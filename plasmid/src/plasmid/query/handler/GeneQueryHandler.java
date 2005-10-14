@@ -109,14 +109,14 @@ public abstract class GeneQueryHandler {
         
         CloneManager manager = new CloneManager(conn);
         Map foundClones = manager.queryAvailableClonesByCloneid(new ArrayList(cloneids), true, true, false,restrictions,clonetypes);
-        
+        /**
         Set ks = foundClones.keySet();
         Iterator it = ks.iterator();
         while(it.hasNext()) {
             String s = (String)it.next();
             Clone c = (Clone)foundClones.get(s);
         }
-        
+        */
         Set keys = found.keySet();
         Iterator iter = keys.iterator();
         Map newFound = new HashMap();

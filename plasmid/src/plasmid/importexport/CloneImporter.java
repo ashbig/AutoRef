@@ -98,6 +98,12 @@ public class CloneImporter {
                 if("status".equalsIgnoreCase(columnName)) {
                     c.setStatus(columnInfo);
                 }
+                if("specialtreatment".equalsIgnoreCase(columnName)) {
+                    c.setSpecialtreatment(columnInfo);
+                }
+                if("source".equalsIgnoreCase(columnName)) {
+                    c.setSource(columnInfo);
+                }
             }
             
             java.text.NumberFormat fmt = java.text.NumberFormat.getInstance();
@@ -106,9 +112,13 @@ public class CloneImporter {
             fmt.setGroupingUsed(false);
             DefTableManager man = new DefTableManager();
             String sp = man.getVocabulary("species", "genusspecies", "code", c.getDomain(), manager.getConnection());
-            String tp = man.getVocabulary("clonetype", "clonetype", "code", c.getType(), manager.getConnection());            
+            String tp = man.getVocabulary("clonetype", "clonetype", "code", c.getType(), manager.getConnection());
             if(sp == null) {
-                throw new Exception("Cannot find code for species: "+c.getDomain());
+                if(Clone.NOINSERT.equals(c.getDomain())) {
+                    sp = Clone.SPECIES_NOINSERT;
+                } else {
+                    throw new Exception("Cannot find code for species: "+c.getDomain());
+                }
             }
             if(tp == null) {
                 throw new Exception("Cannot find code for clonetype: "+c.getType());
@@ -133,6 +143,7 @@ public class CloneImporter {
             for(int i=0; i<columns.size(); i++) {
                 String columnName = (String)columns.get(i);
                 String columnInfo = (String)row.get(i);
+                
                 if("cloneid".equalsIgnoreCase(columnName)) {
                     c.setCloneid(((Integer)idmap.get(columnInfo)).intValue());
                 }
@@ -142,7 +153,13 @@ public class CloneImporter {
                         GrowthConditionManager man = new GrowthConditionManager(manager.getConnection());
                         growthid = man.getGrowthid(columnInfo);
                     } else {
-                        growthid = ((Integer)growthidmap.get(columnInfo)).intValue();
+                        Integer gid = (Integer)growthidmap.get(columnInfo);
+                        if(gid == null) {
+                            GrowthConditionManager man = new GrowthConditionManager(manager.getConnection());
+                            growthid = man.getGrowthid(columnInfo);
+                        } else {  
+                        growthid = gid.intValue();
+                        }
                     }
                     
                     if(growthid <= 0) {
@@ -150,6 +167,7 @@ public class CloneImporter {
                     }
                     c.setGrowthid(growthid);
                 }
+                
                 if("isrecommended".equalsIgnoreCase(columnName)) {
                     c.setIsrecommended(columnInfo);
                 }

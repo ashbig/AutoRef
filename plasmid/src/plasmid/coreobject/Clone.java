@@ -24,6 +24,7 @@ public class Clone {
     public static final String NOINSERT = "No insert";
     public static final String NO_RESTRICTION = "No restriction";
     public static final String NON_PROFIT = "Academic and non-profit labs";
+    public static final String SPECIES_NOINSERT = "Ev";
     
     protected int cloneid;
     protected String name;
@@ -38,6 +39,8 @@ public class Clone {
     protected String vectorname;
     protected String clonemap;
     protected String status;
+    protected String specialtreatment;
+    protected String source;
     
     protected List synonyms;
     protected List publications;
@@ -58,7 +61,8 @@ public class Clone {
     
     public Clone(int cloneid, String name, String type, String verified,
     String vermethod, String domain, String subdomain, String restriction, 
-    String comments, int vectorid, String vectorname, String clonemap, String status) {
+    String comments, int vectorid, String vectorname, String clonemap, String status,
+    String specialtreatment, String source) {
         this.cloneid = cloneid;
         this.name = name;
         this.type = type;
@@ -72,6 +76,8 @@ public class Clone {
         this.vectorname = vectorname;
         this.clonemap = clonemap;
         this.status = status;
+        this.specialtreatment = specialtreatment;
+        this.source = source;
     }
     
     public int getCloneid() {return cloneid;}
@@ -90,6 +96,8 @@ public class Clone {
     public GrowthCondition getRecommendedGrowthCondition() {return recommendedGrowthCondition;}
     public CloneVector getVector() {return vector;}
     public List getProperties() {return properties;}
+    public String getSpecialtreatment() {return specialtreatment;}
+    public String getSource() {return source;}
     
     public void setCloneid(int id) {this.cloneid = id;}
     public void setName(String s) {this.name = s;}
@@ -107,6 +115,8 @@ public class Clone {
     public void setRecommendedGrowthCondition(GrowthCondition g) {this.recommendedGrowthCondition = g;}
     public void setVector(CloneVector v) {this.vector = v;}
     public void setProperties(List l) {this.properties = l;}
+    public void setSpecialtreatment(String s) {this.specialtreatment = s;}
+    public void setSource(String s) {this.source = s;}
     
     public List getSynonyms() {return synonyms;}
     public void setSynonyms(List l) {this.synonyms = l;}

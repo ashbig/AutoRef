@@ -15,6 +15,7 @@ import plasmid.coreobject.*;
  * @author  DZuo
  */
 public class WorklistGenerator {
+    public static int NUMOFTIPS = 8;
     public static final String DELIM = "\t";
     private List worklist;
     
@@ -83,7 +84,7 @@ public class WorklistGenerator {
         f.close();
     }
     
-    public void printWorklistForRobot(String filename) throws Exception {
+    public void printWorklist(String filename) throws Exception {
         if(worklist == null || filename == null)
             return;
         
@@ -97,6 +98,40 @@ public class WorklistGenerator {
                 f.write("\t"+from.getContainerlabel()+"\t"+from.getPosition()+"\t"+to.getContainerlabel()+"\t"+to.getPosition()+"\n");
             
         }
+        f.close();
+    }
+     
+    public void printWorklistForRobot(String filename, int avolumn, int dvolumn, boolean isWash) throws Exception {
+        if(worklist == null || filename == null)
+            return;
+        
+        OutputStreamWriter f = new FileWriter(filename);        
+                
+        int i=0;
+        int size = worklist.size();
+        while(i<size) {
+            SampleLineage w = (SampleLineage)worklist.get(i);
+            Sample from = w.getSampleFrom();
+            f.write("A;;"+from.getContainerlabel()+";"+from.getContainerType()+";"+from.getPosition()+";;"+avolumn+"\n");
+            
+            int numOfDispense = avolumn/dvolumn;
+            for(int n=0; n<numOfDispense; n++) {
+                SampleLineage sl = (SampleLineage)worklist.get(i);
+                Sample to = sl.getSampleTo();
+                f.write("D;;"+to.getContainerlabel()+";"+to.getContainerType()+";"+to.getPosition()+";;"+dvolumn+"\n");
+                i++;
+            }
+            
+            if(isWash) {
+                f.write("W;\n");
+            } else {
+                if(i > size-NUMOFTIPS) {
+                    f.write("W;\n");
+                }
+            }
+        }
+
+        f.flush();
         f.close();
     }
     

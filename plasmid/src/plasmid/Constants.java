@@ -29,6 +29,7 @@ public class Constants {
     public static final String LABELS = "labels";
     public static final String PRINT_LABEL_MESSAGE = "PRINT_LABEL_MESSAGE";
     public static final String PROTOCOLS = "Protocols";
+    public static final String RESULTTYPES = "Result Types";
     
     public static final String WORKLIST_FILE_PATH = FlexProperties.getInstance().getProperty("worklist");
     

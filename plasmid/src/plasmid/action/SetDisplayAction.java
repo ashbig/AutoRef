@@ -85,7 +85,7 @@ public class SetDisplayAction extends Action {
         request.setAttribute("refseqType", refseqType);
                 
         List clones = null;
-        if(displayPage.equals("indirect")) {
+        if("indirect".equals(displayPage)) {
             clones = (List)request.getSession().getAttribute("found");
         } else {
             clones = (List)request.getSession().getAttribute("directFounds");
@@ -139,7 +139,7 @@ public class SetDisplayAction extends Action {
         if("restriction".equals(sortby))
             Collections.sort(clones, new CloneRestrictionComparator());
         
-        if(displayPage.equals("indirect")) {
+        if("indirect".equals(displayPage)) {
             request.getSession().setAttribute("found", clones);
         } else {
             request.getSession().setAttribute("directFounds", clones);

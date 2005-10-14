@@ -12,6 +12,9 @@
         <tr> 
           <td height="15" class="lftsubtxt"><a href="SelectProcess.jsp" class="leftsubnavtext">Generate Worklist</a></td>
         </tr>
+        <tr> 
+          <td height="15" class="lftsubtxt"><a href="GetResultTypes.do" class="leftsubnavtext">Enter Results</a></td>
+        </tr>
       </table></td>
   </tr>
 </table>
