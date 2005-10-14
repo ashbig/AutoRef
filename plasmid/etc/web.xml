@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE web-app
+     PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+
+
+    <!-- General description of your web application -->
+
+    <display-name>PLASMID</display-name>
+    <description>
+      This is the HIP PLASMID Application.
+    </description>
+
+
+    <!-- Context initialization parameters that define shared
+         String constants used within your application, which
+         can be customized by the system administrator who is
+         installing your application.  The values actually
+         assigned to these parameters can be retrieved in a
+         servlet or JSP page by calling:
+
+             String value =
+               getServletContext().getInitParameter("name");
+
+         where "name" matches the <param-name> element of
+         one of these initialization parameters.
+
+         You can define any number of context initialization
+         parameters, including zero.
+    -->
+
+    <context-param>
+      <param-name>webmaster</param-name>
+      <param-value>mcollins@hms.harvard.edu</param-value>
+      <description>
+        The EMAIL address of the administrator to whom questions
+        and comments about this application should be addressed.
+      </description>
+    </context-param>
+    
+
+    <!-- Action Servlet Configuration -->
+  <servlet>
+    <servlet-name>action</servlet-name>
+    <description>plasmid.servlet</description>    
+    <servlet-class>plasmid.servlet.PlasmidServlet</servlet-class>
+        
+    <init-param>
+        <param-name>application</param-name>
+        <param-value>plasmid.ApplicationResources</param-value>
+    </init-param>
+    <init-param>
+      <param-name>config</param-name>
+      <param-value>/WEB-INF/struts-config.xml</param-value>
+    </init-param>
+    <init-param>
+      <param-name>debug</param-name>
+      <param-value>2</param-value>
+    </init-param>
+    <init-param>
+        <param-name>nocache</param-name>
+        <param-value>false</param-value>
+    </init-param>
+    <init-param>
+      <param-name>detail</param-name>
+      <param-value>2</param-value>
+    </init-param>
+    <init-param>
+      <param-name>validate</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <load-on-startup>2</load-on-startup>
+  </servlet>
+
+    <!-- DBInitServlet Configuration -->
+  <servlet>
+    <servlet-name>dbInit</servlet-name>
+        <servlet-class>
+            plasmid.database.DBInitServlet
+        </servlet-class>  
+        
+
+    <!-- for oracle database -->
+    <init-param>
+        <param-name>driverClass</param-name>
+        <param-value>oracle.jdbc.driver.OracleDriver</param-value>
+    </init-param>   
+    <init-param>
+      <param-name>jdbcURL</param-name>
+      <param-value>jdbc:oracle:thin:@kotel:1523:PLASMID</param-value>
+    </init-param>
+
+    <init-param>
+      <param-name>user</param-name>
+      <param-value>plasmid_test</param-value>
+    </init-param>
+    <init-param>
+        <param-name>password</param-name>
+        <param-value>plasmID</param-value>
+    </init-param>
+    <!-- for oracle database -->   
+
+    <init-param>
+      <param-name>minCount</param-name>
+      <param-value>5</param-value>
+    </init-param>
+    <init-param>
+        <param-name>maxCount</param-name>
+        <param-value>30</param-value>
+    </init-param>
+    <load-on-startup>10</load-on-startup>
+  </servlet>  
+  
+  
+
+  <!-- Common Gateway Includes (CGI) processing servlet, which supports     -->
+  <!-- execution of external applications that conform to the CGI spec      -->
+  <!-- requirements.  Typically, this servlet is mapped to the URL pattern  -->
+  <!-- "/cgi-bin/*", which means that any CGI applications that are         -->
+  <!-- executed must be present within the web application.  This servlet   -->
+  <!-- supports the following initialization parameters (default values     -->
+  <!-- are in square brackets):                                             -->
+  <!--                                                                      -->
+  <!--   cgiPathPrefix       The CGI search path will start at              -->
+  <!--                       webAppRootDir + File.separator + this prefix.  -->
+  <!--                       [WEB-INF/cgi]                                  -->
+  <!--                                                                      -->
+  <!--   clientInputTimeout  The time (in milliseconds) to wait for input   -->
+  <!--                       from the browser before assuming that there    -->
+  <!--                       is none.  [100]                                -->
+  <!--                                                                      -->
+  <!--   debug               Debugging detail level for messages logged     -->
+  <!--                       by this servlet.  [0]                          -->
+
+  <!-- IMPORTANT: To use the CGI servlet, you also need to rename the       -->
+  <!--            $CATALINA_HOME/server/lib/servlets-cgi.renametojar file   -->
+  <!--            to $CATALINA_HOME/server/lib/servlets-cgi.jar             -->
+
+  <servlet>
+    <servlet-name>cgi</servlet-name>
+    <servlet-class>org.apache.catalina.servlets.CGIServlet</servlet-class>
+    <init-param>
+      <param-name>clientInputTimeout</param-name>
+      <param-value>100</param-value>
+    </init-param>
+    <init-param>
+      <param-name>debug</param-name>
+      <param-value>6</param-value>
+    </init-param>
+    <init-param>
+      <param-name>cgiPathPrefix</param-name>
+      <param-value></param-value>
+    </init-param>
+     <load-on-startup>5</load-on-startup>
+   </servlet>
+
+  <!-- Action Servlet Mapping -->
+  <servlet-mapping>
+    <servlet-name>action</servlet-name>
+    <url-pattern>*.do</url-pattern>
+  </servlet-mapping>
+
+  
+    <!-- Define the default session timeout for your application,
+         in minutes.  From a servlet or JSP page, you can modify
+         the timeout for a particular session dynamically by using
+         HttpSession.getMaxInactiveInterval(). -->
+
+    <session-config>
+      <session-timeout>30</session-timeout>    <!-- 30 minutes -->
+    </session-config>
+
+  <!-- Welcome-file-list -->
+  <welcome-file-list>
+    <welcome-file>welcome.jsp</welcome-file>
+  </welcome-file-list>
+
+    <taglib>
+      <taglib-uri>/WEB-INF/struts-bean.tld</taglib-uri>
+      <taglib-location>/WEB-INF/struts-bean.tld</taglib-location>
+    </taglib>
+    
+    <taglib>
+        <taglib-uri>/WEB-INF/struts-html.tld</taglib-uri>
+        <taglib-location>/WEB-INF/struts-html.tld</taglib-location>
+    </taglib>
+   
+    <taglib>
+      <taglib-uri>/WEB-INF/struts-logic.tld</taglib-uri>
+      <taglib-location>/WEB-INF/struts-logic.tld</taglib-location>
+    </taglib>
+    
+    <taglib>
+      <taglib-uri>/WEB-INF/struts-template.tld</taglib-uri>
+      <taglib-location>/WEB-INF/struts-template.tld</taglib-location>
+    </taglib>
+    
+
+
+    <!-- Servlet definitions for the servlets that make up
+         your web application, including initialization
+         parameters.  With Tomcat, you can also send requests
+         to servlets not listed here with a request like this:
+
+           http://localhost:8080/{context-path}/servlet/{classname}
+
+         but this usage is not guaranteed to be portable.  It also
+         makes relative references to images and other resources
+         required by your servlet more complicated, so defining
+         all of your servlets (and defining a mapping to them with
+         a <servlet-mapping> element) is recommended.
+
+         Servlet initialization parameters can be retrieved in a
+         servlet or JSP page by calling:
+
+             String value =
+               getServletConfig().getInitParameter("name");
+
+         where "name" matches the <param-name> element of
+         one of these initialization parameters.
+
+         You can define any number of servlets, including zero.
+    -->
+
+</web-app>
