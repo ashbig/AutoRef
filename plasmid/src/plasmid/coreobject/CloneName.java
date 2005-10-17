@@ -31,6 +31,11 @@ public class CloneName {
     public String getType() {return type;}
     public String getValue() {return value;}
     public String getUrl() {return url;}
+    public int getUrlLength() {
+        if(url == null)
+            return 0;
+        return url.trim().length();
+    }
     
     public void setCloneid(int cloneid) {this.cloneid=cloneid;}
     public void setType(String type) {this.type = type;}

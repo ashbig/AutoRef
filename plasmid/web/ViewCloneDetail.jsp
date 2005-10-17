@@ -49,13 +49,15 @@
 <logic:iterate id="clonename" name="clone" property="names">
   <tr>
     <td width="201" class="tablebody"><bean:write name="clonename" property="type"/></td>
-    <logic:present name="clonename" property="url">
+    <td width="566" class="tableinfo">
+    <logic:notEqual name="clonename" property="urlLength" value="0">
     <a target="_blank" href="<bean:write name="clonename" property="url"/>">
-    </logic:present>
-    <td width="566" class="tableinfo"><bean:write name="clonename" property="value"/></td>
-    <logic:present name="clonename" property="url">
+    </logic:notEqual>
+    <bean:write name="clonename" property="value"/>
+    <logic:notEqual name="clonename" property="urlLength" value="0">
     </a>
-    </logic:present>
+    </logic:notEqual>
+    </td>
   </tr>
 </logic:iterate>
 </table>
@@ -257,7 +259,7 @@
   </tr>
 <logic:iterate id="publication" name="clone" property="publications">
   <tr>
-    <td class="tableinfo"><bean:write name="publication" property="pmid"/></td>
+    <td class="tableinfo"><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=pubmed&dopt=Abstract&list_uids=<bean:write name="publication" property="pmid"/>"><bean:write name="publication" property="pmid"/></a></td>
     <td class="tableinfo"><bean:write name="publication" property="title"/></td>
   </tr>
 </logic:iterate>
