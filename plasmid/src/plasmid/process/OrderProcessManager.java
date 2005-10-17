@@ -56,13 +56,13 @@ public class OrderProcessManager {
                 cloneids.add(s.getItemid());
             }
         }
-      
+        
         List restrictions = UserManager.getUserRestrictions(user);
         if(restrictions == null) {
             restrictions = new ArrayList();
         }
         restrictions.add(Clone.NO_RESTRICTION);
-       
+        
         DatabaseTransaction t = null;
         Connection conn = null;
         List restrictedClones = null;
@@ -330,14 +330,14 @@ public class OrderProcessManager {
             if(addresses != null) {
                 UserManager man = new UserManager(conn);
                 /**
-                if(!man.updatePonumber(user.getPonumber(), user.getUserid())) {
-                    DatabaseTransaction.rollback(conn);
-                    if(Constants.DEBUG) {
-                        System.out.println(man.getErrorMessage());
-                        System.out.println("cannot update ponumber.");
-                    }
-                    return -1;
-                }*/
+                 * if(!man.updatePonumber(user.getPonumber(), user.getUserid())) {
+                 * DatabaseTransaction.rollback(conn);
+                 * if(Constants.DEBUG) {
+                 * System.out.println(man.getErrorMessage());
+                 * System.out.println("cannot update ponumber.");
+                 * }
+                 * return -1;
+                 * }*/
                 
                 List a = man.getUserAddresses(user.getUserid());
                 if(a == null) {
@@ -470,17 +470,15 @@ public class OrderProcessManager {
     
     public void writeCloneList(List clones, PrintWriter out, boolean isWorkingStorage) {
         if(isWorkingStorage) {
-            out.println("Clone ID\tClone Type\tGene ID\tGene Symbol\tGene Name\tReference Sequence Genbank Accession\tReference Sequence GI\tInsert Format\tVector\tSelection Markers\tUse Restriction\tQuantity\tContainer\tWell\tPosition");
+            out.println("Clone ID\tClone Type\tGene ID\tGene Symbol\tGene Name\tReference Sequence Genbank Accession\tReference Sequence GI\tInsert Format\tVector\tSelection Markers\tUse Restriction\tQuantity\tContainer\tWell\tPosition\tSpecial Treatment");
         } else {
             out.println("Clone ID\tClone Type\tGene ID\tGene Symbol\tGene Name\tReference Sequence Genbank Accession\tReference Sequence GI\tInsert Format\tVector\tSelection Markers\tUse Restriction\tQuantity");
         }
         
         for(int i=0; i<clones.size(); i++) {
             CloneInfo c = (CloneInfo)clones.get(i);
-            List inserts = c.getInserts();
-            for(int j=0; j<inserts.size(); j++) {
-                DnaInsert insert = (DnaInsert)inserts.get(j);
-                out.print(c.getName()+"\t"+c.getType()+"\t"+insert.getGeneid()+"\t"+insert.getName()+"\t"+insert.getDescription()+"\t"+insert.getTargetgenbank()+"\t"+insert.getTargetseqid()+"\t"+insert.getFormat()+"\t"+c.getVectorname()+"\t");
+            if(Clone.NOINSERT.equals(c.getType())) {
+                out.print(c.getName()+"\t"+c.getType()+"\t\t\t\t\t\t\t"+c.getVectorname()+"\t");
                 
                 List selections = c.getSelections();
                 for(int n=0; n<selections.size(); n++) {
@@ -489,9 +487,27 @@ public class OrderProcessManager {
                 }
                 
                 if(isWorkingStorage) {
-                    out.println("\t"+c.getRestriction()+"\t"+c.getQuantity()+"\t"+c.getPlate()+"\t"+c.getWell()+"\t"+c.getPosition());
+                    out.println("\t"+c.getRestriction()+"\t"+c.getQuantity()+"\t"+c.getPlate()+"\t"+c.getWell()+"\t"+c.getPosition()+"\t"+c.getSpecialtreatment());
                 } else {
                     out.println("\t"+c.getRestriction()+"\t"+c.getQuantity());
+                }
+            } else {
+                List inserts = c.getInserts();
+                for(int j=0; j<inserts.size(); j++) {
+                    DnaInsert insert = (DnaInsert)inserts.get(j);
+                    out.print(c.getName()+"\t"+c.getType()+"\t"+insert.getGeneid()+"\t"+insert.getName()+"\t"+insert.getDescription()+"\t"+insert.getTargetgenbank()+"\t"+insert.getTargetseqid()+"\t"+insert.getFormat()+"\t"+c.getVectorname()+"\t");
+                    
+                    List selections = c.getSelections();
+                    for(int n=0; n<selections.size(); n++) {
+                        CloneSelection cs = (CloneSelection)selections.get(n);
+                        out.print(cs.getHosttype()+": "+cs.getMarker()+";");
+                    }
+                    
+                    if(isWorkingStorage) {
+                        out.println("\t"+c.getRestriction()+"\t"+c.getQuantity()+"\t"+c.getPlate()+"\t"+c.getWell()+"\t"+c.getPosition()+"\t"+c.getSpecialtreatment());
+                    } else {
+                        out.println("\t"+c.getRestriction()+"\t"+c.getQuantity());
+                    }
                 }
             }
         }
