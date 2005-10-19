@@ -23,6 +23,8 @@ tr.evenRow {background: #e4e9f8}
 tr.oddRowColoredFont {background: #b8c6ed;  color: #000080; font-weight: bold}
 tr.evenRowColoredFont {background: #e4e9f8;  color: #000080; font-weight: bold}
 
+tr.evenRowColoredFontNotBold {background: #DCE8FC;  color: #000080}
+
 tr.strong {font-weight: bold }
 
 
