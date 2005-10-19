@@ -6,13 +6,14 @@
 
 package plasmid.query.coreobject;
 
+import java.io.*;
 import plasmid.coreobject.Clone;
 
 /**
  *
  * @author  DZuo
  */
-public class CloneInfo extends Clone {
+public class CloneInfo extends Clone implements Serializable{
     protected String term;     
     protected int quantity;
     protected String plate;
@@ -63,5 +64,15 @@ public class CloneInfo extends Clone {
     public void setWell(String s) {this.well = s;}
     public void setWell(String x, String y) {this.well = x+y;}
     public void setPosition(int i) {this.position = i;}
-    public void setIsAddedToCart(boolean b) {this.isAddedToCart = b;}
+    public void setIsAddedToCart(boolean b) {this.isAddedToCart = b;}    
+    
+    private void writeObject(java.io.ObjectOutputStream out)
+     throws IOException {
+         out.defaultWriteObject();        
+    }
+ 
+     private void readObject(java.io.ObjectInputStream in)
+     throws IOException, ClassNotFoundException {
+         in.defaultReadObject();
+     }
 }

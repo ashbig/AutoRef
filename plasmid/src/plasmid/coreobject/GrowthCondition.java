@@ -6,11 +6,13 @@
 
 package plasmid.coreobject;
 
+import java.io.*;
+
 /**
  *
  * @author  DZuo
  */
-public class GrowthCondition {
+public class GrowthCondition implements Serializable{
     private int growthid;
     private String name;
     private String hosttype;
@@ -44,4 +46,14 @@ public class GrowthCondition {
     public void setSelection(String s) {this.selection = s;}
     public void setCondition(String s) {this.condition = s;}
     public void setComments(String s) {this.comments = s;}
+    
+    private void writeObject(java.io.ObjectOutputStream out)
+     throws IOException {
+         out.defaultWriteObject();        
+    }
+ 
+     private void readObject(java.io.ObjectInputStream in)
+     throws IOException, ClassNotFoundException {
+         in.defaultReadObject();
+     }
 }

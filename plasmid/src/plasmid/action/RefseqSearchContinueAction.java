@@ -157,7 +157,7 @@ public class RefseqSearchContinueAction extends Action {
             totalCount = totalCount+handler.getFoundCloneCount();
             int numOfFounds = handler.getFoundCloneCount();
             int numOfNoFounds = handler.getNumOfNoFoundClones();
-            request.setAttribute("totalCount", new Integer(totalCount));
+            request.getSession().setAttribute("totalCount", new Integer(totalCount));
             request.getSession().setAttribute("numOfFound", new Integer(numOfFounds));
             request.getSession().setAttribute("numOfNoFounds", new Integer(numOfNoFounds));
             request.getSession().setAttribute("found", founds);

@@ -6,6 +6,7 @@
 
 package plasmid.coreobject;
 
+import java.io.*;
 import java.util.*;
 import plasmid.util.StringConvertor;
 
@@ -13,7 +14,7 @@ import plasmid.util.StringConvertor;
  *
  * @author  DZuo
  */
-public class Clone {
+public class Clone implements Serializable {
     public static final String AVAILABLE = "AVAILABLE";
     public static final String CDNA = "cDNA";
     public static final String SHRNA = "shRNA";
@@ -79,7 +80,17 @@ public class Clone {
         this.specialtreatment = specialtreatment;
         this.source = source;
     }
-    
+        
+    private void writeObject(java.io.ObjectOutputStream out)
+     throws IOException {
+         out.defaultWriteObject();        
+    }
+ 
+     private void readObject(java.io.ObjectInputStream in)
+     throws IOException, ClassNotFoundException {
+         in.defaultReadObject();
+     }
+     
     public int getCloneid() {return cloneid;}
     public String getName() {return name;}
     public String getType() {return type;}
