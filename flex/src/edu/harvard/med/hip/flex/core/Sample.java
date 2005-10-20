@@ -1,5 +1,5 @@
 /**
- * $Id: Sample.java,v 1.10 2005-03-23 16:41:20 dzuo Exp $
+ * $Id: Sample.java,v 1.11 2005-10-20 19:12:08 dzuo Exp $
  *
  * File     	: Sample.java
  * Date     	: 04162001
@@ -53,7 +53,7 @@ public class Sample {
     public final static String CONTROL_POSITIVE = "CONTROL_POSITIVE";
     public final static String CONTROL_NEGATIVE = "CONTROL_NEGATIVE";
     public final static String CRE = "CRE";
-    
+    public final static String LR = "LR";
     
     protected int id = -1;
     protected String type;
@@ -392,6 +392,9 @@ public class Sample {
         
         if(Protocol.GENERATE_CRE_PLATE.equals(processname)) 
             return CRE;
+        
+        if(Protocol.GENERATE_LR_PLATE.equals(processname)) 
+            return LR;
         
         return type;
     }

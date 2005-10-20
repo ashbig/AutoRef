@@ -222,8 +222,8 @@ public class Algorithms {
     
     
     public static void main(String args[]) {
-        String inputFile = "C:\\Documents and Settings\\dzuo\\My Documents\\work\\production\\RZPD\\position_input.txt";
-        String outputFile = "C:\\Documents and Settings\\dzuo\\My Documents\\work\\production\\RZPD\\position_output.txt";
+        String inputFile = "C:\\Documents and Settings\\dzuo\\My Documents\\work\\production\\vcholera\\wellin.txt";
+        String outputFile = "C:\\Documents and Settings\\dzuo\\My Documents\\work\\production\\vcholera\\wellout.txt";
         String line;
         
         try {

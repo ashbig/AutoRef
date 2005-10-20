@@ -52,12 +52,18 @@ public abstract class AbstractAgarToCultureMapper extends OneToOneContainerMappe
             String subthread = getSubThread(f1, i+1);
             //String newBarcode = Container.getLabel(projectCode, protocol.getProcesscode(), f1.getThreadid(), subthread);
             int l = f1.getLabel().indexOf("-");
+            String leftString = "";
             String threadid;
             if(l<0)
                 threadid = f1.getLabel().substring(3);
-            else
+            else {
                 threadid = f1.getLabel().substring(3, l);
-            String newBarcode = projectCode+protocol.getProcesscode()+threadid+"-"+subthread;
+                leftString = f1.getLabel().substring(l);
+                if(leftString.equals("-F") || leftString.equals("-C"))
+                    leftString = "";
+            }
+            
+            String newBarcode = projectCode+protocol.getProcesscode()+threadid+leftString+subthread;
             Container newContainer = new Container(newContainerType, null, newBarcode, f1.getThreadid());
     
             int index = 0;

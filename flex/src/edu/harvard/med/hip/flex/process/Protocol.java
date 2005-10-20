@@ -1,5 +1,5 @@
 /**
- * $Id: Protocol.java,v 1.44 2005-10-13 15:01:04 dzuo Exp $
+ * $Id: Protocol.java,v 1.45 2005-10-20 19:09:51 dzuo Exp $
  *
  * File     : FlexProcessException.java
  * Date     : 04162001
@@ -137,6 +137,7 @@ public class Protocol {
     public static final String ENTER_DNA_RESULT = "Enter DNA results";
     public static final String GENERATE_CRE_PLATE = "Generate cre reaction plate";
     public static final String ENTER_EGEL = "Enter PCR e-gel";
+    public static final String GENERATE_LR_PLATE = "Generate LR reaction plate";
     
     private int id;
     private String processcode;
