@@ -29,7 +29,11 @@ public class DirectGenbankQueryHandler extends GeneQueryHandler {
     }
     
     public void doQuery() throws Exception {
+        doQuery(null, null);
+    }   
+    
+    public void doQuery(List restrictions, List clonetypes) throws Exception {
         String sql = "select distinct cloneid from dnainsert where upper(targetgenbank) = upper(?)";
-        executeQuery(sql);
-    }    
+        executeQuery(sql,restrictions,clonetypes);
+    }
 }

@@ -11,17 +11,22 @@ import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
+import plasmid.coreobject.CloneOrder;
 
 /**
  *
  * @author  DZuo
  */
 public class ViewOrderHistoryForm extends ActionForm {
+    private String status = CloneOrder.ALL;
     
     /** Creates a new instance of ViewOrderHistoryForm */
     public ViewOrderHistoryForm() {
     }
       
+    public String getStatus() {return status;}
+    public void setStatus(String s) {this.status = s;}
+    
     /**
      * Reset all properties to their default values.
      *
@@ -29,6 +34,7 @@ public class ViewOrderHistoryForm extends ActionForm {
      * @param request The servlet request we are processing
      */
     public void reset(ActionMapping mapping, HttpServletRequest request) {
+        status = CloneOrder.ALL;
     } 
         
     /**

@@ -18,6 +18,10 @@ public class Sample {
     public static final String ARCHIVE_GLYCEROL = "Archive Glycerol";
     public static final String WORKING_GLYCEROL = "Working Glycerol";
     public static final String EMPTY = "Empty";
+    public static final String CULTURE = "CULTURE";
+    public static final String GLYCEROL = "GLYCEROL";
+    public static final String AGAR = "AGAR";
+    public static final String TRANSFORMATION = "TRANSFORMATION";
     
     private int sampleid;
     private String type;
@@ -28,6 +32,8 @@ public class Sample {
     private String positiony;
     private int containerid;
     private String containerlabel;
+    private String result;
+    private String containerType;
     
     /** Creates a new instance of Sample */
     public Sample() {
@@ -54,6 +60,8 @@ public class Sample {
     public String getPositiony() {return positiony; }
     public int getContainerid() {return containerid;}
     public String getContainerlabel() {return containerlabel;}
+    public String getResult() {return result;}
+    public String getContainerType() {return containerType;}
     
     public void setSampleid(int id) {this.sampleid = id;}
     public void setType(String s) {this.type = s;}
@@ -64,6 +72,8 @@ public class Sample {
     public void setPositiony(String s) {this.positiony = s;}
     public void setContainerid(int i) {this.containerid = i;}
     public void setContainerlabel(String s) {this.containerlabel = s;}
+    public void setResult(String s) {this.result = s;}
+    public void setContainerType(String s) {this.containerType = s;}
     
     public void setPositions(int p) {
         String st = PlatePositionConvertor.convertWellFromInttoA8_12(p);
@@ -78,5 +88,17 @@ public class Sample {
         setPosition(p);
         setPositionx(positionX);
         setPositiony(fmt.format(y));
+    }
+    
+    public static String getSampleType(String processname) {
+        if(Process.CULTURE.equals(processname))
+            return Sample.CULTURE;
+        if(Process.GENERATE_GLYCEROL.equals(processname))
+            return Sample.GLYCEROL;
+        if(Process.PLATING.equals(processname))
+            return Sample.AGAR;
+        if(Process.TRANSFORMATION.equals(processname))
+            return Sample.TRANSFORMATION;
+        return null;
     }
 }

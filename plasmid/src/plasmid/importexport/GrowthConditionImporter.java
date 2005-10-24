@@ -42,13 +42,13 @@ public class GrowthConditionImporter {
         List contents = table.getColumnInfo();
         for(int n=0; n<contents.size(); n++) {
             GrowthCondition g = new GrowthCondition();
+            g.setGrowthid(id);
             List row = (List)contents.get(n);
             for(int i=0; i<columns.size(); i++) {
                 String columnName = (String)columns.get(i);
                 String columnInfo = (String)row.get(i);
                 if("name".equalsIgnoreCase(columnName)) {
                     idmap.put(columnInfo, new Integer(id));
-                    g.setGrowthid(id);
                     g.setName(columnInfo);
                 }
                 if("hosttype".equalsIgnoreCase(columnName)) {

@@ -60,7 +60,12 @@
 <span class="featuretext">If you would like to submit clones to the repository, 
 please contact Stephanie Mohr <a href="mailto:stephanie_mohr@hms.harvard.edu"><span class="featuretext">by 
 email</span></a> or by phone 617-324-4251.</span>
-
+</p>
+<ul>
+  <li class="underbullet"><a target="_blank" href="MQF.pdf">Material Qualification Form</a></li>
+  <li class="underbullet"><a target="_blank" href="PIT.pdf">Plasmid Intake Template</a></li>
+</ul>
+</p>
         </TD>
     </TR>
   </TBODY>

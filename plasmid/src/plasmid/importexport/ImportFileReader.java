@@ -15,6 +15,7 @@ import java.util.*;
  */
 public class ImportFileReader {
     public static final String DILIM = "\t";
+    public static final String NA = "NA";
     private String errorMessage;
     private ImportTable table;
     
@@ -41,7 +42,7 @@ public class ImportFileReader {
             ArrayList columnNames = new ArrayList();
             try {
                 while(st.hasMoreTokens()) {
-                    String s = st.nextToken();
+                    String s = st.nextToken().trim();
                     columnNames.add(s);
                 }
             } catch (NoSuchElementException ex) {
@@ -56,7 +57,10 @@ public class ImportFileReader {
                 ArrayList rowInfo = new ArrayList();
                 try {
                     while(st.hasMoreTokens()) {
-                        String text = st.nextToken();
+                        String text = st.nextToken().trim();
+                        if(NA.equals(text))
+                            text = null;
+                        
                         rowInfo.add(text);
                     }
                     columnInfo.add(rowInfo);

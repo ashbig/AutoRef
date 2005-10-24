@@ -13,6 +13,7 @@ import java.util.*;
 import plasmid.coreobject.*;
 import plasmid.database.*;
 import plasmid.Constants;
+import plasmid.coreobject.Process;
 
 /**
  *
@@ -37,8 +38,8 @@ public class ProcessManager extends TableManager {
         }
         
         String sql = "insert into processexecution"+
-        " (executionid,executionstatus,executiondate,processname,researchername)"+
-        " values(?,?,sysdate,?,?)";
+        " (executionid,executionstatus,executiondate,processname,researchername,protocolname)"+
+        " values(?,?,sysdate,?,?,?)";
         
         try {
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -47,6 +48,7 @@ public class ProcessManager extends TableManager {
             stmt.setString(2, process.getStatus());
             stmt.setString(3, process.getProcessname());
             stmt.setString(4, process.getResearchername());
+            stmt.setString(5, process.getProtocolname());
             
             DatabaseTransaction.executeUpdate(stmt);
             DatabaseTransaction.closeStatement(stmt);
@@ -58,19 +60,19 @@ public class ProcessManager extends TableManager {
         if(!insertLineages(executionid, process.getLineages())) {
             handleError(new Exception(getErrorMessage()), "Cannot insert samplelineage.");
             return false;
-        } 
+        }
         if(!insertInputObjects(executionid, process.getInputObjects())) {
             handleError(new Exception(getErrorMessage()), "Cannot insert input objects.");
             return false;
-        } 
+        }
         if(!insertOutputObjects(executionid, process.getOutputObjects())) {
             handleError(new Exception(getErrorMessage()), "Cannot insert output objects.");
             return false;
-        } 
+        }
         if(!insertIoObjects(executionid, process.getIoObjects())) {
             handleError(new Exception(getErrorMessage()), "Cannot insert IO objects.");
             return false;
-        } 
+        }
         if(!insertResults(executionid, process.getResults())) {
             handleError(new Exception(getErrorMessage()), "Cannot insert results.");
             return false;
@@ -103,7 +105,7 @@ public class ProcessManager extends TableManager {
                     }
                 }
                 stmt.setInt(2, sampleid_from);
-                                
+                
                 int sampleid_to = sl.getTo();
                 if(sampleid_to == 0) {
                     Sample s = sl.getSampleTo();
@@ -124,7 +126,7 @@ public class ProcessManager extends TableManager {
             return false;
         }
         return true;
-    }    
+    }
     
     public boolean insertInputObjects(int executionid, List objects) {
         if(objects == null)
@@ -150,7 +152,7 @@ public class ProcessManager extends TableManager {
             return false;
         }
         return true;
-    }    
+    }
     
     public boolean insertOutputObjects(int executionid, List objects) {
         if(objects == null)
@@ -177,7 +179,7 @@ public class ProcessManager extends TableManager {
         }
         return true;
     }
-        
+    
     public boolean insertIoObjects(int executionid, List objects) {
         if(objects == null)
             return true;
@@ -203,7 +205,7 @@ public class ProcessManager extends TableManager {
         }
         return true;
     }
-        
+    
     public boolean insertResults(int executionid, List results) {
         if(results == null)
             return true;
@@ -229,5 +231,95 @@ public class ProcessManager extends TableManager {
             return false;
         }
         return true;
+    }
+    
+    public static List getProcesses(boolean isProtocol) {
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        ResultSet rs = null;
+        List l = new ArrayList();
+        
+        String sql = "select * from process";
+        
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            rs = t.executeQuery(sql);
+            while(rs.next()) {
+                String processname = rs.getString(1);
+                String description = rs.getString(2);
+                List protocols = null;
+                
+                if(isProtocol) {
+                    String sql2 = "select name, filename, description"+
+                    " from protocol p, processprotocol pp"+
+                    " where p.name=pp.protocolname"+
+                    " and pp.processname=? and pp.active_yn='Y'";
+                    protocols = new ArrayList();
+                    PreparedStatement stmt = conn.prepareStatement(sql2);
+                    stmt.setString(1, processname);
+                    ResultSet rs2 = DatabaseTransaction.executeQuery(stmt);
+                    while(rs2.next()) {
+                        String protocolname = rs2.getString(1);
+                        String filename = rs2.getString(2);
+                        String desc = rs2.getString(3);
+                        Protocol p = new Protocol(protocolname, filename, desc);
+                        protocols.add(p);
+                    }
+                    DatabaseTransaction.closeResultSet(rs2);
+                    DatabaseTransaction.closeStatement(stmt);
+                }
+                Process process = new Process(processname, description, protocols);
+                l.add(process);
+            }
+            DatabaseTransaction.closeResultSet(rs);
+            return l;
+        } catch (Exception ex) {
+            if(Constants.DEBUG) {
+                System.out.println(ex);
+            }
+            return null;
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
+        }
+    }
+    
+    public static List getProtocols(String processname) {
+        if(processname == null)
+            return null;
+        
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        List protocols = new ArrayList();
+        
+        String sql = "select name, filename, description"+
+        " from protocol p, processprotocol pp"+
+        " where p.name=pp.protocolname"+
+        " and pp.processname=? and pp.active_yn='Y'";
+        
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, processname);
+            ResultSet rs = DatabaseTransaction.executeQuery(stmt);
+            while(rs.next()) {
+                String protocolname = rs.getString(1);
+                String filename = rs.getString(2);
+                String desc = rs.getString(3);
+                Protocol p = new Protocol(protocolname, filename, desc);
+                protocols.add(p);
+            }
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+            return protocols;
+        } catch (Exception ex) {
+            if(Constants.DEBUG) {
+                System.out.println(ex);
+            }
+            return null;
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
+        }
     }
 }

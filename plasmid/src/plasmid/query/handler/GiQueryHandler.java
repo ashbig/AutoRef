@@ -29,7 +29,11 @@ public class GiQueryHandler extends GeneQueryHandler {
     }
     
     public void doQuery() throws Exception {        
+        doQuery(null, null);
+    }  
+    
+    public void doQuery(List restrictions, List clonetypes) throws Exception {        
         String sql = "select distinct cloneid from clonegi where gi = ?";
-        executeQuery(sql); 
-    }   
+        executeQuery(sql, restrictions, clonetypes); 
+    }    
 }

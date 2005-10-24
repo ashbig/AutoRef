@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2005-04-01 18:56:54 $
+ * $Revision: 1.1.1.1 $
+ * $Date: 2005-10-24 15:12:51 $
  * $Author: dzuo $
  *
  ******************************************************************************
@@ -40,7 +40,7 @@ package plasmid.database;
  * This class builds the exception for a given error message.
  *
  * @author     $Author: dzuo $
- * @version    $Revision: 1.1 $ $Date: 2005-04-01 18:56:54 $
+ * @version    $Revision: 1.1.1.1 $ $Date: 2005-10-24 15:12:51 $
  */
 public class DatabaseException extends Exception {
 

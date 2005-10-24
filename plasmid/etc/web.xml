@@ -89,12 +89,12 @@
     </init-param>   
     <init-param>
       <param-name>jdbcURL</param-name>
-      <param-value>jdbc:oracle:thin:@kotel:1523:PLASMID</param-value>
+      <param-value>jdbc:oracle:thin:@128.103.32.230:1521:PLASMID</param-value>
     </init-param>
 
     <init-param>
       <param-name>user</param-name>
-      <param-value>plasmid_test</param-value>
+      <param-value>plasmid_production</param-value>
     </init-param>
     <init-param>
         <param-name>password</param-name>
@@ -169,12 +169,12 @@
          HttpSession.getMaxInactiveInterval(). -->
 
     <session-config>
-      <session-timeout>30</session-timeout>    <!-- 30 minutes -->
+      <session-timeout>120</session-timeout>    <!-- 30 minutes -->
     </session-config>
 
   <!-- Welcome-file-list -->
   <welcome-file-list>
-    <welcome-file>welcome.jsp</welcome-file>
+    <welcome-file>Home.jsp</welcome-file>
   </welcome-file-list>
 
     <taglib>

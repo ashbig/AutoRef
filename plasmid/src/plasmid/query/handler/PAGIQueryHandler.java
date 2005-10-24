@@ -23,7 +23,11 @@ public class PAGIQueryHandler extends GeneQueryHandler {
     }
     
     public void doQuery() throws Exception {
+        doQuery(null, null);
+    }    
+    
+    public void doQuery(List restrictions, List clonetypes) throws Exception {
         String sql = "select distinct cloneid from dnainsert where targetseqid = ?";
-        executeQuery(sql);
-    }     
+        executeQuery(sql, restrictions, clonetypes);
+    }    
 }

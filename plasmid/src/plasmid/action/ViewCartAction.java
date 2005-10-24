@@ -26,7 +26,7 @@ import org.apache.struts.util.MessageResources;
 import plasmid.database.*;
 import plasmid.database.DatabaseManager.*;
 import plasmid.Constants;
-import plasmid.coreobject.Clone;
+import plasmid.coreobject.*;
 import plasmid.query.coreobject.CloneInfo;
 import plasmid.form.ViewCartForm;
 
@@ -58,14 +58,18 @@ public class ViewCartAction extends Action {
         // get the parameters specified by the customer
         ActionErrors errors = new ActionErrors();
         
-        Map shoppingcart = (Map)request.getSession().getAttribute(Constants.CART);
+        List shoppingcart = (List)request.getSession().getAttribute(Constants.CART);
+
         if(shoppingcart == null || shoppingcart.size() == 0) {
-            shoppingcart = new HashMap();
+            shoppingcart = new ArrayList();
             request.getSession().setAttribute(Constants.CART, shoppingcart);
             return (mapping.findForward("success_empty"));
-        } else {            
-            Set clones = shoppingcart.keySet();
-            List c = new ArrayList(clones);
+        } else {
+            List c = new ArrayList();
+            for(int i=0; i<shoppingcart.size(); i++) {
+                ShoppingCartItem item = (ShoppingCartItem)shoppingcart.get(i);
+                c.add(item.getItemid());
+            }
             
             DatabaseTransaction t = null;
             Connection conn = null;
@@ -73,21 +77,21 @@ public class ViewCartAction extends Action {
                 t = DatabaseTransaction.getInstance();
                 conn = t.requestConnection();
                 CloneManager manager = new CloneManager(conn);
-                Map found = manager.queryClonesByCloneid(c, true, true);
+                Map found = manager.queryClonesByCloneid(c, true, true, false);
                 List newShoppingcart = new ArrayList();
                 
-                Iterator iter = clones.iterator();
-                while(iter.hasNext()) {
-                    String cloneid =(String)iter.next();
-                    Clone clone = (Clone)found.get(cloneid);
-                    String quantity = (String)shoppingcart.get(cloneid);
-                    CloneInfo cloneInfo = new CloneInfo(clone);
-                    cloneInfo.setQuantity(Integer.parseInt(quantity));
+                for(int i=0; i<shoppingcart.size(); i++) {
+                    ShoppingCartItem item = (ShoppingCartItem)shoppingcart.get(i);
+                    String cloneid = item.getItemid();
+                    int quantity = item.getQuantity();
+                    CloneInfo cloneInfo = (CloneInfo)found.get(cloneid);
+                    cloneInfo.setQuantity(quantity);
+                    
                     newShoppingcart.add(cloneInfo);
                 }
                 
-                int quantity[] = ((ViewCartForm)form).getQuantity();
-                System.out.println(quantity);
+                ((ViewCartForm)form).setCloneCountList(newShoppingcart);
+                
                 request.setAttribute("cart", newShoppingcart);
                 return (mapping.findForward("success"));
             } catch (Exception ex) {
@@ -103,4 +107,4 @@ public class ViewCartAction extends Action {
         }
     }
 }
-    
+

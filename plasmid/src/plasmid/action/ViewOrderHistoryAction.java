@@ -26,6 +26,8 @@ import org.apache.struts.util.MessageResources;
 import plasmid.Constants;
 import plasmid.coreobject.*;
 import plasmid.process.*;
+import plasmid.form.ViewOrderHistoryForm;
+import plasmid.form.ChangeOrderStatusForm;
 
 /**
  *
@@ -55,8 +57,13 @@ public class ViewOrderHistoryAction extends UserAction {
     throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
         User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
+        String status = ((ViewOrderHistoryForm)form).getStatus();
+        
+        if(CloneOrder.ALL.equals(status))
+            status = null;
+        
         OrderProcessManager manager = new OrderProcessManager();
-        List orders = manager.getAllOrders(user, null);
+        List orders = manager.getAllOrders(user, status);
         
         response.setHeader("pragma", "No-Cache"); 
         response.setHeader("Expires", "-1");
@@ -74,6 +81,9 @@ public class ViewOrderHistoryAction extends UserAction {
             return mapping.findForward("success_empty");
         }
         
+        ChangeOrderStatusForm f = new ChangeOrderStatusForm();
+        f.initiateLists(orders);
+        request.getSession().setAttribute("changeOrderStatusForm", f);
         request.setAttribute(Constants.ORDERS, orders);
         return mapping.findForward("success");
     }

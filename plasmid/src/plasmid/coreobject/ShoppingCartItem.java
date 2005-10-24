@@ -6,30 +6,73 @@
 
 package plasmid.coreobject;
 
+import java.util.*;
+
 /**
  *
  * @author  DZuo
  */
 public class ShoppingCartItem {
-    private int cart;
-    private int cloneid;
+    public static final String CLONE = "Clone";
+    public static final String COLLECTION = "Collection";
+    
+    private int userid;
+    private String itemid;
+    private String type;
     private int quantity;
     
     /** Creates a new instance of ShoppingCartItem */
     public ShoppingCartItem() {
     }
     
-    public ShoppingCartItem(int cart, int cloneid, int quantity) {
-        this.cart = cart;
-        this.cloneid = cloneid;
+    public ShoppingCartItem(int userid, String itemid, int quantity, String type) {
+        this.userid = userid;
+        this.itemid = itemid;
         this.quantity = quantity;
+        this.type = type;
     }
     
-    public int getCart() {return cart;}
-    public int getCloneid() {return cloneid;}
+    public int getUserid() {return userid;}
+    public String getItemid() {return itemid;}
+    public String getType() {return type;}
     public int getQuantity() {return quantity;}
     
-    public void setCart(int cart) {this.cart = cart;}
-    public void setCloneid(int cloneid) {this.cloneid = cloneid;}
+    public void setUserid(int userid) {this.userid = userid;}
+    public void setItemid(String s) {this.itemid = s;}
+    public void setType(String s) {this.type = s;}
     public void setQuantity(int quantity) {this.quantity = quantity;}
+    
+    public static List mergeCart(List cart1, List cart2) {
+        if(cart1 == null || cart1.size() == 0) 
+            return cart2;
+        
+        if(cart2 == null || cart2.size() == 0)
+            return cart1;
+        
+        List cart = new ArrayList();
+        cart.addAll(cart1);
+        
+        for(int i=0; i<cart2.size(); i++) {
+            ShoppingCartItem item = (ShoppingCartItem)cart2.get(i);
+            addToCart(cart, item);
+        }
+        
+        return cart;
+    }
+    
+    public static void addToCart(List cart, ShoppingCartItem item) {
+        if(item == null)
+            return;
+        
+        for(int i=0; i<cart.size(); i++) {
+            ShoppingCartItem s = (ShoppingCartItem)cart.get(i);
+            if(s.getItemid().equals(item.getItemid()) && s.getType().equals(item.getType())) {
+                s.setQuantity(s.getQuantity()+item.getQuantity());
+                cart.set(i, s);
+                return;
+            }
+        }
+        cart.add(item);
+        return;
+    }
 }

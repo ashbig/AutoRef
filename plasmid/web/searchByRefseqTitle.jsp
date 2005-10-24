@@ -1,4 +1,4 @@
-<link href="plasmidstyle.css" rel="stylesheet" type="text/css"> <table width="100%" border="0">
+<table width="100%" border="0">
         <tr> 
           <td bgcolor="#6699CC" class="mainbodytexthead">Plasmid Order &gt; Search 
             Plasmids &gt; by reference sequence</td>

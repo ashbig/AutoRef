@@ -11,6 +11,7 @@ package plasmid.coreobject;
  * @author  DZuo
  */
 public class VectorFeature {
+    private int featureid;
     private String name;
     private String description;
     private int start;
@@ -22,8 +23,9 @@ public class VectorFeature {
     public VectorFeature() {
     }
     
-    public VectorFeature(String name, String description, int start,
+    public VectorFeature(int id, String name, String description, int start,
         int stop, int vectorid, String maptype) {
+            this.featureid = id;
             this.name = name;
             this.description = description;
             this.start = start;
@@ -32,6 +34,7 @@ public class VectorFeature {
             this.maptype = maptype;
     }
     
+    public int getFeatureid() {return featureid;}
     public String getName() {return name;}
     public String getDescription() {return description;}
     public int getStart() {return start;}
@@ -39,5 +42,11 @@ public class VectorFeature {
     public int getVectorid() {return vectorid;}
     public String getMaptype() {return maptype;}
     
+    public void setFeatureid(int id) {this.featureid = id;}
+    public void setName(String name) {this.name = name;}
+    public void setDescription(String s) {this.description = s;}
+    public void setStart(int i) {this.start = i;}
+    public void setStop(int i) {this.stop = i;}
+    public void setMaptype(String s) {this.maptype=s;}
     public void setVectorid(int vectorid) {this.vectorid = vectorid;}
 }

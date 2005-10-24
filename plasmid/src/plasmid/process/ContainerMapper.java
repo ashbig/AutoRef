@@ -30,7 +30,7 @@ public class ContainerMapper {
     
     public List getWorklist() {return worklist;}
     public void setWorklist(List l) {this.worklist = l;}
-
+    
     public List mapContainer(String destContainerType) throws Exception {
         WorklistGenerator g = new WorklistGenerator(worklist);
         List destLabels = new ArrayList(g.getDestContainerLabels());
@@ -70,7 +70,73 @@ public class ContainerMapper {
                 return true;
             }
         }
-         
+        
         return false;
+    }
+    
+    public List convertToTubes(Container container, Map mapping) throws Exception {
+        if(mapping == null) {
+            throw new Exception("Please provide the mapping list.");
+        }
+        
+        if(container == null) {
+            throw new Exception("container is null.");
+        }
+        
+        List samples = container.getSamples();
+        if(samples == null) {
+            throw new Exception("sample list is null.");
+        }
+        
+        List tubes = new ArrayList();
+        
+        for(int i=0; i<samples.size(); i++) {
+            Sample s = (Sample)samples.get(i);
+            int position = s.getPosition();
+            String barcode = (String)mapping.get((new Integer(position)).toString());
+            if(barcode == null) {
+                throw new Exception("Cannot find 2D tube barcode at position: "+position);
+            }
+            Container c = new Container(0, Container.TUBE, barcode, null, Location.BIOBANK, Container.getCapacity(Container.TUBE), Container.FILLED);
+            s.setContainerlabel(barcode);
+            s.setPositions(1);
+            c.addSample(s);
+            tubes.add(c);
+        }
+        
+        return tubes;
+    }
+        
+    public Container convertToPlates(List tubes, Map mapping) throws Exception {
+        if(mapping == null) {
+            throw new Exception("Please provide the mapping list.");
+        }
+        
+        if(tubes == null) {
+            throw new Exception("container is null.");
+        }        
+        
+        Container container = new Container();
+        Set keys = mapping.keySet();
+        Iterator iter = keys.iterator();
+        while(iter.hasNext()) {
+            String position = (String)iter.next();
+            String barcode = (String)mapping.get(position);
+            
+            if(TubeMap.NOTUBE.equals(barcode))
+                continue;
+            
+            for(int i=0; i<tubes.size(); i++) {
+                Container c = (Container)tubes.get(i);
+                if(barcode.equals(c.getLabel())) {
+                    Sample sample = c.getSample(1);
+                    sample.setPositions(Integer.parseInt(position));
+                    container.addSample(sample);
+                    break;
+                }
+            }
+        }
+        
+        return container;
     }
 }

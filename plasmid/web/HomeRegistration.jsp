@@ -1,5 +1,6 @@
 <%@ page language="java" %>
 <%@ page errorPage="ProcessError.do"%>
+<%@ page import="plasmid.Constants" %> 
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -9,12 +10,14 @@
 <head>
 <title>PlasmID Database</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+<META HTTP-EQUIV="Expires" CONTENT="-1">
 <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
 <jsp:include page="homeTitle.jsp" />
-<table width="800" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
+<table width="1000" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
   <tr> 
     <td width="17%" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle"> 
       <jsp:include page="menuHome.jsp" />
@@ -64,11 +67,13 @@
     </td>
   </tr>
   <tr class="formlabel"> 
-    <td width="22%" align="left" valign="baseline">Please choose your PI:</td>
+    <td width="22%" align="left" valign="baseline">Please choose your PI:<br>
+        (*PI is required for HIP member, DF/HCC member, Harvard affiliate and Other academic groups)
+    </td>
     <td width="78%" align="left" valign="baseline"> 
         <html:select property="piname" styleClass="text">
             <html:option value=""/>
-            <html:options name="pis"/>
+            <html:options collection="pis" property="nameEmail"/>
         </html:select>
     </td>
   </tr>
@@ -89,6 +94,12 @@
           </td>
         </tr>
         <tr> 
+          <td class="formlabel"> *Email:</td>
+          <td>
+             <html:text property="piemail" size="30" styleClass="text"/>
+          </td>
+        </tr>
+        <tr> 
           <td class="formlabel">*Institution:</td>
           <td>
              <html:text property="piinstitution" size="50" styleClass="text"/>
@@ -106,10 +117,11 @@
     <td width="22%" align="left" valign="baseline">Please choose the appropriate 
       group you or your PI belong to:</td>
     <td width="78%" align="left" valign="baseline">
-        <html:select property="group" styleClass="text">
+        <html:select property="group" styleClass="text" value="<%=Constants.ACADEMIC%>">
             <html:options name="groups"/>
         </html:select>
-    </td>
+        <a href="http://www.dfhcc.harvard.edu/search/members.shtml" target="_blank">check if your PI is a DF/HCC memeber</a>
+    </td>        
   </tr>
 
   <tr class="formlabel"> 
@@ -119,14 +131,14 @@
   <tr class="formlabel"> 
     <td width="22%" align="left" valign="baseline">*Please enter a password:</td>
     <td width="78%" align="left" valign="baseline"> 
-        <html:text property="password" size="30" styleClass="text"/>
+        <html:password property="password" size="30" styleClass="text"/>
     </td>
   </tr>
   <tr class="formlabel"> 
     <td width="22%" align="left" valign="baseline">*Please enter the password 
       again</td>
     <td width="78%" align="left" valign="baseline"> 
-        <html:text property="password2" size="30" styleClass="text"/>
+        <html:password property="password2" size="30" styleClass="text"/>
     </td>
   </tr>
   <tr class="formlabel"> 
@@ -142,5 +154,9 @@
   </tr>
 </table>
 <jsp:include page="footer.jsp" /></body>
+<HEAD>
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+<META HTTP-EQUIV="Expires" CONTENT="-1">
+</HEAD>
 </html>
 

@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2005-04-26 14:11:28 $
+ * $Revision: 1.1.1.1 $
+ * $Date: 2005-10-24 15:12:51 $
  * $Author: dzuo $
  *
  ******************************************************************************
@@ -44,7 +44,7 @@ import java.util.*;
  * Holds sytem level properties.
  *
  * @author     $Author: dzuo $
- * @version    $Revision: 1.1 $ $Date: 2005-04-26 14:11:28 $
+ * @version    $Revision: 1.1.1.1 $ $Date: 2005-10-24 15:12:51 $
  */
 
 public class FlexProperties {

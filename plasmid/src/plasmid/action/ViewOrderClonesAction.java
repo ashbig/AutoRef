@@ -56,7 +56,7 @@ public class ViewOrderClonesAction extends UserAction {
         User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
         int orderid = ((ViewOrderClonesForm)form).getOrderid();
         OrderProcessManager manager = new OrderProcessManager();
-        List clones = manager.getOrderClones(orderid, user);
+        List clones = manager.getOrderClones(orderid, user, false);
         
         if(clones == null) {
             if(Constants.DEBUG)
@@ -67,6 +67,7 @@ public class ViewOrderClonesAction extends UserAction {
             return (mapping.findForward("error"));
         }
         
+        request.setAttribute("orderid", new Integer(orderid));
         request.setAttribute("orderClones", clones);
         return mapping.findForward("success");
     }

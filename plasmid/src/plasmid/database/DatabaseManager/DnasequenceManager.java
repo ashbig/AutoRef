@@ -18,14 +18,13 @@ import plasmid.Constants;
  * @author  DZuo
  */
 public class DnasequenceManager extends TableManager {
-    private Connection conn;
     
     /** Creates a new instance of DnasequenceManager */
     public DnasequenceManager() {
     }
     
     public DnasequenceManager(Connection conn) {
-        this.conn = conn;
+       super(conn);
     }
     
     public boolean insertDnasequences(List sequences) {
@@ -33,8 +32,8 @@ public class DnasequenceManager extends TableManager {
             return true;
         
         String sql = "insert into dnasequence"+
-        " (sequenceid, type, referenceid)"+
-        " values(?,?,?)";
+        " (sequenceid, type, referenceid, insertid)"+
+        " values(?,?,?,?)";
         String sql2 = "insert into seqtext"+
         " (sequenceid, seqorder, seqtext)"+
         " values(?,?,?)";
@@ -45,8 +44,16 @@ public class DnasequenceManager extends TableManager {
             for(int i=0; i<sequences.size(); i++) {
                 Dnasequence seq = (Dnasequence)sequences.get(i);
                 stmt.setInt(1, seq.getSequenceid());
-                stmt.setString(2, seq.getType());
-                stmt.setInt(3, seq.getReferenceid());
+                String type = seq.getType();
+                stmt.setString(2, type);
+                if(Dnasequence.REFERENCE.equals(type)) {
+                    stmt.setInt(3, seq.getReferenceid());
+                    stmt.setString(4, null);
+                }
+                else {
+                    stmt.setString(3, null);
+                    stmt.setInt(4, seq.getInsertid());
+                }
                 
                 DatabaseTransaction.executeUpdate(stmt);
                 

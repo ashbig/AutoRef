@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2005-06-07 18:35:54 $
+ * $Revision: 1.1.1.1 $
+ * $Date: 2005-10-24 15:12:51 $
  * $Author: dzuo $
  *
  ******************************************************************************
@@ -49,7 +49,7 @@ import javax.mail.internet.*;
  * Utility class to send simple messages.
  *
  * @author     $Author: dzuo $
- * @version    $Revision: 1.1 $ $Date: 2005-06-07 18:35:54 $
+ * @version    $Revision: 1.1.1.1 $ $Date: 2005-10-24 15:12:51 $
  */
 
 public class Mailer
@@ -57,6 +57,7 @@ public class Mailer
     //public static final String FILEPATH = FlexProperties.getInstance().getProperty("tmp");
     //public final static String SMTP_HOST ="hms.harvard.edu";
     public final static String SMTP_HOST ="gate.med.harvard.edu";
+    public static final String FROM = "dongmei_zuo@hms.harvard.edu";
     
     /**
      * Utility Method to send a message

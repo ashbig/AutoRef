@@ -16,8 +16,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2005-04-26 14:07:44 $
+ * $Revision: 1.1.1.1 $
+ * $Date: 2005-10-24 15:12:51 $
  * $Author: dzuo $
  *
  ******************************************************************************
@@ -59,7 +59,7 @@ import org.apache.struts.action.*;
  * to this action to process the exception.
  *
  * @author     $Author: dzuo $
- * @version    $Revision: 1.1 $ $Date: 2005-04-26 14:07:44 $
+ * @version    $Revision: 1.1.1.1 $ $Date: 2005-10-24 15:12:51 $
  */
 
 public class ProcessErrorAction extends Action {

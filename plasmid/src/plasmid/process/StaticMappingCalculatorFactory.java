@@ -19,9 +19,9 @@ public class StaticMappingCalculatorFactory {
     public StaticMappingCalculatorFactory() {
     }
     
-    public static MappingCalculator generateMappingCalculator(String type, List src, List dest, String cType, String sType) {
+    public static MappingCalculator generateMappingCalculator(String type, List src, List dest, String sType) {
         if(DIRECT_MAPPING.equals(type))
-            return new DirectMappingCalculator(src, dest, cType, sType);
+            return new DirectMappingCalculator(src, dest, sType);
         
         return null;
     }

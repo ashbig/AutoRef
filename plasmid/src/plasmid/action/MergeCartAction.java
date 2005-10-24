@@ -31,7 +31,7 @@ import plasmid.coreobject.ShoppingCartItem;
  *
  * @author  DZuo
  */
-public class MergeCartAction extends Action {
+public class MergeCartAction extends UserAction {
     
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
@@ -48,7 +48,7 @@ public class MergeCartAction extends Action {
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet exception occurs
      */
-    public ActionForward perform(ActionMapping mapping,
+    public ActionForward userPerform(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
     HttpServletResponse response)
@@ -59,9 +59,11 @@ public class MergeCartAction extends Action {
         List currentCart = (List)request.getSession().getAttribute(Constants.CART);
         List saveCart = (List)request.getSession().getAttribute("databaseCart");
         request.getSession().removeAttribute("databaseCart");
+        request.getSession().setAttribute(Constants.CART_STATUS, Constants.UPDATED);
         
         if(merge.equals("discartCurrentCart")) {
             request.getSession().setAttribute(Constants.CART, saveCart);
+            request.getSession().setAttribute(Constants.CART_STATUS, Constants.SAVED);
         } else if(merge.equals("merge")) {
             List newCart = ShoppingCartItem.mergeCart(currentCart, saveCart);
             request.getSession().setAttribute(Constants.CART, newCart);

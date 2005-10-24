@@ -23,9 +23,7 @@ public class CloneVector {
     private String type;
     private int size;
     private String mapfilename;
-    private String mapfilepath;
     private String seqfilename;
-    private String seqfilepath;
     private String comments;
     
     private List synonyms;
@@ -40,8 +38,7 @@ public class CloneVector {
     }
     
     public CloneVector(int vectorid, String name, String description, String form, String type,
-        int size, String mapfilename, String mapfilepath, String seqfilename, String seqfilepath,
-        String comments) {
+        int size, String mapfilename,  String seqfilename, String comments) {
             this.vectorid = vectorid;
             this.name = name;
             this.description = description;
@@ -49,9 +46,7 @@ public class CloneVector {
             this.type = type;
             this.size = size;
             this.mapfilename = mapfilename;
-            this.mapfilepath = mapfilepath;
             this.seqfilename = seqfilename;
-            this.seqfilepath = seqfilepath;
             this.comments = comments;
     }
     
@@ -62,10 +57,17 @@ public class CloneVector {
     public String getType() {return type;}
     public int getSize() {return size;}
     public String getMapfilename() {return mapfilename;}
-    public String getMapfilepath() {return mapfilepath;}
     public String getSeqfilename() {return seqfilename;}
-    public String getSeqfilepath() {return seqfilepath;}
     public String getComments() {return comments;}
+    public void setVectorid(int id) {this.vectorid = id;}
+    public void setName(String s) {this.name = s;}
+    public void setDescription(String s) {this.description = s;}
+    public void setForm(String s) {this.form = s;}
+    public void setType(String s) {this.type = s;}
+    public void setSize(int i) {this.size = i;}
+    public void setMapfilename(String s) {this.mapfilename=s;}
+    public void setSeqfilename(String s) {this.seqfilename=s;}
+    public void setComments(String s) {this.comments=s;}
     
     public List getSynonyms() {return synonyms;}
     public void setSynonyms(List l) {this.synonyms = l;}
@@ -87,12 +89,12 @@ public class CloneVector {
     
     public String getSynonymString() {
         StringConvertor sc = new StringConvertor();
-        return sc.converFromListToString(synonyms);
+        return sc.convertFromListToString(synonyms);
     }
     
     public String getPropertyString() {
         StringConvertor sc = new StringConvertor();
-        return sc.converFromListToString(property);
+        return sc.convertFromListToString(property);
     }
     
     public static void main(String args[]) {

@@ -11,9 +11,11 @@ package plasmid.coreobject;
  * @author  DZuo
  */
 public class CloneGrowth {
+    public static final String YES = "Y";
+
     private int cloneid;
     private int growthid;
-    private String isrecommened;
+    private String isrecommended;
     
     /** Creates a new instance of CloneGrowth */
     public CloneGrowth() {
@@ -22,13 +24,14 @@ public class CloneGrowth {
     public CloneGrowth(int cloneid, int growthid, String isrecommended) {
         this.cloneid=cloneid;
         this.growthid=growthid;
-        this.isrecommened=isrecommened;
+        this.isrecommended=isrecommended;
     }
     
     public int getCloneid() {return cloneid;}
     public int getGrowthid() {return growthid;}
-    public String getIsrecommended() {return isrecommened;}
+    public String getIsrecommended() {return isrecommended;}
     
     public void setCloneid(int cloneid) {this.cloneid=cloneid;}
     public void setGrowthid(int growthid) {this.growthid=growthid;}
+    public void setIsrecommended(String s) {this.isrecommended = s;}
 }

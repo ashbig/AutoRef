@@ -30,4 +30,17 @@ public class CloneSelection {
     public String getMarker() {return marker;}
     
     public void setCloneid(int id) {this.cloneid = id;}
+    public void setHosttype(String s) {this.hosttype = s;}
+    public void setMarker(String s) {this.marker = s;}
+    
+    public int compareTo(CloneSelection s) {
+        String type = s.getHosttype();
+        
+        if(this.hosttype.compareTo(type) == 0) {
+            String m = s.getMarker();
+            return (this.marker.compareTo(m));
+        } else {
+            return (this.hosttype.compareTo(type));
+        }
+    }
 }

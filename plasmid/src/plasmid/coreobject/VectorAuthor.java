@@ -15,6 +15,7 @@ public class VectorAuthor {
     private int authorid;
     private String type;
     private String date;
+    private String name;
     
     /** Creates a new instance of VectorAuthor */
     public VectorAuthor() {
@@ -26,12 +27,24 @@ public class VectorAuthor {
         this.type = type;
         this.date = date;
     }
+        
+    public VectorAuthor(int vectorid, int authorid, String type, String date, String name) {
+        this.vectorid = vectorid;
+        this.authorid = authorid;
+        this.type = type;
+        this.date = date;
+        this.name = name;
+    }
     
     public int getVectorid() {return vectorid;}
     public int getAuthorid() {return authorid;}
     public String getType() {return type;}
     public String getDate() {return date;}
+    public String getName() {return name;}
     
     public void setVectorid(int vectorid) {this.vectorid = vectorid;}
     public void setAuthorid(int authorid) {this.authorid = authorid;}
+    public void setType(String s) {this.type = s;}
+    public void setDate(String s) {this.date = s;}
+    public void setName(String s) {this.name = s;}
 }

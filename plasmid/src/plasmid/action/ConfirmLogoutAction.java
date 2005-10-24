@@ -24,7 +24,7 @@ import plasmid.coreobject.*;
  *
  * @author  DZuo
  */
-public class ConfirmLogoutAction extends Action {
+public class ConfirmLogoutAction extends UserAction {
     
     /**
      * Does the real work for the perform method which must be overriden by the
@@ -38,18 +38,19 @@ public class ConfirmLogoutAction extends Action {
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet exception occurs
      */
-    public ActionForward perform(ActionMapping mapping,
+    public ActionForward userPerform(ActionMapping mapping,
     ActionForm form, HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
         List cart = (List)request.getSession().getAttribute(Constants.CART);
         String confirm = ((LogoutForm)form).getConfirm();
-        
+     
         if(confirm.equals("Yes")) {
             User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
             DatabaseTransaction t = null;
             Connection conn = null;
             try {
+                t = DatabaseTransaction.getInstance();
                 conn = t.requestConnection();
             } catch (Exception ex) {
                 if(Constants.DEBUG) {
@@ -73,7 +74,7 @@ public class ConfirmLogoutAction extends Action {
                 saveErrors(request, errors);
                 return mapping.findForward("error");
             }
-            if(!manager.addShoppingCart(cart)) {
+            if(!manager.addShoppingCart(user.getUserid(), cart)) {
                 DatabaseTransaction.rollback(conn);
                 if(Constants.DEBUG) {
                     System.out.println("Cannot add shopping cart to user: "+user.getUserid());

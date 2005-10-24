@@ -25,7 +25,7 @@ public class PlateImporter {
         this.manager = new PlateManager(conn);
     }
     
-    public void importPlateAndSample(ImportTable table) throws Exception {
+    public void importPlateAndSample(ImportTable table, Map cloneidmap) throws Exception {
         DefTableManager m = new DefTableManager();
         int containerid = m.getMaxNumber("containerheader", "containerid", DatabaseTransaction.getInstance());
         if(containerid == -1) {
@@ -42,10 +42,9 @@ public class PlateImporter {
         String currentLabel = null;
         String lastLabel = null;
         Container c = null;
-        for(int n=0; n<contents.size(); n++) {            
+        for(int n=0; n<contents.size(); n++) {
             List row = (List)contents.get(n);
             Sample currentSample = null;
-            
             for(int i=0; i<columns.size(); i++) {
                 String columnName = (String)columns.get(i);
                 String columnInfo = (String)row.get(i);
@@ -54,13 +53,15 @@ public class PlateImporter {
                     if(!currentLabel.equals(lastLabel)) {
                         c = new Container();
                         c.setContainerid(containerid);
-                        c.setType(Container.PLATE_96);
+                        c.setType(Container.COSTAR_RD);
+                        c.setCapacity(Container.getCapacity(Container.COSTAR_RD));
                         c.setLocation(Location.FREEZER);
                         c.setLabel(columnInfo);
                         c.setOricontainerid(columnInfo);
+                        c.setStatus(Container.FILLED);
                         c.initiateSamples();
                         
-                        for(int j=0; j<c.getSize(); j++) {
+                        for(int j=0; j<Container.getCapacity(c.getType()); j++) {
                             Sample s = new Sample();
                             s.setSampleid(sampleid);
                             s.setType(Sample.EMPTY);
@@ -71,7 +72,7 @@ public class PlateImporter {
                             c.addSample(s);
                             sampleid++;
                         }
-                            
+                        
                         plates.add(c);
                         lastLabel = currentLabel;
                         containerid++;
@@ -81,13 +82,17 @@ public class PlateImporter {
                     int p = Integer.parseInt(columnInfo);
                     currentSample = c.getSample(p);
                     currentSample.setType(Sample.ARCHIVE_GLYCEROL);
-                    currentSample.setPositions(p);                    
+                    currentSample.setPositions(p);
                     
                 }
                 if("cloneid".equalsIgnoreCase(columnName)) {
-                    currentSample.setCloneid(Integer.parseInt(columnInfo));
+                    if(cloneidmap == null) {
+                        currentSample.setCloneid(Integer.parseInt(columnInfo));
+                    } else {
+                        currentSample.setCloneid(((Integer)cloneidmap.get(columnInfo)).intValue());
+                    }
                 }
-            }           
+            }
         }
         
         if(!manager.insertPlateAndSample(plates)) {

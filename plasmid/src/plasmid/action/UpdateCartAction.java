@@ -26,9 +26,10 @@ import org.apache.struts.util.MessageResources;
 import plasmid.database.*;
 import plasmid.database.DatabaseManager.*;
 import plasmid.Constants;
-import plasmid.coreobject.Clone;
+import plasmid.coreobject.*;
 import plasmid.query.coreobject.CloneInfo;
 import plasmid.form.ViewCartForm;
+import plasmid.process.OrderProcessManager;
 
 /**
  *
@@ -58,64 +59,57 @@ public class UpdateCartAction extends Action {
         // get the parameters specified by the customer
         ActionErrors errors = new ActionErrors();
         
-        Map shoppingcart = (Map)request.getSession().getAttribute(Constants.CART);
+        List shoppingcart = (List)request.getSession().getAttribute(Constants.CART);
         List cloneCountList = ((ViewCartForm)form).getCloneCountList();
+        String ret = ((ViewCartForm)form).getSubmitButton();
+        request.getSession().setAttribute(Constants.CART_STATUS, Constants.UPDATED);
         
-        if(shoppingcart == null || shoppingcart.size() == 0 || cloneCountList.size() == 0) {
-            shoppingcart = new HashMap();
+        if(!("Save Cart".equals(ret)) && ((shoppingcart == null || shoppingcart.size() == 0 || cloneCountList.size() == 0))) {
+            shoppingcart = new ArrayList();
             request.getSession().setAttribute(Constants.CART, shoppingcart);
             return (mapping.findForward("success_empty"));
         } else {
-            Map shoppingcartcopy = new HashMap(shoppingcart);
-            Set clones = shoppingcartcopy.keySet();
-            List c = new ArrayList(clones);
+            List shoppingcartCopy = new ArrayList();
+            List c = new ArrayList();
+            for(int i=0; i<shoppingcart.size(); i++) {
+                ShoppingCartItem item = (ShoppingCartItem)shoppingcart.get(i);
+                c.add(item.getItemid());
+            }
             
-            DatabaseTransaction t = null;
-            Connection conn = null;
-            try {
-                t = DatabaseTransaction.getInstance();
-                conn = t.requestConnection();
-                CloneManager manager = new CloneManager(conn);
-                Map found = manager.queryClonesByCloneid(c, true, true);
-                List newShoppingcart = new ArrayList();
-                
-                Iterator iter = clones.iterator();
-                int i=0;
-                while(iter.hasNext()) {
-                    String cloneid =(String)iter.next();
-                    String count = (String)cloneCountList.get(i);
-                    if(Integer.parseInt(count) == 0) {
-                        shoppingcart.remove(cloneid);
-                    } else {
-                        Clone clone = (Clone)found.get(cloneid);
-                        CloneInfo cloneInfo = new CloneInfo(clone);
-                        cloneInfo.setQuantity(Integer.parseInt(count));
-                        shoppingcart.put(cloneid, count);
-                        newShoppingcart.add(cloneInfo);
-                    }
-                    i++;
-                }
-                
+            User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
+            OrderProcessManager m = new OrderProcessManager();
+            
+            List newShoppingcart = m.updateShoppingCart(c, shoppingcart, cloneCountList, shoppingcartCopy);
+            if(newShoppingcart == null && !("Save Cart".equals(ret))) {
+                errors.add(ActionErrors.GLOBAL_ERROR,
+                new ActionError("error.database.error","Error occured while updating shopping cart."));
+                return (mapping.findForward("error"));
+            } else if(newShoppingcart.size() == 0) {
+                shoppingcart = new ArrayList();
+                request.getSession().setAttribute(Constants.CART, shoppingcart);
+                return (mapping.findForward("success_empty"));
+            } else {
                 ((ViewCartForm)form).setCloneCountList(newShoppingcart);
                 request.setAttribute("cart", newShoppingcart);
-                request.getSession().setAttribute(Constants.CART, shoppingcart);
-                
-                String ret = ((ViewCartForm)form).getSubmitButton();
-                if("Check Out".equals(ret)) {
-                    return (mapping.findForward("success_checkout"));
+                request.getSession().setAttribute(Constants.CART, shoppingcartCopy);
+            }
+            
+            if("Check Out".equals(ret)) {
+                return (mapping.findForward("success_checkout"));
+            }
+            if("Save Cart".equals(ret)) {
+                if(!m.saveShoppingCart(user, shoppingcartCopy)) {
+                    errors.add(ActionErrors.GLOBAL_ERROR,
+                    new ActionError("error.database.error","Error occured while saving shopping cart to the user account."));
+                    return (mapping.findForward("error"));
                 }
                 
-                return (mapping.findForward("success"));
-            } catch (Exception ex) {
-                if(Constants.DEBUG)
-                    System.out.println(ex);
-                
-                errors.add(ActionErrors.GLOBAL_ERROR,
-                new ActionError("error.database.error","Database error occured."));
-                return (mapping.findForward("error"));
-            } finally {
-                DatabaseTransaction.closeConnection(conn);
+                request.getSession().setAttribute(Constants.CART_STATUS, Constants.SAVED);
+                return (mapping.findForward("success_save"));
             }
+            
+            request.getSession().setAttribute(Constants.CART_STATUS, Constants.UPDATED);
+            return (mapping.findForward("success"));
         }
     }
 }

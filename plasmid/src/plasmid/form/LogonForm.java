@@ -27,7 +27,7 @@ public class LogonForm extends ActionForm {
     /**
      * The useremail.
      */
-    private String useremail = null;
+    private String email = null;
 
 
 
@@ -57,25 +57,25 @@ public class LogonForm extends ActionForm {
 
 
     /**
-     * Return the useremail.
+     * Return the email.
      *
-     * @return useremail
+     * @return email
      */
-    public String getUseremail() {
+    public String getEmail() {
 
-	return (this.useremail);
+	return (this.email);
 
     }
 
 
     /**
-     * Set the useremail.
+     * Set the email.
      *
-     * @param useremail The new useremail
+     * @param email The new email
      */
-    public void setUseremail(String useremail) {
+    public void setEmail(String email) {
 
-        this.useremail = useremail;
+        this.email = email;
 
     }
 
@@ -92,7 +92,7 @@ public class LogonForm extends ActionForm {
     public void reset(ActionMapping mapping, HttpServletRequest request) {
 
         this.password = null;
-        this.useremail = null;
+        this.email = null;
 
     }
 
@@ -111,8 +111,8 @@ public class LogonForm extends ActionForm {
                                  HttpServletRequest request) {
 
         ActionErrors errors = new ActionErrors();
-        if ((useremail == null) || (useremail.length() < 1))
-            errors.add("username", new ActionError("error.username.required"));
+        if ((email == null) || (email.length() < 1))
+            errors.add("email", new ActionError("error.email.required"));
         if ((password == null) || (password.length() < 1))
             errors.add("password", new ActionError("error.password.required"));
 

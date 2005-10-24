@@ -11,24 +11,24 @@ import java.util.*;
 
 import plasmid.coreobject.*;
 import plasmid.database.*;
+import plasmid.Constants;
 
 /**
  *
  * @author  DZuo
  */
 public class RefseqManager extends TableManager {
-    private Connection conn;
     
     /** Creates a new instance of RefseqManager */
     public RefseqManager(Connection conn) {
-        this.conn = conn;
+       super(conn);
     }
     
     public boolean insertRefseqs(List seqs) {
         if(seqs == null)
             return true;
         
-        String sql = "inset into referencesequence"+
+        String sql = "insert into referencesequence"+
                     " (refseqid,type,name,description,cdsstart,cdsstop,species)"+
                     " values(?,?,?,?,?,?,?)";
         try {
@@ -46,6 +46,7 @@ public class RefseqManager extends TableManager {
                 
                 DatabaseTransaction.executeUpdate(stmt);
             }
+            DatabaseTransaction.closeStatement(stmt);
         } catch (Exception ex) {
             handleError(ex, "Error occured while inserting into REFERENCESEQUENCE table");
             return false;
@@ -57,7 +58,7 @@ public class RefseqManager extends TableManager {
         if(seqs == null)
             return true;
         
-        String sql = "inset into insertrefseq"+
+        String sql = "insert into insertrefseq"+
                     " (refseqid,insertid,startonrefseq,endonrefseq,hasdiscrepancy,discrepancy,comments)"+
                     " values(?,?,?,?,?,?,?)";
         try {
@@ -75,6 +76,7 @@ public class RefseqManager extends TableManager {
                 
                 DatabaseTransaction.executeUpdate(stmt);
             }
+            DatabaseTransaction.closeStatement(stmt);
         } catch (Exception ex) {
             handleError(ex, "Error occured while inserting into INSERTREFSEQ table");
             return false;
@@ -86,7 +88,7 @@ public class RefseqManager extends TableManager {
         if(types == null)
             return true;
         
-        String sql = "inset into refseqnametype"+
+        String sql = "insert into refseqnametype"+
                     " (refseqtype,genusspecies,nametype,use)"+
                     " values(?,?,?,?)";
         try {
@@ -101,6 +103,7 @@ public class RefseqManager extends TableManager {
                 
                 DatabaseTransaction.executeUpdate(stmt);
             }
+            DatabaseTransaction.closeStatement(stmt);
         } catch (Exception ex) {
             handleError(ex, "Error occured while inserting into REFSEQNAMETYPE table");
             return false;
@@ -112,7 +115,7 @@ public class RefseqManager extends TableManager {
         if(names == null)
             return true;
         
-        String sql = "inset into refseqname"+
+        String sql = "insert into refseqname"+
                     " (refid,nametype,namevalue,nameurl)"+
                     " values(?,?,?,?)";
         try {
@@ -127,10 +130,98 @@ public class RefseqManager extends TableManager {
                 
                 DatabaseTransaction.executeUpdate(stmt);
             }
+            DatabaseTransaction.closeStatement(stmt);
         } catch (Exception ex) {
             handleError(ex, "Error occured while inserting into REFSEQNAME table");
             return false;
         }
         return true;
     }   
+    
+    public List queryNameTypes(String species, String seqType, String use) {
+        String sql = "select distinct nametype"+
+                    " from refseqnametype"+
+                    " where genusspecies=?"+
+                    " and refseqtype=?"+
+                    " and use in (?,?)";
+        List types = new ArrayList();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, species);
+            stmt.setString(2, seqType);
+            stmt.setString(3, use);
+            stmt.setString(4, RefseqNameType.BOTH);
+            
+            rs = DatabaseTransaction.executeQuery(stmt);
+            while(rs.next()) {
+                String type = rs.getString(1);
+                types.add(type);
+            }
+        } catch (Exception ex) {
+            handleError(ex, "Error occured while querying REFSEQNAMETYPE table.");
+            return null;
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+        }
+        
+        return types;
+    }
+        
+    public List queryNameTypes(String species, String use) {
+        String sql = "select distinct nametype"+
+                    " from refseqnametype"+
+                    " where genusspecies=?"+
+                    " and use in (?,?)";
+        List types = new ArrayList();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, species);
+            stmt.setString(2, use);
+            stmt.setString(3, RefseqNameType.BOTH);
+            
+            rs = DatabaseTransaction.executeQuery(stmt);
+            while(rs.next()) {
+                String type = rs.getString(1);
+                types.add(type);
+            }
+        } catch (Exception ex) {
+            handleError(ex, "Error occured while querying REFSEQNAMETYPE table.");
+            return null;
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+        }
+        
+        return types;
+    }
+    
+    /**
+     * Find the reference sequenceid from the database for a given nametype and namevalue.
+     *
+     * @param nametype For human gene, nametype is GI.
+     * @param namevalue For human gene, namevalue is GI number.
+     *
+     * @return Return the reference sequence ID (primary key). Return 0 if no reference sequence found.
+     * @throws Exception
+     */
+    public int findRefseq(String nametype, String namevalue) throws Exception {
+        String sql = "select refid from refseqname where nametype=? and namevalue=?";
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        stmt.setString(1, nametype);
+        stmt.setString(2, namevalue);
+        ResultSet rs = DatabaseTransaction.executeQuery(stmt);
+        int refseqid = 0;
+        if(rs.next()) {
+            refseqid = rs.getInt(1);
+        }
+        DatabaseTransaction.closeResultSet(rs);
+        DatabaseTransaction.closeStatement(stmt);
+        
+        return refseqid;
+    }
 }

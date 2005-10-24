@@ -33,7 +33,6 @@ public class PublicationImporter {
         int id = m.getMaxNumber("publication", "publicationid", DatabaseTransaction.getInstance());
         if(id == -1) {
             throw new Exception("Cannot get publicationid from publication table.");
-            return;
         }
         
         List publications = new ArrayList();
@@ -41,13 +40,13 @@ public class PublicationImporter {
         List contents = table.getColumnInfo();
         for(int n=0; n<contents.size(); n++) {
             Publication p = new Publication();
+            p.setPublicationid(id);
             List row = (List)contents.get(n);
             for(int i=0; i<columns.size(); i++) {
                 String columnName = (String)columns.get(i);
                 String columnInfo = (String)row.get(i);
                 if("publicationid".equalsIgnoreCase(columnName)) {
                     idmap.put(columnInfo, new Integer(id));
-                    p.setPublicationid(id);
                 }
                 if("title".equalsIgnoreCase(columnName))
                     p.setTitle(columnInfo);
@@ -60,7 +59,6 @@ public class PublicationImporter {
         
         if(!manager.insertPublications(publications)) {
             throw new Exception("Error occured while inserting into PUBLICATION table.");
-            return;
         }
     }   
 }

@@ -11,8 +11,12 @@ package plasmid.coreobject;
  * @author  DZuo
  */
 public class UserAddress {
+    public static final String SHIPPING = "Shipping Address";
+    public static final String BILLING = "Billing Address";
+    
     private int userid;
     private String type;
+    private String name;
     private String organization;
     private String addressline1;
     private String addressline2;
@@ -26,7 +30,7 @@ public class UserAddress {
     }
     
     public UserAddress(int userid,String type,String organization,String addressline1,
-    String addressline2,String city, String state, String zipcode,String country) {
+    String addressline2,String city, String state, String zipcode,String country,String name) {
         this.userid = userid;
         this.type = type;
         this.organization = organization;
@@ -36,6 +40,7 @@ public class UserAddress {
         this.state = state;
         this.zipcode = zipcode;
         this.country = country;
+        this.name = name;
     }
     
     public int getUserid() {return userid;}
@@ -47,6 +52,7 @@ public class UserAddress {
     public String getState() {return state;}
     public String getZipcode() {return zipcode;}
     public String getCountry() {return country;}
+    public String getName() {return name;}
     
     public void setUserid(int id) {this.userid = id;}
     public void setType(String s) {this.type = s;}
@@ -57,4 +63,5 @@ public class UserAddress {
     public void setState(String s) {this.state = s;}
     public void setZipcode(String s) {this.zipcode = s;}
     public void setCountry(String s) {this.country = s;}
+    public void setName(String s) {this.name = s;}
 }

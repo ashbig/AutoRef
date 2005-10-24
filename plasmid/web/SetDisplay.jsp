@@ -14,17 +14,21 @@
 
 <body>
 <jsp:include page="orderTitle.jsp" />
-<table width="800" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
+<table width="1000" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
   <tr> 
     <td width="17%" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle"> 
       <jsp:include page="menu.jsp" />
 	</td>
     <td width="83%" align="left" valign="top">
 	<jsp:include page="searchByRefseqTitle.jsp" />
-      <html:form action="SetDisplay.do" enctype="multipart/form-data">
+      <html:form action="SetDisplay.do">
+<input type="hidden" name="displayPage" value="<bean:write name="displayPage"/>">
+        <html:hidden property="species"/>
+        <html:hidden property="refseqType"/>
+
 <table width="100%" height="58" border="0" align="center">
 <tr>
-    <td class="alertheader">We found <bean:write name="numOfFound"/> clones for your search. You can limit your 
+    <td class="alertheader">We found <bean:write name="totalCount"/> clones for your search. You can limit your 
       search by choosing the following criteria or view all of them by pressing 
       the button.</td>
   </tr>
@@ -52,38 +56,7 @@
     <td>&nbsp;</td>
     <td>&nbsp;</td>
   </tr>
-  <tr> 
-    <td colspan="6" class="tableheader">Choose insert format</td>
-  </tr>
-  <tr> 
-    <td>&nbsp;</td>
-    <td class="underbullet"><html:checkbox property="fusion"/>
-      Fusion </td>
-    <td class="underbullet"><html:checkbox property="closed"/>
-      Closed </td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-  </tr>
-  <tr> 
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td colspan="3">&nbsp;</td>
-  </tr>
-  <tr> 
-    <td colspan="6" class="tableheader">Choose selectable marker</td>
-  </tr>
-  <tr> 
-    <td>&nbsp;</td>
-    <td><html:select property="marker">
-            <html:options name="markers"/>
-        </html:select></td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-  </tr>
+
   <tr> 
     <td>&nbsp;</td>
     <td>&nbsp;</td>
@@ -92,6 +65,7 @@
     <td>&nbsp;</td>
     <td>&nbsp;</td>
   </tr>
+<!--
   <tr> 
     <td colspan="6" class="tableheader">Choose vector</td>
   </tr>
@@ -144,6 +118,7 @@
     <td>&nbsp;</td>
     <td>&nbsp;</td>
   </tr>
+-->
   <tr> 
     <td>&nbsp;</td>
     <td><form name="form4" method="post" action="">

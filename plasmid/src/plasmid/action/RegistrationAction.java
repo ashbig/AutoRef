@@ -65,7 +65,8 @@ public class RegistrationAction extends Action {
         String phone = ((RegistrationForm)form).getPhone();
         String institution = ((RegistrationForm)form).getInstitution();
         String department = ((RegistrationForm)form).getDepartment();
-        String piname = ((RegistrationForm)form).getPiname();
+        String pi = ((RegistrationForm)form).getPiname();
+        String piemail = ((RegistrationForm)form).getPiemail();
         String pifirstname = ((RegistrationForm)form).getPifirstname();
         String pilastname = ((RegistrationForm)form).getPilastname();
         String piinstitution = ((RegistrationForm)form).getPiinstitution();
@@ -74,22 +75,7 @@ public class RegistrationAction extends Action {
         String password = ((RegistrationForm)form).getPassword();
         String password2 = ((RegistrationForm)form).getPassword2();
         String forward = ((RegistrationForm)form).getForward();
-        /**
-         * request.setAttribute("firstname", firstname);
-         * request.setAttribute("lastname", lastname);
-         * request.setAttribute("email", email);
-         * request.setAttribute("phone", phone);
-         * request.setAttribute("institution", institution);
-         * request.setAttribute("department", department);
-         * request.setAttribute("piname", piname);
-         * request.setAttribute("pifirstname", pifirstname);
-         * request.setAttribute("pilastname", pilastname);
-         * request.setAttribute("piinstitution", piinstitution);
-         * request.setAttribute("pidepartment", pidepartment);
-         * request.setAttribute("group", group);
-         * request.setAttribute("password", password);
-         * request.setAttribute("password2", password2);
-         */
+        
         DatabaseTransaction t = null;
         Connection conn = null;
         try {
@@ -127,26 +113,36 @@ public class RegistrationAction extends Action {
             return mapping.findForward("error");
         }
         
-        if(piname == null || piname.trim().length() < 1) {
-            if(manager.piExist(pifirstname,pilastname)) {
-                errors.add(ActionErrors.GLOBAL_ERROR,
-                new ActionError("error.pi.exist"));
-                saveErrors(request, errors);
-                return (new ActionForward(mapping.getInput()));
+        String pname = null;
+        String pemail = null;
+        if(pi == null || pi.trim().length() < 1) {
+            if(group.equals(User.HIP) || group.equals(User.DFHCC) || group.equals(User.HARVARD) || group.equals(User.ACADEMIC)) {
+                if(manager.piExist(pifirstname,pilastname,piemail)) {
+                    errors.add(ActionErrors.GLOBAL_ERROR,
+                    new ActionError("error.pi.exist"));
+                    saveErrors(request, errors);
+                    return (new ActionForward(mapping.getInput()));
+                }
+                
+                pname = pilastname.toUpperCase()+", "+pifirstname;
+                pemail = piemail;
+                PI p = new PI(pname, pifirstname, pilastname, piinstitution, pidepartment,pemail);
+                if(!manager.insertPI(p)) {
+                    DatabaseTransaction.rollback(conn);
+                    errors.add(ActionErrors.GLOBAL_ERROR,
+                    new ActionError(manager.getErrorMessage()));
+                    saveErrors(request, errors);
+                    return mapping.findForward("error");
+                }
             }
-            
-            piname = pilastname.toUpperCase()+", "+pifirstname;
-            PI pi = new PI(piname, pifirstname, pilastname, piinstitution, pidepartment);
-            if(!manager.insertPI(pi)) {
-                DatabaseTransaction.rollback(conn);
-                errors.add(ActionErrors.GLOBAL_ERROR,
-                new ActionError(manager.getErrorMessage()));
-                saveErrors(request, errors);
-                return mapping.findForward("error");
-            }
+        } else {
+            int indexLeft = pi.indexOf("(");
+            int indexRight = pi.indexOf(")");
+            pname = pi.substring(0, indexLeft).trim();
+            pemail= pi.substring(indexLeft+1, indexRight);
         }
         
-        User user = new User(id,firstname,lastname,email,phone,institution,department,null,piname,group,password);
+        User user = new User(id,firstname,lastname,email,phone,institution,department,null,pname,group,password,User.EXTERNAL,pemail);
         if(!manager.insertUser(user)) {
             DatabaseTransaction.rollback(conn);
             errors.add(ActionErrors.GLOBAL_ERROR,

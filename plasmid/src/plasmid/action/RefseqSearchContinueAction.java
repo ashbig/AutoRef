@@ -27,7 +27,7 @@ import plasmid.database.*;
 import plasmid.database.DatabaseManager.*;
 import plasmid.Constants;
 import plasmid.form.RefseqSearchForm;
-import plasmid.coreobject.RefseqNameType;
+import plasmid.coreobject.*;
 import plasmid.util.StringConvertor;
 import plasmid.query.handler.*;
 
@@ -60,24 +60,89 @@ public class RefseqSearchContinueAction extends Action {
         // get the parameters specified by the customer
         ActionErrors errors = new ActionErrors();
         
+        request.getSession().removeAttribute("directFounds");
+        request.getSession().removeAttribute("numOfDirectFound");
+        request.getSession().setAttribute("display", "symbol");
+        
         String species = ((RefseqSearchForm)form).getSpecies();
         String refseqType = ((RefseqSearchForm)form).getRefseqType();
         String searchType = ((RefseqSearchForm)form).getSearchType();
         String searchString = ((RefseqSearchForm)form).getSearchString();
+        boolean cdna = ((RefseqSearchForm)form).getCdna();
+        boolean shrna = ((RefseqSearchForm)form).getShrna(); 
+        boolean genomicfragment = ((RefseqSearchForm)form).getGenomicfragment();  
+        int pagesize = ((RefseqSearchForm)form).getPagesize();
+        int page = ((RefseqSearchForm)form).getPage();
+
+        List clonetypes = new ArrayList();
+        if(cdna)
+            clonetypes.add(Clone.CDNA);
+        if(shrna)
+            clonetypes.add(Clone.SHRNA);
+        if(genomicfragment)
+            clonetypes.add(Clone.GENOMIC_FRAGMENT);
+        
+        User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
+        List restrictions = new ArrayList();
+        restrictions.add(Clone.NO_RESTRICTION);
+        if(user != null) {
+            List ress = UserManager.getUserRestrictions(user);
+            restrictions.addAll(ress);
+        } 
         
         request.setAttribute("species", species);
         request.setAttribute("refseqType", refseqType);
+        request.setAttribute("displayPage", "indirect");
+        request.setAttribute("pagesize", new Integer(pagesize));
+        request.setAttribute("page",  new Integer(page));
         
         StringConvertor sc = new StringConvertor();
         List searchList = sc.convertFromStringToList(searchString, " \t\n\r\f");
-        System.out.println("searchList: "+searchList);
+
         if(searchList.size() == 0) {
             errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.searchstring.invalid"));
             saveErrors(request, errors);
             return (new ActionForward(mapping.getInput()));
         }
         
-        GeneQueryHandler handler = StaticQueryHandlerFactory.makeGeneQueryHandler(searchType, searchList);
+        int totalCount = 0;
+        GeneQueryHandler handler = null;
+        List directFoundList = null;
+       
+        if(GeneQueryHandler.GENBANK.equals(searchType) || GeneQueryHandler.GI.equals(searchType)) {
+            request.getSession().setAttribute("display", "genbank");
+            request.setAttribute("displayPage", "direct");
+            
+            if(GeneQueryHandler.GENBANK.equals(searchType))
+                handler = StaticQueryHandlerFactory.makeGeneQueryHandler(GeneQueryHandler.DIRECT_GENBANK, searchList);
+            else
+                handler = StaticQueryHandlerFactory.makeGeneQueryHandler(GeneQueryHandler.DIRECT_GI, searchList);
+            
+            if(handler == null) {
+                errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.query.notfound"));
+                saveErrors(request, errors);
+                return (mapping.findForward("error"));
+            }
+            
+            try {
+                handler.doQuery(restrictions, clonetypes);
+                directFoundList = handler.convertFoundToCloneinfo();
+                searchList = handler.getNofound();
+                totalCount = totalCount+handler.getFoundCloneCount();
+                
+                request.getSession().setAttribute("directFounds", directFoundList);
+                request.getSession().setAttribute("numOfDirectFound", new Integer(handler.getFoundCloneCount()));
+            } catch (Exception ex) {
+                if(Constants.DEBUG)
+                    System.out.println(ex);
+                
+                errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.query.failed"));
+                saveErrors(request, errors);
+                return (mapping.findForward("error"));
+            }
+        }
+        
+        handler = StaticQueryHandlerFactory.makeGeneQueryHandler(searchType, searchList);
         if(handler == null) {
             errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.query.notfound"));
             saveErrors(request, errors);
@@ -85,23 +150,18 @@ public class RefseqSearchContinueAction extends Action {
         }
         
         try {
-            handler.doQuery();
-            DatabaseTransaction t = DatabaseTransaction.getInstance();
-            DefTableManager m = new DefTableManager();
-            List markers = m.getVocabularies("marker", t);
-            markers.add("All");
+            handler.doQuery(restrictions, clonetypes);
             
-            Map founds = handler.getFound();
+            List founds = handler.convertFoundToCloneinfo();
             List nofounds = handler.getNofound();
-            Map foundCounts = handler.getFoundCounts();
-            int numOfFounds = handler.getNumOfFoundClones();
+            totalCount = totalCount+handler.getFoundCloneCount();
+            int numOfFounds = handler.getFoundCloneCount();
             int numOfNoFounds = handler.getNumOfNoFoundClones();
-            request.setAttribute("numOfFound", new Integer(numOfFounds));
-            request.setAttribute("numOfNoFounds", new Integer(numOfNoFounds));
-            request.getSession().setAttribute("foundCounts", foundCounts);
+            request.getSession().setAttribute("totalCount", new Integer(totalCount));
+            request.getSession().setAttribute("numOfFound", new Integer(numOfFounds));
+            request.getSession().setAttribute("numOfNoFounds", new Integer(numOfNoFounds));
             request.getSession().setAttribute("found", founds);
             request.getSession().setAttribute("nofound", nofounds);
-            request.setAttribute("markers", markers);
             return (mapping.findForward("success"));
         } catch (Exception ex) {
             if(Constants.DEBUG)

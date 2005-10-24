@@ -17,7 +17,7 @@ import java.sql.*;
  *
  * @author  DZuo
  */
-public class CloneImporter {   
+public class CloneImporter {
     private Map idmap;
     private CloneManager manager;
     
@@ -25,7 +25,7 @@ public class CloneImporter {
     public CloneImporter(Connection conn) {
         this.manager = new CloneManager(conn);
     }
-        
+    
     public Map getIdmap() {return idmap;}
     
     public void importClone(ImportTable table, Map vectoridmap) throws Exception {
@@ -42,14 +42,13 @@ public class CloneImporter {
         List contents = table.getColumnInfo();
         for(int n=0; n<contents.size(); n++) {
             Clone c = new Clone();
+            c.setCloneid(id);
             List row = (List)contents.get(n);
             for(int i=0; i<columns.size(); i++) {
                 String columnName = (String)columns.get(i);
                 String columnInfo = (String)row.get(i);
                 if("clonename".equalsIgnoreCase(columnName)) {
                     idmap.put(columnInfo, new Integer(id));
-                    c.setCloneid(id);
-                    c.setName("HIP"+id);
                 }
                 if("clonetype".equalsIgnoreCase(columnName)) {
                     c.setType(columnInfo);
@@ -73,10 +72,58 @@ public class CloneImporter {
                     c.setComments(columnInfo);
                 }
                 if("vectorname".equalsIgnoreCase(columnName)) {
-                    c.setVectorid(((Integer)vectoridmap.get(columnInfo)).intValue());
+                    int vectorid = 0;
+                    if(vectoridmap == null) {
+                        VectorManager man = new VectorManager(manager.getConnection());
+                        vectorid = man.getVectorid(columnInfo);
+                    } else {
+                        Integer vid = (Integer)vectoridmap.get(columnInfo);
+                        if(vid == null) {
+                            VectorManager man = new VectorManager(manager.getConnection());
+                            vectorid = man.getVectorid(columnInfo);
+                        } else {
+                            vectorid = vid.intValue();
+                        }
+                    }
+                    
+                    if(vectorid <= 0) {
+                        throw new Exception("Cannot get vectorid with vectorname: "+columnInfo);
+                    }
+                    c.setVectorid(vectorid);
                     c.setVectorname(columnInfo);
                 }
+                if("clonemapfilename".equalsIgnoreCase(columnName)) {
+                    c.setClonemap(columnInfo);
+                }
+                if("status".equalsIgnoreCase(columnName)) {
+                    c.setStatus(columnInfo);
+                }
+                if("specialtreatment".equalsIgnoreCase(columnName)) {
+                    c.setSpecialtreatment(columnInfo);
+                }
+                if("source".equalsIgnoreCase(columnName)) {
+                    c.setSource(columnInfo);
+                }
             }
+            
+            java.text.NumberFormat fmt = java.text.NumberFormat.getInstance();
+            fmt.setMaximumIntegerDigits(8);
+            fmt.setMinimumIntegerDigits(8);
+            fmt.setGroupingUsed(false);
+            DefTableManager man = new DefTableManager();
+            String sp = man.getVocabulary("species", "genusspecies", "code", c.getDomain(), manager.getConnection());
+            String tp = man.getVocabulary("clonetype", "clonetype", "code", c.getType(), manager.getConnection());
+            if(sp == null) {
+                if(Clone.NOINSERT.equals(c.getDomain())) {
+                    sp = Clone.SPECIES_NOINSERT;
+                } else {
+                    throw new Exception("Cannot find code for species: "+c.getDomain());
+                }
+            }
+            if(tp == null) {
+                throw new Exception("Cannot find code for clonetype: "+c.getType());
+            }
+            c.setName(sp+tp+fmt.format(id));
             clones.add(c);
             id++;
         }
@@ -85,7 +132,7 @@ public class CloneImporter {
             throw new Exception("Error occured while inserting into CLONE table.");
         }
     }
-     
+    
     public void importCloneGrowth(ImportTable table, Map growthidmap) throws Exception {
         List growths = new ArrayList();
         List columns = table.getColumnNames();
@@ -96,12 +143,31 @@ public class CloneImporter {
             for(int i=0; i<columns.size(); i++) {
                 String columnName = (String)columns.get(i);
                 String columnInfo = (String)row.get(i);
+                
                 if("cloneid".equalsIgnoreCase(columnName)) {
                     c.setCloneid(((Integer)idmap.get(columnInfo)).intValue());
                 }
-                if("growthid".equalsIgnoreCase(columnName)) {
-                    c.setGrowthid(((Integer)growthidmap.get(columnInfo)).intValue());
+                if("growthname".equalsIgnoreCase(columnName)) {
+                    int growthid = 0;
+                    if(growthidmap == null) {
+                        GrowthConditionManager man = new GrowthConditionManager(manager.getConnection());
+                        growthid = man.getGrowthid(columnInfo);
+                    } else {
+                        Integer gid = (Integer)growthidmap.get(columnInfo);
+                        if(gid == null) {
+                            GrowthConditionManager man = new GrowthConditionManager(manager.getConnection());
+                            growthid = man.getGrowthid(columnInfo);
+                        } else {  
+                        growthid = gid.intValue();
+                        }
+                    }
+                    
+                    if(growthid <= 0) {
+                        throw new Exception("Cannot get growthid from growthname: "+columnInfo);
+                    }
+                    c.setGrowthid(growthid);
                 }
+                
                 if("isrecommended".equalsIgnoreCase(columnName)) {
                     c.setIsrecommended(columnInfo);
                 }
@@ -112,8 +178,8 @@ public class CloneImporter {
         if(!manager.insertCloneGrowths(growths)) {
             throw new Exception("Error occured while inserting into CLONEGROWTH table");
         }
-    }    
-      
+    }
+    
     public void importCloneSelection(ImportTable table) throws Exception {
         List selections = new ArrayList();
         List columns = table.getColumnNames();
@@ -140,8 +206,8 @@ public class CloneImporter {
         if(!manager.insertCloneSelections(selections)) {
             throw new Exception("Error occured while inserting into CLONESELECTION table");
         }
-    }    
-          
+    }
+    
     public void importCloneHost(ImportTable table) throws Exception {
         List hosts = new ArrayList();
         List columns = table.getColumnNames();
@@ -171,8 +237,8 @@ public class CloneImporter {
         if(!manager.insertCloneHosts(hosts)) {
             throw new Exception("Error occured while inserting into HOST table");
         }
-    }    
-        
+    }
+    
     public void importCloneNameType(ImportTable table) throws Exception {
         List types = new ArrayList();
         List columns = table.getColumnNames();
@@ -199,18 +265,22 @@ public class CloneImporter {
         if(!manager.insertCloneNameTypes(types)) {
             throw new Exception("Error occured while inserting into CLONENAMETYPE table");
         }
-    }   
-        
+    }
+    
     public void importCloneName(ImportTable table) throws Exception {
         List names = new ArrayList();
         List columns = table.getColumnNames();
         List contents = table.getColumnInfo();
         for(int n=0; n<contents.size(); n++) {
+            System.out.println("n: "+n);
             CloneName c = new CloneName();
             List row = (List)contents.get(n);
+            System.out.println(row);
             for(int i=0; i<columns.size(); i++) {
                 String columnName = (String)columns.get(i);
                 String columnInfo = (String)row.get(i);
+                System.out.println(columnName);
+                System.out.println(columnInfo);
                 if("cloneid".equalsIgnoreCase(columnName)) {
                     c.setCloneid(((Integer)idmap.get(columnInfo)).intValue());
                 }
@@ -230,8 +300,8 @@ public class CloneImporter {
         if(!manager.insertCloneNames(names)) {
             throw new Exception("Error occured while inserting into CLONENAME table");
         }
-    } 
-
+    }
+    
     public void importCloneAuthor(ImportTable table, Map authoridmap) throws Exception {
         List authors = new ArrayList();
         List columns = table.getColumnNames();
@@ -242,11 +312,31 @@ public class CloneImporter {
             for(int i=0; i<columns.size(); i++) {
                 String columnName = (String)columns.get(i);
                 String columnInfo = (String)row.get(i);
+                System.out.println(columnName);
+                System.out.println(columnInfo);
+                
                 if("cloneid".equalsIgnoreCase(columnName)) {
                     c.setCloneid(((Integer)idmap.get(columnInfo)).intValue());
                 }
                 if("authorname".equalsIgnoreCase(columnName)) {
-                    c.setAuthorid(((Integer)authoridmap.get(columnInfo)).intValue());
+                    int authorid = 0;
+                    if(authoridmap == null) {
+                        AuthorManager man = new AuthorManager(manager.getConnection());
+                        authorid = man.getAuthorid(columnInfo);
+                    } else {
+                        Integer aid = (Integer)authoridmap.get(columnInfo);
+                        if(aid == null) {
+                            AuthorManager man = new AuthorManager(manager.getConnection());
+                            authorid = man.getAuthorid(columnInfo);
+                        } else {
+                            authorid = aid.intValue();
+                        }
+                    }
+                    
+                    if(authorid <= 0) {
+                        throw new Exception("Cannot get authorid from authorname: "+columnInfo);
+                    }
+                    c.setAuthorid(authorid);
                 }
                 if("authortype".equalsIgnoreCase(columnName)) {
                     c.setAuthortype(columnInfo);
@@ -258,8 +348,8 @@ public class CloneImporter {
         if(!manager.insertCloneAuthors(authors)) {
             throw new Exception("Error occured while inserting into CLONEAUTHOR table");
         }
-    }   
-        
+    }
+    
     public void importClonePublication(ImportTable table, Map pubidmap) throws Exception {
         List pubs = new ArrayList();
         List columns = table.getColumnNames();
@@ -274,7 +364,17 @@ public class CloneImporter {
                     c.setCloneid(((Integer)idmap.get(columnInfo)).intValue());
                 }
                 if("publicationid".equalsIgnoreCase(columnName)) {
-                    c.setPublicationid(((Integer)pubidmap.get(columnInfo)).intValue());
+                    int pubid = 0;
+                    if(pubidmap == null) {
+                        pubid = Integer.parseInt(columnInfo);
+                    } else {
+                        pubid = ((Integer)pubidmap.get(columnInfo)).intValue();
+                    }
+                    
+                    if(pubid <= 0) {
+                        throw new Exception("Cannot get publicationid from publication: "+columnInfo);
+                    }
+                    c.setPublicationid(pubid);
                 }
             }
             pubs.add(c);
@@ -283,5 +383,61 @@ public class CloneImporter {
         if(!manager.insertClonePublications(pubs)) {
             throw new Exception("Error occured while inserting into CLONEPUBLICATION table");
         }
-    } 
+    }
+    
+    public void importCloneProperty(ImportTable table) throws Exception {
+        List names = new ArrayList();
+        List columns = table.getColumnNames();
+        List contents = table.getColumnInfo();
+        for(int n=0; n<contents.size(); n++) {
+            CloneProperty c = new CloneProperty();
+            List row = (List)contents.get(n);
+            for(int i=0; i<columns.size(); i++) {
+                String columnName = (String)columns.get(i);
+                String columnInfo = (String)row.get(i);
+                if("cloneid".equalsIgnoreCase(columnName)) {
+                    c.setCloneid(((Integer)idmap.get(columnInfo)).intValue());
+                }
+                if("propertytype".equalsIgnoreCase(columnName)) {
+                    c.setType(columnInfo);
+                }
+                if("propertyvalue".equalsIgnoreCase(columnName)) {
+                    c.setValue(columnInfo);
+                }
+                if("extrainfo".equalsIgnoreCase(columnName)) {
+                    c.setExtrainfo(columnInfo);
+                }
+            }
+            names.add(c);
+        }
+        
+        if(!manager.insertCloneProperties(names)) {
+            throw new Exception("Error occured while inserting into CLONEPROPERTY table");
+        }
+    }
+    
+    public void importCloneCollection(ImportTable table) throws Exception {
+        List cs = new ArrayList();
+        List columns = table.getColumnNames();
+        List contents = table.getColumnInfo();
+        for(int n=0; n<contents.size(); n++) {
+            CloneCollection c = new CloneCollection();
+            List row = (List)contents.get(n);
+            for(int i=0; i<columns.size(); i++) {
+                String columnName = (String)columns.get(i);
+                String columnInfo = (String)row.get(i);
+                if("cloneid".equalsIgnoreCase(columnName)) {
+                    c.setCloneid(((Integer)idmap.get(columnInfo)).intValue());
+                }
+                if("collectionname".equalsIgnoreCase(columnName)) {
+                    c.setName(columnInfo);
+                }
+            }
+            cs.add(c);
+        }
+        
+        if(!manager.insertCloneCollections(cs)) {
+            throw new Exception("Error occured while inserting into CLONECOLLECTION table");
+        }
+    }
 }

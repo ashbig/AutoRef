@@ -12,8 +12,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2005-04-01 18:56:54 $
+ * $Revision: 1.1.1.1 $
+ * $Date: 2005-10-24 15:12:51 $
  * $Author: dzuo $
  *
  ******************************************************************************
@@ -56,7 +56,7 @@ import sun.jdbc.rowset.*;
  * DatabaseTransaction is implemented as a singleton.
  *
  * @author     $Author: dzuo $
- * @version    $Revision: 1.1 $ $Date: 2005-04-01 18:56:54 $
+ * @version    $Revision: 1.1.1.1 $ $Date: 2005-10-24 15:12:51 $
  */
 
 public class DatabaseTransaction {

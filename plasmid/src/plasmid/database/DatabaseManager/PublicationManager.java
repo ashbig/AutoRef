@@ -18,11 +18,9 @@ import plasmid.database.*;
  */
 public class PublicationManager extends TableManager {
     
-    private Connection conn;
-    
     /** Creates a new instance of PublicationManager */
     public PublicationManager(Connection conn) {
-        this.conn = conn;
+       super(conn);
     }
     
     public boolean insertPublications(List publications) {
@@ -43,6 +41,7 @@ public class PublicationManager extends TableManager {
                 
                 DatabaseTransaction.executeUpdate(stmt);
             }
+            DatabaseTransaction.closeStatement(stmt);
         } catch (Exception ex) {
             handleError(ex, "Error occured while inserting into PUBLICATION table");
             return false;

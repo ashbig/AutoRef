@@ -13,32 +13,34 @@
 </head>
 
 <body>
-<jsp:include page="loginTitle.jsp" />
-<table width="800" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
+<jsp:include page="homeTitle.jsp" />
+<table width="1000" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
   <tr> 
     <td width="17%" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle"> 
       <jsp:include page="menuHome.jsp" />
 	</td>
     <td width="83%" align="left" valign="top">
-	<jsp:include page="registrationTitle.jsp" />
-      <html:form action="Login.do">
+        <jsp:include page="loginTitle.jsp" />
+      <html:form action="Logon.do">
 <logic:present name="registrationSuccessful">
 <bean:message key="registration.successful"/>
 </logic:present>
+<p>
+<html:errors/>
 <table width="100%" border="0">
   <tr> 
     <td width="12%" valign="baseline" class="formlabel">Email:</td>
     <td colspan="2">
-        <input name="textfield" type="text" class="text" size="30">
+        <html:text property="email" styleClass="text" size="30"/>
     </td>
   </tr>
   <tr> 
     <td valign="baseline" class="formlabel">Password:</td>
     <td width="28%">
-        <input name="textfield2" type="text" class="text" size="30" maxlength="20">
-        <input name="Submit" type="submit" class="text" value="Login">
+        <html:password property="password" styleClass="text" size="30" maxlength="20"/>
+        <html:submit styleClass="text" value="Login"/>
     </td>
-    <td width="60%" class="text">Find Password</td>
+    <td valign="baseline" width="60%" class="text"><a href="FindPassword.jsp">Find Password</a></td>
   </tr>
 </table>
       </html:form></td>

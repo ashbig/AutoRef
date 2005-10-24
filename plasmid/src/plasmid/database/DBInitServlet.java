@@ -13,7 +13,7 @@ import javax.servlet.ServletException;
 import java.sql.SQLException;
 import java.sql.Connection;
 import javax.sql.DataSource;
-
+import oracle.jdbc.driver.OracleDriver;
 import org.apache.struts.util.GenericDataSource;
 
 /**
