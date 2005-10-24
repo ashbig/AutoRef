@@ -9,10 +9,10 @@
 <project basedir="." default="compile" name="PLASMID">
 
 
-<!-- Property Definitions.  Each of the following properties are used by            convention in this build file.  The values specified can be overridden at            run time by adding a "-Dname=value" argument to the command line that            invokes Ant.  This technique is normally used to copy the values of            the ANT_HOME and TOMCAT_HOME environment variables into the "ant.home" and           "tomcat.home" properties, which are normally not defined explicitly.                 app.name       Base name of this application, used to construct filenames                           and directories.                  deploy.home    The name of the directory into which the deployment                                          hierarchy will be created.  Normally, this will be the                                          name of a subdirectory under $TOMCAT_HOME/webapps.                  System.lib     The name of the directory of the tomcat lib directory.     lib.dir        directory where the included jars/zips are           dist.home      The name of the base directory in which distribution files                    are created.                  dist.src       The name of the distribution JAR file containing the                                          application source code, to be stored in the "dist.home"                                          directory.  This filename should end with ".jar".                  dist.war       The name of the Web ARchive (WAR) file containing our                                          deployable application.  This filename should end with                                          ".war".                 javadoc.home   The name of the base directory in which                                          the JavaDoc documentation for this application                     is generated.                 tomcat.home    The name of the base directory in which                                        Tomcat has been installed.normally set automatically from the value                                           of the TOMCAT_HOME environment variable.                                The FLEX application will be deployed to a subdirectory named "FLEX",                         and will therefore be accessible at:                    http://localhost:<port>/FLEX -->
+<!-- Prope  rty Definitions.  Each of the following properties are used by            convention in this build file.  The values specified can be overridden at            run time by adding a "-Dname=value" argument to the command line that            invokes Ant.  This technique is normally used to copy the values of            the ANT_HOME and TOMCAT_HOME environment variables into the "ant.home" and           "tomcat.home" properties, which are normally not defined explicitly.                 app.name       Base name of this application, used to construct filenames                           and directories.                  deploy.home    The name of the directory into which the deployment                                          hierarchy will be created.  Normally, this will be the                                          name of a subdirectory under $TOMCAT_HOME/webapps.                  System.lib     The name of the directory of the tomcat lib directory.     lib.dir        directory where the included jars/zips are           dist.home      The name of the base directory in which distribution files                    are created.                  dist.src       The name of the distribution JAR file containing the                                          application source code, to be stored in the "dist.home"                                          directory.  This filename should end with ".jar".                  dist.war       The name of the Web ARchive (WAR) file containing our                                          deployable application.  This filename should end with                                          ".war".                 javadoc.home   The name of the base directory in which                                          the JavaDoc documentation for this application                     is generated.                 tomcat.home    The name of the base directory in which                                        Tomcat has been installed.normally set automatically from the value                                           of the TOMCAT_HOME environment variable.                                The FLEX application will be deployed to a subdirectory named "FLEX",                         and will therefore be accessible at:                    http://localhost:<port>/FLEX -->
      
 
-  <property name="tomcat.home" value="F:\Program Files\Apache Tomcat 4.0"/>
+  <property name="tomcat.home" value="D:\Tomcat559"/>
   <property name="app.name" value="PLASMID"/>
   <property name="deploy.home" value="${tomcat.home}/webapps/${app.name}"/>
   <property name="system.lib" value="${tomcat.home}/lib"/>
@@ -21,6 +21,9 @@
   <property name="dist.src" value="${app.name}.jar"/>
   <property name="dist.war" value="${app.name}.war"/>
   <property name="javadoc.home" value="${deploy.home}/javadoc"/>
+  <property name="file.home" value="${deploy.home}/file"/>
+  <property name="map.home" value="${file.home}/map"/>
+  <property name="sequence.home" value="${file.home}/sequence"/>
   
 
 <!-- The "prepare" target is used to construct the deployment home                  directory structure (if necessary), and to copy in static files                  as required.  In the example below, Ant is instructed to create                  the deployment directory, copy the contents of the "web/" source                   hierarchy, and set up the WEB-INF subdirectory appropriately. -->
@@ -42,6 +45,15 @@
     <copy todir="${deploy.home}/WEB-INF/lib">
       <fileset dir="lib" includes="*.jar,*.zip"/>
     </copy>
+    <mkdir dir="${file.home}"/>
+    <mkdir dir="${map.home}"/>
+    <mkdir dir="${sequence.home}"/>
+    <copy todir="${map.home}">
+      <fileset dir="map"/>
+    </copy>
+    <copy todir="${sequence.home}">
+      <fileset dir="sequence"/>
+    </copy>
 
     <!--
     <copy todir="${system.lib}">
@@ -49,14 +61,10 @@
     </copy>
     -->
     
-    <!--
     <mkdir dir="${deploy.home}/WEB-INF/perl"/>
-    <mkdir dir="${deploy.home}/WEB-INF/perl/UTIL"/>
-    <mkdir dir="${javadoc.home}"/>
     <copy todir="${deploy.home}/WEB-INF/perl">
-      <fileset dir="ApplicationCode/Perl"/>
+      <fileset dir="src/perl"/>
     </copy>
-    -->
     
   </target>
 
