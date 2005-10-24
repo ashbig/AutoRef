@@ -55,7 +55,6 @@ public class GetCloneDetailAction extends Action {
     HttpServletRequest request,
     HttpServletResponse response)
     throws ServletException, IOException { 
-        System.out.println("Before connection to database.");
         // get the parameters specified by the customer
         ActionErrors errors = new ActionErrors();
         int cloneid = ((CloneDetailForm)form).getCloneid();
