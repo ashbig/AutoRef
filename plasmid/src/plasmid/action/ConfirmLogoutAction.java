@@ -66,6 +66,7 @@ public class ConfirmLogoutAction extends UserAction {
             UserManager manager = new UserManager(conn);
             if(!manager.removeShoppingCart(user.getUserid())) {
                 DatabaseTransaction.rollback(conn);
+                DatabaseTransaction.closeConnection(conn);
                 if(Constants.DEBUG) {
                     System.out.println("Cannot remove shopping cart from user: "+user.getUserid());
                 }
@@ -76,6 +77,7 @@ public class ConfirmLogoutAction extends UserAction {
             }
             if(!manager.addShoppingCart(user.getUserid(), cart)) {
                 DatabaseTransaction.rollback(conn);
+                DatabaseTransaction.closeConnection(conn);
                 if(Constants.DEBUG) {
                     System.out.println("Cannot add shopping cart to user: "+user.getUserid());
                 }

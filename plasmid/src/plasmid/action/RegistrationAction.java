@@ -88,7 +88,8 @@ public class RegistrationAction extends Action {
             
             errors.add(ActionErrors.GLOBAL_ERROR,
             new ActionError("error.database"));
-            saveErrors(request, errors);
+            saveErrors(request, errors);            
+            DatabaseTransaction.closeConnection(conn);
             return mapping.findForward("error");
         }
         
@@ -97,11 +98,14 @@ public class RegistrationAction extends Action {
             errors.add(ActionErrors.GLOBAL_ERROR,
             new ActionError("error.user.exist"));
             saveErrors(request, errors);
+            DatabaseTransaction.closeConnection(conn);
             return (new ActionForward(mapping.getInput()));
         }
         
-        if(forward.equals("confirm"))
+        if(forward.equals("confirm")) {
+            DatabaseTransaction.closeConnection(conn);
             return (mapping.findForward("success_confirm"));
+        }
         
         DefTableManager m = new DefTableManager();
         int id = m.getMaxNumber("userprofile", "userid", t);
@@ -110,6 +114,7 @@ public class RegistrationAction extends Action {
             errors.add(ActionErrors.GLOBAL_ERROR,
             new ActionError(m.getErrorMessage()));
             saveErrors(request, errors);
+            DatabaseTransaction.closeConnection(conn);
             return mapping.findForward("error");
         }
         
@@ -121,6 +126,7 @@ public class RegistrationAction extends Action {
                     errors.add(ActionErrors.GLOBAL_ERROR,
                     new ActionError("error.pi.exist"));
                     saveErrors(request, errors);
+                    DatabaseTransaction.closeConnection(conn);
                     return (new ActionForward(mapping.getInput()));
                 }
                 
@@ -129,6 +135,7 @@ public class RegistrationAction extends Action {
                 PI p = new PI(pname, pifirstname, pilastname, piinstitution, pidepartment,pemail);
                 if(!manager.insertPI(p)) {
                     DatabaseTransaction.rollback(conn);
+                    DatabaseTransaction.closeConnection(conn);
                     errors.add(ActionErrors.GLOBAL_ERROR,
                     new ActionError(manager.getErrorMessage()));
                     saveErrors(request, errors);
@@ -145,6 +152,7 @@ public class RegistrationAction extends Action {
         User user = new User(id,firstname,lastname,email,phone,institution,department,null,pname,group,password,User.EXTERNAL,pemail);
         if(!manager.insertUser(user)) {
             DatabaseTransaction.rollback(conn);
+            DatabaseTransaction.closeConnection(conn);
             errors.add(ActionErrors.GLOBAL_ERROR,
             new ActionError(manager.getErrorMessage()));
             saveErrors(request, errors);
@@ -152,6 +160,7 @@ public class RegistrationAction extends Action {
         }
         
         DatabaseTransaction.commit(conn);
+        DatabaseTransaction.closeConnection(conn);
         request.setAttribute("registrationSuccessful", "1");
         return mapping.findForward("success");
     }

@@ -55,7 +55,7 @@ public class GetCloneDetailAction extends Action {
     HttpServletRequest request,
     HttpServletResponse response)
     throws ServletException, IOException { 
-        
+        System.out.println("Before connection to database.");
         // get the parameters specified by the customer
         ActionErrors errors = new ActionErrors();
         int cloneid = ((CloneDetailForm)form).getCloneid();
@@ -82,6 +82,8 @@ public class GetCloneDetailAction extends Action {
             errors.add(ActionErrors.GLOBAL_ERROR,
             new ActionError("error.database.error","Database error occured."));
             return (mapping.findForward("error")); 
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
         }
     }       
 }

@@ -8,6 +8,7 @@ package plasmid.coreobject;
 
 import java.util.*;
 import java.lang.*;
+import java.io.*;
 
 import plasmid.util.StringConvertor;
 
@@ -15,7 +16,7 @@ import plasmid.util.StringConvertor;
  *
  * @author  DZuo
  */
-public class CloneVector {
+public class CloneVector implements Serializable{
     private int vectorid;
     private String name;
     private String description;
@@ -107,4 +108,14 @@ public class CloneVector {
         System.out.println(v.getSynonymString());
         System.exit(0);
     }
+        
+    private void writeObject(java.io.ObjectOutputStream out)
+     throws IOException {
+         out.defaultWriteObject();        
+    }
+ 
+     private void readObject(java.io.ObjectInputStream in)
+     throws IOException, ClassNotFoundException {
+         in.defaultReadObject();
+     }
 }

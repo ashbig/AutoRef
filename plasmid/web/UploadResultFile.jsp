@@ -25,15 +25,15 @@
     <td width="83%" align="left" valign="top">
         <jsp:include page="enterResultsTitle.jsp" />
 <html:errors/>
-      <html:form action="SelectResultType.do">
+      <html:form action="UploadResultFile.do"  enctype="multipart/form-data">
 <table width="100%" border="0">
   <tr> 
-    <td width="20%" class="formlabel">Please select the result type:</td>
-    <td colspan="2">
-        <html:select property="resultType" styleClass="itemtext">
-          <html:options name="<%=Constants.RESULTTYPES%>"/>
-        </html:select>
-    </td>
+    <td width="20%" class="formlabel">Result type:</td>
+    <td colspan="2" class="itemtext"><bean:write name="enterResultsForm" property="resultType"/></td>
+  </tr>
+  <tr> 
+    <td width="20%" class="formlabel">Please upload the file:</td>
+    <td colspan="2"><html:file size="30" styleClass="itemtext" property="resultFile" /></td>
   </tr>
   <tr> 
     <td width="20%" class="formlabel">&nbsp;</td>

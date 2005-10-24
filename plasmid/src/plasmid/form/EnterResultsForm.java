@@ -11,21 +11,42 @@ import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.upload.*;
+
+import java.util.*;
+import plasmid.coreobject.*;
 
 /**
  *
  * @author  DZuo
  */
 public class EnterResultsForm extends ActionForm {
-    private String resultType;
+    private String resultType = Result.AGAR;
+    private FormFile resultFile;
+    private List resultList;
     
     /** Creates a new instance of EnterResultsForm */
     public EnterResultsForm() {
     }
 
     public String getResultType() {return resultType;}
-    
+    public FormFile getResultFile() {return resultFile;}    
+    public String getResult(int index) {
+        return (String)resultList.get(index);
+    }    
+        
     public void setResultType(String s) {this.resultType = s;}
+    public void setResultFile(FormFile f) {this.resultFile = f;}
+    public void setResult(int index, String value) {
+        resultList.set(index,value);
+    }
+    
+    public void initiate(Container c) {
+        resultList = new ArrayList();
+        for(int i=0; i<c.getSize(); i++) {
+            resultList.add(i, c.getSample(i).getResult());
+        }
+    }
     
     /**
      * Reset all properties to their default values.
@@ -34,6 +55,8 @@ public class EnterResultsForm extends ActionForm {
      * @param request The servlet request we are processing
      */
     public void reset(ActionMapping mapping, HttpServletRequest request) {
+        this.resultType = Result.AGAR;
+        this.resultFile = null;
     }  
     
     /**
@@ -50,7 +73,10 @@ public class EnterResultsForm extends ActionForm {
                                  HttpServletRequest request) {
 
         ActionErrors errors = new ActionErrors();
-            
+                    
+        if (resultFile == null || resultFile.getFileName().trim().length()<1 || resultFile.getFileSize() == 0)
+            errors.add("resultFile", new ActionError("error.resultfile.invalid"));
+
         return errors;
     }
 }

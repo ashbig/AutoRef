@@ -11,6 +11,9 @@ package plasmid.coreobject;
  * @author  DZuo
  */
 public class Result {
+    public static final String AGAR = "AGAR";
+    public static final String CULTURE = "CULTURE";
+    
     private int resultid;
     private int sampleid;
     private int executionid;

@@ -25,6 +25,7 @@ import org.apache.struts.util.MessageResources;
 
 import plasmid.form.EnterResultsForm;
 import plasmid.Constants;
+import plasmid.coreobject.*;
 
 /**
  *
@@ -40,16 +41,11 @@ public class SelectResultTypeAction extends InternalUserAction{
         ActionErrors errors = new ActionErrors();
         
         String resultType = ((EnterResultsForm)form).getResultType();
-       /** 
-        if(protocols != null) {
-            request.setAttribute(Constants.PROTOCOLS, protocols);
-        }
         
-        if(Process.PLATING.equals(processname)) {
-            return mapping.findForward("success_plating");
-        }
-        */
-        return mapping.findForward("success");
+        if(Result.AGAR.equals(resultType) || Result.CULTURE.equals(resultType))
+            return mapping.findForward("success_upload_result_file");
+        
+        return mapping.findForward("fail");
     }   
 }
 

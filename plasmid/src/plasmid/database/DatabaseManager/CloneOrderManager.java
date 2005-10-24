@@ -356,6 +356,7 @@ public class CloneOrderManager extends TableManager {
         List orders = manager.queryCloneOrders(user, null);
         if(orders == null) {
             System.out.println("error.");
+            DatabaseTransaction.closeConnection(conn);
             System.exit(0);
         }
         

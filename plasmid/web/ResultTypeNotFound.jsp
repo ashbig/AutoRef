@@ -25,24 +25,8 @@
     <td width="83%" align="left" valign="top">
         <jsp:include page="enterResultsTitle.jsp" />
 <html:errors/>
-      <html:form action="SelectResultType.do">
-<table width="100%" border="0">
-  <tr> 
-    <td width="20%" class="formlabel">Please select the result type:</td>
-    <td colspan="2">
-        <html:select property="resultType" styleClass="itemtext">
-          <html:options name="<%=Constants.RESULTTYPES%>"/>
-        </html:select>
-    </td>
-  </tr>
-  <tr> 
-    <td width="20%" class="formlabel">&nbsp;</td>
-    <td colspan="2">
-        <html:submit styleClass="itemtext" value="Continue"/>
-    </td>
-  </tr>
-</table>
-      </html:form></td>
+<p class="text">Invalid result type.</P>
+</td>
   </tr>
 </table>
 <jsp:include page="footer.jsp" />

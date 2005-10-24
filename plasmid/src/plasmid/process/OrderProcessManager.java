@@ -450,6 +450,7 @@ public class OrderProcessManager {
                     System.out.println(manager.getErrorMessage());
                     System.out.println(ex);
                 }
+                DatabaseTransaction.closeConnection(conn);
                 return null;
             }
         } else {
@@ -460,6 +461,7 @@ public class OrderProcessManager {
                     System.out.println(manager.getErrorMessage());
                     System.out.println(ex);
                 }
+                DatabaseTransaction.closeConnection(conn);
                 return null;
             }
         }

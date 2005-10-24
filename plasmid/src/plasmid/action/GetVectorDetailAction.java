@@ -80,6 +80,8 @@ public class GetVectorDetailAction extends Action {
             errors.add(ActionErrors.GLOBAL_ERROR,
             new ActionError("error.database.error","Database error occured."));
             return (mapping.findForward("error")); 
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
         }
     }       
 }

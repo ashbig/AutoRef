@@ -307,8 +307,8 @@ public class CloneGeneBuilder {
     }
 
     public static void main(String args[]) {
-        int lastInsertid = 9057;
-        int lastCloneid = 9057;
+        int lastInsertid = 9081;
+        int lastCloneid = 9081;
         DatabaseTransaction t = null;
         Connection conn = null;
         CloneGeneBuilder builder = new CloneGeneBuilder();
@@ -316,13 +316,13 @@ public class CloneGeneBuilder {
         try {
             t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
-            /**System.out.println("Building DNAINSERT with genes");
+            System.out.println("Building DNAINSERT with genes");
             builder.buildDnainsertWithGene(conn, lastInsertid);
             builder.buildDnainsertWithRefseqSymbol(conn, lastInsertid);
             System.out.println("Building DNAINSERT with reference sequences");
             builder.buildDnainsertWithRefseq(conn, lastInsertid);
             DatabaseTransaction.commit(conn);
-            */
+           
             System.out.println("Building CLONEGENBANK");
             builder.buildCloneGenbank(conn, lastCloneid);
             System.out.println("Building CLONELOCUS");

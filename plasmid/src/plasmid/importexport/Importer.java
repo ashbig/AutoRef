@@ -26,8 +26,8 @@ public class Importer {
     //public static final String filepath = "G:\\plasmid\\NEEL_05_7_20\\";    
     //public static final String filepath = "G:\\plasmid\\TRC_import\\";     
     //public static final String filepath = "G:\\plasmid\\Howley_Neel_plate\\import\\"; 
-    public static final String filepath = "G:\\plasmid\\Yeast_batch2_20050902\\";  
-    //public static final String filepath = "G:\\plasmid\\vector_set\\";  
+    //public static final String filepath = "G:\\plasmid\\Yeast_batch2_20050902\\";  
+    public static final String filepath = "G:\\plasmid\\vector_set\\";  
    
     private List tables;
     private String error;

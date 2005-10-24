@@ -72,15 +72,17 @@ public final class LogonAction extends Action {
             errors.add(ActionErrors.GLOBAL_ERROR,
             new ActionError("error.database"));
             saveErrors(request, errors);
+            DatabaseTransaction.closeConnection(conn);
             return mapping.findForward("error");
         }
         
         UserManager manager = new UserManager(conn);
         User user = manager.authenticate(email, password);
-        if(user == null) {            
+        if(user == null) {
             errors.add(ActionErrors.GLOBAL_ERROR,
             new ActionError("error.login.incorrect"));
             saveErrors(request, errors);
+            DatabaseTransaction.closeConnection(conn);
             return (new ActionForward(mapping.getInput()));
         }
         
@@ -98,6 +100,8 @@ public final class LogonAction extends Action {
          * carts.
          **/
         List cart = manager.queryShoppingCartForClones(user.getUserid());
+        DatabaseTransaction.closeConnection(conn);
+        
         if(cart == null) {
             if(Constants.DEBUG) {
                 System.out.println("Cannot retrieve shopping cart from database.");
@@ -107,7 +111,7 @@ public final class LogonAction extends Action {
             new ActionError("error.database.shoppingcart"));
             saveErrors(request, errors);
             return mapping.findForward("error");
-        }  
+        }
         
         // Remove the obsolete form bean
         if (mapping.getAttribute() != null) {
@@ -117,16 +121,16 @@ public final class LogonAction extends Action {
                 session.removeAttribute(mapping.getAttribute());
         }
         
-        List currentCart = (List)request.getSession().getAttribute(Constants.CART); 
+        List currentCart = (List)request.getSession().getAttribute(Constants.CART);
         if(currentCart == null || currentCart.size() == 0) {
             request.getSession().setAttribute(Constants.CART, cart);
         } else if(cart.size() > 0) {
             request.getSession().setAttribute("databaseCart", cart);
             return mapping.findForward("confirm");
-        }             
-         
+        }
+        
         request.getSession().setAttribute(Constants.CART_STATUS, Constants.SAVED);
-        return (mapping.findForward("success"));        
-    }    
+        return (mapping.findForward("success"));
+    }
 }
 
