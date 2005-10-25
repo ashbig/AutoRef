@@ -149,8 +149,7 @@ public class IsolateRanker
                         }
                       
                     }
-                    if ( it.getCloneId()== 119919)
-                    { System.out.println("119919");}
+                   
                      //check wether number of mutations exseedmax allowed
                      it.setBlackRank(m_cutoff_spec,m_penalty_spec, ref_sequence_length,type_of_item_to_analize);
                 }
@@ -234,6 +233,11 @@ public class IsolateRanker
                 {
                     read = (Read) reads.get(read_count);
                     
+                    if ( read.getStatus() == Read.TYPE_ENDREAD_FORWARD_SHORT    
+                       || read.getStatus() == Read.TYPE_ENDREAD_REVERSE_SHORT)
+                    {
+                        return_value = 0;
+                    }
                     if ( read.getStatus() == Read.STATUS_NOT_ANALIZED
                     && ( read.getType() == Read.TYPE_ENDREAD_FORWARD
                     || read.getType() == Read.TYPE_ENDREAD_REVERSE))
