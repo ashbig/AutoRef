@@ -81,11 +81,6 @@ public class ImportBC {
                         }
                         
                         String seq = (String)st.nextToken();
-                        String quality = checkQuality(seq);
-                        if(quality.trim().length() > 0) {
-                            System.out.println(cloneid+": "+quality);
-                            //System.exit(0);
-                        }
                         
                         int start = 0;
                         if(st.hasMoreTokens()) {
@@ -96,7 +91,13 @@ public class ImportBC {
                         if(st.hasMoreTokens()) {
                             stop = Integer.parseInt((String)st.nextToken());
                         }
-                            
+                      
+                        String quality = checkQuality(seq, start, stop);
+                        if(quality.trim().length() > 0) {
+                            System.out.println(cloneid+": "+quality);
+                            //System.exit(0);
+                        }
+                        
                         DescrepancyInfo clone = new DescrepancyInfo(cloneid, genbank, gi, resultRef, resultMGC, seq, start, stop-start+1);
                         clones.add(clone);                        
                     }
@@ -179,11 +180,16 @@ public class ImportBC {
         }
     }
 
-    private String checkQuality(String seq) {
+    private String checkQuality(String seq, int cdsstart, int cdsstop) {
         StringBuffer result = new StringBuffer();
-        int cdsstart = 1;
-        int cdslength = seq.length();
-        int cdsstop = cdsstart+cdslength-1;
+        int cdslength = cdsstop - cdsstart + 1;
+        
+        if(cdslength == 1) {
+            cdsstart = 1;
+            cdslength = seq.length();
+            cdsstop = cdsstart + cdslength - 1;
+        }
+        
         if( cdslength % 3 != 0) {
             result.append("\tWrong CDS length\n");
         }
@@ -258,7 +264,7 @@ public class ImportBC {
     
     public static void main(String arg[]) {
         //String file = "G:\\ct_rejected_mgc.txt";
-        String file = "G:\\BC_gateway_import_final.txt";
+        String file = "G:\\Yeast_FLEX_update_accepted_20040826.txt";
         String logfile = "G:\\clontech.log";
         
         Logger log = new Logger(logfile);

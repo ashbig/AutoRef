@@ -243,7 +243,7 @@ public class Blaster extends java.lang.Object {
          String blastcmd = null;
         if (executable.equals(Blaster.BLAST_EXEC_BLASTALL))
         {
-     
+     /*
           blastcmd = "/kotel/data/blast/blastall " +                    
                           program + " " +                
                           "-d" + dbPath +  " " +                
@@ -254,9 +254,9 @@ public class Blaster extends java.lang.Object {
                           gapExtend + " " +              
                           filter + " " +                 
                           hits;                    
-
-    /*
-          blastcmd = "c:\\Program Files\\blast\\blastall "    +            
+                       */
+    
+          blastcmd = "H:\\blast\\blastall "    +            
                           program + " " +                
                           "-d " + dbPath +  " " +                
                           "-i " + query + " "  +         
@@ -266,7 +266,7 @@ public class Blaster extends java.lang.Object {
                           gapExtend + " " +              
                           filter + " " +                 
                           hits; 
-     */
+     
         }
         else
             if (executable.equals("bl2seq") &&  m_subjectfile != null) 

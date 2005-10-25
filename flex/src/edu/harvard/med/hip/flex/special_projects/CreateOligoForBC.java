@@ -388,7 +388,7 @@ public class CreateOligoForBC {
          //   int protocolid = 40;
             
              input = new FileInputStream(fname);
-            rearrayer = new CreateOligoForBC(c,projectid, workflowid,input,"dzuo@hms.harvard.edu");
+            rearrayer = new CreateOligoForBC(c,projectid, workflowid,input,"dongmei_zuo@hms.harvard.edu");
            
             rearrayer.readFile();c.commit();
 

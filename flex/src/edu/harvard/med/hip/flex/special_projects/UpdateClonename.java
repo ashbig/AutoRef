@@ -54,7 +54,7 @@ public class UpdateClonename {
                     String constructtype = rs.getString(1);
                     String name = null;
                     if("FUSION".equals(constructtype)) {
-                        name="FLH"+fmt.format(cloneid)+".01L";
+                        name="FLH"+fmt.format(cloneid)+".01F";
                     } else if("CLOSED".equals(constructtype)) {
                         name="FLH"+fmt.format(cloneid)+".01X";
                     } else {
@@ -377,6 +377,7 @@ public class UpdateClonename {
     }
     
     public static void main(String args[]) throws Exception {
+        
           DatabaseTransaction t = DatabaseTransaction.getInstance();
           
           String sql = "select c.cloneid from clones c"+
@@ -412,20 +413,18 @@ public class UpdateClonename {
         //u.correctConstructid();
         //u.correctConstructidForClones();
           */
-       /**   
+       /**  
           try {
               List containers = new ArrayList();
-              containers.add(new Container(7278));
-              containers.add(new Container(7280));
-              containers.add(new Container(7393));
-              containers.add(new Container(7394));
+              containers.add(new Container(8218));
+              containers.add(new Container(8223));
               
               UpdateClonename uc = new UpdateClonename();
               uc.updateAllRearrayPlateCloneid(containers);
           } catch (Exception ex) {
               System.out.println(ex);
           }
-        **/
+     */
     }
     
 }
