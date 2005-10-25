@@ -11,7 +11,7 @@ import java.io.*;
 
 import plasmid.coreobject.Container;
 import plasmid.database.DatabaseManager.DefTableManager;
-import edu.harvard.med.hip.flex.process.ColonyPickLogFileParser;
+//import edu.harvard.med.hip.flex.process.ColonyPickLogFileParser;
 //import edu.harvard.med.hip.flex.process.CultureResultConverter;
 
 /**
@@ -34,13 +34,14 @@ public class ResultProcessManager {
         return manager.getVocabularies("resulttype", "resulttype");
     }
 
-    public Map uploadAgarResults(InputStream input) throws Exception {
+    public Map uploadAgarResults(InputStream input) throws Exception {/**
         ColonyPickLogFileParser parser = new ColonyPickLogFileParser(input);
         if(!parser.parseFile()) {
             throw new Exception(parser.getErrorMessage());
         }
         
-        return parser.getColonyInfo();
+        return parser.getColonyInfo();*/
+        return null;
     }
     
     public List uploadCultureResults(InputStream input, Container container) throws Exception {
