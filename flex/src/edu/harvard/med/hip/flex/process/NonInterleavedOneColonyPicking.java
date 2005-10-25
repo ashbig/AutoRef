@@ -27,14 +27,19 @@ public class NonInterleavedOneColonyPicking extends NonInterleavedColonyPicking 
         String newContainerType = getContainerType(protocol.getProcessname());
         String projectCode = getProjectCode(project, workflow);
         
-        Container container = (Container)containers.get(0);       
+        Container container = (Container)containers.get(0);
+        String leftString = "";
         int l = container.getLabel().indexOf("-");
         String threadid;
-        if(l<0) 
+        if(l<0)
             threadid = container.getLabel().substring(3);
-        else
+        else {
             threadid = container.getLabel().substring(3, l);
-        String newBarcode = projectCode+protocol.getProcesscode()+threadid+"-1";
+            leftString = container.getLabel().substring(l);
+            if(leftString.equals("-F") || leftString.equals("-C"))
+                leftString = "";
+        }
+        String newBarcode = projectCode+protocol.getProcesscode()+threadid+leftString+"-1";
         Container newContainer = new Container(newContainerType, null, newBarcode, container.getThreadid());
         int index = 1;
         Enumeration enum = containers.elements();
