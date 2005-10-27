@@ -16,116 +16,97 @@
 <jsp:include page="homeTitle.jsp" />
 <table width="1000" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
 
-  <TBODY>
-    <TR>
-      <TD width="100%"><div align="center">
-          <P><FONT color=#000000><FONT size=4>Welcome to the Plasmid Information
-            Database (PlasmID)</FONT><BR align="center">
-            <FONT size=4>of the Dana
-      Farber/Harvard Cancer Center DNA Resource Core</FONT></FONT> </P>
-          <table width="100%" border="0">
-            <tr valign="top">
-              <td width="68%" height="77"> <p align="left" class="homeMainText"> 
-                  <span class="mainbodytexthead">The goal of PlasmID is to allow 
-                  researchers in academic and non-profit laboratories to search 
-                  for and order plasmid clones in the DF/HCC DNA Resource Core 
-                  collection. In addition, PlasmID is a source for growth conditions, 
-                  plasmid maps, sequence data, and other information relevant 
-                  to the clones in our collection</span>.</p>
-                <p align="left" class="mainbodytexthead"><span class="controlpaneltext">PLEASE 
-                  REGISTER AND SIGN IN BEFORE YOU SEARCH.</span> Prior to sign-in, 
-                  you'll be able to view only clones available to all users and 
-                  you might miss out on clones available to specific sub-sets 
-                  of users, such as those clones limited to academic and non-profit 
-                  labs.
-                <p align="left" class="mainbodytexthead"><span class="controlpaneltext">YOUR 
-                  FEEDBACK IS WELCOME</span>. Please let us know if you have suggestions 
-                  for improving the website, search functions, information display, 
-                  or other aspects of PlasmID. We will work to make improvements 
-                  based on this feedback. Contact <a href="http://dnaseq.med.harvard.edu/contact_us.htm" target="_blank">Stephanie
-          Mohr</a>. </td>
-              <td width="32%" align="center" valign="middle" class="tableinfo"><a href="http://dnaseq.med.harvard.edu" target="_blank">Click 
-                here to go to the DF/HCC DNA Resource Core's main webpage and 
-                learn about our low cost, quick turn-around<br>
-                DNA sequence services</a></td>
+<TBODY>
+    <TR> 
+      <TD width="100%">
+<div align="center">
+<table width="100%" height="104" border="0">
+            <tr valign="top"> 
+              <td width="32%" height="100" align="center" valign="middle" class="tableinfo"><font color=#000000><font size=4>Welcome 
+                to the Plasmid Information Database (PlasmID)<br>
+                at the Dana Farber/Harvard Cancer Center DNA Resource Core</font></font></td>
             </tr>
           </table>
 
         </div>
-        <P align=center><FONT size=4>THE COLLECTION INCLUDES</FONT></P>
-        <UL>
-          <LI class="homeMainText">Large sets of sequence verified cDNA clones
-            from Human, Yeast, Pseudomonas, and other species
-          <LI><span class="homeMainText">Frequently requested plasmid clones from
-            laboratories in <a href="http://www.dfhcc.harvard.edu/" target="_blank">DF/HCC</a>
-            member institutions: </span>
-            <UL>
-              <LI class="homeMainText"><A href="http://www.bidmc.harvard.edu/sites/bidmc/home.asp" target="_blank">Beth
-                Israel Deaconess Medical Center</A>
-              <LI class="homeMainText"><A href="http://www.brighamandwomens.org/" target="_blank">Brigham
-                &amp; Women's Hospital</A>
-              <LI class="homeMainText"><A href="http://www.childrenshospital.org/" target="_blank">Children's
-                Hospital Boston</A>
-              <LI class="homeMainText"><A href="http://www.dfci.harvard.edu/" target="_blank">Dana
-                Farber Cancer Institute</A>
-              <LI class="homeMainText"><A href="http://www.hms.harvard.edu/" target="_blank">Harvard
-                Medical School</A>
-              <LI class="homeMainText"><A href="http://www.hsph.harvard.edu/" target="_blank">Harvard
-                School of Public Health</A>
-              <LI class="homeMainText"><A href="http://www.mgh.harvard.edu/" target="_blank">Massachusetts
-                General Hospital</A>. </LI>
-            </UL>
-          <LI class="homeMainText">Frequently requested plasmid clones from other
-            researchers who have submitted their plasmids to our facility for
-            centralized long-term storage, maintenance, and distribution of plasmid
-            clones</LI>
-        </UL>
-        <P class="homeMainText">Please set up a new account or log in as a returning 
-          user in order to start your search and order clones (please click the 
-          &quot;log in&quot; link at the top of the page).</P>
-        <P class="homeMainText">For more information about the repository and
-          how it works, or if you are interested in submitting clones to the facility,
-          please click the &quot;plasmid submission&quot; link above, visit the
-          DNA Resource Core homepage at <A
-      href="http://dnaseq.med.harvard.edu/" target="_blank">http://dnaseq.med.harvard.edu/</A>,
-          or contact <a href="http://dnaseq.med.harvard.edu/contact_us.htm" target="_blank">Stephanie
-          Mohr</a>.</P></TD>
+        <table width="100%" height="241" border="0" cellpadding="3" cellspacing="3">
+          <tr> 
+            <td width="31%" height="235" valign="top"> <p class="homepageText3"><strong>Collection 
+                Includes</strong></p>
+              <ul>
+                <li class="alert">genome-scale ORF collections from:<br>
+                  <span class="morehit">Pseudomonas<br>
+                  Yeast<br>
+                  Y. pestis<br>
+                  F. tularensis</span><br>
+                </li>
+                <li class="alert">more than 500 human kinase ORFs<br>
+                </li>
+                <li class="alert">other human ORFs in recombinational cloning 
+                  vectors <br>
+                </li>
+                <li class="alert">genomic fragments, cDNAs and other constructs 
+                  from viruses, mouse, humans and more<br>
+                </li>
+                <li class="alert">vectors for routine and cutting-edge molecular 
+                  biology techniques</li>
+              </ul></td>
+            <td width="36%" class="mainbodytextlarge"><p align="center">Please 
+                register and sign in. </p>
+              <p align="center" class="morehit">Log-in status affects what you 
+                can view from the collection.</p></td>
+            <td width="33%"><p class="homepageText3">Getting Started</p>
+              <p>Looking for a specific gene insert? <span class="morehit"><br>
+                search by reference sequence (left-hand side, search &amp; order 
+                page)</span></p>
+              <p>Looking for an 'empty vector'? <span class="morehit"><br>
+                click to view all vectors (left-hand side, search &amp; order 
+                page)</span></p>
+              <p>Ready to check out? <span class="morehit"><br>
+                click the shopping cart icon to initiate check-out (top right 
+                of any page)</span><br>
+                <br>
+                Don't see what you expect? <span class="morehit"><br>
+                please be sure you logged in because log-in effects what clones 
+                you can view. <a href="http://dnaseq.med.harvard.edu/plasmid-related_links.htm" title="Plasmid Links Page" target="_blank">CLICK 
+                HERE</a> to see other resources for clones.</span></p>
+              </td>
+          </tr>
+        </table>
+        <table width="100%" border="0" cellspacing="3" cellpadding="3">
+         
+          <tr> 
+            <td bgcolor="#CCCCCC"> <p class="morehit">DFHCC<br>
+                Member Institutions:</p></td>
+            <td bgcolor="#CCCCCC" class="morehit"><a href="http://www.hms.harvard.edu" title="Harvard Medical School" target="_blank">Harvard 
+              Medical School</a></td>
+            <td bgcolor="#CCCCCC" class="morehit"><a href="http://www.hsph.harvard.edu" title="Harvard School of Public Health" target="_blank">Harvard 
+              School of Public Health</a></td>
+            <td bgcolor="#CCCCCC" class="morehit"><a href="http://www.bidmc.harvard.edu/sites/bidmc/home.asp" title="Beth Israel Deaconess Medical Center" target="_blank">Beth 
+              Israel Deaconess Medical Center</a></td>
+            <td bgcolor="#CCCCCC" class="morehit"><a href="http://www.brighamandwomens.org/" title="Brigham & Women's Hospital" target="_blank">Brigham 
+              & Women's Hospital</a></td>
+            <td bgcolor="#CCCCCC" class="morehit"><a href="http://www.dfci.harvard.edu/" title="Dana-Farber Cancer Institute" target="_blank">Dana-Farber 
+              Cancer Institute</a></td>
+            <td bgcolor="#CCCCCC" class="morehit"><a href="http://www.mgh.harvard.edu/" title="Massachusetts General Hospital" target="_blank">Massachusetts 
+              General Hospital</a></td>
+            <td bgcolor="#CCCCCC" class="morehit"><a href="Massachusetts General Hospital" title="Children's Hospital Boston" target="_blank">Children's 
+              Hospital Boston</a></td>
+          </tr>
+		   <tr> 
+            <td height="28" colspan="8"> <div align="center" class="homepageLink">For 
+                information on DNA sequencing and other DNA Resource Core services, 
+                please <a href="http://dnaseq.med.harvard.edu" title="DNA Resource Core Home Page" target="_blank">CLICK 
+                HERE</a>. <span class="morehit"><br>
+                Have questions not answered in our faq (top right of page)? Please 
+                contact <a href="http://dnaseq.med.harvard.edu/contact_us.htm" title="Contact DNA Resource Core" target="_blank">stephanie 
+                mohr</a>.</span></div></td>
+          </tr>
+        </table>
+      </TD>
     </TR>
-    <TR>
-      <TD width="100%"> <TABLE id=AutoNumber3 style="BORDER-COLLAPSE: collapse"
-      borderColor=#111111 cellSpacing=3 cellPadding=3 width="100%" border=0>
-          <TBODY>
-            <TR>
-              <TD width="50%" height="288" valign="top">
-                <table width="100%" border="0">
-                  <tr>
-                    <td valign="top">
-<p class="tableheader"><B>New in the collection:</B></p>
-                      <p class="tablebody">Several cDNAs for human ubiquitin pathway
-                        components, including tagged and mutant forms in mammalian
-                        expression vectors (from the collection of the Howley
-                        lab, Harvard Medical School).</p>
-                      <p class="tablebody">Fluorescent tagging vectors pKT146, 
-                        pKT176 and pKT178 for yeast (from the collection of K. 
-                        Thorn at the Bauer CGR, Harvard University).</p>
-                      </td>
-                  </tr>
-                </table>
-                <p>&nbsp;</p>
-                </TD>
-              <TD width="50%" valign="top">
-<table width="100%" border="0">
-                  <tr>
-                    <td valign="top">
-<p class="tableheader"><B>Frequently ordered from the collection:</B></p>
-                      <p class="tableinfo">to be added</p></td>
-                  </tr>
-                </table>
-                <p>&nbsp;</p>
-                </TD>
-            </TR>
-          </TBODY>
-        </TABLE></TD>
+    <TR> 
+      <TD width="100%"></TD>
     </TR>
     <TR>
       <TD width="100%"><div align="center" class="homeMainText">PlasmID was created

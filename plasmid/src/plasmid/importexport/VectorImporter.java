@@ -109,8 +109,8 @@ public class VectorImporter {
             for(int i=0; i<columns.size(); i++) {
                 String columnName = (String)columns.get(i);
                 String columnInfo = (String)row.get(i);
-                System.out.println(columnName);
-                System.out.println(columnInfo);
+                //System.out.println(columnName);
+                //System.out.println(columnInfo);
                 if("name".equalsIgnoreCase(columnName)) {
                     v.setName(columnInfo);
                 }
@@ -149,6 +149,8 @@ public class VectorImporter {
             for(int i=0; i<columns.size(); i++) {
                 String columnName = (String)columns.get(i);
                 String columnInfo = (String)row.get(i);
+                //System.out.println(columnName);
+                //System.out.println(columnInfo);
                 if("propertytype".equalsIgnoreCase(columnName)) {
                     v.setPropertyType(columnInfo);
                 }

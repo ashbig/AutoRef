@@ -46,7 +46,10 @@
     </td>
   </tr>
 </table>
-<p>&nbsp;</p>
+<p class="altert">If you don't see your country on the list, 
+please contact <a href="mailto:dongmei_zuo@hms.harvard.edu">PlasmID support</a>. 
+Please be aware that <i>Francisella tularensis, Yersinia pestis, Vibrio cholerae</i>
+are not allowed to be shipped outside of USA.</p>
 <table width="100%" border="0">
   <tr> 
     <td colspan="2" class="featuretext">Shipping Address:</td>

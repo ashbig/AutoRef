@@ -143,7 +143,7 @@ public class CloneImporter {
             for(int i=0; i<columns.size(); i++) {
                 String columnName = (String)columns.get(i);
                 String columnInfo = (String)row.get(i);
-                
+                System.out.println(columnName+"\t"+columnInfo);
                 if("cloneid".equalsIgnoreCase(columnName)) {
                     c.setCloneid(((Integer)idmap.get(columnInfo)).intValue());
                 }
@@ -272,15 +272,15 @@ public class CloneImporter {
         List columns = table.getColumnNames();
         List contents = table.getColumnInfo();
         for(int n=0; n<contents.size(); n++) {
-            System.out.println("n: "+n);
+            //System.out.println("n: "+n);
             CloneName c = new CloneName();
             List row = (List)contents.get(n);
-            System.out.println(row);
+            //System.out.println(row);
             for(int i=0; i<columns.size(); i++) {
                 String columnName = (String)columns.get(i);
                 String columnInfo = (String)row.get(i);
-                System.out.println(columnName);
-                System.out.println(columnInfo);
+                //System.out.println(columnName);
+                //System.out.println(columnInfo);
                 if("cloneid".equalsIgnoreCase(columnName)) {
                     c.setCloneid(((Integer)idmap.get(columnInfo)).intValue());
                 }
@@ -312,8 +312,8 @@ public class CloneImporter {
             for(int i=0; i<columns.size(); i++) {
                 String columnName = (String)columns.get(i);
                 String columnInfo = (String)row.get(i);
-                System.out.println(columnName);
-                System.out.println(columnInfo);
+                //System.out.println(columnName);
+                //System.out.println(columnInfo);
                 
                 if("cloneid".equalsIgnoreCase(columnName)) {
                     c.setCloneid(((Integer)idmap.get(columnInfo)).intValue());

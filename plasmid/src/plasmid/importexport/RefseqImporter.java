@@ -71,9 +71,10 @@ public class RefseqImporter {
             for(int i=0; i<columns.size(); i++) {
                 String columnName = (String)columns.get(i);
                 String columnInfo = (String)row.get(i);
-                //System.out.println(columnInfo);
+                //System.out.println(columnName+"\t"+columnInfo);
                 if("refseqid".equalsIgnoreCase(columnName)) {
                     int seqid = 0;
+                    
                     try {
                         RefseqManager man = new RefseqManager(manager.getConnection());
                         seqid = man.findRefseq(RefseqNameType.GI, columnInfo);
@@ -220,6 +221,7 @@ public class RefseqImporter {
             for(int i=0; i<columns.size(); i++) {
                 String columnName = (String)columns.get(i);
                 String columnInfo = (String)row.get(i);
+                //System.out.println(columnName+"\t"+columnInfo);
                 if("refid".equalsIgnoreCase(columnName)) {
                     isNew = (String)isNewMap.get(columnInfo);
                     if(isNew.equals(NEW)) {

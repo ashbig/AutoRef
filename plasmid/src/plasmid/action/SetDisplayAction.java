@@ -136,8 +136,8 @@ public class SetDisplayAction extends Action {
             Collections.sort(clones, new VectorNameComparator());
         if("selection".equals(sortby))
             Collections.sort(clones, new SelectionMarkerComparator());
-        if("restriction".equals(sortby))
-            Collections.sort(clones, new CloneRestrictionComparator());
+        if("specialtreatment".equals(sortby))
+            Collections.sort(clones, new CloneSpecialTreatmentComparator());
         
         if("indirect".equals(displayPage)) {
             request.getSession().setAttribute("found", clones);

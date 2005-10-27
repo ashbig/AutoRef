@@ -34,6 +34,12 @@
     <td class="mainbodytext"><bean:write name="clone" property="restriction"/></td>
   </tr>
   <tr> 
+    <td class="tablebody">Source:</td>
+    <td class="mainbodytext"><bean:write name="clone" property="source"/></td>
+    <td class="tablebody">Special Treatment:</td>
+    <td class="mainbodytext"><bean:write name="clone" property="specialtreatment"/></td>
+  </tr>
+  <tr> 
     <td class="tablebody">Comments:</td>
     <td colspan="3" class="mainbodytext"><bean:write name="clone" property="comments"/></td>
   </tr>
@@ -111,6 +117,9 @@
     <td class="tableinfo"><a target="_blank" href="http://db.yeastgenome.org/cgi-bin/locus.pl?locus=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
     </logic:equal>
     <logic:equal name="insert" property="species" value="Yersinia pestis KIM">
+    <td class="tableinfo"><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=nucleotide&val=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
+    </logic:equal>
+    <logic:equal name="insert" property="species" value="Luciola mingrelica">
     <td class="tableinfo"><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=nucleotide&val=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
     </logic:equal>
     <td class="tableinfo"><bean:write name="insert" property="name"/></td>

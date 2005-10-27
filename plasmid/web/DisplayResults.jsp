@@ -77,7 +77,7 @@
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=insertformat&displayPage=<bean:write name="displayPage"/>&species=<bean:write name="species"/>">Insert Format</a></td>
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=vectorname&displayPage=<bean:write name="displayPage"/>&species=<bean:write name="species"/>">Vector</a></td>
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=selection&displayPage=<bean:write name="displayPage"/>&species=<bean:write name="species"/>">Selection Markers</a></td>
-    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=restriction&displayPage=<bean:write name="displayPage"/>&species=<bean:write name="species"/>">Distribution</a></td>
+    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=specialtreatment&displayPage=<bean:write name="displayPage"/>&species=<bean:write name="species"/>">Special Treatment</a></td>
     <td class="tableheader">&nbsp;</td>
   </tr>
 
@@ -112,7 +112,7 @@
         <bean:write name="selection" property="hosttype"/>: <bean:write name="selection" property="marker"/>
     </logic:iterate>
     </td>
-    <td><bean:write name="clone" property="restriction"/></td>
+    <td><bean:write name="clone" property="specialtreatment"/></td>
     <html:form action="SetDisplay.do">
     <html:hidden property="pagesize"/>
     <html:hidden property="page"/>
@@ -167,7 +167,7 @@
         <bean:write name="selection" property="hosttype"/>: <bean:write name="selection" property="marker"/>
     </logic:iterate>
     </td>
-    <td><bean:write name="clone" property="restriction"/></td>
+    <td><bean:write name="clone" property="specialtreatment"/></td>
 
     <html:form action="SetDisplay.do">
     <html:hidden property="pagesize"/>

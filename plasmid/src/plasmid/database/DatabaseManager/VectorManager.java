@@ -122,11 +122,7 @@ public class VectorManager extends TableManager {
                 VectorProperty vp = (VectorProperty)properties.get(i);
                 stmt.setInt(1, vp.getVectorid());
                 stmt.setString(2, vp.getPropertyType());
-                
-                if(Constants.DEBUG) {
-                    System.out.println("inserting propertytype: "+vp.getPropertyType());
-                }
-                
+
                 DatabaseTransaction.executeUpdate(stmt);
             }
             DatabaseTransaction.closeStatement(stmt);

@@ -33,7 +33,7 @@
     <td class="tableheader"><a href="SetVectorDisplay.do?sortby=clonetype">Clone Type</a></td>
     <td class="tableheader"><a href="SetVectorDisplay.do?sortby=vectorname">Vector Name</a></td>
     <td class="tableheader"><a href="SetVectorDisplay.do?sortby=selection">Selection Markers</a></td>
-    <td class="tableheader"><a href="SetVectorDisplay.do?sortby=restriction">Distribution</a></td>
+    <td class="tableheader"><a href="SetVectorDisplay.do?sortby=specialtreatment">Special Treatment</a></td>
     <td class="tableheader">&nbsp;</td>
   </tr>
 
@@ -49,7 +49,7 @@
         <bean:write name="selection" property="hosttype"/>: <bean:write name="selection" property="marker"/>
     </logic:iterate>
     </td>
-    <td><bean:write name="clone" property="restriction"/></td>
+    <td><bean:write name="clone" property="specialtreatment"/></td>
     <html:form action="SetVectorDisplay.do">
     <input type="hidden" name="cloneid" value="<bean:write name="clone" property="cloneid"/>"/>
     <logic:equal name="clone" property="isAddedToCart" value="true">
