@@ -47,14 +47,14 @@ public abstract class InternalUserAction extends UserAction {
         ActionErrors errors = new ActionErrors();
         User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
         
-       // if(User.INTERNAL.equals(user.getIsinternal())) {
+       if(User.INTERNAL.equals(user.getIsinternal())) {
             return internalUserPerform(mapping,form,request,response);
-       /** } else {
+      } else {
             errors.add(ActionErrors.GLOBAL_ERROR,
             new ActionError("error.user.nopreveliege"));
             saveErrors(request,errors);
             return mapping.findForward("login");
-        }*/
+        }
     }
         
     public abstract ActionForward internalUserPerform(ActionMapping mapping,
