@@ -266,9 +266,25 @@ public class ContainerProcessManager {
         }
         
         PlateManager manager = new PlateManager(conn);
-        if(!manager.insertPlateAndSample(containers)) {
+        if(!manager.updatePlates(containers, Container.FILLED, Container.WORKBENCH)) {
             if(Constants.DEBUG) {
-                System.out.println("Cannot insert containers.");
+                System.out.println("Cannot update containers.");
+                System.out.println(manager.getErrorMessage());
+            }
+            DatabaseTransaction.rollback(conn);
+            DatabaseTransaction.closeConnection(conn);
+            return false;
+        }
+        
+        List samples = new ArrayList();
+        for(int i=0; i<containers.size(); i++) {
+            Container c = (Container)containers.get(i);
+            List ss = c.getSamples();
+            samples.addAll(ss);
+        }
+        if(!manager.insertSample(samples)) {
+            if(Constants.DEBUG) {
+                System.out.println("Cannot insert samples.");
                 System.out.println(manager.getErrorMessage());
             }
             DatabaseTransaction.rollback(conn);
@@ -333,7 +349,7 @@ public class ContainerProcessManager {
                 generator.readWorklist(filepath+"full_worklist.txt");
                 
                 ContainerMapper mapper = new ContainerMapper(generator.getWorklist());
-                List destContainers = mapper.mapContainer(destContainerType);
+                List destContainers = mapper.mapContainer();
                 List lineages = mapper.getWorklist();
                 List samples = new ArrayList();
                 List tubes = new ArrayList();

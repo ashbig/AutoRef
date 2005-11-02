@@ -78,7 +78,7 @@ public class WorklistGenerator {
             Sample from = w.getSampleFrom();
             Sample to = w.getSampleTo();
             
-            f.write("\t"+from.getContainerlabel()+"\t"+from.getPosition()+"\t"+to.getContainerlabel()+"\t"+to.getPosition()+"\t"+to.getType()+"\t"+from.getSampleid()+"\t"+to.getCloneid()+"\n");
+            f.write("\t"+from.getContainerlabel()+"\t"+from.getPosition()+"\t"+to.getContainerlabel()+"\t"+to.getPosition()+"\t"+to.getType()+"\t"+from.getSampleid()+"\t"+to.getCloneid()+"\t"+from.getContainerid()+"\t"+to.getContainerid()+"\n");
             
         }
         f.close();
@@ -100,13 +100,13 @@ public class WorklistGenerator {
         }
         f.close();
     }
-     
+    
     public void printWorklistForRobot(String filename, int avolumn, int dvolumn, boolean isWash) throws Exception {
         if(worklist == null || filename == null)
             return;
         
-        OutputStreamWriter f = new FileWriter(filename);        
-                
+        OutputStreamWriter f = new FileWriter(filename);
+        
         int i=0;
         int size = worklist.size();
         while(i<size) {
@@ -130,7 +130,7 @@ public class WorklistGenerator {
                 }
             }
         }
-
+        
         f.flush();
         f.close();
     }
@@ -153,17 +153,27 @@ public class WorklistGenerator {
                 String sampleid = null;
                 if(st.hasMoreTokens()) {
                     sampleid = st.nextToken();
-                }          
+                }
                 String cloneid = null;
                 if(st.hasMoreTokens()) {
                     cloneid = st.nextToken();
                 }
+                String srcContainerid = null;
+                if(st.hasMoreTokens()) {
+                    srcContainerid = st.nextToken();
+                }
+                String destContainerid = null;
+                if(st.hasMoreTokens()) {
+                    destContainerid = st.nextToken();
+                }
                 
                 Sample from = new Sample();
                 from.setContainerlabel(sourcePlate);
-                from.setPosition(Integer.parseInt(sourcePosition));                
+                from.setPosition(Integer.parseInt(sourcePosition));
                 if(sampleid != null)
                     from.setSampleid(Integer.parseInt(sampleid));
+                if(srcContainerid != null)
+                    from.setContainerid(Integer.parseInt(srcContainerid));
                 
                 Sample to = new Sample();
                 to.setContainerlabel(destPlate);
@@ -171,6 +181,9 @@ public class WorklistGenerator {
                 to.setType(destSampleType);
                 if(cloneid != null)
                     to.setCloneid(Integer.parseInt(cloneid));
+                if(destContainerid != null)
+                    to.setContainerid(Integer.parseInt(destContainerid));
+                
                 worklist.add(new SampleLineage(from, to));
             }
         }
@@ -200,5 +213,67 @@ public class WorklistGenerator {
         }
         
         return labels;
-    }        
+    }
+    
+    public Set getSrcContainerids() {
+        if(worklist == null)
+            return null;
+        
+        Set ids = new HashSet();
+        for(int i=0; i<worklist.size(); i++) {
+            SampleLineage w = (SampleLineage)worklist.get(i);
+            ids.add(new Integer(w.getSampleFrom().getContainerid()));
+        }
+        
+        return ids;
+    }
+    
+    public Set getSrcContainers() {
+        if(worklist == null)
+            return null;
+        
+        Set containers = new HashSet();
+        for(int i=0; i<worklist.size(); i++) {
+            SampleLineage w = (SampleLineage)worklist.get(i);
+            Sample s = w.getSampleFrom();
+            int id = s.getContainerid();
+            String label = s.getContainerlabel();
+            String type = s.getContainerType();
+            Container c = new Container(id, type, label, null, null, -1, null);
+            containers.add(c);
+        }
+        
+        return containers;
+    }
+    
+    public Set getDestContainers() {
+        if(worklist == null)
+            return null;
+        
+        Set containers = new HashSet();
+        for(int i=0; i<worklist.size(); i++) {
+            SampleLineage w = (SampleLineage)worklist.get(i);
+            Sample s = w.getSampleTo();
+            int id = s.getContainerid();
+            String label = s.getContainerlabel();
+            String type = s.getContainerType();
+            Container c = new Container(id, type, label, null, null, -1, null);
+            containers.add(c);
+        }
+        
+        return containers;
+    }
+    
+    public Set getDestContainerids() {
+        if(worklist == null)
+            return null;
+        
+        Set ids = new HashSet();
+        for(int i=0; i<worklist.size(); i++) {
+            SampleLineage w = (SampleLineage)worklist.get(i);
+            ids.add(new Integer(w.getSampleTo().getContainerid()));
+        }
+        
+        return ids;
+    }
 }

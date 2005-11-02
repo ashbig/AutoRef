@@ -26,6 +26,7 @@ public class GenerateWorklistForm extends ActionForm {
     private String srcContainerList;
     private String destContainerList;
     private int volumn;
+    private String worklistname;
     
     /** Creates a new instance of GenerateWorklistForm */
     public GenerateWorklistForm() {
@@ -37,6 +38,7 @@ public class GenerateWorklistForm extends ActionForm {
     public String getSrcContainerList() {return srcContainerList;}
     public String getDestContainerList() {return destContainerList;}
     public int getVolumn() {return volumn;}
+    public String getWorklistname() {return worklistname;}
     
     public void setProcessname(String s) {this.processname = s;}
     public void setProtocols(List l) {this.protocols = l;}
@@ -44,6 +46,7 @@ public class GenerateWorklistForm extends ActionForm {
     public void setSrcContainerList(String s) {this.srcContainerList = s;}
     public void setDestContainerList(String s) {this.destContainerList = s;}
     public void setVolumn(int i) {this.volumn = i;}
+    public void setWorklistname(String s) {this.worklistname = s;}
     
     /**
      * Reset all properties to their default values.

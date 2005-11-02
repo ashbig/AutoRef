@@ -63,7 +63,7 @@ public class InsertImporter {
             for(int i=0; i<columns.size(); i++) {
                 String columnName = (String)columns.get(i);
                 String columnInfo = (String)row.get(i);
-                System.out.println(i+": "+columnInfo);
+                //System.out.println(i+": "+columnInfo);
                 if("insertid".equalsIgnoreCase(columnName)) {
                     idmap.put(columnInfo, new Integer(id));
                 }
@@ -149,6 +149,7 @@ public class InsertImporter {
             for(int i=0; i<columns.size(); i++) {
                 String columnName = (String)columns.get(i);
                 String columnInfo = (String)row.get(i);
+                //System.out.println(columnName+"\t"+columnInfo);
                 if("insertid".equalsIgnoreCase(columnName)) {
                     c.setInsertid(((Integer)idmap.get(columnInfo)).intValue());
                 }

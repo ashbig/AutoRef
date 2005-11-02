@@ -4,6 +4,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ page import="plasmid.coreobject.RefseqNameType" %> 
 
 <html>
 <head>
@@ -107,19 +108,16 @@
     <td class="tableinfo"><bean:write name="insert" property="hasdiscrepancy"/></td>
     <td class="tableinfo"><bean:write name="insert" property="format"/></td>
     <td class="tableinfo"><bean:write name="insert" property="source"/></td>
-    <logic:equal name="insert" property="species" value="Homo sapiens">
+    <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.GENEID%>">
     <td class="tableinfo"><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=gene&cmd=Retrieve&dopt=Graphics&list_uids=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
     </logic:equal>
-    <logic:equal name="insert" property="species" value="Pseudomonas aeruginosa">
+    <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.PA%>">
     <td class="tableinfo"><a target="_blank" href="http://www.pseudomonas.com/AnnotationByPAU.asp?PA=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
     </logic:equal>
-    <logic:equal name="insert" property="species" value="Saccharomyces cerevisiae">
+    <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.SGD%>">
     <td class="tableinfo"><a target="_blank" href="http://db.yeastgenome.org/cgi-bin/locus.pl?locus=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
     </logic:equal>
-    <logic:equal name="insert" property="species" value="Yersinia pestis KIM">
-    <td class="tableinfo"><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=nucleotide&val=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
-    </logic:equal>
-    <logic:equal name="insert" property="species" value="Luciola mingrelica">
+    <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.GENBANK%>">
     <td class="tableinfo"><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=nucleotide&val=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
     </logic:equal>
     <td class="tableinfo"><bean:write name="insert" property="name"/></td>
@@ -271,7 +269,7 @@
   </tr>
 <logic:iterate id="publication" name="clone" property="publications">
   <tr>
-    <td class="tableinfo"><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=pubmed&dopt=Abstract&list_uids=<bean:write name="publication" property="pmid"/>"><bean:write name="publication" property="pmid"/></a></td>
+    <td class="tableinfo"><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Search&db=pubmed&term=<bean:write name="publication" property="pmid"/>"><bean:write name="publication" property="pmid"/></a></td>
     <td class="tableinfo"><bean:write name="publication" property="title"/></td>
   </tr>
 </logic:iterate>

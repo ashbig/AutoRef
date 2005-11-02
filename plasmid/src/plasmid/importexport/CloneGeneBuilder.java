@@ -298,17 +298,38 @@ public class CloneGeneBuilder {
         DatabaseTransaction.executeUpdate(sql, conn);
     }
     
-    public void truncateTables(Connection conn) throws Exception {
-        String sql= " truncate table clonegenbank;"+
-        " truncate table clonegi;"+
-        " truncate table clonesymbol;"+
-        " truncate table clonegene;";
+    public void buildCloneLocusWithSpecies(Connection conn, String species) throws Exception {
+        String sql = "insert into clonegene(cloneid, geneid)"+
+        " select distinct c.cloneid, d.geneid"+
+        " from clone c, dnainsert d"+
+        " where c.cloneid=d.cloneid"+
+        " and d.species='"+species+"'";
+        DatabaseTransaction.executeUpdate(sql, conn);
+        
+        sql = "insert into clonesymbol(cloneid, symbol)"+
+        " select distinct c.cloneid, d.name"+
+        " from clone c, dnainsert d"+
+        " where c.cloneid=d.cloneid"+
+        " and d.species='"+species+"'";
         DatabaseTransaction.executeUpdate(sql, conn);
     }
-
+    
+    public void truncateTables(Connection conn) throws Exception {
+        String sql= "truncate table clonegenbank";
+        DatabaseTransaction.executeUpdate(sql, conn);
+        sql= "truncate table clonegi";
+        DatabaseTransaction.executeUpdate(sql, conn);
+        sql= "truncate table clonesymbol";
+        DatabaseTransaction.executeUpdate(sql, conn);
+        sql= "truncate table clonegene";
+        DatabaseTransaction.executeUpdate(sql, conn);
+    }
+    
     public static void main(String args[]) {
-        int lastInsertid = 9081;
-        int lastCloneid = 9081;
+        //int lastInsertid = 9081;
+        //int lastCloneid = 9081;
+        int lastInsertid = 0;
+        int lastCloneid = 0;
         DatabaseTransaction t = null;
         Connection conn = null;
         CloneGeneBuilder builder = new CloneGeneBuilder();
@@ -316,13 +337,16 @@ public class CloneGeneBuilder {
         try {
             t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
+            /**
             System.out.println("Building DNAINSERT with genes");
             builder.buildDnainsertWithGene(conn, lastInsertid);
             builder.buildDnainsertWithRefseqSymbol(conn, lastInsertid);
             System.out.println("Building DNAINSERT with reference sequences");
             builder.buildDnainsertWithRefseq(conn, lastInsertid);
             DatabaseTransaction.commit(conn);
-           
+           */
+            System.out.println("Truncate tables");
+            builder.truncateTables(conn);
             System.out.println("Building CLONEGENBANK");
             builder.buildCloneGenbank(conn, lastCloneid);
             System.out.println("Building CLONELOCUS");
@@ -331,6 +355,8 @@ public class CloneGeneBuilder {
             builder.buildCloneSymbol(conn, lastCloneid);
             System.out.println("Building CLONEGI");
             builder.buildCloneGi(conn, lastCloneid);
+            DatabaseTransaction.commit(conn);
+            
             DatabaseTransaction.commit(conn);
         } catch (Exception ex) {
             DatabaseTransaction.rollback(conn);

@@ -42,6 +42,7 @@ public class LocusDetailParser {
                     result.add(gene);
                     genbanks = new ArrayList();
                     genesymbols = new ArrayList();
+                    //System.out.println(gene.getLocusid());
                 }
                 count++;
                 //System.out.println(count);
@@ -54,6 +55,7 @@ public class LocusDetailParser {
                 gene = new Gene(locusid);
             }
             if(line.indexOf("CURRENT_LOCUSID") == 0) {
+                gene = null;
                 in.readLine();
                 count--;
                 continue;
@@ -169,9 +171,11 @@ public class LocusDetailParser {
         for( int i=0; i<records.size(); i++) {
             Gene gene = (Gene)records.get(i);
             
+            /**
             if(!"Homo sapiens".equals(gene.getOrganism())) {
                 continue;
             }
+            */
             
             stmt.setString(1, gene.getLocusid());
             stmt.setString(2, gene.getIsconfirmed());
@@ -189,7 +193,7 @@ public class LocusDetailParser {
                 stmt2.setString(1, gs.getSymbol());
                 stmt2.setString(2, gs.getType());
                 stmt2.setString(3,  gene.getLocusid());
-                System.out.println("\tupdate: "+gs.getSymbol());
+                //System.out.println("\tupdate: "+gs.getSymbol());
                 DatabaseTransaction.executeUpdate(stmt2);
             }
             
@@ -200,7 +204,7 @@ public class LocusDetailParser {
                 stmt3.setString(2, gr.getGi());
                 stmt3.setString(3, gr.getType());
                 stmt3.setString(4, gene.getLocusid());
-                System.out.println("\tupdate: "+gr.getGenbank());
+                //System.out.println("\tupdate: "+gr.getGenbank());
                 DatabaseTransaction.executeUpdate(stmt3);
             }
         }
@@ -226,38 +230,22 @@ public class LocusDetailParser {
         DatabaseTransaction.executeUpdate(sql, conn);
     }
     
-    public void disableConstraints(String table, Connection conn) throws Exception{
-        String sql="select constraint_name from user_constraints "+
-        "where table_name='"+table.toUpperCase()+"'"+
-        " and constraint_name not like '%PK'";
-        DatabaseTransaction t = DatabaseTransaction.getInstance();
-        
-        ResultSet rs = t.executeQuery(sql);
-        while(rs.next()) {
-            String name = rs.getString(1);
-            String sqlUpdate = "alter table "+table+
-            " disable constraint "+name;
-            System.out.println("name: "+name);
+    public void disableConstraints(Connection conn) throws Exception{
+            String sqlUpdate = "alter table GENENAME disable constraint GEE_GENE_FK";
             DatabaseTransaction.executeUpdate(sqlUpdate, conn);
-        }
-        
-        DatabaseTransaction.closeResultSet(rs);
+            sqlUpdate = "alter table GENESYMBOL disable constraint GSB_GENE_FK";
+            DatabaseTransaction.executeUpdate(sqlUpdate, conn);
+            sqlUpdate = "alter table SEQUENCERECORD disable constraint SEQRECORD_GENE_FK";
+            DatabaseTransaction.executeUpdate(sqlUpdate, conn);
     }
     
-    public void enableConstraints(String table, Connection conn) throws Exception{
-        String sql="select constraint_name from user_constraints "+
-        "where table_name='"+table.toUpperCase()+"'";
-        DatabaseTransaction t = DatabaseTransaction.getInstance();
-        
-        ResultSet rs = t.executeQuery(sql);
-        while(rs.next()) {
-            String name = rs.getString(1);
-            String sqlUpdate = "alter table "+table+
-            " enable constraint "+name;
+    public void enableConstraints(Connection conn) throws Exception{
+            String sqlUpdate = "alter table GENENAME enable constraint GEE_GENE_FK";
             DatabaseTransaction.executeUpdate(sqlUpdate, conn);
-        }
-        
-        DatabaseTransaction.closeResultSet(rs);
+            sqlUpdate = "alter table GENESYMBOL enable constraint GSB_GENE_FK";
+            DatabaseTransaction.executeUpdate(sqlUpdate, conn);
+            sqlUpdate = "alter table SEQUENCERECORD enable constraint SEQRECORD_GENE_FK";
+            DatabaseTransaction.executeUpdate(sqlUpdate, conn);
     }
     
     public static void main(String args[]) {
@@ -274,6 +262,7 @@ public class LocusDetailParser {
             in = new BufferedReader(new FileReader(file));
             t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
+            /**
             parser.cleanTable("generecord_tmp", conn);
             parser.cleanTable("sequencerecord_tmp", conn);
             parser.cleanTable("genesymbol_tmp", conn);
@@ -281,7 +270,6 @@ public class LocusDetailParser {
             in.readLine();
             
             while((line = in.readLine()) != null) {
-                System.out.println(line);
                 records = parser.parseFile(in, line);
                 parser.insert(conn, records);
                 DatabaseTransaction.commit(conn);
@@ -289,13 +277,13 @@ public class LocusDetailParser {
             }
             
             in.close();
-            
-            //parser.disableConstraints("gene", conn);
+            */
+            parser.disableConstraints(conn);
             System.out.println("Truncate table GENESYMBOL");
             parser.cleanTable("genesymbol", conn);
             System.out.println("Truncate table sequencerecord");
             parser.cleanTable("sequencerecord", conn);
-            //parser.cleanTable("gene", conn);
+            parser.cleanTable("gene", conn);
             System.out.println("Truncate table gene");
             parser.deleteTable("gene", conn);
             
@@ -307,8 +295,8 @@ public class LocusDetailParser {
             parser.transferTable("genesymbol_tmp", "genesymbol", conn);
             DatabaseTransaction.commit(conn);
             
-            //System.out.println("Enable constraints");
-            //parser.enableConstraints("gene", conn);
+            System.out.println("Enable constraints");
+            parser.enableConstraints(conn);
         } catch (Exception ex) {
             DatabaseTransaction.rollback(conn);
             System.out.println(ex);

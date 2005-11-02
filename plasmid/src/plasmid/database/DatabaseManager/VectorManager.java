@@ -122,7 +122,7 @@ public class VectorManager extends TableManager {
                 VectorProperty vp = (VectorProperty)properties.get(i);
                 stmt.setInt(1, vp.getVectorid());
                 stmt.setString(2, vp.getPropertyType());
-
+                //System.out.println(vp.getPropertyType());
                 DatabaseTransaction.executeUpdate(stmt);
             }
             DatabaseTransaction.closeStatement(stmt);
@@ -145,7 +145,7 @@ public class VectorManager extends TableManager {
             
             for(int i=0; i<features.size(); i++) {
                 VectorFeature v = (VectorFeature)features.get(i);
-                System.out.println(v.getName());
+                //System.out.println(v.getName());
                 stmt2.setString(1, v.getName());
                 stmt2.setString(2, v.getDescription());
                 stmt2.setInt(3, v.getStart());
@@ -153,7 +153,7 @@ public class VectorManager extends TableManager {
                 stmt2.setInt(5, v.getVectorid());
                 stmt2.setString(6, v.getMaptype());
                 stmt2.setInt(7, v.getFeatureid());
-                
+                //System.out.println(v.getMaptype());
                 DatabaseTransaction.executeUpdate(stmt2);
             }
             DatabaseTransaction.closeStatement(stmt2);
@@ -211,7 +211,7 @@ public class VectorManager extends TableManager {
                 stmt.setInt(2, vp.getAuthorid());
                 stmt.setString(3, vp.getType());
                 stmt.setString(4, vp.getDate());
-                
+                //System.out.println(vp.getVectorid()+"\t"+vp.getAuthorid());
                 DatabaseTransaction.executeUpdate(stmt);
             }
             DatabaseTransaction.closeStatement(stmt);

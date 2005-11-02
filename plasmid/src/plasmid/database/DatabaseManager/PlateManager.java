@@ -114,6 +114,33 @@ public class PlateManager extends TableManager {
         return true;
     }
     
+    public boolean updatePlates(List plates, String status, String location) {
+        if(plates == null || plates.size() == 0)
+            return true;
+        
+        String sql = "update containerheader"+
+        " set status=?, location=?"+
+        " where containerid=?";
+        
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            
+            for(int i=0; i<plates.size(); i++) {
+                Container c = (Container)plates.get(i);
+                stmt.setString(1, status);
+                stmt.setString(2, location);
+                stmt.setInt(3, c.getContainerid());
+                
+                DatabaseTransaction.executeUpdate(stmt);
+            }
+            DatabaseTransaction.closeStatement(stmt);
+        } catch (Exception ex) {
+            handleError(ex, "Error occured while updating CONTAINERHEADER table");
+            return false;
+        }
+        return true;
+    }
+    
     public List queryContainers(List labels, boolean isSampleRestore) {
         if(labels == null)
             return null;

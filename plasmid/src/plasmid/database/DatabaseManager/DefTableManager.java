@@ -69,7 +69,7 @@ public class DefTableManager extends TableManager {
     }
     
     public int getNextid(String seqname, DatabaseTransaction t) {
-        String sql = "select seqname.nextval from dual";
+        String sql = "select "+seqname+".nextval from dual";
         ResultSet rs = null;
         int id = -1;
         try {
@@ -106,8 +106,8 @@ public class DefTableManager extends TableManager {
         return l;
     }
      
-    public int getNextid(String seqname) {
-        String sql = "select seqname.nextval from dual";
+    public static int getNextid(String seqname) {
+        String sql = "select "+seqname+".nextval from dual";
         DatabaseTransaction t = null;
         ResultSet rs = null;
         int id = -1;
@@ -118,7 +118,10 @@ public class DefTableManager extends TableManager {
                 id = rs.getInt(1);
             }
         } catch (Exception ex) {
-            handleError(ex, "Error occured while querying sequence "+seqname);
+            if(Constants.DEBUG) {
+                System.out.println("Error occured while querying sequence "+seqname);
+                System.out.println(ex);
+            }
         } finally {
             t.closeResultSet(rs);
         }

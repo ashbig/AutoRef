@@ -24,35 +24,25 @@
 
 <table width="100%" border="0">
   <tr> 
-    <td width="58%" rowspan="3" valign="top"> <p class="text"><span class="controlpaneltext">HAVE 
-        YOU LOGGED IN? LOG-IN STATUS AFFECTS YOUR SEARCH RESULTS.</span><br>
-        Register and log in to search the complete set of clones you are eligible 
-        to order (for example, if you are an academic researcher, log in to see 
-        the set of clones that can be distributed only to academic and non-profit 
-        labs). Prior to log-in, you'll only be able to search the set of clones 
-        available to all users.
-      <p class="text">After log-in, use the menu bar on the left to choose a search 
-        type or view a list of clones in a special collection.
-<P class="itemtext"><u>Search for plasmid clones</u></P>
-      <ul>
-        <li class="underbullet">Choose a search type from the menu bar on the 
-          left</li>
-        <li class="underbullet">&quot;Search by reference sequence&quot; queries 
-          insert-associated information. Use this search to find cDNAs, genomic 
-          fragments, shRNAs, etc. inserted into various vectors using a gene symbol, 
-          GenBank number, or an organism-specific ID)</li>
-      </ul>
-      <p class="itemtext"><u>View clone lists</u></p>
-      <ul>
-        <li class="underbullet">Certain donor labs (for example, the Harvard Institute 
-          of Proteomics or HIP) have special collections listed here that group 
-          a set of clones by molecular function, disease association, or organism</li>
-        <li class="underbullet">Click &quot;view clone lists&quot; then click 
-          on a specific set to view the clones in that set</li>
-        <li class="underbullet">Order individual clones or the entire set (special 
-          pricing available for some sets)</li>
-      </ul></td>
-    <td width="42%" height="142" valign="top"> 
+    <td width="58%" rowspan="3" valign="top"> <p><span class="mainbodytextlarge">Looking 
+        for a specific gene insert? </span> <span class="morehit"><br>
+        </span><span class="alert"><a href="GetDataForRefseqSearch.do">search by reference sequence</a></span></p>
+      <p><span class="mainbodytextlarge">Looking for an 'empty vector'? </span><span class="morehit"><br>
+        </span><span class="alert"><a href="GetAllVectors.do">view all vectors</a></span></p>
+      <p><span class="mainbodytextlarge">Ready to check out? </span><span class="morehit"><br>
+        </span><span class="alert">click the shopping cart icon to initiate check-out 
+        (top right of any page)</span><br>
+        <br>
+        <span class="mainbodytextlarge">Can't find what you're looking for? </span><span class="morehit"><br>
+        </span><span class="alert">please be sure you logged in because log-in 
+        effects what clones you can view.<br>
+        <a href="http://dnaseq.med.harvard.edu/plasmid-related_links.htm" title="Plasmid Links Page" target="_blank">CLICK 
+        HERE</a> to see other resources for clones.</span></p>
+      <p class="text"><span class="mainbodytextlarge">Don't recognize an organisms' 
+        name? </span><span class="morehit"><br>
+        </span><span class="alert">the <a target="_blank" href="collection_overview.jsp">collection overview</a> includes common names 
+        for organisms in our collection</span></td>
+    <td width="42%" height="140" valign="top"> 
       <table width="100%" border="3">
         <tr class="tableheader"> 
           <td width="32%">PI Status</td>
@@ -91,33 +81,31 @@
         </tr>
       </table></td>
   </tr>
-  <tr>
+  <tr> 
     <td valign="top" class="footertext">* Shipping is additional -- details at 
       checkout.</td>
   </tr>
   <tr> 
-    <td height="164" valign="middle" class="footertext"> 
-      <p class="homepageLink"><span class="alert">quick hint to understanding 
-        the database:</span> <span class="underbullet">the core curates information 
-        about vectors, inserts and clones, with the idea that vector + insert 
-        = clone in most cases. the &quot;search by reference sequence&quot; tool 
-        searches insert info (use this to find your gene of interest) and conversely, 
-        the &quot;search by vector&quot; tool searches vector info. at the search 
-        results table (or from the summary table created after you've placed an 
-        order), click on the clone ID to find information about vector, insert, 
-        growth conditions, host strains, appropriate references, and more. Downloadable 
-        maps &amp; sequences are associated with the clone and/or the vector.</span></p></td>
+    <td height="137" valign="middle" class="footertext"> 
+      <p class="homepageLink"><span class="homepageText3">Please 
+        give credit where credit is due!</span><span class="mainbodytexthead"> 
+        </span><span class="morehit">When you have searched for and ordered a 
+        clone, be sure to click on the clone ID and make note of both the reference(s) 
+        associated with the clone and the author(s) who donated the clone. The 
+        people who constructed, published, and donated the clone should be cited 
+        whenever you publish work that uses the clone that you ordered.</span></p></td>
   </tr>
 </table>
 
 <table width="100%" border="0">
   <tr>
-    <td class="homepageText2">Please give credit where credit is due! <span class="breadcrumbtextactive">When 
-      you have searched for and ordered a clone, be sure to click on the clone 
-      ID and make note of both the reference(s) associated with the clone and 
-      the author(s) who donated the clone. The people who constructed, published, 
-      and donated the clone should be cited whenever you publish work that uses 
-      the clone that you ordered.</span></td>
+  <td height="28" colspan="8"> <div align="center" class="homepageLink">For 
+                information on DNA sequencing and other DNA Resource Core services, 
+                please <a href="http://dnaseq.med.harvard.edu" title="DNA Resource Core Home Page" target="_blank">CLICK 
+                HERE</a>. <span class="morehit"><br>
+                Have questions not answered in our faq (top right of page)? Please 
+                contact <a href="http://dnaseq.med.harvard.edu/contact_us.htm" title="Contact DNA Resource Core" target="_blank">stephanie 
+                mohr</a>.</span></div></td>
   </tr>
 </table>
     </td>

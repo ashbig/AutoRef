@@ -109,7 +109,7 @@ public class VectorImporter {
             for(int i=0; i<columns.size(); i++) {
                 String columnName = (String)columns.get(i);
                 String columnInfo = (String)row.get(i);
-                //System.out.println(columnName);
+               //System.out.println(columnName);
                 //System.out.println(columnInfo);
                 if("name".equalsIgnoreCase(columnName)) {
                     v.setName(columnInfo);
@@ -176,6 +176,7 @@ public class VectorImporter {
             for(int i=0; i<columns.size(); i++) {
                 String columnName = (String)columns.get(i);
                 String columnInfo = (String)row.get(i);
+                //System.out.println(columnName+"\t"+columnInfo);
                 if("parentname".equalsIgnoreCase(columnName)) {
                     v.setParentvectorname(columnInfo);
                 }
@@ -208,6 +209,7 @@ public class VectorImporter {
             for(int i=0; i<columns.size(); i++) {
                 String columnName = (String)columns.get(i);
                 String columnInfo = (String)row.get(i);
+                //System.out.println(columnName+"\t"+columnInfo);
                 if("authortype".equalsIgnoreCase(columnName)) {
                     v.setType(columnInfo);
                 }
@@ -216,6 +218,7 @@ public class VectorImporter {
                 }
                 if("vectorname".equalsIgnoreCase(columnName)) {
                     v.setVectorid(((Integer)idmap.get(columnInfo)).intValue());
+                    //System.out.println("vectorid: "+columnInfo+"\t"+idmap.get(columnInfo));
                 }
                 if("authorname".equalsIgnoreCase(columnName)) {
                     int authorid = 0;
@@ -236,6 +239,7 @@ public class VectorImporter {
                         throw new Exception("Cannot get authorid with authorname: "+columnInfo);
                     }
                     v.setAuthorid(authorid);
+                    //System.out.println("authorid: "+columnInfo+"\t"+authorid);
                 }
             }
             authors.add(v);
@@ -256,6 +260,7 @@ public class VectorImporter {
             for(int i=0; i<columns.size(); i++) {
                 String columnName = (String)columns.get(i);
                 String columnInfo = (String)row.get(i);
+                System.out.println(columnName+"\t"+columnInfo);
                 if("vectorname".equalsIgnoreCase(columnName)) {
                     v.setVectorid(((Integer)idmap.get(columnInfo)).intValue());
                 }

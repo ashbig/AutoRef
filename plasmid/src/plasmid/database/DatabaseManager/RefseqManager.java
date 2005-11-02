@@ -127,7 +127,7 @@ public class RefseqManager extends TableManager {
                 stmt.setString(2, c.getNametype());
                 stmt.setString(3, c.getNamevalue());
                 stmt.setString(4, c.getNameurl());
-                
+                //System.out.println(c.getRefseqid()+"\t"+c.getNamevalue());
                 DatabaseTransaction.executeUpdate(stmt);
             }
             DatabaseTransaction.closeStatement(stmt);

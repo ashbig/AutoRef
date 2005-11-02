@@ -63,7 +63,8 @@
             shRNA </td>
             <td width="19%" class="underbullet"><html:checkbox property="genomicfragment"/>
             genomic fragment </td>
-            <td width="21%" class="underbullet"></td>
+            <td width="21%" class="underbullet"><html:checkbox property="tfbindsite"/>
+            trxn factor bind site </td>
             <td width="20%" class="underbullet"></td>
         </tr>
         <tr> 

@@ -287,7 +287,7 @@ public class CloneManager extends TableManager {
                 ClonePublication c = (ClonePublication)pubs.get(i);
                 stmt.setInt(1, c.getCloneid());
                 stmt.setInt(2, c.getPublicationid());
-                
+                //System.out.println(c.getCloneid()+"\t"+c.getPublicationid());
                 DatabaseTransaction.executeUpdate(stmt);
             }
             DatabaseTransaction.closeStatement(stmt);

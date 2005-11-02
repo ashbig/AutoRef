@@ -78,6 +78,7 @@ public class RefseqImporter {
                     try {
                         RefseqManager man = new RefseqManager(manager.getConnection());
                         seqid = man.findRefseq(RefseqNameType.GI, columnInfo);
+                        //System.out.println("seqid: "+seqid);
                     } catch (Exception ex) {
                         throw new Exception("Error occured while trying to find matching reference sequence: "+columnInfo+" from database.");
                     }
@@ -85,7 +86,6 @@ public class RefseqImporter {
                     if(seqid > 0) {
                         idmap.put(columnInfo, new Integer(seqid));
                         isNew = OLD;
-                        break;
                     } else {
                         idmap.put(columnInfo, new Integer(id));
                         isNew = NEW;
@@ -224,6 +224,7 @@ public class RefseqImporter {
                 //System.out.println(columnName+"\t"+columnInfo);
                 if("refid".equalsIgnoreCase(columnName)) {
                     isNew = (String)isNewMap.get(columnInfo);
+                    //System.out.println(isNew);
                     if(isNew.equals(NEW)) {
                         c.setRefseqid(((Integer)idmap.get(columnInfo)).intValue());
                     } else {
@@ -242,6 +243,7 @@ public class RefseqImporter {
             }
             if(isNew.equals(NEW)) {
                 names.add(c);
+               // System.out.println("add: "+c.getRefseqid());
             }
         }
         

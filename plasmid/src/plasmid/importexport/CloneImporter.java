@@ -143,7 +143,7 @@ public class CloneImporter {
             for(int i=0; i<columns.size(); i++) {
                 String columnName = (String)columns.get(i);
                 String columnInfo = (String)row.get(i);
-                System.out.println(columnName+"\t"+columnInfo);
+                //System.out.println(columnName+"\t"+columnInfo);
                 if("cloneid".equalsIgnoreCase(columnName)) {
                     c.setCloneid(((Integer)idmap.get(columnInfo)).intValue());
                 }
@@ -362,6 +362,7 @@ public class CloneImporter {
                 String columnInfo = (String)row.get(i);
                 if("cloneid".equalsIgnoreCase(columnName)) {
                     c.setCloneid(((Integer)idmap.get(columnInfo)).intValue());
+                    //System.out.println("cloneid: "+c.getCloneid()+"\t"+columnInfo);
                 }
                 if("publicationid".equalsIgnoreCase(columnName)) {
                     int pubid = 0;
@@ -375,6 +376,7 @@ public class CloneImporter {
                         throw new Exception("Cannot get publicationid from publication: "+columnInfo);
                     }
                     c.setPublicationid(pubid);
+                    //System.out.println("publicationid: "+c.getPublicationid()+"\t"+columnInfo);
                 }
             }
             pubs.add(c);

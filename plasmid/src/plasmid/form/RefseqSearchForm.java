@@ -26,6 +26,7 @@ public class RefseqSearchForm extends ActionForm {
     private boolean cdna;
     private boolean shrna;
     private boolean genomicfragment;
+    private boolean tfbindsite;
     private boolean fusion;
     private boolean closed;
     private String marker;
@@ -49,6 +50,7 @@ public class RefseqSearchForm extends ActionForm {
     public boolean getCdna() {return cdna;}
     public boolean getShrna() {return shrna;}
     public boolean getGenomicfragment() {return genomicfragment;}
+    public boolean getTfbindsite() {return tfbindsite;}
     public boolean getFusion() {return fusion;}
     public boolean getClosed() {return closed;}
     public String getMarker() {return marker;}
@@ -71,6 +73,8 @@ public class RefseqSearchForm extends ActionForm {
     public void setSearchString(String s) {this.searchString = s;}
     public void setCdna(boolean s) {this.cdna = s;}
     public void setShrna(boolean s) {this.shrna = s;}
+    public void setGenomicfragment(boolean s) {this.genomicfragment = s;}
+    public void setTfbindsite(boolean s) {this.tfbindsite = s;}
     public void setFusion(boolean s) {this.fusion = s;}
     public void setClosed(boolean s) {this.closed = s;}
     public void setMarker(String s) {this.marker = s;}
@@ -86,7 +90,6 @@ public class RefseqSearchForm extends ActionForm {
     public void setSortby(String s) {this.sortby = s;}
     public void setCloneid(String id) {this.cloneid = id;}
     public void setButton(String s) {this.button = s;}
-    public void setGenomicfragment(boolean b) {this.genomicfragment = b;}
     
     /**
      * Reset all properties to their default values.
@@ -102,6 +105,7 @@ public class RefseqSearchForm extends ActionForm {
         cdna = false;
         shrna = false;
         genomicfragment = false;
+        tfbindsite = false;
         fusion = false;
         closed=false;
         marker = "All";
