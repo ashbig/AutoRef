@@ -25,11 +25,13 @@ import org.apache.struts.util.MessageResources;
 
 import plasmid.form.GenerateWorklistForm;
 import plasmid.database.DatabaseManager.ProcessManager;
+import plasmid.database.DatabaseManager.DefTableManager;
 import plasmid.Constants;
 import plasmid.coreobject.Process;
 import plasmid.coreobject.*;
 import plasmid.util.StringConvertor;
 import plasmid.process.*;
+import plasmid.util.Mailer;
 
 /**
  *
@@ -124,17 +126,35 @@ public class WorklistInputAction extends InternalUserAction{
                 return (new ActionForward(mapping.getInput()));
             }
          
-            String fileWorklist = "worklist.txt";
-            String fileWorklistRobot = "worklist_robot.txt";
+            int worklistid = DefTableManager.getNextid("WORKLISTID");
+            if(worklistid < 0) {
+                errors.add(ActionErrors.GLOBAL_ERROR,
+                new ActionError("error.general", "Cannot get next value from sequence WORKLISTID."));
+                saveErrors(request, errors);
+                return mapping.findForward("error");
+            }
+            
+            String fileWorklist = Constants.WORKLIST+"_"+worklistid+".txt";
+            String fileWorklistRobot = Constants.WORKLISTROBOT+"_"+worklistid+".gwl";
             List worklist = calculator.calculateMapping();
             WorklistGenerator generator = new WorklistGenerator(worklist);
-            generator.printFullWorklist(Constants.WORKLIST_FILE_PATH+"full_worklist.txt");
+            generator.printFullWorklist(Constants.WORKLIST_FILE_PATH+Constants.FULLWORKLIST+"_"+worklistid+".txt");
             generator.printWorklist(Constants.WORKLIST_FILE_PATH+fileWorklist);
             generator.printWorklistForRobot(Constants.WORKLIST_FILE_PATH+fileWorklistRobot, volumn, volumn, true);
             
             List filenames = new ArrayList();
             filenames.add(fileWorklist);
             filenames.add(fileWorklistRobot);
+            
+            Collection fileCol = new LinkedList();
+            User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
+            String to = user.getEmail();
+            String subject = "Worklist";
+            String text = "The attached files are your worklists.";
+            fileCol.add(new File(Constants.WORKLIST_FILE_PATH+fileWorklist));
+            fileCol.add(new File(Constants.WORKLIST_FILE_PATH+fileWorklistRobot));
+            Mailer.sendMessage(to,Constants.EMAIL_FROM,null,subject,text,fileCol);
+            
             request.setAttribute("filenames", filenames);
         } catch (Exception ex) {
             if(Constants.DEBUG) {

@@ -13,6 +13,19 @@ import java.util.*;
  * @author  DZuo
  */
 public class DnaInsert {
+    public static final String HUMAN = "Homo sapiens";
+    public static final String YEAST = "Saccharomyces cerevisiae";
+    public static final String PA = "Pseudomonas aeruginosa";
+    public static final String HP = "Human papillomavirus-16";
+    public static final String MOUSE = "Mus musculus";
+    public static final String OC = "Oryctolagus cuniculus";
+    public static final String RN = "Rattus norvegicus";
+    public static final String BP = "Bacteriophage";
+    public static final String SV40 = "SV40";
+    public static final String YP = "Yersinia pestis KIM";
+    public static final String LM = "Luciola mingrelica";
+    public static final String HAD = "Human adenovirus C type 2";
+
     private int insertid;
     private int order;
     private int size;
@@ -109,5 +122,15 @@ public class DnaInsert {
     
     public String getFastaSequence() {
         return Dnasequence.convertToFasta(sequence);
+    }
+    
+    public String getSpeciesSpecificid() {
+        if(YEAST.equals(species))
+            return RefseqNameType.SGD;
+        if(PA.equals(species))
+            return RefseqNameType.PA;
+        if(LM.equals(species) || YP.equals(species))
+            return RefseqNameType.GENBANK;
+        return RefseqNameType.GENEID;
     }
 }

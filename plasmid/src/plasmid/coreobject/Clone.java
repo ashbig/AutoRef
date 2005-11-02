@@ -19,6 +19,7 @@ public class Clone implements Serializable {
     public static final String CDNA = "cDNA";
     public static final String SHRNA = "shRNA";
     public static final String GENOMIC_FRAGMENT = "genomic fragment";
+    public static final String TFBINDSITE = "trxn factor bind site";
     public static final String PROMOTER = "promoter";
     public static final String TRANSPOSON = "transposon";
     public static final String GENE = "gene";

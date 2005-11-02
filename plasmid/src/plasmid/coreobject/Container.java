@@ -28,6 +28,7 @@ public class Container {
     public static final String FILLED = "FILLED";
     
     public static final String UNAVAILABLE = "UNAVAILABLE";
+    public static final String WORKBENCH = "WORKBENCH";
     
     private int containerid;
     private String type;
