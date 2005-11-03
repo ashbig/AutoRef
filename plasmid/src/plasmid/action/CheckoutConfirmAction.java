@@ -99,10 +99,42 @@ public class CheckoutConfirmAction extends UserAction {
             errors.add("country", new ActionError("error.country.required"));
         if(billingcountry == null || billingcountry.trim().length()<1)
             errors.add("billingcountry", new ActionError("error.billingcountry.required"));
+               
+        List shoppingcart = (List)request.getSession().getAttribute(Constants.CART);
+        
+        if(shoppingcart == null || shoppingcart.size() == 0) {
+            shoppingcart = new ArrayList();
+            request.getSession().setAttribute(Constants.CART, shoppingcart);
+            return (mapping.findForward("success_empty"));
+        } 
         
         Calendar c = Calendar.getInstance();
         String time = c.getTime().toString();
         request.setAttribute("date", time);
+        
+        OrderProcessManager m = new OrderProcessManager();
+        List restrictedClones = m.checkShippingRestriction(shoppingcart, country);
+        
+        if(restrictedClones == null) {
+            if(Constants.DEBUG)
+                System.out.println("Database error occured.");
+            
+            errors.add(ActionErrors.GLOBAL_ERROR,
+            new ActionError("error.database.error","Database error occured."));
+            return (mapping.findForward("error"));
+        }
+        
+        if(restrictedClones.size()>0) {
+            String error = "<br>The following clones are restricted and cannot be shipped to your country:<br>";
+            for(int i=0; i<restrictedClones.size(); i++) {
+                String id = (String)restrictedClones.get(i);
+                error += id+"<br>";
+            }
+            errors.add(ActionErrors.GLOBAL_ERROR,
+            new ActionError("error.general", error));
+            saveErrors(request, errors);
+            return (new ActionForward(mapping.getInput()));
+        }
         
         if(errors.empty()) {
             return (mapping.findForward("success"));

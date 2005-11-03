@@ -823,6 +823,39 @@ public class CloneManager extends TableManager {
         
         return restrictedClones;
     }
+        
+    public List findShippingRestrictedClones(List cloneidStrings) {
+        String sql = "select clonename, domain from clone where cloneid=?";
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        List restrictedClones = new ArrayList();
+        try {
+            stmt = conn.prepareStatement(sql);
+            for(int i=0; i<cloneidStrings.size(); i++) {
+                String cloneid = (String)cloneidStrings.get(i);
+                stmt.setInt(1, Integer.parseInt(cloneid));
+                rs = DatabaseTransaction.executeQuery(stmt);
+                if(rs.next()) {
+                    String clonename = rs.getString(1);
+                    String species = rs.getString(2);
+                    if(species.equals(DnaInsert.YP) || species.equals(DnaInsert.VC) || species.equals(DnaInsert.FT)) {
+                        restrictedClones.add(clonename);
+                    }
+                } else {
+                    handleError(null, "Cannot find clone for cloneid: "+cloneid);
+                    return null;
+                }
+            }
+        } catch (Exception ex) {
+            handleError(ex, "Database error occured.");
+            return null;
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+        }
+        
+        return restrictedClones;
+    }
     
     public List queryCloneidsByCloneType(List clonetypes) {
         String sql = "select cloneid from clone";

@@ -25,6 +25,8 @@ public class DnaInsert {
     public static final String YP = "Yersinia pestis KIM";
     public static final String LM = "Luciola mingrelica";
     public static final String HAD = "Human adenovirus C type 2";
+    public static final String VC = "Vibrio cholerae";
+    public static final String FT = "Francisella tularensis";
 
     private int insertid;
     private int order;

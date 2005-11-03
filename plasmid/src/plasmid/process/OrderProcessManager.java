@@ -22,6 +22,7 @@ import plasmid.database.DatabaseManager.*;
  * @author  DZuo
  */
 public class OrderProcessManager {
+    public static final String USA = "USA";
     public static final int PLATESIZE = 96;
     private List clones;
     private List collections;
@@ -71,6 +72,41 @@ public class OrderProcessManager {
             conn = t.requestConnection();
             CloneManager manager = new CloneManager(conn);
             restrictedClones = manager.findRestrictedClones(cloneids, restrictions);
+        } catch (Exception ex) {
+            if(Constants.DEBUG) {
+                System.out.println(ex);
+            }
+            return null;
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
+        }
+        
+        return restrictedClones;
+    }
+    
+    public List checkShippingRestriction(List items, String country) {
+        if(USA.equals(country))
+            return new ArrayList();
+        
+        if(items == null || items.size() == 0)
+            return new ArrayList();
+        
+        List cloneids = new ArrayList();
+        for(int i=0; i<items.size(); i++) {
+            ShoppingCartItem s = (ShoppingCartItem)items.get(i);
+            if(s.getType().equals(ShoppingCartItem.CLONE)) {
+                cloneids.add(s.getItemid());
+            }
+        }
+        
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        List restrictedClones = null;
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            CloneManager manager = new CloneManager(conn);
+            restrictedClones = manager.findShippingRestrictedClones(cloneids);
         } catch (Exception ex) {
             if(Constants.DEBUG) {
                 System.out.println(ex);

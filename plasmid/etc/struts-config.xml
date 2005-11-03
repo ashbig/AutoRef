@@ -149,6 +149,12 @@
               input="/FindPassword.jsp">
       <forward  name="success"   path="/FindPasswordSuccessful.jsp"/>
     </action>
+    
+    <action    path="/GenerateContainers"
+               type="plasmid.action.GenerateContainersAction"
+               name="generateWorklistForm"
+              validate="false">
+    </action>
          
     <action    path="/GetAllVectors"
                type="plasmid.action.GetAllVectorsAction"
@@ -286,7 +292,8 @@
                name="enterResultsForm"
               input="/GetResultTypes.do"
               validate="false">
-      <forward  name="success"   path="/Login.jsp"/>
+      <forward  name="success_upload_result_file"   path="/UploadResultFile.jsp"/>
+      <forward  name="fail"   path="/ResultTypeNotFound.jsp"/>
     </action>
          
     <action    path="/SetDisplay"
@@ -321,6 +328,15 @@
       <forward  name="success_empty"   path="/DisplayEmptyCart.jsp"/>
       <forward  name="success_save"   path="/Account.jsp"/>
       <forward  name="success_checkout"   path="/Checkout.do"/>
+    </action>
+      
+    <action    path="/UploadResultFile"
+               type="plasmid.action.UploadResultFileAction"
+               name="enterResultsForm"
+              input="/UploadResultFile.jsp"
+              validate="true">
+      <forward  name="success"   path="/ConfirmResultFile.jsp"/>
+      <forward  name="fail"   path="/ResultTypeNotFound.jsp"/>
     </action>
     
     <action    path="/ViewCart"

@@ -46,7 +46,7 @@
     </td>
   </tr>
 </table>
-<p class="altert">If you don't see your country on the list, 
+<p class="text">*If you don't see your country on the list, 
 please contact <a href="mailto:dongmei_zuo@hms.harvard.edu">PlasmID support</a>. 
 Please be aware that <i>Francisella tularensis, Yersinia pestis, Vibrio cholerae</i>
 are not allowed to be shipped outside of USA.</p>
@@ -99,12 +99,16 @@ are not allowed to be shipped outside of USA.</p>
   </tr>
   <tr>
     <td class="formlabel">*Country:</td>
-    <td><html:select styleClass="text" property="country">
+    <td><html:select styleClass="text" property="country" value="USA">
+        <html:option value="Spain"/>
+        <html:option value="United Kindom"/>
         <html:option value="USA"/>
         </html:select>
     </td>
     <td class="formlabel">*Country:</td>
-    <td><html:select styleClass="text" property="billingcountry">
+    <td><html:select styleClass="text" property="billingcountry" value="USA">
+        <html:option value="Spain"/>
+        <html:option value="United Kindom"/>
         <html:option value="USA"/>
         </html:select>
     </td>
