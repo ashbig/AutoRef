@@ -46,6 +46,7 @@ public class CloneOrder {
     
     private String firstname;
     private String lastname;
+    private String email;
     
     private List items;
     
@@ -97,6 +98,7 @@ public class CloneOrder {
     public String getReceiveconfirmationdate() {return receiveconfirmationdate;}
     public String getWhoconfirmed() {return whoconfirmed;}
     public String getWhoreceivedconfirmation() {return whoreceivedconfirmation;}
+    public String getEmail() {return email;}
     
     public void setOrderid(int i) {this.orderid = i;}
     public void setOrderDate(String s) {this.orderDate = s;}
@@ -123,6 +125,7 @@ public class CloneOrder {
     public void setReceiveconfirmationdate(String s) {this.receiveconfirmationdate=s;}
     public void setWhoconfirmed(String s) {this.whoconfirmed=s;}
     public void setWhoreceivedconfirmation(String s) {this.whoreceivedconfirmation=s;}
+    public void setEmail(String s) {this.email = s;}
     
     public List getItems() {return items;}
     public void setItems(List l) {this.items = l;}

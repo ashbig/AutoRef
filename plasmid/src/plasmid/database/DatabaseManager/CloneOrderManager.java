@@ -211,7 +211,7 @@ public class CloneOrderManager extends TableManager {
         " c.shippingaddress,c.billingaddress,c.numofclones,c.numofcollection,c.costforclones,"+
         " c.costforcollection,c.costforshipping,c.totalprice,c.userid,u.firstname,u.lastname,"+
         " c.shippingdate, c.whoshipped, c.shippingmethod,c.shippingaccount,c.trackingnumber,"+
-        " c.receiveconfirmationdate, c.whoconfirmed,c.whoreceivedconfirmation"+
+        " c.receiveconfirmationdate, c.whoconfirmed,c.whoreceivedconfirmation,u.email"+
         " from cloneorder c, userprofile u where c.userid=u.userid";
         
         if(user != null) {
@@ -264,6 +264,7 @@ public class CloneOrderManager extends TableManager {
                 String receiveconfirmationdate = rs.getString(23);
                 String whoconfirmed = rs.getString(24);
                 String whoreceivedconfirmation = rs.getString(25);
+                String email = rs.getString(26);
                 
                 CloneOrder order = new CloneOrder(orderid, date, st, ponumber,shippingto,billingto,shippingaddress,billingaddress, numofclones, numofcollection, costforclones, costforcollection,costforshipping, total, userid);
                
@@ -277,6 +278,7 @@ public class CloneOrderManager extends TableManager {
                 order.setReceiveconfirmationdate(receiveconfirmationdate);
                 order.setWhoconfirmed(whoconfirmed);
                 order.setWhoreceivedconfirmation(whoreceivedconfirmation);
+                order.setEmail(email);
                 orders.add(order);
             }
             return orders;

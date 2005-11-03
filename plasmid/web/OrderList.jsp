@@ -51,14 +51,15 @@
 <table width="100%" border="0">
   <tr>
     <td width="9%" class="tableheader">Order ID</td>
-    <td width="14%" class="tableheader">Order Date</td>
-    <td width="12%" class="tableheader">Status</td>
-    <td width="17%" class="tableheader">Number of Clones</td>
-    <td width="21%" class="tableheader">Number of Collections</td>
-    <td width="12%" class="tableheader">Total Price</td>
+    <td width="15%" class="tableheader">Order Date</td>
+    <td width="15%" class="tableheader">Status</td>
+    <td width="9%" class="tableheader">Number of Clones</td>
+    <td width="9%" class="tableheader">Number of Collections</td>
+    <td width="9%" class="tableheader">Total Price</td>
     
     <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
-    <td class="tableheader">User</td>
+    <td width="14%" class="tableheader">User</td>
+    <td width="20%" class="tableheader">User Email</td>
     </logic:equal>
   </tr>
 
@@ -100,6 +101,7 @@
 
     <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
     <td class="tableinfo"><bean:write name="order" property="name"/></td>
+    <td class="tableinfo"><bean:write name="order" property="email"/></td>
     </logic:equal>
   </tr>
   <% i++; %>
