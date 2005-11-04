@@ -322,4 +322,82 @@ public class ProcessManager extends TableManager {
             DatabaseTransaction.closeConnection(conn);
         }
     }
+    
+    public static WorklistInfo getWorklistInfo(int worklistid) {
+        String sql = "select worklistname, researchername, processname, protocolname, status"+
+        " from worklistinfo where worklistid="+worklistid;
+        
+        DatabaseTransaction t = null;
+        ResultSet rs = null;
+        WorklistInfo info = null;
+        
+        try {
+            t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            while(rs.next()) {
+                String worklistname = rs.getString(1);
+                String researchername = rs.getString(2);
+                String processname = rs.getString(3);
+                String protocolname = rs.getString(4);
+                int status = rs.getInt(5);
+                info = new WorklistInfo(worklistid,worklistname,researchername, processname,protocolname,status);
+            }
+        } catch (Exception ex) {
+            if(Constants.DEBUG) {
+                System.out.println(ex);
+            }
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+        
+        return info;
+    }
+    
+    public boolean insertWorklistInfo(WorklistInfo info) {
+        if(info == null)
+            return true;
+        
+        String sql = "insert into worklistinfo"+
+        " (worklistid,worklistname,researchername,processname,protocolname,status)"+
+        " values(?,?,?,?,?,?)";
+        
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            
+            stmt.setInt(1, info.getWorklistid());
+            stmt.setString(2, info.getWorklistname());
+            stmt.setString(3, info.getResearchername());
+            stmt.setString(4, info.getProcessname());
+            stmt.setString(5, info.getProtocolname());
+            stmt.setInt(6, info.getStatus());
+            DatabaseTransaction.executeUpdate(stmt);
+            
+            DatabaseTransaction.closeStatement(stmt);
+        } catch (Exception ex) {
+            handleError(ex, "Error occured while inserting into WORKLISTINFO table");
+            return false;
+        }
+        return true;
+    }
+    
+    public boolean updateWorklistInfo(WorklistInfo info, int status) {
+        if(info == null)
+            return true;
+        
+        String sql = "update worklistinfo set status=? where worklistid=?";
+        
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            
+            stmt.setInt(1, status);
+            stmt.setInt(2, info.getWorklistid());
+            DatabaseTransaction.executeUpdate(stmt);
+            
+            DatabaseTransaction.closeStatement(stmt);
+        } catch (Exception ex) {
+            handleError(ex, "Error occured while updating WORKLISTINFO table");
+            return false;
+        }
+        return true;
+    }
 }

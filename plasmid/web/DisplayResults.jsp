@@ -35,7 +35,7 @@
     <td class="tablebody">Clones found by indirect match</td>
     </logic:equal>
     <logic:equal name="display" value="symbol">
-    <td class="tablebody">Clones found</td>
+    <td class="tablebody">Matches found</td>
     </logic:equal>
     <td class="tablebody">Search terms not found</td>
   </tr>  

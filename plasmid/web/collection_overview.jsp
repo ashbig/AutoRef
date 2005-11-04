@@ -115,7 +115,7 @@
                 <li class="mainbodytext">signal transduction</li>
               </ul></td>
             <td>
-<p><span class="mainbodytextlarge"><em>Luciola mingrelica</em></span><span class="mainbodytext"><br>
+<p><span class="mainbodytextlarge"><em>Photinus pyralis</em></span><span class="mainbodytext"><br>
                 </span><span class="morehit">common name: firefly</span></p>
               <p><span class="mainbodytext">some vectors contain firefly luciferase 
                 as a readout or shRNAs against luciferase for control experiments</span></p></td>

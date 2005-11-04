@@ -23,7 +23,7 @@ public class DnaInsert {
     public static final String BP = "Bacteriophage";
     public static final String SV40 = "SV40";
     public static final String YP = "Yersinia pestis KIM";
-    public static final String LM = "Luciola mingrelica";
+    public static final String LM = "Photinus pyralis";
     public static final String HAD = "Human adenovirus C type 2";
     public static final String VC = "Vibrio cholerae";
     public static final String FT = "Francisella tularensis";

@@ -70,7 +70,7 @@ public class LabelPlatesAction extends InternalUserAction{
             saveErrors(request, errors);
             return mapping.findForward("error");
         }
-        if(!manager.persistData(containers, null)) {
+        if(!manager.persistData(containers, null, null, true)) {
             if(Constants.DEBUG) {
                 System.out.println("Cannot insert data into database.");
             }

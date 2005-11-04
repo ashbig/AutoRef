@@ -51,6 +51,7 @@ public class WorklistInputAction extends InternalUserAction{
         String srcContainerList = ((GenerateWorklistForm)form).getSrcContainerList().trim();
         String destContainerList = ((GenerateWorklistForm)form).getDestContainerList().trim();
         int volumn = ((GenerateWorklistForm)form).getVolumn();
+            User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
         
         StringConvertor sc = new StringConvertor();
         List srcLabels = sc.convertFromStringToList(srcContainerList, "\n\t ");
@@ -136,9 +137,10 @@ public class WorklistInputAction extends InternalUserAction{
             
             String fileWorklist = Constants.WORKLIST+"_"+worklistid+".txt";
             String fileWorklistRobot = Constants.WORKLISTROBOT+"_"+worklistid+".gwl";
+            String worklistname = Constants.FULLWORKLIST+"_"+worklistid+".txt";
             List worklist = calculator.calculateMapping();
             WorklistGenerator generator = new WorklistGenerator(worklist);
-            generator.printFullWorklist(Constants.WORKLIST_FILE_PATH+Constants.FULLWORKLIST+"_"+worklistid+".txt");
+            generator.printFullWorklist(Constants.WORKLIST_FILE_PATH+worklistname);
             generator.printWorklist(Constants.WORKLIST_FILE_PATH+fileWorklist);
             generator.printWorklistForRobot(Constants.WORKLIST_FILE_PATH+fileWorklistRobot, volumn, volumn, true);
             
@@ -146,8 +148,15 @@ public class WorklistInputAction extends InternalUserAction{
             filenames.add(fileWorklist);
             filenames.add(fileWorklistRobot);
             
+            WorklistInfo info = new WorklistInfo(worklistid, worklistname, user.getFirstname()+" "+user.getLastname(), processname,protocol,WorklistInfo.NOTCOMMIT);
+            if(!manager.persistWorklistInfo(info)) {
+                errors.add(ActionErrors.GLOBAL_ERROR, 
+                new ActionError("error.general", "Cannot insert data into WORKLISTINFO with worklistid: "+worklistid));
+                saveErrors(request, errors);
+                return mapping.findForward("error");
+            }
+            
             Collection fileCol = new LinkedList();
-            User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
             String to = user.getEmail();
             String subject = "Worklist";
             String text = "The attached files are your worklists.";

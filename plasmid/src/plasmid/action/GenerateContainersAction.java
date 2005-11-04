@@ -27,6 +27,7 @@ import plasmid.Constants;
 import plasmid.process.*;
 import plasmid.coreobject.*;
 import plasmid.util.Mailer;
+import plasmid.database.DatabaseManager.ProcessManager;
 
 /**
  *
@@ -58,8 +59,12 @@ public class GenerateContainersAction extends Action {
         try {
             int begin = worklistname.indexOf("_");
             int end = worklistname.indexOf(".");
-            String worklistid = worklistname.substring(begin, end);
-            String filename = Constants.FULLWORKLIST+"_"+worklistid+".txt";
+            int worklistid = Integer.parseInt(worklistname.substring(begin, end));
+            WorklistInfo info = ProcessManager.getWorklistInfo(worklistid);
+            if(info == null) {
+                throw new Exception("Cannot get data from WORKLISTINFO with worklistid: "+worklistid);
+            }
+            String filename = info.getWorklistname();
             WorklistGenerator generator = new WorklistGenerator();
             generator.readWorklist(Constants.WORKLIST_FILE_PATH+filename);
             ContainerMapper mapper = new ContainerMapper(generator.getWorklist());
@@ -74,12 +79,12 @@ public class GenerateContainersAction extends Action {
             ContainerProcessManager manager = new ContainerProcessManager();
             manager.setSampleids(samples);
             
-            ProcessExecution execution = new ProcessExecution(0, ProcessExecution.COMPLETE, null, "test", "Tecan", "Test Protocol");
+            ProcessExecution execution = new ProcessExecution(0, ProcessExecution.COMPLETE, null, info.getProcessname(), info.getResearchername(), info.getProtocolname());
             execution.setLineages(lineages);
             execution.setInputObjects(srcContainers);
             execution.setOutputObjects(destContainers);
             
-            if(!manager.persistData(srcContainers,execution)) {
+            if(!manager.persistData(srcContainers,execution,info,false)) {
                 System.out.println("Error occured while inserting into database.");
             }
         } catch (Exception ex) {

@@ -250,7 +250,7 @@ public class ContainerProcessManager {
         return true;
     }
     
-    public boolean persistData(List containers, ProcessExecution process) {
+    public boolean persistData(List containers, ProcessExecution process, WorklistInfo info, boolean isInsertContainer) {
         DatabaseTransaction t = null;
         Connection conn = null;
         
@@ -266,14 +266,26 @@ public class ContainerProcessManager {
         }
         
         PlateManager manager = new PlateManager(conn);
-        if(!manager.updatePlates(containers, Container.FILLED, Container.WORKBENCH)) {
-            if(Constants.DEBUG) {
-                System.out.println("Cannot update containers.");
-                System.out.println(manager.getErrorMessage());
+        if(isInsertContainer) {
+            if(!manager.insertPlate(containers)) {
+                if(Constants.DEBUG) {
+                    System.out.println("Cannot insert containers.");
+                    System.out.println(manager.getErrorMessage());
+                }
+                DatabaseTransaction.rollback(conn);
+                DatabaseTransaction.closeConnection(conn);
+                return false;
             }
-            DatabaseTransaction.rollback(conn);
-            DatabaseTransaction.closeConnection(conn);
-            return false;
+        } else {
+            if(!manager.updatePlates(containers, Container.FILLED, Container.WORKBENCH)) {
+                if(Constants.DEBUG) {
+                    System.out.println("Cannot update containers.");
+                    System.out.println(manager.getErrorMessage());
+                }
+                DatabaseTransaction.rollback(conn);
+                DatabaseTransaction.closeConnection(conn);
+                return false;
+            }
         }
         
         List samples = new ArrayList();
@@ -292,8 +304,8 @@ public class ContainerProcessManager {
             return false;
         }
         
+        ProcessManager m = new ProcessManager(conn);
         if(process != null) {
-            ProcessManager m = new ProcessManager(conn);
             if(!m.insertProcess(process)) {
                 if(Constants.DEBUG) {
                     System.out.println("Cannot insert process.");
@@ -305,9 +317,52 @@ public class ContainerProcessManager {
             }
         }
         
+        if(info != null) {
+            if(!m.updateWorklistInfo(info, WorklistInfo.COMMIT)) {
+                if(Constants.DEBUG) {
+                    System.out.println("Cannot update WORKLISTINFO with worklistid: "+info.getWorklistid());
+                    System.out.println(m.getErrorMessage());
+                }
+                DatabaseTransaction.rollback(conn);
+                DatabaseTransaction.closeConnection(conn);
+                return false;
+            }
+        }
+        
         DatabaseTransaction.commit(conn);
         DatabaseTransaction.closeConnection(conn);
         return true;
+    }
+    
+    public boolean persistWorklistInfo(WorklistInfo info) {
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+        } catch (Exception ex) {
+            if(Constants.DEBUG) {
+                System.out.println("Cannot get database connection.");
+                System.out.println(ex);
+            }
+            return false;
+        }
+        
+        ProcessManager manager = new ProcessManager(conn);
+        if(manager.insertWorklistInfo(info)) {
+            DatabaseTransaction.commit(conn);
+            DatabaseTransaction.closeConnection(conn);
+            return true;
+        } else {
+            if(Constants.DEBUG) {
+                System.out.println("Cannot insert data into WORKLISTINFO.");
+                System.out.println(manager.getErrorMessage());
+            }
+            DatabaseTransaction.rollback(conn);
+            DatabaseTransaction.closeConnection(conn);
+            return false;
+        }
     }
     
     public static void main(String args[]) {
@@ -376,7 +431,7 @@ public class ContainerProcessManager {
                 execution.setInputObjects(containers);
                 execution.setOutputObjects(tubes);
                 
-                if(!manager.persistData(tubes,execution)) {
+                if(!manager.persistData(tubes,execution,null,true)) {
                     System.out.println("Error occured while inserting into database.");
                 }
             }
