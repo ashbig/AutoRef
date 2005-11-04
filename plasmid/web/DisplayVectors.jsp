@@ -33,7 +33,7 @@
     <td class="tableheader"><a href="SetVectorDisplay.do?sortby=clonetype">Clone Type</a></td>
     <td class="tableheader"><a href="SetVectorDisplay.do?sortby=vectorname">Vector Name</a></td>
     <td class="tableheader"><a href="SetVectorDisplay.do?sortby=selection">Selection Markers</a></td>
-    <td class="tableheader"><a href="SetVectorDisplay.do?sortby=specialtreatment">Special MTA</a></td>
+    <td class="tableheader">Special MTA</td>
     <td class="tableheader">&nbsp;</td>
   </tr>
 
