@@ -77,6 +77,7 @@ public class SetDisplayAction extends Action {
         String displayPage = ((RefseqSearchForm)form).getDisplayPage();
         String species = ((RefseqSearchForm)form).getSpecies();
         String refseqType = ((RefseqSearchForm)form).getRefseqType();
+        String forward = ((RefseqSearchForm)form).getForward();
         
         request.setAttribute("pagesize", new Integer(pagesize));
         request.setAttribute("page",  new Integer(page));
@@ -112,6 +113,10 @@ public class SetDisplayAction extends Action {
             
             request.getSession().setAttribute(Constants.CART, shoppingcart);
             request.getSession().setAttribute(Constants.CART_STATUS, Constants.UPDATED);
+            
+            if("collection".equals(forward))
+                return (mapping.findForward("success_collection"));
+            
             return (mapping.findForward("success"));
         }
         
@@ -145,6 +150,8 @@ public class SetDisplayAction extends Action {
             request.getSession().setAttribute("directFounds", clones);
         }
         
+        if("collection".equals(forward))
+            return (mapping.findForward("success_collection"));
         return (mapping.findForward("success"));
     }
 }

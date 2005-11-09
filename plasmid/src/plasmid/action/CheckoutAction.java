@@ -94,11 +94,23 @@ public class CheckoutAction extends UserAction {
         }
         
         m.processShoppingCartItems(shoppingcart);
+        List collectionNames = m.getCollectionNames();
+        List collections = m.getShoppingCartCollections(collectionNames, m.getCollections());
+        if(collections == null) {
+            if(Constants.DEBUG)
+                System.out.println("Database error occured.");
+            
+            errors.add(ActionErrors.GLOBAL_ERROR,
+            new ActionError("error.database.error","Database error occured."));
+            return (mapping.findForward("error"));
+        }
+        
         int cloneQuantity = m.getTotalCloneQuantity();
-        //int collectionQuantity = m.getTotalCollectionQuantity();
+        int collectionQuantity = m.getTotalCollectionQuantity();
         double clonePrice = m.getTotalClonePrice(OrderProcessManager.PLATESIZE,user.getGroup());
+        double collectionPrice = m.getTotalCollectionPrice(collections, user.getGroup());
         int totalQuantity = m.getTotalQuantity();
-        double totalPrice = clonePrice;
+        double totalPrice = clonePrice+collectionPrice;
         
         UserAddress shipping = null;
         UserAddress billing = null;
@@ -117,8 +129,8 @@ public class CheckoutAction extends UserAction {
         ((CheckoutForm)form).setNumOfClones(cloneQuantity);
         ((CheckoutForm)form).setCostOfClones(clonePrice);
         ((CheckoutForm)form).setTotalPrice(totalPrice);
-        ((CheckoutForm)form).setNumOfCollections(0);
-        ((CheckoutForm)form).setCostOfCollections(0.0);
+        ((CheckoutForm)form).setNumOfCollections(collectionQuantity);
+        ((CheckoutForm)form).setCostOfCollections(collectionPrice);
         ((CheckoutForm)form).setCostForShipping(0.0);
            
         DefTableManager def = new DefTableManager();

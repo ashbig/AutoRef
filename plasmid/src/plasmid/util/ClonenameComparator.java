@@ -23,6 +23,19 @@ public class ClonenameComparator implements Comparator {
     public int compare(Object p1, Object p2) {
         String name1 = ((Clone)p1).getName();
         String name2 = ((Clone)p2).getName();
-        return (name1.compareTo(name2));
+                
+        if(name1 == null) {
+            if(name2 == null) {
+                return 0;
+            } else {
+                return 1;
+            }
+        } else {
+            if(name2 == null) {
+                return -1;
+            } else {
+                return (name1.compareTo(name2));
+            }
+        } 
     }
 }

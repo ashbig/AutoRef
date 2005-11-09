@@ -19,6 +19,7 @@ import org.apache.struts.action.ActionMapping;
 public class DownloadClonesForm extends ActionForm {
     private int orderid;
     private String type;
+    private String collectionName;
     
     /** Creates a new instance of DownloadClonesForm */
     public DownloadClonesForm() {
@@ -26,7 +27,9 @@ public class DownloadClonesForm extends ActionForm {
     
     public int getOrderid() {return orderid;}
     public String getType() {return type;}
+    public String getCollectionName() {return collectionName;}
     
     public void setOrderid(int id) {this.orderid = id;}
     public void setType(String s) {this.type = s;}
+    public void setCollectionName(String s) {this.collectionName = s;}
 }

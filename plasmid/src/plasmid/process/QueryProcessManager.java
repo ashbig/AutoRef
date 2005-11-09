@@ -56,4 +56,43 @@ public class QueryProcessManager {
             DatabaseTransaction.closeConnection(conn);
         }
     }
+    
+    public List getCollections(String status, List restrictions) {
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        List found = new ArrayList();
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            CollectionManager manager = new CollectionManager(conn);
+            found = manager.getAllCollections(status, restrictions);
+            return found;
+        } catch (Exception ex) {
+            if(Constants.DEBUG) {
+                System.out.println(ex);
+            }
+            return null;
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
+        }
+    }
+    
+    public CollectionInfo getCollection(String name, String status, List restrictions, boolean isCloneRestore) {
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        CollectionInfo c = null;
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            CollectionManager manager = new CollectionManager(conn);
+            c = manager.getCollection(name, status, restrictions, isCloneRestore, false);
+        } catch (Exception ex) {
+            if(Constants.DEBUG) {
+                System.out.println(ex);
+            }
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
+        }
+        return c;
+    }
 }

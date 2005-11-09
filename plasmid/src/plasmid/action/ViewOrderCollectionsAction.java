@@ -1,7 +1,7 @@
 /*
- * DownloadClonesAction.java
+ * ViewOrderCollectionsAction.java
  *
- * Created on June 23, 2005, 4:10 PM
+ * Created on November 9, 2005, 2:44 PM
  */
 
 package plasmid.action;
@@ -25,15 +25,18 @@ import org.apache.struts.util.MessageResources;
 
 import plasmid.coreobject.*;
 import plasmid.process.*;
-import plasmid.form.DownloadClonesForm;
+import plasmid.form.ViewOrderClonesForm;
 import plasmid.Constants;
-import plasmid.query.coreobject.CloneInfo;
 
 /**
  *
  * @author  DZuo
  */
-public class DownloadClonesAction extends UserAction {
+public class ViewOrderCollectionsAction extends UserAction {
+    
+    /** Creates a new instance of ViewOrderCollectionsAction */
+    public ViewOrderCollectionsAction() {
+    }
     
     /** Does the real work for the perform method which must be overriden by the
      * Child classes.
@@ -51,24 +54,9 @@ public class DownloadClonesAction extends UserAction {
         ActionErrors errors = new ActionErrors();
         
         User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
-        
-        boolean isWorkingStorage = false;
-        if(User.INTERNAL.equals(user.getIsinternal())) {
-            isWorkingStorage = true;
-        }
-        
-        int orderid = ((DownloadClonesForm)form).getOrderid();
-        String type = ((DownloadClonesForm)form).getType();
-        String collectionName = ((DownloadClonesForm)form).getCollectionName();
-        System.out.println("collectionname: "+collectionName);
+        int orderid = ((ViewOrderClonesForm)form).getOrderid();
         OrderProcessManager manager = new OrderProcessManager();
-        List clones = null;        
-        if(Constants.ORDER_CLONE.equals(type)) {
-            clones = manager.getOrderClones(orderid, user, isWorkingStorage);
-        }
-        if(Constants.ORDER_COLLECTION.equals(type)) {
-            clones = manager.getOrderClonesForCollection(collectionName, user, isWorkingStorage);
-        }
+        List clones = manager.getOrderCollections(orderid, user, false);
         
         if(clones == null) {
             if(Constants.DEBUG)
@@ -79,11 +67,8 @@ public class DownloadClonesAction extends UserAction {
             return (mapping.findForward("error"));
         }
         
-        response.setContentType("application/x-msexcel");
-        response.setHeader("Content-Disposition", "attachment;filename=Clones.xls");
-        PrintWriter out = response.getWriter();
-        manager.writeCloneList(clones, out, isWorkingStorage);
-        return null;
-    }
+        request.setAttribute("orderid", new Integer(orderid));
+        request.setAttribute("orderClones", clones);
+        return mapping.findForward("success");    
+    }   
 }
-

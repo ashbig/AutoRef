@@ -59,7 +59,20 @@ public class InsertFormatComparator implements Comparator {
         
         String s1 = ((DnaInsert)inserts1.get(0)).getFormat();
         String s2 = ((DnaInsert)inserts2.get(0)).getFormat();
-        return (s1.compareTo(s2));
+                
+        if(s1 == null) {
+            if(s2 == null) {
+                return 0;
+            } else {
+                return 1;
+            }
+        } else {
+            if(s2 == null) {
+                return -1;
+            } else {
+                return (s1.compareTo(s2));
+            }
+        }     
     }
     
 }

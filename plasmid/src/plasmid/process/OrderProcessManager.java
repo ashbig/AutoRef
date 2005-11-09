@@ -26,6 +26,8 @@ public class OrderProcessManager {
     public static final int PLATESIZE = 96;
     private List clones;
     private List collections;
+    private List cloneids;
+    private List collectionNames;
     
     /** Creates a new instance of OrderProcessManager */
     public OrderProcessManager() {
@@ -33,6 +35,8 @@ public class OrderProcessManager {
     
     public List getClones() {return clones;}
     public List getCollections() {return collections;}
+    public List getCloneids() {return cloneids;}
+    public List getCollectionNames() {return collectionNames;}
     
     public void setAddToCartStatus(List cloneList, int cloneid, boolean b) {
         if(cloneList == null)
@@ -122,6 +126,8 @@ public class OrderProcessManager {
     public void processShoppingCartItems(List items) {
         clones = new ArrayList();
         collections = new ArrayList();
+        cloneids = new ArrayList();
+        collectionNames = new ArrayList();
         
         if(items == null || items.size() == 0)
             return;
@@ -130,8 +136,10 @@ public class OrderProcessManager {
             ShoppingCartItem s = (ShoppingCartItem)items.get(i);
             if(s.getType().equals(ShoppingCartItem.CLONE)) {
                 clones.add(s);
+                cloneids.add(s.getItemid());
             } else {
                 collections.add(s);
+                collectionNames.add(s.getItemid());
             }
         }
     }
@@ -167,8 +175,16 @@ public class OrderProcessManager {
         return calculator.calculateClonePrice(getTotalCloneQuantity(), platesize, group);
     }
     
-    public double getTotalCollectionPrice(String group) {
-        return 0.0;
+    public double getTotalCollectionPrice(List collectionList, String group) {
+        ClonePriceCalculator calculator = new ClonePriceCalculator();
+        
+        double price = 0.0;
+        for(int i=0; i<collectionList.size(); i++) {
+            CollectionInfo info = (CollectionInfo)collectionList.get(i);
+            price = price+calculator.calculatePriceForCollection(info, group);
+        }
+        
+        return price;
     }
     
     public int getTotalQuantity() {
@@ -178,30 +194,106 @@ public class OrderProcessManager {
         return n+m;
     }
     
-    public List updateShoppingCart(List items, List shoppingcart, List cloneCountList, List shoppingcartCopy) {
+    public List updateShoppingCartForClones(List cloneids, List clones, List cloneCountList, List shoppingcartCopy) {
+        List newShoppingcart = new ArrayList();
+        
+        try {
+        for(int i=0; i<cloneCountList.size(); i++) {
+            String count = (String)cloneCountList.get(i);
+            if(Integer.parseInt(count) > 0) {
+                String cloneid = (String)cloneids.get(i);
+                CloneInfo cloneInfo = (CloneInfo)clones.get(i);
+                cloneInfo.setQuantity(Integer.parseInt(count));
+                ShoppingCartItem s = new ShoppingCartItem(0, cloneid, Integer.parseInt(count), ShoppingCartItem.CLONE);
+                shoppingcartCopy.add(s);
+                newShoppingcart.add(cloneInfo);
+            }
+        }
+        } catch (Exception ex) { 
+            if(Constants.DEBUG) {
+                System.out.println(ex);
+            }
+            return null;
+        }
+        
+        return newShoppingcart;        
+    }
+    
+    public List updateShoppingCartForCollections(List collectionNames, List collections, List collectionCountList, List shoppingcartCopy) {
+        List newShoppingcart = new ArrayList();
+        
+        try {
+        for(int i=0; i<collectionCountList.size(); i++) {
+            String count = (String)collectionCountList.get(i);
+            if(Integer.parseInt(count) > 0) {
+                String collectionName = (String)collectionNames.get(i);
+                CollectionInfo info = (CollectionInfo)collections.get(i);
+                info.setQuantity(Integer.parseInt(count));
+                ShoppingCartItem s = new ShoppingCartItem(0, collectionName, Integer.parseInt(count), ShoppingCartItem.COLLECTION);
+                shoppingcartCopy.add(s);
+                newShoppingcart.add(info);
+            }
+        }
+        } catch (Exception ex) { 
+            if(Constants.DEBUG) {
+                System.out.println(ex);
+            }
+            return null;
+        }
+        
+        return newShoppingcart;     
+    }
+    
+    public List getShoppingCartClones(List cloneids, List clones) {
         DatabaseTransaction t = null;
         Connection conn = null;
         try {
             t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
-            CloneManager manager = new CloneManager(conn);
-            Map found = manager.queryClonesByCloneid(items, true, true, false);
-            List newShoppingcart = new ArrayList();
             
-            for(int i=0; i<shoppingcart.size(); i++) {
-                ShoppingCartItem item = (ShoppingCartItem)shoppingcart.get(i);
-                String count = (String)cloneCountList.get(i);
-                if(Integer.parseInt(count) > 0) {
-                    String cloneid = item.getItemid();
-                    CloneInfo cloneInfo = (CloneInfo)found.get(cloneid);
-                    cloneInfo.setQuantity(Integer.parseInt(count));
-                    ShoppingCartItem s = new ShoppingCartItem(0, item.getItemid(), Integer.parseInt(count), item.getType());
-                    shoppingcartCopy.add(s);
-                    newShoppingcart.add(cloneInfo);
-                }
+            CloneManager manager = new CloneManager(conn);
+            Map found = manager.queryClonesByCloneid(cloneids, true, true, false);
+            List newShoppingcart = new ArrayList();
+            for(int i=0; i<clones.size(); i++) {
+                ShoppingCartItem item = (ShoppingCartItem)clones.get(i);
+                String cloneid = item.getItemid();
+                int quantity = item.getQuantity();
+                CloneInfo cloneInfo = (CloneInfo)found.get(cloneid);
+                cloneInfo.setQuantity(quantity);
+                newShoppingcart.add(cloneInfo);
             }
             
             return newShoppingcart;
+        } catch (Exception ex) {
+            if(Constants.DEBUG) {
+                System.out.println(ex);
+            }
+            return null;
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
+        }
+    }
+    
+    public List getShoppingCartCollections(List collectionNames, List collections) {
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            
+            CollectionManager man = new CollectionManager(conn);
+            Map foundCollections = man.getCollections(conn, collectionNames);
+            List newShoppingcartCollections = new ArrayList();
+            for(int i=0; i<collections.size(); i++) {
+                ShoppingCartItem item = (ShoppingCartItem)collections.get(i);
+                String itemid = item.getItemid();
+                int quantity = item.getQuantity();
+                CollectionInfo info = (CollectionInfo)foundCollections.get(itemid);
+                info.setQuantity(quantity);
+                newShoppingcartCollections.add(info);
+            }
+            
+            return newShoppingcartCollections;
         } catch (Exception ex) {
             if(Constants.DEBUG) {
                 System.out.println(ex);
@@ -225,7 +317,7 @@ public class OrderProcessManager {
             } else {
                 clones = m.queryOrderClones(orderid, user);
             }
-            
+           
             if(clones == null) {
                 if(Constants.DEBUG) {
                     System.out.println(m.getErrorMessage());
@@ -250,6 +342,90 @@ public class OrderProcessManager {
                 CloneInfo cloneInfo = (CloneInfo)found.get(cloneid);
                 cloneInfo.setQuantity(quantity);
                 orderClones.add(cloneInfo);
+            }
+           
+            return orderClones;
+        } catch (Exception ex) {
+            if(Constants.DEBUG) {
+                System.out.println(ex);
+            }
+            return null;
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
+        }
+    }
+     
+    public List getOrderClonesForCollection(String collectionname, User user, boolean isWorkingStorage) {
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            CollectionManager m = new CollectionManager(conn);
+            CollectionInfo info = m.getCollection(collectionname, true, isWorkingStorage);
+            List clones = info.getClones();
+            
+            if(clones == null) {
+                if(Constants.DEBUG) {
+                    System.out.println(m.getErrorMessage());
+                }
+                return null;
+            }
+
+            for(int i=0; i<clones.size(); i++) {
+                CloneInfo clone = (CloneInfo)clones.get(i);
+                clone.setQuantity(1);
+            }
+            
+            return clones;
+        } catch (Exception ex) {
+            if(Constants.DEBUG) {
+                System.out.println(ex);
+            }
+            return null;
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
+        }
+    }
+     
+    public List getOrderCollections(int orderid, User user, boolean isWorkingStorage) {
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            CloneOrderManager m = new CloneOrderManager(conn);
+            List clones = null;
+            if(User.INTERNAL.equals(user.getIsinternal())) {
+                clones = m.queryOrderCollections(orderid, null);
+            } else {
+                clones = m.queryOrderCollections(orderid, user);
+            }
+            
+            if(clones == null) {
+                if(Constants.DEBUG) {
+                    System.out.println(m.getErrorMessage());
+                }
+                return null;
+            }
+            
+            List items = new ArrayList();
+            for(int i=0; i<clones.size(); i++) {
+                OrderClones c = (OrderClones)clones.get(i);
+                items.add(c.getCollectionname());
+            }
+            
+            CollectionManager manager = new CollectionManager(conn);
+            Map found = manager.getCollections(conn, items);
+            
+            List orderClones = new ArrayList();
+            for(int i=0; i<clones.size(); i++) {
+                OrderClones item = (OrderClones)clones.get(i);
+                int quantity = item.getQuantity();
+                String name = item.getCollectionname();
+                CollectionInfo info = (CollectionInfo)found.get(name);
+                info.setQuantity(quantity);
+                orderClones.add(info);
             }
             
             return orderClones;

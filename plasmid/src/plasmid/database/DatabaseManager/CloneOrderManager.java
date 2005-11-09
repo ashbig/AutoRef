@@ -77,7 +77,12 @@ public class CloneOrderManager extends TableManager {
             for(int i=0; i<items.size(); i++) {
                 OrderClones item = (OrderClones)items.get(i);
                 stmt2.setInt(1,  orderid);
-                stmt2.setInt(2, item.getCloneid());
+                int cloneid = item.getCloneid();
+                if(cloneid <= 0) {
+                    stmt2.setString(2, null);
+                } else {
+                    stmt2.setInt(2, item.getCloneid());
+                }
                 stmt2.setString(3, item.getCollectionname());
                 stmt2.setInt(4, item.getQuantity());
                 DatabaseTransaction.executeUpdate(stmt2);
@@ -128,7 +133,36 @@ public class CloneOrderManager extends TableManager {
             DatabaseTransaction.closeResultSet(rs);
         }
     }
-    
+     
+    public List queryOrderCollections(int orderid, User user) {
+        String sql = "select o.collectionname, o.quantity from orderclones o, cloneorder c"+
+        " where o.orderid=c.orderid and o.cloneid is null and c.orderid="+orderid;
+        
+        if(user != null) {
+            sql = sql + " and c.userid="+user.getUserid();
+        }
+        
+        DatabaseTransaction t = null;
+        ResultSet rs = null;
+        List clones = new ArrayList();
+        try {
+            t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            while(rs.next()) {
+                String collectionname = rs.getString(1);
+                int quantity = rs.getInt(2);
+                OrderClones clone = new OrderClones(orderid,0, collectionname, quantity);
+                clones.add(clone);
+            }
+            return clones;
+        } catch (Exception ex) {
+            handleError(ex, "Cannot query orderclones.");
+            return null;
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+    }
+     
     /**
      * Query database to get the clone order by orderid and user.
      *
@@ -267,7 +301,7 @@ public class CloneOrderManager extends TableManager {
                 String email = rs.getString(26);
                 
                 CloneOrder order = new CloneOrder(orderid, date, st, ponumber,shippingto,billingto,shippingaddress,billingaddress, numofclones, numofcollection, costforclones, costforcollection,costforshipping, total, userid);
-               
+                
                 order.setFirstname(firstname);
                 order.setLastname(lastname);
                 order.setShippingdate(shippingdate);

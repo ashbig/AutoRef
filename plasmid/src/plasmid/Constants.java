@@ -37,6 +37,11 @@ public class Constants {
     public static final String FULLWORKLIST = "fullworklist";
     public static final String WORKLISTROBOT = "worklistrobot";
     
+    public static final String COLLECTION = "Collections";
+    public static final String SINGLECOLLECTION = "Collection";
+    public static final String ORDER_CLONE = "OrderClone";
+    public static final String ORDER_COLLECTION = "OrderCollection";
+    
     /** Creates a new instance of Constants */
     public Constants() {
     }    

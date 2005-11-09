@@ -55,7 +55,19 @@ public class ClonetypeComparator implements Comparator {
     public int compare(Object o1, Object o2) {
         String type1 = ((Clone)o1).getType();
         String type2 = ((Clone)o2).getType();
-        
-        return (type1.compareTo(type2));
+                
+        if(type1 == null) {
+            if(type2 == null) {
+                return 0;
+            } else {
+                return 1;
+            }
+        } else {
+            if(type2 == null) {
+                return -1;
+            } else {
+                return (type1.compareTo(type2));
+            }
+        }     
     }   
 }

@@ -55,8 +55,18 @@ public class ViewOrderClonesAction extends UserAction {
         
         User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
         int orderid = ((ViewOrderClonesForm)form).getOrderid();
+        String type = ((ViewOrderClonesForm)form).getType();
+        String collectionName = ((ViewOrderClonesForm)form).getCollectionName();
+        
         OrderProcessManager manager = new OrderProcessManager();
-        List clones = manager.getOrderClones(orderid, user, false);
+        List clones = null;
+        
+        if(Constants.ORDER_CLONE.equals(type)) {
+            clones = manager.getOrderClones(orderid, user, false);
+        }
+        if(Constants.ORDER_COLLECTION.equals(type)) {
+            clones = manager.getOrderClonesForCollection(collectionName, user, false);
+        }
         
         if(clones == null) {
             if(Constants.DEBUG)
@@ -68,6 +78,8 @@ public class ViewOrderClonesAction extends UserAction {
         }
         
         request.setAttribute("orderid", new Integer(orderid));
+        request.setAttribute("type", type);
+        request.setAttribute("collectionName", collectionName);
         request.setAttribute("orderClones", clones);
         return mapping.findForward("success");
     }

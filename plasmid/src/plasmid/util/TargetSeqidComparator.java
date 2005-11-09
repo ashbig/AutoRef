@@ -59,7 +59,20 @@ public class TargetSeqidComparator implements Comparator {
         
         String id1 = ((DnaInsert)inserts1.get(0)).getTargetseqid();
         String id2 = ((DnaInsert)inserts2.get(0)).getTargetseqid();
-        return (id1.compareTo(id2));
+                
+        if(id1 == null) {
+            if(id2 == null) {
+                return 0;
+            } else {
+                return 1;
+            }
+        } else {
+            if(id2 == null) {
+                return -1;
+            } else {
+                return (id1.compareTo(id2));
+            }
+        } 
     }
     
 }

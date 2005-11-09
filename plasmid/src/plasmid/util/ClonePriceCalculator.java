@@ -7,6 +7,7 @@
 package plasmid.util;
 
 import plasmid.coreobject.User;
+import plasmid.coreobject.CollectionInfo;
 
 /**
  *
@@ -48,5 +49,20 @@ public class ClonePriceCalculator {
             }
         }
         return PRICE_PER_PLATE_NON_MEMBER;
+    }
+    
+    public double calculatePriceForCollection(CollectionInfo info, String group) {
+        double price = info.getPrice();
+        
+        for(int i=0; i<User.MEMBER.length; i++) {
+            String g = User.MEMBER[i];
+            if(g.equals(group)) {
+                price = info.getMemberprice();
+                break;
+            }
+        }
+        
+        int quantity = info.getQuantity();
+        return price*quantity;
     }
 }

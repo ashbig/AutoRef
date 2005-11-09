@@ -19,6 +19,9 @@ import java.util.*;
  * @author  DZuo
  */
 public class RefseqSearchForm extends ActionForm {
+    public static final int PAGESIZE = 25;
+    public static final int PAGE = 1;
+    
     private String species;
     private String refseqType;
     private String searchType;
@@ -36,12 +39,13 @@ public class RefseqSearchForm extends ActionForm {
     private boolean plk;
     private boolean pby011;
     private boolean pgex2tk;
-    private int pagesize = 25;
-    private int page = 1;
+    private int pagesize = PAGESIZE;
+    private int page = PAGE;
     private String displayPage;
     private String sortby;
     private String cloneid;
     private String button;
+    private String forward;
     
     public String getSpecies() {return species;}
     public String getRefseqType() {return refseqType;}
@@ -66,6 +70,7 @@ public class RefseqSearchForm extends ActionForm {
     public String getSortby() {return sortby;}
     public String getCloneid() {return cloneid;}
     public String getButton() {return button;}
+    public String getForward() {return forward;}
     
     public void setSpecies(String s) {this.species = s;}
     public void setRefseqType(String s) {this.refseqType = s;}
@@ -90,6 +95,7 @@ public class RefseqSearchForm extends ActionForm {
     public void setSortby(String s) {this.sortby = s;}
     public void setCloneid(String id) {this.cloneid = id;}
     public void setButton(String s) {this.button = s;}
+    public void setForward(String s) {this.forward = s;}
     
     /**
      * Reset all properties to their default values.
@@ -115,7 +121,8 @@ public class RefseqSearchForm extends ActionForm {
         plk = false;
         pby011 = false;
         pgex2tk = false;
-        pagesize = 25;
+        pagesize = PAGESIZE;
+        forward = null;
     }
 }
 

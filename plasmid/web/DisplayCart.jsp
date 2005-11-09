@@ -26,7 +26,7 @@
 	<jsp:include page="viewShoppingCartTitle.jsp" />
 
       <html:form action="UpdateCart.do">
-<p>
+<p class="text">Clones:</p>
 <table width="100%" border="0">
   <tr>
     <td class="tableheader">&nbsp;</td>
@@ -73,10 +73,34 @@
     </td>
     <td><bean:write name="clone" property="restriction"/></td>
     <td><html:text size="3" styleClass="tableinfo" property='<%="cloneCount["+(i-1)+"]"%>'/></td>
-        <!--<input type="hidden" name="cloneid" value="<bean:write name="clone" property="cloneid"/>"/>
-    --></tr>
+  </tr>
   </logic:iterate>
 </table>
+
+<p class="text">Collections:</p>
+<table width="100%" border="0">
+  <tr>
+    <td class="tableheader">&nbsp;</td>
+    <td class="tableheader">Collection Name</td>
+    <td class="tableheader">Use Restriction</td>
+    <td class="tableheader">Price For Member</td>
+    <td class="tableheader">Price For Non-Member</td>
+    <td class="tableheader">Quantity</td>
+  </tr>
+
+  <% int j=0;%>
+  <logic:iterate name="collectioncart" id="collection">
+  <tr class="tableinfo"> 
+    <td><%=++j%></td>
+    <td><a target="_blank" class="itemtext" href="GetCollection.do?collectionName=<bean:write name="collection" property="name"/>"><bean:write name="collection" property="name"/></a></td>
+    <td><bean:write name="collection" property="restriction"/></td>
+    <td><bean:write name="collection" property="memberprice"/></td>
+    <td><bean:write name="collection" property="price"/></td>
+    <td><html:text size="3" styleClass="tableinfo" property='<%="collectionCount["+(j-1)+"]"%>'/></td>
+  </tr>
+  </logic:iterate>
+</table>
+
     <html:submit property="submitButton" value="Update Cart"/>
 <logic:present name="<%=Constants.USER_KEY%>" scope="session">
     <html:submit property="submitButton" value="Save Cart"/>

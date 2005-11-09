@@ -37,7 +37,10 @@ public class StaticQueryHandlerFactory {
             return new PAGenbankQueryHandler(terms);
         else if(GeneQueryHandler.PRO_GI.equals(type))
             return new PAGIQueryHandler(terms);
-        else
-            return null;
+        else {
+            RefseqNameQueryHandler h = new RefseqNameQueryHandler(terms);
+            h.setNametype(type);
+            return h;
+        }
     }
 }

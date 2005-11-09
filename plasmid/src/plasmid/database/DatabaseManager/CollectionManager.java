@@ -12,6 +12,7 @@ import java.util.*;
 import plasmid.coreobject.*;
 import plasmid.database.DatabaseTransaction;
 import plasmid.Constants;
+import plasmid.util.StringConvertor;
 
 /**
  *
@@ -24,12 +25,23 @@ public class CollectionManager extends TableManager {
         super(conn);
     }
     
-    public static List getAllCollections(String status) {
-        String sql = "select name,description,price,status,restriction"+
+    public static List getAllCollections(String status, List restrictions) {
+        String sql = "select name,description,price,status,restriction,memberprice"+
         " from collection";
         
+        boolean isWhere = true;
         if(status != null) {
-            sql += " where status="+status;
+            sql += " where status='"+status+"'";
+            isWhere = false;
+        }
+        
+        if(restrictions != null && restrictions.size()>0) {
+            String s = StringConvertor.convertFromListToSqlString(restrictions);
+            if(isWhere) {
+                sql += " where restriction in ("+s+")";
+            } else {
+                sql = sql+" and restriction in ("+s+")";
+            }
         }
         
         List infos = new ArrayList();
@@ -44,7 +56,8 @@ public class CollectionManager extends TableManager {
                 double price = rs.getDouble(3);
                 String s = rs.getString(4);
                 String restriction = rs.getString(5);
-                CollectionInfo info = new CollectionInfo(name, description, price, s, restriction);
+                double memberprice = rs.getDouble(6);
+                CollectionInfo info = new CollectionInfo(name, description, price, memberprice, s, restriction);
                 infos.add(info);
             }
         } catch (Exception ex) {
@@ -60,9 +73,64 @@ public class CollectionManager extends TableManager {
         return infos;
     }
     
-    public static CollectionInfo getCollection(String name) {
-        String sql = "select description,price,status,restriction"+
+    public Map getCollections(Connection conn, List names) {
+        String sql = "select description,price,status,restriction,memberprice"+
+        " from collection where name=?";
+        PreparedStatement stmt = null;
+        Map collections = new HashMap();
+        String currentName = null;
+        
+        try {
+            stmt = conn.prepareStatement(sql);
+            for(int i=0; i<names.size(); i++) {
+                String name = (String)names.get(i);
+                currentName = name;
+                stmt.setString(1, name);
+                ResultSet rs = DatabaseTransaction.executeQuery(stmt);
+                if(rs.next()) {
+                    String description = rs.getString(1);
+                    double price = rs.getDouble(2);
+                    String s = rs.getString(3);
+                    String restriction = rs.getString(4);
+                    double memberprice = rs.getDouble(5);
+                    CollectionInfo info = new CollectionInfo(name, description, price, memberprice, s, restriction);
+                    collections.put(name, info);
+                    DatabaseTransaction.closeResultSet(rs);
+                } else {
+                    throw new Exception("Cannot get collection by name: "+name);
+                }
+            }
+        } catch (Exception ex) {
+            handleError(ex, "Error occured while query collection by name: "+currentName);
+            return null;
+        }
+        return collections;
+    }
+    
+    public static CollectionInfo getCollection(String name, boolean isCloneRestore, boolean isCloneStorage) {
+        String sql = "select description,price,status,restriction,memberprice"+
         " from collection where name='"+name+"'";
+        
+        return CollectionManager.doGetCollection(sql, name, isCloneRestore, isCloneStorage);
+    }
+    
+    public static CollectionInfo getCollection(String name, String status, List restrictions, boolean isCloneRestore, boolean isCloneStorage) {
+        String sql = "select description,price,status,restriction,memberprice"+
+        " from collection where name='"+name+"'";
+        
+        if(status != null) {
+            sql += " and status='"+status+"'";
+        }
+        
+        if(restrictions != null && restrictions.size()>0) {
+            String s = StringConvertor.convertFromListToSqlString(restrictions);
+            sql = sql+" and restriction in ("+s+")";
+        }
+        
+        return CollectionManager.doGetCollection(sql, name, isCloneRestore, isCloneStorage);
+    }
+    
+    private static CollectionInfo doGetCollection(String sql, String name, boolean isCloneRestore, boolean isCloneStorage) {
         String sql1 = "select a.authorid, a.authorname, ca.authortype"+
         " from authorinfo a, collectionauthor ca"+
         " where a.authorid=ca.authorid and ca.collectionname='"+name+"'";
@@ -72,22 +140,28 @@ public class CollectionManager extends TableManager {
         String sql3 = "select p.name, p.filename, p.description"+
         " from protocol p, collectionprotocol cp"+
         " where p.name=cp.protocolname and cp.collectionname='"+name+"'";
+        String sql4 = "select cloneid from clonecollection where name='"+name+"'";
         
         DatabaseTransaction t = null;
+        Connection conn = null;
         ResultSet rs = null;
         ResultSet rs1 = null;
         ResultSet rs2 = null;
         ResultSet rs3 = null;
+        ResultSet rs4 = null;
         CollectionInfo info = null;
         try {
             t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            System.out.println(sql);
             rs = t.executeQuery(sql);
             if(rs.next()) {
                 String description = rs.getString(1);
                 double price = rs.getDouble(2);
                 String s = rs.getString(3);
                 String restriction = rs.getString(4);
-                info = new CollectionInfo(name, description, price, s, restriction);
+                double memberprice = rs.getDouble(5);
+                info = new CollectionInfo(name, description, price, memberprice, s, restriction);
             } else {
                 if(Constants.DEBUG) {
                     System.out.println("Cannot get collection from database using collection name: "+name);
@@ -125,6 +199,22 @@ public class CollectionManager extends TableManager {
                 protocols.add(p);
             }
             
+            if(isCloneRestore) {
+                List cloneids = new ArrayList();
+                rs4 = t.executeQuery(sql4);
+                while(rs4.next()) {
+                    int cloneid = rs4.getInt(1);
+                    cloneids.add((new Integer(cloneid)).toString());
+                }
+                
+                CloneManager m = new CloneManager(conn);
+                Map clones = m.queryClonesByCloneid(cloneids, true, true, isCloneStorage);
+                if(clones == null) {
+                    throw new Exception("Cannot get clones from database.");
+                }
+                info.setClones(new ArrayList(clones.values()));
+            }
+            
             info.setAuthors(authors);
             info.setPublications(publications);
             info.setProtocols(protocols);
@@ -138,6 +228,8 @@ public class CollectionManager extends TableManager {
             DatabaseTransaction.closeResultSet(rs1);
             DatabaseTransaction.closeResultSet(rs2);
             DatabaseTransaction.closeResultSet(rs3);
+            DatabaseTransaction.closeResultSet(rs4);
+            DatabaseTransaction.closeConnection(conn);
         }
         
         return info;

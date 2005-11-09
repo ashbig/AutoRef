@@ -29,6 +29,7 @@ import plasmid.Constants;
 import plasmid.coreobject.*;
 import plasmid.query.coreobject.CloneInfo;
 import plasmid.form.ViewCartForm;
+import plasmid.process.OrderProcessManager;
 
 /**
  *
@@ -59,51 +60,37 @@ public class ViewCartAction extends Action {
         ActionErrors errors = new ActionErrors();
         
         List shoppingcart = (List)request.getSession().getAttribute(Constants.CART);
-
+        
         if(shoppingcart == null || shoppingcart.size() == 0) {
             shoppingcart = new ArrayList();
             request.getSession().setAttribute(Constants.CART, shoppingcart);
             return (mapping.findForward("success_empty"));
         } else {
-            List c = new ArrayList();
-            for(int i=0; i<shoppingcart.size(); i++) {
-                ShoppingCartItem item = (ShoppingCartItem)shoppingcart.get(i);
-                c.add(item.getItemid());
-            }
+            OrderProcessManager manager = new OrderProcessManager();
+            manager.processShoppingCartItems(shoppingcart);
+            List clones = manager.getClones();
+            List collections = manager.getCollections();
+            List cloneids = manager.getCloneids();
+            List collectionNames = manager.getCollectionNames();
+            List newShoppingcart = manager.getShoppingCartClones(cloneids, clones);
+            List newShoppingcartCollections = manager.getShoppingCartCollections(collectionNames, collections);
             
-            DatabaseTransaction t = null;
-            Connection conn = null;
-            try {
-                t = DatabaseTransaction.getInstance();
-                conn = t.requestConnection();
-                CloneManager manager = new CloneManager(conn);
-                Map found = manager.queryClonesByCloneid(c, true, true, false);
-                List newShoppingcart = new ArrayList();
-                
-                for(int i=0; i<shoppingcart.size(); i++) {
-                    ShoppingCartItem item = (ShoppingCartItem)shoppingcart.get(i);
-                    String cloneid = item.getItemid();
-                    int quantity = item.getQuantity();
-                    CloneInfo cloneInfo = (CloneInfo)found.get(cloneid);
-                    cloneInfo.setQuantity(quantity);
-                    
-                    newShoppingcart.add(cloneInfo);
-                }
-                
-                ((ViewCartForm)form).setCloneCountList(newShoppingcart);
-                
-                request.setAttribute("cart", newShoppingcart);
-                return (mapping.findForward("success"));
-            } catch (Exception ex) {
+            if(newShoppingcart == null || newShoppingcartCollections == null) {
                 if(Constants.DEBUG)
-                    System.out.println(ex);
+                    System.out.println("Database error occured.");
                 
                 errors.add(ActionErrors.GLOBAL_ERROR,
                 new ActionError("error.database.error","Database error occured."));
                 return (mapping.findForward("error"));
-            } finally {
-                DatabaseTransaction.closeConnection(conn);
             }
+            
+            ((ViewCartForm)form).setCloneCountList(newShoppingcart);
+            ((ViewCartForm)form).setCollectionCountList(newShoppingcartCollections);
+            
+            request.setAttribute("cart", newShoppingcart);
+            request.setAttribute("collectioncart", newShoppingcartCollections);
+            
+            return (mapping.findForward("success"));
         }
     }
 }

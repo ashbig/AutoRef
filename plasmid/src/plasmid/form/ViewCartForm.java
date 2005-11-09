@@ -15,6 +15,7 @@ import org.apache.struts.action.ActionMapping;
 import java.util.*;
 
 import plasmid.query.coreobject.CloneInfo;
+import plasmid.coreobject.CollectionInfo;
 
 /**
  *
@@ -22,6 +23,7 @@ import plasmid.query.coreobject.CloneInfo;
  */
 public class ViewCartForm extends ActionForm {
     private List cloneCount;
+    private List collectionCount;
     private String submitButton;
     
     /** Creates a new instance of ViewCartForm */
@@ -36,6 +38,14 @@ public class ViewCartForm extends ActionForm {
         cloneCount.set(i,s);
     }
     
+    public String getCollectionCount(int i) {
+        return (String)collectionCount.get(i);
+    }
+    
+    public void setCollectionCount(int i, String s) {
+        collectionCount.set(i, s);
+    }
+    
     public void setCloneCountList(List clones) {        
         cloneCount = new ArrayList();
         for(int i=0; i<clones.size(); i++) {
@@ -45,12 +55,29 @@ public class ViewCartForm extends ActionForm {
         }
     }
     
+    public void setCollectionCountList(List collections) {        
+        collectionCount = new ArrayList();
+        for(int i=0; i<collections.size(); i++) {
+            CollectionInfo c = (CollectionInfo)collections.get(i);
+            int q = c.getQuantity();
+            collectionCount.add((new Integer(q)).toString());
+        }
+    }
+    
     public List getCloneCountList() {
         return cloneCount;
     }  
     
+    public List getCollectionCountList() {
+        return collectionCount;
+    } 
+    
     public void removeClone(int i) {
         cloneCount.remove(i);
+    }
+    
+    public void removeCollection(int i) {
+        collectionCount.remove(i);
     }
     
     public String getSubmitButton() {

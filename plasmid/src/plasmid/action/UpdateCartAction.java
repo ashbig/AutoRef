@@ -61,6 +61,7 @@ public class UpdateCartAction extends Action {
         
         List shoppingcart = (List)request.getSession().getAttribute(Constants.CART);
         List cloneCountList = ((ViewCartForm)form).getCloneCountList();
+        List collectionCountList = ((ViewCartForm)form).getCollectionCountList();
         String ret = ((ViewCartForm)form).getSubmitButton();
         request.getSession().setAttribute(Constants.CART_STATUS, Constants.UPDATED);
         
@@ -70,30 +71,37 @@ public class UpdateCartAction extends Action {
             return (mapping.findForward("success_empty"));
         } else {
             List shoppingcartCopy = new ArrayList();
-            List c = new ArrayList();
-            for(int i=0; i<shoppingcart.size(); i++) {
-                ShoppingCartItem item = (ShoppingCartItem)shoppingcart.get(i);
-                c.add(item.getItemid());
-            }
-            
             User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
-            OrderProcessManager m = new OrderProcessManager();
             
-            List newShoppingcart = m.updateShoppingCart(c, shoppingcart, cloneCountList, shoppingcartCopy);
-            if(newShoppingcart == null && !("Save Cart".equals(ret))) {
+            OrderProcessManager m = new OrderProcessManager();
+            m.processShoppingCartItems(shoppingcart);
+            List cloneids = m.getCloneids();
+            List collectionNames = m.getCollectionNames();
+            List clones = m.getShoppingCartClones(cloneids, m.getClones());
+            List collections = m.getShoppingCartCollections(collectionNames, m.getCollections());
+            List newShoppingcartClones = m.updateShoppingCartForClones(cloneids, clones, cloneCountList, shoppingcartCopy);
+            List newShoppingcartCollections = m.updateShoppingCartForCollections(collectionNames, collections, collectionCountList, shoppingcartCopy);
+           
+            if(newShoppingcartClones == null && !("Save Cart".equals(ret))) {
                 errors.add(ActionErrors.GLOBAL_ERROR,
                 new ActionError("error.database.error","Error occured while updating shopping cart."));
                 return (mapping.findForward("error"));
-            } else if(newShoppingcart.size() == 0) {
+            } else if(newShoppingcartCollections == null && !("Save Cart".equals(ret))) {
+                errors.add(ActionErrors.GLOBAL_ERROR,
+                new ActionError("error.database.error","Error occured while updating shopping cart."));
+                return (mapping.findForward("error"));
+            } else if(newShoppingcartClones.size() == 0 && newShoppingcartCollections.size() == 0) {
                 shoppingcart = new ArrayList();
                 request.getSession().setAttribute(Constants.CART, shoppingcart);
                 return (mapping.findForward("success_empty"));
             } else {
-                ((ViewCartForm)form).setCloneCountList(newShoppingcart);
-                request.setAttribute("cart", newShoppingcart);
+                ((ViewCartForm)form).setCloneCountList(newShoppingcartClones);
+                ((ViewCartForm)form).setCollectionCountList(newShoppingcartCollections);
+                
+                request.setAttribute("cart", newShoppingcartClones);
+                request.setAttribute("collectioncart", newShoppingcartCollections);
                 request.getSession().setAttribute(Constants.CART, shoppingcartCopy);
             }
-            
             if("Check Out".equals(ret)) {
                 return (mapping.findForward("success_checkout"));
             }

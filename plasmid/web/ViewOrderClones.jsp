@@ -37,7 +37,7 @@
     <td class="tableheader">Insert Format</td>
     <td class="tableheader">Vector</td>
     <td class="tableheader">Selection Markers</td>
-    <td class="tableheader">Use Restriction</td>
+    <td class="tableheader">Special MTA</td>
     <td class="tableheader">Quantity</td>
   </tr>
 
@@ -69,15 +69,16 @@
         <bean:write name="selection" property="hosttype"/>: <bean:write name="selection" property="marker"/>;
     </logic:iterate>
     </td>
-    <td><bean:write name="clone" property="restriction"/></td>
+    <td><bean:write name="clone" property="specialtreatment"/></td>
     <td><bean:write name="clone" property="quantity"/></td>
     </tr>
   </logic:iterate>
 </table>
 
 <html:form action="DownloadClones.do">
-<input type="hidden" name="type" value="clone">
+<input type="hidden" name="type" value="<bean:write name="type"/>">
 <input type="hidden" name="orderid" value="<bean:write name="orderid"/>">
+<input type="hidden" name="collectionName" value="<bean:write name="collectionName"/>">
 <table width="100%" border="0">
   <tr>
     <td width="77%">&nbsp;</td>

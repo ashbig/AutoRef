@@ -1,6 +1,7 @@
 <%@ page language="java" %>
 <%@ page errorPage="ProcessError.do"%>
 <%@ page import="plasmid.Constants" %> 
+<%@ page import="plasmid.coreobject.RefseqNameType" %> 
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -60,15 +61,7 @@
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=searchterm&displayPage=<bean:write name="displayPage"/>&species=<bean:write name="species"/>">Search Term</a></td>
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=cloneid&displayPage=<bean:write name="displayPage"/>&species=<bean:write name="species"/>">Clone ID</a></td>
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=clonetype&displayPage=<bean:write name="displayPage"/>&species=<bean:write name="species"/>">Clone Type</a></td>
-    <logic:equal name="species" value="Homo sapiens">
-    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=geneid&displayPage=<bean:write name="displayPage"/>&species=<bean:write name="species"/>">Gene ID</a></td>
-    </logic:equal>
-    <logic:equal name="species" value="Saccharomyces cerevisiae">
-    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=geneid&displayPage=<bean:write name="displayPage"/>&species=<bean:write name="species"/>">SGD</a></td>
-    </logic:equal>
-    <logic:equal name="species" value="Pseudomonas aeruginosa">
-    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=geneid&displayPage=<bean:write name="displayPage"/>&species=<bean:write name="species"/>">PA Number</a></td>
-    </logic:equal>
+    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=geneid&displayPage=<bean:write name="displayPage"/>&species=<bean:write name="species"/>">Species Specific ID</a></td>
     <td class="tableheader">Gene Symbol</td>
     <td class="tableheader">Gene Name</td>
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=targetseq&displayPage=<bean:write name="displayPage"/>&species=<bean:write name="species"/>">Reference Sequence</a></td>
@@ -90,14 +83,17 @@
     <td><a target="_blank" href="GetCloneDetail.do?cloneid=<bean:write name="clone" property="cloneid"/>&species=<bean:write name="species"/>"><bean:write name="clone" property="name"/></a></td>
     <td><bean:write name="clone" property="type"/></td>
     <logic:iterate name="clone" property="inserts" id="insert">
-    <logic:equal name="species" value="Homo sapiens">
+    <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.GENEID%>">
     <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=gene&cmd=Retrieve&dopt=Graphics&list_uids=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
     </logic:equal>
-    <logic:equal name="species" value="Pseudomonas aeruginosa">
+    <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.PA%>">
     <td><a target="_blank" href="http://www.pseudomonas.com/AnnotationByPAU.asp?PA=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
     </logic:equal>
-    <logic:equal name="species" value="Saccharomyces cerevisiae">
+    <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.SGD%>">
     <td><a target="_blank" href="http://db.yeastgenome.org/cgi-bin/locus.pl?locus=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
+    </logic:equal>
+    <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.GENBANK%>">
+    <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=nucleotide&val=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
     </logic:equal>
     <td><bean:write name="insert" property="name"/></td>
     <td><bean:write name="insert" property="description"/></td>
