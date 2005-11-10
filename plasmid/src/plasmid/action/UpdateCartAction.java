@@ -65,9 +65,10 @@ public class UpdateCartAction extends Action {
         String ret = ((ViewCartForm)form).getSubmitButton();
         request.getSession().setAttribute(Constants.CART_STATUS, Constants.UPDATED);
         
-        if(!("Save Cart".equals(ret)) && ((shoppingcart == null || shoppingcart.size() == 0 || cloneCountList.size() == 0))) {
+        if(!("Save Cart".equals(ret)) && ((shoppingcart == null || shoppingcart.size() == 0 || (cloneCountList.size() == 0 && collectionCountList.size() == 0)))) {
             shoppingcart = new ArrayList();
             request.getSession().setAttribute(Constants.CART, shoppingcart);
+            System.out.println("1");
             return (mapping.findForward("success_empty"));
         } else {
             List shoppingcartCopy = new ArrayList();
@@ -77,11 +78,35 @@ public class UpdateCartAction extends Action {
             m.processShoppingCartItems(shoppingcart);
             List cloneids = m.getCloneids();
             List collectionNames = m.getCollectionNames();
+            
+            if(cloneids.size() == 0 && collectionNames.size() == 0) {
+                shoppingcart = new ArrayList();
+                request.getSession().setAttribute(Constants.CART, shoppingcart);
+                return (mapping.findForward("success_empty"));
+            }
+           
             List clones = m.getShoppingCartClones(cloneids, m.getClones());
             List collections = m.getShoppingCartCollections(collectionNames, m.getCollections());
-            List newShoppingcartClones = m.updateShoppingCartForClones(cloneids, clones, cloneCountList, shoppingcartCopy);
-            List newShoppingcartCollections = m.updateShoppingCartForCollections(collectionNames, collections, collectionCountList, shoppingcartCopy);
-           
+             
+            if(clones == null && !("Save Cart".equals(ret))) {
+                errors.add(ActionErrors.GLOBAL_ERROR,
+                new ActionError("error.database.error","Error occured while updating shopping cart."));
+                return (mapping.findForward("error"));
+            } 
+            if(collections == null && !("Save Cart".equals(ret))) {
+                errors.add(ActionErrors.GLOBAL_ERROR,
+                new ActionError("error.database.error","Error occured while updating shopping cart."));
+                return (mapping.findForward("error"));
+            }             
+            
+            List newShoppingcartClones = new ArrayList();
+            List newShoppingcartCollections = new ArrayList();
+            
+            if(clones.size()>0)
+                newShoppingcartClones = m.updateShoppingCartForClones(cloneids, clones, cloneCountList, shoppingcartCopy);
+            if(collections.size()>0)
+                newShoppingcartCollections = m.updateShoppingCartForCollections(collectionNames, collections, collectionCountList, shoppingcartCopy);
+            
             if(newShoppingcartClones == null && !("Save Cart".equals(ret))) {
                 errors.add(ActionErrors.GLOBAL_ERROR,
                 new ActionError("error.database.error","Error occured while updating shopping cart."));

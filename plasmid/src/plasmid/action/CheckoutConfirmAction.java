@@ -72,6 +72,10 @@ public class CheckoutConfirmAction extends UserAction {
         String billingzipcode = ((CheckoutForm)form).getBillingzipcode();
         String country = ((CheckoutForm)form).getCountry();
         String billingcountry = ((CheckoutForm)form).getBillingcountry();
+        String phone = ((CheckoutForm)form).getPhone();
+        String billingphone = ((CheckoutForm)form).getBillingphone();
+        String fax = ((CheckoutForm)form).getFax();
+        String billingfax = ((CheckoutForm)form).getBillingfax();
         
         if(ponumber == null || ponumber.trim().length()<1)
             errors.add("ponumber", new ActionError("error.ponumber.required"));
@@ -99,7 +103,9 @@ public class CheckoutConfirmAction extends UserAction {
             errors.add("country", new ActionError("error.country.required"));
         if(billingcountry == null || billingcountry.trim().length()<1)
             errors.add("billingcountry", new ActionError("error.billingcountry.required"));
-               
+        if(phone == null || phone.trim().length() < 1)
+            errors.add("phone", new ActionError("error.phone.shipping.required"));
+        
         List shoppingcart = (List)request.getSession().getAttribute(Constants.CART);
         
         if(shoppingcart == null || shoppingcart.size() == 0) {

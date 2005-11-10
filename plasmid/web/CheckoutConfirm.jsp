@@ -108,6 +108,18 @@
     <td class="formlabel">Country:</td>
     <td class="text"><bean:write name="checkoutForm" property="billingcountry"/></td>
   </tr>
+  <tr> 
+    <td class="formlabel">Phone:</td>
+    <td class="text"><bean:write name="checkoutForm" property="phone"/></td>
+    <td class="formlabel">Phone:</td>
+    <td class="text"><bean:write name="checkoutForm"  property="billingphone"/></td>
+  </tr>
+  <tr> 
+    <td class="formlabel">Fax:</td>
+    <td class="text"><bean:write name="checkoutForm" property="fax"/></td>
+    <td class="formlabel">Fax:</td>
+    <td class="text"><bean:write name="checkoutForm"  property="billingfax"/></td>
+  </tr>
 </table>
 
 <p>&nbsp;</p>

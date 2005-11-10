@@ -100,6 +100,7 @@ are not allowed to be shipped outside of USA.</p>
   <tr>
     <td class="formlabel">*Country:</td>
     <td><html:select styleClass="text" property="country" value="USA">
+        <html:option value="Denmark"/>
         <html:option value="Spain"/>
         <html:option value="United Kindom"/>
         <html:option value="USA"/>
@@ -107,11 +108,24 @@ are not allowed to be shipped outside of USA.</p>
     </td>
     <td class="formlabel">*Country:</td>
     <td><html:select styleClass="text" property="billingcountry" value="USA">
+        <html:option value="Denmark"/>
         <html:option value="Spain"/>
         <html:option value="United Kindom"/>
         <html:option value="USA"/>
         </html:select>
     </td>
+  </tr>
+  <tr> 
+    <td class="formlabel">*Phone:</td>
+    <td><html:text styleClass="text" property="phone"/></td>
+    <td class="formlabel">Phone:</td>
+    <td><html:text styleClass="text" property="billingphone"/></td>
+  </tr>
+  <tr> 
+    <td class="formlabel">Fax:</td>
+    <td><html:text styleClass="text" property="fax"/></td>
+    <td class="formlabel">Fax:</td>
+    <td><html:text styleClass="text" property="billingfax"/></td>
   </tr>
 </table>
 

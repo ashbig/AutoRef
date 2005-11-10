@@ -153,7 +153,6 @@ public class CollectionManager extends TableManager {
         try {
             t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
-            System.out.println(sql);
             rs = t.executeQuery(sql);
             if(rs.next()) {
                 String description = rs.getString(1);

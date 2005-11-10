@@ -46,6 +46,10 @@ public class CheckoutForm extends ActionForm {
     private boolean saveInfo = false;
     private String shippingMethod;
     private String accountNumber;
+    private String phone;
+    private String billingphone;
+    private String fax;
+    private String billingfax;
     
     /** Creates a new instance of CheckoutForm */
     public CheckoutForm() {
@@ -80,6 +84,10 @@ public class CheckoutForm extends ActionForm {
     public boolean getSaveInfo() {return saveInfo;}
     public String getShippingMethod() {return shippingMethod;}
     public String getAccountNumber() {return accountNumber;}
+    public String getPhone() {return phone;}
+    public String getBillingphone() {return billingphone;}
+    public String getFax() {return fax;}
+    public String getBillingfax() {return billingfax;}
     
     // public void setUsername(String s) {this.username = s;}
     // public void setEmail(String s) {this.email = s;}
@@ -110,6 +118,10 @@ public class CheckoutForm extends ActionForm {
     public void setSaveInfo(boolean b) {this.saveInfo = b;}
     public void setShippingMethod(String s) {this.shippingMethod = s;}
     public void setAccountNumber(String s) {this.accountNumber = s;}
+    public void setPhone(String s) {this.phone = s;}
+    public void setBillingphone(String s) {this.billingphone = s;}
+    public void setFax(String s) {this.fax = s;}
+    public void setBillingfax(String s) {this.billingfax = s;}
     
     /**
      * Reset all properties to their default values.

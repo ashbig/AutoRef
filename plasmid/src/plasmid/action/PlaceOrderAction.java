@@ -81,6 +81,10 @@ public class PlaceOrderAction extends UserAction {
         String billingcountry = ((CheckoutForm)form).getBillingcountry();
         String shippingMethod = ((CheckoutForm)form).getShippingMethod();
         String accountNumber = ((CheckoutForm)form).getAccountNumber();
+        String phone = ((CheckoutForm)form).getPhone();
+        String billingphone = ((CheckoutForm)form).getBillingphone();
+        String fax = ((CheckoutForm)form).getFax();
+        String billingfax = ((CheckoutForm)form).getBillingfax();
         boolean saveInfo = ((CheckoutForm)form).getSaveInfo();
         
         String shippingAddress = "";
@@ -90,6 +94,9 @@ public class PlaceOrderAction extends UserAction {
         if(addressline2 != null)
             shippingAddress += addressline2+"\n";
         shippingAddress = shippingAddress+city+", "+state+" "+zipcode+"\n"+country;
+        shippingAddress = shippingAddress+"\n"+"Phone: "+phone;
+        if(fax != null && fax.trim().length()>0)
+            shippingAddress = shippingAddress+"\n"+"Fax: "+fax;
         
         String billingAddress = "";
         if(billingOrganization != null) 
@@ -98,7 +105,11 @@ public class PlaceOrderAction extends UserAction {
         if(billingaddressline2 != null)
             billingAddress += billingaddressline2+"\n";
         billingAddress = billingAddress+billingcity+", "+billingstate+" "+billingzipcode+"\n"+billingcountry;
-
+        if(billingphone != null && billingphone.trim().length()>0)
+            billingAddress += "\nPhone: "+billingphone;
+        if(billingfax != null && billingfax.trim().length()>0)
+            billingAddress += "\nFax: "+billingfax;
+        
         List addresses = null;
         if(saveInfo) {
             addresses = new ArrayList();
