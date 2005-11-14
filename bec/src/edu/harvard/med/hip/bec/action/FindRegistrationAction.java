@@ -63,9 +63,9 @@ public final class FindRegistrationAction extends Action {
         String reminder = ((FindRegistrationForm) form).getReminderText(); 
         String password = "";
         String email_address = "";
-        String subject = "FLEXGene registration";
-        String msgText = "Information for your FLEXGene registration"+"\n";
-
+        String subject = "ACE registration";
+        String msgText = "Information for your ACE registration"+"\n";
+        String from = BecProperties.getInstance().getACEEmailAddress();
        try {
             // get the access manager to check if the user_id has been used.
             AccessManager accessManager = AccessManager.getInstance();
@@ -77,7 +77,7 @@ public final class FindRegistrationAction extends Action {
                     email_address = accessManager.getEmail(user_id);
                     msgText = msgText.concat("\n"+"Username: "+user_id+"\n");
                     msgText = msgText.concat("Password: "+password+"\n");
-                    Mailer.sendMessage(email_address,"FLEXGene_manager@hms.harvard.edu",subject,msgText);
+                    Mailer.sendMessage(email_address,from,subject,msgText);
                     return(mapping.findForward("success"));
                 }
                 else if (reminder.equals("")){ 
@@ -94,7 +94,7 @@ public final class FindRegistrationAction extends Action {
                         //send email
                         msgText = msgText.concat("\n"+"Username: "+user_id+"\n");
                         msgText = msgText.concat("Password: "+password+"\n");
-                        Mailer.sendMessage(email_address,"FLEXGene_manager@hms.harvard.edu",subject,msgText);
+                        Mailer.sendMessage(email_address,from,subject,msgText);
                         return(mapping.findForward("success"));
                     }
                     else {
@@ -117,7 +117,7 @@ public final class FindRegistrationAction extends Action {
                     //send email
                     msgText = msgText.concat("\n"+"Username: "+user_id+"\n");
                     msgText = msgText.concat("Password: "+password+"\n");
-                    Mailer.sendMessage(email_address,"FLEXGene_manager@hms.harvard.edu",subject,msgText);
+                    Mailer.sendMessage(email_address,from,subject,msgText);
                     return(mapping.findForward("success"));
                 }
                 else {

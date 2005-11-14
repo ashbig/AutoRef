@@ -2,6 +2,7 @@
 <%@ page import="edu.harvard.med.hip.bec.programs.blast.*" %>
 <%@ page import="edu.harvard.med.hip.bec.coreobjects.sequence.*" %>
 <%@ page import="edu.harvard.med.hip.bec.coreobjects.oligo.*" %>
+<%@ page import="edu.harvard.med.hip.bec.coreobjects.endreads.*" %>
 <%@ page import="edu.harvard.med.hip.bec.action_runners.*" %>
 <%@ page import="edu.harvard.med.hip.bec.programs.assembler.*" %>
 <%@ page import="edu.harvard.med.hip.bec.util.*" %>
@@ -11,6 +12,8 @@
 <%@ page import="java.util.*" %>
 
 <head>
+<LINK REL=STYLESHEET       HREF="application_styles.css"      TYPE="text/css">
+
 <script language="JavaScript" src="<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>scripts.js"></script>
 </head>
 
@@ -154,6 +157,8 @@ break;
 
 
 case Constants.PROCESS_RUNPOLYMORPHISM_FINDER:{ break;}
+
+case Constants.PROCESS_REANALYZE_CLONE_SEQUENCE:
 case Constants.PROCESS_RUN_DISCREPANCY_FINDER:
 { 
     
@@ -288,6 +293,18 @@ additional_jsp_buffer.append( "   <td> <textarea name='sequencing_comments' rows
 additional_jsp_buffer.append(  "  if ( container.getStatus() !=  OligoContainer.STATUS_RECIEVED) { disabled}></textarea></td></tr>");
 additional_jsp = additional_jsp_buffer.toString();
 break;
+}
+case Constants.PROCESS_SET_CLONE_FINAL_STATUS:
+{
+additional_jsp_buffer.append( "<tr class='headerRow'><td colspan =2>Process Specification</td></tr>");
+additional_jsp_buffer.append( "<tr class='strong'> <td>"+line_padding+"Clone status:</td><td><SELECT NAME='CLONE_FINAL_STATUS' id='CLONE_FINAL_STATUS'> ");
+additional_jsp_buffer.append( "<OPTION VALUE=" + IsolateTrackingEngine.FINAL_STATUS_INPROCESS +">"+IsolateTrackingEngine.getCloneFinalStatusAsString(IsolateTrackingEngine.FINAL_STATUS_INPROCESS));
+additional_jsp_buffer.append( "<OPTION VALUE=" + IsolateTrackingEngine.FINAL_STATUS_ACCEPTED +">"+IsolateTrackingEngine.getCloneFinalStatusAsString(IsolateTrackingEngine.FINAL_STATUS_ACCEPTED));
+additional_jsp_buffer.append( "<OPTION VALUE=" + IsolateTrackingEngine.FINAL_STATUS_REJECTED +">"+IsolateTrackingEngine.getCloneFinalStatusAsString(IsolateTrackingEngine.FINAL_STATUS_REJECTED));
+
+additional_jsp_buffer.append("</SELECT></td> </tr>");
+additional_jsp = additional_jsp_buffer.toString();
+    break;
 }
 }
 if ( isTryMode )

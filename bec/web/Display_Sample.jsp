@@ -25,11 +25,7 @@
     <tr>
         <td >
     <font color="#008000" size="5"><b> Sample Report  </font>
-    <hr>
-    
-    <p>
-    </td>
-    </tr>
+    <hr><p></td> </tr>
 </table>
 
 <div align="center">
@@ -43,7 +39,7 @@
   </center>
 </div>
 <p></p>
-<% Sample sample = (Sample)request.getAttribute("sample") ;
+<% UICloneSample sample = (UICloneSample)request.getAttribute("sample") ;
 ArrayList end_read = (ArrayList)request.getAttribute("end_read");
 ArrayList contigs = (ArrayList)request.getAttribute("contigs");
 ArrayList clone_sequences = (ArrayList)request.getAttribute("clone_sequences");
@@ -53,31 +49,28 @@ ArrayList clone_sequences = (ArrayList)request.getAttribute("clone_sequences");
     <td width="39%"><strong>Container Label:</strong></td>
     <td width="61%"> <%= request.getAttribute("container_label") %> </td>
   </tr>
-  <tr> 
-    <td><strong>Sample Id:</strong></td>
-    <td> <%= sample.getId() %> </td>
-  </tr>
+  
   <tr> 
     <td><strong>Position: </strong></td>
     <td> <%= sample.getPosition() %> </td>
   </tr>
+   <tr>     <td clospan = 2>&nbsp;</td>  </tr>
   <tr> 
-    <td>&nbsp;</td>
-    <td>&nbsp; </td>
+    <td><strong>Clone Id:</strong></td>
+    <td> <%= sample.getCloneId() %> </td>
   </tr>
+  <tr> 
+    <td><strong>Clone Final Status:</strong></td>
+    <td> <%= IsolateTrackingEngine.getCloneFinalStatusAsString(sample.getCloneFinalStatus()) %> </td>
+  </tr>
+  <tr>     <td clospan = 2>&nbsp;</td>  </tr>
   <tr> 
     <td><strong>Reference Sequence Id:</strong></td>
     <td> <a href="#" onCLick="window.open('<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetItem.do?forwardName=<%=Constants.REFSEQUENCE_DEFINITION_INT%>&amp;ID=<%= sample.getRefSequenceId()%>','newWndRefseqNt','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" > 
       <%= sample.getRefSequenceId()%></a> </td>
   </tr>
-  <tr> 
-    <td><strong>Construct Type:</strong></td>
-    <td> </td>
-  </tr>
-  <tr> 
-    <td>&nbsp;</td>
-    <td>&nbsp; </td>
-  </tr>
+    <tr>     <td clospan = 2>&nbsp;</td>  </tr>
+
   
   <tr> 
     <td colspan="2"><p><strong>End Reads:</strong></p>

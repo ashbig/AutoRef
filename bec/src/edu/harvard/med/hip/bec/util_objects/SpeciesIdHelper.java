@@ -31,7 +31,7 @@ public class SpeciesIdHelper
 
       public  static SpeciesIdHelper[]       biuldSpeciesIdDefinitions  ()
         {
-            int species = DatabaseToApplicationDataLoader.getSpecies().size();
+            int species = getMaxIndexForSpecies(DatabaseToApplicationDataLoader.getSpecies());
             SpeciesIdHelper[] species_id_definitions = new SpeciesIdHelper[species];
             SpeciesDefinition sd = null;
             for (Enumeration e = DatabaseToApplicationDataLoader.getSpecies().elements() ; e.hasMoreElements() ;)
@@ -43,5 +43,22 @@ public class SpeciesIdHelper
             return species_id_definitions;
 
         }
+      
+      
+      
+       private  static int     getMaxIndexForSpecies  (Hashtable species)
+        {
+            int max_index = 0;
+            
+            SpeciesDefinition sd = null;
+            for (Enumeration e = species.elements() ; e.hasMoreElements() ;)
+            {
+                 sd = (SpeciesDefinition) e.nextElement();
+                 max_index = ( sd.getCode()> max_index) ? sd.getCode(): max_index;
+            }
+            return max_index;
+
+        }
+      
   }
      

@@ -24,6 +24,7 @@ For this and 100's more DHTML scripts, visit http://dynamicdrive.com
 
 var myNavBar1 = new NavBar(0);
 var dhtmlMenu;
+var menu_width = 0;
 
 //define menu items (first parameter of NavBarMenu specifies main category width, second specifies sub category width in pixels)
 //add more menus simply by adding more "blocks" of same code below
@@ -31,9 +32,9 @@ var dhtmlMenu;
 dhtmlMenu = new NavBarMenu(80, 0);
 dhtmlMenu.addItem(new NavBarMenuItem("About", "about_bec.jsp"));
 myNavBar1.addMenu(dhtmlMenu);
+menu_width = 80;
 
 <% User user = (User)session.getAttribute(Constants.USER_KEY);
-//	System.out.println(user.getUserGroup());
 int user_level = 0;
 if (user.getUserGroup().equals("Researcher")) user_level = 0;
 else if (user.getUserGroup().equals("Researcher2")) user_level = 1;
@@ -43,7 +44,8 @@ else if (user.getUserGroup().equals("Administrator")) user_level = 3;
 
 <% if ( user_level > 1)
 {%>
-	dhtmlMenu = new NavBarMenu(150, 290);
+menu_width += 200;
+	dhtmlMenu = new NavBarMenu(200, 300);
 	dhtmlMenu.addItem(new NavBarMenuItem("Configure System", ""));
 	dhtmlMenu.addItem(new NavBarMenuItem("End Reads Evaluation", "Seq_EnterEndReadsParameters.jsp"));
 	dhtmlMenu.addItem(new NavBarMenuItem("Biological Evaluation of Clones", "Seq_EnterFullSeqParameters.jsp"));
@@ -55,6 +57,7 @@ dhtmlMenu.addItem(new NavBarMenuItem("Available Vectors Information", "<%= edu.h
 dhtmlMenu.addItem(new NavBarMenuItem("Available Linkers Information", "<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetItem.do?forwardName=<%=Constants.AVAILABLE_LINKERS_DEFINITION_INT%>"));
 
 <% if ( user_level == 3){%>
+
 dhtmlMenu.addItem(new NavBarMenuItem("ACE Configuration", "<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>/SelectDatabaseConfigurationOption.jsp"));
 <%}%>
 myNavBar1.addMenu(dhtmlMenu);
@@ -62,13 +65,17 @@ myNavBar1.addMenu(dhtmlMenu);
 <%}%>
 
 <% if ( user_level > 0 )
-{%>      dhtmlMenu = new NavBarMenu(100, 200);
+{%>     
+ menu_width+=80;
+dhtmlMenu = new NavBarMenu(80, 0);
 	dhtmlMenu.addItem(new NavBarMenuItem("Process", "SelectProcess.jsp"));
 	myNavBar1.addMenu(dhtmlMenu);
 <%}%>
 
 <% if (user_level > 2)
-{%>      dhtmlMenu = new NavBarMenu(100, 200);
+{%>     
+menu_width+=120; 
+dhtmlMenu = new NavBarMenu(120, 200);
 	dhtmlMenu.addItem(new NavBarMenuItem("Trace Files", ""));
        <!-- dhtmlMenu.addItem(new NavBarMenuItem ("Create File", "TraceFileProcessing.jsp?forwardName=<%=Constants.PROCESS_CREATE_FILE_FOR_TRACEFILES_TRANSFER%>&amp;<%=Constants.JSP_TITLE%>=create file for sequencing facility"));-->
         dhtmlMenu.addItem(new NavBarMenuItem("Create Renaming File", "TraceFileProcessing.jsp?forwardName=<%=Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRANSFER%>&amp;<%=Constants.JSP_TITLE%>=Create renaming file for trace files"));
@@ -78,7 +85,9 @@ myNavBar1.addMenu(dhtmlMenu);
 <%}%>
 <% if (user_level > 0)
 {%>
-dhtmlMenu = new NavBarMenu(100, 220);
+
+menu_width+=80;
+dhtmlMenu = new NavBarMenu(80, 200);
 dhtmlMenu.addItem(new NavBarMenuItem("Search", ""));
 dhtmlMenu.addItem(new NavBarMenuItem ("Container History", "ContainerScan.jsp?forwardName=<%=Constants.CONTAINER_PROCESS_HISTORY%>&amp;<%=Constants.JSP_TITLE%>=Container Process History"));
 dhtmlMenu.addItem(new NavBarMenuItem("Container Description", "ContainerScan.jsp?forwardName=<%=Constants.CONTAINER_DEFINITION_INT%>&amp;<%=Constants.JSP_TITLE%>=Container Description"));
@@ -95,7 +104,8 @@ myNavBar1.addMenu(dhtmlMenu);
 <%}%>
 
 <!-- for any user -->
-dhtmlMenu = new NavBarMenu(100, 220);
+menu_width +=80;
+dhtmlMenu = new NavBarMenu(80, 200);
 dhtmlMenu.addItem(new NavBarMenuItem("Help", ""));
 dhtmlMenu.addItem(new NavBarMenuItem("ACE Help", "Help_GeneralHelp.jsp"));
 dhtmlMenu.addItem(new NavBarMenuItem("Release Notes", "Help_New.jsp"));
@@ -105,11 +115,13 @@ dhtmlMenu.addItem(new NavBarMenuItem("Projects Settings", "Help_ProjectData.jsp"
 myNavBar1.addMenu(dhtmlMenu);
 
 
-dhtmlMenu = new NavBarMenu(100, 120);
+dhtmlMenu = new NavBarMenu(120, 0);
+menu_width+=120;
 dhtmlMenu.addItem(new NavBarMenuItem("Contact us", "mailto:hip_informatics@hms.harvard.edu"));
 myNavBar1.addMenu(dhtmlMenu);
 
-dhtmlMenu = new NavBarMenu(100, 120);
+menu_width+=120;
+dhtmlMenu = new NavBarMenu(120, 0);
 dhtmlMenu.addItem(new NavBarMenuItem("Log out", "Logout.do"));
 myNavBar1.addMenu(dhtmlMenu);
 
@@ -136,10 +148,13 @@ function init() {
     - (isMinNS4 && getWindowHeight() < getPageHeight() ? 16 : 0);
 
   //myNavBar1.resize(fullWidth);
-  myNavBar1.resize(900);
+ 
+  myNavBar1.resize(800);
   myNavBar1.create();
   myNavBar1.setzIndex(2);  
-  myNavBar1.moveTo(60, 110);
+  var menu_start =(getWindowWidth()- menu_width)/2;
+  menu_start = ( menu_start > 0)?menu_start : 20; 
+  myNavBar1.moveTo(menu_start, 110);
 }
 </script>
 </head>
@@ -148,7 +163,7 @@ function init() {
 <table width="90%" border="0" cellspacing="2" cellpadding="2">
   <tr> 
     <td width="80%"><font color="#3333CC"> 
-      <h1><strong>Automatic Clones Evaluation  (ACE)</strong></h1>
+     <h1><strong>Automatic Clones Evaluation  (ACE)</strong></h1>
       </font></td>
     <!--<td > <img align="top" border="0" src="./jpg/earth.gif" width=76 height="76" > -->
     </td>

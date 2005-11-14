@@ -74,14 +74,15 @@ public class ResultParser
                 String file_name = Constants.getTemporaryFilesPath() + File.separator + "ErrorMessages"+ System.currentTimeMillis()+".txt";
                 Algorithms.writeArrayIntoFile( error_messages, false,  file_name) ;
                 message = title+ Constants.LINE_SEPARATOR + "Please find error messages for your request in  attached file";
-                Mailer.sendMessageWithAttachedFile("hip_informatics@hms.harvard.edu", "hip_informatics@hms.harvard.edu",
-                "hip_informatics@hms.harvard.edu",title, message , 
-                new File(file_name) );
+                Mailer.sendMessageWithAttachedFile(BecProperties.getInstance().getACEEmailAddress(), BecProperties.getInstance().getACEEmailAddress(),
+                null,title, message ,                 new File(file_name) );
             }
             else
             {
-                 Mailer.sendMessage      (  "hip_informatics@hms.harvard.edu", "hip_informatics@hms.harvard.edu",  null, title, message);
-                     
+                 Mailer.sendMessage      (  BecProperties.getInstance().getACEEmailAddress(), 
+                    BecProperties.getInstance().getACEEmailAddress(),
+                    null, title, message);
+               
             }
      
         }

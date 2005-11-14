@@ -47,7 +47,7 @@ public class PolymFinderDataSender
           catch(Exception e)
           {
     
-             try{Mailer.sendMessage      (  "hip_informatics@hms.harvard.edu", "hip_informatics@hms.harvard.edu",  null, "Polymorphism Finder Cron job report", "Cannot create ORF files "+ e.getMessage());
+             try{Mailer.sendMessage      (  BecProperties.getInstance().getACEEmailAddress(), BecProperties.getInstance().getACEEmailAddress(),  null, "Polymorphism Finder Cron job report", "Cannot create ORF files "+ e.getMessage());
               }catch(Exception e1){}
       
           }

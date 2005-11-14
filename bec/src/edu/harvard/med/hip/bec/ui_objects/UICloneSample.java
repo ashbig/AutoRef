@@ -34,6 +34,7 @@ public class UICloneSample
     private int             m_isolatetracking_id = -1;
     private int             m_clone_id = -1;
     private int             m_clone_status_in_analisys_pipline = -1;
+    private int             m_clone_final_status = -1;
     private int             m_clone_sequence_id = -1;
     private int             m_clone_sequence_cds_start = -1;
     private int             m_clone_sequence_cds_stop = -1;
@@ -63,21 +64,21 @@ public class UICloneSample
     public int             getSequenceType (){ return m_clone_sequence_editing_status  ;}
     public int             getCloneQuality (){ return m_clone_quality  ;}
     public int             getConstructId (){ return m_construct_id  ;}
-     public int             getIsolateTrackingId (){ return m_isolatetracking_id ;}
-     public int             getRank(){ return m_clone_rank;}
-     public int             getScore(){ return  m_clone_score;}
+    public int             getIsolateTrackingId (){ return m_isolatetracking_id ;}
+    public int             getRank(){ return m_clone_rank;}
+    public int             getScore(){ return  m_clone_score;}
     public int             getSampleId(){ return m_sample_id ;}
     public int             getRefSequenceId(){ return m_refsequence_id ;}
     public int             getFLEXRefSequenceId(){ return m_flex_refsequence_id ;}
     public int             getCloneAssemblytStatus(){ return  m_clone_assembly_status;}
-    
+
     public int             getCloneSequenceCdsStart (){ return m_clone_sequence_cds_start ;}
-   public int             getCloneSequenceCdsStop (){ return m_clone_sequence_cds_stop ;}
-   public String           getTraceFilesDirectory(){ return m_tracefiles_dir;}
-    
-   
-   
-   public void             setPlateLabel (String v){  m_plate_lable  = v ;}
+    public int             getCloneSequenceCdsStop (){ return m_clone_sequence_cds_stop ;}
+    public String           getTraceFilesDirectory(){ return m_tracefiles_dir;}
+    public int               getCloneFinalStatus(){ return m_clone_final_status;} 
+
+
+    public void             setPlateLabel (String v){  m_plate_lable  = v ;}
     public void             setPosition (int v){  m_poisition  = v ;}
     public void             setSampleType (String v){  m_sample_type  = v ;}
     public void             setCloneId (int v){  m_clone_id  = v ;}
@@ -87,17 +88,20 @@ public class UICloneSample
     public void             setSequenceType (int v){  m_clone_sequence_editing_status  = v ;}
     public void             setCloneQuality (int v){  m_clone_quality  = v ;}
     public void             setConstructId (int v){  m_construct_id  = v ;}
-     public void             setIsolateTrackingId (int v){  m_isolatetracking_id = v ;}
-     public void             setRank(int v){  m_clone_rank = v;}
-      public void             setScore(int v){  m_clone_score = v;}
-     public void             setSampleId(int v){   m_sample_id = v;}
+    public void             setIsolateTrackingId (int v){  m_isolatetracking_id = v ;}
+    public void             setRank(int v){  m_clone_rank = v;}
+    public void             setScore(int v){  m_clone_score = v;}
+    public void             setSampleId(int v){   m_sample_id = v;}
     public void             setRefSequenceId(int v){   m_refsequence_id = v;}
-     public void             setFLEXRefSequenceId(int v){   m_flex_refsequence_id = v;}
+    public void             setFLEXRefSequenceId(int v){   m_flex_refsequence_id = v;}
     public void             setCloneSequenceCdsStart (int v){  m_clone_sequence_cds_start =v;}
-   public void             setCloneSequenceCdsStop (int v){  m_clone_sequence_cds_stop =v;}
-   public void           setTraceFilesDirectory(String v){  m_tracefiles_dir = v;} 
-   public void              setCloneAssemblyStatus(int v){  m_clone_assembly_status = v;}
-    
+    public void             setCloneSequenceCdsStop (int v){  m_clone_sequence_cds_stop =v;}
+    public void           setTraceFilesDirectory(String v){  m_tracefiles_dir = v;} 
+    public void              setCloneAssemblyStatus(int v){  m_clone_assembly_status = v;}
+    public void              setCloneFinalStatus(int v){ m_clone_final_status = v;}
+
+   
+   
      public static CloneSequence setCloneSequence(UICloneSample clone_sample,int[] sequence_analysis_status ) throws BecDatabaseException
     {
             String clone_sequence_analysis_status =  null;
@@ -212,6 +216,7 @@ public class UICloneSample
                     }
                    processed_clone_ids.put(current_clone_id, current_clone_id );
                  }
+                 clone.setCloneFinalStatus(rs.getInt("PROCESS_STATUS"));
                  clone.setSampleType(rs.getString("SAMPLETYPE"));
                  clone.setPlateLabel (rs.getString("LABEL"));
                  clone.setPosition (rs.getInt("POSITION"));
@@ -238,7 +243,7 @@ public class UICloneSample
                      clone.setRefSequenceId(rs.getInt("acerefsequenceid")); 
                 }
                 clones.add(clone);
-            }
+             }
             return clones;
             
         }
@@ -254,13 +259,12 @@ public class UICloneSample
     {
         String what_str = ""; String from_str = ""; 
         String where_str = ""; String orderby_str = "";
-        what_str = "select flexcloneid  as CLONEID, FLEXSEQUENCEID, " +
+        what_str = "select flexcloneid  as CLONEID, PROCESS_STATUS, FLEXSEQUENCEID, " +
                     " i.ISOLATETRACKINGID as ISOLATETRACKINGID, i.CONSTRUCTID as CONSTRUCTID, i.STATUS as STATUS " +
                     ", RANK, i.SCORE as SCORE, i.SAMPLEID as SAMPLEID, i.ASSEMBLY_STATUS as ASSEMBLYSTATUS, " +
-                    "POSITION, SAMPLETYPE , " +
-                    "LABEL ";
+                    "POSITION, SAMPLETYPE , LABEL ";
         from_str = " from flexinfo f,isolatetracking i, sample s, containerheader c ";
-        orderby_str = " order by c.containerid,position , a.submissiondate desc";  
+        orderby_str = " order by c.containerid,position ";  
          if ( isAssembledSequenceInfo)
         {
             from_str += ", assembledsequence a ";
@@ -280,7 +284,7 @@ public class UICloneSample
             {
                 
                 where_str = " where f.isolatetrackingid=i.isolatetrackingid and i.sampleid=s.sampleid "
-     +" and  s.containerid=c.containerid and s.containerid in (select containerid from containerheader where label in ("
+     +" and  s.containerid=c.containerid and s.containerid in (select containerid from containerheader where Upper(label) in ("
    + items+"))"  +where_str;
                 return what_str+from_str+where_str+orderby_str;
             } 
@@ -289,6 +293,13 @@ public class UICloneSample
                  where_str =  " where f.isolatetrackingid=i.isolatetrackingid and i.sampleid=s.sampleid "
      +" and s.containerid=c.containerid and flexcloneid in ("+items +")" +where_str;
                 return what_str+from_str+where_str+orderby_str ;
+            }
+            case Constants.ITEM_TYPE_ISOLATETRASCKING_ID:
+            {
+                where_str =  " where f.isolatetrackingid=i.isolatetrackingid and i.sampleid=s.sampleid "
+     +" and s.containerid=c.containerid and i.isolatetrackingid in ("+items +")" +where_str;
+                return what_str+from_str+where_str+orderby_str ;
+  
             }
             default: return null;
         }
@@ -299,16 +310,20 @@ public class UICloneSample
 
  public static void main(String args[]) 
     {
-         
+         ArrayList a= null;
         try
         {
-             int items_type = Constants.ITEM_TYPE_CLONEID;
-             String items = "582, 123, 1032";
+               BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
+        sysProps.verifyApplicationSettings();
+     edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
+    
+             int items_type = Constants.ITEM_TYPE_ISOLATETRASCKING_ID;
+             String items = "34995";
 //System.out.println( constructQueryString(  items,  items_type,   true,  true));
 //System.out.println( constructQueryString(  items,  items_type,   true,  false));
 //System.out.println( constructQueryString(  items,  items_type,   false,  true));
 //System.out.println( constructQueryString(  items,  items_type,   false,  false));
-ArrayList a= getCloneInfo(  items,  items_type,false,false);
+ a= getCloneInfo(  items,  items_type,false,false);
 
          }
         catch(Exception e)

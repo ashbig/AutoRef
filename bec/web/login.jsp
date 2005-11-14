@@ -9,7 +9,7 @@
 <head>
 <meta http-equiv="Content-Language" content="en-us">
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
-<title>ACE (<i>A</i>utomatic <i>E</i>valuation of <i>C</i>lones) login</title>
+<title>ACE (Automatic Evaluation of Clones) login</title>
 </head>
 
 <body>

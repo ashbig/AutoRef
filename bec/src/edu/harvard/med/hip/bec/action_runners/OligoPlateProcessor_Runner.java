@@ -23,26 +23,26 @@ import edu.harvard.med.hip.bec.user.*;
  */
 public class OligoPlateProcessor_Runner extends ProcessRunner
 {
-    
+
     private String              m_order_comment = null;
     private String              m_sequencing_comment = null;
     private int                 m_plate_status = -1;
-    
-    
+
+
     public void                 setOrderComment(String v){ m_order_comment = v;}
     public void                 setSequencingComment(String v){   m_sequencing_comment = v;}
     public void                 setPlateStatus(int v){m_plate_status =v;}
-   
+
     public String getTitle() {return "Request for oligo plates status change. Plates: " + m_items;    }
-   
-     public void run()
+
+     public void run_process()
     {
        Connection  conn =null; String plate_name = null;
        String process_description = null;
        try
          {
                 conn = DatabaseTransaction.getInstance().requestConnection();
-                 
+
                ArrayList sql_groups_of_items =  prepareItemsListForSQL();
                ArrayList plates = null;String sql_history = null;
                OligoContainer oligo_container = null;
@@ -56,7 +56,7 @@ public class OligoPlateProcessor_Runner extends ProcessRunner
                     process_description = ProcessDefinition.RUN_OLIGO_PLATE_USED_FOR_SEQUENCING;
                 }
                 int process_id = Request.createProcessHistory( conn, process_description, new ArrayList(),m_user) ;
-                DatabaseTransaction.commit(conn);       
+                DatabaseTransaction.commit(conn);
                for (int count = 0; count < sql_groups_of_items.size(); count++)
                {
                    plates = getOligoPlates( (String)sql_groups_of_items.get(count));
@@ -66,7 +66,7 @@ public class OligoPlateProcessor_Runner extends ProcessRunner
                        try
                        {
                            plate_name = oligo_container.getLabel();
-                       
+
                            sql_plate_update = " update oligocontainer set status = " + m_plate_status ;
                              if(  m_order_comment != null && m_order_comment.trim().length() > 0)
                                  sql_plate_update += ", descr_oligo_processing = '" + oligo_container.getCommentOrder() +" "+ m_order_comment+ "'";
@@ -84,17 +84,17 @@ public class OligoPlateProcessor_Runner extends ProcessRunner
                        {m_error_messages.add("Cannot process oligo plate " + plate_name +"\n"+e1.getMessage());}
                     }
                 }
-          } 
-        catch(Exception e)  
+          }
+        catch(Exception e)
        {m_error_messages.add(e.getMessage());}
         finally
             {
                 sendEMails( getTitle() );
-                DatabaseTransaction.closeConnection(conn);
+                if ( conn != null ) DatabaseTransaction.closeConnection(conn);
             }
     }
-     
-     
+
+
     private ArrayList getOligoPlates(String sql_items)
     {
         String sql = " select oligocontainerid, label, status,descr_oligo_processing,descr_sequencing from oligocontainer "
@@ -106,22 +106,22 @@ public class OligoPlateProcessor_Runner extends ProcessRunner
         {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             rs = t.executeQuery(sql);
-            
+
             while(rs.next())
             {
                 ordcom = rs.getString("descr_oligo_processing");
                 ordcom = (ordcom == null) ? "": ordcom;
                 seqcom = rs.getString("descr_sequencing");
                 seqcom = (seqcom == null) ?"":seqcom;
-                containers.add( new OligoContainer(rs.getString("label"), 
-                        rs.getInt("status"), m_user.getId(), 
+                containers.add( new OligoContainer(rs.getString("label"),
+                        rs.getInt("status"), m_user.getId(),
                         ordcom, seqcom));
             }
             return containers;
         }
         catch (Exception e)
         {
-            
+
             m_error_messages.add("Cannot get data for plates "+ sql_items +e.getMessage());
             return containers;
         }
@@ -130,7 +130,7 @@ public class OligoPlateProcessor_Runner extends ProcessRunner
             DatabaseTransaction.closeResultSet(rs);
         }
     }
- 
+
     public static void main(String[] args)
     {
          OligoPlateProcessor_Runner input = null;
@@ -139,8 +139,8 @@ public class OligoPlateProcessor_Runner extends ProcessRunner
         {
             BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
             sysProps.verifyApplicationSettings();
-      
-             
+
+
             user = AccessManager.getInstance().getUser("htaycher123","htaycher");
             input = new OligoPlateProcessor_Runner();
             input.setOrderComment("ads");
@@ -150,11 +150,11 @@ public class OligoPlateProcessor_Runner extends ProcessRunner
              input.run();
         }catch(Exception e)
         {
-            
+
         }
-        
+
     }
-    
-    
-    
+
+
+
 }

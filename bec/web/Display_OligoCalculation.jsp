@@ -84,7 +84,7 @@ String item_title = null;
                     {item_title = "Clone Id: "; break;}
                 case Constants.ITEM_TYPE_PLATE_LABELS :
                     {item_title = "Plate: "; break;}
-                case Constants.ITEM_TYPE_BECSEQUENCE_ID :
+                case Constants.ITEM_TYPE_ACE_REF_SEQUENCE_ID :
                     {item_title = "ACE Reference Sequence Id: "; break;}
                 case Constants.ITEM_TYPE_FLEXSEQUENCE_ID:
                     {item_title = "FLEX Sequence Id: "; break;}

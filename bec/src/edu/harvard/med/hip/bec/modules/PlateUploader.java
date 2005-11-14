@@ -129,18 +129,22 @@ public class PlateUploader
                //check for plate existing in FLEX
               if ( !isPlateExist(platename, flex_connection))
               {
+                   m_messages_failed_plates.add("Plate "+platename+" was not uploaded into ACE (plate does not exist in FLEX).");
                    m_error_messages.add("Plate "+platename+" does not exist in FLEX");
-                   return;
+                   throw new Exception();
               }
               //check for plate duplication in BEC
               if (isPlateExist(platename))
               {
-                   m_error_messages.add("Plate "+platename+" already exists in BEC");
+                   m_messages_failed_plates.add("Plate "+platename+" was not uploaded into ACE (plate already exists in ACE). ");
+                   m_error_messages.add("Plate "+platename+" already exists in ACE. ");
                    return;
               }
               String duplicated_clones = duplicatedClones(platename, flex_connection, bec_connection);
               if ( duplicated_clones != null && duplicated_clones.trim().length() > 0 )
               {
+                   m_messages_failed_plates.add("Plate "+platename+" was not uploaded into BEC (it contains clone duplicates).");
+           
                    m_error_messages.add("Clones  "+ duplicated_clones +" from plate" + platename + " already exist in ACE");
                    return;
               }
@@ -162,8 +166,8 @@ public class PlateUploader
         }
         catch(Exception ex)
         {
-            m_messages_failed_plates.add("Plate "+platename+" was not uploaded into BEC.");
-            m_error_messages.add("Plate "+platename+" was not uploaded into BEC" +ex.getMessage());
+            m_messages_failed_plates.add("Plate "+platename+" was not uploaded into ACE.");
+            m_error_messages.add("Plate "+platename+" was not uploaded into ACE" +ex.getMessage());
             DatabaseTransaction.rollback(bec_connection);
         }
         
@@ -459,10 +463,12 @@ public class PlateUploader
                 {
                     istr.setStatus(IsolateTrackingEngine.PROCESS_STATUS_SUBMITTED_EMPTY);
                     istr.setRank(IsolateTrackingEngine.RANK_NOT_APPLICABLE);
+                    istr.setFinalStatus( IsolateTrackingEngine.FINAL_STATUS_NOT_APPLICABLE);
                 }
                 else
                 {
                     istr.setStatus( m_plate_sabmitted_for);
+                    istr.setFinalStatus( IsolateTrackingEngine.FINAL_STATUS_INPROCESS);
                 }
                 istr.setFlexInfo(flex_info);
         //link flex info with isolate tracking 
@@ -698,8 +704,9 @@ public class PlateUploader
     
     private boolean isPlateExist(String platename)throws BecDatabaseException
     {
-        String sql = "select * from containerheader where label ='"+platename+"'";
-     
+       // String sql = "select * from containerheader where label ='"+platename+"'";
+        String sql = "select * from containerheader where ( Upper(label) like Upper('"+platename+"'))";
+ 
         ResultSet rs  = DatabaseTransaction.getInstance().executeQuery(sql);
         try
         {

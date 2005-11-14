@@ -44,6 +44,7 @@ import edu.harvard.med.hip.bec.util_objects.*;
     private  GroupDefinition[] m_group_definitions = null;
     private  SpeciesIdHelper[] m_species_id_definitions = null;
     //print options
+private boolean 				 m_is_clone_final_status = false;
     private boolean 				 m_is_plate_label = false;//    Plate Label</td>
 private boolean 				 m_is_sample_type = false;//    Sample Type</td>
 private boolean 				 m_is_position = false;//    Well</td>
@@ -94,6 +95,7 @@ public void                 setSpecId(int v){ m_spec_id = v;}
     public void                 setNumberOfOutputFiles(int v){ m_number_of_files= v;}
     public String               getTitle()    {return "Request for Decision tool run";    }
     public void                 setFields(
+                         Object is_clone_final_status,
                         Object is_plate_label,//    Plate Label</td>
                         Object is_sample_type,//    Sample Type</td>
                         Object is_position,//    Well</td>
@@ -127,7 +129,8 @@ public void                 setSpecId(int v){ m_spec_id = v;}
                         Object is_lqd_last_assembly //	Number of lqr in last assembled clone sequence
 )
    {
-          if(   is_plate_label != null ) { m_is_plate_label = true; }
+       if(   is_clone_final_status!= null ) {  m_is_clone_final_status = true;} 
+       if(   is_plate_label != null ) { m_is_plate_label = true; }
         if(  is_sample_type != null ) { m_is_sample_type = true; }
         if(  is_position != null ) { m_is_position = true;  }
 
@@ -221,7 +224,7 @@ group_definition = new GroupDefinition("Not clone sample","DecisionTool_No_Clone
 
 
 
-    public void run()
+    public void run_process()
     {
         // ArrayList file_list = new ArrayList();
         CloneDescription[] clones = new CloneDescription[40];
@@ -808,7 +811,7 @@ group_definition = new GroupDefinition("Not clone sample","DecisionTool_No_Clone
         String  sql="select i.status as ISOLATESTATUS, assembly_status, i.CONSTRUCTID as CONSTRUCTID , cloningstrategyid, "
 +" a.SEQUENCEID as CLONESEQUENCEID,  a.linker5start as clonesequence5start, a.linker3stop as clonesequence3stop, a.cdsstart as cloneseqcdsstart, a.cdsstop as clonesequencecdsstop, analysisSTATUS, "
 +" FLEXSEQUENCEID,flexcloneid  as CLONEID,  POSITION,  SAMPLETYPE, LABEL, "
-+"sc.refsequenceid as refsequenceid,    i.ISOLATETRACKINGID as ISOLATETRACKINGID "
++"sc.refsequenceid as refsequenceid,    i.ISOLATETRACKINGID as ISOLATETRACKINGID, PROCESS_STATUS "
 +"  from flexinfo f,isolatetracking i, sample s, containerheader c,assembledsequence a ,"
 +" sequencingconstruct sc where f.isolatetrackingid=i.isolatetrackingid and i.sampleid= "
 +" s.sampleid  and sc.constructid(+)=i.constructid and   s.containerid=c.containerid and a.isolatetrackingid(+) "
@@ -841,12 +844,18 @@ group_definition = new GroupDefinition("Not clone sample","DecisionTool_No_Clone
             ((oracle.jdbc.driver.OracleStatement)stmt).defineColumnType (15,Types.VARCHAR);//LABEL, "
             ((oracle.jdbc.driver.OracleStatement)stmt).defineColumnType (16,Types.INTEGER);//refsequenceid, 
             ((oracle.jdbc.driver.OracleStatement)stmt).defineColumnType (17,Types.INTEGER);// ISOLATETRACKINGID
+            ((oracle.jdbc.driver.OracleStatement)stmt).defineColumnType (18,Types.INTEGER);// ISOLATETRACKINGID
+
+
             rs = stmt.executeQuery (sql);
 
             while(rs.next())
             {
                  clone = new CloneDescription();
                  clone.setCloneId (rs.getInt(12));
+                 clone.setCloneFinalStatus( rs.getInt(18));
+
+
                  if (clone.getCloneId() > 0 )
                  {
                     current_clone_id = new Integer(clone.getCloneId());
@@ -1025,6 +1034,7 @@ group_definition = new GroupDefinition("Not clone sample","DecisionTool_No_Clone
         cloneinfo.append(clone.getCloneId() + Constants.TAB_DELIMETER);
         cloneinfo.append( m_group_definitions[clone.getRank()].getGroupName() + Constants.TAB_DELIMETER);
         cloneinfo.append(clone.getNextStepRecomendation() + Constants.TAB_DELIMETER);
+        if ( m_is_clone_final_status ){ cloneinfo.append(IsolateTrackingEngine.getCloneFinalStatusAsString(clone.getCloneFinalStatus())+ Constants.TAB_DELIMETER); }
         if(    m_is_plate_label   ){ cloneinfo.append(clone.getPlateName  ()+ Constants.TAB_DELIMETER); }//   "Plate Label "
         if(     m_is_sample_type ){ cloneinfo.append(clone.getSampleType  ()+ Constants.TAB_DELIMETER); }//          "Sample Type "
         if(     m_is_position ){ cloneinfo.append(clone.getPosition  ()+ Constants.TAB_DELIMETER); }//          "Well "
@@ -1144,6 +1154,7 @@ group_definition = new GroupDefinition("Not clone sample","DecisionTool_No_Clone
             cloneinfo.append(clone.getCloneId() + Constants.TAB_DELIMETER);
             cloneinfo.append( m_group_definitions[clone.getRank()].getGroupName() + Constants.TAB_DELIMETER);
             cloneinfo.append(clone.getNextStepRecomendation() + Constants.TAB_DELIMETER);
+            if ( m_is_clone_final_status ) {cloneinfo.append(IsolateTrackingEngine.getCloneFinalStatusAsString(clone.getCloneFinalStatus() )+ Constants.TAB_DELIMETER);}
             if(    m_is_plate_label   ){ cloneinfo.append(clone.getPlateName  ()+ Constants.TAB_DELIMETER); }//   "Plate Label "
             if(     m_is_sample_type ){ cloneinfo.append(clone.getSampleType  ()+ Constants.TAB_DELIMETER); }//          "Sample Type "
             if(     m_is_position ){ cloneinfo.append(clone.getPosition  ()+ Constants.TAB_DELIMETER); }//          "Well "
@@ -1287,6 +1298,8 @@ group_definition = new GroupDefinition("Not clone sample","DecisionTool_No_Clone
         cloneinfo.append(clone.getCloneId() + Constants.TAB_DELIMETER);
         cloneinfo.append( m_group_definitions[clone.getRank()].getGroupName() + Constants.TAB_DELIMETER);
         cloneinfo.append(clone.getNextStepRecomendation() + Constants.TAB_DELIMETER);
+        if ( m_is_clone_final_status ) {cloneinfo.append(IsolateTrackingEngine.getCloneFinalStatusAsString(clone.getCloneFinalStatus()) + Constants.TAB_DELIMETER);}
+ 
         if(    m_is_plate_label   ){ cloneinfo.append(clone.getPlateName  ()+ Constants.TAB_DELIMETER); }//   "Plate Label "
         if(     m_is_sample_type ){ cloneinfo.append(clone.getSampleType  ()+ Constants.TAB_DELIMETER); }//          "Sample Type "
         if(     m_is_position ){ cloneinfo.append(clone.getPosition  ()+ Constants.TAB_DELIMETER); }//          "Well "
@@ -1366,7 +1379,7 @@ group_definition = new GroupDefinition("Not clone sample","DecisionTool_No_Clone
 
                          query = " select isolatetrackingid as ITEM from isolatetracking where sampleid in "
                          +" (select sampleid from sample where containerid in "
-                         +" (select containerid from containerheader where label in "
+                         +" (select containerid from containerheader where Upper(label) in "
                          +"("+items.get(plate_count)+")))";
                          isolatetracking_ids += getListOfItems( query, conn);
  
@@ -1550,10 +1563,19 @@ vii.	Total number of clones in this report*/
     //put all report files into sending collection
   private void attachFiles(String summary_report_file_name, String total_report_file_name, String time_stamp)
   {
-      m_file_list_reports.add(new File(summary_report_file_name));
+      File summary_report_file =   new File( summary_report_file_name );
+      if ( summary_report_file.exists() )
+      {
+          m_file_list_reports.add( summary_report_file );
+      }
+      
       if ( m_number_of_files == Constants.OUTPUT_TYPE_ONE_FILE)
       {
-          m_file_list_reports.add(new File(total_report_file_name));
+           File report_file =   new File( total_report_file_name );
+           if ( report_file.exists() )
+           {
+               m_file_list_reports.add( report_file );
+           }
       }
       else
       {
@@ -1561,7 +1583,6 @@ vii.	Total number of clones in this report*/
           for (int group_count = 0; group_count < m_group_definitions.length; group_count++)
           {
               fr = new File(Constants.getTemporaryFilesPath() + m_group_definitions[group_count].getFileName() + "_"+  time_stamp + ".txt");
-
               if ( fr.exists() && m_group_definitions[group_count].getCloneCount() > 0)
                 m_file_list_reports.add( fr );
           }
@@ -1573,7 +1594,8 @@ vii.	Total number of clones in this report*/
        SpeciesDefinition sd = null;
        StringBuffer title = new StringBuffer();
        title.append("Clone Id"+ Constants.TAB_DELIMETER +"Group"+ Constants.TAB_DELIMETER+" Next step"+ Constants.TAB_DELIMETER);
-        if(   m_is_plate_label ) title.append("Plate Label" + Constants.TAB_DELIMETER);
+        if ( m_is_clone_final_status) title.append("Clone Final Status" + Constants.TAB_DELIMETER);
+       if(   m_is_plate_label ) title.append("Plate Label" + Constants.TAB_DELIMETER);
         if(  m_is_sample_type  ) { title.append("Sample Type" + Constants.TAB_DELIMETER) ;}
         if(  m_is_position ) {title.append("Position" + Constants.TAB_DELIMETER);}
 
@@ -1857,7 +1879,7 @@ System.out.println(System.currentTimeMillis());
             runner = new DecisionToolRunner_New();
          //   runner.setInputData(Constants.ITEM_TYPE_CLONEID, "159321 159415 159237 159333 159423 159245 159435 159345 159349 159437 159441 159261 159353 159357 159445 159265 159269 159365 159273 159277 159369 159281 159285 159377 159289 159293 159385 159301 159397 159309 159401 159405 159317 159407 159411 172834 172842 172849 172857 172865 172869 172873 172881 172891 172893 172897 172926 172929 172940 172945 172949 172962 172966 172977 172981 172993 172997 173012 173013 173238 173249 173276 173419 173419 173437 173442 173470 173473 173477 173489 173607 173613 173619 173625 173630 173633 173642 173647 173649 173654 173662 173665 173669 173678 173682 173686 173689 ");
 
-     runner.setInputData(Constants.ITEM_TYPE_CLONEID, "134441 134449");
+     runner.setInputData(Constants.ITEM_TYPE_PLATE_LABELS, "ASA001213");
 
    // runner.setInputData(Constants.ITEM_TYPE_PROJECT_NAME, "A	 ");
       //runner.setInputData(Constants.ITEM_TYPE_PLATE_LABELS, "ASE001213"); 
@@ -1869,6 +1891,7 @@ System.out.println(System.currentTimeMillis());
             runner.setUserComment(" test user comment");
             //runner.setNumberOfOutputFiles( );
              runner.setFields(
+             "is_clone_final_status", 
             "is_plate_label",//    Plate Label</td>
             "is_sample_type",//    Sample Type</td>
             "is_position",//    Well</td>

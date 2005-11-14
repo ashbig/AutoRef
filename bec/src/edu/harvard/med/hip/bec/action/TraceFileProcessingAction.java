@@ -50,7 +50,7 @@ public class TraceFileProcessingAction extends ResearcherAction
         try
         {
             User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
-            TraceFileProcessingRunner runner = new TraceFileProcessingRunner();
+            ProcessRunner runner = new TraceFileProcessingRunner();
             runner.setProcessType(forwardName);
             switch (forwardName)
             {
@@ -58,12 +58,13 @@ public class TraceFileProcessingAction extends ResearcherAction
                 {
                      String items = (String)request.getParameter("items");
                     request.setAttribute(Constants.JSP_TITLE,"Processing Request for Plates Upload");
-                    request.setAttribute(Constants.ADDITIONAL_JSP,"Processing plates:\n"+items.toUpperCase().trim() +". Files will be send to you by e-mail.");
-                    runner.setReadDirection((String)request.getParameter("read_direction"));
-                    runner.setReadType((String)request.getParameter("read_type"));
-                    //runner.setItems(items.toUpperCase().trim() );
-                   // runner.setItemsType(Constants.ITEM_TYPE_PLATE_LABELS);
+                  //     request.setAttribute(Constants.ADDITIONAL_JSP,"Processing plates:\n"+items.toUpperCase().trim() +". Files will be send to you by e-mail.");
+                 
+                    request.setAttribute(Constants.ADDITIONAL_JSP,"Processing plates:\n"+items.trim() +". Files will be send to you by e-mail.");
+                    ((TraceFileProcessingRunner)runner).setReadDirection((String)request.getParameter("read_direction"));
+                    ((TraceFileProcessingRunner)runner).setReadType((String)request.getParameter("read_type"));
                     runner.setInputData(Constants.ITEM_TYPE_PLATE_LABELS,items.toUpperCase().trim() );
+                  
                     break;
                 }
                 case Constants.PROCESS_INITIATE_TRACEFILES_TRANSFER:
@@ -74,15 +75,15 @@ public class TraceFileProcessingAction extends ResearcherAction
                     String inputdir = (String)request.getParameter("inputdir");
                     String outputdir = (String)request.getParameter("outputdir");
                     String delete = (String)request.getParameter("delete");
-                     runner.setInputDirectory(inputdir);
-                    runner.setOutputDirectory(outputdir);
-                    runner.setDelete(delete);
+                    ((TraceFileProcessingRunner) runner).setInputDirectory(inputdir);
+                    ((TraceFileProcessingRunner) runner).setOutputDirectory(outputdir);
+                    ((TraceFileProcessingRunner) runner).setDelete(delete);
                     FormFile requestFile = ((SubmitDataFileForm)form).getFileName();
                     InputStream input = null;
                     try
                     {
                         input = requestFile.getInputStream();
-                        runner.setRenamingFile(input);
+                        ((TraceFileProcessingRunner) runner).setRenamingFile(input);
                         
                     }
                     catch (Exception ex)
@@ -98,10 +99,10 @@ public class TraceFileProcessingAction extends ResearcherAction
                     request.setAttribute(Constants.JSP_TITLE,"Processing Request for Creating Renaming File for Trace Files");
                     request.setAttribute(Constants.ADDITIONAL_JSP,"Application will put renaming file into input directory. Report will be send to you by e-mail.");
                     String inputdir = (String)request.getParameter("inputdir");
-                    runner.setInputDirectory(inputdir);
-                    runner.setReadType((String)request.getParameter("read_type"));
+                    ((TraceFileProcessingRunner) runner).setInputDirectory(inputdir);
+                    ((TraceFileProcessingRunner) runner).setReadType((String)request.getParameter("read_type"));
                     String temp = (String)request.getParameter("sequencing_facility");
-                    runner.setFormatName( temp);
+                    ((TraceFileProcessingRunner) runner).setFormatName( temp);
     
                     //runner.setSequencingFacility(Integer.parseInt(temp);
                     FormFile requestFile = ((SubmitDataFileForm)form).getFileName();
@@ -109,7 +110,7 @@ public class TraceFileProcessingAction extends ResearcherAction
                     try
                     {
                         input = requestFile.getInputStream();
-                        runner.setRenamingFile(input);
+                        ((TraceFileProcessingRunner) runner).setRenamingFile(input);
                     }
                     catch (Exception ex)
                     {
@@ -123,7 +124,7 @@ public class TraceFileProcessingAction extends ResearcherAction
                 runner.setUser(user);
                 t = new Thread(runner);                   
                 t.start();
-          return (mapping.findForward("processing"));
+                 return (mapping.findForward("processing"));
            
         }
         catch (Exception e)

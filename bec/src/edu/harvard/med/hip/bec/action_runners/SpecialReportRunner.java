@@ -154,7 +154,7 @@ viii.	List of discrepancies
 
     public void       set5LinkerLength(int v){ m_5linker_length=v;}
      public void       set3LinkerLength(int v){  m_3linker_length=v;}
-    public void run()
+    public void run_process()
     {
         // ArrayList file_list = new ArrayList();
         ArrayList items = new ArrayList();
@@ -275,7 +275,7 @@ viii.	List of discrepancies
 +"  and flexcloneid in ("+Algorithms.convertStringArrayToString(items,"," )+") order by s.containerid,position, a.submissiondate desc";
         }
        
-        else if (submission_type == Constants.ITEM_TYPE_BECSEQUENCE_ID)//bec sequence id
+        else if (submission_type == Constants.ITEM_TYPE_ACE_CLONE_SEQUENCE_ID)//bec sequence id
         {
                 sql="select FLEXSEQUENCEID,LABEL, POSITION,  SAMPLETYPE, s.SAMPLEID as SAMPLEID,flexcloneid  as CLONEID,"
  +" i.STATUS as IsolateStatus,  a.SEQUENCEID as CLONESEQUENCEID, a.cdsstart as cloneseqcdsstart, a.cdsstop as clonesequencecdsstop, analysisSTATUS,  SEQUENCETYPE, "

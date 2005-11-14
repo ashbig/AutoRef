@@ -402,9 +402,9 @@ sql += " from cloningstrategy s, vector v where v.vectorid=s.vectorid order by s
            }
             
          }
-        DatabaseCommunicationsRunner runner = new DatabaseCommunicationsRunner();
+        ProcessRunner runner = new DatabaseCommunicationsRunner();
         runner.setUser(user);
-        runner.setInputStream(input);
+        ((DatabaseCommunicationsRunner)runner).setInputStream(input);
         runner.setProcessType( forwardName);
         Thread t = new Thread(runner);                    t.start();
      }

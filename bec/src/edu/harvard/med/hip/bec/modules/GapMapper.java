@@ -74,7 +74,7 @@ public class GapMapper
                 m_error_messages.add("Clone "+clone_id+" does not exist.");
                 return ;
             }
-             if ( clone_description.getCloneStatus() == IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH) 
+             if ( clone_description.getCloneStatus() == IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH ) 
             {
                 m_error_messages.add("Clone "+clone_id+" does not match exspected sequence: Gap Mapper run aborted.");
                 return ;
@@ -237,8 +237,8 @@ public class GapMapper
             }
             case CloneAssembly.ASSEMBLY_RUN_STATUS_NOT_ALL_TRACE_FILES_INCLUDED :
             {
-                 m_error_messages.add("Call for GapMapper on Clone : "+clone_description.getCloneId()+" is irrelevant: assembly was not run on all existing chromat files.");
-                return false;
+                 m_error_messages.add("Call for GapMapper on Clone : "+clone_description.getCloneId()+"can be irrelevant: assembler was not run on all existing chromat files?");
+                return true;
             }
         }
         return true;  

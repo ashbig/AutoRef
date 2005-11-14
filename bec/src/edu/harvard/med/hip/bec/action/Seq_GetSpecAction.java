@@ -41,8 +41,8 @@ import edu.harvard.med.hip.bec.Constants;
 
 public class Seq_GetSpecAction extends ResearcherAction
 {
-    
-    
+
+
     public ActionForward becPerform(ActionMapping mapping,
                                     ActionForm form,
                                     HttpServletRequest request,
@@ -52,23 +52,23 @@ public class Seq_GetSpecAction extends ResearcherAction
         ActionErrors errors = new ActionErrors();
         int forwardName = ((Seq_GetSpecForm)form).getForwardName();
         ArrayList specs = new ArrayList();
-        
-        
-        
-        try 
+
+
+
+        try
         {
-           
+
             //get system user
             User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
-          
+
             String username = user.getUsername();
             request.setAttribute("forwardName", new Integer(forwardName));
-            
+
             //show spec by id
             if ( forwardName >= Spec.SPEC_SHOW_SPEC)
             {
                 int spec_id = forwardName / Spec.SPEC_SHOW_SPEC;
-              
+
                  Spec config = Spec.getSpecById(spec_id);
                  specs.add(config);
                 request.setAttribute("specs", specs);
@@ -84,10 +84,10 @@ public class Seq_GetSpecAction extends ResearcherAction
                         return (mapping.findForward("polymorphism_spec"));
                      case SlidingWindowTrimmingSpec.TRIM_SLIDING_WINDOW_SPEC_INT:
                         return (mapping.findForward("slidingwindow_spec"));
-                 
+
                  }
             }
-            
+
             switch  (forwardName)
             {
                 case Spec.END_READS_SPEC_INT:
@@ -120,8 +120,8 @@ public class Seq_GetSpecAction extends ResearcherAction
                     request.setAttribute("specs", specs);
                     return (mapping.findForward("slidingwindow_spec"));
                 }
-                
-                
+
+
                 case Spec.END_READS_SPEC_INT * Spec.SPEC_SHOW_USER_ONLY_SPECS:
                 {
                     specs = EndReadsSpec.getAllSpecsBySubmitter( user.getId());
@@ -152,7 +152,7 @@ public class Seq_GetSpecAction extends ResearcherAction
                     request.setAttribute("specs", specs);
                     return (mapping.findForward("slidingwindow_spec"));
                 }
- // delete spec                
+ // delete spec
                 case  Spec.SPEC_DELETE_SPEC:
                 {
                     String title = "Delete Configuration";                   String additional_jsp = null;
@@ -160,26 +160,27 @@ public class Seq_GetSpecAction extends ResearcherAction
                     String spec_id = (String)request.getParameter( "er_specid");
                     if ( spec_id == null) spec_id = (String)request.getParameter( "be_specid");
                     if ( spec_id == null) spec_id = (String) request.getParameter("primer_specid");
-                    if ( spec_id == null) spec_id = (String)request.getParameter("polym_specid"); 
-                    if ( spec_id == null) spec_id = (String) request.getParameter("sl_specid"); 
+                    if ( spec_id == null) spec_id = (String)request.getParameter("polym_specid");
+                    if ( spec_id == null) spec_id = (String) request.getParameter("sl_specid");
                     if ( spec_id != null )    specid =  Integer.parseInt( spec_id);
                     if ( specid > 0 )
                     {
                         Connection conn= DatabaseTransaction.getInstance().requestConnection();
                         Spec.deleteSpecById( specid, conn );
                         conn.commit();
+                         if(conn != null)            DatabaseTransaction.closeConnection(conn);
                         additional_jsp = "The configuration was deleted.";
                     }
                     else
                     {
-                       additional_jsp="Please select configuration you would like to delete."; 
+                       additional_jsp="Please select configuration you would like to delete.";
                     }
                     request.setAttribute( Constants.JSP_TITLE, title);
                     request.setAttribute( Constants.ADDITIONAL_JSP, additional_jsp);
                     return (mapping.findForward("processing"));
                 }
-                
-                
+
+
                   case Constants.AVAILABLE_SPECIFICATION_INT:
                 {
                     Spec spec = null;
@@ -208,7 +209,7 @@ public class Seq_GetSpecAction extends ResearcherAction
                             }
                             else
                             {
-                                specid = Integer.parseInt( (String)request.getParameter("polym_specid")); 
+                                specid = Integer.parseInt( (String)request.getParameter("polym_specid"));
                                 if ( specid > 0 )
                                 {
                                     spec = Spec.getSpecById( specid );
@@ -216,7 +217,7 @@ public class Seq_GetSpecAction extends ResearcherAction
                                 }
                                 else
                                 {
-                                    specid = Integer.parseInt( (String) request.getParameter("sl_specid")); 
+                                    specid = Integer.parseInt( (String) request.getParameter("sl_specid"));
                                     if ( specid > 0 )
                                     {
                                         spec = Spec.getSpecById( specid );
@@ -226,17 +227,17 @@ public class Seq_GetSpecAction extends ResearcherAction
                             }
                         }
                     }
-  
+
                     if ( spec== null || mapping_forw== null) {}
-                    else       specs.add(spec);    
-                    
+                    else       specs.add(spec);
+
                     request.setAttribute("specs", specs);
                     return (mapping.findForward(mapping_forw));
                 }
-             
+
             }
-            
-        } 
+
+        }
         catch (Exception e)
         {
             System.out.println(e.getMessage());
@@ -245,5 +246,5 @@ public class Seq_GetSpecAction extends ResearcherAction
         }
         return (mapping.findForward("error"));
     }
-    
+
 }

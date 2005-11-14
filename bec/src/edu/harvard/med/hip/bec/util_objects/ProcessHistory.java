@@ -121,6 +121,12 @@ public class ProcessHistory
         process_items = getProcessItemsForSearchItem(sql,Constants.PROCESS_OBJECT_TYPE_CLONE_SEQUENCE, clone.getCloneSequenceId(),pstm_config_info);  
         if ( process_items!= null && process_items.size() > 0 ) history.addAll(process_items);
      
+        
+        //clone final status set
+        sql = "select configid from process_object where objecttype="+Constants.PROCESS_OBJECT_TYPE_CLONEID+" objectid = " + clone.getIsolateTrackingId();
+        process_items = getProcessItemsForSearchItem(null,Constants.PROCESS_OBJECT_TYPE_CLONEID, clone.getCloneId(),pstm_config_info);  
+        if ( process_items!= null && process_items.size() > 0 ) history.addAll(process_items);
+  
        sortByDate(history);
        return new ItemHistory(String.valueOf(clone.getCloneId() ), history, ItemHistory.HISTORY_PROCESSED);
      
@@ -291,7 +297,7 @@ public class ProcessHistory
     
      public static void main(String [] args) throws Exception
     {
-          ArrayList h = ProcessHistory.getProcessHistory(Constants.ITEM_TYPE_CLONEID, "8687\t8688\t8789");
+          ArrayList h = ProcessHistory.getProcessHistory(Constants.ITEM_TYPE_CLONEID, "158499 158507 ");
     //      ArrayList h = ProcessHistory.getProcessHistory(Constants.ITEM_TYPE_PLATE_LABELS, "YGS000357-1");
          
           System.out.print(h.size());

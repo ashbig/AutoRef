@@ -26,7 +26,6 @@ import java.util.*;
   public class GapMapperRunner extends ProcessRunner
 {
 
-    private int                             m_process_type = -1;
     private boolean                         m_isTryMode = false;
     private int                             m_spec_id = -1;
     private boolean                         m_isRunLQRFinderForContigs = false;
@@ -42,7 +41,6 @@ import java.util.*;
     private int				m_number_of_bases_covered_by_forward_er = 300;
     private int				m_number_of_bases_covered_by_reverse_er = 300;
 
-    public void         setProcessType(int v){ m_process_type = v;}
     public void         setSpecId(int v){m_spec_id = v;}
     public void         setIsTryMode(boolean isTryMode){m_isTryMode=isTryMode;}
     public void         setIsRunLQR(boolean v){ m_isRunLQRFinderForContigs = v ;}
@@ -73,7 +71,7 @@ import java.util.*;
         }
     }
 
-    public void run()
+    public void run_process()
     {
          Connection conn = null;
          int process_id = -1;
@@ -497,7 +495,7 @@ import java.util.*;
 
         public static void main(String [] args)
     {
-        GapMapperRunner runner = new GapMapperRunner();
+        ProcessRunner runner = new GapMapperRunner();
         try
         {
                BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
@@ -505,19 +503,18 @@ import java.util.*;
             edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
        
              runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
-             runner.setInputData( Constants.ITEM_TYPE_CLONEID," 141619	");            
+             runner.setInputData( Constants.ITEM_TYPE_CLONEID," 218183 218186 218203 218205 218206 218204 218195 218198 218196 ");            
              runner.setProcessType(Constants.PROCESS_FIND_GAPS);
-             runner.setIsTryMode(true);
+             ((GapMapperRunner)runner).setIsTryMode(true);
              //SlidingWindowTrimmingSpec spec =   SlidingWindowTrimmingSpec.getDefaultSpec();
           //   spec.setTrimmingType( SlidingWindowTrimmingSpec.TRIM_TYPE_NONE);
              //spec.setQWindowSize( 10);
-             runner.setSpecId(73);// 32 for yp3
+              ((GapMapperRunner)runner).setSpecId(73);// 32 for yp3
            //  runner.setVectorFileName("vector_pDonor221_altered.txt");
-             runner.setIsRunLQR(false);
-             runner.setQualityTrimmingScore (0);
-   runner.setQualityTrimmingLastBase (0);
-   runner.setQualityTrimmingFirstBase (0);
-  
+              ((GapMapperRunner)runner).setIsRunLQR(false);
+              ((GapMapperRunner)runner).setQualityTrimmingScore (0);
+    ((GapMapperRunner)runner).setQualityTrimmingLastBase (0);
+    ((GapMapperRunner)runner).setQualityTrimmingFirstBase (0);
              runner.run();
             /* spec.setType( SlidingWindowTrimmingSpec.TRIM_TYPE_MOVING_WINDOW);
              runner.setTrimmingSpec(spec);

@@ -97,17 +97,14 @@
 	int constructid = -1;
     for (int count = 0; count < container.getSamples().size(); count ++)
 	{
-	// System.out.println("get "+System.currentTimeMillis());
 		sample = (Sample)container.getSamples().get(count);
                 read = null; result = null;
-	//System.out.println(sample.getPosition());
 		if ( sample.getResults() != null && sample.getResults().size() > 0)
 		{
 			result = (Result)sample.getResults().get(0);
 			
 			if (result != null)
 			{
-				//System.out.println("result id "+ result.getId() +" "+result.getType() );
 				read = (Read) result.getValueObject();
 				
 			}

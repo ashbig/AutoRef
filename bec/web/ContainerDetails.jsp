@@ -2,7 +2,7 @@
 <%@ page language="java" %>
 <%@ page errorPage="ProcessError.do"%>
 
-
+<LINK REL=STYLESHEET       HREF="application_styles.css"      TYPE="text/css">
 <%@ page import="java.util.*" %>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
@@ -84,62 +84,38 @@
 </table>
 <P><P></P></P>
 <table border="1" cellpadding="0" cellspacing="0" width="84%" align=center>
-    <tr >
-       <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Position</font></strong></th>
-        <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Type</font></strong></th>
+    <tr class='headerRow'>
+        <th >Position</th>
+        <th >Type</th>
     <!--    <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Sample Id</font></strong></th> -->
-        <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Clone Id</font></strong></th>
-        <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Status</font></strong></th>
-        <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Refference Sequence</font></strong></th>
-		 <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Clone Sequence</font></strong></th>
+        <th >Clone Id</th>
+        <th> Clone Final Status</th>
+        <th >Clone Process Status</th>
+        <th >Refference Sequence</th>
+	<th >Clone Sequence</th>
     </tr>
 <%  
-    String row_color = " bgColor='#e4e9f8'";
+    String row_style = null;String clone_id = null;String refseq_id = null;
+    String cloneseq_id = null;
 	UICloneSample sample=null;
     for (int count = 0; count < container.getSamples().size(); count ++)
 	{
 		sample = (UICloneSample)container.getSamples().get(count);
-		if (count % 2 == 0)
-		{
-		  row_color = " bgColor='#e4e9f8'";
-		}
-		else
-		{
-			row_color =" bgColor='#b8c6ed'";
-		}
+		row_style = (count % 2 == 0) ? "'evenRow'" : "'oddRow'";// bgColor='#e4e9f8'";
+		clone_id = (sample.getCloneId() > -1)? String.valueOf(sample.getCloneId() ): "&nbsp;";
+                refseq_id = "<a href='#' onCLick=\"window.open('"+edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") +"Seq_GetItem.do?forwardName="+Constants.REFSEQUENCE_DEFINITION_INT +"&amp;ID="+ sample.getRefSequenceId()+"','"+ sample.getRefSequenceId()+"','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;\"> "+ sample.getRefSequenceId()+"</a>";
+                refseq_id = (sample.getRefSequenceId() > -1)? refseq_id :  "&nbsp;";
+                cloneseq_id = "<a href=\"#\" onCLick=\"window.open('"+ edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") +"Seq_GetItem.do?forwardName="+Constants.CLONE_SEQUENCE_DEFINITION_REPORT_INT+"&amp;ID="+ sample.getSequenceId()+"','"+ sample.getSequenceId() +"','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;\" >"+ sample.getSequenceId()+"</a>";
+                cloneseq_id = ( sample.getSequenceId() > -1)? cloneseq_id :  "&nbsp;";
 	%>
-	<tr>
-
-		<td <%= row_color %>><%= sample.getPosition() %> </td>
-		<td <%= row_color %>> <%= sample.getSampleType()%></td>
-		<!--<td = row_color %>> = sample.getSampleId()%></td> -->
-                <td align='right' <%= row_color %>>
-                        <% if (sample.getCloneId() != 0)
-                        {%> <%= sample.getCloneId()%>
-                       <%}else{%>&nbsp;<%}%>
-                </td>
-		<td <%= row_color %>> <%= IsolateTrackingEngine.getStatusAsString( sample.getCloneStatus () )%></td>
-		<td <%= row_color %>  align='right' > 
-	<% if (sample.getRefSequenceId() == -1)
-	{%>
-	&nbsp;
-	<%}else{%>
-
-		<a href="#" onCLick="window.open('<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetItem.do?forwardName=<%=Constants.REFSEQUENCE_DEFINITION_INT%>&amp;ID=<%= sample.getRefSequenceId()%>','<%= sample.getRefSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" > 
-		<%= sample.getRefSequenceId()%></a>
-		
-	<%}%>	
-		</td>
-	    
-		<td <%= row_color %>  align='right' > 
-		<% if ( sample.getSequenceId() != -1)
-		{%>
-<a href="#" onCLick="window.open('<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetItem.do?forwardName=<%=Constants.CLONE_SEQUENCE_DEFINITION_REPORT_INT%>&amp;ID=<%= sample.getSequenceId()%>','<%= sample.getSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" > 
-		<%= sample.getSequenceId()%></a>
-
-		<%}else{%>&nbsp;
-		<%}%></td>
-		
+	<tr class=<%= row_style %>>
+		<td width='10%'><%= sample.getPosition() %> </td>
+		<td width='15%'> <%= sample.getSampleType()%></td>
+                <td width='15%'align='right' > <%= clone_id %>      </td>
+                <td > <%= IsolateTrackingEngine.getCloneFinalStatusAsString(sample.getCloneFinalStatus() )%></td>
+               <td > <%= IsolateTrackingEngine.getStatusAsString( sample.getCloneStatus () )%></td>
+		<td   align='right' width='15%'> <%= refseq_id %></td>
+	        <td  align='right' width='15%'> <%= cloneseq_id%></td>
 	</tr>
 	<%}%>
   

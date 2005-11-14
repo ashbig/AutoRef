@@ -11,7 +11,7 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <html>
 <head>
-    <title><bean:message key="bec.name"/> : Container Process History</title>
+    <title><bean:message key="bec.name"/> : Container Label</title>
     
 </head>
 <body>
@@ -69,8 +69,7 @@ else if  (request.getAttribute(Constants.JSP_TITLE ) != null)
 		{
 			forwardName = request.getParameter("forwardName") ;
 		}
-//System.out.println("scan label "+forwardName);%>
-
+%>
 <input name="forwardName" type="hidden" value="<%= forwardName %>" > 
 <input name="<%= Constants.JSP_TITLE %>" type="hidden" value="<%= title %>" >
         <tr>

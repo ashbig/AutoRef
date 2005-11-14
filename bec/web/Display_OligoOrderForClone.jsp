@@ -12,7 +12,7 @@
 <%@ page import="edu.harvard.med.hip.bec.Constants" %>
 <%@ page import="edu.harvard.med.hip.bec.ui_objects.*" %>
 
-<%-- The container that was searched --%>
+<LINK REL=StyleSheet HREF="application_styles.css" TYPE="text/css" MEDIA=screen>
 
 <html>
 
@@ -21,7 +21,7 @@
 	<p><P>
 <br>
 <%
-String color[] = { "#e4e9f8","#b8c6ed" };
+String[] row_class = {"evenRow","oddRow"} ; int row_count = 0;
 	 Object title = null;
 	 if (request.getAttribute(Constants.JSP_TITLE ) == null)
 	 { 
@@ -31,7 +31,6 @@ String color[] = { "#e4e9f8","#b8c6ed" };
 	{
 		title = request.getAttribute( Constants.JSP_TITLE );
 	}
-//System.out.println("container "+forwardName +" samples "+ container.getSamples().size() );
 
 %>
 
@@ -46,37 +45,36 @@ String color[] = { "#e4e9f8","#b8c6ed" };
 
 
 <table border="1" cellpadding="1" cellspacing="1" width="84%" align=center>
-<th bgcolor="#1145A6"><strong><font color=white>Clone Id</font></strong></th>
-<th bgcolor="#1145A6"><strong><font color="#FFFFFF">Plate</font></strong></th>
-<th bgcolor="#1145A6"><strong><font color="#FFFFFF">Position</font></strong></th>
-<th bgcolor="#1145A6"><strong><font color="#FFFFFF">Plate Status</font></strong></th>
-<th bgcolor="#1145A6"><strong><font color="#FFFFFF">Plate Order Date</font></strong></th>
-<th bgcolor="#1145A6"><strong><font color="#FFFFFF">User Id</font></strong></th>
-<th bgcolor="#1145A6"><strong><font color="#FFFFFF">Oligo Id</font></strong></th>
-<th bgcolor="#1145A6"><strong><font color="#FFFFFF">Oligo Name</font></strong></th>
-<th bgcolor="#1145A6"><strong><font color="#FFFFFF">Oligo Sequence</font></strong></th>
-<th bgcolor="#1145A6"><strong><font color="#FFFFFF">Oligo Position</font></strong></th>
+<tr class='headerRow'>
+<td>Clone Id</td>
+<td>Plate</td>
+<td>Position</td>
+<td>Plate Status</td>
+<td>Plate Order Date</td>
+<td>User Id</td>
+<td>Oligo Id</td>
+<td>Oligo Name</td>
+<td>Oligo Sequence</td>
+<td>Oligo Position</td>
 
 <%
  ArrayList ui_items = (ArrayList)request.getAttribute("processing_items");
-    UI_GeneOligo  ui_oligo = null;String row_color = color[0];
+    UI_GeneOligo  ui_oligo = null;
     String previous_plate_name = null;
     int prev_clone_id = 0;String clone_id = "";
-    int color_count = 0;
+    
 for (int count = 0; count < ui_items.size(); count++)
     {
 ui_oligo = (UI_GeneOligo)ui_items.get(count);
 if ( count > 0 && !previous_plate_name.equalsIgnoreCase(ui_oligo.getPlateLabel ()))
     {
-        color_count++; 
-        row_color = color[color_count % 2];
+        row_count++;
         
      }
 previous_plate_name = ui_oligo.getPlateLabel ();
 %>
-    <Tr>
-
-<td bgcolor='<%= row_color %>'> 
+<Tr class=<%= row_class[row_count % 2] %>>
+<td > 
 <% 
 if ( prev_clone_id != ui_oligo.getCloneId ()) 
 {
@@ -87,16 +85,16 @@ prev_clone_id = ui_oligo.getCloneId (); %>
 
  </td>
 
-<td bgcolor='<%= row_color %>'><%= ui_oligo.getPlateLabel () %></td>
-<td bgcolor='<%= row_color %>'><%= ui_oligo.getWell () %></td>
-<td bgcolor='<%= row_color %>'><%= OligoContainer.getStatusAsString( ui_oligo.getPlateStatus ()) %></td>
-<td bgcolor='<%= row_color %>'><%= ui_oligo.getOrderDate ().substring(0,10) %></td>
-<td bgcolor='<%= row_color %>'><%= ui_oligo.getUserId () %></td>
-<td bgcolor='<%= row_color %>'><%= ui_oligo.getOligoDesignType () %><%= ui_oligo.getOligoID () %></td>
-<td bgcolor='<%= row_color %>'><%= ui_oligo.getOligoName () %></td>
+<td ><%= ui_oligo.getPlateLabel () %></td>
+<td ><%= ui_oligo.getWell () %></td>
+<td ><%= OligoContainer.getStatusAsString( ui_oligo.getPlateStatus ()) %></td>
+<td ><%= ui_oligo.getOrderDate ().substring(0,10) %></td>
+<td ><%= ui_oligo.getUserId () %></td>
+<td ><%= ui_oligo.getOligoDesignType () %><%= ui_oligo.getOligoID () %></td>
+<td ><%= ui_oligo.getOligoName () %></td>
 
-<td bgcolor='<%= row_color %>'><%= ui_oligo.getOligoSequence () %></td>
-<td bgcolor='<%= row_color %>'><%= ui_oligo.   getOligoPosition() %></td>
+<td ><%= ui_oligo.getOligoSequence () %></td>
+<td ><%= ui_oligo.   getOligoPosition() %></td>
     
     <%}%>
 </table>

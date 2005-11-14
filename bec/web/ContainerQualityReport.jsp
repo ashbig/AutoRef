@@ -13,7 +13,7 @@
 <%@ page import="edu.harvard.med.hip.bec.sampletracking.mapping.*" %>
 <%@ page import="edu.harvard.med.hip.bec.sampletracking.objects.*" %>
 <%@ page import="edu.harvard.med.hip.bec.coreobjects.endreads.*" %>
-
+<%@ page import="edu.harvard.med.hip.bec.ui_objects.*" %>
 <%-- The container that was searched --%>
 <head>
 <link href="application_styles.css" rel="stylesheet" type="text/css">
@@ -65,7 +65,7 @@ Container container = (Container)request.getAttribute("container") ;
         int cols = ((Integer)request.getAttribute("cols")).intValue();
 
         int forwardName = ((Integer)request.getAttribute("forwardName")).intValue();
-	Sample sample = null;	int constructid = -1; int border_index = -1;
+	UICloneSample sample = null;	int constructid = -1; int border_index = -1;
         String[][] cell_data = new String[rows][cols];
         int row = 0; int col = 0;
         String anchor = null;
@@ -73,54 +73,52 @@ Container container = (Container)request.getAttribute("container") ;
         String border_style = null;
         for (int count = 0; count < container.getSamples().size(); count ++)
         {   
-                
-                sample = (Sample)container.getSamples().get(count);
+                sample = (UICloneSample)container.getSamples().get(count);
                 if ( border_line_color_counter > border_line_color.length -1) 
                         border_line_color_counter = 0;
                 if ( border_line_style_counter >   border_line_style.length - 1)
                     border_line_style_counter = 0;
                 border_style = "border:"+border_line_style[border_line_style_counter++]+" 2px "+border_line_color[border_line_color_counter++];
-                construct_border_style.put( new Integer( sample.getIsolateTrackingEngine().getConstructId()), border_style);
+                construct_border_style.put( new Integer( sample.getConstructId()), border_style);
         }
          for (int count = 0; count < container.getSamples().size(); count ++)
         {	
-                sample = (Sample)container.getSamples().get(count);
-
+                sample = (UICloneSample)container.getSamples().get(count);
 if ( forwardName == Constants.CONTAINER_RESULTS_VIEW)
 {
                 anchor = "<A HREF=\"\" onClick=\"window.open('"+
-edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") +"Seq_GetItem.do?forwardName="+ Constants.SAMPLE_ISOLATE_RANKER_REPORT + "&amp;ID="+ sample.getId()+"&amp;container_label="+container.getLabel()+"','newWndNt','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;\"><div align=center>"+ sample.getPosition()+"</div></a>";
+edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") +"Seq_GetItem.do?forwardName="+ Constants.SAMPLE_ISOLATE_RANKER_REPORT + "&amp;ID="+ sample.getIsolateTrackingId()+"&amp;container_label="+container.getLabel()+"','newWndNt','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;\"><div align=center>"+ sample.getPosition()+"</div></a>";
 }
-if (forwardName == Constants.PROCESS_APROVE_ISOLATE_RANKER && sample.getIsolateTrackingEngine() != null)
+/*if (forwardName == Constants.PROCESS_APROVE_ISOLATE_RANKER && sample.getIsolateTrackingEngine() != null)
 {
    anchor = "<A HREF=\"\" onClick=\"window.open('"
     + edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") 
     + "Seq_GetItem.do?forwardName="+ Constants.CONSTRUCT_DEFINITION_REPORT 
 		+ "&amp;ID="+ sample.getIsolateTrackingEngine().getConstructId()+"','"+sample.getIsolateTrackingEngine().getConstructId()+"','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;\"><div align=center>"+ sample.getPosition()+"</div></a>";
-}
+}*/
                 row = Algorithms.convertWellNumberIntoRowNumber(sample.getPosition())-1;
                 col =Algorithms.convertWellNumberIntoColNumber(sample.getPosition() ) -1;
-                constructid = sample.getIsolateTrackingEngine().getConstructId();
+                constructid = sample.getConstructId();
                 border_style = (String)construct_border_style.get( new Integer(constructid));
-                if ( sample.getType().equals("CONTROL_POSITIVE") ||  sample.getType().equals("CONTROL_NEGATIVE"))
+                if ( sample.getSampleType().equals("CONTROL_POSITIVE") ||  sample.getSampleType().equals("CONTROL_NEGATIVE"))
 		{
 			cell_data[row][col] =" <td class='control'><div align=center>"+sample.getPosition()+"</div></td>";
 		}
-                else if ( sample.getType().equals("EMPTY") )
+                else if ( sample.getSampleType().equals("EMPTY") )
                 {
 
                       cell_data[row][col] =" <td class='empty' style = '"+ border_style + "' ><div align=center>"+sample.getPosition()+"</div></td>";
           
 }
-                else if ( sample.getIsolateTrackingEngine().getStatus() == IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH ||
-                            sample.getIsolateTrackingEngine().getStatus() == IsolateTrackingEngine.PROCESS_STATUS_CLONE_SEQUENCE_ANALYZED_NO_MATCH)
+                else if ( sample.getCloneStatus()  == IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH ||
+                            sample.getCloneStatus() == IsolateTrackingEngine.PROCESS_STATUS_CLONE_SEQUENCE_ANALYZED_NO_MATCH)
                     {
                         cell_data[row][col] =" <td class='nomatch' style='"+ border_style+"' >"+ anchor + "</td>";
                   
 }
                 else
                 {
-                        int rank = sample.getIsolateTrackingEngine().getRank();
+                        int rank = sample.getRank();
                         switch ( rank )
                         {
                                 case 1: 
@@ -150,7 +148,7 @@ if (forwardName == Constants.PROCESS_APROVE_ISOLATE_RANKER && sample.getIsolateT
                                 }
                                 case IsolateTrackingEngine.RANK_BLACK:
                                 {
-                                    if (sample.getIsolateTrackingEngine().getStatus() ==IsolateTrackingEngine.PROCESS_STATUS_ER_NO_LONG_READS || sample.getIsolateTrackingEngine().getStatus()==IsolateTrackingEngine.PROCESS_STATUS_ER_NO_READS)
+                                    if (sample.getCloneStatus()  ==IsolateTrackingEngine.PROCESS_STATUS_ER_NO_LONG_READS || sample.getCloneStatus()==IsolateTrackingEngine.PROCESS_STATUS_ER_NO_READS)
                                     {
                                         cell_data[row][col] =" <td class='brown' style='"+ border_style +"' >"+anchor+"</td>";
                                    }
@@ -186,7 +184,7 @@ if (forwardName == Constants.PROCESS_APROVE_ISOLATE_RANKER && sample.getIsolateT
 {
     %> <TR> <%
     for (int count_col = 0; count_col < cols; count_col++)
-    {//System.out.println(cell_data[count][count_col]);
+    {
         if (  cell_data[count][count_col] == null )
         {
             cell_data[count][count_col] = " <td class='nosample' style='border:solid 2px black' ><div align=center>" + ((count+1)+(count_col)* 8) +"</div></td>";

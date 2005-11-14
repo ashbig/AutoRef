@@ -169,77 +169,77 @@ public class Constants {
     
     //jsp tags
     public static final String ADDITIONAL_JSP = "additional_jsp";
-     public static final String JSP_TITLE = "title";
-      public static final String SPEC_COLLECTION = "spec_collection";
-     public static final String SPEC_TITLE_COLLECTION = "spec_title_collection";
-     public static final String SPEC_CONTROL_NAME_COLLECTION = "spec_control_name_collection";
-     public static final String PLATE_NAMES_COLLECTION = "plate_collection";
-    
+    public static final String JSP_TITLE = "title";
+    public static final String SPEC_COLLECTION = "spec_collection";
+    public static final String SPEC_TITLE_COLLECTION = "spec_title_collection";
+    public static final String SPEC_CONTROL_NAME_COLLECTION = "spec_control_name_collection";
+    public static final String PLATE_NAMES_COLLECTION = "plate_collection";
+
     //for  display; definition of items to display
     //processes 40 - 150 
     public static final int PROCESS_UPLOAD_PLATES =  40;//upload plates
-     public static final int PROCESS_SELECT_VECTOR_FOR_END_READS =41;//run sequencing for end reads
-     public static final int PROCESS_SELECT_PLATES_FOR_END_READS =44; 
-     public static final int PROCESS_RUN_END_READS = 42;//run sequencing for end reads
-     public static final int PROCESS_RUN_END_READS_WRAPPER = 43;//run end reads wrapper
-     public static final int PROCESS_RUN_ASSEMBLER_FOR_END_READS = 45;//run assembly wrapper
-      public static final int PROCESS_SELECT_PLATES_TO_CHECK_READS_AVAILABILITY =46;
-     public static final int PROCESS_CHECK_READS_AVAILABILITY =62;//check reads
-     
+    public static final int PROCESS_SELECT_VECTOR_FOR_END_READS =41;//run sequencing for end reads
+    public static final int PROCESS_SELECT_PLATES_FOR_END_READS =44; 
+    public static final int PROCESS_RUN_END_READS = 42;//run sequencing for end reads
+    public static final int PROCESS_RUN_END_READS_WRAPPER = 43;//run end reads wrapper
+    public static final int PROCESS_RUN_ASSEMBLER_FOR_END_READS = 45;//run assembly wrapper
+    public static final int PROCESS_SELECT_PLATES_TO_CHECK_READS_AVAILABILITY =46;
+    public static final int PROCESS_CHECK_READS_AVAILABILITY =62;//check reads
+
     // public static final int PROCESS_SELECT_PLATES_FOR_ISOLATE_RUNKER =; 
-     public static final int PROCESS_RUN_ISOLATE_RUNKER = 47;//run isolate runker
-      public static final int PROCESS_APROVE_ISOLATE_RANKER = 48;//approve isolate ranker
-    
-      public static final int             PROCESS_ADD_NEW_INTERNAL_PRIMER = 49; // add new internal primer
-      public static final int             PROCESS_VIEW_INTERNAL_PRIMERS = 50;//view internal primers
-      public static final int             PROCESS_APPROVE_INTERNAL_PRIMERS = 51;//approve internal primers
-      public static final int             PROCESS_RUN_PRIMER3= 52;//run primer3
+    public static final int PROCESS_RUN_ISOLATE_RUNKER = 47;//run isolate runker
+   // public static final int PROCESS_APROVE_ISOLATE_RANKER = 48;//approve isolate ranker
+
+    public static final int             PROCESS_ADD_NEW_INTERNAL_PRIMER = 49; // add new internal primer
+    public static final int             PROCESS_VIEW_INTERNAL_PRIMERS = 50;//view internal primers
+    public static final int             PROCESS_APPROVE_INTERNAL_PRIMERS = 51;//approve internal primers
+    public static final int             PROCESS_RUN_PRIMER3= 52;//run primer3
     public static final int             PROCESS_RUN_ASSEMBLER_FOR_ALL_READS = 53;//run assembly wrapper
     public static final int             PROCESS_RUNPOLYMORPHISM_FINDER= 54; //run polymorphism finder
     public static final int             PROCESS_RUN_DISCREPANCY_FINDER= 55;//run discrepancy finder
     public static final int             PROCESS_RUN_DECISION_TOOL = 56;//run decision tool
 
     public static final int             PROCESS_RUN_DISCREPANCY_FINDER_STANDALONE = 57;//run decision tool
-    public static final int             PROCESS_PUT_CLONES_ON_HOLD = 58; //put clones on hold
-    public static final int             PROCESS_ACTIVATE_CLONES = 59;
+ //   public static final int             PROCESS_PUT_CLONES_ON_HOLD = 58; //put clones on hold
+ //   public static final int             PROCESS_ACTIVATE_CLONES = 59;
     public static final int             PROCESS_SUBMIT_ASSEMBLED_SEQUENCE = 60;
     public static final int             PROCESS_CREATE_REPORT = 61;
     public static final int             PROCESS_SHOW_CLONE_HISTORY = 63;
-     public static final int            PROCESS_ORDER_INTERNAL_PRIMERS = 64;
-     
-     public static final int            PROCESS_PROCESS_OLIGO_PLATE = 65;
-     public static final int            PROCESS_VIEW_OLIGO_PLATE = 66;
-     
-     public static final int            PROCESS_CREATE_FILE_FOR_TRACEFILES_TRANSFER = 67;
-     public static final int            PROCESS_INITIATE_TRACEFILES_TRANSFER = 68;
-     public static final int            PROCESS_NOMATCH_REPORT  = 69;
-     public static final int            PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRANSFER = 70;
+    public static final int            PROCESS_ORDER_INTERNAL_PRIMERS = 64;
 
-     public static final int            PROCESS_FIND_GAPS  = 71;
-     public static final int            PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE  = 72;
-      public static final int           PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING  = 73;
-      public static final int           PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING  = 74;
-       public static final int         PROCESS_DELETE_PLATE = 75;//
+    public static final int            PROCESS_PROCESS_OLIGO_PLATE = 65;
+    public static final int            PROCESS_VIEW_OLIGO_PLATE = 66;
+
+    public static final int            PROCESS_CREATE_FILE_FOR_TRACEFILES_TRANSFER = 67;
+    public static final int            PROCESS_INITIATE_TRACEFILES_TRANSFER = 68;
+    public static final int            PROCESS_NOMATCH_REPORT  = 69;
+    public static final int            PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRANSFER = 70;
+
+    public static final int            PROCESS_FIND_GAPS  = 71;
+    public static final int            PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE  = 72;
+    public static final int           PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING  = 73;
+    public static final int           PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING  = 74;
+    public static final int         PROCESS_DELETE_PLATE = 75;//
     public static final int         PROCESS_DELETE_CLONE_READS = 76;//
     public static final int         PROCESS_DELETE_CLONE_FORWARD_READ = 77;//
     public static final int         PROCESS_DELETE_CLONE_REVERSE_READ = 78;//
     public static final int         PROCESS_DELETE_CLONE_SEQUENCE = 79;//
-  public static final int         PROCESS_GET_TRACE_FILE_NAMES = 80;
-  public static final int         PROCESS_DELETE_TRACE_FILES = 81;
-   public static final int         PROCESS_MOVE_TRACE_FILES = 82;
-  public static final int         PROCESS_VIEW_OLIGO_ORDER_BY_CLONEID = 83;
+    public static final int         PROCESS_GET_TRACE_FILE_NAMES = 80;
+    public static final int         PROCESS_DELETE_TRACE_FILES = 81;
+    public static final int         PROCESS_MOVE_TRACE_FILES = 82;
+    public static final int         PROCESS_VIEW_OLIGO_ORDER_BY_CLONEID = 83;
     public static final int         PROCESS_RUN_DECISION_TOOL_NEW  = 84;
- public static final int         PROCESS_CREATE_REPORT_TRACEFILES_QUALITY  = 85;
+    public static final int         PROCESS_CREATE_REPORT_TRACEFILES_QUALITY  = 85;
 
-     //69
- 
- //settings database
+    //69
+
+    //settings database
     public static final int         PROCESS_ADD_NEW_LINKER  = 86;
     public static final int         PROCESS_ADD_NEW_VECTOR  = 87;
     public static final int         PROCESS_ADD_NAME_TYPE  = 88;
     public static final int         PROCESS_ADD_SPECIES_DEFINITION  = 89;
     public static final int         PROCESS_ADD_PROJECT_DEFINITION  = 90;
-     
+
     public static final int         PROCESS_VIEW_ALL_NAME_TYPE  = 92;
     public static final int         PROCESS_VIEW_ALL_SPECIES_DEFINITION  = 93;
     public static final int         PROCESS_VIEW_ALL_PROJECT_DEFINITION  = 94;
@@ -248,17 +248,19 @@ public class Constants {
     public static final int         PROCESS_ADD_NEW_CLONINGSTRATEGY   = 99;
     public static final int         PROCESS_ADD_TRACE_FILE_NAME_FORMAT       = 100;
 
-// outside submission
+    // outside submission
     public static final int         PROCESS_SUBMIT_REFERENCE_SEQUENCES  = 96;
     public static final int         PROCESS_SUBMIT_CLONE_COLLECTION  = 97;
-   public static final int         PROCESS_SUBMIT_CLONE_SEQUENCES  = 101;
- 
-    
-    // max process 101
+    public static final int         PROCESS_SUBMIT_CLONE_SEQUENCES  = 101;
+
+ public static final int         PROCESS_SET_CLONE_FINAL_STATUS  = 102;
+public static final int         PROCESS_REANALYZE_CLONE_SEQUENCE  = 103;
+
+    // max process 103
 
     //items for display 1-40
-  
-   
+
+
     public static final int VECTOR_DEFINITION_INT = 1;
     public static final int LINKER_DEFINITION_INT = 2;
     public static final int PRIMER_DEFINITION_INT = 3;
@@ -277,36 +279,39 @@ public class Constants {
     public static final int READ_REPORT_INT = 16;
     public static final int AVAILABLE_VECTORS_DEFINITION_INT = 17;
     public static final int AVAILABLE_LINKERS_DEFINITION_INT = 18;
-    public static final int CONSTRUCT_DEFINITION_REPORT = 19;
+   // public static final int CONSTRUCT_DEFINITION_REPORT = 19;
     public static final int CLONE_SEQUENCE_DEFINITION_REPORT_INT = 20;
     public static final int AVAILABLE_CONTAINERS_INT = 21;
     public static final int STRETCH_REPORT_INT = 22;
     public static final int STRETCH_COLLECTION_REPORT_INT = 23;
     public static final int STRETCH_COLLECTION_REPORT_ALL_INT = 24;
     public static final int LQR_COLLECTION_REPORT_INT = 25;
-  public static final int AVAILABLE_SPECIFICATION_INT = 26;
-    
-    
-    
-    
-    
-    
+    public static final int AVAILABLE_SPECIFICATION_INT = 26;
+
+
+
+
+
+
     //type of items submitted for action : 1-4
     public static final int ITEM_TYPE_CLONEID = 1;
     public static final int ITEM_TYPE_PLATE_LABELS = 2;
-    public static final int ITEM_TYPE_BECSEQUENCE_ID = 3;
+    public static final int ITEM_TYPE_ACE_CLONE_SEQUENCE_ID = 3;
+    public static final int ITEM_TYPE_ACE_REF_SEQUENCE_ID = 6;
     public static final int ITEM_TYPE_FLEXSEQUENCE_ID = 4;
-     public static final int ITEM_TYPE_ISOLATETRASCKING_ID =-2;
-     public static final int ITEM_TYPE_PROJECT_NAME = 5 ;
-   
-     
-     public static String           getItemTypeAsString(int object_type)
+    public static final int ITEM_TYPE_ISOLATETRASCKING_ID =-2;
+    public static final int ITEM_TYPE_PROJECT_NAME = 5 ;
+
+
+public static String           getItemTypeAsString(int object_type)
      {
          switch (object_type )
          {
              case ITEM_TYPE_ISOLATETRASCKING_ID :return "Isolate Tracking Id";
              case ITEM_TYPE_PLATE_LABELS : return "Container Label";
-             case ITEM_TYPE_BECSEQUENCE_ID : return "ACE reference sequence Id";
+             case ITEM_TYPE_ACE_CLONE_SEQUENCE_ID : return "Clone sequence Id";
+             case ITEM_TYPE_ACE_REF_SEQUENCE_ID : return "ACE reference sequence Id";
+             
              case ITEM_TYPE_FLEXSEQUENCE_ID : return "Flex reference Sequence Id";
              case ITEM_TYPE_CLONEID: return "Clone Id";
              case ITEM_TYPE_PROJECT_NAME: return "Project Name";

@@ -48,7 +48,7 @@ public class DiscrepancyFinderRunner extends ProcessRunner
      public String getTitle()     {  return "Request for discrepancy finder run.";           }
      public void            setDiscrepancyQualityCutOff(int v){m_cutoff_score = v;}
 
-    public void run()
+    public void run_process()
     {
         int process_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
         Connection conn = null;
@@ -69,10 +69,11 @@ public class DiscrepancyFinderRunner extends ProcessRunner
             sql_groups_of_items =  prepareItemsListForSQL();
             if ( sql_groups_of_items.size() > 0 )
                 process_id = Request.createProcessHistory( conn, ProcessDefinition.RUN_DISCREPANCY_FINDER,new ArrayList(),m_user) ;
-
+            else return;
             for (int count = 0; count < sql_groups_of_items.size(); count++)
             {
                 sql = getQueryString( (String)sql_groups_of_items.get(count) );
+                if (sql == null) continue;
                 sequence_descriptions =     getSequenceDescriptions(sql, sequence_descriptions, MODE_GET_CLONE_SEQUENCES);
                 for  (int index =  0;  index < sequence_descriptions.size(); index++)
                 {
@@ -147,6 +148,7 @@ public class DiscrepancyFinderRunner extends ProcessRunner
 
                  i_discrepancy_finder.setCdsStart(0);
                  i_discrepancy_finder.setCdsStop(0);
+                 i_discrepancy_finder.setIsRunCompliment(false);
                  i_discrepancy_finder.run();
                  if (contig_sequence.getStatus() == BaseSequence.CLONE_SEQUENCE_STATUS_NOMATCH)
                  {
@@ -356,7 +358,8 @@ public class DiscrepancyFinderRunner extends ProcessRunner
                 clone_description.setCloneSequenceId (rs.getInt("clonesequenceid"));
                 clone_description.setCloneSequenceType (rs.getInt("clonesequencetype"));
                 clone_description.setCloneSequenceAnalysisStatus (rs.getInt("clonesequencestatus"));
-                clone_description.setContainerId( rs.getInt("containerid"));
+                if ( m_items_type !=  Constants.ITEM_TYPE_ACE_CLONE_SEQUENCE_ID)
+                    clone_description.setContainerId( rs.getInt("containerid"));
                 sequence_descriptions.add(clone_description);
                
             }
@@ -457,6 +460,7 @@ public class DiscrepancyFinderRunner extends ProcessRunner
 
             i_discrepancy_finder.setCdsStart(0);
             i_discrepancy_finder.setCdsStop(0);
+            i_discrepancy_finder.setIsRunCompliment(false);
             i_discrepancy_finder.run();
             clonesequence.setLinker3Stop(i_discrepancy_finder.getCdsStop());
             clonesequence.setLinker5Start(i_discrepancy_finder.getCdsStart() );
@@ -562,7 +566,7 @@ public class DiscrepancyFinderRunner extends ProcessRunner
 
 
 
-    private String      getQueryString(String sql_items)//, int sequence_analysis_status)
+     private String      getQueryString(String sql_items)//, int sequence_analysis_status)
     {
         switch ( m_items_type)
         {
@@ -575,6 +579,7 @@ public class DiscrepancyFinderRunner extends ProcessRunner
                  +" where s.sampleid=i.sampleid and  c.constructid=i.constructid and i.isolatetrackingid=a.isolatetrackingid(+) "
                  +"  and i.isolatetrackingid in (select isolatetrackingid from flexinfo where flexcloneid in ("+sql_items+"))"
                 ;// + " and a.analysisstatus in ("+sequence_analysis_status+")";
+
             }
             case  Constants.ITEM_TYPE_PLATE_LABELS :
             {
@@ -585,10 +590,11 @@ public class DiscrepancyFinderRunner extends ProcessRunner
                  +" where s.sampleid=i.sampleid and c.constructid=i.constructid and i.isolatetrackingid=a.isolatetrackingid(+) "
                  +"  and i.isolatetrackingid in (select isolatetrackingid from isolatetracking where sampleid in   "
                  +" (select sampleid from sample where containerid in "
-                 +" (select containerid from  containerheader where label in ("+sql_items+"))))"
+                 +" (select containerid from  containerheader where Upper(label) in ("+sql_items+"))))"
                 ;// + " and a.analysisstatus in ("+sequence_analysis_status+")";
+
             }
-            case  Constants.ITEM_TYPE_BECSEQUENCE_ID :
+            case  Constants.ITEM_TYPE_ACE_CLONE_SEQUENCE_ID :
             {
                 return "select c.refsequenceid as refsequenceid,c.constructid as constructid,format,cloningstrategyid, "
                  +" sequenceid as clonesequenceid,sequencetype as clonesequencetype,analysisstatus as clonesequencestatus, "
@@ -596,6 +602,7 @@ public class DiscrepancyFinderRunner extends ProcessRunner
                  +" where c.constructid=i.constructid and i.isolatetrackingid=a.isolatetrackingid(+) "
                  +"  and a.sequenceid in  ("+sql_items+")"
                 ;//  + " and a.analysisstatus in ("+sequence_analysis_status+")";
+
             }
           /*  case  Constants.ITEM_TYPE_FLEXSEQUENCE_ID :
             {
@@ -607,10 +614,13 @@ public class DiscrepancyFinderRunner extends ProcessRunner
                  ;// + " and a.analysisstatus in ("+sequence_analysis_status+")";
              }*/
         }
+
+    
         return null;
     }
 
-   
+     
+
 ////////////////////////////////////////////////
      public static void main(String args[])
 
@@ -619,17 +629,18 @@ public class DiscrepancyFinderRunner extends ProcessRunner
           BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
         sysProps.verifyApplicationSettings();
      edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
-        FileInputStream input = null;
         User user  = null;
         try
         {
             user = AccessManager.getInstance().getUser("htaycher123","htaycher");
         }
         catch(Exception e){}
-        ProcessRunner runner =  new DiscrepancyFinderRunner();
+        ProcessRunner runner =  null;
+        runner = new DiscrepancyFinderRunner();
 
        
-        runner.setInputData( Constants.ITEM_TYPE_CLONEID, " 172710  ");
+        runner.setInputData( Constants.ITEM_TYPE_CLONEID, " 2258 2259 119340 119452 119731   ");
+       runner.setProcessType(Constants.PROCESS_RUN_DISCREPANCY_FINDER);
         runner.setUser(user);
         runner.run();
          

@@ -39,7 +39,7 @@ import edu.harvard.med.hip.bec.ui_objects.*;
     public ArrayList            getClones(){ return m_clones;}
     public String               getTitle()    {return "Request for Decision tool run";    }
     
-    public void run()
+    public void run_process()
     {
         // ArrayList file_list = new ArrayList();
         ArrayList clones = new ArrayList();
@@ -63,7 +63,12 @@ import edu.harvard.med.hip.bec.ui_objects.*;
                  }
            }
            
-           m_file_list_reports.add(new File(report_file_name));   
+           File report_file =   new File( report_file_name );
+           if ( report_file.exists() )
+           {
+               m_file_list_reports.add( report_file );
+           }
+      
         }
         catch(Exception ex)
         {

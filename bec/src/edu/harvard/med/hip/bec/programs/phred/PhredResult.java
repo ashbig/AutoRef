@@ -108,7 +108,7 @@ public class PhredResult
     private void parseSequenceFile(String sfile)throws BecUtilException
     {
         BufferedReader  fin = null;
-        String line;
+        String line = null;
         StringBuffer seq = new StringBuffer();
         try
         {
@@ -164,7 +164,9 @@ public class PhredResult
     } // extractHeaderInfo
     
     
-    private boolean validate()throws BecUtilException
+   
+    
+    public   boolean validate()throws BecUtilException
     {
         ArrayList  scores= Algorithms.splitString( m_qualityScores,  PHRED_SEPARATOR);
        
@@ -187,17 +189,106 @@ public class PhredResult
     }
     
     
+    //used for read quality assessment
+     public static ArrayList parsePhredOutputForManyReads(String qfile, String sfile)throws BecUtilException
+    {
+        ArrayList q_reads = parseFileForManyReads(qfile, 1);
+        ArrayList s_reads = parseFileForManyReads(sfile, 0);
+        return combineReadsData(q_reads,s_reads);
+        
+    }
+     
+     private static ArrayList combineReadsData(ArrayList q_reads,ArrayList s_reads)throws BecUtilException
+     {
+         PhredResult q_result = null;
+         PhredResult s_result = null;
+         if ( q_reads.size() != s_reads.size()) throw new  BecUtilException("Not equal number of sequence and score record");
+         for (int count = 0; count < q_reads.size(); count++)
+         {
+             q_result = (PhredResult)q_reads.get(count);
+             s_result = (PhredResult)s_reads.get(count);
+              if ( !q_result.getFileName().equalsIgnoreCase(s_result.getFileName()))
+                throw new BecUtilException("Sequence record does not match score record. Sequence record " +s_result.getFileName()+", score record "+q_result.getFileName() );
+             q_result.setSequence( s_result.getSequence());
+             q_result.validate();
+           
+          }
+         return q_reads;
+     }
     
+     public  static ArrayList parseFileForManyReads(String qfile, int mode)throws BecUtilException
+    {
+        BufferedReader  fin = null;
+        String line = null;
+        ArrayList headerinfo = new ArrayList();
+        ArrayList reads = new ArrayList();
+        PhredResult read = null;
+        StringBuffer string_property = new StringBuffer();
+        boolean isInsideRead = false;
+        int read_length = 0; int read_trim_start = 0; int read_trim_end = 0;
+        try
+        {
+            fin = new BufferedReader(new FileReader(qfile));
+            while ((line = fin.readLine()) != null)
+            {
+              //header
+                if ( line.startsWith(">")  )
+                {
+                    if ( read != null) 
+                    {
+                        if ( mode == 1)read.setQualityScores( string_property.toString());
+                        else if ( mode == 0 )read.setSequence(string_property.toString());
+                        reads.add(read);
+                        string_property = new StringBuffer();
+                    }
+                    headerinfo = Algorithms.splitString( line.substring(1),  PHRED_SEPARATOR);
+                    if (headerinfo.size() < 5) { isInsideRead = false; continue;}
+                    else
+                    {
+                         read =  new PhredResult();
+                        read.setFileName((String) headerinfo.get(0));
+                         // Get read length.
+                        read.setSequenceLength( Integer.parseInt( (String)headerinfo.get(1)));
+                        // Get trimming start.
+                        read.setTrimmingStart( Integer.parseInt( (String)headerinfo.get(2)));
+                        // Get trimming end.
+                        read.setTrimmingEnd(  Integer.parseInt( (String)headerinfo.get(3)));
+                        isInsideRead = true;
+                    }
+                }
+                else  if ( isInsideRead && !line.equals("") )
+                {
+                    string_property.append(line);
+                }
+            }
+           
+            fin.close();
+            if ( read != null) 
+            {
+                 if ( mode == 1)read.setQualityScores( string_property.toString());
+                 else if ( mode == 0 )read.setSequence(string_property.toString());
+                 reads.add(read);
+            }
+             return reads;
+        }
+        catch(Exception e)
+        {
+            try
+            {fin.close();}catch(Exception c)            {}
+            throw new  BecUtilException("Cannot parse phred output");
+        }
+    }
+     
+     //-----------------------------
    public static void main(String args[])
  { 
-     PhredResult result = new PhredResult();
-     Read r = null;
+     ArrayList result = null;
     try
       {
-       String ql="C:\\bio\\plate_analysis\\clone_samples\\12894\\43935\\quality_dir\\7170_F12_1003_110994_R1.ab1.qual";
-       String sf = "C:\\bio\\plate_analysis\\clone_samples\\12894\\43935\\sequence_dir\\7170_F12_1003_110994_R1.ab1.seq";
-       
-       r=result.parsePhredOutputIntoRead(ql,sf);
+            BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
+        sysProps.verifyApplicationSettings();
+    
+       result = PhredResult.parsePhredOutputForManyReads("c:\\tmp\\test.tex","c:\\tmp\\tst.t");
        
       }
       catch (Exception e)

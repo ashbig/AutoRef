@@ -143,24 +143,41 @@ public class Algorithms
      // used to create quevery where parameter in range
     public static  String convertArrayToString(int[] arr, String delim)
     {
-        String res = "";
+        StringBuffer res = new StringBuffer();
+        if ( arr == null) return null;
         for (int count = 0; count < arr.length;count++)
         {
-            res += arr[count];
-            if (count != arr.length - 1 ) res += delim;
+            res.append( arr[count]);
+            if (count != arr.length - 1 ) res .append(delim);
         }
-        return res;
+        return res.toString();
+    }
+    
+     public static  String convertArrayToString(String[] arr, String delim)
+    {
+        StringBuffer res = new StringBuffer();
+        if ( arr == null) return null;
+        for (int count = 0; count < arr.length;count++)
+        {
+            res.append( arr[count]);
+            if (count != arr.length - 1 ) res .append(delim);
+        }
+        return res.toString();
     }
     public static  String convertStringArrayToString(ArrayList arr, String delim)
     {
-        String res = "";
+        StringBuffer res = new StringBuffer();
+        if (arr == null) return null;
         for (int count = 0; count < arr.size();count++)
         {
-            res += (String)arr.get(count);
-            if (count != arr.size()- 1 ) res += delim;
+            res.append((String)arr.get(count));
+            if (count != arr.size()- 1 ) res.append(delim);
         }
-        return res;
+        return res.toString();
     }
+    
+    
+ 
     public static int numberOf(String str, char ch)
     {
         int res = 0;
@@ -352,6 +369,83 @@ public class Algorithms
         return result;
     }
     
+    
+    
+    
+      // mode: 0 - return items common in both files;
+    // 1 return itemes found in one, but not in 2
+    // 2 return item not found in one, but found in 2
+    public static ArrayList compareTwoLists(ArrayList ar1, ArrayList ar2, int mode)
+    {
+        ArrayList result = new ArrayList();
+        String line = null;
+       
+        ar1 = sortStringArrayList(ar1);
+        ar2 = sortStringArrayList(ar2);
+
+        int count_1 = 0; int count_2 = 0;
+        while(count_1 < ar1.size() && count_2 < ar2.size()) 
+
+        {
+            int res = ((String)ar1.get(count_1)).compareTo((String)ar2.get(count_2));
+            if( res == 0)
+            {
+                if ( mode == 0 )   result.add( ar1.get(count_1));
+                count_1++; count_2++;
+            }
+            else if ( res < 0 )
+            {
+                if ( mode == 1 )  result.add( ar1.get(count_1));
+                count_1++;
+            }
+            else if ( res > 0 )
+            {
+                if ( mode == -1 ) result.add( ar2.get(count_2));
+                count_2++;
+            }
+      }
+
+      if ( mode == 1)
+        { 
+            for (int countn = count_1; countn < ar1.size(); countn++)
+            {
+                result. add( ar1.get(countn));
+            }
+        }
+         if ( mode == - 1)
+        { 
+            for (int countn = count_2; countn < ar2.size(); countn++)
+            {
+                result. add( ar2.get(countn));
+            }
+        }
+       return result;
+
+    }
+         
+        
+     public static ArrayList sortStringArrayList(ArrayList arr)
+    {
+          //sort array by containerid and position
+            Collections.sort(arr, new Comparator() 
+            {
+                public int compare(Object o1, Object o2) 
+                {
+                    String cl1 = (String)o1;
+                    String cl2 = (String)o2;
+                    return cl1.compareTo( cl2);
+                     
+                }
+                /** Note: this comparator imposes orderings that are
+                 * inconsistent with equals. */
+                public boolean equals(java.lang.Object obj)
+                {      return false;  }
+                // compare
+            } );
+        
+        return arr;
+    }    
+  
     public static void main(String args[])
     {
       

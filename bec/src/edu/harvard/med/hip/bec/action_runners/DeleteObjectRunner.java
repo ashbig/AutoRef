@@ -1,5 +1,5 @@
 /*
- * PrimerDesignerRunner.java
+ * DeleteObjectRunner.java
  *
  * Created on October 27, 2003, 5:11 PM
  */
@@ -15,6 +15,7 @@ import edu.harvard.med.hip.bec.util.*;
 import edu.harvard.med.hip.bec.coreobjects.sequence.*;
 import edu.harvard.med.hip.bec.coreobjects.endreads.*;
 import edu.harvard.med.hip.bec.coreobjects.feature.*;
+import edu.harvard.med.hip.bec.modules.*;
 import edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.form.*;
 import edu.harvard.med.hip.bec.user.*;
@@ -33,24 +34,14 @@ import java.util.*;
 public class DeleteObjectRunner extends ProcessRunner 
 {
     //public static final int         Constants.PROCESS_UPDATE_REFERENCE_SEQUENCE = 5;
-    private static  String MOVE_TRACE_FILES_BASE_DIR = edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("MOVE_TRACE_FILES_BASE_DIR") + java.io.File.separator;
-/*
-    {
-        if (ApplicationHostDeclaration.IS_BIGHEAD)
-        {
-             MOVE_TRACE_FILES_BASE_DIR = "d:\\trace_files_root\\trace_files_temporary_removed\\";
-        }
-        else
-        {
-           //MOVE_TRACE_FILES_BASE_DIR = "c:\\bio\\plate_analysis\\trace_files_temporary_removed\\";
-          MOVE_TRACE_FILES_BASE_DIR = "f:\\trace_files_root\\trace_files_temporary_removed\\";
-        }
-    }
-    */
-    private int                     m_action_type = -1;
-     public String       getTitle()    
+ 
+       private int                 m_cutoff_score = DiscrepancyFinder.DISCREPANCY_QUALITY_CUTT_OFF;
+ 
+       public void            setDiscrepancyQualityCutOff(int v){m_cutoff_score = v;}
+
+       public String       getTitle()    
      {  
-         switch(m_action_type)
+         switch(this.m_process_type)
          {
             case Constants.PROCESS_DELETE_PLATE : return "delete Plates";
             case Constants.PROCESS_DELETE_CLONE_READS : return "delete Clone End Reads (forward and reverse";
@@ -60,12 +51,13 @@ public class DeleteObjectRunner extends ProcessRunner
             case  Constants.PROCESS_GET_TRACE_FILE_NAMES :return "get Trace Files' names";
             case  Constants.PROCESS_DELETE_TRACE_FILES :return "delete Trace Files from hard drive";
             case Constants.PROCESS_MOVE_TRACE_FILES:return "move Trace Files from clone directories";
-            default: return  "";
+            case Constants.PROCESS_REANALYZE_CLONE_SEQUENCE: return "delete result of clone sequence analysis";
+                                    
+             default: return  "";
         }
      }
-    public   void        setActionType(int v){ m_action_type = v;}  
     
-    public void run()
+    public void run_process()
     {
           Connection conn = null;
           String sql = "";
@@ -75,11 +67,11 @@ public class DeleteObjectRunner extends ProcessRunner
         {
             conn = DatabaseTransaction.getInstance().requestConnection();
             String  report_file_name = Constants.getTemporaryFilesPath() + "DeleteReport"+System.currentTimeMillis()+".txt";
-            if (  m_action_type == Constants.PROCESS_DELETE_TRACE_FILES )
+            if (  this.m_process_type == Constants.PROCESS_DELETE_TRACE_FILES )
             {
                 deleteTraceFiles(report_file_name);
             }
-            else if ( m_action_type ==Constants.PROCESS_MOVE_TRACE_FILES)
+            else if (  this.m_process_type ==Constants.PROCESS_MOVE_TRACE_FILES)
             {
                 report_file_name = Constants.getTemporaryFilesPath() + "MoveFilesReport"+System.currentTimeMillis()+".txt";
                 moveTraceFiles(report_file_name); 
@@ -91,7 +83,7 @@ public class DeleteObjectRunner extends ProcessRunner
                {
                    try
                    {
-                       switch(m_action_type)
+                       switch( this.m_process_type)
                        {
                             case  Constants.PROCESS_GET_TRACE_FILE_NAMES :{getTraceFileNames((String)sql_groups_of_items.get(count),report_file_name); break;}
                              case Constants.PROCESS_DELETE_PLATE : 
@@ -103,15 +95,31 @@ public class DeleteObjectRunner extends ProcessRunner
                                deleteItems(conn, (String)sql_groups_of_items.get(count) , report_file_name);
                                break;
                             }
+                            case Constants.PROCESS_REANALYZE_CLONE_SEQUENCE:
+                            {
+                                deleteItems(conn, (String)sql_groups_of_items.get(count) , report_file_name);
+                                //run discrepancy finder
+                                DiscrepancyFinderRunner runner = new DiscrepancyFinderRunner();
+                                runner.setInputData( this.m_items_type, this.m_items);
+                                runner.setProcessType(Constants.PROCESS_RUN_DISCREPANCY_FINDER);
+                                runner.setUser(this.m_user);
+                                runner.run_process();
+                                break;
+                     
+                            }
                        }
                    } catch(Exception e)
                     {
                         DatabaseTransaction.rollback(conn);
-                        m_error_messages.add(e.getMessage());
+                        m_error_messages.add( "Cannot perform action: "+getTitle() +"\n.For items "+(String)sql_groups_of_items.get(count));
                     }
                }
             }
-            m_file_list_reports.add(new File(report_file_name));   
+            File report_file = new File(report_file_name);
+            if ( report_file.exists())
+            {
+                m_file_list_reports.add(report_file);   
+            }
           
         }
         catch(Exception e)
@@ -224,22 +232,24 @@ public class DeleteObjectRunner extends ProcessRunner
         ArrayList file_names_to_move = Algorithms.splitString(m_items);
         ArrayList fileNames = new ArrayList();
         String new_file_name = null;
+        String move_trace_files_base_dir = edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("MOVE_TRACE_FILES_BASE_DIR") + java.io.File.separator;
+
         for (int file_count = 0; file_count < file_names_to_move.size(); file_count++)
         {
             file_to_move = new File( (String) file_names_to_move.get(file_count) );
             if ( file_to_move.exists() )
             {
-                new_file_name = MOVE_TRACE_FILES_BASE_DIR + file_to_move.getName();
+                new_file_name = move_trace_files_base_dir + file_to_move.getName();
                 file_new = new File(new_file_name);
                 try
                 {
                     FileOperations.moveFile(file_to_move, file_new, true, true);
-                    fileNames.add("Moving file: "+(String) file_names_to_move.get(file_count) +" into directory "+ MOVE_TRACE_FILES_BASE_DIR);
+                    fileNames.add("Moving file: "+(String) file_names_to_move.get(file_count) +" into directory "+ move_trace_files_base_dir);
                 }
                 catch(Exception e)
                 {
                 //file_to_move.delete();
-                    fileNames.add("Cannot move file: "+(String) file_names_to_move.get(file_count) +" into directory "+ MOVE_TRACE_FILES_BASE_DIR);
+                    fileNames.add("Cannot move file: "+(String) file_names_to_move.get(file_count) +" into directory "+ move_trace_files_base_dir);
                 }
             }
             else
@@ -256,7 +266,7 @@ public class DeleteObjectRunner extends ProcessRunner
     {
         ArrayList sql_for_deletion = new ArrayList();
         String sql = null;
-        switch (m_action_type)
+        switch ( this.m_process_type)
         {
             case Constants.PROCESS_DELETE_PLATE :
             {
@@ -267,13 +277,18 @@ public class DeleteObjectRunner extends ProcessRunner
             case Constants.PROCESS_DELETE_CLONE_FORWARD_READ :
             case Constants.PROCESS_DELETE_CLONE_REVERSE_READ :
             {
-                sql_for_deletion = getSqlReads(sql_items, m_action_type);
+                sql_for_deletion = getSqlReads(sql_items,  this.m_process_type);
                 break;
             }
             case  Constants.PROCESS_DELETE_CLONE_SEQUENCE :
             {
                 //delete all assembled sequences and their discrrepancies for the clone
                 sql_for_deletion = getSqlDeleteCloneSequence(sql_items);
+                break;
+            }
+            case Constants.PROCESS_REANALYZE_CLONE_SEQUENCE:
+            {
+                sql_for_deletion = getSqlDeleteCloneSequenceAnalysisResult(sql_items);
                 break;
             }
           //  case  Constants.PROCESS_UPDATE_REFERENCE_SEQUENCE : break;
@@ -283,14 +298,20 @@ public class DeleteObjectRunner extends ProcessRunner
         //execute statements
         printReport(sql_for_deletion,   report_file_name , "Need to be executed");
         ArrayList exc_items = new ArrayList();
-        for ( int count = 0; count < sql_for_deletion.size(); count++)
+        try
         {
-              DatabaseTransaction.executeUpdate( (String)sql_for_deletion.get(count) , conn);
-              exc_items.add((String)sql_for_deletion.get(count));
+            for ( int count = 0; count < sql_for_deletion.size(); count++)
+            {
+                  DatabaseTransaction.executeUpdate( (String)sql_for_deletion.get(count) , conn);
+                  exc_items.add((String)sql_for_deletion.get(count));
+            }
+            conn.commit();
         }
-        conn.commit();
-    
-        printReport(exc_items,   report_file_name, "Executed items");
+        catch(Exception e)
+        {
+            printReport(exc_items,   report_file_name, "Executed items");
+            throw new BecDatabaseException( e.getMessage());
+        }
     }
     
     //------------------------------------------------------------------
@@ -300,7 +321,7 @@ public class DeleteObjectRunner extends ProcessRunner
         ArrayList sql_for_deletion= new ArrayList();
         String sql_where = null;String sql = null;
         String sql_read_type = null;String sql_result_type = null;
-         switch (m_action_type)
+         switch ( this.m_process_type)
         {
             case Constants.PROCESS_DELETE_CLONE_READS :{break;}
             case Constants.PROCESS_DELETE_CLONE_FORWARD_READ :
@@ -329,9 +350,9 @@ public class DeleteObjectRunner extends ProcessRunner
         }
         else if ( m_items_type == Constants.ITEM_TYPE_PLATE_LABELS)
         {
-            sql_where ="( select isolatetrackingid from isolatetracking where sampleid in "
+            sql_where ="( select isolatetrackingid from isolatetracking where process_status = "+IsolateTrackingEngine.FINAL_STATUS_INPROCESS+" and sampleid in "
             +"(select sampleid from sample where containerid in (select containerid from containerheader "
-            +" where label in ("+items_for_sql+"))))";
+            +" where Upper(label) in ("+items_for_sql+"))))";
         }
         //discrepancy          
         sql = "delete from discrepancy where sequenceid in "
@@ -367,27 +388,27 @@ public class DeleteObjectRunner extends ProcessRunner
         sql_for_deletion.add(sql);
        }
         //update reads
-        if ( m_action_type == Constants.PROCESS_DELETE_CLONE_READS )
+        if (  this.m_process_type == Constants.PROCESS_DELETE_CLONE_READS )
         {
         sql = "update  result set resultvalueid = null, resulttype = "+Result.RESULT_TYPE_ENDREAD_FORWARD+" where resulttype in ("
-+ Read.TYPE_ENDREAD_FORWARD+","+ Read.TYPE_ENDREAD_FORWARD_FAIL+") and sampleid in (select sampleid from isolatetracking where isolatetrackingid in "
++ Read.TYPE_ENDREAD_FORWARD+","+ Read.TYPE_ENDREAD_FORWARD_FAIL+") and sampleid in (select sampleid from isolatetracking where  process_status = "+IsolateTrackingEngine.FINAL_STATUS_INPROCESS+" and isolatetrackingid in "
 + sql_where+")";   sql_for_deletion.add(sql);      
 sql = "update  result set resultvalueid = null, resulttype = "+Result.RESULT_TYPE_ENDREAD_REVERSE+" where resulttype in ("
-+Read.TYPE_ENDREAD_REVERSE+","+ Read.TYPE_ENDREAD_REVERSE_FAIL+") and sampleid in (select sampleid from isolatetracking where isolatetrackingid in "
++Read.TYPE_ENDREAD_REVERSE+","+ Read.TYPE_ENDREAD_REVERSE_FAIL+") and sampleid in (select sampleid from isolatetracking where  process_status = "+IsolateTrackingEngine.FINAL_STATUS_INPROCESS+" and isolatetrackingid in "
 + sql_where+")";   sql_for_deletion.add(sql);  
         }
-        if ( m_action_type ==  Constants.PROCESS_DELETE_CLONE_FORWARD_READ )
+        if (  this.m_process_type ==  Constants.PROCESS_DELETE_CLONE_FORWARD_READ )
         {
             sql = "update  result set resultvalueid = null, resulttype = "+Result.RESULT_TYPE_ENDREAD_FORWARD+" where resulttype in ("
-+ Read.TYPE_ENDREAD_FORWARD+","+ Read.TYPE_ENDREAD_FORWARD_FAIL+") and sampleid in (select sampleid from isolatetracking where isolatetrackingid in "
++ Read.TYPE_ENDREAD_FORWARD+","+ Read.TYPE_ENDREAD_FORWARD_FAIL+") and sampleid in (select sampleid from isolatetracking where  process_status = "+IsolateTrackingEngine.FINAL_STATUS_INPROCESS+" and isolatetrackingid in "
 + sql_where+")";   sql_for_deletion.add(sql);      
 
         }
-        if ( m_action_type ==  Constants.PROCESS_DELETE_CLONE_REVERSE_READ)
+        if (  this.m_process_type ==  Constants.PROCESS_DELETE_CLONE_REVERSE_READ)
         {
             
 sql = "update  result set resultvalueid = null, resulttype = "+Result.RESULT_TYPE_ENDREAD_REVERSE+" where resulttype in ("
-+Read.TYPE_ENDREAD_REVERSE+","+ Read.TYPE_ENDREAD_REVERSE_FAIL+") and sampleid in (select sampleid from isolatetracking where isolatetrackingid in "
++Read.TYPE_ENDREAD_REVERSE+","+ Read.TYPE_ENDREAD_REVERSE_FAIL+") and sampleid in (select sampleid from isolatetracking where  process_status = "+IsolateTrackingEngine.FINAL_STATUS_INPROCESS+" and isolatetrackingid in "
 + sql_where+")";   sql_for_deletion.add(sql);  
         
         }
@@ -429,7 +450,8 @@ sql = "update  result set resultvalueid = null, resulttype = "+Result.RESULT_TYP
         }
         
      }
-    public ArrayList      getSqlDeleteCloneSequence(String items_for_sql)
+     
+     public ArrayList       getSqlDeleteCloneSequenceAnalysisResult(String items_for_sql)
     {
         //delete all assembled sequences and their discrrepancies for the clone
         ArrayList sql_for_deletion= new ArrayList();
@@ -440,25 +462,67 @@ sql = "update  result set resultvalueid = null, resulttype = "+Result.RESULT_TYP
             +" ( select sequenceid from assembledsequence where isolatetrackingid in"
             +"( select isolatetrackingid from flexinfo where flexcloneid in "
             +" ("+items_for_sql+")))";                sql_for_deletion.add(sql);
-             sql = "delete from sequenceinfo where sequenceid in "
-            +" ( select sequenceid from assembledsequence where isolatetrackingid in"
-            +"( select isolatetrackingid from flexinfo where flexcloneid in "
-            +" ("+items_for_sql+")))";                sql_for_deletion.add(sql);
-             sql = "delete from  assembledsequence where isolatetrackingid in"
+             sql = "update  assembledsequence set analysisstatus= "+BaseSequence.CLONE_SEQUENCE_STATUS_ASSEMBLED
+             + " where isolatetrackingid in "
             +"( select isolatetrackingid from flexinfo where flexcloneid in "
             +" ("+items_for_sql+"))";                sql_for_deletion.add(sql);
+             
         }
-        else if ( m_items_type == Constants.ITEM_TYPE_BECSEQUENCE_ID)
+        else if ( m_items_type == Constants.ITEM_TYPE_ACE_CLONE_SEQUENCE_ID)
+        {
+            sql = "delete from discrepancy where sequenceid in  ("+items_for_sql+")";   sql_for_deletion.add(sql);
+            sql = "update  assembledsequence set analysisstatus= "+BaseSequence.CLONE_SEQUENCE_STATUS_ASSEMBLED+" where sequenceid in ("+items_for_sql+")"; sql_for_deletion.add(sql);
+        }
+       
+        return sql_for_deletion;
+    }
+     
+     
+     public ArrayList      getSqlDeleteCloneSequence(String items_for_sql)
+    {
+        //delete all assembled sequences and their discrrepancies for the clone
+        ArrayList sql_for_deletion= new ArrayList();
+        String sql = null; String sql_where = null;
+        if ( m_items_type == Constants.ITEM_TYPE_CLONEID)
+        {
+            sql_where = "  where isolatetrackingid in "
+            +"( select isolatetrackingid from flexinfo where flexcloneid in "
+            +" ("+items_for_sql+"))";
+            sql = "delete from discrepancy where sequenceid in "
+            +" ( select sequenceid from assembledsequence "+sql_where +")";        
+            sql_for_deletion.add(sql);
+             sql = "delete from sequenceinfo where sequenceid in "
+            +" ( select sequenceid from assembledsequence  "+sql_where+")";
+             sql_for_deletion.add(sql);
+             sql=" delete from stretch where collectionid in "
+             +" (select collectionid from stretch_collection where clonesequenceid in"
+             +" (select sequenceid from assembledsequence  "+sql_where+"))";
+             sql_for_deletion.add(sql);
+             sql=" delete from  stretch_collection where clonesequenceid in"
+             +" (select sequenceid from assembledsequence  "+sql_where+")";
+             sql_for_deletion.add(sql);
+             sql = "delete from  assembledsequence  "+sql_where;
+             sql_for_deletion.add(sql);
+        }
+        else if ( m_items_type == Constants.ITEM_TYPE_ACE_CLONE_SEQUENCE_ID)
         {
             sql = "delete from discrepancy where sequenceid in  ("+items_for_sql+")";   sql_for_deletion.add(sql);
              sql = "delete from sequenceinfo where sequenceid in ("+items_for_sql+")"; sql_for_deletion.add(sql);
+             sql=" delete from stretch where collectionid in (select collectionid from stretch_collection where clonesequenceid in("+items_for_sql+"))";   sql_for_deletion.add(sql);
+             sql=" delete from  stretch_collection where clonesequenceid  in  ("+items_for_sql+")";   sql_for_deletion.add(sql);
+             
              sql = "delete from  assembledsequence where sequenceid in ("+items_for_sql+")"; sql_for_deletion.add(sql);
         }
-        else if ( m_items_type == Constants.ITEM_TYPE_PLATE_LABELS)
+        else if ( m_items_type == Constants.ITEM_TYPE_PLATE_LABELS)//called from delete plates
         {
-            sql = "delete from discrepancy where sequenceid in  (select sequenceid from assembledsequence  where isolatetrackingid in ( select isolatetrackingid from isolatetracking where sampleid in ( select sampleid from sample where containerid in ( select containerid from containerheader where label in ("+items_for_sql+")))))";   sql_for_deletion.add(sql);
-             sql = "delete from sequenceinfo where sequenceid in (select sequenceid from assembledsequence  where isolatetrackingid in ( select isolatetrackingid from isolatetracking where sampleid in ( select sampleid from sample where containerid in ( select containerid from containerheader where label in ("+items_for_sql+")))))"; sql_for_deletion.add(sql);
-             sql = "delete from  assembledsequence  where isolatetrackingid in ( select isolatetrackingid from isolatetracking where sampleid in ( select sampleid from sample where containerid in ( select containerid from containerheader where label in ("+items_for_sql+"))))"; sql_for_deletion.add(sql);
+            sql_where =  " isolatetrackingid in ( select isolatetrackingid from isolatetracking where sampleid in ( select sampleid from sample where containerid in ( select containerid from containerheader where Upper(label) in ("+items_for_sql+"))))";
+            sql = "delete from discrepancy where sequenceid in  (select sequenceid from assembledsequence  where "+sql_where +")";   sql_for_deletion.add(sql);
+            sql = "delete from sequenceinfo where sequenceid in (select sequenceid from assembledsequence  where "+sql_where+")"; sql_for_deletion.add(sql);
+             sql=" delete from stretch where collectionid in (select collectionid from stretch_collection where clonesequenceid in (select sequenceid from assembledsequence where "+sql_where+"))";
+             sql_for_deletion.add(sql);
+             sql=" delete from  stretch_collection where clonesequenceid in (select sequenceid from assembledsequence where "+sql_where+")";
+             sql_for_deletion.add(sql);
+             sql = "delete from  assembledsequence  where "+sql_where; sql_for_deletion.add(sql);
         }
         return sql_for_deletion;
     }
@@ -466,30 +530,32 @@ sql = "update  result set resultvalueid = null, resulttype = "+Result.RESULT_TYP
     
     public ArrayList       getSqlForPlate(String sql_items)throws Exception
     {
+        // get plates where no clone set to be 'nonactive
+        sql_items = getPlatesAllActiveClones(sql_items);
         //delete all sequences
         ArrayList  sql =     getSqlDeleteCloneSequence( sql_items);
         // delete all end reads
         sql.addAll( getSqlReads(sql_items, Constants.PROCESS_DELETE_CLONE_READS)) ;
         //delete upload history record 
-        sql.add("delete from process_object where objecttype = "+Constants.PROCESS_OBJECT_TYPE_CONTAINER+" and objectid in (select containerid from containerheader where label in ("+sql_items+"))");
+        sql.add("delete from process_object where objecttype = "+Constants.PROCESS_OBJECT_TYPE_CONTAINER+" and objectid in (select containerid from containerheader where Upper(label) in ("+sql_items+"))");
         // delete all results
-        sql.add("delete from result where sampleid in ( select sampleid from sample where containerid in(select containerid from containerheader where label  in ( "+sql_items+")))");
-        String sql_ids = " select constructid as id from isolatetracking  where sampleid in ( select sampleid from sample where containerid in(select containerid from containerheader where label  in ( "+sql_items+")))";
+        sql.add("delete from result where sampleid in ( select sampleid from sample where containerid in(select containerid from containerheader where Upper(label)  in ( "+sql_items+")))");
+        String sql_ids = " select constructid as id from isolatetracking  where sampleid in ( select sampleid from sample where containerid in(select containerid from containerheader where Upper(label)  in ( "+sql_items+")))";
         String isolatetracking_ids = getIdsToRemove(sql_ids);      
          //delete flexinfo
-           sql.add("delete from flexinfo where isolatetrackingid in ( select isolatetrackingid from isolatetracking  where sampleid in ( select sampleid from sample where containerid in(select containerid from containerheader where label  in ( "+sql_items+"))))");
+           sql.add("delete from flexinfo where isolatetrackingid in ( select isolatetrackingid from isolatetracking  where sampleid in ( select sampleid from sample where containerid in(select containerid from containerheader where Upper(label)  in ( "+sql_items+"))))");
   
         //delete isolates
-            sql.add("delete from isolatetracking where sampleid in ( select sampleid from sample where containerid in(select containerid from containerheader where label  in ( "+sql_items+")))");
+            sql.add("delete from isolatetracking where sampleid in ( select sampleid from sample where containerid in(select containerid from containerheader where Upper(label)  in ( "+sql_items+")))");
   
         //delete all sequencing constructs
         if (isolatetracking_ids != null && !isolatetracking_ids.equals(""))
            sql.add("delete from sequencingconstruct where constructid in ( "+isolatetracking_ids+")");//delete isolates
          //samples
-              sql.add("delete from  sample where containerid in(select containerid from containerheader where label  in ( "+sql_items+"))");
+              sql.add("delete from  sample where containerid in(select containerid from containerheader where Upper(label)  in ( "+sql_items+"))");
   
         //containerheader
-                sql.add("delete from  containerheader where label  in ( "+sql_items+")");
+                sql.add("delete from  containerheader where Upper(label)  in ( "+sql_items+")");
   
         
         //stretched
@@ -498,6 +564,35 @@ sql = "update  result set resultvalueid = null, resulttype = "+Result.RESULT_TYP
         //oligo calculations for stretch collections   ?????
         //oligos for stretch collections   ????
         return sql;
+    }
+    
+    
+    private String          getPlatesAllActiveClones(String sql_items)throws Exception
+    {
+        String sql ="select label as item from containerheader where label in ("+sql_items
+        +" ) and containerid not in (select containerid from sample where sampleid in "
+        + "(select sampleid from isolatetracking where process_status  in ("
+        +IsolateTrackingEngine.FINAL_STATUS_ACCEPTED+","+IsolateTrackingEngine.FINAL_STATUS_REJECTED+")))";
+        String active_plates = getActiveItems( sql, 1);
+        ArrayList arr_active_plates= Algorithms.splitString(active_plates);
+         m_additional_info = "The following plates cannot be deleted, because at least one clone on the plate is marked as 'nonactive': ";
+        m_additional_info += Algorithms.compareTwoLists(
+                    Algorithms.splitString(m_items),
+                    arr_active_plates, 
+                    1);
+        
+        StringBuffer plate_names = new StringBuffer();
+        for (int index = 0; index < arr_active_plates.size(); index++)
+        {
+            plate_names.append( "'");
+            plate_names.append((String)arr_active_plates.get(index));
+            plate_names.append("'");
+            if ( index != arr_active_plates.size()-1 ) plate_names.append(",");
+        }
+        m_items = plate_names.toString();
+        return plate_names.toString();
+        
+        
     }
     private void            printReport(ArrayList sql_statements,  String report_file_name, String title)
     {
@@ -524,15 +619,21 @@ sql = "update  result set resultvalueid = null, resulttype = "+Result.RESULT_TYP
      
     {
        // InputStream input = new InputStream();
-        DeleteObjectRunner input = null;
+          
+  
+        ProcessRunner input = null;
         User user  = null;
         try
         {// 3558           775       776       884       638      6947 
-            input = new DeleteObjectRunner();
+              input = new DeleteObjectRunner();
             user = AccessManager.getInstance().getUser("htaycher123","htaycher");
             input.setUser(user);
-           input.setActionType(Constants.PROCESS_MOVE_TRACE_FILES);
-           String items = "C:\\bio\\plate_analysis\\clone_samples\\test.txt";
+           BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
+        sysProps.verifyApplicationSettings();
+       edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
+    
+           input.setProcessType(Constants.PROCESS_DELETE_PLATE);
+           String items = "VCXXG002290-2.012-1   ASA001213 ";
            input.setInputData( Constants.ITEM_TYPE_PLATE_LABELS, items);
            input.run();
             

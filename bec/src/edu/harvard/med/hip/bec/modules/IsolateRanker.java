@@ -140,13 +140,10 @@ public class IsolateRanker
                        m_error_messages.add("\nClone  "+ it.getCloneId() + " is not analized. Ranking cannot be run for all clones in the same construct (clone ids:"+message+")");
                        return;
                     }
-                    switch ( type_of_item_to_analize )
+                    if ( type_of_item_to_analize == 0)
                     {
-                        case 0:
-                        {
-                            it.setStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_NO_READS);
-                            break;
-                        }
+                        it.setStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_NO_READS);
+                         continue;
                       
                     }
                    
@@ -233,8 +230,8 @@ public class IsolateRanker
                 {
                     read = (Read) reads.get(read_count);
                     
-                    if ( read.getStatus() == Read.TYPE_ENDREAD_FORWARD_SHORT    
-                       || read.getStatus() == Read.TYPE_ENDREAD_REVERSE_SHORT)
+                    if ( read.getType() == Read.TYPE_ENDREAD_FORWARD_SHORT    
+                       || read.getType() == Read.TYPE_ENDREAD_REVERSE_SHORT)
                     {
                         return_value = 0;
                     }

@@ -65,7 +65,7 @@
   </tr>
 }%> -->
 <% if ( request.getAttribute("sequence_id") != null)
-  {%>
+  { %>
 <tr> 
     <td width="19%"><strong>Sequence Id:</strong>
    

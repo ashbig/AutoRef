@@ -48,14 +48,7 @@ public class PhredWrapper
     
      private static final boolean isUnix = false; 
      private   String m_phredFilePath = edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("PHRED_EXE_PATH") ;
-/*
-    {
-        if (ApplicationHostDeclaration.IS_BIGHEAD)
-            m_phredFilePath = "d:\\bio_programs\\phred\\phred.exe";
-        else
-            m_phredFilePath = "c:\\bio\\phred\\Phred.exe";
-    }
- **/
+
     //-id 		Read and process files in .
     private String m_IDN = " -id ";
     private String m_input_directoryname = null ;
@@ -213,6 +206,14 @@ public class PhredWrapper
         }
         cmd = m_phredFilePath + m_IDN + m_input_directoryname +  m_ODN + m_output_directoryname + m_OQDN
         + m_output_quality_directoryname + m_trim_alg + m_trim_type + m_ezyme_sequence ;
+        return run(cmd);
+    } 
+   
+   
+   
+   public boolean run(String cmd)throws BecUtilException
+    {
+        
         //System.out.println(cmd);
         
         try

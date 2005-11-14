@@ -111,13 +111,15 @@ public class SubmitDataFileAction extends ResearcherAction
                          case  Constants.PROCESS_GET_TRACE_FILE_NAMES :{title = "request for list of Trace Files' names"; break;}
                          case  Constants.PROCESS_DELETE_TRACE_FILES :{title = "request for Trace Files deletion"; break;}
                     }
-                    DeleteObjectRunner runner = new DeleteObjectRunner();
-                    ((DeleteObjectRunner)runner).setActionType(forwardName);
+                    ProcessRunner runner = new DeleteObjectRunner();
+                    runner.setProcessType(forwardName);
                               
                     ArrayList items = getInputItems( input);
                     String  item_ids = Algorithms.convertStringArrayToString(items, " ");
                     runner.setInputData( Constants.ITEM_TYPE_PLATE_LABELS,item_ids);
                     runner.setUser(user);
+                       runner.setProcessType(forwardName);
+                 
                     t = new Thread(runner);                    t.start();
                     
                     request.setAttribute(Constants.JSP_TITLE,title);
@@ -147,7 +149,7 @@ public class SubmitDataFileAction extends ResearcherAction
                 while  ((line = reader.readLine()) != null)
                 {
                     items.add(line.trim().toUpperCase() );
-                }
+                 }
                 return items;
          }
          catch(Exception e)
@@ -256,8 +258,8 @@ public class SubmitDataFileAction extends ResearcherAction
                     //send report  
                     String msgText = "Please find Discrepancy Finder Report enclosed.";
                    
-                    Mailer.sendMessageWithFileCollections(i_email,  "hip_informatics@hms.harvard.edu",
-                    "hip_informatics@hms.harvard.edu", "Discrepancy Finder Report.",  msgText, files);
+                    Mailer.sendMessageWithFileCollection(i_email,  BecProperties.getInstance().getACEEmailAddress(),
+                    BecProperties.getInstance().getProperty("ACE_CC_EMAIL_ADDRESS"), "Discrepancy Finder Report.",  msgText, files);
                  
             }
             catch(Exception e){if (reader != null) try{reader.close();}catch(Exception i){}}

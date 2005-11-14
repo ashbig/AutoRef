@@ -49,9 +49,10 @@ public class RunProcessAction extends ResearcherAction
         ActionErrors errors = new ActionErrors();
         Thread t = null;
         Connection conn = null;
-        
-        ArrayList master_container_ids = null;
-        ArrayList master_container_labels = null;
+         ProcessRunner runner = null;
+                   
+     //   ArrayList master_container_ids = null;
+      //  ArrayList master_container_labels = null;
         int   forwardName = ((Seq_GetSpecForm)form).getForwardName();
       
         try
@@ -83,23 +84,21 @@ public class RunProcessAction extends ResearcherAction
                         return new ActionForward(mapping.getInput());
                     }
                     
-                    request.setAttribute(Constants.JSP_TITLE,"Processing Request for Plates Upload");
+                    request.setAttribute(Constants.JSP_TITLE,getTitleForProcess(forwardName));
                     request.setAttribute(Constants.ADDITIONAL_JSP,"Processing plates:\n"+container_labels);
                     
-                    //parse plate names
-                    master_container_labels = Algorithms.splitString(container_labels);
-                    
-                    
-                    PlateUploadRunner runner = new PlateUploadRunner();
-                    runner.setContainerLabels(master_container_labels );
-                    runner.setVectorId(vectorid );
-                    runner.setLinker3Id(linker3id);
-                    runner.setLinker5Id(linker5id);
-                    runner.setStartCodon(start_codon);
-                    runner.setFusionStopCodon(fusion_stop_codon);
-                    runner.setClosedStopCodon(closed_stop_codon);
-                    runner.setNextStep(put_plate_for_step);
-                    runner.setPlateInfoType(PlateUploader.PLATE_NAMES);
+                      
+                     runner = new PlateUploadRunner();
+                     runner.setInputData(Constants.ITEM_TYPE_PLATE_LABELS,  container_labels);
+                    ((PlateUploadRunner)runner).setVectorId(vectorid );
+                    ((PlateUploadRunner)runner).setLinker3Id(linker3id);
+                    ((PlateUploadRunner)runner).setLinker5Id(linker5id);
+                    ((PlateUploadRunner)runner).setStartCodon(start_codon);
+                    ((PlateUploadRunner)runner).setFusionStopCodon(fusion_stop_codon);
+                    ((PlateUploadRunner)runner).setClosedStopCodon(closed_stop_codon);
+                    ((PlateUploadRunner)runner).setNextStep(put_plate_for_step);
+                    ((PlateUploadRunner)runner).setPlateInfoType(PlateUploader.PLATE_NAMES);
+                    runner.setProcessType(forwardName);
                     runner.setUser(user);
                     t = new Thread(runner);                    t.start();
                     break;
@@ -107,32 +106,23 @@ public class RunProcessAction extends ResearcherAction
                
                 case Constants.PROCESS_RUN_END_READS : //run sequencing for end reads
                 {
-                    master_container_ids = new ArrayList();
-                    master_container_labels = new ArrayList();
                     String[] labels = request.getParameterValues("chkLabel");
-                    String plate_names = "";
-                    if(labels != null)
-                    {
-                        for (int i = 0; i < labels.length; i ++)
-                        {
-                            master_container_labels.add(labels[i] );
-                            plate_names += labels[i] + "\n";
-                        }
-                    }
-                    master_container_ids = Container.findContainerIdsFromLabel(master_container_labels);
-                    
-                    
+                    String plate_names = Algorithms.convertArrayToString(labels, " ");
+                
+                     
                     int forward_primer_id = Integer.parseInt( (String) request.getParameter("5p_primerid"));
                     int reverse_primer_id = Integer.parseInt( (String) request.getParameter("3p_primerid"));
                     
-                    request.setAttribute(Constants.JSP_TITLE,"Request for end read sequencing request" );
+                    request.setAttribute(Constants.JSP_TITLE,getTitleForProcess(forwardName) );
                     request.setAttribute(Constants.ADDITIONAL_JSP,"Processing plates "+ plate_names);
                     
-                    EndReadsRequestRunner runner = new EndReadsRequestRunner();
-                    runner.setContainerIds(master_container_ids );
-                    if ( forward_primer_id != -1) runner.setForwardPrimerId( forward_primer_id );
-                    if ( reverse_primer_id != -1)runner.setRevercePrimerId(reverse_primer_id);
+                     runner = new EndReadsRequestRunner();
+                    runner.setInputData(Constants.ITEM_TYPE_PLATE_LABELS , plate_names );
+                    if ( forward_primer_id != -1) ((EndReadsRequestRunner)runner).setForwardPrimerId( forward_primer_id );
+                    if ( reverse_primer_id != -1)((EndReadsRequestRunner)runner).setRevercePrimerId(reverse_primer_id);
                     runner.setUser(user);
+                    runner.setProcessType(forwardName);
+                 
                     t = new Thread(runner);           t.start();
                     
                     return mapping.findForward("processing");
@@ -141,64 +131,37 @@ public class RunProcessAction extends ResearcherAction
                 
                 case Constants.PROCESS_RUN_ISOLATE_RUNKER : //run isolate runker
                 {
-                    master_container_labels = new ArrayList();
                     String[] labels = request.getParameterValues("chkLabel");
-                    String plate_names = "";
-                    if(labels != null)
-                    {
-                        for (int i = 0; i < labels.length; i ++)
-                        {
-                            master_container_labels.add(labels[i] );
-                            plate_names += labels[i] + "\n";
-                           // System.out.println(labels[i]);
-                        }
-                    }
+                     String plate_names = Algorithms.convertArrayToString(labels, " ");
+                
                     
                   //  master_container_ids = Container.findContainerIdsFromLabel(master_container_labels);
-                    request.setAttribute(Constants.JSP_TITLE,"Request for isolate ranker run" );
-                    request.setAttribute(Constants.ADDITIONAL_JSP,"Processing plates "+ plate_names);
+                    request.setAttribute(Constants.JSP_TITLE,getTitleForProcess(forwardName) );
+                    request.setAttribute(Constants.ADDITIONAL_JSP,"Processing plates "+ plate_names.toString());
                     
                     int bioeval_spec_id = Integer.parseInt( (String) request.getParameter(Spec.FULL_SEQ_SPEC));
                     int endread_spec_id = Integer.parseInt( (String) request.getParameter(Spec.END_READS_SPEC));
-                    IsolateRankerRunner runner = new IsolateRankerRunner();
-                    runner.setContainerLabels(master_container_labels );
+                     runner = new IsolateRankerRunner();
+                    // ((IsolateRankerRunner)runner).setContainerLabels(master_container_labels );
                    // runner.setContainerIds(master_container_ids );
-                    runner.setCutoffValuesSpec( (FullSeqSpec)Spec.getSpecById(bioeval_spec_id, Spec.FULL_SEQ_SPEC_INT));
-                    runner.setPenaltyValuesSpec( (EndReadsSpec)Spec.getSpecById(endread_spec_id, Spec.END_READS_SPEC_INT));
+                    runner.setInputData(Constants.ITEM_TYPE_PLATE_LABELS, plate_names );
+                     ((IsolateRankerRunner)runner).setCutoffValuesSpec( (FullSeqSpec)Spec.getSpecById(bioeval_spec_id, Spec.FULL_SEQ_SPEC_INT));
+                     ((IsolateRankerRunner)runner).setPenaltyValuesSpec( (EndReadsSpec)Spec.getSpecById(endread_spec_id, Spec.END_READS_SPEC_INT));
                     runner.setUser(user);
+                   runner.setProcessType(forwardName);
+                 
                     t = new Thread(runner);           t.start();
                     break;
                 }
-                case Constants.PROCESS_APROVE_ISOLATE_RANKER:
-                {
-                    int clone_number = 0;
-                    int isolate_id = -1;
-                    Enumeration e = request.getParameterNames();
-                    while (e.hasMoreElements())
-                    {
-                        String param_name = (String)e.nextElement();
-                        
-                        if ( !param_name.equalsIgnoreCase("forwardName") )
-                        {
-                            int rank = Integer.parseInt( (String) request.getParameter(param_name));
-                            isolate_id = Integer.parseInt(param_name);
-                            clone_number++;
-                            IsolateTrackingEngine.updateRankUserChangerId(rank,user.getId(),isolate_id,conn);
-                        }
-                    }
-                    conn.commit();
-                    request.setAttribute(Constants.JSP_TITLE,"Request for change of clone ranking is in process" );
-                    request.setAttribute(Constants.ADDITIONAL_JSP,"Processing "+clone_number +"  clones");
-                    break;
-                }
-             
-      //primer design items
+                //primer design items
                 case Constants.PROCESS_ADD_NEW_INTERNAL_PRIMER : // add new internal primer
                 case Constants.PROCESS_APPROVE_INTERNAL_PRIMERS :
                 case Constants.PROCESS_VIEW_INTERNAL_PRIMERS : //view internal primers
                 {
                     String  item_ids = (String) request.getParameter("items");
-                    item_ids = item_ids.toUpperCase().trim();
+                    item_ids = item_ids.trim();
+                     item_ids = item_ids.toUpperCase().trim();
+                //    item_ids = item_ids.trim();
                     int item_type = Integer.parseInt(request.getParameter("item_type"));
                     
                      ArrayList oligo_calculations = new ArrayList();
@@ -216,11 +179,9 @@ public class RunProcessAction extends ResearcherAction
                           oligo_calculations_per_item = OligoCalculation.getOligoCalculations((String)items.get(index),item_type, type_of_coverage, isLatestStretchCollection);
                          oligo_calculations.add( oligo_calculations_per_item);
                      }
-                    String title="";
                     
                     if ( forwardName == Constants.PROCESS_APPROVE_INTERNAL_PRIMERS)
                     {
-                       request.setAttribute(Constants.JSP_TITLE,"Approve Internal Primers");
                        request.setAttribute("forwardName",new Integer(-forwardName));
                        //store all approved primer's ids for disapproval
                        OligoCalculation ol = null;Oligo oligo = null;
@@ -240,19 +201,10 @@ public class RunProcessAction extends ResearcherAction
                         }
 
                      }
-                    //   System.out.println(Algorithms.convertStringArrayToString( forwardAllApprovedPrimerIds,Constants.DELIM_WHITE_SPACE));
                        request.setAttribute("forwardAllApprovedPrimerIds",Algorithms.convertStringArrayToString( forwardAllApprovedPrimerIds,Constants.DELIM_WHITE_SPACE));
-                     //  oligo_calculations = OligoCalculation.sortByRefSequenceIdPrimerSpec(oligo_calculations);
-                    
+                     
                     }
-                    else if ( forwardName == Constants.PROCESS_VIEW_INTERNAL_PRIMERS)
-                    {
-                       request.setAttribute(Constants.JSP_TITLE,"View Internal Primers");
-                    }
-                    else if ( forwardName == Constants.PROCESS_ADD_NEW_INTERNAL_PRIMER)
-                    {
-                       request.setAttribute(Constants.JSP_TITLE,"Add new Internal Primers");
-                    }
+                    request.setAttribute(Constants.JSP_TITLE,getTitleForProcess(forwardName));
                     request.setAttribute("oligo_calculations",oligo_calculations);
                     request.setAttribute("items",items);
                     request.setAttribute("item_type",request.getParameter("item_type"));
@@ -263,6 +215,7 @@ public class RunProcessAction extends ResearcherAction
                 case Constants.STRETCH_COLLECTION_REPORT_ALL_INT:
                 {
                      String  item_ids = (String) request.getParameter("items");
+                 //   item_ids = item_ids.trim();
                     item_ids = item_ids.toUpperCase().trim();
                     int item_type = Integer.parseInt(request.getParameter("item_type"));
                     
@@ -277,6 +230,7 @@ public class RunProcessAction extends ResearcherAction
                              if ( forwardName == Constants.STRETCH_COLLECTION_REPORT_ALL_INT)
                              {
                                  ArrayList str_colections = StretchCollection.getAllByCloneId(cloneid);
+                                 ArrayList str_colections_of_right_type = null;
                                  if ( str_colections != null )
                                  {
                                      for ( int count = 0; count < str_colections.size(); count++)
@@ -284,10 +238,14 @@ public class RunProcessAction extends ResearcherAction
                                          strcol = (StretchCollection) str_colections.get(count);
                                          if ( strcol.getType() == StretchCollection.TYPE_COLLECTION_OF_GAPS_AND_CONTIGS) 
                                          {
-                                            strcol.setStretches( StretchCollection.createListOfUIContigs(strcol,Constants.ITEM_TYPE_CLONEID));
+                                             if ( str_colections_of_right_type == null) str_colections_of_right_type = new ArrayList();
+                                             str_colections_of_right_type.add(strcol);
+                                             strcol.setStretches( StretchCollection.createListOfUIContigs(strcol,Constants.ITEM_TYPE_CLONEID));
                                          }
+                                       
                                      }
-                                     stretch_collections.put( (String) items.get(index), str_colections);
+                                     if ( str_colections_of_right_type!= null)
+                                         stretch_collections.put( (String) items.get(index), str_colections_of_right_type);
                                  }
                              }
                              
@@ -301,12 +259,13 @@ public class RunProcessAction extends ResearcherAction
                                     {
                                         stretch_collections.put( (String) items.get(index), strcol);
                                        
+                                       
                                     }
                                 }
                              }
                      }
                      }
-                    request.setAttribute(Constants.JSP_TITLE,"View Gaps and Contigs");
+                    request.setAttribute(Constants.JSP_TITLE,getTitleForProcess(forwardName));
                     request.setAttribute("stretch_collections",stretch_collections);
                     request.setAttribute("items",items);
                     request.setAttribute("item_type",request.getParameter("item_type"));
@@ -316,6 +275,8 @@ public class RunProcessAction extends ResearcherAction
                 {
                     String  item_ids = (String) request.getParameter("items");
                     item_ids = item_ids.toUpperCase().trim();
+                    //item_ids = item_ids.trim();
+                   
                     int item_type = Integer.parseInt(request.getParameter("item_type"));
                     
                      ArrayList items = Algorithms.splitString(item_ids);
@@ -343,7 +304,7 @@ public class RunProcessAction extends ResearcherAction
 
                          }
                      }
-                    request.setAttribute(Constants.JSP_TITLE,"View Low Quality Regions for clone sequences");
+                    request.setAttribute(Constants.JSP_TITLE,getTitleForProcess(forwardName));
                     request.setAttribute("lqr_clone_stretch_collections",display_items);
                      request.setAttribute("items",items);
                     request.setAttribute("item_type",request.getParameter("item_type"));
@@ -424,7 +385,7 @@ public class RunProcessAction extends ResearcherAction
                            primer_ids_failed += primer_id + "<P>";
                        }
                     }
-                    request.setAttribute(Constants.JSP_TITLE,"Request for Approval of Internal Primers is in process" );
+                    request.setAttribute(Constants.JSP_TITLE,getTitleForProcess(forwardName) );
                     String report = "Processing "+primer_ids_report +"  primers. <P>"+"Primer ids approved "+primer_ids_approved+". <P>"+
                     "Primer ids disapproved "+primer_ids_disapproved+".<P>Primer ids failed "+primer_ids_failed+"\n\n";
                     request.setAttribute(Constants.ADDITIONAL_JSP,report);
@@ -453,37 +414,29 @@ public class RunProcessAction extends ResearcherAction
                 case Constants.PROCESS_DELETE_CLONE_FORWARD_READ ://
                 case Constants.PROCESS_DELETE_CLONE_REVERSE_READ ://
                 case Constants.PROCESS_DELETE_CLONE_SEQUENCE://
-                    case  Constants.PROCESS_GET_TRACE_FILE_NAMES :
+                case  Constants.PROCESS_GET_TRACE_FILE_NAMES :
+                 case  Constants.PROCESS_SET_CLONE_FINAL_STATUS:
+                case Constants.PROCESS_REANALYZE_CLONE_SEQUENCE:
                // case  Constants.PROCESS_DELETE_TRACE_FILES :
   
                 {
-                    String title = "";
-                    ProcessRunner runner = null;
-                    switch (forwardName)
+                     switch (forwardName)
                     {
-                          case Constants.PROCESS_DELETE_PLATE :
+                        case Constants.PROCESS_DELETE_PLATE :
                         case Constants.PROCESS_DELETE_CLONE_READS://
                         case Constants.PROCESS_DELETE_CLONE_FORWARD_READ ://
                         case Constants.PROCESS_DELETE_CLONE_REVERSE_READ ://
                         case Constants.PROCESS_DELETE_CLONE_SEQUENCE://
                         case  Constants.PROCESS_GET_TRACE_FILE_NAMES :
-                      //  case  Constants.PROCESS_DELETE_TRACE_FILES :
-  
-                         {
+                        case Constants.PROCESS_REANALYZE_CLONE_SEQUENCE:
+                        {
                               runner = new DeleteObjectRunner();
-                              ((DeleteObjectRunner)runner).setActionType(forwardName);
-                              switch(forwardName)
-                              { 
-                                    case Constants.PROCESS_DELETE_PLATE :{title = "Request for Plate deletion"; break;}
-                                    case Constants.PROCESS_DELETE_CLONE_READS:{title = "Request for Clone end reads deletion"; break;}
-                                    case Constants.PROCESS_DELETE_CLONE_FORWARD_READ :{title = "Request for Clone forward end reads deletion"; break;}
-                                    case Constants.PROCESS_DELETE_CLONE_REVERSE_READ :{title = "Request for Clone reverse end reads deletion"; break;}
-                                    case Constants.PROCESS_DELETE_CLONE_SEQUENCE:{title = "Request for Clone sequences deletion"; break;}
-                                    case  Constants.PROCESS_GET_TRACE_FILE_NAMES :{title = "Request for list of Trace Files' names"; break;}
-                                //    case  Constants.PROCESS_DELETE_TRACE_FILES :{title = "request for Trace Files deletion"; break;}
-  
-                              }
+                             if (forwardName == Constants.PROCESS_REANALYZE_CLONE_SEQUENCE)
+                            {
+                                ((DeleteObjectRunner)runner).setDiscrepancyQualityCutOff(Integer.parseInt( (String)request.getParameter("FS_PHRED_CUT_OFF")));
+                            }
                               break;
+                          
                         }
                         case Constants.PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING  :
                         case Constants.PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING  :
@@ -491,21 +444,11 @@ public class RunProcessAction extends ResearcherAction
                         {
                               runner = new SpecialReportsRunner();
                               ((SpecialReportsRunner)runner).setReportType(forwardName);
-                              switch (  forwardName )
-                              {
-                                  case Constants.PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING  :
-                                  { title = "Request for Order List for resequencing of End Reads"; break;}
-                                  case Constants.PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING  :
-                                  {title = "Request for Order List for resequencing of Internal Reads";break;}
-                                case Constants.PROCESS_CREATE_REPORT_TRACEFILES_QUALITY  :
-                                  {title = "Request for Trace Files Quality Report";break;}
-                              }
                               break;//run end reads wrapper
                          }
                          case Constants.PROCESS_RUN_END_READS_WRAPPER:
                          {
                               runner = new EndReadsWrapperRunner();
-                              title = "Request for end read wrapper invocation";
                               break;//run end reads wrapper
                          }
                         case Constants.PROCESS_RUN_ASSEMBLER_FOR_END_READS:
@@ -520,15 +463,13 @@ public class RunProcessAction extends ResearcherAction
                                ((AssemblyRunner)runner).setQualityTrimmingFirstBase ( Integer.parseInt( (String)request.getParameter(PhredPhrap.QUALITY_TRIMMING_FIRST_BASE)));
                                  ((AssemblyRunner)runner).setIsUseLQReadsForAssembly( request.getParameter(PhredPhrap.LQREADS_USE_FOR_ASSEMBLY) != null );
                               ((AssemblyRunner)runner).setIsDeleteLQReads( request.getParameter(PhredPhrap.LQREADS_DELETE) != null );
-         
-                             title = "Request for assembly from end reads.";
-                             break;
+                               break;
                         }
+                        
                          case Constants.PROCESS_RUN_PRIMER3: //run primer3
                          {
                               runner = new PrimerDesignerRunner();
-                              title = "Request for Primer Designer";
-                              int spec_id = Integer.parseInt( request.getParameter("PRIMER3_SPEC"));
+                             int spec_id = Integer.parseInt( request.getParameter("PRIMER3_SPEC"));
                               ((PrimerDesignerRunner)runner).setSpecId(spec_id);
       if ( request.getParameter("isTryMode") != null )  
           ((PrimerDesignerRunner)runner).setIsTryMode( true );
@@ -541,7 +482,6 @@ public class RunProcessAction extends ResearcherAction
                         case Constants.PROCESS_ORDER_INTERNAL_PRIMERS:
                         {
                              runner = new PrimerOrderRunner();
-                             title = "Request for Primer Order";
                              if ( request.getParameter("oligo_placement_format")  != null)
                             (   (PrimerOrderRunner)runner).setPrimerPlacementFormat( Integer.parseInt(request.getParameter("oligo_placement_format") ));
                               if ( request.getParameter("primer_number") != null)
@@ -586,30 +526,26 @@ if ( request.getParameter("plate_name") != null)((PrimerOrderRunner)runner).setP
                                ((AssemblyRunner)runner).setQualityTrimmingFirstBase ( Integer.parseInt( (String)request.getParameter(PhredPhrap.QUALITY_TRIMMING_FIRST_BASE)));
                                 ((AssemblyRunner)runner).setIsUseLQReadsForAssembly( request.getParameter(PhredPhrap.LQREADS_USE_FOR_ASSEMBLY) != null );
                               ((AssemblyRunner)runner).setIsDeleteLQReads( request.getParameter(PhredPhrap.LQREADS_DELETE) != null );
-                    //      System.out.println((String)request.getParameter("vectors_file_name"));
-                             title = "Request for Clone sequence assembly";
-                             break;
+                              break;
                         }
                         case Constants.PROCESS_RUNPOLYMORPHISM_FINDER:
                          {
                               runner = new PolymorphismFinderRunner();
-                               title = "Request for Polymorphism Finder";
-                               ((PolymorphismFinderRunner)runner).setSpecId(Integer.parseInt( (String)request.getParameter("POLYMORPHISM_SPEC")));
+                              ((PolymorphismFinderRunner)runner).setSpecId(Integer.parseInt( (String)request.getParameter("POLYMORPHISM_SPEC")));
                               break;
                         }//run polymorphism finder
                         case Constants.PROCESS_RUN_DISCREPANCY_FINDER:
                         {
                              runner = new DiscrepancyFinderRunner();
                              ((DiscrepancyFinderRunner)runner).setDiscrepancyQualityCutOff(Integer.parseInt( (String)request.getParameter("FS_PHRED_CUT_OFF")));
-                              title = "Request for Discrepancy Finder";
                               break;
                         }//run discrepancy finder
+                        
                         case Constants.PROCESS_NOMATCH_REPORT:
                         {
                              runner = new NoMatchReportRunner();
                              ((NoMatchReportRunner)runner).setBlastableDBName( (String) request.getParameter("DATABASE_NAME")) ;
                               ((NoMatchReportRunner)runner).setIdTypeToDisplay( (String) request.getParameter("ID_NAME")) ;
-                              title = "Request for 'NO MATCH' report";
                               break;
                         }
                         
@@ -620,27 +556,22 @@ if ( request.getParameter("plate_name") != null)((PrimerOrderRunner)runner).setP
                               int spec_id = Integer.parseInt( request.getParameter("SLIDING_WINDOW_SPEC"));
                               ((GapMapperRunner)runner).setSpecId(spec_id);
                               if ( request.getParameter("isTryMode") != null )  ((GapMapperRunner)runner).setIsTryMode( true );
-                              
-                              ((GapMapperRunner)runner).setProcessType( forwardName ) ;
-                              if ( forwardName == Constants.PROCESS_FIND_GAPS)
+                               if ( forwardName == Constants.PROCESS_FIND_GAPS)
                               {
-                                  ((GapMapperRunner)runner).setVectorFileName( request.getParameter("isRunVectorTrimming"));
-                                  ((GapMapperRunner)runner).setQualityTrimmingScore ( Integer.parseInt( (String)request.getParameter(PhredPhrap.QUALITY_TRIMMING_SCORE)));
+                                    ((GapMapperRunner)runner).setVectorFileName( request.getParameter("isRunVectorTrimming"));
+                                    ((GapMapperRunner)runner).setQualityTrimmingScore ( Integer.parseInt( (String)request.getParameter(PhredPhrap.QUALITY_TRIMMING_SCORE)));
                                     ((GapMapperRunner)runner).setQualityTrimmingLastBase ( Integer.parseInt( (String) request.getParameter(PhredPhrap.QUALITY_TRIMMING_LAST_BASE)));
-                                   ((GapMapperRunner)runner).setQualityTrimmingFirstBase ( Integer.parseInt( (String)request.getParameter(PhredPhrap.QUALITY_TRIMMING_FIRST_BASE)));
-                                 ((GapMapperRunner)runner).setIsUseLQReadsForAssembly( request.getParameter(PhredPhrap.LQREADS_USE_FOR_ASSEMBLY) != null );
-                              ((GapMapperRunner)runner).setIsDeleteLQReads( request.getParameter(PhredPhrap.LQREADS_DELETE) != null );
+                                    ((GapMapperRunner)runner).setQualityTrimmingFirstBase ( Integer.parseInt( (String)request.getParameter(PhredPhrap.QUALITY_TRIMMING_FIRST_BASE)));
+                                    ((GapMapperRunner)runner).setIsUseLQReadsForAssembly( request.getParameter(PhredPhrap.LQREADS_USE_FOR_ASSEMBLY) != null );
+                                    ((GapMapperRunner)runner).setIsDeleteLQReads( request.getParameter(PhredPhrap.LQREADS_DELETE) != null );
            
                               }
                               
                               if ( forwardName == Constants.PROCESS_FIND_GAPS)
                               {
-                                  title = "Request for Gap Mapper run";
                                   if ( request.getParameter("isRunLQR") != null )
                                     ((GapMapperRunner)runner).setIsRunLQR(true);
                               }
-                              else if ( forwardName == Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE)
-                                title = "Request for LQR Finder for clone sequence";
                               break;
                         } 
                         case Constants.PROCESS_PROCESS_OLIGO_PLATE:
@@ -652,17 +583,28 @@ if ( request.getParameter("plate_name") != null)((PrimerOrderRunner)runner).setP
 
                             break;
                         }
+                        case  Constants.PROCESS_SET_CLONE_FINAL_STATUS:
+                        {
+                            runner = new CloneManipulationRunner();
+                            (( CloneManipulationRunner) runner).setProcessType(forwardName);
+                           (( CloneManipulationRunner) runner).setCloneFinalStatus( Integer.parseInt((String)request.getParameter("CLONE_FINAL_STATUS")));
+                            break;
+                        }
                         
                     }
                     
                     String  item_ids = (String) request.getParameter("items");
                     String items = item_ids.toUpperCase().trim();
+                    
+                  //  String items = item_ids.trim();
                     int items_type =  Integer.parseInt(request.getParameter("item_type"));
                 
-                     runner.setInputData(items_type,items);
+                    runner.setInputData(items_type,items);
                     runner.setUser(user);
+                       runner.setProcessType(forwardName);
+                                              
                     t = new Thread(runner);                    t.start();
-                    request.setAttribute(Constants.JSP_TITLE,title);
+                    request.setAttribute(Constants.JSP_TITLE, getTitleForProcess(forwardName));
                     request.setAttribute(Constants.ADDITIONAL_JSP,"Processing items:<P>"+item_ids);
                     break;
                    
@@ -673,7 +615,7 @@ if ( request.getParameter("plate_name") != null)((PrimerOrderRunner)runner).setP
                 {
                     String  item_ids = (String) request.getParameter("items");
                    ArrayList process_items = edu.harvard.med.hip.bec.util_objects.ProcessHistory.getProcessHistory( Integer.parseInt(request.getParameter("item_type")), item_ids.toUpperCase().trim());
-                    request.setAttribute(Constants.JSP_TITLE,"Clone History");
+                    request.setAttribute(Constants.JSP_TITLE,getTitleForProcess(forwardName));
                     request.setAttribute("process_items",process_items);
                     request.setAttribute("item_type",request.getParameter("item_type"));
                     return mapping.findForward("display_item_history"); 
@@ -686,31 +628,33 @@ if ( request.getParameter("plate_name") != null)((PrimerOrderRunner)runner).setP
                     ArrayList clone_ids = Algorithms.splitString(ProcessRunner.cleanUpItems( items_type,  item_ids));
                     ArrayList item_descriptions = UI_GeneOligo.getByCloneId(clone_ids);
                     request.setAttribute("processing_items", item_descriptions);
-                    request.setAttribute(Constants.JSP_TITLE,"Gene specific Oligos ordered for Clone");
+                    request.setAttribute(Constants.JSP_TITLE,getTitleForProcess(forwardName));
                     return mapping.findForward("display_oligo_order_for_clone"); 
                 }
                 case Constants.PROCESS_RUN_DECISION_TOOL : //run decision tool
                 {
                     //get spec
                     int bioeval_spec_id = Integer.parseInt( (String) request.getParameter(Spec.FULL_SEQ_SPEC));
-                    DecisionToolRunner ds = new DecisionToolRunner();
-                    ds.setSpecId(bioeval_spec_id);
+                    runner = new DecisionToolRunner();
+                    ((DecisionToolRunner)runner).setSpecId(bioeval_spec_id);
                     String  item_ids = (String) request.getParameter("items");
+                    //String items = item_ids.trim();
                     String items = item_ids.toUpperCase().trim();
                     int items_type =  Integer.parseInt(request.getParameter("item_type"));
-                    ds.setInputData(items_type,items);
+                    runner.setInputData(items_type,items);
+                       runner.setProcessType(forwardName);
                  
-                    ds.setUser(user);
-                    ds.run();
+                    runner.setUser(user);
+                    runner.run();
                    
-                    ArrayList clone_data = ds.getClones();
-                    request.setAttribute(Constants.JSP_TITLE,"Report Clone Sequence Qualities" );
+                    ArrayList clone_data = ((DecisionToolRunner)runner).getClones();
+                    request.setAttribute(Constants.JSP_TITLE,getTitleForProcess(forwardName) );
                     request.setAttribute("clone_data",clone_data );
                     return mapping.findForward("decision_tool_report");
                 }
                 
   //two go together : donot separate           
-                case Constants.PROCESS_ACTIVATE_CLONES :
+  /*              case Constants.PROCESS_ACTIVATE_CLONES :
                 case Constants.PROCESS_PUT_CLONES_ON_HOLD :  //put clones on hold
                 {
                     String chkStr[] = request.getParameterValues("chkClone");
@@ -730,11 +674,12 @@ if ( request.getParameter("plate_name") != null)((PrimerOrderRunner)runner).setP
                     request.setAttribute(Constants.ADDITIONAL_JSP,"For " +chkStr.length+ " clones from plate "+ request.getParameter("containerLabel") +" status have been changes" );
                     return mapping.findForward("processing");
                 }
+   **/
                 case Constants.PROCESS_CREATE_REPORT:
                 {
                     String  item_ids = (String) request.getParameter("items");
-                    ProcessRunner runner = null;
                     runner = new ReportRunner();
+                   // String items = item_ids.trim();
                     String items = item_ids.toUpperCase().trim();
                     int items_type =  Integer.parseInt(request.getParameter("item_type"));
                     runner.setInputData(items_type,items);
@@ -743,7 +688,7 @@ if ( request.getParameter("plate_name") != null)((PrimerOrderRunner)runner).setP
                     ((ReportRunner)runner).setFields(
                         request.getParameter("clone_id"), //    Clone Id
                         request.getParameter("dir_name"), // Directory Name
-                        request.getParameter("sample_id"), //      Sample Id
+                        request.getParameter("clone_final_status"), //      Sample Id
                         request.getParameter("plate_label"), //      Plate Label
                         request.getParameter("sample_type"), //      Sample Type
                         request.getParameter("position"), //      Sample Position
@@ -770,26 +715,32 @@ if ( request.getParameter("plate_name") != null)((PrimerOrderRunner)runner).setP
                         request.getParameter("clone_seq_text"),
                         request.getParameter("assembly_attempt_status"));
                     runner.setUser(user);
+                         runner.setProcessType(forwardName);
+                 
                     t = new Thread( runner);                    t.start();
-                    request.setAttribute(Constants.JSP_TITLE,"Processing Report Generation request");
+                    request.setAttribute(Constants.JSP_TITLE, getTitleForProcess(forwardName));
                     request.setAttribute(Constants.ADDITIONAL_JSP,"Processing items:<P>"+item_ids);
                     break;
                 }
                  case Constants.PROCESS_RUN_DECISION_TOOL_NEW:
                 {
                     String  item_ids = (String) request.getParameter("items");
-                    DecisionToolRunner_New runner = new DecisionToolRunner_New();
+                    runner = new DecisionToolRunner_New();
+                    //String items = item_ids.trim();
                     String items = item_ids.toUpperCase().trim();
                     int items_type =  Integer.parseInt(request.getParameter("item_type"));
                   
-                   runner.setInputData(items_type,items);
+                    runner.setInputData(items_type,items);
                     runner.setUser(user);
+                         runner.setProcessType(forwardName);
+                 
                     int bioeval_spec_id = Integer.parseInt( (String) request.getParameter(Spec.FULL_SEQ_SPEC));
-                    runner.setSpecId(bioeval_spec_id);
-                    runner.setUserComment(request.getParameter("user_comment"));
-                    runner.setNumberOfOutputFiles(Integer.parseInt( (String) request.getParameter("output_format")));
+                    ((DecisionToolRunner_New)runner).setSpecId(bioeval_spec_id);
+                    ((DecisionToolRunner_New)runner).setUserComment(request.getParameter("user_comment"));
+                    ((DecisionToolRunner_New)runner).setNumberOfOutputFiles(Integer.parseInt( (String) request.getParameter("output_format")));
                      // value="2"//Clone Ids</strong//
-                    runner.setFields(
+                    ((DecisionToolRunner_New)runner).setFields(
+                       request.getParameter("clone_final_status" ),
                         request.getParameter("plate_label" ),//    Plate Label</td>
                         request.getParameter("sample_type" ),//    Sample Type</td>
                         request.getParameter("position" ),//    Well</td>
@@ -825,7 +776,7 @@ if ( request.getParameter("plate_name") != null)((PrimerOrderRunner)runner).setP
                         );
                     
                     t = new Thread( runner);                    t.start();
-                    request.setAttribute(Constants.JSP_TITLE,"Processing Decision Tool request");
+                    request.setAttribute(Constants.JSP_TITLE,getTitleForProcess(forwardName));
                     request.setAttribute(Constants.ADDITIONAL_JSP,"Processing items:<P>"+item_ids);
                     break;
                 }
@@ -855,6 +806,50 @@ if ( request.getParameter("plate_name") != null)((PrimerOrderRunner)runner).setP
     }
     
     
-    
+    private String          getTitleForProcess(int forwardName)
+    {
+             switch (forwardName)
+            {
+                case Constants.PROCESS_UPLOAD_PLATES :  return "Processing Request for Plates Upload";
+                case Constants.PROCESS_RUN_END_READS :  return "Request for end read sequencing request";
+                case Constants.PROCESS_RUN_ISOLATE_RUNKER :  return "Request for isolate ranker run" ;
+                case Constants.PROCESS_APPROVE_INTERNAL_PRIMERS: return "Approve Internal Primers";
+                case Constants.PROCESS_VIEW_INTERNAL_PRIMERS: return "View Internal Primers";
+                case Constants.PROCESS_ADD_NEW_INTERNAL_PRIMER : return "Add new Internal Primers";
+                case Constants.STRETCH_COLLECTION_REPORT_INT:
+                case Constants.STRETCH_COLLECTION_REPORT_ALL_INT:return "View Gaps and Contigs";
+                case Constants.LQR_COLLECTION_REPORT_INT: return   "View Low Quality Regions for clone sequences";
+                case -Constants.PROCESS_APPROVE_INTERNAL_PRIMERS : return "Request for Approval of Internal Primers is in process" ;
+                case Constants.PROCESS_DELETE_PLATE :return  "Request for Plate deletion";
+                case Constants.PROCESS_DELETE_CLONE_READS:return  "Request for Clone end reads deletion"; 
+                case Constants.PROCESS_DELETE_CLONE_FORWARD_READ :return  "Request for Clone forward end reads deletion";
+                case Constants.PROCESS_DELETE_CLONE_REVERSE_READ :return  "Request for Clone reverse end reads deletion";
+                case Constants.PROCESS_DELETE_CLONE_SEQUENCE:return  "Request for Clone sequences deletion"; 
+                case  Constants.PROCESS_GET_TRACE_FILE_NAMES :return  "Request for list of Trace Files' names";
+                case Constants.PROCESS_REANALYZE_CLONE_SEQUENCE:return  "Request to reanalyse clone sequences"; 
+                case Constants.PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING  : return "Request for Order List for resequencing of End Reads"; 
+                case Constants.PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING  : return "Request for Order List for resequencing of Internal Reads";
+                case Constants.PROCESS_CREATE_REPORT_TRACEFILES_QUALITY  :return "Request for Trace Files Quality Report";
+                case Constants.PROCESS_RUN_END_READS_WRAPPER:return "Request for end read wrapper invocation";
+                case Constants.PROCESS_RUN_ASSEMBLER_FOR_END_READS:return "Request for assembly from end reads.";
+                case Constants.PROCESS_RUN_PRIMER3: return"Request for Primer Designer";
+                case Constants.PROCESS_ORDER_INTERNAL_PRIMERS:return "Request for Primer Order";
+                case Constants.PROCESS_RUN_ASSEMBLER_FOR_ALL_READS:return "Request for Clone sequence assembly";
+                case Constants.PROCESS_RUNPOLYMORPHISM_FINDER:return "Request for Polymorphism Finder";
+                case Constants.PROCESS_RUN_DISCREPANCY_FINDER:return "Request for Discrepancy Finder";
+                case Constants.PROCESS_NOMATCH_REPORT:return "Request for 'NO MATCH' report";
+                case Constants.PROCESS_FIND_GAPS: return "Request for Gap Mapper run";
+                case Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE: return"Request for LQR Finder for clone sequence";
+                case Constants.PROCESS_PROCESS_OLIGO_PLATE:return "Process oligo plate";
+                case  Constants.PROCESS_SET_CLONE_FINAL_STATUS: return "Set clone status";
+                case Constants.PROCESS_SHOW_CLONE_HISTORY: return "Clone History";
+                case Constants.PROCESS_VIEW_OLIGO_ORDER_BY_CLONEID: return "Gene specific Oligos ordered for Clone";
+                case Constants.PROCESS_RUN_DECISION_TOOL : return "Report Clone Sequence Qualities" ;
+                case Constants.PROCESS_CREATE_REPORT: return "Processing Report Generation request";
+                case Constants.PROCESS_RUN_DECISION_TOOL_NEW: return "Processing Decision Tool request";
+                default: return "";
+            }
+       
+    }
    
 }

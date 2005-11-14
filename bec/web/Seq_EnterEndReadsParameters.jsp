@@ -188,7 +188,7 @@
             <td ><div align="center">                 <input name="ER_NINFRAME_PASS_H" type="input" id="ER_NINFRAME_PASS_H" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');">              </div></td>
             <td ><div align="center">                 <input name="ER_NINFRAME_PASS_L" type="input" id="ER_NINFRAME_PASS_L" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');">              </div></td>
           </tr>
-          <tr  class=<%= row_class[row_count++ % 2] %>> 
+          <tr  class=<%= row_class[++row_count % 2] %>> 
             <td >Substitution in 5'               linker region</font></strong></td>
             <td ><div align="center">                 <input name="ER_N5SUB_PASS_H" type="input" id="ER_N5SUB_PASS_H" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');">              </div></td>
             <td ><div align="center"><input name="ER_N5SUB_PASS_L" type="input" id="ER_N5SUB_PASS_L" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');">              </div></td>
@@ -198,7 +198,7 @@
             <td ><div align="center">                 <input name="ER_N5INS_PASS_H" type="input" id="ER_N5INS_PASS_H" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');">              </div></td>
             <td ><div align="center">                 <input name="ER_N5INS_PASS_L" type="input" id="ER_N5INS_PASS_L" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');">              </div></td>
           </tr>
-          <tr  class=<%= row_class[row_count++ % 2] %>> 
+          <tr  class=<%= row_class[++row_count % 2] %>> 
             <td >Substitution in 3'               linker region</td>
             <td ><div align="center">                 <input name="ER_N3SUB_PASS_H" type="input" id="ER_N3SUB_PASS_H" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');">              </div></td>
             <td ><div align="center">                 <input name="ER_N3SUB_PASS_L" type="input" id="ER_N3SUB_PASS_L" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');">              </div></td>

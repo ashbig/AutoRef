@@ -661,13 +661,25 @@ vi.	Type of definition (coverage low quality / no coverage )
          
          try
          {
-       Stretch st = Stretch.getById(13266 );
-       for ( int c = 0; c < st.getSequence().getDiscrepancies().size(); c++)
-       {
-          System.out.println( (( Mutation) st.getSequence().getDiscrepancies().get(c)).toString() ) ;
-     }
-            DiscrepancyDescription.assembleDiscrepancyDefinitions( st.getSequence().getDiscrepancies() );
-                  
+             
+             
+              StretchCollection strcol = null; int cloneid = 119545			;
+                 Hashtable stretch_collections = new Hashtable();
+                       
+             ArrayList str_colections = StretchCollection.getAllByCloneId(cloneid);
+             if ( str_colections != null )
+             {
+                 for ( int count = 0; count < str_colections.size(); count++)
+                 {
+                     strcol = (StretchCollection) str_colections.get(count);
+                     if ( strcol.getType() == StretchCollection.TYPE_COLLECTION_OF_GAPS_AND_CONTIGS) 
+                     {
+                        strcol.setStretches( StretchCollection.createListOfUIContigs(strcol,Constants.ITEM_TYPE_CLONEID));
+                     }
+                 }
+                 stretch_collections.put( String.valueOf(cloneid), str_colections);
+             }
+                                
         }catch(Exception e){}
          
              /*

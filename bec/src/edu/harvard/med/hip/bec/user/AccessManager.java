@@ -320,7 +320,7 @@ public class AccessManager
             
             }
             return user;
-        } catch (SQLException sqlE)
+        } catch (Exception sqlE)
         {
             throw new BecDatabaseException(sqlE+"\nSQL: "+sql);
         } finally

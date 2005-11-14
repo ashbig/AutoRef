@@ -9,7 +9,7 @@
 <%@ page import="edu.harvard.med.hip.bec.coreobjects.sequence.*" %>
 <html>
 <head>
-    <title><bean:message key="bec.name"/> : Container Process History</title>
+    <title><bean:message key="bec.name"/> : Display Reference Sequence</title>
     
 </head>
 <body>

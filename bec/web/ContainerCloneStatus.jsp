@@ -14,6 +14,7 @@
 <%@ page import="edu.harvard.med.hip.bec.coreobjects.endreads.*" %>
 
 <html>
+<LINK REL=StyleSheet HREF="application_styles.css" TYPE="text/css" MEDIA=screen>
 
 <body>
 <jsp:include page="NavigatorBar_Administrator.jsp" />
@@ -41,8 +42,7 @@
   </center>
 </div>
 <p></p>
-<% Container container = (Container)request.getAttribute("container") ;
-//System.out.println(container.getLabel());%>
+<% Container container = (Container)request.getAttribute("container") ;%>
 <table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
   <tr> 
     <td width="19%"><strong>Label:</strong></td>
@@ -76,31 +76,29 @@
 </table>
 <P><P></P></P>
 <table border="1" cellpadding="0" cellspacing="0" width="84%" align=center>
-    <tr >
-       <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Position</font></strong></th>
-        <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Type</font></strong></th>
-        <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Forward End Read</font></strong></th>
-        <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Reverse End Read</font></strong></th>
-        <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Assembled Sequence</font></strong></th>
-		 <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Clone Status</font></strong></th>
+    <tr class='headerRow' >
+       <td >Position</td>
+        <td >Type</td>
+        <td >Forward End Read</td>
+        <td >Reverse End Read</td>
+        <td >Assembled Sequence</td>
+	<td >Clone Status</td>
     </tr>
 <%  
-    String row_color = " bgColor='#e4e9f8'";
+String[] row_class = {"evenRow","oddRow"} ; int row_count = 0;
 	Sample sample=null;
 Result result = null;
 String forward_read_status = "";String reverse_read_status = "";
     for (int count = 0; count < container.getSamples().size(); count ++)
 	{
 		sample = (Sample)container.getSamples().get(count);
-//System.out.println("position"+sample.getPosition());
                  forward_read_status = "&nbsp"; reverse_read_status = "&nbsp";
 if (sample.getResults() != null)
 {
                 for (int result_count = 0; result_count < sample.getResults().size(); result_count++)
                 {
                         result = (Result)sample.getResults().get(result_count);
-//System.out.println(result.getType());
-                        switch (result.getType())
+                       switch (result.getType())
                         {
                             case Result.RESULT_TYPE_ENDREAD_FORWARD:{ forward_read_status = "NOT PROCESSED"; break;}
 
@@ -114,22 +112,14 @@ if (sample.getResults() != null)
                         
                 }
 }
-		if (count % 2 == 0)
-		{
-		  row_color = " bgColor='#e4e9f8'";
-		}
-		else
-		{
-			row_color =" bgColor='#b8c6ed'";
-		}
 	%>
-	<tr>
+	<tr class=<%= row_class[row_count++ % 2] %> >
 
-		<td <%= row_color %>><%= sample.getPosition() %> </td>
-		<td <%= row_color %>> <%= sample.getType()%></td>
-		<td <%= row_color %>> <%= forward_read_status%> </td>
-                <td <%= row_color %>> <%= reverse_read_status%></td>
-                <td <%= row_color %>>
+		<td > <%= sample.getPosition() %> </td>
+		<td > <%= sample.getType()%></td>
+		<td > <%= forward_read_status%> </td>
+                <td> <%= reverse_read_status%></td>
+                <td >
                     <%if(sample.getIsolateTrackingEngine() != null && sample.getIsolateTrackingEngine().getAssemblyStatus() == IsolateTrackingEngine.ASSEMBLY_STATUS_PASS) 
                     {%>Clone Sequence Assembled  <%}
                     else if(sample.getIsolateTrackingEngine() != null &&  sample.getIsolateTrackingEngine().getAssemblyStatus() == IsolateTrackingEngine.ASSEMBLY_STATUS_CONFIRMED) 
@@ -137,14 +127,11 @@ if (sample.getResults() != null)
                     else
                     {%> &nbsp; <%}%>
 </td>
-		<td <%= row_color %>>
+		<td >
 <% if (sample.getIsolateTrackingEngine() != null )
 {%><%= sample.getIsolateTrackingEngine().getStatusAsString()%><%}
 else{%>&nbsp;<%}%>
-</td>
-		
-	
-	</tr>
+</td></tr>
 	<%}%>
   
      

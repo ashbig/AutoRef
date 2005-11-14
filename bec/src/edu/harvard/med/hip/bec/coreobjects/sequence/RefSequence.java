@@ -304,6 +304,7 @@ public class RefSequence extends BaseSequence
                 break;
             }
         }
+        
          return m_currentGi;
         
     }

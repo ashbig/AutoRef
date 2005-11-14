@@ -45,7 +45,7 @@ public class NoMatchReportRunner extends ProcessRunner
     public String       getTitle()    { return "Request for NO MATCH report.";    }
     
     
-    public void run()
+    public void run_process()
     {
         Hashtable blast_clone_reports = new Hashtable ();
         try
@@ -66,9 +66,12 @@ public class NoMatchReportRunner extends ProcessRunner
                processClones(clones, blaster, blast_clone_reports);
                printReport(clones, blast_clone_reports, report_file_name, count);
            }
-           
-           m_file_list_reports.add(new File(report_file_name));   
-        }
+            File report = new File(report_file_name);
+            if ( report.exists())
+            {
+                m_file_list_reports.add(new File(report_file_name));   
+            }
+         }
         catch(Exception ex)
         {
             m_error_messages.add(ex.getMessage());
@@ -142,7 +145,9 @@ public class NoMatchReportRunner extends ProcessRunner
     +" from flexinfo f,isolatetracking i, sample s, containerheader c,assembledsequence a ,"
     +" sequencingconstruct sc where f.isolatetrackingid=i.isolatetrackingid and i.sampleid=s.sampleid "
     +" and sc.constructid(+)=i.constructid and   s.containerid=c.containerid and a.isolatetrackingid(+) =i.isolatetrackingid "
-    +" and i.status in (" +IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH+","+IsolateTrackingEngine.PROCESS_STATUS_CLONE_SEQUENCE_ANALYZED_NO_MATCH+") and s.containerid in (select containerid from containerheader where label in ("
+    +" and i.status in (" +IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH+","
+    +IsolateTrackingEngine.PROCESS_STATUS_CLONE_SEQUENCE_ANALYZED_NO_MATCH+
+    ") and s.containerid in (select containerid from containerheader where Upper(label) in ("
     +sql_items+")) order by s.containerid,position";
             } 
             case Constants.ITEM_TYPE_CLONEID:

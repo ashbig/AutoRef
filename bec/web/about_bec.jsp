@@ -10,7 +10,7 @@
 </head>
 
 <body>
-<jsp:include page="NavigatorBar_Administrator.jsp" />
+<div align='center'><jsp:include page="NavigatorBar_Administrator.jsp" /></div>
 	<p><P>
 <br>
 <div align="center">

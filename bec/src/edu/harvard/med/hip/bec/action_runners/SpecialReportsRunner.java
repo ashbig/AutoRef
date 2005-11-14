@@ -26,6 +26,7 @@ import edu.harvard.med.hip.bec.file.*;
 import edu.harvard.med.hip.bec.programs.phred.*;
 
 
+
   import java.util.*;
   import edu.harvard.med.hip.utility.*;
 /**
@@ -68,12 +69,11 @@ public class SpecialReportsRunner extends ProcessRunner
     
      
     /** Creates a new instance of TraceFileProcessingRunner */
-    public void run()
+    public void run_process()
     {
         String title = null;
         int pass_score = 0; int first_base =  0; int last_base = 0;    int min_length = 0;
          //get triming parameters
-        
         try
         {
            String  report_file_name =    Constants.getTemporaryFilesPath() + "SpecialReport"+ System.currentTimeMillis()+ ".txt";
@@ -115,8 +115,11 @@ public class SpecialReportsRunner extends ProcessRunner
                 Algorithms.writeArrayIntoFile(print_items, true , report_file_name);
                // printReport(report_file_name, count, print_items, title);
            }
- 
-           m_file_list_reports.add(new File(report_file_name));   
+            File report_file = new File(report_file_name);
+            if ( report_file.exists())
+            {
+                m_file_list_reports.add(report_file);   
+            }
         }
         catch(Exception e)
         {
@@ -146,7 +149,7 @@ public class SpecialReportsRunner extends ProcessRunner
     
          String sql = "select position, resulttype as readtype ,resultvalueid as readid,label from containerheader c, "
          +" sample s , result r where r.sampleid=s.sampleid and c.containerid=s.containerid "
-         +" and label in ("+sql_items+")and resulttype in ("+result_status+") order by label,position";
+         +" and Upper(label) in ("+sql_items+")and resulttype in ("+result_status+") order by label,position";
          ArrayList expected_reads = getExspectedReadDescriptions(sql);
          ReadDescription read_description = null;
          for (int count = 0; count < expected_reads.size(); count++)
@@ -195,7 +198,7 @@ public class SpecialReportsRunner extends ProcessRunner
          ArrayList print_items = new ArrayList();
          String sql = constructQueryStringForTraceFilesQualityCheck( sql_items);
         //get clone data
-         if ( sql == null || sql.trim().length() == 0) return print_items;
+        if ( sql == null || sql.trim().length() == 0) return print_items;
          Hashtable clone_directories =  getCloneDirectories( sql);
          //run thr. clone directory
          if ( clone_directories == null || clone_directories.size() < 1 ) return print_items;
@@ -211,17 +214,18 @@ public class SpecialReportsRunner extends ProcessRunner
      {
          ArrayList print_items = new ArrayList();
          String cloneid = null; String clone_directory = null;
+         PhredWrapper prwrapper    = new PhredWrapper();
          for ( Enumeration cloneinfo = clone_directories.keys(); cloneinfo.hasMoreElements();)
          {
              try
              {
                  cloneid =  (String) cloneinfo.nextElement() ;
                  clone_directory = (String) clone_directories.get( cloneid );
-                 print_items.addAll( processCloneTraceFiles(cloneid, clone_directory,  pass_score , first_base ,last_base ,min_length ) );
+                  print_items.addAll( processCloneTraceFiles_1(cloneid, clone_directory,  pass_score , first_base ,last_base ,min_length , prwrapper) );
         
              }catch (Exception e)
              {
-                 m_error_messages.add("Cannot get data for clone " + cloneid);
+                 m_error_messages.add("Cannot get data for clone " + cloneid +" "+ e.getMessage());
              }
          }
          return print_items;
@@ -236,39 +240,62 @@ public class SpecialReportsRunner extends ProcessRunner
          boolean isGoodQualityTraceFile = false;
          File[] traceFiles = FileOperations.getSortArrayOfFiles( clone_directory + File.separator +PhredWrapper.CHROMAT_DIR_NAME );
          File[] phdFiles = FileOperations.getSortArrayOfFiles( clone_directory + File.separator +PhredWrapper.PHD_DIR_NAME );
-         
          int trace_files_count = 0; int phd_files_count = 0;
          int trace_files_number = traceFiles.length; int phd_files_number = phdFiles.length;
          String trace_file_name_key = null; String phd_file_name_key = null;
          int compare_result = 0;
-         if ( phdFiles == null || phdFiles.length==0)throw new Exception ("No .phd files exist for the clone");
-         if ( traceFiles == null || traceFiles.length==0)throw new Exception ("No trace files exist for the clone");
+         if ( phdFiles == null || phd_files_number==0)throw new Exception ("No .phd files exist for the clone");
+         if ( traceFiles == null || trace_files_number==0)throw new Exception ("No trace files exist for the clone");
          
-         for (; trace_files_count < trace_files_number; )
+         int file_count = ( trace_files_number <= phd_files_number) ? trace_files_number : phd_files_number;
+         for (; trace_files_count < file_count; )
          {
-             phd_file_name_key = phdFiles[phd_files_count].getName();
-             phd_file_name_key = phd_file_name_key.substring(0,phd_file_name_key.indexOf('.'));
-             trace_file_name_key = traceFiles[trace_files_count].getName();
-             trace_file_name_key = trace_file_name_key.substring(0,trace_file_name_key.indexOf('.'));
-            
-             compare_result = trace_file_name_key.compareToIgnoreCase(phd_file_name_key);
-             if ( compare_result == 0)
+             try
              {
-                 isGoodQualityTraceFile = isTraceFilePassQualityCheck( phdFiles[phd_files_count],  pass_score , first_base ,last_base ,min_length );
-                  if ( isGoodQualityTraceFile )
-                      print_items.add(cloneid + Constants.TAB_DELIMETER + traceFiles[trace_files_count].getAbsolutePath() + Constants.TAB_DELIMETER + "PASS");
-                  else
-                     print_items.add(cloneid + Constants.TAB_DELIMETER + traceFiles[trace_files_count].getAbsolutePath() + Constants.TAB_DELIMETER + "FAIL");
-                     trace_files_count++;phd_files_count++;
+               
+                 trace_file_name_key = traceFiles[trace_files_count].getName();
+                 trace_file_name_key = trace_file_name_key.substring(0,trace_file_name_key.indexOf('.'));
+              
+                 phd_file_name_key = phdFiles[phd_files_count].getName();
+                 phd_file_name_key = phd_file_name_key.substring(0,phd_file_name_key.indexOf('.'));
+                 compare_result = trace_file_name_key.compareToIgnoreCase(phd_file_name_key);
+                 if ( compare_result == 0)
+                 {
+                     isGoodQualityTraceFile = isTraceFilePassQualityCheck( phdFiles[phd_files_count],  pass_score , first_base ,last_base ,min_length );
+                      if ( isGoodQualityTraceFile )
+                          print_items.add(cloneid + Constants.TAB_DELIMETER + traceFiles[trace_files_count].getAbsolutePath() + Constants.TAB_DELIMETER + "PASS");
+                      else
+                         print_items.add(cloneid + Constants.TAB_DELIMETER + traceFiles[trace_files_count].getAbsolutePath() + Constants.TAB_DELIMETER + "FAIL");
+                         trace_files_count++;phd_files_count++;
+                 }
+                 else if ( compare_result < 0 )
+                 {
+                     print_items.add(cloneid + Constants.TAB_DELIMETER + traceFiles[trace_files_count].getAbsolutePath()+ Constants.TAB_DELIMETER + "N/A");
+                     trace_files_count++;
+                 }
+                 else if ( compare_result > 0 )
+                 {
+                      phd_files_count++;
+                 }
              }
-             else if ( compare_result < 0 )
+             catch(Exception e)
              {
+                 m_error_messages.add("error "+e.getMessage());
+             }
+           
+          }
+         for (; trace_files_count < trace_files_number ; trace_files_count++)
+         {
+             try
+             {
+                 trace_file_name_key = traceFiles[trace_files_count].getName();
+                 trace_file_name_key = trace_file_name_key.substring(0,trace_file_name_key.indexOf('.'));
                  print_items.add(cloneid + Constants.TAB_DELIMETER + traceFiles[trace_files_count].getAbsolutePath()+ Constants.TAB_DELIMETER + "N/A");
-                 trace_files_count++;
+                 
              }
-             else if ( compare_result > 0 )
+             catch(Exception e)
              {
-                  phd_files_count++;
+                 m_error_messages.add("error "+e.getMessage());
              }
            
           }
@@ -318,6 +345,74 @@ public class SpecialReportsRunner extends ProcessRunner
      
            
      
+     //????????????????????????????????? quality report for all files phred execution ????
+      private ArrayList     processCloneTraceFiles_1(String cloneid, String clone_directory,
+                    int pass_score , int first_base ,int last_base ,
+                    int min_length,    PhredWrapper prwrapper       ) throws Exception
+     {
+            ArrayList print_items = new ArrayList();
+            ArrayList read_items = new ArrayList();
+            ArrayList elements = null;
+            PhredResult read = null;
+            clone_directory += File.separator + PhredWrapper.CHROMAT_DIR_NAME;
+            String phred_qual_output_fn = Constants.getTemporaryFilesPath() + cloneid +"_qual.txt";
+            String phred_seq_output_fn = Constants.getTemporaryFilesPath() + cloneid +"_seq.txt";
+            String cmd_phred = edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("PHRED_EXE_PATH") 
+            + " -id " + clone_directory  +  " -sa " +  phred_seq_output_fn  + " -qa " +  phred_qual_output_fn;
+            String readable_printout = null;
+            boolean isGoodQualityTraceFile = false;
+            try
+            {
+                prwrapper.run(cmd_phred);
+                boolean isSequenceFileExist = (new File(phred_seq_output_fn)).exists();
+                boolean isScoreFileExist = (new File(phred_qual_output_fn)).exists();
+               
+                if (isSequenceFileExist && isScoreFileExist)
+                {
+                    read_items= PhredResult.parsePhredOutputForManyReads(phred_qual_output_fn, phred_seq_output_fn);
+                    for ( int count= 0; count < read_items.size(); count++)
+                    {
+                        read = (PhredResult)read_items.get(count);
+                         elements = convertPhredResultToArrayOfElements(read);
+                         isGoodQualityTraceFile = PhredScoredElement.isGoodQuality( elements,  first_base, 
+                                                 last_base,  pass_score,  min_length);
+                         readable_printout =  ( isGoodQualityTraceFile ) ? "PASS" : "FAIL";
+                         print_items.add(cloneid + Constants.TAB_DELIMETER + read.getFileName() + Constants.TAB_DELIMETER + readable_printout);
+                         
+                    }
+
+                }
+               
+            }
+             catch(Exception e)
+             {
+                 m_error_messages.add("error "+e.getMessage());
+             }
+            return print_items;
+          }
+        
+     private ArrayList convertPhredResultToArrayOfElements(PhredResult read)
+    {
+        ArrayList scores = Algorithms.splitString(read.getQualityScores());
+        PhredScoredElement element = null;
+        ArrayList elements = new ArrayList();
+        char[] bases = read.getSequence().toCharArray();
+        for ( int count = 0; count < bases.length; count++)
+        {
+             element = new PhredScoredElement() ;
+             element.setChar(bases[count]);
+             element.setScore(Integer.parseInt( (String)scores.get(count)));
+             elements.add(element);
+        }
+      
+        return elements;
+    }
+    
+     
+     
+     
+       //???????????????????????????????????????????????????????    
+     
      
      
      private String    constructQueryStringForTraceFilesQualityCheck(String sql_items)
@@ -330,7 +425,7 @@ public class SpecialReportsRunner extends ProcessRunner
                    return "select flexcloneid, flexsequenceid from flexinfo where isolatetrackingid in "
                    +" ( select isolatetrackingid from isolatetracking where sampleid in "
                    +" (select sampleid from sample where containerid in "
-                   +" (select containerid from containerheader where label in (" + sql_items +")))) order by flexcloneid";
+                   +" (select containerid from containerheader where Upper(label) in (" + sql_items +")))) order by flexcloneid";
               }
               case Constants.ITEM_TYPE_CLONEID:
                   return " select flexcloneid, flexsequenceid from flexinfo where flexcloneid in (" + sql_items +") order by flexcloneid"; 
@@ -530,8 +625,7 @@ public class SpecialReportsRunner extends ProcessRunner
         String item = null;
         ArrayList print_items = new ArrayList();
         StringBuffer buf = new StringBuffer();
-       // System.out.println("A"+oligo_calculation.getSequenceId());
-        print_items.add(Constants.LINE_SEPARATOR );
+         print_items.add(Constants.LINE_SEPARATOR );
         print_items.add("Clone Id: "+ clone_id+Constants.LINE_SEPARATOR);
         int refseq_cds_length = RefSequence.getCdsLength(stretch_collection.getRefSequenceId());
         buf.append("RefSequence Id: "+stretch_collection.getRefSequenceId() );
@@ -809,7 +903,8 @@ public class SpecialReportsRunner extends ProcessRunner
           ProcessRunner runner = new SpecialReportsRunner();
             runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
             ((SpecialReportsRunner)runner).setReportType(Constants.PROCESS_CREATE_REPORT_TRACEFILES_QUALITY);
-            runner.setInputData(Constants.ITEM_TYPE_PLATE_LABELS," IGS002109-1  ");
+            runner.setInputData(Constants.ITEM_TYPE_CLONEID," 121780 116382 2329 113840 ");
+            runner.setProcessType(Constants.PROCESS_CREATE_REPORT_TRACEFILES_QUALITY);
           runner.run();
              
          }catch(Exception e){}

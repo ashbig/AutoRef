@@ -79,7 +79,7 @@ for (int index = 0; index < items.size(); index ++)
     stretchColl = null;
    if (forwardName_int == Constants.STRETCH_COLLECTION_REPORT_INT)
     {
-        strcol = (StretchCollection)stretch_collections.get((String) items.get(index));
+       strcol = (StretchCollection)stretch_collections.get((String) items.get(index));
         if ( strcol != null)
         {
             stretchColl = new ArrayList();
@@ -97,7 +97,9 @@ for (int index = 0; index < items.size(); index ++)
            <strong><font color="#000080"><%= item_title%></font></td>
            <td bgColor="#b8c6ed" ><strong><font color="#000080"><%= (String)items.get(index)%></font></strong></td></TR>
     <% if (  stretchColl != null )
-{   %>
+{   
+
+%>
 
 <tr> <td  ><strong>&nbsp;&nbsp; Reference Sequence Id: </strong></td>
 <td   ><a href="#" onCLick="window.open('<%=edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetItem.do?forwardName=<%=Constants.REFSEQUENCE_DEFINITION_INT%>&amp;ID=<%= ((StretchCollection)stretchColl.get(0)).getRefSequenceId()%>','<%= ((StretchCollection)stretchColl.get(0)).getRefSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" > <strong><%= ((StretchCollection)stretchColl.get(0)).getRefSequenceId()%></a></strong></td></TR>
@@ -107,7 +109,7 @@ for (int index = 0; index < items.size(); index ++)
  for (int col_count = 0; col_count < stretchColl.size() ; col_count++)
 { 
       strcol = (StretchCollection)stretchColl.get(col_count);
-       %>
+      %>
 
   <table width="95%" border="1" align="center" cellpadding="2" cellspacing="2">
         <th>Contig Name </th>
@@ -123,7 +125,8 @@ for (int index = 0; index < items.size(); index ++)
         UIRead contig   = null;
         for (int contig_count = 0; contig_count < strcol.getStretches().size(); contig_count++)
 	  	{
-	  		 contig  = (UIRead)strcol.getStretches().get(contig_count);
+                    contig  = (UIRead)strcol.getStretches().get(contig_count);
+                 
 			%>
 <tr>  <td width="15%"><%= contig.getName() %></td>
     <td ><%= Stretch.getStretchTypeAsString( contig.getType() ) %> </td>

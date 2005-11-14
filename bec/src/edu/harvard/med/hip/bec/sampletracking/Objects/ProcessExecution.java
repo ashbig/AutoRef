@@ -1,5 +1,5 @@
 /**
- * $Id: ProcessExecution.java,v 1.6 2003-07-07 13:16:12 Elena Exp $
+ * $Id: ProcessExecution.java,v 1.7 2005-11-14 16:10:40 Elena Exp $
  *
  * File     	: Process.java
  * Date     	: 04162001
@@ -119,12 +119,9 @@ public class ProcessExecution
         try
         {
             st = conn.createStatement();
-         //   System.out.print("1l");
             st.executeUpdate(sql);
-         //   System.out.print("2l");
             if (m_specs != null)
             {
-                System.out.print("l");
                 for (int i = 0; i < m_specs.size(); i++)
                 {
                     spec = (Spec) m_specs.get(i);

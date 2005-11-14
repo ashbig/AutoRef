@@ -11,7 +11,7 @@
 <%@ page import="edu.harvard.med.hip.bec.coreobjects.oligo.*" %>
 <%@ page import="edu.harvard.med.hip.bec.Constants" %>
 
-<%-- The container that was searched --%>
+<LINK REL=StyleSheet HREF="application_styles.css" TYPE="text/css" MEDIA=screen>
 
 <html>
 
@@ -20,7 +20,6 @@
 	<p><P>
 <br>
 <%
-//System.out.println("container ");
         Object forwardName = null;
         if ( request.getAttribute("forwardName") != null)
         {
@@ -43,7 +42,7 @@ int forwardName_int = 0;
 if (forwardName instanceof String) forwardName_int = Integer.parseInt((String)forwardName);
 else if (forwardName instanceof Integer) forwardName_int = ((Integer) forwardName).intValue();
 OligoContainer container = (OligoContainer)request.getAttribute("container") ;
-//System.out.println("container "+forwardName +" samples "+ container.getSamples().size() );
+String[] row_class = {"evenRow","oddRow"} ; int row_count = 0;
 
 %>
 
@@ -77,7 +76,7 @@ OligoContainer container = (OligoContainer)request.getAttribute("container") ;
 <%}%>
 
 
-<table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
+<table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
   <tr> 
     <td ><strong>Plate Label:</strong></td>
     <td > 
@@ -141,41 +140,33 @@ OligoContainer container = (OligoContainer)request.getAttribute("container") ;
 <P><P></P></P>
 <%if (container.getSamples() != null && container.getSamples().size() > 0)
 {%>
-<table border="1" cellpadding="0" cellspacing="0" width="84%" align=center>
-    <tr >
-       <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Sample Id</font></strong></th>
- <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Position</font></strong></th>
- <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Clone Id</font></strong></th>
-<th bgcolor="#1145A6"><strong><font color="#FFFFFF">Oligo Name</font></strong></th>
-<th bgcolor="#1145A6"><strong><font color="#FFFFFF">Oligo Sequence</font></strong></th>
-<th bgcolor="#1145A6"><strong><font color="#FFFFFF">Oligo Position on Sequence</font></strong></th>
-<th bgcolor="#1145A6"><strong><font color="#FFFFFF">Oligo Tm</font></strong></th>
+<table border="1" cellpadding="0" cellspacing="0" width="74%" align=center>
+    <tr class='headerRow'>
+    <!--   <td>Sample Id</td> -->
+ <td><div align='centre'>Position</div></td>
+ <td><div align='centre'>Clone Id</div></td>
+<td><div align='centre'>Oligo Name</div></td>
+<td><div align='centre'>Oligo Sequence</div></td>
+<td><div align='centre'>Oligo Position on Sequence</div></td>
+<td><div align='centre'>Oligo Tm</div></td>
        </tr>
 <%  
-    String row_color = " bgColor='#e4e9f8'";
     OligoSample sample=null; Oligo o = null;
     for (int count = 0; count < container.getSamples().size(); count ++)
 	{
 		sample = (OligoSample)container.getSamples().get(count);
                 o = sample.getOligo();
-		if (count % 2 == 0)
-		{
-		  row_color = " bgColor='#e4e9f8'";
-		}
-		else
-		{
-			row_color =" bgColor='#b8c6ed'";
-		}
+		
 	%>
-	<tr>
-<td <%= row_color %>> <%= sample.getId() %></font></strong></th>
-<td <%= row_color %>> <%= sample.getPosition() %></font></strong></th>
- <td <%= row_color %>>  <%= sample.getCloneId() %></font></strong></th>
-<td <%= row_color %>> <%= o.getName() %></font></strong></th>
-<td <%= row_color %>> <%= o.getSequence() %></font></strong></th>
-<td <%= row_color %>> <%= o.getPosition() %></font></strong></th>
-<td <%= row_color %>> <%= o.getTm() %></font></strong></th>
-	</tr>
+<tr class=<%= row_class[row_count++ % 2] %>>
+<!--<td > < %=  sample.getId() %></td>-->
+<td ><div align='right'> <%= sample.getPosition() %></div></td>
+ <td ><div align='right'>  <%= sample.getCloneId() %></div></td>
+<td >&nbsp; <%= o.getName() %></td>
+<td >&nbsp; <%= o.getSequence() %></td>
+<td > <div align='right'><%= o.getPosition() %></div></td>
+<td ><div align='right'> <%= o.getTm() %></div></td>
+</tr>
 	<%}%>
     </table>
 <%}%>

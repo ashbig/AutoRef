@@ -125,7 +125,7 @@ public class PrimerOrderRunner extends ProcessRunner
     
     public String       getTitle()    { return "Request for Primer order";}
     
-    public void run()
+    public void run_process()
     {
         Connection conn = null;
          try
@@ -439,7 +439,6 @@ public class PrimerOrderRunner extends ProcessRunner
                     {
                         time_stamp_oligo_plate = String.valueOf( System.currentTimeMillis() );
                     }
-               //     m_file_list_reports.add( NamingFileEntry.createNamingFile(naming_file_entries,Constants.getTemporaryFilesPath() + plate_label+"_naming_reads.txt"));
                     m_file_list_reports.add( FileOperations.writeFile(items_template,  "Clone Id\tOrg plate\tOrg well\tDestination plate\tDestination well\n",  Constants.getTemporaryFilesPath() + plate_label +"_template"+time_stamp_oligo_plate+".txt"));
                     m_file_list_reports.add( FileOperations.writeFile(items_oligo ,"Oligo Sample Id\tPlate Name\tWellId\tWellIndex\tCloneId\tPrimerId\tPrimerSequence\tTm\tPrimerLength\n",  Constants.getTemporaryFilesPath() + plate_label +"_oligo"+time_stamp_oligo_plate+".txt"));
  //-----                  m_file_list_reports.add( FileOperations.writeFile(items_order_file ,"Oligo Sample Id\tPlate Name\tWellId\tWellIndex\tCloneId\tPrimerId\tPrimerSequence\tTm\tPrimerLength\n",  Constants.getTemporaryFilesPath() + plate_label +"_oligo.txt"));

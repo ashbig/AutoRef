@@ -4,8 +4,8 @@
  *
  * 
  * The following information is used by CVS
- * $Revision: 1.8 $
- * $Date: 2005-09-27 18:58:08 $
+ * $Revision: 1.9 $
+ * $Date: 2005-11-14 16:09:12 $
  * $Author: Elena $
  *
  ******************************************************************************
@@ -24,7 +24,7 @@ import java.util.*;
  * Holds sytem level properties.
  *
  * @author     $Author: Elena $
- * @version    $Revision: 1.8 $ $Date: 2005-09-27 18:58:08 $
+ * @version    $Revision: 1.9 $ $Date: 2005-11-14 16:09:12 $
  */
 
 public class BecProperties
@@ -32,8 +32,7 @@ public class BecProperties
     // The name of the properties file holding the system config info.
     public final static String[]  APPLICATION_SETTINGS =
     {"SystemConfig.properties",
-     "ContainerType.properties",
-     "ApplicationHostSettings.properties"};
+      "ApplicationHostSettings.properties"};
     public final static String PATH = "config/";
     // The properties
     private Properties m_properties = null;
@@ -49,6 +48,7 @@ public class BecProperties
     private int          m_isWindowsOS = 0;
     private boolean     m_isHipInternalVersion = false;
     private int         m_plate_naming_type = edu.harvard.med.hip.bec.sampletracking.objects.Container.PLATE_TYPE_96_A1_H12;
+    private String      m_ace_email_address = null;
     /**
      * Protected constructor.
      *
@@ -117,7 +117,9 @@ public class BecProperties
             value =m_properties.getProperty("POLYORPHISM_FINDER_DATA_DIRECTORY");//=/F/Sequences for BEC/files_to_transfer
              if ( value == null || !isFileExsist(value) )m_Error_messages.add("Path for polymorphism finder directory is not set properly");
            
-        
+            value =m_properties.getProperty("mail.smtp.host");//=/F/Sequences for BEC/files_to_transfer
+            if ( value == null )m_Error_messages.add("SMTP host is not set. No e-mail can be send by ACE");
+           
             value =m_properties.getProperty("IS_HIP_VERSION");//=/F/Sequences for BEC/files_to_transfer
             if ( value == null  )   m_Error_messages.add("HIP/External version not defined. Setting to work as HIP internal application.");
             else if ( Integer.parseInt(value) != 0 )  m_isHipInternalVersion  = true;
@@ -128,6 +130,11 @@ public class BecProperties
             
             value =m_properties.getProperty("PERL_PATH");//=/F/Sequences for BEC/files_to_transfer
             if ( value == null || !isFileExsist(value) )m_Error_messages.add("Path for perl exe not set properly");
+            
+            value =m_properties.getProperty("ACE_FROM_EMAIL_ADDRESS");//=/F/Sequences for BEC/files_to_transfer
+            if ( value == null || value.indexOf("@") == -1 ) m_Error_messages.add("Problem with ACE e-mail address");
+            else m_ace_email_address = (String) value;
+            
             
             m_blastable_db = new Hashtable();
             m_vector_libraries = new Hashtable();
@@ -213,8 +220,9 @@ public class BecProperties
      *
      * @return The property requested.
      */
-    public String getProperty(String key) {
-        
+    public String getProperty(String key)
+    {
+        if (m_properties == null) return null;
         String property = m_properties.getProperty(key);
         if ( property == null) return null;
         else         return property.trim();
@@ -283,10 +291,15 @@ public class BecProperties
        return  m_isHipInternalVersion ;
             
     }
+    public          String getACEEmailAddress(){ return m_ace_email_address;}
+    
+    
     
     private  InputStream getInputStream(String name) {
         return (Thread.currentThread().getContextClassLoader().getResourceAsStream(name));
     }  
+    
+    
     
     public static void main(String [] args) 
     {

@@ -65,15 +65,17 @@ public class Seq_GetItemAction extends ResearcherAction
                 ==Constants.CONTAINER_DEFINITION_INT ||
                 forwardName == Constants.CONTAINER_RESULTS_VIEW ||
                 forwardName == Constants.CONTAINER_ISOLATE_RANKER_REPORT ||
-                forwardName ==Constants.PROCESS_PUT_CLONES_ON_HOLD ||
-                 forwardName == Constants.PROCESS_ACTIVATE_CLONES ||
+             //   forwardName ==Constants.PROCESS_PUT_CLONES_ON_HOLD ||
+              //   forwardName == Constants.PROCESS_ACTIVATE_CLONES ||
                  forwardName == Constants.PROCESS_CHECK_READS_AVAILABILITY 
-                 || forwardName == Constants.PROCESS_APROVE_ISOLATE_RANKER
+               //  || forwardName == Constants.PROCESS_APROVE_ISOLATE_RANKER
                  )//rocessing from container label
                {
                      
                     label = (String)request.getParameter(Constants.CONTAINER_BARCODE_KEY);
                     label =label.toUpperCase().trim();
+                   //   label =label.trim();
+                 
                     container =  verifyLabel(label);
                                
                     if ( container == null)
@@ -95,7 +97,7 @@ public class Seq_GetItemAction extends ResearcherAction
                forwardName == Constants.CLONING_STRATEGY_DEFINITION_INT ||
                forwardName == Constants.SAMPLE_ISOLATE_RANKER_REPORT ||
                forwardName == Constants.READ_REPORT_INT ||
-               forwardName == Constants.CONSTRUCT_DEFINITION_REPORT ||
+             //  forwardName == Constants.CONSTRUCT_DEFINITION_REPORT ||
                forwardName == Constants.CLONE_SEQUENCE_DEFINITION_REPORT_INT ||
                forwardName == Constants.STRETCH_REPORT_INT ||
                forwardName == Constants.STRETCH_COLLECTION_REPORT_INT
@@ -173,17 +175,14 @@ public class Seq_GetItemAction extends ResearcherAction
                 case Constants.CONTAINER_DEFINITION_INT:
                 {
                     ArrayList ui_clones = container.restoreUISamples(container);
-                    //fill in clone info
-                    UICloneSample clone = null; 
-                    
-            //get info for the most relevant sequence 
+                     //get info for the most relevant sequence 
                     UICloneSample.setCloneSequences(ui_clones, null);
                     container.setSamples(ui_clones);
                     container.getCloningStrategyId();
                     request.setAttribute("container",container);
                     return (mapping.findForward("display_container_details"));
                 }
-                case Constants.PROCESS_APROVE_ISOLATE_RANKER:
+               /* case Constants.PROCESS_APROVE_ISOLATE_RANKER:
                 {
                     container.restoreSampleIsolateNoFlexInfo();
                     request.setAttribute("container",container);
@@ -191,7 +190,7 @@ public class Seq_GetItemAction extends ResearcherAction
                     request.setAttribute("cols", new Integer(12));
 
                     return (mapping.findForward("display_isolate_ranker_report"));
-                }
+                }*/
                  case Constants.CONTAINER_RESULTS_VIEW:
                 {
                    
@@ -211,12 +210,13 @@ public class Seq_GetItemAction extends ResearcherAction
                     }
                     else if (result_type.equalsIgnoreCase("IR"))
                     {
-                        container.restoreSampleIsolateNoFlexInfo();
+                        ArrayList ui_clones = container.restoreUISamples(container);
+                        container.setSamples(ui_clones);
                         container.getCloningStrategyId();
                         request.setAttribute("container",container);
                         request.setAttribute("rows", new Integer(8));
                         request.setAttribute("cols", new Integer(12));
-                        return (mapping.findForward("display_isolate_ranker_report"));
+                         return (mapping.findForward("display_isolate_ranker_report"));
                     }
                     container.getCloningStrategyId();
                     request.setAttribute("container",container);
@@ -241,26 +241,19 @@ public class Seq_GetItemAction extends ResearcherAction
                 case Constants.SAMPLE_ISOLATE_RANKER_REPORT:
                 {
                     //get sample 
-                    Sample sample = new Sample(id);
-                    sample.getRefSequenceId();
-            //get clone sequences && end reads
-                    int[] sequence_analysis_status = {
-                        BaseSequence.CLONE_SEQUENCE_STATUS_ASSEMBLED ,
-                        BaseSequence.CLONE_SEQUENCE_STATUS_ANALIZED_YES_DISCREPANCIES,
-                        BaseSequence.CLONE_SEQUENCE_STATUS_ANALIZED_NO_DISCREPANCIES ,
-                        BaseSequence.CLONE_SEQUENCE_STATUS_NOMATCH ,
-                        BaseSequence.CLONE_SEQUENCE_STATUS_POLYMORPHISM_CLEARED ,
-                        BaseSequence.CLONE_SEQUENCE_STATUS_ANALYSIS_CONFIRMED };
-                    String clone_sequence_analysis_status = Algorithms.convertArrayToString(sequence_analysis_status, ",");
-                    int[] sequence_type = {BaseSequence.CLONE_SEQUENCE_TYPE_ASSEMBLED, BaseSequence.CLONE_SEQUENCE_TYPE_FINAL  };
-                    String clone_sequence_type = Algorithms.convertArrayToString(sequence_type, ",");
-                    IsolateTrackingEngine istr = IsolateTrackingEngine.getIsolateTrackingEngineBySampleId(sample.getId(),
-                                clone_sequence_analysis_status,
-                                clone_sequence_type,2);
-                //    sample.setIsolaterTrackingEngine( istr);
+                    UICloneSample sample = null;
+                    ArrayList ar =  UICloneSample.getCloneInfo( String.valueOf(id),Constants.ITEM_TYPE_ISOLATETRASCKING_ID,false, true);
+                    if (ar != null && ar.size() > 0)
+                         sample = (UICloneSample) ar.get(0);
+                    System.out.println("sample "+sample == null);
+                        //get clone sequences && end reads
+                    ArrayList end_reads = Read.getReadByIsolateTrackingId( id );
                     String discrepancy_report_for_endread = null;
-                    ArrayList end_reads = createListOfUIReads(istr,discrepancy_report_for_endread, sample.getRefSequenceId());
-                    ArrayList  clone_sequences = createListOfUICloneSequences(istr, sample.getRefSequenceId());
+                    end_reads = createListOfUIReads(end_reads,discrepancy_report_for_endread, sample.getRefSequenceId());
+                   
+                    ArrayList  clone_sequences = CloneSequence.getAllByIsolateTrackingId(id, null,  null);
+                    clone_sequences = createListOfUICloneSequences(clone_sequences, sample.getRefSequenceId());
+                    
                     ArrayList contigs = null;
                     StretchCollection strcol = null;
                     if ( clone_sequences== null || clone_sequences.size() < 1)
@@ -276,15 +269,16 @@ public class Seq_GetItemAction extends ResearcherAction
                     request.setAttribute("discrepancy_report_for_endread",discrepancy_report_for_endread);
                     return (mapping.findForward("display_sample_isolate_ranker_report"));
                 }
-                case Constants.CONSTRUCT_DEFINITION_REPORT:
+              /*  case Constants.CONSTRUCT_DEFINITION_REPORT:
                 {
                     Construct construct = new Construct(id);
                     ArrayList clones_data = Construct.getClonesData(id);
                     request.setAttribute("clones_data",clones_data);
                     request.setAttribute("construct",construct);
-                     request.setAttribute("forwardName", new Integer(Constants.PROCESS_APROVE_ISOLATE_RANKER));
+             //        request.setAttribute("forwardName", new Integer(Constants.PROCESS_APROVE_ISOLATE_RANKER));
                     return (mapping.findForward("construct_report"));
                 }
+               **/
                 case Constants.READ_REPORT_INT:
                 {
                     Read read = Read.getReadById(id);
@@ -431,7 +425,7 @@ public class Seq_GetItemAction extends ResearcherAction
                     request.setAttribute("alignment",needle_output);
                     return (mapping.findForward("display_needle_alignment"));
                 }
-                case   Constants.PROCESS_PUT_CLONES_ON_HOLD :
+            /*    case   Constants.PROCESS_PUT_CLONES_ON_HOLD :
                  case Constants.PROCESS_ACTIVATE_CLONES:
                 {
                  //show label scan form  
@@ -452,6 +446,7 @@ public class Seq_GetItemAction extends ResearcherAction
                     request.setAttribute(Constants.JSP_TITLE,title);
                     return (mapping.findForward("show_activate_list"));
                 }
+             **/
                 case Constants.AVAILABLE_LINKERS_DEFINITION_INT:
                 {
                     ArrayList linkers = BioLinker.getAllLinkers();
@@ -524,10 +519,12 @@ public class Seq_GetItemAction extends ResearcherAction
                 }
                 case Constants.PROCESS_VIEW_OLIGO_PLATE:
                 {
+                    //label for oligo plate created by application, always in apper case
                      label = (String)request.getParameter(Constants.CONTAINER_BARCODE_KEY);
-                     label =label.toUpperCase().trim();
+                    label =label.toUpperCase().trim();
+                     
          //  System.out.println(label +" getitem "+ forwardName);
-                     ArrayList oligo_containers = OligoContainer.findContainersInfoFromLabel(label.toUpperCase().trim(), OligoContainer.MODE_NOTRESTORE_SAMPLES);
+                     ArrayList oligo_containers = OligoContainer.findContainersInfoFromLabel(label, OligoContainer.MODE_NOTRESTORE_SAMPLES);
                      OligoContainer oligo_container = null;
                     if ( oligo_containers != null && oligo_containers.size() == 1)
                         oligo_container = (OligoContainer)oligo_containers.get(0);
@@ -580,7 +577,7 @@ public class Seq_GetItemAction extends ResearcherAction
     
      
     //for sample report: converts end reads list int o uireads
-    private ArrayList  createListOfUIReads(IsolateTrackingEngine istr, String discrepancy_report_for_endread, int ref_seqid)
+    private ArrayList  createListOfUIReads(ArrayList reads, String discrepancy_report_for_endread, int ref_seqid)
                         throws BecDatabaseException
     {
         ArrayList discrepancies = new ArrayList();
@@ -589,9 +586,9 @@ public class Seq_GetItemAction extends ResearcherAction
         DiscrepancyFinder nv = new DiscrepancyFinder();
         String  needle_file_name = null;
         File needle_file = null;
-         for (int read_count = 0; read_count < istr.getEndReads().size(); read_count++)
+         for (int read_count = 0; read_count < reads.size(); read_count++)
         {
-            read = (Read) istr.getEndReads().get(read_count);
+            read = (Read) reads.get(read_count);
             uiread = new UIRead();
             uiread.setId (read.getId());
             uiread.setSequenceId (read.getSequence().getId());
@@ -624,7 +621,7 @@ public class Seq_GetItemAction extends ResearcherAction
    
         
      //for sample report: converts end reads list int o uireads
-    private ArrayList  createListOfUICloneSequences(IsolateTrackingEngine istr,int ref_seqid)
+    private ArrayList  createListOfUICloneSequences(ArrayList clone_sequences,int ref_seqid)
                          throws BecDatabaseException
     {
         ArrayList discrepancies = new ArrayList();
@@ -632,9 +629,9 @@ public class Seq_GetItemAction extends ResearcherAction
         String discrepancy_report_html = null;
         File  needle_file = null;
         UISequence uiclonesequence = null;CloneSequence clone_sequence = null;
-         for (int seq_count = 0; seq_count < istr.getCloneSequences().size(); seq_count++)
+         for (int seq_count = 0; seq_count < clone_sequences.size(); seq_count++)
         {
-            clone_sequence = (CloneSequence) istr.getCloneSequences().get(seq_count);
+            clone_sequence = (CloneSequence)clone_sequences.get(seq_count);
             uiclonesequence = new UISequence();
             uiclonesequence.setId (clone_sequence.getId());
             uiclonesequence.setRefSequenceId (ref_seqid);

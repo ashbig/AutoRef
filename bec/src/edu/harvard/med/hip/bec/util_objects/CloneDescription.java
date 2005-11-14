@@ -10,6 +10,7 @@ import java.util.*;
 import java.sql.*;
 import java.io.*;
 import edu.harvard.med.hip.bec.util.*;
+import edu.harvard.med.hip.bec.coreobjects.endreads.*;
 import edu.harvard.med.hip.bec.database.*;
 import  edu.harvard.med.hip.bec.action_runners.*;
 /**
@@ -45,6 +46,7 @@ public class CloneDescription
 
 
         private int        m_cloneid = -1;
+        private int        m_clone_final_status = IsolateTrackingEngine.FINAL_STATUS_INPROCESS;
         private int        m_clone_status = -1;
 
         private int        m_clone_sequence_id = -1;
@@ -94,6 +96,7 @@ public class CloneDescription
         public int			getCloneSequenceAnalysisStatus (){ return m_clone_sequence_analysis_status  ;}
         public int			getFlexSequenceId (){ return m_flex_sequenceid   ;}
         public int			getCloneId (){ return m_cloneid   ;}
+        public int			getCloneFinalStatus (){ return m_clone_final_status ;}
         public int			getResultId (){ return m_resultid   ;}
         public int			getBecRefSequenceId (){ return m_refsequenceid   ;}
         public int			getIsolateTrackingId (){ return m_isolatetrackingid   ;}
@@ -126,6 +129,8 @@ public class CloneDescription
         public void                  setReadFilePath(String c){ m_read_filepath=c;}
         public void                  setFlexSequenceId  ( int v){  m_flex_sequenceid =v  ;}
         public void                  setCloneId ( int v){  m_cloneid   =v;}
+        public void                 setCloneFinalStatus (int v){  m_clone_final_status =v;}
+        
         public void                  setResultId ( int v){  m_resultid =v  ;}
         public void                  setBecRefSequenceId (int v){  m_refsequenceid =v  ;}
         public void                  setIsolateTrackingId (int v){  m_isolatetrackingid =v  ;}
@@ -162,7 +167,7 @@ public class CloneDescription
         
         public static ArrayList getClonesDescription( String clones_to_process)throws BecDatabaseException
         {
-            String sql =  "select flexcloneid, iso.status as status, flexsequenceid,  refsequenceid, iso.isolatetrackingid as isolatetrackingid , containerid, s.sampleid as sampleid"
+            String sql =  "select flexcloneid, process_status, iso.status as status, flexsequenceid,  refsequenceid, iso.isolatetrackingid as isolatetrackingid , containerid, s.sampleid as sampleid"
 + " from isolatetracking iso,  sample s, sequencingconstruct  constr , flexinfo f "
 +" where constr.constructid = iso.constructid and iso.sampleid=s.sampleid and f.isolatetrackingid=iso.isolatetrackingid "
 +" and f.flexcloneid in ("+clones_to_process+")   order by containerid ,refsequenceid";
@@ -203,6 +208,7 @@ public class CloneDescription
                 seq_desc.setBecRefSequenceId(rs.getInt("refsequenceID"));
                 seq_desc.setIsolateTrackingId( rs.getInt("isolatetrackingid"));
                  seq_desc.setCloneId(  rs.getInt("flexcloneid"));
+                 seq_desc.setCloneFinalStatus( rs.getInt("process_status"));
                
                  if ( isCloningStrategyId ) seq_desc.setCloningStrategyId(rs.getInt("cloningstrategyid"));
                 if ( isContainerid) seq_desc.setContainerId(rs.getInt("containerid"));
@@ -227,7 +233,7 @@ public class CloneDescription
         
      public static CloneDescription getCloneDescription( int clone_id)throws BecDatabaseException
     {
-            String sql =  "select flexcloneid, flexsequenceid, iso.status as status, refsequenceid, iso.isolatetrackingid as isolatetrackingid , containerid, s.sampleid as sampleid"
+            String sql =  "select flexcloneid, process_status,flexsequenceid, iso.status as status, refsequenceid, iso.isolatetrackingid as isolatetrackingid , containerid, s.sampleid as sampleid"
 + " from isolatetracking iso,  sample s, sequencingconstruct  constr , flexinfo f "
 +" where constr.constructid = iso.constructid and iso.sampleid=s.sampleid and f.isolatetrackingid=iso.isolatetrackingid "
 +" and f.flexcloneid in ("+clone_id+")   order by containerid ,refsequenceid";

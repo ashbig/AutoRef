@@ -139,7 +139,7 @@
      <td  ><div align="center">        <input name="FS_TRANC_PASS_L" type="input" id="FS_TRANC_PASS_L" value="0" size="5" onBlur="checkNumeric(this,0,100,'','','');">      </div></td>
      <td  ><div align="center">        <input name="FS_TRANC_FAIL_H" type="input" id="FS_TRANC_FAIL_H" value="1" size="5" onBlur="checkNumeric(this,0,100,'','','');">      </div></td>
      <td  ><div align="center">        <input name="FS_TRANC_FAIL_L" type="input" id="FS_TRANC_FAIL_L" value="9" size="5" onBlur="checkNumeric(this,0,100,'','','');">      </div></td>
-     <td  > <div align="center">        <input type="checkbox" name="FS_TRANCS_POLM" value="1">      </div></td>
+     <td  > <div align="center">        <input type="checkbox" name="FS_TRANC_POLM" value="1">      </div></td>
     </tr>
     <tr class=<%= row_class[row_count++ % 2]%>> 
      <td  > No translation (e.g.,       no ATG)</td>

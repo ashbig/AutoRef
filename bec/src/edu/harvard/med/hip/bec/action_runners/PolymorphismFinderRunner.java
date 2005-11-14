@@ -18,6 +18,7 @@ import edu.harvard.med.hip.bec.user.*;
 import edu.harvard.med.hip.bec.Constants;
 import edu.harvard.med.hip.bec.programs.polymorphism_finder.*;
 import edu.harvard.med.hip.bec.coreobjects.sequence.*;
+import edu.harvard.med.hip.bec.coreobjects.endreads.*;
 import edu.harvard.med.hip.bec.util_objects.*;
  
  
@@ -37,7 +38,7 @@ public class PolymorphismFinderRunner extends ProcessRunner
     public void         setSpecId(int v){m_spec_id = v;}
     public String getTitle()    {return "Request for polymorphism finder run.";    }
     
-    public void run()
+    public void run_process()
     {
         //create job_order file
         int process_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
@@ -249,8 +250,14 @@ public class PolymorphismFinderRunner extends ProcessRunner
                     ArrayList remaining_istrids,
                     Hashtable sequenceid_isolatetrackingid)
      {
-        String sql = " select f.isolatetrackingid as isolatetrackingid, sequenceid from assembledsequence a, isolatetracking f "
-        +" where a.isolatetrackingid(+)=f.isolatetrackingid and f.isolatetrackingid in "+isolatetrackingids+" order by f.isolatetrackingid, sequenceid DESC";
+        String sql = " select i.isolatetrackingid as isolatetrackingid, sequenceid "
+        +" from assembledsequence a, isolatetracking i "
+        + " where a.isolatetrackingid(+)=f.isolatetrackingid ";
+         if ( this.isWriteProcess() ==  ProcessRunner.PROCESS_TYPE_WRITE)
+          {
+              sql += " and i.process_status = "+IsolateTrackingEngine.FINAL_STATUS_INPROCESS;
+          }
+        sql += " and i.isolatetrackingid in "+isolatetrackingids+" order by i.isolatetrackingid, sequenceid DESC";
         String result = "";
         ArrayList sequenceids = new ArrayList();   DatabaseTransaction t = null;
         int current_istr =  0;

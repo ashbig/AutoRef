@@ -1,5 +1,5 @@
 /**
- * $Id: Container.java,v 1.30 2005-09-27 18:57:41 Elena Exp $
+ * $Id: Container.java,v 1.31 2005-11-14 16:10:40 Elena Exp $
  *
  * File     	: Container.java
 
@@ -63,17 +63,7 @@ public class Container
     {
         m_id = id;
         
-  /*      String sql = "select c.containerid as containerid, "+
-        "c.containertype as containertype, "+
-        "c.label as label, "+
-        "c.locationid as locationid, "+
-        "c.threadid as threadid, "+
-        "l.locationtype as locationtype, "+
-        "l.locationdescription as description\n"+
-        "from containerheader c, containerlocation l\n"+
-        "where c.locationid = l.locationid\n"+
-        "and c.containerid = "+id;
-        */
+  
           String sql = "select  containerid,  containertype,  label, status "+
             "from containerheader where containerid = "+id;
         CachedRowSet crs = null;
@@ -139,7 +129,7 @@ public class Container
         ArrayList containerList = new ArrayList();
        
         String sql = "select  containerid, containertype,  label, status "+
-        "from containerheader where label = '"+ label+"'";
+        "from containerheader where Upper(label) = '"+ label+"'";
         ResultSet rs = null;
         try
         {
@@ -219,7 +209,7 @@ public class Container
         
         ArrayList containerList = new ArrayList();
         
-        String sql = "select  containerid, containertype,  label, status from containerheader where label = '"+ label+"'";
+        String sql = "select  containerid, containertype,  label, status from containerheader where Upper(label) = '"+ label+"'";
         ResultSet rs = null;
         Container container = null;
         try
@@ -511,7 +501,7 @@ public class Container
         String sql = null;
         if (!isRefSequenceInfo && !isConstructInfo)
         {
-         sql = "select s.sampleid as sampleid, position, ASSEMBLY_STATUS, constructid, sampletype,rank,score, status, "
+         sql = "select s.sampleid as sampleid, position, ASSEMBLY_STATUS, PROCESS_STATUS,constructid, sampletype,rank,score, status, "
         +" iso.isolatetrackingid as isolatetrackingid,id,flexconstructid,flexsampleid,flexsequencingplateid,"
         +" flexsequenceid,flexcloneid from flexinfo f, isolatetracking iso, sample s  "
         +" where f.isolatetrackingid=iso.isolatetrackingid and iso.sampleid=s.sampleid "
@@ -519,7 +509,7 @@ public class Container
         }
         if (isRefSequenceInfo)
         {
-            sql="select s.sampleid as sampleid, position, iso.ASSEMBLY_STATUS as ASSEMBLY_STATUS,  iso.constructid as constructid, sampletype,rank,score, status,refsequenceid,  "
+            sql="select s.sampleid as sampleid, position, PROCESS_STATUS,iso.ASSEMBLY_STATUS as ASSEMBLY_STATUS,  iso.constructid as constructid, sampletype,rank,score, status,refsequenceid,  "
         +" iso.isolatetrackingid as isolatetrackingid,id,flexconstructid,flexsampleid,flexsequencingplateid, "
         +"  flexsequenceid,flexcloneid from flexinfo f, isolatetracking iso, sample s, sequencingconstruct c  "
         +"  where f.isolatetrackingid=iso.isolatetrackingid and iso.sampleid=s.sampleid "
@@ -555,6 +545,7 @@ public class Container
                     isolatetracking.setStatus(crs.getInt("status"));
                     isolatetracking.setSampleId(sampleid);
                     isolatetracking.setId(isolatetracking_id);
+                    isolatetracking.setFinalStatus( crs.getInt("PROCESS_STATUS"));
                     isolatetracking.setAssemblyStatus(crs.getInt("ASSEMBLY_STATUS"));
                     isolatetracking.setFlexInfoId(crs.getInt("id") );// sample id of the first sample of this isolate
                     isolatetracking.setConstructId(crs.getInt("constructid") );// identifies the agar; several (four) isolates will have the same id
@@ -599,6 +590,8 @@ public class Container
             clone.setPlateLabel (container.getLabel() ); 
             clone.setPosition (sample.getPosition()); 
             clone.setSampleType (sample.getType()); 
+            clone.setCloneFinalStatus( sample.getIsolateTrackingEngine().getCloneFinalStatus()); 
+          
             clone.setCloneId ( sample.getIsolateTrackingEngine().getFlexInfo().getFlexCloneId()); 
             clone.setCloneStatus (sample.getIsolateTrackingEngine().getStatus() ); 
             clone.setConstructId (sample.getIsolateTrackingEngine().getConstructId()); 
@@ -1255,21 +1248,8 @@ public class Container
               BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
             sysProps.verifyApplicationSettings();
         
-         int position = 1;
-       System.out.println(  position+" "+      Container.convertPositionFrom_int_to_alphanumeric(position)    );
-        position = 96;
-       System.out.println(  position+" "+         Container.convertPositionFrom_int_to_alphanumeric( position) );
-         position = 8;
-       System.out.println(  position+" "+         Container.convertPositionFrom_int_to_alphanumeric( position) );
-           position = 89;
-       System.out.println(  position+" "+         Container.convertPositionFrom_int_to_alphanumeric( position) );
-        position = 52;
-       System.out.println(  position+" "+         Container.convertPositionFrom_int_to_alphanumeric( position) );
-        position = 64;
-       System.out.println(  position+" "+         Container.convertPositionFrom_int_to_alphanumeric( position) );
-       position = 41;
-       System.out.println(  position+" "+         Container.convertPositionFrom_int_to_alphanumeric( position) );
-       
+           ArrayList plateNames = Container.findContainerLabelsForProcess(Constants.PROCESS_SELECT_PLATES_FOR_END_READS,  75);
+                   
         }
         catch(Exception e)
         {

@@ -21,23 +21,24 @@
     <td width="50%" bgColor="#e4e9f8"><div align="center"><font color="000080"><strong>Clone Raw Data Information
               </strong></font></div></td>
   </tr>
-  <tr>    <td >  <input type="checkbox" checked name="l" value="1" disabled>     Clone Id</td> 
-   <td ><input type="checkbox"  name="is_forward_er_uploaded" value="1" >  Is forward end read uploaded? </td>  </tr>
+  <tr>    <td >  <input type="checkbox" checked name="l" value="1" disabled> Clone Id</td> 
+   <td ><input type="checkbox"  name="is_forward_er_uploaded" value="1" > Is forward end read uploaded? </td>  </tr>
 
   <tr>
-    <td> <input type="checkbox" name="plate_label" value="1">      Plate Label</td>
-	 <td><input type="checkbox"  name="is_reverse_er_uploaded" value="1" >  
-Is reverse end read uploaded? </td>
+    <td> <input type="checkbox" name="clone_final_status" value="1"> Clone Final Status</td>
+	 <td><input type="checkbox"  name="is_reverse_er_uploaded" value="1" > Is reverse end read uploaded? </td>
+  </tr>
+  <tr>
+    <td> <input type="checkbox" name="plate_label" value="1"> Plate Label</td>
+	 <td><input type="checkbox"  name="is_ordered_internals_oligos" value="1" > Number of ordered internal oligo </td>
   </tr>
   <tr>
     <td> <input type="checkbox" name="sample_type" value="1">      Sample Type</td>
-    <td><input type="checkbox"  name="is_ordered_internals_oligos" value="1" >
- Number of ordered internal oligo</td>
+    <td><input type="checkbox"  name="is_internal_traces" value="1" > Number of submitted internal reads </td>
   </tr>
   <tr>
     <td> <input type="checkbox" name="position" value="1">      Position</td>
-    <td><input type="checkbox"  name="is_internal_traces" value="1" > 
-Number of submitted internal reads</td>
+    <td>&nbsp;</td>
   </tr>
 
   <tr>

@@ -277,15 +277,12 @@ public class BlastWrapper
     public void run() throws BecUtilException
     {
         String blastcmd = null;
-       //  System.out.println("ll");
         if (m_blast_type == BLASTALL  && m_db == null )
         {
         
             throw new BecUtilException( BLAST_FAILED_NO_DB);
         }
-       // System.out.println(m_blast_type + " "+m_db);
         blastcmd = makeBlastCmd();
-//System.out.println(blastcmd);
         try
         {
             Runtime r = Runtime.getRuntime();
@@ -422,8 +419,7 @@ public class BlastWrapper
              + " -I "  + m_gi;
         else if (m_blast_type == BLAST2SEQ )
             blastcmd = BLAST_PASS + "bl2seq "  + " -j " + m_subjectinputf +" "+blastcmd;
-  //      System.out.println(blastcmd);
-        return blastcmd;
+         return blastcmd;
     }
 
 

@@ -31,39 +31,33 @@ import edu.harvard.med.hip.bec.coreobjects.endreads.*;
  *
  * @author  HTaycher
  */
-public class IsolateRankerRunner implements Runnable
+public class IsolateRankerRunner extends ProcessRunner
 {
 
-    /** Creates a new instance of IsolateRankerRunner */
-    public IsolateRankerRunner()
-    {
-         m_error_messages = new ArrayList();
-    }
 
     private ArrayList           m_master_container_labels = null;//get from form
     private boolean             m_isRunPolymorphismFinder = false;//get from form
     private FullSeqSpec         m_fullseq_spec = null;
     private EndReadsSpec        m_endreads_spec = null;
-    private User                m_user = null;
     private ArrayList           m_error_messages = null;
 
 
-    public void         setContainerLabels(ArrayList v)        { m_master_container_labels = v;}
     public void         setCutoffValuesSpec(FullSeqSpec specs)        {m_fullseq_spec = specs;}
     public void         setPenaltyValuesSpec(EndReadsSpec specs)        {m_endreads_spec = specs;}
-    public  void        setUser(User v){m_user=v;}
+    public String getTitle() {    return "Request for Isolate ranker run.";   }
 
-    public void run()
+
+
+    public void run_process()
     {
         // The database connection used for the transaction
             Connection conn = null;
             ArrayList master_container_ids = new ArrayList();
-            String requested_plates= Algorithms.convertStringArrayToString(m_master_container_labels,"\n");
-            int container_id = -1;
+             int container_id = -1;
              IsolateRanker isolate_ranker = null;
             try
             {
-                master_container_ids = Container.findContainerIdsFromLabel(m_master_container_labels);
+                master_container_ids = Container.findContainerIdsFromLabel(Algorithms.splitString(m_items));
                 // conncection to use for transactions
                 conn = DatabaseTransaction.getInstance().requestConnection();
                  //get construct from db// synchronize block here
@@ -71,11 +65,11 @@ public class IsolateRankerRunner implements Runnable
                 {
                     container_id = ((Integer)master_container_ids.get(plate_count)).intValue();
                     ArrayList constructs = Construct.getConstructsFromPlates(String.valueOf(container_id));
-        
+
                     isolate_ranker = new IsolateRanker(m_fullseq_spec,  m_endreads_spec,constructs);
                     isolate_ranker.run(conn);
                     m_error_messages.addAll( isolate_ranker.getErrorMessages() );
-               
+
                 }
 
                      //request object
@@ -93,7 +87,7 @@ public class IsolateRankerRunner implements Runnable
                     ArrayList specs = new ArrayList();
                     specs.add(m_fullseq_spec);
                     specs.add( m_endreads_spec );
-               
+
                     ProcessExecution process = new ProcessExecution( BecIDGenerator.BEC_OBJECT_ID_NOTSET,
                                                                 ProcessDefinition.ProcessIdFromProcessName(ProcessDefinition.RUN_ENDREADS_EVALUATION),
                                                                 actionrequest.getId(),
@@ -122,34 +116,18 @@ public class IsolateRankerRunner implements Runnable
             }
             finally
             {
-                  try
-                {
-         //send errors
-                    if (m_error_messages.size()>0)
-                    {
-                         Mailer.sendMessage(m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",
-                        "hip_informatics@hms.harvard.edu", "Request for end reads evaluation: error messages.", "Errors\n Processing of requested for the following plates(bec ids):\n"+requested_plates ,m_error_messages);
-
-                    }
-                    if (m_error_messages.size()==0)
-                    {
-                         Mailer.sendMessage(m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",
-                        "hip_informatics@hms.harvard.edu", "Request for end reads evaluation: error messages.", "\nIsolate Ranker finished request for the following plates(bec ids):\n"+requested_plates );
-
-                    }
-                }
-                    catch(Exception e){}
-                DatabaseTransaction.closeConnection(conn);
+                sendEMails( getTitle() );
+                if ( conn != null ) DatabaseTransaction.closeConnection(conn);
             }
 
     }
 
-    
-   
-     
-     
-     
-     
+
+
+
+
+
+
       public static void main(String args[])
     {
         try{
@@ -158,9 +136,11 @@ public class IsolateRankerRunner implements Runnable
             edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
 
         IsolateRankerRunner runner = new IsolateRankerRunner();
-        ArrayList master_container_labels = new ArrayList(); 
+        ArrayList master_container_labels = new ArrayList();
         master_container_labels.add("BSA000768");
-        runner.setContainerLabels(master_container_labels );
+        runner.setInputData(Constants.ITEM_TYPE_PLATE_LABELS, "IGS002106-1");
+      //  runner.setContainerLabels(master_container_labels );
+        runner.setProcessType( Constants.PROCESS_RUN_ISOLATE_RUNKER );
         runner.setCutoffValuesSpec( (FullSeqSpec)Spec.getSpecById(91, Spec.FULL_SEQ_SPEC_INT));
         runner.setPenaltyValuesSpec( (EndReadsSpec)Spec.getSpecById(1, Spec.END_READS_SPEC_INT));
        runner.setUser(  AccessManager.getInstance().getUser("htaycher123","htaycher"));
@@ -168,4 +148,7 @@ public class IsolateRankerRunner implements Runnable
         }catch(Exception e){}
         System.exit(0);
       }
+
+
+
 }

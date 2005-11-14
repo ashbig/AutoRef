@@ -28,8 +28,7 @@ public class TraceFileProcessingRunner extends ProcessRunner
      
     
     private String              m_renaming_file_name = "rename";
-    private int                m_process_name = -1;
-    private String             m_read_direction = null;
+     private String             m_read_direction = null;
     private String             m_read_type = null;
     private String             m_file_extension = null;
     private String             m_inputdir = null;
@@ -44,7 +43,6 @@ public class TraceFileProcessingRunner extends ProcessRunner
     private String              OUTPUT_DIR = edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("TRACE_FILES_INPUT_PATH_DIR");
     private String              INPUT_DIR = edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("TRACE_FILES_TRANCFER_INPUT_DIR");
   
-    public void setProcessType(int process_name){m_process_name=process_name;}
     public void setReadDirection(String read_direction)    { m_read_direction = read_direction;}
     public void setReadType(String read_type)    { m_read_type = read_type;    }//m_read_type= read_type;}
     public void setFileExtension(String ext){ m_file_extension = ext;}
@@ -75,11 +73,11 @@ public class TraceFileProcessingRunner extends ProcessRunner
     
     
     /** Creates a new instance of TraceFileProcessingRunner */
-    public void run()
+    public void run_process()
     {
          try
         {
-            switch (m_process_name)
+            switch (m_process_type)
             {
                 case Constants.PROCESS_CREATE_FILE_FOR_TRACEFILES_TRANSFER:
                 {
@@ -135,7 +133,10 @@ public class TraceFileProcessingRunner extends ProcessRunner
            
          }
           File renaming_file =   new File( renaming_file_name );
-          if ( renaming_file!= null )m_file_list_reports.add( renaming_file );
+          if ( renaming_file.exists() )
+          {
+              m_file_list_reports.add( renaming_file );
+          }
          
      }
      
@@ -518,16 +519,16 @@ public class TraceFileProcessingRunner extends ProcessRunner
               BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
         sysProps.verifyApplicationSettings();
       edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadTraceFileFormats();
-TraceFileProcessingRunner runner = new TraceFileProcessingRunner();
+ProcessRunner runner = new TraceFileProcessingRunner();
 runner.setProcessType(Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRANSFER);
-runner.setReadType(Constants.READ_TYPE_INTERNAL_STR);//m_read_type= read_type;}
+((TraceFileProcessingRunner)runner).setReadType(Constants.READ_TYPE_ENDREAD_STR);//m_read_type= read_type;}
 //runner.setSequencingFacility(SequencingFacilityFileName.SEQUENCING_FACILITY_KOLODNER);
-runner.setInputDirectory("E:\\Yersinia pestis KIM\\files_to_transfer");
+((TraceFileProcessingRunner)runner).setInputDirectory("C:\\bio\\plate_dump");
 //runner.setOutputDirectory( "C:\\bio\\original_files");
-runner.setRenamingFile(new  FileInputStream("E:\\Yersinia pestis KIM\\files_to_transfer\\mapping.txt"));
-runner.setFormatName("Kolodner");
-     runner.setUser( AccessManager.getInstance().getUser("tigr","tigr"));
-       runner.setDelete("YES");
+((TraceFileProcessingRunner)runner).setRenamingFile(new  FileInputStream("C:\\bio\\plate_dump\\map.txt"));
+((TraceFileProcessingRunner)runner).setFormatName("HMBCT");
+     runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
+       ((TraceFileProcessingRunner)runner).setDelete("YES");
            
        
                 

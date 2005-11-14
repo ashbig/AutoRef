@@ -12,7 +12,7 @@ package edu.harvard.med.hip.bec.action_runners;
  */
 
     /*
- 
+
  * end reads processing request
  * Created on May 6, 2003, 3:00 PM
  */
@@ -44,24 +44,19 @@ import edu.harvard.med.hip.bec.sampletracking.objects.*;
  */
   public class EndReadsRequestRunner extends ProcessRunner
 {
-    
-     
-  
-        private ArrayList   i_master_container_ids = null;//get from form
         private boolean     i_isForward = false;//get from form
         private boolean     i_isReverse = false;//get from form
         private int         i_forward_primerid = -1;//get from form
         private int         i_reverse_primerid = -1;
-     
-        public void         setContainerIds(ArrayList v)        { i_master_container_ids = v;}
+
         public void         setForwardPrimerId(int id)        {i_forward_primerid = id; i_isForward =true;}
         public void         setRevercePrimerId(int id)        {i_reverse_primerid = id; i_isReverse = true;}
-        public String getTitle()     {   return "Request for end reads sequencing";  }     
-     
-        public void run()
+        public String       getTitle()     {   return "Request for end reads sequencing";  }
+
+        public void run_process()
         {
-            
-            
+
+
             // The database connection used for the transaction
             Connection conn = null;
             ArrayList master_plates = new ArrayList();
@@ -71,6 +66,8 @@ import edu.harvard.med.hip.bec.sampletracking.objects.*;
             {
                 // conncection to use for transactions
                 conn = DatabaseTransaction.getInstance().requestConnection();
+                ArrayList master_container_ids = Container.findContainerIdsFromLabel(Algorithms.splitString( m_items));
+                if ( master_container_ids == null || master_container_ids.size() == 0) return;
                 //request object
                 ArrayList processes = new ArrayList();
                 Request actionrequest = new Request(BecIDGenerator.BEC_OBJECT_ID_NOTSET,
@@ -88,44 +85,44 @@ import edu.harvard.med.hip.bec.sampletracking.objects.*;
                                                         actionrequest.getId(),
                                                         specids,
                                                         Constants.TYPE_ID) ;
-                
+
                  processes.add(process);
                  //finally we must insert request
                 actionrequest.insert(conn);
                 //patch here
                  process.insertConnectorToSpec(conn, Spec.VECTORPRIMER_SPEC_INT);
-                
+
                 //get master plates from db
                 Container container = null;Sample smp = null;
-                
+
                 int[] result_types = {Result.RESULT_TYPE_ENDREAD_FORWARD,Result.RESULT_TYPE_ENDREAD_REVERSE};
-                for (int count =0; count < i_master_container_ids.size(); count++)
+                for (int count =0; count < master_container_ids.size(); count++)
                 {
-                    container = new Container( ( (Integer)i_master_container_ids.get(count)).intValue());
+                    container = new Container( ( (Integer)master_container_ids.get(count)).intValue());
                     requested_plates += container.getLabel();
-                    
+
                     //check wether this plate has end read results already
                     if (container.checkForResultTypes(result_types))
                     {
                         m_error_messages.add("Plate "+container.getLabel()+" has enr read result - it wont be processed");
                         continue;
                     }
-                  
+
                     container.restoreSampleIsolate(false,false);
                     master_plates.add(container);
                 }
-                
+
                 // for each plate
                 ArrayList isolates = null;
                 Result result = null;
                 IsolateTrackingEngine istrk = null;
-                
+
                 for (int count = 0; count < master_plates.size(); count++)
                 {
                     //get all isolate tracking with status 'submitted'
                     container = (Container) master_plates.get(count);
                     processPlate( container,  m_file_list_reports, conn, process.getId());
-                   
+
                 }
                 // commit the transaction
                 if (master_plates.size() != 0)
@@ -139,13 +136,13 @@ import edu.harvard.med.hip.bec.sampletracking.objects.*;
             finally
             {
                sendEMails ( getTitle() );
-                DatabaseTransaction.closeConnection(conn);
+                if ( conn != null )DatabaseTransaction.closeConnection(conn);
             }
-            
+
         }
-        
-     
-        
+
+
+
         private void processPlate(Container container, ArrayList file_list, Connection conn, int process_id) throws Exception
         {
             ArrayList naming_file_entries_reverse = new ArrayList();
@@ -181,7 +178,7 @@ import edu.harvard.med.hip.bec.sampletracking.objects.*;
                             result.insert(conn, process_id );
                             cloneid = istrk.getFlexInfo().getFlexCloneId();
                             //change isolate status
-                            if ( !isStatusUpdated) 
+                            if ( !isStatusUpdated)
                             {
 
                                 IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_INITIATED,istrk.getId(),  conn );
@@ -202,12 +199,12 @@ import edu.harvard.med.hip.bec.sampletracking.objects.*;
                             cloneid = istrk.getFlexInfo().getFlexCloneId();
                             result = new Result(BecIDGenerator.BEC_OBJECT_ID_NOTSET,    process_id,
                                                 istrk.getSampleId(),     null,
-                                                Result.RESULT_TYPE_ENDREAD_REVERSE,     
+                                                Result.RESULT_TYPE_ENDREAD_REVERSE,
                                                 BecIDGenerator.BEC_OBJECT_ID_NOTSET
                                                 );
                             result.insert(conn, process_id);
                              //change isolate status
-                             if ( !isStatusUpdated) 
+                             if ( !isStatusUpdated)
                             {
                                  IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_INITIATED,istrk.getId(),  conn );
                                  isStatusUpdated = true;
@@ -240,46 +237,41 @@ import edu.harvard.med.hip.bec.sampletracking.objects.*;
                 throw new BecDatabaseException("Cannot process request for plate "+container.getLabel()+" Request will be aborted. Please try later.");
             }
     }
-        
+
         private NamingFileEntry createNamingFileEntry(Sample smp, String orientation)
                                 throws Exception
         {
             NamingFileEntry entry =new  NamingFileEntry(smp.getIsolateTrackingEngine().getFlexInfo().getFlexCloneId()
                         , orientation,
                         smp.getIsolateTrackingEngine().getFlexInfo().getFlexPlateId(),
-                       edu.harvard.med.hip.bec.sampletracking.objects.Container.convertPositionFrom_int_to_alphanumeric( smp.getPosition()), 
+                       edu.harvard.med.hip.bec.sampletracking.objects.Container.convertPositionFrom_int_to_alphanumeric( smp.getPosition()),
                         smp.getIsolateTrackingEngine().getFlexInfo().getFlexSequenceId(),
                         0);
             return entry;
         }
-    
+
      public static void main(String args[])
     {
         try
         {
           ArrayList master_container_ids = new ArrayList();
-          ArrayList  master_container_labels = new ArrayList();
-           master_container_labels.add("YMG000488");
-           master_container_ids = Container.findContainerIdsFromLabel(master_container_labels);
-
-
-            int forward_primer_id = 1 ;
+              int forward_primer_id = 1 ;
             int reverse_primer_id = -1;
 
-            EndReadsRequestRunner runner = new EndReadsRequestRunner();
-            runner.setContainerIds(master_container_ids );
-            if ( forward_primer_id != -1) runner.setForwardPrimerId( forward_primer_id );
-            if ( reverse_primer_id != -1)runner.setRevercePrimerId(reverse_primer_id);
+            ProcessRunner runner = new EndReadsRequestRunner();
+            runner.setInputData(Constants.ITEM_TYPE_PLATE_LABELS, "YMG000488" );
+            if ( forward_primer_id != -1) ((EndReadsRequestRunner)runner).setForwardPrimerId( forward_primer_id );
+            if ( reverse_primer_id != -1)((EndReadsRequestRunner)runner).setRevercePrimerId(reverse_primer_id);
             runner.setUser(AccessManager.getInstance().getUser("htaycher345","htaycher"));
             runner.run();
 
         }catch(Exception e){}
         System.exit(0);
      }
-    
-   
-    
+
+
+
 }
 
-    
+
 

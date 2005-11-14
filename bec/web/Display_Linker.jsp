@@ -8,7 +8,8 @@
 <%@ page import="edu.harvard.med.hip.bec.coreobjects.spec.*" %>
 <html>
 
-<head><title>linker</title></head>
+<head><title>Linker</title></head>
+<LINK REL=STYLESHEET       HREF="application_styles.css"      TYPE="text/css">
 
 <body >
 
@@ -55,29 +56,14 @@ if (count1 !=0 && count1 % 40 == 0 )linkerseq_formated.append("<BR>");
 
 %>
 
-<tr>
-	<td colspan=2 bgcolor="#1145A6" height="26"><strong><font color="#FFFFFF"> Linker <%= linker.getId() %></font> </td>
-	
-</tr>
-<tr>
-	<td width="25%" bgColor="#b8c6ed">  <b>Linker Name</b>  </td>
-	<td  bgColor="#b8c6ed"><%= linker.getName() %></td>
-</tr>
-<tr> 
-	<td  bgColor="#e4e9f8" nowrap ><strong>Sequence: </strong></td>
-	<td bgColor="#e4e9f8"> <%= linkerseq_formated.toString() %></td>
-</tr>
+<tr class='headerRow'>	<td  height="26"> Linker </td><td>&nbsp;</td></tr>
+<tr class='evenRowColoredFont'><td width="25%" >Linker Name  </td>	<td  ><%= linker.getName() %></td></tr>
+<tr class='evenRowColoredFont'> 	<td  nowrap >Sequence: </td>	<td > <%= linkerseq_formated.toString() %></td></tr>
 <% if (linker.getFrameStart() != -1)
 {%>
-<tr> 
-	<td  bgColor="#e4e9f8" ><strong>Frame Start: </strong></td>
-	<td bgColor="#e4e9f8"> <%= linker.getFrameStart() %></td>
-</tr>
+<tr class='evenRowColoredFont'> 
+	<td>Frame Start: </td>	<td > <%= linker.getFrameStart() %></td></tr>
 <%}%>
-<!--<tr> 
-	<td  bgColor="#b8c6ed" ><b>Linker Id:</b></td>
-	 <td bgColor="#b8c6ed">= linker.getId() %></td>   </tr>-->
- 
 
 <tr><TD>&nbsp;</TD></TR>
 

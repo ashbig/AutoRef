@@ -87,7 +87,10 @@
   </TR>
   <TR> 
     <TD width="35%" ><strong>Alignment:</strong></td>
-    <td ><input type=BUTTON value=Alignment onClick="window.open('<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetItem.do?forwardName=<%=Constants.READSEQUENCE_NEEDLE_ALIGNMENT_INT%>&amp;ID=<%= clone_sequence.getId()%>&amp;TYPE=<%= BaseSequence.CLONE_SEQUENCE%>&amp;<%=BaseSequence.THEORETICAL_SEQUENCE_STR%>=<%= clone_sequence.getRefSequenceId ()%>','<%= clone_sequence.getId()+clone_sequence.getRefSequenceId ()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;"></TD>
+    <td >
+    <% if (clone_sequence.getStatus() != CloneSequence.CLONE_SEQUENCE_STATUS_ASSEMBLED ){%>
+<input type=BUTTON value=Alignment onClick="window.open('<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetItem.do?forwardName=<%=Constants.READSEQUENCE_NEEDLE_ALIGNMENT_INT%>&amp;ID=<%= clone_sequence.getId()%>&amp;TYPE=<%= BaseSequence.CLONE_SEQUENCE%>&amp;<%=BaseSequence.THEORETICAL_SEQUENCE_STR%>=<%= clone_sequence.getRefSequenceId ()%>','<%= clone_sequence.getId()+clone_sequence.getRefSequenceId ()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;">
+    <%}else {%>Not available<%}%> </TD>
  
  
 </TR>

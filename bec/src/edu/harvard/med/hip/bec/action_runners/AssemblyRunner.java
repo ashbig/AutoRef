@@ -52,9 +52,7 @@ public class AssemblyRunner extends ProcessRunner
         private ArrayList   m_master_container_ids = null;//get from form
         private String      m_phrap_params_file = null;
         private String      m_traceFilesBaseDir = null;
-        private ArrayList   m_error_messages = null;
         private String      m_result_type = null;
-        private User        m_user = null;
         private String      m_vector_file_name = null;
         private int         m_assembly_mode = END_READS_ASSEMBLY;
         private int         m_quality_trimming_phd_score = 0;
@@ -63,7 +61,6 @@ public class AssemblyRunner extends ProcessRunner
         private int         m_use_lqreads_for_assembly = 0;
         private int         m_delete_lqreads = 0;
    
-        public  void        setUser(User v){m_user=v;}
         public void         setResultType(String v){ m_result_type=v;}
         public void         setVectorFileName(String v){m_vector_file_name = v;}
         public void         setAssemblyMode(int mode){ m_assembly_mode = mode;}
@@ -76,7 +73,7 @@ public class AssemblyRunner extends ProcessRunner
         public String       getTitle(){ return "Request for sequence assembler run.";}
 
 
-        public void run()
+        public void run_process()
         {
       // The database connection used for the transaction
        
@@ -88,7 +85,8 @@ public class AssemblyRunner extends ProcessRunner
             RefSequence refsequence = null;BaseSequence base_refsequence = null;
             BioLinker   linker5 = null; int cds_start = 0; int cds_stop = 0;
             BioLinker   linker3 = null;
-            ArrayList expected_sequence_definition = null;
+            ArrayList sequence_definition = null;
+            String sql = null;
             ArrayList sql_groups_of_items = null;
              CloneDescription clone_definition = null;
              int[] isolate_status = getIsolateStatus();// statuses for isolate - first pass; second - failed
@@ -101,16 +99,23 @@ public class AssemblyRunner extends ProcessRunner
                 conn = DatabaseTransaction.getInstance().requestConnection();
                 int process_id = createProcessHistory(conn);
                if (m_assembly_mode == FULL_SEQUENCE_ASSEMBLY) distributeInternalReads();
+                
           //process only sequences  that are exspected
                 sql_groups_of_items =  prepareItemsListForSQL();
+                if ( sql_groups_of_items == null ) return;
+                 EndReadsWrapperRunner erw = new EndReadsWrapperRunner();
+                 String trace_files_path = erw.getOuputBaseDir();
+                   
                for (int count = 0; count < sql_groups_of_items.size(); count++)
                {
                     
-                   expected_sequence_definition = getExspectedSequenceDescriptions(conn, m_result_type, (String)sql_groups_of_items.get(count) );
-                    if (expected_sequence_definition.size() == 0 )      break; ;
-                    for (int clone_count = 0; clone_count < expected_sequence_definition.size(); clone_count ++)
+                    sql = constructQueryString( m_result_type, (String)sql_groups_of_items.get(count) );
+                    sequence_definition =  getCloneInfo( conn,  sql, trace_files_path);
+  
+                    if (sequence_definition.size() == 0 )      break; ;
+                    for (int clone_count = 0; clone_count < sequence_definition.size(); clone_count ++)
                     {
-                        clone_definition= ( CloneDescription)expected_sequence_definition.get(clone_count);
+                        clone_definition= ( CloneDescription)sequence_definition.get(clone_count);
                         //get linker info
                         try
                         {
@@ -173,16 +178,18 @@ public class AssemblyRunner extends ProcessRunner
             }
             finally
             {
-                try
+                /*try
                 {
-                    String message=null;
+                   /* String message=null;
                     if (m_error_messages != null && m_error_messages.size()>0)
                     {
                         String file_name = Constants.getTemporaryFilesPath() + File.separator + "ErrorMessages"+ System.currentTimeMillis()+".txt";
                         Algorithms.writeArrayIntoFile( m_error_messages, false,  file_name) ;
                         message = getTitle()+ Constants.LINE_SEPARATOR + "Please find error messages for your request in  attached file";
-                        Mailer.sendMessageWithAttachedFile(m_user.getUserEmail(), "hip_informatics@hms.harvard.edu", "hip_informatics@hms.harvard.edu",getTitle(), message , 
-                        new File(file_name) );
+                        Mailer.sendMessageWithAttachedFile(m_user.getUserEmail(), 
+                                        BecProperties.getInstance().getACEEmailAddress(), 
+                                        BecProperties.getInstance().getProperty("ACE_CC_EMAIL_ADDRESS"),
+                                        getTitle(), message ,   new File(file_name) );
                     }
                     message =  getTitle()+  Constants.LINE_SEPARATOR +"Process finished.";
                     if ( m_items != null && m_items.length() > 0)
@@ -197,9 +204,26 @@ public class AssemblyRunner extends ProcessRunner
     +  Constants.LINE_SEPARATOR+" delete low quality reads from hard drive: "+       (m_delete_lqreads ==1);
                         message +=  Constants.LINE_SEPARATOR + "Request item's ids:\n"+m_items;
                     }
-                    Mailer.sendMessage      ( m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",  "hip_informatics@hms.harvard.edu", getTitle(), message);
+                    Mailer.sendMessage      ( m_user.getUserEmail(), 
+                            BecProperties.getInstance().getACEEmailAddress(), 
+                            BecProperties.getInstance().getProperty("ACE_CC_EMAIL_ADDRESS"),
+                            getTitle(), message);
 
                 }catch(Exception e1){}
+                 **/
+                 if ( m_items != null && m_items.length() > 0)
+                    {
+                        
+                        m_additional_info = Constants.LINE_SEPARATOR+"Assembly conditions: "
+                       +  Constants.LINE_SEPARATOR+" vector trimming: vector file name :"+m_vector_file_name 
+    + Constants.LINE_SEPARATOR+" quality trimming: score: "+ m_quality_trimming_phd_score 
+    + Constants.LINE_SEPARATOR+" quality trimming: first base: "+   m_quality_trimming_phd_first_base
+    +  Constants.LINE_SEPARATOR+" quality trimming: last base: "+       m_quality_trimming_phd_last_base 
+    +  Constants.LINE_SEPARATOR+" exclude low quality reads from assembly: " +   (m_use_lqreads_for_assembly == 1)
+    +  Constants.LINE_SEPARATOR+" delete low quality reads from hard drive: "+       (m_delete_lqreads ==1);
+                       
+                    }
+                 sendEMails(getTitle());
                 if ( conn != null) DatabaseTransaction.closeConnection(conn);
                
             }
@@ -371,39 +395,44 @@ public class AssemblyRunner extends ProcessRunner
   
             
      
-      private ArrayList getExspectedSequenceDescriptions(Connection conn, String status, String sql_items)throws BecDatabaseException
+      private String constructQueryString(String status, String sql_items)throws BecDatabaseException
       {
-          String sql = null;
-          EndReadsWrapperRunner erw = new EndReadsWrapperRunner();
-          String trace_files_path = erw.getOuputBaseDir();
-          switch ( m_assembly_mode ) 
+         if( m_assembly_mode == END_READS_ASSEMBLY )
          {
-             case END_READS_ASSEMBLY :
-             {
-                 //submission by plate
-                sql = "select flexcloneid, flexsequenceid,  refsequenceid, iso.isolatetrackingid as isolatetrackingid , containerid, s.sampleid as sampleid"
+             switch (m_items_type)
+            {
+                case Constants.ITEM_TYPE_CLONEID:
+                {
+                     return "select flexcloneid, flexsequenceid,  refsequenceid, iso.isolatetrackingid as isolatetrackingid , containerid, s.sampleid as sampleid"
++ " from isolatetracking iso,  sample s, sequencingconstruct  constr , flexinfo f "
++" where constr.constructid = iso.constructid and iso.sampleid=s.sampleid and f.isolatetrackingid=iso.isolatetrackingid "
++" and status in ("+ status +") and flexcloneid in (  "+sql_items + ") order by containerid ,refsequenceid";
+                   
+                }
+                case  Constants.ITEM_TYPE_PLATE_LABELS:
+                {
+                   return "select flexcloneid, flexsequenceid,  refsequenceid, iso.isolatetrackingid as isolatetrackingid , containerid, s.sampleid as sampleid"
 + " from isolatetracking iso,  sample s, sequencingconstruct  constr , flexinfo f "
 +" where constr.constructid = iso.constructid and iso.sampleid=s.sampleid and f.isolatetrackingid=iso.isolatetrackingid "
 +" and status in ("+ status +") and containerid in ( select containerid from containerheader where label in "
 + "("+sql_items + ")) order by containerid ,refsequenceid";
-               //  System.out.println(sql);
-                break;
-             }
-             case FULL_SEQUENCE_ASSEMBLY :
-             {
-                   
-                 sql =  "select flexcloneid, flexsequenceid,  refsequenceid, iso.isolatetrackingid as isolatetrackingid , containerid, s.sampleid as sampleid"
+                  
+                }
+            }
+         }
+         else if( m_assembly_mode ==  FULL_SEQUENCE_ASSEMBLY )
+         {
+
+            return  "select flexcloneid, flexsequenceid,  refsequenceid, iso.isolatetrackingid as isolatetrackingid , containerid, s.sampleid as sampleid"
 + " from isolatetracking iso,  sample s, sequencingconstruct  constr , flexinfo f "
 +" where  constr.constructid = iso.constructid and iso.sampleid=s.sampleid and f.isolatetrackingid=iso.isolatetrackingid "
 +" and f.flexcloneid in ("+sql_items +") order by containerid ,refsequenceid";
-                break;
-             }
-             
+           
          }
-        return getExspectedCloneDescriptions( conn,  sql, trace_files_path);
-      }
+        return null;
+     }
      
-     private ArrayList getExspectedCloneDescriptions(Connection conn, String sql, String trace_files_path)throws BecDatabaseException
+     private ArrayList getCloneInfo(Connection conn, String sql, String trace_files_path)throws BecDatabaseException
     {
         ArrayList res = new ArrayList();
        ResultSet rs = null;ResultSet rs_ref = null;String sql_sample = null;
@@ -613,7 +642,7 @@ public class AssemblyRunner extends ProcessRunner
 
 public static void main(String args[]) 
 {
-    AssemblyRunner runner = new AssemblyRunner();
+    ProcessRunner runner =null;
        CloneAssembly clone_assembly =null;
     try
     {
@@ -621,16 +650,28 @@ public static void main(String args[])
         sysProps.verifyApplicationSettings();
         edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
 
-    
-         runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
-        runner.setResultType( String.valueOf(IsolateTrackingEngine.PROCESS_STATUS_ER_PHRED_RUN));
-         runner.setAssemblyMode(AssemblyRunner.END_READS_ASSEMBLY);
-       //      runner.setItems("116384	");
-      // runner.setItemsType( Constants.ITEM_TYPE_CLONEID);
-            runner.setInputData(Constants.ITEM_TYPE_PLATE_LABELS,"IGS002108-1");  
-            runner.setVectorFileName("vector_empty.seq");
-        runner.run();           
-        
+     User user = AccessManager.getInstance().getUser("htaycher123","htaycher");
+      runner = new AssemblyRunner();
+               runner.setInputData(Constants.ITEM_TYPE_PLATE_LABELS,"VCXXG002290-4.012-1 ");  
+    runner.setUser(user);
+            runner.setProcessType(Constants.PROCESS_RUN_ASSEMBLER_FOR_END_READS);
+  System.out.println(runner.getUser() == null);
+           ((AssemblyRunner)runner).setAssemblyMode(AssemblyRunner.END_READS_ASSEMBLY);
+        ((AssemblyRunner)runner).setResultType( String.valueOf(IsolateTrackingEngine.PROCESS_STATUS_ER_PHRED_RUN));
+        ((AssemblyRunner)runner).setVectorFileName( "vector_empty.seq");
+        ((AssemblyRunner)runner).setQualityTrimmingScore ( 0);
+        ((AssemblyRunner)runner).setQualityTrimmingLastBase (1000);
+        ((AssemblyRunner)runner).setQualityTrimmingFirstBase ( 0);
+         ((AssemblyRunner)runner).setIsUseLQReadsForAssembly( false );
+        ((AssemblyRunner)runner).setIsDeleteLQReads( false );
+                   runner.run();           
+     /*
+     runner =  new EndReadsWrapperRunner();
+     runner.setProcessType(Constants.PROCESS_RUN_END_READS_WRAPPER);
+        runner.setInputData( edu.harvard.med.hip.bec.Constants.ITEM_TYPE_PLATE_LABELS, "VCXXG002290-3.012-1");
+         runner.setUser(user);
+        runner.run();
+      **/
     }catch(Exception e){}
     System.exit(0);
 }

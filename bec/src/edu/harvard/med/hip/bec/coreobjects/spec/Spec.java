@@ -218,7 +218,6 @@ public abstract class Spec
                 val =  (String)m_params.get(key);
                 pstmt.setString(1, key.toUpperCase());
                 pstmt.setString(2, val);
-                
                 DatabaseTransaction.executeUpdate(pstmt);
                // System.out.println(key);
            }

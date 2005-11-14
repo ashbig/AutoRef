@@ -90,7 +90,7 @@ public class PrimerDesignerRunner extends ProcessRunner
   
     
     
-    public void run()
+    public void run_process()
     {
          int id = -1; int process_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
          Connection conn = null;
@@ -274,7 +274,7 @@ public class PrimerDesignerRunner extends ProcessRunner
                 +" containerheader where label in ("+plate_names.toString()+"))))";
  **/
             }
-            case  Constants.ITEM_TYPE_BECSEQUENCE_ID :
+            case  Constants.ITEM_TYPE_ACE_REF_SEQUENCE_ID :
             {
                 return "select distinct refsequenceid as working_id , refsequenceid as repeat_id, refsequenceid as query_id "
                 +" from sequencingconstruct where  refsequenceid in  ("+Algorithms.convertStringArrayToString(items,"," )+")";

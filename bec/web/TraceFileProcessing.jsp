@@ -154,13 +154,14 @@ else if ( forwardName_int == Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFIL
 </td></tr>-->
 <% Hashtable formats =(Hashtable) DatabaseToApplicationDataLoader.getTraceFileFormats();
 String format_name = null;
+int item_count = 0;
 for (Enumeration en = formats.keys(); en.hasMoreElements(); )
 {
     format_name = (String)en.nextElement();
 %>
- <tr><td><input type=radio name=sequencing_facility value="<%= format_name%>" ><%= format_name%> 
+ <tr><td><input type=radio name=sequencing_facility value="<%= format_name%>" <%if ( item_count ==0 ){%> checked <%}%>><%= format_name%> 
 
-   <% }%>
+   <% item_count++;}%>
 
 </table>
 <tr><td>&nbsp;</td></tr>

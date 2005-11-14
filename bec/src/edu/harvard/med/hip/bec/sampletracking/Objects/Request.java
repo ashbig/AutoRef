@@ -133,10 +133,8 @@ public class Request
             for (int ind = 0 ; ind < m_processes.size() ;ind++)
             {
                 ProcessExecution pr = (ProcessExecution)m_processes.get(ind);
-                System.out.print("l-"+ind);
                 pr.insert(conn);
-                System.out.print(ind);
-            }
+                 }
             
            
         } 

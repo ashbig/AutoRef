@@ -1,5 +1,5 @@
 /**
- * $Id: ProcessDefinition.java,v 1.17 2005-02-14 17:19:00 Elena Exp $
+ * $Id: ProcessDefinition.java,v 1.18 2005-11-14 16:10:40 Elena Exp $
  *
  * File     	: Process.java
  * Date     	: 04162001
@@ -42,22 +42,14 @@ public class ProcessDefinition
     
     public static final     String    RUN_GAP_MAPPER_FOR_LOWQUALITY_SEQUENCE = "Run Gap Mapper to identify Low Quality Regions";
     public static final     String    RUN_GAP_MAPPER = "Run Gap Mapper";
+    
+    public static final     String    RUN_UPDATE_FINAL_CLONE_STATUS = "Update final clone status";
   
     private int             m_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
     private String          m_process_name = null;
     private ArrayList       m_spectype_ids = null;
     
-   /*
-    public ProcessDefinition(int id) throws BecDatabaseException
-    {
-      
-    }
-    
-    public ProcessDefinition(String name) throws BecDatabaseException
-    {
-      
-    }
-    **/
+
     
    
     public ProcessDefinition(int id,  String name, ArrayList ids) 

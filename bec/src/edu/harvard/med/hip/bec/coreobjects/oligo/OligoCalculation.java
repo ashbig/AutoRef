@@ -133,7 +133,7 @@ public class OligoCalculation
                     oligo_calculations.addAll(getByPlateLabel((String) items.get( index),type_of_oligo_calculation, isLatestStretchCollection));
                     break;
                 }
-                case Constants.ITEM_TYPE_BECSEQUENCE_ID :
+                case Constants.ITEM_TYPE_ACE_REF_SEQUENCE_ID :
                 {   
                     oligo_calculations.addAll(getByRefSequenceId(Integer.parseInt( (String)items.get( index))));
                     break;

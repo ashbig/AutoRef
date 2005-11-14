@@ -74,7 +74,7 @@
   </table>
   </center>
 </div>
-<html:form action="/RunProcess.do" onsubmit="return validateForm(this);"> 
+<html:form action="/RunProcess.do"  onsubmit="return validateForm(this);"> 
 <input name="forwardName" type="hidden" value="<%= forwardName %>" > 
 
 <table border="0" cellpadding="10" cellspacing="2" width="74%" align=center>

@@ -34,11 +34,21 @@ import edu.harvard.med.hip.bec.ui_objects.*;
  */
 public abstract class ProcessRunner implements Runnable
 {
+    
+    public   static final int           PROCESS_TYPE_WRITE = 1;
+    public   static final int           PROCESS_TYPE_READ = -1;
+    public   static final int           PROCESS_TYPE_NOT_DEFINED = 0;
+    
+    
+    
+    
     protected ArrayList   m_error_messages = null;
     protected String      m_items = null;
+    protected String      m_items_original = null;
     protected int         m_items_type = -1;
     protected User        m_user = null;
     protected ArrayList   m_file_list_reports = null;
+    protected int         m_process_type = -1;
     
     protected String      m_additional_info =  Constants.LINE_SEPARATOR;
   //  private   String        m_title = null;
@@ -47,50 +57,384 @@ public abstract class ProcessRunner implements Runnable
     {
         m_error_messages = new ArrayList();
         m_file_list_reports = new ArrayList();
+        
        // m_title = "";
     }
     
     public  void        setUser(User v){m_user=v;}
- //   public  void        setItems(String item_ids)    {        m_items = item_ids;    }
- //    public  void        setItemsType( int type)     {   m_items_type = type;     }
-     public void       setInputData(int type,String item_ids)
+    public  void        setProcessType(int process_id)    {        m_process_type = process_id;    }
+ 
+    public void       setInputData(int type,String item_ids)
      {
          m_items_type = type;
          m_items = item_ids;
+         m_items_original = m_items;
          cleanUpItems();
-     
+        
      }
-    public  String        getItems()   {      return  m_items;    }   
+     public  String             getItems()   {      return  m_items;    }   
+     public int                 getProcessType(){ return m_process_type;}
+     public abstract String     getTitle();
+     public  User               getUser(){ return m_user;}
+     public abstract void       run_process();
+     
      
      public void run()
      {
-         cleanUpItems();
-         if (this instanceof PrimerDesignerRunner)
-         {  ((PrimerDesignerRunner)this).run(); }
-         else if  (this instanceof PolymorphismFinderRunner)
-             { ((PolymorphismFinderRunner)this).run();         }//run polymorphism finder
-         else if (this instanceof DiscrepancyFinderRunner)
-            {  ((DiscrepancyFinderRunner)this).run();   }
-          else if (this instanceof ReportRunner)
-            { ((ReportRunner)this).run();   }
-          else if (this instanceof AssemblyRunner)
-            { ((AssemblyRunner)this).run();     }
-          else if (this instanceof NoMatchReportRunner)
-              ((NoMatchReportRunner)this).run();
-           else if (this instanceof SpecialReportsRunner)
-              ((SpecialReportsRunner)this).run();
-           else if (this instanceof DeleteObjectRunner)
-              ((DeleteObjectRunner)this).run();
+         
+          try
+         {
+               
+               checkProcessSettings();
+               cleanUpFrozenItemsForWriteProcesses();
+             
+         }
+         catch(Exception e)
+         {
+             m_error_messages.add( e.getMessage());
+             sendEMails("Error message: cannot clean up none active items for write process ");
+             return;
+         }
+     
+         switch (m_process_type)
+         {
+               case -Constants.PROCESS_ADD_NEW_VECTOR  : 
+               case -Constants.PROCESS_SUBMIT_REFERENCE_SEQUENCES  :
+               case - Constants.PROCESS_SUBMIT_CLONE_SEQUENCES:
+               case -Constants.PROCESS_SUBMIT_CLONE_COLLECTION  : 
+                    {((DatabaseCommunicationsRunner)this).run_process(); break;}
+               case Constants.PROCESS_RUN_PRIMER3:
+                    {((PrimerDesignerRunner)this).run_process(); break;}
+               case Constants.PROCESS_ORDER_INTERNAL_PRIMERS:
+                        {((PrimerOrderRunner)this).run_process(); break;}
+     
+                case Constants.PROCESS_RUNPOLYMORPHISM_FINDER:
+                    { ((PolymorphismFinderRunner)this).run_process();     break;    }//run polymorphism finder
+                case Constants.PROCESS_RUN_DISCREPANCY_FINDER: 
+                        {  ((DiscrepancyFinderRunner)this).run_process();   break;}
+              case Constants.PROCESS_CREATE_REPORT:
+                        { ((ReportRunner)this).run_process(); break;  }
+               case Constants.PROCESS_NOMATCH_REPORT:
+                        { ((NoMatchReportRunner)this).run_process(); break;  }
+              // { ((SpecialReportRunner)this).run(); break;  }
+              case Constants.PROCESS_RUN_ASSEMBLER_FOR_END_READS:
+              case Constants.PROCESS_RUN_ASSEMBLER_FOR_ALL_READS:
+                        { ((AssemblyRunner)this).run_process();    break; }
+                case Constants.PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING  :
+                case Constants.PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING  :
+                case Constants.PROCESS_CREATE_REPORT_TRACEFILES_QUALITY:
+                                {((SpecialReportsRunner)this).run_process();  break; }
+                case Constants.PROCESS_DELETE_PLATE :
+                case Constants.PROCESS_DELETE_CLONE_READS://
+                case Constants.PROCESS_DELETE_CLONE_FORWARD_READ ://
+                case Constants.PROCESS_DELETE_CLONE_REVERSE_READ ://
+                case Constants.PROCESS_DELETE_CLONE_SEQUENCE://
+                case  Constants.PROCESS_GET_TRACE_FILE_NAMES :
+                case  Constants.PROCESS_DELETE_TRACE_FILES :
+                case  Constants.PROCESS_MOVE_TRACE_FILES:
+                    case  Constants.PROCESS_REANALYZE_CLONE_SEQUENCE:
+                {((DeleteObjectRunner)this).run_process();  break; }
+                case Constants.PROCESS_CREATE_FILE_FOR_TRACEFILES_TRANSFER:
+                case Constants.PROCESS_INITIATE_TRACEFILES_TRANSFER:
+                case Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRANSFER:
+                     {((TraceFileProcessingRunner)this).run_process();  break; }
+                case Constants.PROCESS_RUN_DECISION_TOOL : //run decision tool
+                {((DecisionToolRunner)this).run_process();  break; }
+                case Constants.PROCESS_RUN_DECISION_TOOL_NEW:
+                {((DecisionToolRunner_New)this).run_process();  break; }
+                 case Constants.PROCESS_FIND_GAPS:
+                 case Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE:
+                       {((GapMapperRunner)this).run_process();  break; }
+                 case Constants.PROCESS_PROCESS_OLIGO_PLATE:
+                      {((OligoPlateProcessor_Runner)this).run_process();  break; }
+                 case Constants.PROCESS_RUN_END_READS : //run_process sequencing for end reads
+                      {((EndReadsRequestRunner)this).run_process();  break; }
+                 case Constants.PROCESS_RUN_END_READS_WRAPPER:
+                          {((EndReadsWrapperRunner)this).run_process();  break; }
+                 case Constants.PROCESS_RUN_ISOLATE_RUNKER : //run_process isolate run_processker
+                   {((IsolateRankerRunner)this).run_process();  break; }
+                   case Constants.PROCESS_UPLOAD_PLATES : //upload plates
+                    {((PlateUploadRunner)this).run_process();  break; }
+             case Constants.PROCESS_SET_CLONE_FINAL_STATUS:
+             {((CloneManipulationRunner)this).run_process();  break; }
+         }
+               
     }
      
      
-     public abstract String getTitle();
+       
   
-    
+       public        int isWriteProcess()
+       {
+           switch(m_process_type)
+           {
+               case Constants.PROCESS_UPLOAD_PLATES :   //upload plates
+                case Constants.PROCESS_CHECK_READS_AVAILABILITY : //check reads
+            //    case Constants.PROCESS_RUN_DISCREPANCY_FINDER_STANDALONE :  //run decision tool
+          //      case Constants.PROCESS_PUT_CLONES_ON_HOLD :   //put clones on hold
+          //      case Constants.PROCESS_ACTIVATE_CLONES :  
+                case Constants.PROCESS_SHOW_CLONE_HISTORY :  
+                case Constants.PROCESS_VIEW_OLIGO_PLATE :  
+                case Constants.PROCESS_VIEW_OLIGO_ORDER_BY_CLONEID :  
+                case Constants.PROCESS_VIEW_INTERNAL_PRIMERS :  //view internal primers
+                case Constants.PROCESS_NOMATCH_REPORT  :  
+                case Constants.PROCESS_GET_TRACE_FILE_NAMES :  
+                case Constants.PROCESS_RUN_DECISION_TOOL_NEW  :  
+                case Constants.PROCESS_CREATE_REPORT_TRACEFILES_QUALITY  :  
+                case Constants.PROCESS_CREATE_REPORT :  
+                case Constants.PROCESS_RUN_DECISION_TOOL :  //run decision tool
+                case Constants.PROCESS_PROCESS_OLIGO_PLATE :  
+                
+                case -Constants.PROCESS_ADD_NEW_VECTOR      :    
+                case -Constants.PROCESS_SUBMIT_REFERENCE_SEQUENCES      :    
+                case -Constants.PROCESS_SUBMIT_CLONE_COLLECTION      :    
+                case -Constants.PROCESS_SUBMIT_CLONE_SEQUENCES       :    
+                case Constants.PROCESS_SET_CLONE_FINAL_STATUS:
+                case Constants.PROCESS_RUN_END_READS :  //run order for end reads
+                 case Constants.PROCESS_RUN_ISOLATE_RUNKER :  //run isolate runker
+                 case Constants.PROCESS_RUN_DISCREPANCY_FINDER:  //*run discrepancy finder
+                case Constants.PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING  :  
+                case Constants.PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING  :  
+                
+                    return ProcessRunner.PROCESS_TYPE_READ;
+
+   
+                case Constants.PROCESS_RUN_END_READS_WRAPPER :  //*run end reads wrapper
+                case Constants.PROCESS_RUN_ASSEMBLER_FOR_END_READS :  //*run assembly wrapper
+                   //   case Constants.PROCESS_APROVE_ISOLATE_RANKER :  //approve isolate ranker
+                case Constants.PROCESS_RUN_ASSEMBLER_FOR_ALL_READS :  //*run assembly wrapper
+                case Constants.PROCESS_ADD_NEW_INTERNAL_PRIMER :   // add new internal primer
+                case Constants.PROCESS_APPROVE_INTERNAL_PRIMERS :  //approve internal primers
+                case Constants.PROCESS_RUN_PRIMER3:  //run primer
+                case Constants.PROCESS_RUNPOLYMORPHISM_FINDER:   //run polymorphism finder
+                case Constants.PROCESS_SUBMIT_ASSEMBLED_SEQUENCE :  
+                case Constants.PROCESS_ORDER_INTERNAL_PRIMERS :  
+                case Constants.PROCESS_FIND_GAPS  :  
+                case Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE  :  
+                case Constants.PROCESS_DELETE_PLATE :  //
+                case Constants.PROCESS_DELETE_CLONE_READS :  //
+                case Constants.PROCESS_DELETE_CLONE_FORWARD_READ :  //
+                case Constants.PROCESS_DELETE_CLONE_REVERSE_READ :  //
+                case Constants.PROCESS_DELETE_CLONE_SEQUENCE :  //
+                case Constants.PROCESS_DELETE_TRACE_FILES :  
+                case  Constants.PROCESS_REANALYZE_CLONE_SEQUENCE:
+                case Constants.PROCESS_MOVE_TRACE_FILES :  
+                    return ProcessRunner.PROCESS_TYPE_WRITE;
+               default: return ProcessRunner.PROCESS_TYPE_READ;
+           }
+       }
+       
+       
+ //------------------------------------------------      
+       private     void   checkProcessSettings()throws Exception
+       {
+           if ( this.isWriteProcess() == 0) throw new BecUtilException("Cannot run process: process type not set.");
+           if ( isItemsRequered())
+           {
+                if ( m_items == null || m_items.trim().length() < 1 )
+                {
+                      throw new BecUtilException("Cannot run process: no items submitted.");
+                }
+                  
+                if   (m_items_type == -1)
+                {
+                    throw new BecUtilException("Cannot run process: items type not set.");
+                }
+          
+           }
+           if ( m_user == null )
+           {
+               throw new BecUtilException("Cannot run process: user not set.");
+           }
+               
+         
+       }
+       
+       protected boolean            isItemsRequered()
+       {
+           boolean result = true;
+           switch (m_process_type)
+           {
+               case Constants.PROCESS_SUBMIT_ASSEMBLED_SEQUENCE  :    
+                case Constants.   PROCESS_CREATE_FILE_FOR_TRACEFILES_TRANSFER  :    
+                case Constants.   PROCESS_INITIATE_TRACEFILES_TRANSFER  :    
+                case Constants.   PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRANSFER  :    
+                case Constants.PROCESS_SUBMIT_REFERENCE_SEQUENCES   :    
+                case Constants.PROCESS_SUBMIT_CLONE_COLLECTION   :    
+                case Constants.PROCESS_SUBMIT_CLONE_SEQUENCES   : 
+                    result=false;
+           }
+           return result;
+
+
+
+       }
+       protected void cleanUpFrozenItemsForWriteProcesses()throws BecDatabaseException
+       {
+            
+         StringBuffer final_string = new StringBuffer();
+         ArrayList sql_items = new ArrayList();
+         String sql =   null;
+         if ( this.isWriteProcess() == ProcessRunner.PROCESS_TYPE_WRITE)
+         {
+             if ( m_items_type == Constants.ITEM_TYPE_CLONEID ||
+                m_items_type == Constants.ITEM_TYPE_ACE_CLONE_SEQUENCE_ID )
+             {
+                    sql_items= prepareItemsListForSQL(500);
+                    for ( int count = 0; count < sql_items.size(); count++)
+                    {
+                        sql =  constructSQLToGetActiveItems( (String)sql_items.get(count));
+                        final_string.append( getActiveItems(sql));
+                    }
+
+             
+              
+                 ArrayList excluded_items = Algorithms.compareTwoLists(
+                        Algorithms.splitString(m_items),
+                        Algorithms.splitString(final_string.toString()), 
+                        1);
+                 if ( excluded_items != null && excluded_items.size() > 0)
+                 {
+                      m_additional_info = "The following items are excluded from process: they are 'deactivated' for future changes: ";
+                       m_additional_info += Algorithms.convertStringArrayToString(excluded_items, " ");
+                        m_items = final_string.toString();
+                 }
+                
+             }
+             
+             //====================================================================
+             if ( m_items_type == Constants.ITEM_TYPE_PLATE_LABELS)
+             {
+                 if (m_process_type ==  Constants.PROCESS_RUN_END_READS_WRAPPER   //*run end reads wrapper
+                || m_process_type ==  Constants.PROCESS_RUN_ASSEMBLER_FOR_END_READS  //*run assembly wrapper
+                || m_process_type ==  Constants.PROCESS_DELETE_CLONE_READS  //
+                ||m_process_type ==  Constants.PROCESS_DELETE_CLONE_FORWARD_READ   //
+                ||m_process_type ==  Constants.PROCESS_DELETE_CLONE_REVERSE_READ   //
+                ) 
+                {
+                    ArrayList clone_items_for_plates = null;
+                    StringBuffer active_items = new StringBuffer();
+                    StringBuffer excluded_items = new StringBuffer();
+                    UIConfigItem item = null;
+                    sql_items= prepareItemsListForSQL(5);
+                    for ( int count = 0; count < sql_items.size(); count++)
+                    {
+                        sql =  "select flexcloneid as item_id, process_status as item_type " 
+                         +" from flexinfo f, isolatetracking i where f.isolatetrackingid=i.isolatetrackingid and sampleid in "
+                         +" ( select sampleid from sample where containerid in "
+                         +" (select containerid from containerheader where Upper(label) in ("
+                        +(String)sql_items.get(count)+")))";
+                        
+                        clone_items_for_plates = getCloneItemsForPlateActiveClones(sql);
+                        for (int count_items = 0; count_items < clone_items_for_plates.size(); count_items++)
+                        {
+                            item = (UIConfigItem)clone_items_for_plates.get(count_items) ;
+                            if ( item.getType() == IsolateTrackingEngine.FINAL_STATUS_INPROCESS)
+                                active_items.append(String.valueOf(item.getId()) +" ");
+                            else
+                                if ( item.getId() > 0 )
+                                {
+                                    excluded_items.append(String.valueOf(item.getId()) +" ");
+                                }
+                                
+                        }
+                    }
+
+                     if ( excluded_items != null && excluded_items.length()> 0)
+                     {
+                          m_additional_info = "The following items are excluded from process: they are 'deactivated' for future changes: ";
+                          m_additional_info += excluded_items.toString();
+                           m_items = active_items.toString();
+                          m_items_type = Constants.ITEM_TYPE_CLONEID;
+                     }
+                    
+                 }
+             }
+         }
+       }
+       
+       protected String getActiveItems(String sql) throws BecDatabaseException
+       {
+           return getActiveItems( sql,0) ;
+      }
+       protected String getActiveItems(String sql, int mode) throws BecDatabaseException
+       {
+           StringBuffer result = new StringBuffer();
+           ResultSet rs = null; 
+            try
+            {
+                 DatabaseTransaction t = DatabaseTransaction.getInstance();
+                rs = t.executeQuery(sql);
+                while(rs.next())
+                {
+                    if ( mode == 0)      result.append( rs.getInt("item") + " ");
+                    if ( mode == 1)      result.append( rs.getString("item") + " ");
+                  
+                }
+                return result.toString();
+            } catch (SQLException sqlE)
+            {
+                throw new BecDatabaseException("Error occured while cleaning up none active items "+sqlE.getMessage()+"\nSQL: "+sql);
+            } finally
+            {
+                DatabaseTransaction.closeResultSet(rs);
+            }
+           
+       }
+       
+        protected ArrayList getCloneItemsForPlateActiveClones(String sql) throws BecDatabaseException
+       {
+           ArrayList result = new ArrayList();
+           ResultSet rs = null; 
+           UIConfigItem item = null;// use of the class because it has two int properties
+            try
+            {
+                DatabaseTransaction t = DatabaseTransaction.getInstance();
+                rs = t.executeQuery(sql);
+                while(rs.next())
+                {
+                    item = new UIConfigItem(rs.getInt("item_id"), rs.getInt("item_type"));
+                    result.add( item);
+                    
+                }
+                return result;
+            } catch (Exception sqlE)
+            {
+                throw new BecDatabaseException("Error occured while cleaning up none active items "+sqlE.getMessage()+"\nSQL: "+sql);
+            } finally
+            {
+                DatabaseTransaction.closeResultSet(rs);
+            }
+           
+       }
+       
+       
+       private String           constructSQLToGetActiveItems(String sql_items)
+       {
+           switch (m_items_type)
+           {
+               case Constants.ITEM_TYPE_CLONEID:
+                   return "select flexcloneid as item from flexinfo where flexcloneid in ("+sql_items+") and isolatetrackingid in "
+                   +" (select isolatetrackingid from isolatetracking where process_status ="+IsolateTrackingEngine.FINAL_STATUS_INPROCESS+")";
+               case Constants.ITEM_TYPE_ACE_CLONE_SEQUENCE_ID:
+               {
+                      return "select sequenceid as item from assembledsequence where sequenceid in ("+sql_items+") and isolatetrackingid in "
+                   +" (select isolatetrackingid from isolatetracking where process_status ="+IsolateTrackingEngine.FINAL_STATUS_INPROCESS+")";
+              
+               }
+               
+               default: return "";
+           }
+       }
+       
+       
+       
+       
+       //-----------------------------------------------------
        public ArrayList prepareItemsListForSQL()
        {
           int item_increment = 0;
-       
+          
           switch ( m_items_type)
           {
               case Constants.ITEM_TYPE_PLATE_LABELS:
@@ -98,7 +442,8 @@ public abstract class ProcessRunner implements Runnable
                    item_increment = 5; break;
               }
               case Constants.ITEM_TYPE_CLONEID:
-              case Constants.ITEM_TYPE_BECSEQUENCE_ID:
+              case Constants.ITEM_TYPE_ACE_CLONE_SEQUENCE_ID:
+                  case Constants.ITEM_TYPE_ACE_REF_SEQUENCE_ID:
               case Constants.ITEM_TYPE_FLEXSEQUENCE_ID :
               case Constants.ITEM_TYPE_ISOLATETRASCKING_ID :
              {
@@ -127,9 +472,12 @@ public abstract class ProcessRunner implements Runnable
          return    prepareItemsListForSQL(m_items_type, m_items, item_increment);
      
        }
-      public ArrayList prepareItemsListForSQL(int items_type, String initial_items, int item_increment)
+      
+        
+      public  ArrayList prepareItemsListForSQL(int items_type, String initial_items, int item_increment)
      {
          ArrayList result = new ArrayList();
+         if ( initial_items == null || initial_items.trim().length() < 1) return result;
          ArrayList  items = Algorithms.splitString( initial_items);
          ArrayList cycle_items = new ArrayList();
          int cycle_number = 0; int last_item_in_cycle = 0; int first_item_in_cycle = 0;
@@ -146,7 +494,8 @@ public abstract class ProcessRunner implements Runnable
                       break;
                   }
                   case Constants.ITEM_TYPE_CLONEID:
-                  case Constants.ITEM_TYPE_BECSEQUENCE_ID:
+                  case Constants.ITEM_TYPE_ACE_REF_SEQUENCE_ID:
+                      case Constants.ITEM_TYPE_ACE_CLONE_SEQUENCE_ID:
                   case Constants.ITEM_TYPE_FLEXSEQUENCE_ID :
                   case Constants.ITEM_TYPE_ISOLATETRASCKING_ID :
             
@@ -176,7 +525,8 @@ public abstract class ProcessRunner implements Runnable
           switch ( m_items_type)
           {
               case Constants.ITEM_TYPE_CLONEID:
-              case Constants.ITEM_TYPE_BECSEQUENCE_ID:
+              case Constants.ITEM_TYPE_ACE_CLONE_SEQUENCE_ID:
+                  case Constants.ITEM_TYPE_ACE_REF_SEQUENCE_ID:
               case Constants.ITEM_TYPE_FLEXSEQUENCE_ID :
               case Constants.ITEM_TYPE_ISOLATETRASCKING_ID :
               {
@@ -200,55 +550,51 @@ public abstract class ProcessRunner implements Runnable
           }
           return result;
       }
-     protected void             sendEMails(String title)
+      
+        protected void             sendEMails(String title)        {    sendEMails( title, null);}
+        
+      protected void             sendEMails(String title, String msgText)
      {
-         String message = null;
-          
+         String to  = null;
+         String from  = BecProperties.getInstance().getACEEmailAddress();
+         String cc  = BecProperties.getInstance().getProperty("ACE_CC_EMAIL_ADDRESS");
          try
          {
  //send errors
+             //&& this instanceof ReportRunner)
+            if ( msgText == null)
+            {
+                msgText =  title+  Constants.LINE_SEPARATOR  +"Process finished.";
+                if (m_file_list_reports != null && m_file_list_reports.size()>0 )
+                    msgText+="Please find attached report file for your request.";
+                if ( m_items != null && m_items.length() > 0)
+                    msgText +=  Constants.LINE_SEPARATOR + "Request item's ids:\n"+m_items_original;
+                if ( this.isWriteProcess()== ProcessRunner.PROCESS_TYPE_WRITE )    
+                    msgText +=  Constants.LINE_SEPARATOR + "Processed item's ids:\n"+m_items;
+            }
+            if ( m_additional_info != null)                   msgText += m_additional_info;
+                        
+            Mailer.sendMessage      ( m_user.getUserEmail(), from,  cc, title, msgText, null,m_file_list_reports);
+           
+             
             m_error_messages = deleteNullMessages(m_error_messages);
-            if (m_error_messages != null && m_error_messages.size()>0)
+           if (m_error_messages != null && m_error_messages.size()>0)
             {
                 String file_name = Constants.getTemporaryFilesPath() + File.separator + "ErrorMessages"+ System.currentTimeMillis()+".txt";
                 Algorithms.writeArrayIntoFile( m_error_messages, false,  file_name) ;
-                message = title+ Constants.LINE_SEPARATOR + "Please find error messages for your request in  attached file";
-                Mailer.sendMessageWithAttachedFile(m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",
-                "hip_informatics@hms.harvard.edu",title, message , 
-                new File(file_name) );
+                msgText = title+ Constants.LINE_SEPARATOR + "Please find error messages for your request in  attached file";
+                
+                Mailer.sendMessageWithAttachedFile(m_user.getUserEmail(), 
+                    from,cc,"Error messages: "+title, msgText , new File(file_name) );
+                
             }
-            if (m_file_list_reports != null && m_file_list_reports.size()>0 )//&& this instanceof ReportRunner)
-            {
-                message =  title+  Constants.LINE_SEPARATOR +
-                "Please find attached report file for your request.";
-                if ( m_items != null && m_items.length() > 0)
-                    message +=  Constants.LINE_SEPARATOR + "Request item's ids:\n"+m_items;
-               if ( m_additional_info != null)
-                   message += m_additional_info;
-                 Mailer.sendMessageWithFileCollections(m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",
-                null,title, message , 
-                m_file_list_reports);
-                  Mailer.sendMessageWithFileCollections("hip_informatics@hms.harvard.edu", "hip_informatics@hms.harvard.edu",
-                null,title, message , 
-                m_file_list_reports);
-                 
-            }
-            if (( m_file_list_reports == null || m_file_list_reports.size()==0 )
-                 && ( m_error_messages == null || m_error_messages.size() == 0))
-            {
-                message =  title+  Constants.LINE_SEPARATOR +"Process finished.";
-                if ( m_items != null && m_items.length() > 0)
-                    message +=  Constants.LINE_SEPARATOR + "Request item's ids:\n"+m_items;
-                if ( m_additional_info != null)
-                   message += m_additional_info;
-                 Mailer.sendMessage      ( m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",  null, title, message);
-                 Mailer.sendMessage      (  "hip_informatics@hms.harvard.edu", "hip_informatics@hms.harvard.edu",  null, title, message);
-                     
-            }
+            
      
         }
-        catch(Exception e){   System.out.println(e.getMessage());  
-    }
+        catch(Exception e)
+        {   
+            System.out.println(e.getMessage());  
+        }
      }
      
      
@@ -267,7 +613,8 @@ public abstract class ProcessRunner implements Runnable
          char[] items_char = null;
          StringBuffer final_string = new StringBuffer();
          if ( m_items_type == Constants.ITEM_TYPE_CLONEID ||
-            m_items_type == Constants.ITEM_TYPE_BECSEQUENCE_ID ||
+            m_items_type == Constants.ITEM_TYPE_ACE_CLONE_SEQUENCE_ID ||
+            m_items_type == Constants.ITEM_TYPE_ACE_REF_SEQUENCE_ID ||
             m_items_type == Constants.ITEM_TYPE_FLEXSEQUENCE_ID)
          {
              ArrayList items = Algorithms.splitString(m_items);
@@ -297,7 +644,8 @@ public abstract class ProcessRunner implements Runnable
          char[] items_char = null;
          StringBuffer final_string = new StringBuffer();
          if ( items_type == Constants.ITEM_TYPE_CLONEID ||
-            items_type == Constants.ITEM_TYPE_BECSEQUENCE_ID ||
+            items_type == Constants.ITEM_TYPE_ACE_REF_SEQUENCE_ID ||
+            items_type == Constants.ITEM_TYPE_ACE_CLONE_SEQUENCE_ID ||
             items_type == Constants.ITEM_TYPE_FLEXSEQUENCE_ID)
          {
              ArrayList items = Algorithms.splitString(submit_items);

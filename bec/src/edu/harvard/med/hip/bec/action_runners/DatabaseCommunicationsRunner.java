@@ -40,12 +40,10 @@ import edu.harvard.med.hip.bec.programs.assembler.*;
 public class DatabaseCommunicationsRunner  extends ProcessRunner
 {
     private InputStream                 m_input_stream = null;
-    private int                         m_process_type = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
      // first step in collection processing
     private int                         m_collection_processing_first_step = IsolateTrackingEngine.PROCESS_STATUS_SUBMITTED_FOR_ER;
     
     
-    public void     setProcessType(int i){ m_process_type = i;}
     public void     setInputStream(InputStream i){ m_input_stream = i;}
     public String getTitle() 
     {  
@@ -72,7 +70,7 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
          }
     }
    
-   public void run()
+   public void run_process()
     {
          Connection  conn =null;
          try
@@ -170,7 +168,14 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
        {
           
            clone_description = (CloneDescription)clone_descriptions.get(description_count);
+           if (clone_description.getCloneFinalStatus() != IsolateTrackingEngine.FINAL_STATUS_INPROCESS)
+           {
+               m_error_messages.add("Cannot submit sequence for clone "+clone_description.getCloneId() +
+               "Clone status set to 'nonactive'.");
+               continue;
+           }
            clone_sequence = (BaseSequence) sequences.get(sequences_count);
+           
             int res = clone_description.getCloneId() - clone_sequence.getId();
             if( res == 0)
             {
@@ -211,7 +216,7 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
            clones_to_process.append( sequence.getId() ) ;
            if ( count < sequences.size() - 1)  clones_to_process.append(",");
        }
-       String sql = "select flexcloneid, cloningstrategyid,  refsequenceid, iso.isolatetrackingid as isolatetrackingid  "
+       String sql = "select flexcloneid, process_status, cloningstrategyid,  refsequenceid, iso.isolatetrackingid as isolatetrackingid  "
         + " from isolatetracking iso,  sequencingconstruct  constr , flexinfo f "
         +" where constr.constructid = iso.constructid and f.isolatetrackingid=iso.isolatetrackingid "
         +" and f.flexcloneid in ("+clones_to_process.toString() +")   order by flexcloneid";
@@ -495,10 +500,14 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
         {
             istr.setStatus(IsolateTrackingEngine.PROCESS_STATUS_SUBMITTED_EMPTY);
             istr.setRank(IsolateTrackingEngine.RANK_NOT_APPLICABLE);
+                istr.setFinalStatus( IsolateTrackingEngine.FINAL_STATUS_NOT_APPLICABLE);
+        
         }
         else
         {
             istr.setStatus( m_collection_processing_first_step);
+                istr.setFinalStatus( IsolateTrackingEngine.FINAL_STATUS_INPROCESS);
+        
         }
         Sample sample = new Sample(  BecIDGenerator.getID("sampleid"),cc_sample.getType(), 
                              cc_sample.getPosition(), container_id);
@@ -556,6 +565,7 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
             istr.setId( BecIDGenerator.getID("isolatetrackingid"));
             istr.setStatus(IsolateTrackingEngine.PROCESS_STATUS_SUBMITTED_EMPTY);
             istr.setRank(IsolateTrackingEngine.RANK_NOT_APPLICABLE);
+            istr.setFinalStatus( IsolateTrackingEngine.FINAL_STATUS_NOT_APPLICABLE);
             istr.setFlexInfo(flex_info);
             //link flex info with isolate tracking 
             flex_info.setIsolateTrackingId ( istr.getId() );
@@ -574,7 +584,9 @@ private boolean isCloneCollectionNameExists(CloneCollection collection, Connecti
    {
         try
         {
-            String sql =  "select  *  from containerheader where label ="+ collection.getName();
+           // String sql =  "select  *  from containerheader where label ="+ collection.getName();
+            String sql =  "select  *  from containerheader where (Upper(label) like Upper('"+ collection.getName()+"')";
+
             CachedRowSet rs =  DatabaseTransaction.executeQuery(sql, conn);
             if( rs.next() )       
             {

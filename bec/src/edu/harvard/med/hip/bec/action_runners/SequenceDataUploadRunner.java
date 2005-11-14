@@ -31,12 +31,12 @@ import edu.harvard.med.hip.bec.util_objects.*;
  */
 public class SequenceDataUploadRunner implements Runnable
 {
-   
+
         private InputStream     m_input = null;
         private User            m_user=null;
         private ArrayList       m_report = null;
         private Hashtable       m_cloning_starategy = null;
-              
+
         public SequenceDataUploadRunner(InputStream in, User user)
         {
             m_input = in;
@@ -44,14 +44,14 @@ public class SequenceDataUploadRunner implements Runnable
             m_report = new ArrayList();
             m_cloning_starategy= new Hashtable();
         }
-        
-       
-        
+
+
+
         public void run()
         {
                // The database connection used for the transaction
             Connection conn = null;
-            
+
             BufferedReader reader = null;
             StringBuffer sample_id = new StringBuffer();
             StringBuffer sequence_text = new StringBuffer();
@@ -63,10 +63,10 @@ public class SequenceDataUploadRunner implements Runnable
                 conn = DatabaseTransaction.getInstance().requestConnection();
                 int process_id = createProcessHistory(conn);
                 reader = new BufferedReader(new InputStreamReader(m_input));
-                   
+
                  while  ((line = reader.readLine()) != null)
                 {
-                    if (line.trim().startsWith(">") ) 
+                    if (line.trim().startsWith(">") )
                     {
                         //process previous sequence
                         processSequence(sequence_text.toString(), sample_id.toString(), process_id,conn);
@@ -79,21 +79,21 @@ public class SequenceDataUploadRunner implements Runnable
                             if (Character.isDigit(cur_char) )
                                 sample_id.append( cur_char);
                             else
-                               break; 
+                               break;
                         }
-                        
+
                     }
                     else
                     {
                         line = line.trim();
                         sequence_text.append( Algorithms.cleanWhiteSpaces(line) );
                      }
-                        
+
                 }
-                reader.close();       
-                
-               
-             
+                reader.close();
+
+
+
             }
             catch(Exception e)
             {
@@ -106,10 +106,10 @@ public class SequenceDataUploadRunner implements Runnable
             {
                 try
                 {
-                    DatabaseTransaction.closeConnection(conn);
+                    if ( conn != null) DatabaseTransaction.closeConnection(conn);
 
-                    Mailer.sendMessage(m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",
-                    "hip_informatics@hms.harvard.edu", "Submit sequence data.",
+                    Mailer.sendMessage(m_user.getUserEmail(),  BecProperties.getInstance().getACEEmailAddress(),
+                     BecProperties.getInstance().getProperty("ACE_CC_EMAIL_ADDRESS"), "Submit sequence data.",
                     "Sequence data submission report:\n"+
                     Algorithms.convertStringArrayToString(m_report,"\n"));
                 }
@@ -117,16 +117,16 @@ public class SequenceDataUploadRunner implements Runnable
                 }
             }
         }
-            
-            
+
+
     //***********************************
-        private synchronized  void processSequence(String sequence_data, String flex_sample_id, 
+        private synchronized  void processSequence(String sequence_data, String flex_sample_id,
                         int process_id, Connection conn)
-                        
+
         {
-            if (sequence_data == null || sequence_data.trim().length()==0) 
+            if (sequence_data == null || sequence_data.trim().length()==0)
                 return ;
-            
+
             Contig contig = null;
             int contig_quality = -1;
             CloneDescription sequence_definition = null;
@@ -135,7 +135,7 @@ public class SequenceDataUploadRunner implements Runnable
              {
                  //get sequence description based on flex sample id
                  sequence_definition = getSequenceDescription(flex_sample_id);
-                 
+
                  if (sequence_definition == null )
                  {
                      m_report.add("Cannot submit data for clone with sampleid "+flex_sample_id);
@@ -151,7 +151,7 @@ public class SequenceDataUploadRunner implements Runnable
                  //create contig
                  contig = new Contig();
                  contig.setSequence(sequence_data.toUpperCase());
-                 
+
                  //analize sequence
                  contig_quality = analizeContig(contig,sequence_definition);
                  //insert result && sequence
@@ -162,14 +162,14 @@ public class SequenceDataUploadRunner implements Runnable
                          Result.RESULT_TYPE_FINAL_CLONE_SEQUENCE,
                          BaseSequence.CLONE_SEQUENCE_STATUS_ASSEMBLED,
                          BaseSequence.CLONE_SEQUENCE_TYPE_FINAL, contig, process_id, conn);
-            
-            //update isolatetracking 
+
+            //update isolatetracking
                  IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_CLONE_SEQUENCE_SUBMITED_FROM_OUTSIDE,
-                                                       sequence_definition.getIsolateTrackingId(), 
+                                                       sequence_definition.getIsolateTrackingId(),
                                                        conn );
-                 IsolateTrackingEngine.updateAssemblyStatus( 
+                 IsolateTrackingEngine.updateAssemblyStatus(
                                         contig_quality,
-                                        sequence_definition.getIsolateTrackingId(),  
+                                        sequence_definition.getIsolateTrackingId(),
                                         conn);
                 conn.commit();
                   m_report.add("Data submitted for with sampleid "+flex_sample_id + " (sequence id " + return_value +")" );
@@ -179,20 +179,20 @@ public class SequenceDataUploadRunner implements Runnable
                  m_report.add("Cannot submit data for clobne with sampleid "+flex_sample_id);
                 // throw new BecDatabaseException("Cannot submit data for clobne with sampleid "+flex_sample_id);
              }
-                                
+
         }
-        
-  //gets clone description based on flex sample id      
+
+  //gets clone description based on flex sample id
   private CloneDescription getSequenceDescription(String flex_sample_id)throws BecDatabaseException
   {
       CloneDescription seq_description = null;
       String sql = "select flexcloneid, flexsequenceid, iso.status as process_status,  refsequenceid,iso.isolatetrackingid as isolatetrackingid , "
 +" containerid, s.sampleid as sampleid from isolatetracking iso,  sample s, sequencingconstruct  constr , flexinfo f "
-+" where constr.constructid = iso.constructid and "
++" where        iso.process_status="+IsolateTrackingEngine.FINAL_STATUS_INPROCESS+" and   constr.constructid = iso.constructid and "
 +" iso.sampleid=s.sampleid and f.isolatetrackingid=iso.isolatetrackingid "
 +" and flexsampleid = "+flex_sample_id;
       ResultSet rs = null;ResultSet rs_ref = null;String sql_sample = null;
-     
+
         try
         {
            // DatabaseTransactionLocal t = DatabaseTransactionLocal.getInstance();
@@ -219,9 +219,9 @@ public class SequenceDataUploadRunner implements Runnable
         {
             DatabaseTransactionLocal.closeResultSet(rs);
         }
-      
+
   }
-  
+
   private int analizeContig(Contig contig,CloneDescription clone_definition)throws Exception
   {
        CloningStrategy container_cloning_strategy = null;
@@ -237,7 +237,7 @@ public class SequenceDataUploadRunner implements Runnable
              m_cloning_starategy.put(new Integer(clone_definition.getContainerId()),container_cloning_strategy);
         }
 
-        //get refsequence 
+        //get refsequence
        RefSequence refsequence = new RefSequence( clone_definition.getBecRefSequenceId());
        BioLinker linker5 = container_cloning_strategy.getLinker5();
         BioLinker linker3 = container_cloning_strategy.getLinker3();
@@ -245,7 +245,7 @@ public class SequenceDataUploadRunner implements Runnable
         int cds_stop = linker5.getSequence().length() +  refsequence.getCodingSequence().length();
         BaseSequence base_refsequence =  new BaseSequence(linker5.getSequence() + refsequence.getCodingSequence()+linker3.getSequence(), BaseSequence.BASE_SEQUENCE );
         base_refsequence.setId(refsequence.getId());
-          
+
            //check coverage
            int result = contig.checkForCoverage(clone_definition.getCloneId(), cds_start,  cds_stop,  base_refsequence);
            return result;
@@ -282,9 +282,9 @@ public class SequenceDataUploadRunner implements Runnable
          }
      }
 
-     
-       public static void main(String args[]) 
-     
+
+       public static void main(String args[])
+
     {
        // InputStream input = new InputStream();
         FileInputStream input = null;
@@ -297,8 +297,8 @@ public class SequenceDataUploadRunner implements Runnable
         catch(Exception e){}
         SequenceDataUploadRunner runner = new SequenceDataUploadRunner(input,user);
        runner.run();
-        
-       
+
+
         System.exit(0);
      }
 }

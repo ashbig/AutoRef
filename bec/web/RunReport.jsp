@@ -8,7 +8,7 @@
 <%@ page import="edu.harvard.med.hip.bec.*" %>
 <html>
 <head>
-<title>create report</title>
+<title>Run report</title>
 </head>
 <body >
 <jsp:include page="NavigatorBar_Administrator.jsp" />
@@ -57,7 +57,7 @@
     <td >   <input type="checkbox" name="dir_name" value="1"> Directory Name</td>
   </tr>
   <tr> 
-    <td><input type="checkbox" name="sample_id" value="1">      Sample Id</td>
+    <td><input type="checkbox" name="clone_final_status" value="1">      Clone Final Status</td>
           <td> <input type="checkbox" name="read_length" value="1">
             End Reads Length(High Quality Region)</td>
   </tr>

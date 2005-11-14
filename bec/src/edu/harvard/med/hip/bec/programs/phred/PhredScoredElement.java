@@ -29,10 +29,15 @@ public class PhredScoredElement
         m_score = Integer.parseInt( (String)temp.get(1));
         m_number = (String)temp.get(2);
     }
+    
+    public PhredScoredElement()    {}
 
-    public          int   getScore(){ return m_score;}
-    public          String   getNumber(){ return m_number ; }
-    public          char  getChar(){ return m_base;}
+    public          int         getScore(){ return m_score;}
+    public          String      getNumber(){ return m_number ; }
+    public          char        getChar(){ return m_base;}
+    public          void        setScore(int v){ m_score = v;}
+    public          void        setNumber(String v){ m_number = v; }
+    public          void        setChar(char v){  m_base = v;}
 
     public          String  toString(){ return m_base +" "+m_score +" "+m_number + LINE_SEPARATOR; }
 

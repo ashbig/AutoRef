@@ -10,7 +10,7 @@
 
 <head>
 
-<title>End Reads Parameters</title>
+<title>Display Cloning Strategy</title>
 <LINK REL=StyleSheet HREF="application_styles.css" TYPE="text/css" MEDIA=screen>
 </head>
 

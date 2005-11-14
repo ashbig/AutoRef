@@ -86,7 +86,12 @@ public class IsolateTrackingEngine
      
     public static final int            ASSEMBLY_STATUS_CONFIRMED = 13;
     
-     
+    public static final int            FINAL_STATUS_INPROCESS = 1;
+    public static final int            FINAL_STATUS_ACCEPTED = 2;
+    public static final int            FINAL_STATUS_REJECTED = 3;
+    public static final int            FINAL_STATUS_NOT_APPLICABLE = 4;
+    
+    
     
     
     private	int     m_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
@@ -98,7 +103,8 @@ public class IsolateTrackingEngine
     private	int     m_flexinfo_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;//  isolate id
     private	int     m_sample_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET ;// resulting from the full sequencing
     private     int     m_assembly_status = ASSEMBLY_STATUS_NOT_RUN;
-     private	int     m_clone_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;   
+     private	int     m_clone_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET; 
+     private    int     m_final_status = FINAL_STATUS_INPROCESS;
     private     FlexInfo    m_flexinfo = null;
     
     //?????????????//
@@ -135,14 +141,14 @@ public class IsolateTrackingEngine
         if ( m_construct_id == -1)
         {
             sql = "insert into ISOLATETRACKING "+
-            "(ISOLATETRACKINGID  ,STATUS  ,RANK  ,SCORE  ,SAMPLEID )"
-            + " values ("+m_id+","+m_status+","+m_rank+","+m_score+","+m_sample_id+")";
+            "(ISOLATETRACKINGID  ,STATUS  ,RANK  ,SCORE  ,SAMPLEID, PROCESS_STATUS )"
+            + " values ("+m_id+","+m_status+","+m_rank+","+m_score+","+m_sample_id+","+m_final_status+")";
         }
         else
         {
             sql = "insert into ISOLATETRACKING "+
-            "(ISOLATETRACKINGID  ,CONSTRUCTID  ,STATUS  ,RANK  ,SCORE  ,SAMPLEID )"
-            + " values ("+m_id+","+m_construct_id+","+m_status+","+m_rank+","+m_score+","+m_sample_id+")";
+            "(ISOLATETRACKINGID  ,CONSTRUCTID  ,STATUS  ,RANK  ,SCORE  ,SAMPLEID , PROCESS_STATUS)"
+            + " values ("+m_id+","+m_construct_id+","+m_status+","+m_rank+","+m_score+","+m_sample_id+","+m_final_status+")";
         }
         
        
@@ -169,6 +175,7 @@ public class IsolateTrackingEngine
     public void      setRank(int s){  m_rank = s;} ;// results of the end read analysis
     public void      setScore(int s){  m_score = s;} ;// results of the end read analysis
     public void      setStatus(int s){  m_status = s;}
+     public void      setFinalStatus(int s){ m_final_status = s;}
     public void      setSampleId(int s){  m_sample_id =s ;}
     public  void     setId(int v){  m_id = v;}
     public void      setFlexInfoId(int v){  m_flexinfo_id = v;}// sample id of the first sample of this isolate
@@ -188,6 +195,7 @@ public class IsolateTrackingEngine
     public int              getFlexInfoId(){ return m_flexinfo_id ;}// sample id of the first sample of this isolate
     public int              getConstructId(){ return m_construct_id ;}// identifies the agar; several (four) isolates will have the same id
     public int              getStatus(){ return m_status ;}
+    public int              getCloneFinalStatus(){ return m_final_status;}
      public int             getAssemblyStatus(){return  m_assembly_status ;}
     public int[]            getEndReadId()   {              return m_end_reads_id ; }// sample id of the sample used for the forward read
     public int              getRank(){ return m_rank;} ;// results of the end read analysis
@@ -204,8 +212,8 @@ public class IsolateTrackingEngine
     }
     public ArrayList        getCloneSequences(){ return m_clone_sequences;}
     public int              getScore()    {    return m_score;    }
-    public  String getStatusAsString()    {        return getStatusAsString(m_status);    }
-    
+    public  String          getStatusAsString()    {        return getStatusAsString(m_status);    }
+    public  String          getCloneFinalStatusAsString(){ return getCloneFinalStatusAsString(m_final_status);}
     
     public static String getRankAsString(int rank)
     {
@@ -220,6 +228,19 @@ public class IsolateTrackingEngine
         }
     }
     
+    
+    public static String getCloneFinalStatusAsString(int pr_status)
+    {
+          switch (pr_status)
+          {
+              case IsolateTrackingEngine.FINAL_STATUS_INPROCESS : return "In process";
+              case IsolateTrackingEngine.FINAL_STATUS_ACCEPTED: return "Accepted";
+              case IsolateTrackingEngine.FINAL_STATUS_REJECTED : return "Rejected";
+              case IsolateTrackingEngine.FINAL_STATUS_NOT_APPLICABLE: return "N/A";
+              default:return "Not known";
+  
+          }
+   }
     public static String getRankStatusAsString(int rank, int status)
     {
         switch (rank)
@@ -229,7 +250,7 @@ public class IsolateTrackingEngine
                 switch (status)
                 {
                     case PROCESS_STATUS_SUBMITTED_EMPTY : return "Not acceptable clone: Submitted empty";
-
+                    case PROCESS_STATUS_CLONE_SEQUENCE_ANALYZED_NO_MATCH: return "Not acceptable clone: clone sequence does not match reference sequence";
                     case PROCESS_STATUS_ER_ANALYZED_NO_MATCH : return "Not acceptable clone: No match";
                     case PROCESS_STATUS_ER_NO_READS : return "Not acceptable clone: No end reads after initial submission";
                     case PROCESS_STATUS_ER_NO_LONG_READS : return "Not acceptable clone: No long end reads after initial submission";
@@ -260,6 +281,7 @@ public class IsolateTrackingEngine
             case PROCESS_STATUS_ER_INITIATED :return "End reads ordered";
             case PROCESS_STATUS_ER_PHRED_RUN : return "Phred finished";
             case PROCESS_STATUS_ER_ANALYZED : return "End reads analisys finished";
+            case PROCESS_STATUS_CLONE_SEQUENCE_ANALYZED_NO_MATCH: return "No match";
             case PROCESS_STATUS_ER_ANALYZED_NO_MATCH : return "No match";
             case PROCESS_STATUS_ER_NO_READS : return "No end reads";
             case PROCESS_STATUS_ER_NO_LONG_READS: return "No long Reads";
@@ -277,8 +299,7 @@ public class IsolateTrackingEngine
             case PROCESS_STATUS_DISCREPANCY_FINDER_FINISHED : return "Discrepancy finder finished";
             case PROCESS_STATUS_POLYMORPHISM_FINDER_FINISHED : return "Polymorphism finder finished";
             case  PROCESS_STATUS_CLONE_SEQUENCE_SUBMITED_FROM_OUTSIDE :return "Sequence submitted from outside facility";
-            case PROCESS_STATUS_CLONE_SEQUENCE_ANALYZED_NO_MATCH : return "Sequence no match";
-            case PROCESS_STATUS_SEQUENCING_PROCESS_FINISHED : return "Sequencing process finished";
+             case PROCESS_STATUS_SEQUENCING_PROCESS_FINISHED : return "Sequencing process finished";
             default  : return "Not defined";
     
         }
@@ -348,11 +369,38 @@ public class IsolateTrackingEngine
     }
     
     
-    public void updateStatus(int status)throws BecDatabaseException
+    public void updateStatus(int status)   {        m_status = status;    }
+    public void updateFinalStatus(int pr_status){ m_final_status = pr_status;}
+    
+    public static void updateFinalStatus(int pr_status, int isolatetrackingid,Connection conn)throws BecDatabaseException
     {
-        m_status = status;
+         String sql=null;
+         try
+        {
+              sql = "update isolatetracking set process_status="+pr_status+" where isolatetrackingid="+ isolatetrackingid;
+
+            DatabaseTransaction.executeUpdate(sql, conn);
+        }
+        catch(Exception e)
+        {
+            throw new BecDatabaseException("Cannot update isolate status "+sql);
+        }
     }
     
+    public static void updateFinalStatusFor(int pr_status, String isolatetrackingid,Connection conn)throws BecDatabaseException
+    {
+         String sql=null;
+         try
+        {
+              sql = "update isolatetracking set process_status="+pr_status+" where isolatetrackingid in ("+ isolatetrackingid +")";
+
+            DatabaseTransaction.executeUpdate(sql, conn);
+        }
+        catch(Exception e)
+        {
+            throw new BecDatabaseException("Cannot update isolate status "+sql);
+        }
+    }
     public static void updateStatus(int status, int isolatetrackingid, Connection conn )throws BecDatabaseException
     {
          String sql=null;
@@ -393,10 +441,7 @@ public class IsolateTrackingEngine
     }
     
     
-    public void updateRank(int r)throws BecDatabaseException
-    {
-        m_rank = r;
-    }
+    public void updateRank(int r)throws BecDatabaseException    {        m_rank = r;    }
     
     public boolean          isCoveredByEndReads(RefSequence refsequence) 
     {
@@ -448,6 +493,7 @@ public class IsolateTrackingEngine
         //if no match exit or no good reads are available for the isolate
         if (  m_status == PROCESS_STATUS_ER_NO_READS ||
                       m_status ==  PROCESS_STATUS_ER_ANALYZED_NO_MATCH ||
+                      m_status == PROCESS_STATUS_CLONE_SEQUENCE_ANALYZED_NO_MATCH ||
                       m_status == PROCESS_STATUS_ER_NO_LONG_READS)
         { 
             m_rank = RANK_BLACK;
@@ -503,54 +549,6 @@ public class IsolateTrackingEngine
     }
     
     
-  /*  
-    //function returns array of sequenceid for isolates whose status is in range
-    // @paramin status[]- isolate status 
-    // @paramin masterids[] - ids for master plates
-    // @paramout    array of sequenceids
-    public static ArrayList getIsolateTrackingEngines(int[] master_plate_ids, int[] status)
-        throws BecDatabaseException
-    {
-        ArrayList engines = new ArrayList();
-        String masterplate = Algorithms.convertArrayToString(master_plate_ids,",");
-        String processtatus=Algorithms.convertArrayToString(status,",");
-       
-        if (masterplate.equalsIgnoreCase("") || processtatus.equalsIgnoreCase("") ) return null;
-        
-        String sql = "select clonesequenceid, isolatetrackingid, agartrackingid, processstatus from isolatebyplate where containerid in ("+
-        masterplate + ") and processstatus in ( " + processtatus +")";
-    
-        CachedRowSet crs = null;
-        IsolateTrackingEngine it = null;
-        try
-        {
-            DatabaseTransaction t = DatabaseTransaction.getInstance();
-            crs = t.executeQuery(sql);
-            
-            while(crs.next())
-            {
-                it = new IsolateTrackingEngine();
-            //    it.setAgarId(crs.getInt("AGARTRACKINGID"));
-             //   it.setCloneSeqId(crs.getInt("CLONESEQUENCEID"));
-             //   it.setId(crs.getInt("ISOLATETRACKINGID"));
-             //   it.setStatus(crs.getInt("PROCESSSTATUS"));
-             //   engines.add( it );
-            }
-            return engines;
-        } 
-        catch (Exception e)
-        {
-            throw new BecDatabaseException("Error occured while extracting sequenceids: "+sql);
-        } 
-        finally
-        {
-            DatabaseTransaction.closeResultSet(crs);
-        }
-        
-    }
-    
-   */ 
-    
      //function returns array of sequenceid for isolates whose status is in range
     // @paramin status[]- isolate status 
     // @paramin masterids[] - ids for master plates
@@ -592,7 +590,7 @@ public class IsolateTrackingEngine
             exclude_istr = "and isolatetrackingid not in ("+exclude_istr+")";
         }
         String sql =  "select iso.ASSEMBLY_STATUS as assemblystatus, iso.isolatetrackingid as isolatetrackingid, iso.constructid as constructid,"
-            +"iso.status as status,iso.rank as rank,iso.score as score,iso.sampleid  as sampleid, containerid "
+            +"iso.status as status,iso.rank as rank,iso.score as score,iso.sampleid  as sampleid, process_status,containerid "
             +" from isolatetracking iso, sequencingconstruct c, sample s "
             +"where rownum < 30 "+exclude_istr+"and status in ("+ processtatus+") and containerid in ("+containerids+") and  c.constructid=iso.constructid   and iso.sampleid=s.sampleid  order by isolatetrackingid";
         return getByRule(sql);
@@ -620,6 +618,7 @@ public class IsolateTrackingEngine
                 istr.setSampleId(crs.getInt("sampleid") );
                 istr.setId( crs.getInt("isolatetrackingid") );
                 istr.setAssemblyStatus( crs.getInt("assemblystatus"));
+                istr.setFinalStatus(crs.getInt("process_status"));
                 istr.setConstructId( crs.getInt("constructid"));// identifies the agar; several (four) isolates will have the same id
                 // exstruct reads if not empty sample
                 if (istr.getStatus() != IsolateTrackingEngine.PROCESS_STATUS_SUBMITTED_EMPTY)
@@ -827,7 +826,7 @@ public class IsolateTrackingEngine
     {
         ArrayList engines = new ArrayList();
        
-       sql = "select ASSEMBLY_STATUS as assemblystatus ,flexsequenceid,flexcloneid ,id,flexconstructid,flexsampleid,flexsequencingplateid, iso.isolatetrackingid as isolatetrackingid, iso.constructid as constructid,"
+       sql = "select ASSEMBLY_STATUS as assemblystatus ,process_status, flexsequenceid,flexcloneid ,id,flexconstructid,flexsampleid,flexsequencingplateid, iso.isolatetrackingid as isolatetrackingid, iso.constructid as constructid,"
             +"iso.status as status,iso.rank as rank,iso.score as score,iso.sampleid  as sampleid  "
             +" from isolatetracking iso, flexinfo f "
             +" where  f.isolatetrackingid=iso.isolatetrackingid  and "+sql;
@@ -848,6 +847,7 @@ public class IsolateTrackingEngine
                 istr.setSampleId(crs.getInt("sampleid") );
                 istr.setId( crs.getInt("isolatetrackingid") );
                 istr.setFlexInfoId(crs.getInt("id") );
+                istr.setFinalStatus(crs.getInt("process_status"));
                 istr.setAssemblyStatus( crs.getInt("assemblystatus"));
                 istr.setConstructId( crs.getInt("constructid"));// identifies the agar; several (four) isolates will have the same id
                 // exstruct reads if not empty sample

@@ -38,47 +38,42 @@ import java.util.*;
  *
  * @author  htaycher
  */
-public class PlateUploadRunner implements Runnable
+public class PlateUploadRunner extends ProcessRunner
 {
 
-    /** Creates a new instance of tester */
-    public PlateUploadRunner()
-    {
-        m_error_messages = new ArrayList();
-    }
 
 
-    private ArrayList   m_master_container_labels = null;//get from form
+  //  private ArrayList   m_master_container_labels = null;//get from form
     private int         m_vector_id = -1;//get from form
     private int         m_linker3_id = -1;
     private int         m_linker5_id = -1;
     private int         m_isolate_status = -1;
-    private User        m_user = null;
     private int         m_plate_info_type = -1;
     private ArrayList   m_error_messages = null;
-      private String     m_start_codon = null;
+    private String     m_start_codon = null;
     private String      m_fusion_stop_codon = null;
     private String      m_close_stop_codon = null;
 
-    public void         setContainerLabels(ArrayList v)    { m_master_container_labels = v;}
+  //  public void         setContainerLabels(ArrayList v)    { m_master_container_labels = v;}
     public void         setVectorId(int vectorid )    { m_vector_id = vectorid;}
     public void         setLinker3Id(int linker3id)    { m_linker3_id = linker3id;}
     public void         setLinker5Id(int linker5id)    { m_linker5_id = linker5id;}
     public void         setNextStep(int put_plate_for_step)    { m_isolate_status = put_plate_for_step;}
     public void         setPlateInfoType(int plate_info_type){m_plate_info_type = PlateUploader.PLATE_NAMES;}
-    public  void        setUser(User v)    {m_user=v;}
      public  void        setStartCodon(String v){m_start_codon = v;}
     public  void        setFusionStopCodon(String v){m_fusion_stop_codon = v;}
     public  void        setClosedStopCodon(String v){m_close_stop_codon = v;}
-    
-    public void run()
+     public String          getTitle() {return "Request for plates upload";    }
+
+
+     public void run_process()
     {
-       
+
         // The database connection used for the transaction
         Connection conn = null;
         ArrayList master_plates = new ArrayList();
         m_error_messages = new ArrayList();
-         String requested_plates = Algorithms.convertStringArrayToString(m_master_container_labels,",");
+        ArrayList master_container_labels = Algorithms.splitString(m_items);
         PlateUploader pb = null;
         try
         {
@@ -98,7 +93,7 @@ public class PlateUploadRunner implements Runnable
 
 
               //upload plates
-            pb = new PlateUploader( m_master_container_labels, m_plate_info_type, cloning_startegy_id, m_isolate_status);
+            pb = new PlateUploader( master_container_labels, m_plate_info_type, cloning_startegy_id, m_isolate_status);
             pb.upload(conn);
             m_error_messages.addAll(pb.getErrors());
             //if at least one plate was uploaded create request
@@ -137,75 +132,59 @@ public class PlateUploadRunner implements Runnable
 
                 conn.commit();
             }
+             if (pb.getPassPlateNames().size()!=0)
+            {
+                m_additional_info ="\nThe follwing plates have been sucessfully uploaded from FLEX into BEC: "+
+                Algorithms.convertStringArrayToString(pb.getPassPlateNames(), Constants.LINE_SEPARATOR);
+            }
+             if (pb.getFailedPlateNames().size() != 0)
+             {
+                 m_additional_info ="\nFailed plates"+Constants.LINE_SEPARATOR
+                + Algorithms.convertStringArrayToString(pb.getFailedPlateNames(),Constants.LINE_SEPARATOR);
+             }
 
         }
         catch(Exception e)
         {
-            System.out.println(e.getMessage());
             DatabaseTransaction.rollback(conn);
 
         }
 
         finally
         {
-            try
-            {
-                DatabaseTransaction.closeConnection(conn);
-             //   System.out.println(m_error_messages.size()+" l");
-                //send errors
-                if (m_error_messages.size() != 0)
-                {
-                  //  System.out.println(m_error_messages.size()+" l1");
-                    Mailer.sendMessage(m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",
-                    "hip_informatics@hms.harvard.edu", "Upload plates: error messages.",
-                    "Errors"+Constants.LINE_SEPARATOR+"Processing of requested for the following plates:"+Constants.LINE_SEPARATOR+requested_plates +Constants.LINE_SEPARATOR+
-                    Algorithms.convertStringArrayToString(m_error_messages,"\n"));
-                }
-                if (pb.getPassPlateNames().size()!=0)
-                {
-                  //  System.out.println(pb.getPassPlateNames().size()+" l3");
-                     Mailer.sendMessage(m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",
-                    "hip_informatics@hms.harvard.edu", "Uploaded plates.",
-                    Constants.LINE_SEPARATOR+"Processing of requested for the following plates:"+Constants.LINE_SEPARATOR+requested_plates +Constants.LINE_SEPARATOR+"The follwing plates have been sucessfully uploaded from FLEX into BEC: "+
-                    Algorithms.convertStringArrayToString(pb.getPassPlateNames(), Constants.LINE_SEPARATOR));
-                }
-                 if (pb.getFailedPlateNames().size() != 0)
-                 {
-                    Mailer.sendMessage(m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",
-                    "hip_informatics@hms.harvard.edu", "Failed Plates.",
-                    "Processing of requested for the following plates:"+Constants.LINE_SEPARATOR+requested_plates +Constants.LINE_SEPARATOR+"Failed plates"+Constants.LINE_SEPARATOR
-                    + Algorithms.convertStringArrayToString(pb.getFailedPlateNames(),Constants.LINE_SEPARATOR));
-                 }
+            if ( conn != null )DatabaseTransaction.closeConnection(conn);
+            sendEMails(getTitle());
 
-            }
-            catch(Exception e){System.out.println(e.getMessage());}
         }
 
     }
 
-    
-    
-    public static void main(String args[]) 
+
+
+    public static void main(String args[])
 {
-    PlateUploadRunner runner = new PlateUploadRunner();
+    ProcessRunner runner = new PlateUploadRunner();
       try
     {
             BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
         sysProps.verifyApplicationSettings();
        edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
-    ArrayList arr = new ArrayList(); arr.add("SAE000946");
-         runner.setUser( AccessManager.getInstance().getUser("tigr","tigr"));
-                 runner.setContainerLabels(arr );
-                    runner.setVectorId(3 );
-                    runner.setLinker3Id(2);
-                    runner.setLinker5Id(1);
-                    runner.setStartCodon("ATG");
-                    runner.setFusionStopCodon("TAA");
-                    runner.setClosedStopCodon("TAG");
-                    runner.setPlateInfoType(PlateUploader.PLATE_NAMES);
+         runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
+                 runner.setInputData(Constants.ITEM_TYPE_PLATE_LABELS, "VcxXG002290-2.012-1 ");
+                    ((PlateUploadRunner)runner).setVectorId(9 );
+                     ((PlateUploadRunner)runner).setLinker3Id(74);
+                     ((PlateUploadRunner)runner).setLinker5Id(73);
+                     ((PlateUploadRunner)runner).setStartCodon("ATG");
+                     ((PlateUploadRunner)runner).setFusionStopCodon("TAA");
+                     ((PlateUploadRunner)runner).setClosedStopCodon("TAG");
+                     ((PlateUploadRunner)runner).setPlateInfoType(PlateUploader.PLATE_NAMES);
+                     runner.setProcessType(Constants.PROCESS_UPLOAD_PLATES);
                     runner.run();
-              
+
     }
       catch(Exception e){}
     }
+
+
+
  }

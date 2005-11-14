@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.2 $
- * $Date: 2005-01-20 16:48:31 $
+ * $Revision: 1.3 $
+ * $Date: 2005-11-14 16:10:30 $
  * $Author: Elena $
  *
  ******************************************************************************
@@ -53,7 +53,7 @@ import edu.harvard.med.hip.bec.util.*;
  * Overides the ActionServlet to provide bec specific functionality
  *
  * @author     $Author: Elena $
- * @version    $Revision: 1.2 $ $Date: 2005-01-20 16:48:31 $
+ * @version    $Revision: 1.3 $ $Date: 2005-11-14 16:10:30 $
  */
 
 public class BecServlet extends ActionServlet {
@@ -86,9 +86,7 @@ public class BecServlet extends ActionServlet {
             try
             {
                 prop.load(systemStream);
-              //  System.out.println("properties "+filePath + BecProperties.APPLICATION_SETTINGS[count] +prop.size());
                 becProp.setProperties(prop);
-            //    System.out.println("properties "+ BecProperties.getInstance().getErrorMessage());
                
              } catch (IOException ioE) 
              {
