@@ -68,7 +68,8 @@ public class IsolateRankerRunner extends ProcessRunner
 
                     isolate_ranker = new IsolateRanker(m_fullseq_spec,  m_endreads_spec,constructs);
                     isolate_ranker.run(conn);
-                    m_error_messages.addAll( isolate_ranker.getErrorMessages() );
+                    if ( isolate_ranker.getErrorMessages() != null && isolate_ranker.getErrorMessages().size() > 0)
+                        m_error_messages.addAll( isolate_ranker.getErrorMessages() );
 
                 }
 
@@ -135,14 +136,14 @@ public class IsolateRankerRunner extends ProcessRunner
             sysProps.verifyApplicationSettings();
             edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
 
-        IsolateRankerRunner runner = new IsolateRankerRunner();
-        ArrayList master_container_labels = new ArrayList();
-        master_container_labels.add("BSA000768");
-        runner.setInputData(Constants.ITEM_TYPE_PLATE_LABELS, "IGS002106-1");
+        ProcessRunner runner = new IsolateRankerRunner();
+        runner.setInputData(Constants.ITEM_TYPE_PLATE_LABELS, "JSA001431 ");
       //  runner.setContainerLabels(master_container_labels );
         runner.setProcessType( Constants.PROCESS_RUN_ISOLATE_RUNKER );
-        runner.setCutoffValuesSpec( (FullSeqSpec)Spec.getSpecById(91, Spec.FULL_SEQ_SPEC_INT));
-        runner.setPenaltyValuesSpec( (EndReadsSpec)Spec.getSpecById(1, Spec.END_READS_SPEC_INT));
+        Spec spec_f = Spec.getSpecById(91, Spec.FULL_SEQ_SPEC_INT);
+        System.out.println(spec_f instanceof FullSeqSpec);
+        ((IsolateRankerRunner)runner).setCutoffValuesSpec( (FullSeqSpec)Spec.getSpecById(91, Spec.FULL_SEQ_SPEC_INT));
+        ((IsolateRankerRunner)runner).setPenaltyValuesSpec( (EndReadsSpec)Spec.getSpecById(1, Spec.END_READS_SPEC_INT));
        runner.setUser(  AccessManager.getInstance().getUser("htaycher123","htaycher"));
         runner.run();
         }catch(Exception e){}

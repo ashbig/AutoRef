@@ -143,7 +143,7 @@ public class IsolateRanker
                     if ( type_of_item_to_analize == 0)
                     {
                         it.setStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_NO_READS);
-                         continue;
+                        // continue;
                       
                     }
                    
