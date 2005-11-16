@@ -83,6 +83,9 @@
     <form-bean      name="enterResultsForm"
                     type="plasmid.form.EnterResultsForm"/>
                     
+    <form-bean      name="viewCollectionForm"
+                    type="plasmid.form.ViewCollectionForm"/>
+                    
  </form-beans>
 
   <!-- ========== Global Forward Definitions ============================== -->
@@ -99,6 +102,14 @@
 
   <!-- ========== Action Mapping Definitions ============================== -->
   <action-mappings type="org.apache.struts.action.ActionMapping">
+    
+    <action     path="/AddCollectionToCart"
+                type="plasmid.action.AddCollectionToCartAction"
+               name="viewCollectionForm"
+              validate="false"
+              input="/ViewCollection.jsp">
+      <forward  name="success"  path="/ViewCollection.jsp"/>
+    </action>
     
     <action     path="/ChangeOrderStatus"
                 type="plasmid.action.ChangeOrderStatusAction"
@@ -154,6 +165,8 @@
                type="plasmid.action.GenerateContainersAction"
                name="generateWorklistForm"
               validate="false">
+      <forward  name="success"   path="/GenerateContainersSuccessful.txt"/>
+      <forward  name="fail"   path="/GenerateContainersFail.txt"/>
     </action>
          
     <action    path="/GetAllVectors"
@@ -169,6 +182,22 @@
               scope="request"
               input="/GetCloneDetailAction">
       <forward  name="success"   path="/ViewCloneDetail.jsp"/>
+    </action>
+     
+    <action    path="/GetCollection"
+               type="plasmid.action.GetCollectionAction"
+               name="viewCollectionForm"
+              validate="false"
+              input="/GetCollectionList.do">
+      <forward  name="success"   path="/ViewCollection.jsp"/>
+    </action>
+         
+    <action    path="/GetCollectionList"
+               type="plasmid.action.GetCollectionListAction"
+              scope="request"
+              input="/GetCollectionList.do">
+      <forward  name="success"   path="/CollectionList.jsp"/>
+      <forward  name="empty"   path="/CollectionListEmpty.jsp"/>
     </action>
      
     <action    path="/GetDataForRefseqSearch"
@@ -302,6 +331,7 @@
               scope="request"
               input="/RefseqSearchContinue.jsp">
       <forward  name="success"   path="/DisplayResults.jsp"/>
+      <forward  name="success_collection"   path="/ViewCollection.jsp"/>
     </action>
          
     <action    path="/SetVectorDisplay"
@@ -352,6 +382,13 @@
                name="viewOrderClonesForm"
               input="/ViewOrderClones.do">
       <forward  name="success"   path="/ViewOrderClones.jsp"/>
+    </action>
+        
+    <action    path="/ViewOrderCollections"
+               type="plasmid.action.ViewOrderCollectionsAction"
+               name="viewOrderClonesForm"
+              input="/ViewOrderClones.do">
+      <forward  name="success"   path="/ViewOrderCollections.jsp"/>
     </action>
     
     <action    path="/ViewOrderDetail"
