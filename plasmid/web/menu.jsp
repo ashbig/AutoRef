@@ -29,10 +29,7 @@
           <td height="15" class="mainbodytext">Plasmids Collection</td>
         </tr>
         <tr> 
-          <td height="15" class="lftsubtxt">- <a href="#" class="leftsubnavtext">Human</a></td>
-        </tr>
-        <tr> 
-          <td height="15" class="lftsubtxt"> - <a href="#" class="leftsubnavtext">Yeast</a></td>
+          <td height="15" class="lftsubtxt">- <a href="GetCollectionList.do" class="leftsubnavtext">view collections</a></td>
         </tr>
       </table></td>
   </tr>
