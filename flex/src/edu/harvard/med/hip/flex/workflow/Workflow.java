@@ -66,6 +66,7 @@ public class Workflow {
     public static final int TRANSFER_TO_EXP_PLP_DS_3xMyc = 39;
     public static final int TRANSFER_TO_EXP_pCITE_GST = 40;
     public static final int TRANSFER_TO_EXP_pDEST17 = 41;
+    public static final int TRANSFER_TO_EXP_pBY011 = 42;
     
     /** Creates new Workflow */
     public Workflow() {

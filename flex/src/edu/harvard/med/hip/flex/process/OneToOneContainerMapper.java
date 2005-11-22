@@ -104,12 +104,16 @@ public class OneToOneContainerMapper implements ContainerMapper {
                 if(workflow.getId() == Workflow.TRANSFER_TO_EXP_pDEST17) {
                     newBarcode = newBarcode+".014";
                 }
+                if(workflow.getId() == Workflow.TRANSFER_TO_EXP_pBY011) {
+                    newBarcode = newBarcode+".003";
+                }
             } else if(Protocol.GENERATE_GLYCEROL_PLATES.equals(protocol.getProcessname()) &&
             (workflow.getId()==Workflow.TRANSFER_TO_EXP_JP1520 
             || workflow.getId()==Workflow.TRANSFER_TO_EXP_PLP_DS_3xFlag 
             || workflow.getId()==Workflow.TRANSFER_TO_EXP_PLP_DS_3xMyc
             || workflow.getId()==Workflow.TRANSFER_TO_EXP_pCITE_GST
-            || workflow.getId()==Workflow.TRANSFER_TO_EXP_pDEST17)) {
+            || workflow.getId()==Workflow.TRANSFER_TO_EXP_pDEST17
+            || workflow.getId()==Workflow.TRANSFER_TO_EXP_pBY011)) {
                 String labelPrefix = null;
                 if(project.getId()==Project.HUMAN) {
                     labelPrefix = "HsxXG";
@@ -123,6 +127,8 @@ public class OneToOneContainerMapper implements ContainerMapper {
                     labelPrefix = "FtxXG";
                 } else if(project.getId()==Project.Bacillus_anthracis) {
                     labelPrefix = "BaxXG";
+                } else if(project.getId()==Project.Yersinia_pseudotuberculosis) {
+                    labelPrefix = "YpsXG";
                 }
                 newBarcode = labelPrefix+container.getLabel().substring(3);
             } else {
