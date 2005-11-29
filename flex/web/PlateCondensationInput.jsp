@@ -60,7 +60,7 @@
         </td>
     </tr>
     <tr>
-        <td class="prompt">Check here if you allow partial destination plates:</td>
+        <td class="prompt">Check here if the source plates are not muitiple of 4:</td>
         <td><html:checkbox property="isPartial"/></td>
     </tr>
     <tr>
