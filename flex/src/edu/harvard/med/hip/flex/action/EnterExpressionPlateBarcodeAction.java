@@ -68,6 +68,7 @@ public class EnterExpressionPlateBarcodeAction extends ResearcherAction {
         try {
             containers = ExpressionCloneContainer.findContainers(newPlate);
         } catch (Exception ex) {
+            System.out.println(ex);
             errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.plate.invalid.barcode", newPlate));
             saveErrors(request, errors);
             return (new ActionForward(mapping.getInput()));

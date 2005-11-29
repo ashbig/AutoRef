@@ -25,6 +25,8 @@ public class CloneSample extends Sample {
     protected int strategyid;
     protected String clonestatus;
     protected String comments;
+    protected String vectorname;
+    protected boolean isWorking;
     
     public String getClonename() {return clonename;}
     public String getClonetype() {return clonetype;}
@@ -34,6 +36,8 @@ public class CloneSample extends Sample {
     public int getStrategyid() {return strategyid;}
     public String getClonestatus() {return clonestatus;}
     public String getComments() {return comments;}
+    public String getVectorname() {return vectorname;}
+    public boolean getIsWorking() {return isWorking;}
     
     public void setClonename(String clonename) {this.clonename=clonename;}
     public void setClonetype(String s) {this.clonetype=s;}
@@ -43,6 +47,8 @@ public class CloneSample extends Sample {
     public void setStrategyid(int i) {this.strategyid=i;}
     public void setClonestatus(String s) {this.clonestatus = s;}
     public void setComments(String s) {this.comments = s;}
+    public void setVectorname(String s) {this.vectorname = s;}
+    public void setIsWorking(boolean b) {this.isWorking = b;}
     
     public CloneSample(int id, int position, int containerid, int cloneid) {
         super(id, position, containerid);

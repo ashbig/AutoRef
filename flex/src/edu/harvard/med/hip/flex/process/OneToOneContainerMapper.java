@@ -131,6 +131,7 @@ public class OneToOneContainerMapper implements ContainerMapper {
                     labelPrefix = "YpsXG";
                 }
                 newBarcode = labelPrefix+container.getLabel().substring(3);
+                newContainerType = ExpressionCloneContainer.EXPRESSION_CONTAINER_TYPE;
             } else {
                 newBarcode = Container.getLabel(projectCode, protocol.getProcesscode(), container.getThreadid(), getSubThread(container));
             }

@@ -164,8 +164,7 @@ public class ExpressionCloneContainer extends CloneContainer {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             rs = t.executeQuery(sql);
             
-            while(rs.next()) {
-                
+            while(rs.next()) {               
                 int id = rs.getInt("CONTAINERID");
                 String containerType = rs.getString("CONTAINERTYPE");
                 String containerLabel = rs.getString("LABEL");

@@ -150,7 +150,12 @@ public class Algorithms {
     
     public static ArrayList splitString(String value, String spliter) {
         ArrayList res = new ArrayList();
-        StringTokenizer st = new StringTokenizer(value, spliter);
+        StringTokenizer st = null;
+        if(spliter == null)
+            st = new StringTokenizer(value);
+        else 
+            st = new StringTokenizer(value, spliter);
+        
         while(st.hasMoreTokens()) {
             String val = st.nextToken().trim();
             res.add( val );

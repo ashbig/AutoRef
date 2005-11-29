@@ -1,5 +1,5 @@
 /**
- * $Id: Container.java,v 1.5 2005-03-23 17:11:45 dzuo Exp $
+ * $Id: Container.java,v 1.6 2005-11-29 20:07:29 dzuo Exp $
  *
  * File     	: Container.java
  * Date     	: 04162001
@@ -396,12 +396,21 @@ public class Container {
     public void setSampleResult(int id, String result){
     }
     
+    public void restoreSample() throws FlexDatabaseException {
+        restoreSample(true);
+    }
+    
     /**
      * Get the data from Sample table.
      *
      * @exception FlexDatabaseException.
      */
-    public void restoreSample() throws FlexDatabaseException {
+    public void restoreSample(boolean isRestoreSequence) throws FlexDatabaseException {
+        if(!isRestoreSequence) {
+            restoreSampleWithoutSeq();
+            return;
+        }
+        
         samples.removeAllElements();
         
         String sql = "select * from sample where containerid="+id+" order by CONTAINERPOSITION";

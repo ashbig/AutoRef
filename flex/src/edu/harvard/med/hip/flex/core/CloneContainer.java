@@ -34,17 +34,35 @@ public class CloneContainer extends Container{
     }
     
     public void restoreSample() throws FlexDatabaseException {
-        super.restoreSample();
+        restoreSample(true, false);
+    }
+    
+    public void restoreSample(boolean isRestoreSequence, boolean isRestoreStorage) throws FlexDatabaseException {
+        super.restoreSample(isRestoreSequence);
         
         String sql = "select * from clones where cloneid=?";
+        String sql1 = "select c.vectorname from cloningstrategy c, clones cs"+
+        " where c.strategyid=cs.strategyid and cs.cloneid=?";
+        String sql2 = "select count(*) from clonestorage"+
+        " where storagetype='Working Storage'"+
+        " and storagesampleid=?";
+        
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         Connection conn = t.requestConnection();
         PreparedStatement stmt = null;
+        PreparedStatement stmt1 = null;
+        PreparedStatement stmt2 = null;
         ResultSet rs = null;
+        ResultSet rs1 = null;
+        ResultSet rs2 = null;
         Vector cloneSamples = new Vector();
         
         try {
             stmt = conn.prepareStatement(sql);
+            if(isRestoreStorage) {
+                stmt1 = conn.prepareStatement(sql1);
+                stmt2 = conn.prepareStatement(sql2);
+            }
             
             for (int i=0; i<samples.size(); i++) {
                 Sample s = (Sample)samples.get(i);
@@ -79,6 +97,25 @@ public class CloneContainer extends Container{
                         cs.setClonestatus(clonestatus);
                         cs.setComments(comments);
                     }
+                    
+                    if(isRestoreStorage) {
+                        stmt1.setInt(1, cloneid);
+                        rs1 = DatabaseTransaction.executeQuery(stmt1);
+                        if(rs1.next()) {
+                            String vectorname = rs1.getString(1);
+                            cs.setVectorname(vectorname);
+                        }
+                        
+                        stmt2.setInt(1, cs.getId());
+                        rs2 = DatabaseTransaction.executeQuery(stmt2);
+                        if(rs2.next()) {
+                            int n = rs2.getInt(1);
+                            if(n>0)
+                                cs.setIsWorking(true);
+                            else
+                                cs.setIsWorking(false);
+                        }
+                    }
                 }
                 cloneSamples.add(cs);
             }
@@ -87,7 +124,11 @@ public class CloneContainer extends Container{
             throw new FlexDatabaseException("Error occured while initializing sample\n"+sqlE+"\nSQL: "+sql);
         } finally {
             DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeResultSet(rs1);
+            DatabaseTransaction.closeResultSet(rs2);
             DatabaseTransaction.closeStatement(stmt);
+            DatabaseTransaction.closeStatement(stmt1);
+            DatabaseTransaction.closeStatement(stmt2);
             DatabaseTransaction.closeConnection(conn);
         }
     }
@@ -123,13 +164,18 @@ public class CloneContainer extends Container{
                 stmt.setString(8, cs.getClonestatus());
                 stmt.setString(9, cs.getComments());
                 DatabaseTransaction.executeUpdate(stmt);
-            }            
+            }
             super.insert(conn);
         } catch (SQLException ex) {
             throw new FlexDatabaseException(ex);
         } finally {
             DatabaseTransaction.closeStatement(stmt);
         }
+    }
+    
+    public static List findContainers(String label) throws FlexCoreException,
+    FlexDatabaseException {
+        return findContainers(label, true, false);
     }
     
     /**
@@ -140,11 +186,9 @@ public class CloneContainer extends Container{
      * @return A list of Container object with the given label.
      * @exception FlexCoreException, FlexDatabaseException.
      */
-    public static List findContainers(String label) throws FlexCoreException,
+    public static List findContainers(String label, boolean isRestoreSequence, boolean isRestoreStorage) throws FlexCoreException,
     FlexDatabaseException {
-        
         List containerList = new LinkedList();
-        
         String sql = "select c.containerid as containerid, "+
         "c.containertype as containertype, "+
         "c.label as label, "+
@@ -170,9 +214,9 @@ public class CloneContainer extends Container{
                 String locationtype = rs.getString("LOCATIONTYPE");
                 String description = rs.getString("DESCRIPTION");
                 Location location = new Location(locationid, locationtype, description);
-                Container curContainer = new CloneContainer(id,containerType,location,containerLabel);
+                CloneContainer curContainer = new CloneContainer(id,containerType,location,containerLabel);
                 curContainer.setThreadid(threadId);
-                curContainer.restoreSample();
+                curContainer.restoreSample(isRestoreSequence, isRestoreStorage);
                 containerList.add(curContainer);
             }
         } catch (NullPointerException ex) {
@@ -185,11 +229,11 @@ public class CloneContainer extends Container{
         return containerList;
     }
     
-    public static void update(Connection conn, List cloneidList, List statusList, List commentsList) 
+    public static void update(Connection conn, List cloneidList, List statusList, List commentsList)
     throws FlexDatabaseException, SQLException {
         String sql = "update clones set status=?,"+
-                    " comments=?"+
-                    " where cloneid=?";
+        " comments=?"+
+        " where cloneid=?";
         PreparedStatement stmt = conn.prepareStatement(sql);
         
         for(int i=0; i<cloneidList.size(); i++) {
@@ -204,7 +248,7 @@ public class CloneContainer extends Container{
         
         DatabaseTransaction.closeStatement(stmt);
     }
-        
+    
     public static void main(String args[]) throws Exception {
         List containers = CloneContainer.findContainers("HXG000420");
         Container container = (CloneContainer)containers.get(0);

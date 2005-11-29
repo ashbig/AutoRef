@@ -96,6 +96,10 @@ public class GetProjectsAction extends ResearcherAction {
              
             request.setAttribute("forwardName", forwardName);
             
+            if(Constants.PLATE_CONDENSATION.equals(forwardName)) {
+                return (mapping.findForward("success_plate_condensation"));
+            }
+            
             return (mapping.findForward("success"));
         } catch (Exception e) {
             request.setAttribute(Action.EXCEPTION_KEY, e);

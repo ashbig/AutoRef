@@ -172,6 +172,7 @@ public class Constants {
     //forward name for enter result
     public static final String ENTER_RESULT = "ENTER_RESULT";
     
+    public static final String PLATE_CONDENSATION = "PLATE_CONDENSATION";
     
     //forward name for set project parameters for sequencing 
     public static final String SEQ_SET_PROJECT_PARAMS = "SEQ_SET_PROJECT_PARAMS";

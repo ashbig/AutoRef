@@ -253,6 +253,9 @@
                         
     <form-bean      name="uploadCultureResultForm"
                     type="edu.harvard.med.hip.flex.form.UploadCultureResultForm"/> 
+                        
+    <form-bean      name="plateCondensationForm"
+                    type="edu.harvard.med.hip.flex.form.PlateCondensationForm"/> 
                            
  </form-beans>
 
@@ -290,6 +293,7 @@
     <forward    name="queryHistory" path="/GetAllSearchRecords.do"/>
     <forward    name="helpExternal" path="/tmp.jsp"/>
     <forward    name="queryCloneStorage" path="/QueryStorageCloneInput.jsp"/>
+    <forward    name="plateCondensation" path="/GetProjects.do?forwardName=PLATE_CONDENSATION"/>
 
   </global-forwards>
   
@@ -350,6 +354,7 @@
                 type="edu.harvard.med.hip.flex.action.GetProjectsAction">
         <forward    name="success"   path="/SelectProject.jsp"/>
         <forward    name="success_import_sequence"   path="/ImportSequence.jsp"/>
+        <forward    name="success_plate_condensation"   path="/PlateCondensationInput.jsp"/>
     </action>
 
     <!-- Process user's selection of a project -->
@@ -1405,6 +1410,15 @@
                validate="false"
                input="/ImportSeqResults.jsp">
       <forward  name="success"   path="/ViewFoundResults.jsp"/>
+    </action>  
+                                      
+    <action    path="/PlateCondensationInput"
+               type="edu.harvard.med.hip.flex.action.PlateCondensationInputAction"
+               name="plateCondensationForm"
+               scope="request"
+               validate="true"
+               input="/GetProjects.do?forwardName=PLATE_CONDENSATION">
+      <forward  name="success"   path="/PlateCondensationOutput.jsp"/>
     </action>  
      
     <!-- The standard administrative actions available with Struts -->

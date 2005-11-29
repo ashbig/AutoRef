@@ -42,8 +42,8 @@ public class CloneStorageManager {
         " storagecontainerlabel,storagecontainerposition,"+
         " storagetype,storageform,cloneid)"+
         " values(storageid.nextval, ?,?,?,?,?,?,?)";
-        System.out.println("Storage Type: "+storageType);
-        System.out.println("Storage Form: "+storageForm);
+        //System.out.println("Storage Type: "+storageType);
+        //System.out.println("Storage Form: "+storageForm);
         PreparedStatement stmt = null;
         PreparedStatement stmtUpdate = null;
         PreparedStatement stmtInsert = null;
@@ -94,14 +94,14 @@ public class CloneStorageManager {
                             stmtUpdate.setInt(4, position);
                             stmtUpdate.setInt(5, storageid);
                             DatabaseTransaction.executeUpdate(stmtUpdate);
-                            System.out.println("update clone: "+cloneid);
+                            //System.out.println("update clone: "+cloneid);
                         } else {
                             DatabaseTransaction.executeUpdate(stmtInsert);
-                            System.out.println("insert clone: "+cloneid);
+                            //System.out.println("insert clone: "+cloneid);
                         }
                     } else {
                         DatabaseTransaction.executeUpdate(stmtInsert);
-                        System.out.println("INSERT clone: "+cloneid);
+                        //System.out.println("INSERT clone: "+cloneid);
                     }
                 }
             }
