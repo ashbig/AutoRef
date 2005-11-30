@@ -89,7 +89,7 @@ public class PlateCondensationManager {
         return true;
     }
     
-    public List condensePlates(int projectid, List containers, String containerType) throws Exception {
+    public List condensePlates(int projectid, List containers, String containerType, String sampleType, boolean isWorking) throws Exception {
         PlateCondensationMapper mapper = new PlateCondensationMapper();
         sampleLineages = new Vector();
         containerMaps = new ArrayList();
@@ -124,7 +124,7 @@ public class PlateCondensationManager {
                 else
                     barcode = "Z";
                 barcode = barcode+"3AR"+fmt.format(threadid);
-                Container container = mapper.mapContainers(src, containerType, barcode);
+                Container container = mapper.mapContainers(src, containerType, barcode, sampleType, isWorking);
                 destContainers.add(container);
                 sampleLineages.addAll(mapper.getSampleLineageSet());
                 List l = new ArrayList();
@@ -139,7 +139,7 @@ public class PlateCondensationManager {
     
     public void persistData(Project project, Workflow workflow, Protocol protocol,
     Researcher researcher, List srcContainers, List destContainers, String storageType, 
-    String storageForm) throws Exception {
+    String storageForm, boolean isWorking) throws Exception {
         DatabaseTransaction t = null;
         Connection conn = null;
         try {

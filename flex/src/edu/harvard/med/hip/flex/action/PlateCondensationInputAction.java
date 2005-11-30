@@ -114,9 +114,15 @@ public class PlateCondensationInputAction extends ResearcherAction {
             return (new ActionForward(mapping.getInput()));
         }
         
+        String sampleType = null;
+        if(StorageForm.GLYCEROL.equals(destStorageForm))
+            sampleType = Sample.ISOLATE;
+        else
+            sampleType = Sample.DNA;
+        
         List destContainers = null;
         try {
-            destContainers = manager.condensePlates(projectid, containers, destContainerType);
+            destContainers = manager.condensePlates(projectid, containers, destContainerType, sampleType, isWorking);
         } catch (Exception ex) {
             errors.add("srcLabels", new ActionError("error.general", "Cannot condense containers. "+ex));
             saveErrors(request, errors);
@@ -135,7 +141,7 @@ public class PlateCondensationInputAction extends ResearcherAction {
         }
         
         try {
-            manager.persistData(p, workflow, protocol, r, containers, destContainers, destStorageType, destStorageForm);
+            manager.persistData(p, workflow, protocol, r, containers, destContainers, destStorageType, destStorageForm, isWorking);
         } catch (Exception ex) {
             errors.add("srcLabels", new ActionError("error.general", "Error occured: "+ex));
             saveErrors(request, errors);

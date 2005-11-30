@@ -22,15 +22,15 @@
 <logic:iterate name="containerMaps" id="containerMap">
     <tr>
         <td class="promp" valign=="top">Source Containers:</td>
-        <td>
+        <td valign=="top">
             <logic:iterate name="containerMap" property="src" id="srcContainer">
                 <a href="ViewContainerDetails.do?<%=Constants.CONTAINER_ID_KEY%>=<bean:write name="srcContainer" property="id"/>"><bean:write name="srcContainer" property="label"/></a><br>
             </logic:iterate>
         </td>
         <td class="promp" valign="top">Destination Containers:</td>
-        <td>
+        <td valign=="top">
             <logic:iterate name="containerMap" property="dest" id="destContainer">
-                <a href="ViewContainerDetails.do?<%=Constants.CONTAINER_ID_KEY%>=<bean:write name="destContainer" property="id"/>">><bean:write name="destContainer" property="label"/></a><br>
+                <a href="ViewContainerDetails.do?<%=Constants.CONTAINER_ID_KEY%>=<bean:write name="destContainer" property="id"/>"><bean:write name="destContainer" property="label"/></a><br>
             </logic:iterate>
         </td>    
     </tr>
