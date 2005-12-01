@@ -40,7 +40,7 @@ public class ProcessManager extends TableManager {
         String sql = "insert into processexecution"+
         " (executionid,executionstatus,executiondate,processname,researchername,protocolname)"+
         " values(?,?,sysdate,?,?,?)";
-        
+       
         try {
             PreparedStatement stmt = conn.prepareStatement(sql);
             
@@ -324,7 +324,7 @@ public class ProcessManager extends TableManager {
     }
     
     public static WorklistInfo getWorklistInfo(int worklistid) {
-        String sql = "select worklistname, researchername, processname, protocolname, status"+
+        String sql = "select worklistname, researchername, processname, protocolname, status, istube"+
         " from worklistinfo where worklistid="+worklistid;
         
         DatabaseTransaction t = null;
@@ -340,7 +340,8 @@ public class ProcessManager extends TableManager {
                 String processname = rs.getString(3);
                 String protocolname = rs.getString(4);
                 int status = rs.getInt(5);
-                info = new WorklistInfo(worklistid,worklistname,researchername, processname,protocolname,status);
+                String istube = rs.getString(6);
+                info = new WorklistInfo(worklistid,worklistname,researchername, processname,protocolname,status,istube);
             }
         } catch (Exception ex) {
             if(Constants.DEBUG) {
@@ -358,8 +359,8 @@ public class ProcessManager extends TableManager {
             return true;
         
         String sql = "insert into worklistinfo"+
-        " (worklistid,worklistname,researchername,processname,protocolname,status)"+
-        " values(?,?,?,?,?,?)";
+        " (worklistid,worklistname,researchername,processname,protocolname,status,istube)"+
+        " values(?,?,?,?,?,?,?)";
         
         try {
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -370,6 +371,7 @@ public class ProcessManager extends TableManager {
             stmt.setString(4, info.getProcessname());
             stmt.setString(5, info.getProtocolname());
             stmt.setInt(6, info.getStatus());
+            stmt.setString(7, info.getTube());
             DatabaseTransaction.executeUpdate(stmt);
             
             DatabaseTransaction.closeStatement(stmt);

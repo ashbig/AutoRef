@@ -39,7 +39,7 @@ public class ContainerMapper {
             SampleLineage sl = (SampleLineage)worklist.get(i);
             Sample to = sl.getSampleTo();
             to.setStatus(Sample.GOOD);
-            to.setSampleid(i);
+            //to.setSampleid(0);
             if(!addToContainer(containers, to)) {
                 throw new Exception("Cannot add sample "+to.getContainerlabel()+"/"+to.getPosition()+" to containers");
             }

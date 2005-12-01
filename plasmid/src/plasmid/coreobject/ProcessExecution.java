@@ -35,13 +35,13 @@ public class ProcessExecution {
     public ProcessExecution() {
     }
     
-    public ProcessExecution(int executionid, String status, String date, String processname, String reseachername, String protocolname) {
+    public ProcessExecution(int executionid, String status, String date, String processName, String researcherName, String protocolName) {
         this.executionid = executionid;
         this.status = status;
         this.date = date;
-        this.processname = processname;
-        this.researchername = researchername;
-        this.protocolname = protocolname;
+        this.processname = processName;
+        this.researchername = researcherName;
+        this.protocolname = protocolName;
     }
     
     public int getExecutionid() {return executionid;}

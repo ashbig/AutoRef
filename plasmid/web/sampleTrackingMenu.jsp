@@ -7,6 +7,9 @@
   <tr> 
     <td height=30" valign="middle"> <table width="100%" border="0">
         <tr> 
+          <td height="15" class="lftsubtxt"><a href="SampleTrackingHome.jsp" class="leftsubnavtext">Sample Tracking Home</a></td>
+        </tr>
+        <tr> 
           <td height="15" class="lftsubtxt"><a href="LabelPlates.jsp" class="leftsubnavtext">Label Containers</a></td>
         </tr>
         <tr> 

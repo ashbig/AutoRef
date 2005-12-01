@@ -51,7 +51,9 @@ public class WorklistInputAction extends InternalUserAction{
         String srcContainerList = ((GenerateWorklistForm)form).getSrcContainerList().trim();
         String destContainerList = ((GenerateWorklistForm)form).getDestContainerList().trim();
         int volumn = ((GenerateWorklistForm)form).getVolumn();
-            User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
+        boolean tube = ((GenerateWorklistForm)form).getTube();
+        
+        User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
         
         StringConvertor sc = new StringConvertor();
         List srcLabels = sc.convertFromStringToList(srcContainerList, "\n\t ");
@@ -109,7 +111,7 @@ public class WorklistInputAction extends InternalUserAction{
                 saveErrors(request, errors);
                 return (new ActionForward(mapping.getInput()));
             }
-                
+            
             List notEmptyDestContainers = manager.checkEmptyContainers(destContainers);
             if(notEmptyDestContainers.size()>0) {
                 String s = sc.convertFromListToString(notEmptyDestContainers);
@@ -126,7 +128,7 @@ public class WorklistInputAction extends InternalUserAction{
                 saveErrors(request, errors);
                 return (new ActionForward(mapping.getInput()));
             }
-         
+            
             int worklistid = DefTableManager.getNextid("WORKLISTID");
             if(worklistid < 0) {
                 errors.add(ActionErrors.GLOBAL_ERROR,
@@ -148,9 +150,12 @@ public class WorklistInputAction extends InternalUserAction{
             filenames.add(fileWorklist);
             filenames.add(fileWorklistRobot);
             
-            WorklistInfo info = new WorklistInfo(worklistid, worklistname, user.getFirstname()+" "+user.getLastname(), processname,protocol,WorklistInfo.NOTCOMMIT);
+            String istube = "N";
+            if(tube)
+                istube = "Y";
+            WorklistInfo info = new WorklistInfo(worklistid, worklistname, user.getFirstname()+" "+user.getLastname(), processname,protocol,WorklistInfo.NOTCOMMIT,istube);
             if(!manager.persistWorklistInfo(info)) {
-                errors.add(ActionErrors.GLOBAL_ERROR, 
+                errors.add(ActionErrors.GLOBAL_ERROR,
                 new ActionError("error.general", "Cannot insert data into WORKLISTINFO with worklistid: "+worklistid));
                 saveErrors(request, errors);
                 return mapping.findForward("error");

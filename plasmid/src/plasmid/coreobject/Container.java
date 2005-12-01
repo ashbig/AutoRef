@@ -52,6 +52,7 @@ public class Container {
         this.location = location;
         this.capacity = capacity;
         this.status = status;
+        samples = new ArrayList();
     }
     
     public int getContainerid() {return containerid;}
@@ -104,16 +105,21 @@ public class Container {
     
     public void addSample(Sample s) {
         if(samples == null)
-            samples = new ArrayList(this.getSize());
+            samples = new ArrayList();
         
-        samples.add(s.getPosition()-1, s);
+        samples.add(s);
     }
     
     public Sample getSample(int position) {
+        if(samples == null)
+            return null;
+        
         Sample s = null;
-        try {
-            s = (Sample)samples.get(position-1);
-        } catch (Exception ex) {}
+        for(int i=0; i<samples.size(); i++) {
+            s = (Sample)samples.get(i);
+            if(s.getPosition() == position)
+                break;
+        }
         
         return s;
     }

@@ -33,6 +33,7 @@ public class Constants {
     public static final String EMAIL_FROM = "dzuo@hms.harvard.edu";
     
     public static final String WORKLIST_FILE_PATH = FlexProperties.getInstance().getProperty("worklist");
+    public static final String TUBEMAP_FILE_PATH = FlexProperties.getInstance().getProperty("tubemap");
     public static final String WORKLIST = "worklist";
     public static final String FULLWORKLIST = "fullworklist";
     public static final String WORKLISTROBOT = "worklistrobot";

@@ -25,20 +25,44 @@
     <td width="83%" align="left" valign="top">
         <jsp:include page="enterResultsTitle.jsp" />
 <html:errors/>
-      <html:form action="UploadResultFile.do"  enctype="multipart/form-data">
+
 <table width="100%" border="0">
   <tr> 
     <td width="25%" class="formlabel">Result type:</td>
-    <td colspan="2"><bean:write styleClass="itemtext" name="enterResultsForm" property="resultType"/></td>
+    <td colspan="2" class="itemtext"><bean:write name="enterResultsForm" property="resultType"/></td>
   </tr>
   <tr> 
-    <td width="25%" class="formlabel">Please upload the file:</td>
-    <td colspan="2"><html:file styleClass="itemtext" property="resultFile" /></td>
+    <td width="25%" class="formlabel">Result file:</td>
+    <td colspan="2" class="itemtext"><bean:write name="enterResultsForm" property="resultFile.fileName" /></td>
   </tr>
   <tr> 
+    <td width="25%" class="formlabel">Container:</td>
+    <td colspan="2" class="itemtext"><bean:write name="enterResultsForm" property="label" /></td>
+  </tr>
+</table>
+      
+<html:form action="ConfirmResults.do">
+<p>
+<table width="100%" border="0">
+  <tr>
+    <td class="tableheader">Position</td>
+    <td class="tableheader">Well</td>
+    <td class="tableheader">Type</td>
+    <td class="tableheader">Result</td>
+  </tr>
+  <logic:iterate name="enterResultsForm" property="container.samples" 
+    id="curSample" indexId="i" type="plasmid.coreobject.Sample">
+  <tr class="tableinfo">
+    <td width="25%" class="itemtext"><bean:write name="curSample" property="position"/></td>
+    <td width="25%" class="itemtext"><bean:write name="curSample" property="well"/></td>
+    <td width="25%" class="itemtext"><bean:write name="curSample" property="type"/></td>
+    <td width="25%" class="itemtext"><bean:write name="enterResultsForm" property='<%="result["+ i +"]" %>'/></td>
+  </tr> 
+  </logic:iterate>
+  <tr>
     <td width="25%" class="formlabel">&nbsp;</td>
     <td colspan="2">
-        <html:submit styleClass="itemtext" value="Continue"/>
+        <html:submit styleClass="itemtext" value="Submit"/>
     </td>
   </tr>
 </table>

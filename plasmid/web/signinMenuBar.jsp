@@ -1,9 +1,22 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ page import="plasmid.Constants" %> 
+<%@ page import="plasmid.coreobject.User" %> 
 
 <table width="1000" height="86" border="0" align="center">
   <tr> 
-    <td colspan="3" rowspan="2">&nbsp;</td>
+    <td colspan="3" rowspan="2">
+        <logic:present name="<%=Constants.USER_KEY%>" scope="session"> 
+            <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
+            <a href="SampleTrackingHome.jsp" class="text">Sample Tracking</A>
+            </logic:equal>
+            <logic:notEqual name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
+             &nbsp;
+            </logic:notEqual>
+        </logic:present>
+        <logic:notPresent name="<%=Constants.USER_KEY%>" scope="session"> 
+            &nbsp;
+        </logic:notPresent> 
+    </td>
     <td width="64%" align="center" valign="bottom" class="title"> 
       <p><strong><font color="#333333" size="5">Welcome To PlasmID</font></strong></p></td>
     <td width="18%" height="54" align="right" valign="bottom" class="countrytext"> 

@@ -57,6 +57,9 @@ public class EnterAddressAction extends UserAction {
         String accountNumber = ((CheckoutForm)form).getAccountNumber();
         
         OrderProcessManager m = new OrderProcessManager();
+        
+        List countryList = OrderProcessManager.getCountryList();
+        request.getSession().setAttribute("countryList", countryList);
  
         UserAddress shipping = null;
         UserAddress billing = null;
@@ -98,7 +101,8 @@ public class EnterAddressAction extends UserAction {
         }
 
         ((CheckoutForm)form).setPonumber(user.getPonumber());
-        
+        ((CheckoutForm)form).setCountry("USA");
+        ((CheckoutForm)form).setBillingcountry("USA");
         return (mapping.findForward("success"));
     }
     

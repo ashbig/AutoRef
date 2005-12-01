@@ -140,7 +140,31 @@ public class PlateManager extends TableManager {
         }
         return true;
     }
-    
+        
+    public boolean updateSampleResults(List results) {
+        if(results == null || results.size() == 0)
+            return true;
+        
+        String sql = "update sample set result=? where sampleid=?";
+        
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            
+            for(int i=0; i<results.size(); i++) {
+                Result s = (Result)results.get(i);
+                stmt.setString(1, s.getResultvalue());
+                stmt.setInt(2, s.getSampleid());
+                System.out.println("update sample: "+s.getSampleid()+"\t"+s.getResultvalue());
+                DatabaseTransaction.executeUpdate(stmt);
+            }
+            DatabaseTransaction.closeStatement(stmt);
+        } catch (Exception ex) {
+            handleError(ex, "Error occured while updating SAMPLE table");
+            return false;
+        }
+        return true;
+    }
+        
     public List queryContainers(List labels, boolean isSampleRestore) {
         if(labels == null)
             return null;
@@ -149,18 +173,20 @@ public class PlateManager extends TableManager {
         String sql = "select containerid,containertype,oricontainerid,location,capacity,status"+
         " from containerheader where label=?";
         String sql2 = "select sampleid,sampletype,status_gb,cloneid,position,positionx,positiony,containerlabel,result"+
-        " from sample where containerid=?";
+        " from sample where containerid=? order by position";
         
         PreparedStatement stmt = null;
         PreparedStatement stmt2 = null;
         ResultSet rs = null;
         ResultSet rs2 = null;
+        String currentLabel = null;
         
         try {
             stmt = conn.prepareStatement(sql);
             
             for(int i=0; i<labels.size(); i++) {
                 String label = (String)labels.get(i);
+                currentLabel = label;
                 stmt.setString(1, label);
                 rs = DatabaseTransaction.executeQuery(stmt);
                 if(rs.next()) {
@@ -195,7 +221,7 @@ public class PlateManager extends TableManager {
                 }
             }
         } catch (Exception ex) {
-            handleError(ex, "Error occured while querying from CONTAINER and SAMPLE table");
+            handleError(ex, "Error occured while querying from CONTAINER and SAMPLE table with label: "+currentLabel);
             return null;
         }
         return containers;

@@ -43,6 +43,7 @@ public class DirectMappingCalculator extends MappingCalculator {
             Sample s = src.getSample(i+1);
             s.setContainerType(src.getType());
             Sample sample = new Sample();
+            sample.setContainerid(dest.getContainerid());
             sample.setContainerlabel(dest.getLabel());
             sample.setContainerType(dest.getType());
             sample.setCloneid(s.getCloneid());
@@ -50,9 +51,17 @@ public class DirectMappingCalculator extends MappingCalculator {
             sample.setStatus(s.getStatus());
             if(s.getType().equals(Sample.EMPTY))
                 sample.setType(Sample.EMPTY);
-            else
-                sample.setType(destSampleType);
-            
+            else {
+                if(s.getResult() != null) {
+                    if(Sample.isResultPass(s.getType(), s.getResult())) {
+                        sample.setType(destSampleType);
+                    } else {
+                        sample.setType(Sample.EMPTY);
+                    }
+                } else {
+                    sample.setType(destSampleType);
+                }
+            }
             l.add(new SampleLineage(s,sample));
         }
         

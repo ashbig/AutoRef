@@ -43,6 +43,10 @@ public class GetResultTypesAction extends InternalUserAction{
         List resulttypes = manager.getResultTypes();
         request.setAttribute(Constants.RESULTTYPES, resulttypes);
         
+        String message = (String)request.getAttribute("message");
+        if(message != null)
+            request.setAttribute("message", message);
+        
         return mapping.findForward("success");
     }   
 }

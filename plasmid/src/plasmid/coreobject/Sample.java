@@ -62,6 +62,7 @@ public class Sample {
     public String getContainerlabel() {return containerlabel;}
     public String getResult() {return result;}
     public String getContainerType() {return containerType;}
+    public String getWell() {return positionx+positiony;}
     
     public void setSampleid(int id) {this.sampleid = id;}
     public void setType(String s) {this.type = s;}
@@ -100,5 +101,15 @@ public class Sample {
         if(Process.TRANSFORMATION.equals(processname))
             return Sample.TRANSFORMATION;
         return null;
+    }    
+    
+    public static boolean isResultPass(String sampletype, String result) {
+        if(Sample.CULTURE.equals(sampletype)) {
+            if(Result.GROW.equals(result) || Result.WEAKGROW.equals(result))
+                return true;
+            else
+                return false;
+        }
+        return true;
     }
 }

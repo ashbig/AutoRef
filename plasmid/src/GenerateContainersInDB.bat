@@ -1,0 +1,3 @@
+javac GenerateContainers.java
+java GenerateContainers
+pause

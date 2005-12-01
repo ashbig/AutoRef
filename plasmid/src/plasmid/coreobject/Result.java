@@ -13,6 +13,9 @@ package plasmid.coreobject;
 public class Result {
     public static final String AGAR = "AGAR";
     public static final String CULTURE = "CULTURE";
+    public static final String GROW = "Grow";
+    public static final String NOTGROW = "Not Grow";
+    public static final String WEAKGROW = "Weak Grow";
     
     private int resultid;
     private int sampleid;

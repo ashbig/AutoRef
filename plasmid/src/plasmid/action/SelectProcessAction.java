@@ -42,6 +42,8 @@ public class SelectProcessAction extends InternalUserAction{
         ActionErrors errors = new ActionErrors();
         
         String processname = ((GenerateWorklistForm)form).getProcessname();
+        ((GenerateWorklistForm)form).setVolumn(3);
+        
         List protocols = ProcessManager.getProtocols(processname);
         /**
         if(protocols == null) {

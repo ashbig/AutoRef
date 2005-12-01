@@ -65,6 +65,7 @@ public class UploadResultFileAction extends InternalUserAction{
                 String label = filename.substring(0, filename.indexOf("_"));
                 List labels = new ArrayList();
                 labels.add(label);
+                
                 List containers = man.getContainers(labels, true);
                 if(containers == null) {
                     errors.add("resultFile", new ActionError("error.general", "Cannot get the containers for labels: "+labels));
@@ -78,16 +79,19 @@ public class UploadResultFileAction extends InternalUserAction{
                 for(int i=0; i<results.size(); i++) {
                     ((EnterResultsForm)form).setResult(i, (String)results.get(i));
                 }
+                ((EnterResultsForm)form).setLabel(label);
             } else {
                 return mapping.findForward("fail");
             }
             
             return mapping.findForward("success");
         } catch (FileNotFoundException ex) {
+            System.out.println(ex);
             errors.add("resultFile", new ActionError("error.file.notfound", resultFile.getFileName()));
             saveErrors(request,errors);
             return new ActionForward(mapping.getInput());
         } catch (Exception ex) {
+            System.out.println(ex);
             errors.add("resultFile", new ActionError("error.general", ex.getMessage()));
             saveErrors(request,errors);
             return new ActionForward(mapping.getInput());

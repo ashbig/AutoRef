@@ -8,6 +8,7 @@ package plasmid.process;
 
 import java.io.*;
 import java.util.*;
+import plasmid.util.ContainerLabelComparator;
 import plasmid.coreobject.*;
 
 /**
@@ -183,7 +184,6 @@ public class WorklistGenerator {
                     to.setCloneid(Integer.parseInt(cloneid));
                 if(destContainerid != null)
                     to.setContainerid(Integer.parseInt(destContainerid));
-                
                 worklist.add(new SampleLineage(from, to));
             }
         }
@@ -232,7 +232,7 @@ public class WorklistGenerator {
         if(worklist == null)
             return null;
         
-        Set containers = new HashSet();
+        Set containers = new TreeSet(new ContainerLabelComparator());
         for(int i=0; i<worklist.size(); i++) {
             SampleLineage w = (SampleLineage)worklist.get(i);
             Sample s = w.getSampleFrom();
@@ -250,7 +250,7 @@ public class WorklistGenerator {
         if(worklist == null)
             return null;
         
-        Set containers = new HashSet();
+        Set containers = new TreeSet(new ContainerLabelComparator());
         for(int i=0; i<worklist.size(); i++) {
             SampleLineage w = (SampleLineage)worklist.get(i);
             Sample s = w.getSampleTo();

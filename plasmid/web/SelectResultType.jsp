@@ -25,6 +25,9 @@
     <td width="83%" align="left" valign="top">
         <jsp:include page="enterResultsTitle.jsp" />
 <html:errors/>
+<logic:present name="message">
+   <p class="text"><bean:write name="message"/>
+</logic:present>
       <html:form action="SelectResultType.do">
 <table width="100%" border="0">
   <tr> 

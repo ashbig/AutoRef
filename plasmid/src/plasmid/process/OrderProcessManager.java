@@ -778,4 +778,19 @@ public class OrderProcessManager {
             DatabaseTransaction.closeConnection(conn);
         }
     }
+    
+    public static List getCountryList() {
+        List c = new ArrayList();
+        c.add("Canada");
+        c.add("Denmark");
+        c.add("Germany");
+        c.add("Korea");
+        c.add("Netherlands");
+        c.add("Spain");
+        c.add("Taiwan");
+        c.add("United Kindom");
+        c.add("USA");
+      
+        return c;
+    }
 }

@@ -27,6 +27,7 @@ public class GenerateWorklistForm extends ActionForm {
     private String destContainerList;
     private int volumn;
     private String worklistname;
+    private boolean tube = false;
     
     /** Creates a new instance of GenerateWorklistForm */
     public GenerateWorklistForm() {
@@ -39,6 +40,7 @@ public class GenerateWorklistForm extends ActionForm {
     public String getDestContainerList() {return destContainerList;}
     public int getVolumn() {return volumn;}
     public String getWorklistname() {return worklistname;}
+    public boolean getTube() {return tube;}
     
     public void setProcessname(String s) {this.processname = s;}
     public void setProtocols(List l) {this.protocols = l;}
@@ -47,6 +49,7 @@ public class GenerateWorklistForm extends ActionForm {
     public void setDestContainerList(String s) {this.destContainerList = s;}
     public void setVolumn(int i) {this.volumn = i;}
     public void setWorklistname(String s) {this.worklistname = s;}
+    public void setTube(boolean s) {this.tube = s;}
     
     /**
      * Reset all properties to their default values.
@@ -55,10 +58,10 @@ public class GenerateWorklistForm extends ActionForm {
      * @param request The servlet request we are processing
      */
     public void reset(ActionMapping mapping, HttpServletRequest request) {
-        processname = Process.TRANSFORMATION;
         srcContainerList = null;
         destContainerList = null;
-        volumn = 0;
+        volumn = 3;
+        tube = false;
     }  
     
     /**

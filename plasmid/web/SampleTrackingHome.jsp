@@ -1,6 +1,6 @@
 <%@ page language="java" %>
 <%@ page errorPage="ProcessError.do"%>
-<%@ page import="plasmid.coreobject.Process" %> 
+<%@ page import="plasmid.coreobject.Container" %> 
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -23,27 +23,16 @@
       <jsp:include page="sampleTrackingMenu.jsp" />
 	</td>
     <td width="83%" align="left" valign="top">
-        <jsp:include page="generateWorklistTitle.jsp" />
+        <jsp:include page="sampleTrackingHomeTitle.jsp" />
 <html:errors/>
-      <html:form action="SelectProcess.do">
-<table width="100%" border="0">
-  <tr> 
-    <td width="16%" class="formlabel">Please select the process:</td>
-    <td colspan="2">
-        <html:select property="processname" styleClass="itemtext">
-          <html:option value="<%=Process.CULTURE%>"><%=Process.CULTURE%></html:option>
-          <html:option value="<%=Process.GENERATE_GLYCEROL%>"><%=Process.GENERATE_GLYCEROL%></html:option>
-        </html:select>
+
+<ul>
+    <li class="text"><a href="LabelPlates.jsp">Label Containers</a>
+    <li class="text"><a href="SelectProcess.jsp">Generate Worklist</a>
+    <li class="text"><a href="GetResultTypes.do">Enter Results</a>
+</ul>
+
     </td>
-  </tr>
-  <tr> 
-    <td width="16%" class="formlabel">&nbsp;</td>
-    <td colspan="2">
-        <html:submit styleClass="itemtext" value="Continue"/>
-    </td>
-  </tr>
-</table>
-      </html:form></td>
   </tr>
 </table>
 <jsp:include page="footer.jsp" />

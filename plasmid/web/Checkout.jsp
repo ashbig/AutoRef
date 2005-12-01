@@ -99,19 +99,13 @@ are not allowed to be shipped outside of USA.</p>
   </tr>
   <tr>
     <td class="formlabel">*Country:</td>
-    <td><html:select styleClass="text" property="country" value="USA">
-        <html:option value="Denmark"/>
-        <html:option value="Spain"/>
-        <html:option value="United Kindom"/>
-        <html:option value="USA"/>
+    <td><html:select styleClass="text" property="country">
+        <html:options name="countryList"/>
         </html:select>
     </td>
     <td class="formlabel">*Country:</td>
-    <td><html:select styleClass="text" property="billingcountry" value="USA">
-        <html:option value="Denmark"/>
-        <html:option value="Spain"/>
-        <html:option value="United Kindom"/>
-        <html:option value="USA"/>
+    <td><html:select styleClass="text" property="billingcountry">
+        <html:options name="countryList"/>
         </html:select>
     </td>
   </tr>

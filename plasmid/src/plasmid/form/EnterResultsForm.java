@@ -21,9 +21,11 @@ import plasmid.coreobject.*;
  * @author  DZuo
  */
 public class EnterResultsForm extends ActionForm {
-    private String resultType = Result.AGAR;
+    private String resultType;
     private FormFile resultFile;
     private List resultList;
+    private String label;
+    private Container container;
     
     /** Creates a new instance of EnterResultsForm */
     public EnterResultsForm() {
@@ -34,14 +36,20 @@ public class EnterResultsForm extends ActionForm {
     public String getResult(int index) {
         return (String)resultList.get(index);
     }    
-        
+    public String getLabel() {return label;}  
+    public int getSize() {return resultList.size();}
+    public Container getContainer() {return container;}
+    
     public void setResultType(String s) {this.resultType = s;}
     public void setResultFile(FormFile f) {this.resultFile = f;}
     public void setResult(int index, String value) {
         resultList.set(index,value);
     }
+    public void setLabel(String s) {this.label = s;}
+    public void setContainer(Container c) {this.container = c;}
     
     public void initiate(Container c) {
+        this.container = c;
         resultList = new ArrayList();
         for(int i=0; i<c.getSize(); i++) {
             resultList.add(i, c.getSample(i).getResult());
@@ -55,7 +63,6 @@ public class EnterResultsForm extends ActionForm {
      * @param request The servlet request we are processing
      */
     public void reset(ActionMapping mapping, HttpServletRequest request) {
-        this.resultType = Result.AGAR;
         this.resultFile = null;
     }  
     

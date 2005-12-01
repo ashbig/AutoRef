@@ -56,10 +56,11 @@ public class GenerateContainersAction extends Action {
     throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
         String worklistname = ((GenerateWorklistForm)form).getWorklistname();
+            ContainerProcessManager manager = new ContainerProcessManager();
         try {
             int begin = worklistname.indexOf("_");
             int end = worklistname.indexOf(".");
-            int worklistid = Integer.parseInt(worklistname.substring(begin, end));
+            int worklistid = Integer.parseInt(worklistname.substring(begin+1, end));
             WorklistInfo info = ProcessManager.getWorklistInfo(worklistid);
             if(info == null) {
                 throw new Exception("Cannot get data from WORKLISTINFO with worklistid: "+worklistid);
@@ -67,25 +68,55 @@ public class GenerateContainersAction extends Action {
             String filename = info.getWorklistname();
             WorklistGenerator generator = new WorklistGenerator();
             generator.readWorklist(Constants.WORKLIST_FILE_PATH+filename);
+            
+            Set destContainerLabels = generator.getDestContainerLabels();
+            List dContainers = manager.getContainers(new ArrayList(destContainerLabels), false);
+            if(dContainers == null) {
+                throw new Exception("Cannot get destination containers from database.");
+            }
+            List nonempty = manager.checkEmptyContainers(dContainers);
+            if(nonempty.size()>0) {
+                throw new Exception("Some destination containers have been filled.");
+            }
+            
             ContainerMapper mapper = new ContainerMapper(generator.getWorklist());
             List srcContainers = new ArrayList(generator.getSrcContainers());
             List destContainers = mapper.mapContainer();
             List lineages = mapper.getWorklist();
             List samples = new ArrayList();
-            for(int i=0; i<destContainers.size(); i++) {
-                Container c = (Container)destContainers.get(i);
-                samples.addAll(c.getSamples());
+            List tubes = new ArrayList();
+            if(WorklistInfo.YES.equals(info.getTube())) {
+                for(int i=0; i<destContainers.size(); i++) {
+                    Container c = (Container)destContainers.get(i);
+                    String label = c.getLabel();
+                    TubeMap tm = manager.readTubeMappingFile(ContainerProcessManager.TUBEMAPFILEPATH+label);
+                    
+                    if(tm == null) {
+                        throw new Exception("Cannot read tube mapping file for container: "+label);
+                    }
+                    
+                    List l = mapper.convertToTubes(c, tm.getMapping());
+                    for(int n=0; n<l.size(); n++) {
+                        Container c1 = (Container)l.get(n);
+                        tubes.add(c1);
+                        samples.addAll(c1.getSamples());
+                    }
+                }
+            } else {
+                for(int i=0; i<destContainers.size(); i++) {
+                    Container c = (Container)destContainers.get(i);
+                    samples.addAll(c.getSamples());
+                }
             }
-            ContainerProcessManager manager = new ContainerProcessManager();
             manager.setSampleids(samples);
-            
+            manager.setSampleToidsForLineages(samples, lineages);
             ProcessExecution execution = new ProcessExecution(0, ProcessExecution.COMPLETE, null, info.getProcessname(), info.getResearchername(), info.getProtocolname());
             execution.setLineages(lineages);
             execution.setInputObjects(srcContainers);
             execution.setOutputObjects(destContainers);
             
-            if(!manager.persistData(srcContainers,execution,info,false)) {
-                System.out.println("Error occured while inserting into database.");
+            if(!manager.persistData(destContainers,execution,info,false)) {
+                throw new Exception("Error occured while inserting into database.");
             }
         } catch (Exception ex) {
             if(Constants.DEBUG) {
@@ -102,7 +133,8 @@ public class GenerateContainersAction extends Action {
             } catch (Exception ex1) {
                 System.out.println(ex1);
             }
+            return mapping.findForward("fail");
         }
-        return null;
+        return mapping.findForward("success");
     }
 }

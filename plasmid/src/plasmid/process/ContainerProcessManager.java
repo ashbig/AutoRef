@@ -23,7 +23,7 @@ import plasmid.util.PlatePositionConvertor;
 public class ContainerProcessManager {
     public static final String DELIM = ",";
     public static final String NOTUBE = TubeMap.NOTUBE;
-    public static final String FILEPATH = "G:\\plasmid\\test\\";
+    public static final String TUBEMAPFILEPATH = Constants.TUBEMAP_FILE_PATH;
     
     /** Creates a new instance of ContainerProcessManager */
     public ContainerProcessManager() {
@@ -71,6 +71,12 @@ public class ContainerProcessManager {
         return notFound;
     }
     
+    /**
+     * Check a given list of Container objects to see if there is any non-empty containers.
+     * 
+     * @param containers A list of Container objects.
+     * @return A list of non-empty Container objects.
+     */
     public List checkEmptyContainers(List containers) {
         List l = new ArrayList();
         for(int i=0; i<containers.size(); i++) {
@@ -250,6 +256,35 @@ public class ContainerProcessManager {
         return true;
     }
     
+    public boolean setSampleToidsForLineages(List samples, List lineages) {
+        for(int i=0; i<lineages.size(); i++) {
+            SampleLineage sl = (SampleLineage)lineages.get(i);
+            Sample to = sl.getSampleTo();
+            String label = to.getContainerlabel();
+            int position = to.getPosition();
+            Sample s = findSample(samples, label, position);
+            if(s == null) {
+                if(Constants.DEBUG) {
+                    System.out.println("Cannot find sample with label/position: "+label+"/"+position);
+                }
+                return false;
+            }
+            to.setSampleid(s.getSampleid());
+        }
+        return true;
+    }
+    
+    public Sample findSample(List samples, String label, int position) {
+        for(int i=0; i<samples.size(); i++) {
+            Sample s = (Sample)samples.get(i);
+            String l = s.getContainerlabel();
+            int pos = s.getPosition();
+            if(l.equals(label) && pos == position)
+                return s;
+        }
+        return null;
+    }
+    
     public boolean persistData(List containers, ProcessExecution process, WorklistInfo info, boolean isInsertContainer) {
         DatabaseTransaction t = null;
         Connection conn = null;
@@ -410,7 +445,7 @@ public class ContainerProcessManager {
                 List tubes = new ArrayList();
                 for(int i=0; i<destContainers.size(); i++) {
                     Container c = (Container)destContainers.get(i);
-                    TubeMap tm = manager.readTubeMappingFile(FILEPATH+c.getLabel());
+                    TubeMap tm = manager.readTubeMappingFile(TUBEMAPFILEPATH+c.getLabel());
                     
                     List l = mapper.convertToTubes(c, tm.getMapping());
                     for(int n=0; n<l.size(); n++) {

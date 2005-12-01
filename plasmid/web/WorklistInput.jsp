@@ -61,6 +61,11 @@
         <html:text property="volumn" styleClass="itemtext" size="30"/>
     </td>
   </tr>
+  <logic:equal name="generateWorklistForm" property="processname" value="<%=Process.GENERATE_GLYCEROL%>">
+  <tr> 
+    <td width="20%" colspan="3" height="29" class="formlabel"><html:checkbox property="tube"/>Please check here if the destination containers are tubes</td>
+  </tr>
+  </logic:equal>
   <tr> 
     <td width="20%">&nbsp;</td>
     <td colspan="2"> <html:submit styleClass="itemtext" value="Generate Worklist"/> </td>
