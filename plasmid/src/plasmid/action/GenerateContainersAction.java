@@ -56,7 +56,7 @@ public class GenerateContainersAction extends Action {
     throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
         String worklistname = ((GenerateWorklistForm)form).getWorklistname();
-            ContainerProcessManager manager = new ContainerProcessManager();
+        ContainerProcessManager manager = new ContainerProcessManager();
         try {
             int begin = worklistname.indexOf("_");
             int end = worklistname.indexOf(".");
@@ -95,7 +95,7 @@ public class GenerateContainersAction extends Action {
                         throw new Exception("Cannot read tube mapping file for container: "+label);
                     }
                     
-                    List l = mapper.convertToTubes(c, tm.getMapping());
+                    List l = mapper.convertToTubes(c, tm.getMapping(), true);
                     for(int n=0; n<l.size(); n++) {
                         Container c1 = (Container)l.get(n);
                         tubes.add(c1);

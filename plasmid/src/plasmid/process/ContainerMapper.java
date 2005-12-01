@@ -64,7 +64,7 @@ public class ContainerMapper {
         return false;
     }
     
-    public List convertToTubes(Container container, Map mapping) throws Exception {
+    public List convertToTubes(Container container, Map mapping, boolean isWorking) throws Exception {
         if(mapping == null) {
             throw new Exception("Please provide the mapping list.");
         }
@@ -90,6 +90,8 @@ public class ContainerMapper {
             Container c = new Container(0, Container.TUBE, barcode, null, Location.BIOBANK, Container.getCapacity(Container.TUBE), Container.FILLED);
             s.setContainerlabel(barcode);
             s.setPositions(1);
+            if(isWorking)
+                s.setType(Sample.WORKING_GLYCEROL);
             c.addSample(s);
             tubes.add(c);
         }

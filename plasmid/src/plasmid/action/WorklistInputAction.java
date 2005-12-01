@@ -170,6 +170,8 @@ public class WorklistInputAction extends InternalUserAction{
             Mailer.sendMessage(to,Constants.EMAIL_FROM,null,subject,text,fileCol);
             
             request.setAttribute("filenames", filenames);
+            request.setAttribute("srcLabels", srcLabels);
+            request.setAttribute("destLabels", destLabels);
         } catch (Exception ex) {
             if(Constants.DEBUG) {
                 System.out.println(ex);

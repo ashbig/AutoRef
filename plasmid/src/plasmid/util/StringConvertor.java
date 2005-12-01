@@ -47,7 +47,8 @@ public class StringConvertor {
         try {
             while(tokenizer.hasMoreTokens()) {
                 String st = tokenizer.nextToken().trim();
-                l.add(st);
+                if(st.length()>0)
+                    l.add(st);
             }
         } catch (Exception ex) {
             if(Constants.DEBUG) {

@@ -40,13 +40,17 @@
   <tr> 
     <td width="20%" valign="top" class="formlabel">Source containers:</td>
     <td colspan="2" class="itemtext">
-        <pre><bean:write name="generateWorklistForm" property="srcContainerList"/></pre>
+        <logic:iterate name="srcLabels" id="srcLabel">
+            <bean:write name="srcLabel"/><br>
+        </logic:iterate>
     </td>
   </tr>
   <tr> 
     <td width="20%" valign="top" class="formlabel">Destination containers:</td>
     <td colspan="2" class="itemtext">
-        <pre><bean:write name="generateWorklistForm" property="destContainerList"/></pre>
+        <logic:iterate name="destLabels" id="destLabel">
+            <bean:write name="destLabel"/><br>
+        </logic:iterate>
     </td>
   </tr>
   <tr> 

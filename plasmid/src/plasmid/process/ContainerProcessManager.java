@@ -447,7 +447,7 @@ public class ContainerProcessManager {
                     Container c = (Container)destContainers.get(i);
                     TubeMap tm = manager.readTubeMappingFile(TUBEMAPFILEPATH+c.getLabel());
                     
-                    List l = mapper.convertToTubes(c, tm.getMapping());
+                    List l = mapper.convertToTubes(c, tm.getMapping(), true);
                     for(int n=0; n<l.size(); n++) {
                         Container c1 = (Container)l.get(n);
                         tubes.add(c1);

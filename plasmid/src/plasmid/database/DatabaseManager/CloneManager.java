@@ -665,7 +665,7 @@ public class CloneManager extends TableManager {
         " from dnainsert d, clone c"+
         " where c.cloneid=d.cloneid and c.cloneid=?";
         String sql3 = "select hosttype, marker from cloneselection where cloneid=?";
-        String sql4 = "select containerlabel, position, positionx, positiony from sample where cloneid=? and sampletype= ?";
+        String sql4 = "select containerlabel, position, positionx, positiony from sample where cloneid=? and sampletype=? order by sampleid desc";
         
         PreparedStatement stmt = null;
         PreparedStatement stmt2 = null;
