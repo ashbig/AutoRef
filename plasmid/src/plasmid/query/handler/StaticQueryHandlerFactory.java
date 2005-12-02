@@ -31,7 +31,8 @@ public class StaticQueryHandlerFactory {
             return new GiQueryHandler(terms);
         else if(GeneQueryHandler.DIRECT_GI.equals(type))
             return new DirectGiQueryHandler(terms);
-        else if(GeneQueryHandler.PA.equals(type) || GeneQueryHandler.SGD.equals(type))
+        else if(GeneQueryHandler.PA.equals(type) || GeneQueryHandler.SGD.equals(type) 
+        || GeneQueryHandler.VCNUMBER.equals(type) || GeneQueryHandler.FTNUMBER.equals(type))
             return new PAQueryHandler(terms);
         else if(GeneQueryHandler.PRO_GENBANK.equals(type))
             return new PAGenbankQueryHandler(terms);

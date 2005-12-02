@@ -140,6 +140,14 @@
       <forward  name="success"  path="/Home.jsp"/>
     </action>
     
+    <action     path="/ConfirmResults"
+                type="plasmid.action.ConfirmResultsAction"
+               name="enterResultsForm"
+               validate="false"
+              input="/ConfirmResultFile.jsp">
+      <forward  name="success"  path="/GetResultTypes.do"/>
+    </action>
+    
     <action    path="/DownloadClones"
                type="plasmid.action.DownloadClonesAction"
                name="downloadClonesForm"

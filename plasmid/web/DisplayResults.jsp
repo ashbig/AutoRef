@@ -95,6 +95,12 @@
     <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.GENBANK%>">
     <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=nucleotide&val=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
     </logic:equal>
+    <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.VCNUMBER%>">
+    <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=nucleotide&val=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
+    </logic:equal>
+    <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.FTNUMBER%>">
+    <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=nucleotide&val=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
+    </logic:equal>
     <td><bean:write name="insert" property="name"/></td>
     <td><bean:write name="insert" property="description"/></td>
     <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=nucleotide&val=<bean:write name="insert" property="targetseqid"/>"><bean:write name="insert" property="targetgenbank"/></a></td>
@@ -141,14 +147,23 @@
     <td><a target="_blank" href="GetCloneDetail.do?cloneid=<bean:write name="clone" property="cloneid"/>&species=<bean:write name="species"/>"><bean:write name="clone" property="name"/></a></td>
     <td><bean:write name="clone" property="type"/></td>
     <logic:iterate name="clone" property="inserts" id="insert">
-    <logic:equal name="species" value="Homo sapiens">
+    <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.GENEID%>">
     <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=gene&cmd=Retrieve&dopt=Graphics&list_uids=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
     </logic:equal>
-    <logic:equal name="species" value="Pseudomonas aeruginosa">
+    <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.PA%>">
     <td><a target="_blank" href="http://www.pseudomonas.com/AnnotationByPAU.asp?PA=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
     </logic:equal>
-    <logic:equal name="species" value="Saccharomyces cerevisiae">
+    <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.SGD%>">
     <td><a target="_blank" href="http://db.yeastgenome.org/cgi-bin/locus.pl?locus=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
+    </logic:equal>
+    <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.GENBANK%>">
+    <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=nucleotide&val=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
+    </logic:equal>
+    <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.VCNUMBER%>">
+    <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=nucleotide&val=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
+    </logic:equal>
+    <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.FTNUMBER%>">
+    <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=nucleotide&val=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
     </logic:equal>
     <td><bean:write name="insert" property="name"/></td>
     <td><bean:write name="insert" property="description"/></td>

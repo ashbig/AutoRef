@@ -162,9 +162,9 @@ public class GenbankInfoManager {
     }
     
     public static void main(String args[]) throws Exception {
-        String referenceFile = "G:\\plasmid\\Reference\\decarprio\\reference.txt";
-        String referenceNameFile = "G:\\plasmid\\Reference\\decarprio\\referenceName.txt";
-        String referenceInput = "G:\\plasmid\\Reference\\decarprio\\input.txt";
+        String referenceFile = "G:\\plasmid\\Reference\\cretransfer\\reference.txt";
+        String referenceNameFile = "G:\\plasmid\\Reference\\cretransfer\\referenceName.txt";
+        String referenceInput = "G:\\plasmid\\Reference\\cretransfer\\input.txt";
         //String referenceInput="G:\\tmp.txt";
         String error = "G:\\plasmid\\Reference\\decarprio\\error.txt";
         

@@ -25,8 +25,8 @@ public class DnaInsert {
     public static final String YP = "Yersinia pestis KIM";
     public static final String LM = "Photinus pyralis";
     public static final String HAD = "Human adenovirus C type 2";
-    public static final String VC = "Vibrio cholerae";
-    public static final String FT = "Francisella tularensis";
+    public static final String FT = "Francisella tularensis Schu 4";
+    public static final String VC = "Vibrio cholerae O1 biovar eltor str. N16961";
 
     private int insertid;
     private int order;
@@ -133,6 +133,8 @@ public class DnaInsert {
             return RefseqNameType.PA;
         if(LM.equals(species) || YP.equals(species))
             return RefseqNameType.GENBANK;
+        if(VC.equals(species))
+            return RefseqNameType.VCNUMBER;
         return RefseqNameType.GENEID;
     }
 }

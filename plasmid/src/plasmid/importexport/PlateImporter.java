@@ -81,7 +81,7 @@ public class PlateImporter {
                 if("position".equalsIgnoreCase(columnName)) {
                     int p = Integer.parseInt(columnInfo);
                     currentSample = c.getSample(p);
-                    currentSample.setType(Sample.ARCHIVE_GLYCEROL);
+                    currentSample.setType(Sample.WORKING_GLYCEROL);
                     currentSample.setPositions(p);
                     
                 }

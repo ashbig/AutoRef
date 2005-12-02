@@ -76,6 +76,7 @@ public class ConfirmResultsAction extends InternalUserAction{
         }
              
         request.setAttribute("message",  "The results have been successfully entered for container: "+container.getLabel());
+        request.removeAttribute("enterResultsForm");
         return mapping.findForward("success");        
     }
 }

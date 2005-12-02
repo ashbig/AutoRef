@@ -11,17 +11,19 @@ package plasmid.coreobject;
  * @author  DZuo
  */
 public class RefseqNameType {
-    public static String SEARCH = "Search";
-    public static String DISPLAY = "Display";
-    public static String BOTH = "both";
-    public static String GENBANK = "GenBank Accession";
-    public static String GI = "GI";
-    public static String GENEID = "Gene ID";
-    public static String SYMBOL = "Gene Symbol";
-    public static String PA = "PA Number";
-    public static String PRO_GENBANK = "Protein GenBank Accession";
-    public static String PRO_GI = "Protein GI";
-    public static String SGD = "SGD Number";
+    public static final String SEARCH = "Search";
+    public static final String DISPLAY = "Display";
+    public static final String BOTH = "both";
+    public static final String GENBANK = "GenBank Accession";
+    public static final String GI = "GI";
+    public static final String GENEID = "Gene ID";
+    public static final String SYMBOL = "Gene Symbol";
+    public static final String PA = "PA Number";
+    public static final String PRO_GENBANK = "Protein GenBank Accession";
+    public static final String PRO_GI = "Protein GI";
+    public static final String SGD = "SGD Number";
+    public static final String VCNUMBER = "Locus Tag (VC number)";
+    public static final String FTNUMBER = "Locus Tag (FTT number)";
     
     private String species;
     private String refseqtype;
