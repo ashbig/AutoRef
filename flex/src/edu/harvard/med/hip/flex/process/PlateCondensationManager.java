@@ -83,7 +83,8 @@ public class PlateCondensationManager {
         for(int i=0; i<samples.size(); i++) {
             CloneSample s = (CloneSample)samples.get(i);
             String type = s.getClonetype();
-            types.add(type);
+            if(type != null)
+                types.add(type);
         }
         
         if(types.size()>1)
