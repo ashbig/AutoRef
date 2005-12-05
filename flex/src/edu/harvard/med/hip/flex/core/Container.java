@@ -1,5 +1,5 @@
 /**
- * $Id: Container.java,v 1.6 2005-11-29 20:07:29 dzuo Exp $
+ * $Id: Container.java,v 1.7 2005-12-05 19:52:34 dzuo Exp $
  *
  * File     	: Container.java
  * Date     	: 04162001
@@ -536,7 +536,6 @@ public class Container {
                 
                 Sample s = new Sample(sampleid, sampletype, containerposition, id, constructid, oligoid, status);
                 s.setCloneid(cloneid);
-                
                 this.addSample(s);
             }
         } catch (SQLException ex) {
