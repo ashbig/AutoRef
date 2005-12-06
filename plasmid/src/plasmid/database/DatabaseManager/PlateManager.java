@@ -64,7 +64,6 @@ public class PlateManager extends TableManager {
                 stmt.setString(5, c.getLocation());
                 stmt.setInt(6, c.getCapacity());
                 stmt.setString(7, c.getStatus());
-                
                 DatabaseTransaction.executeUpdate(stmt);
             }
             DatabaseTransaction.closeStatement(stmt);

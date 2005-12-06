@@ -30,7 +30,7 @@ public class ContainerMapper {
     
     public List getWorklist() {return worklist;}
     public void setWorklist(List l) {this.worklist = l;}
-     
+    
     public List mapContainer() throws Exception {
         WorklistGenerator g = new WorklistGenerator(worklist);
         List containers = new ArrayList(g.getDestContainers());
@@ -47,7 +47,7 @@ public class ContainerMapper {
         
         return containers;
     }
-     
+    
     public boolean addToContainer(List containers, Sample s) {
         if(containers == null || s == null)
             return false;
@@ -83,10 +83,12 @@ public class ContainerMapper {
         for(int i=0; i<samples.size(); i++) {
             Sample s = (Sample)samples.get(i);
             int position = s.getPosition();
+            String label = s.getContainerlabel();
             String barcode = (String)mapping.get((new Integer(position)).toString());
             if(barcode == null) {
-                throw new Exception("Cannot find 2D tube barcode at position: "+position);
+                continue;
             }
+            
             Container c = new Container(0, Container.TUBE, barcode, null, Location.BIOBANK, Container.getCapacity(Container.TUBE), Container.FILLED);
             s.setContainerlabel(barcode);
             s.setPositions(1);
@@ -95,10 +97,9 @@ public class ContainerMapper {
             c.addSample(s);
             tubes.add(c);
         }
-        
         return tubes;
     }
-        
+    
     public Container convertToPlates(List tubes, Map mapping) throws Exception {
         if(mapping == null) {
             throw new Exception("Please provide the mapping list.");
@@ -106,7 +107,7 @@ public class ContainerMapper {
         
         if(tubes == null) {
             throw new Exception("container is null.");
-        }        
+        }
         
         Container container = new Container();
         Set keys = mapping.keySet();

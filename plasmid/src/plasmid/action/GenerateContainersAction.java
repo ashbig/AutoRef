@@ -89,19 +89,21 @@ public class GenerateContainersAction extends Action {
                 for(int i=0; i<destContainers.size(); i++) {
                     Container c = (Container)destContainers.get(i);
                     String label = c.getLabel();
-                    TubeMap tm = manager.readTubeMappingFile(ContainerProcessManager.TUBEMAPFILEPATH+label);
+                    Map m = manager.readTubeMappingFile(ContainerProcessManager.TUBEMAPFILEPATH+label+".trx");
                     
-                    if(tm == null) {
+                    if(m == null) {
                         throw new Exception("Cannot read tube mapping file for container: "+label);
                     }
                     
-                    List l = mapper.convertToTubes(c, tm.getMapping(), true);
+                    List l = mapper.convertToTubes(c, m, true);
                     for(int n=0; n<l.size(); n++) {
                         Container c1 = (Container)l.get(n);
                         tubes.add(c1);
                         samples.addAll(c1.getSamples());
                     }
                 }
+                destContainers = tubes;
+                manager.setContainerids(destContainers);
             } else {
                 for(int i=0; i<destContainers.size(); i++) {
                     Container c = (Container)destContainers.get(i);
@@ -115,7 +117,11 @@ public class GenerateContainersAction extends Action {
             execution.setInputObjects(srcContainers);
             execution.setOutputObjects(destContainers);
             
-            if(!manager.persistData(destContainers,execution,info,false)) {
+            boolean b = false;            
+            if(WorklistInfo.YES.equals(info.getTube())) {
+                b = true;
+            }
+            if(!manager.persistData(destContainers,execution,info,b)) {
                 throw new Exception("Error occured while inserting into database.");
             }
         } catch (Exception ex) {

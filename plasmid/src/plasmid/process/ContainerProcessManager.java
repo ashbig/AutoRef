@@ -24,6 +24,8 @@ public class ContainerProcessManager {
     public static final String DELIM = ",";
     public static final String NOTUBE = TubeMap.NOTUBE;
     public static final String TUBEMAPFILEPATH = Constants.TUBEMAP_FILE_PATH;
+    public static final int ROW = 8;
+    public static final int COLUMN = 12;
     
     /** Creates a new instance of ContainerProcessManager */
     public ContainerProcessManager() {
@@ -73,7 +75,7 @@ public class ContainerProcessManager {
     
     /**
      * Check a given list of Container objects to see if there is any non-empty containers.
-     * 
+     *
      * @param containers A list of Container objects.
      * @return A list of non-empty Container objects.
      */
@@ -134,31 +136,31 @@ public class ContainerProcessManager {
         return false;
     }
     
-    public TubeMap readTubeMappingFile(String filename) {
+    public Map readTubeMappingFile(String filename) {
         BufferedReader in = null;
-        TubeMap m = null;
+        Map mapping = new HashMap();
         try {
             in = new BufferedReader(new FileReader(filename));
-            String barcode = in.readLine();
-            if(barcode == null)
-                throw new Exception("No barcode was specified.");
-            
-            String line = null;
-            Map mapping = new HashMap();
-            PlatePositionConvertor convertor = new PlatePositionConvertor();
+            String line = in.readLine();
+            int i=0;
+            int j=1;
             while((line = in.readLine()) != null) {
-                StringTokenizer tokenizer = new StringTokenizer(line, DELIM);
+                String s = line.trim();
+                if(s.length()<1)
+                    continue;
                 
-                String well = tokenizer.nextToken();
-                int position = convertor.convertWellFromA8_12toInt(well);
+                String label = null;
+                if(s.indexOf(NOTUBE)<0) {
+                    label = s.substring(0, s.length()-1);
+                }
                 
-                String label = tokenizer.nextToken();
-                if(NOTUBE.equals(label))
-                    label = null;
-                
-                mapping.put((new Integer(position)).toString(), label);
+                mapping.put((new Integer(i*ROW+j)).toString(), label);
+                i++;
+                if(i == COLUMN) {
+                    i=0;
+                    j++;
+                }
             }
-            m = new TubeMap(barcode, mapping);
         } catch (Exception ex) {
             if(Constants.DEBUG) {
                 System.out.println("Cannot read mapping file.");
@@ -175,7 +177,7 @@ public class ContainerProcessManager {
             }
         }
         
-        return m;
+        return mapping;
     }
     
     public boolean setContaineridAndLabels(List containers, String suffix) {
@@ -223,7 +225,7 @@ public class ContainerProcessManager {
             List samples = c.getSamples();
             if(samples != null) {
                 for(int k=0; k<samples.size(); k++) {
-                    Sample s = (Sample)samples.get(i);
+                    Sample s = (Sample)samples.get(k);
                     s.setContainerid(containerid);
                 }
             }
@@ -445,9 +447,9 @@ public class ContainerProcessManager {
                 List tubes = new ArrayList();
                 for(int i=0; i<destContainers.size(); i++) {
                     Container c = (Container)destContainers.get(i);
-                    TubeMap tm = manager.readTubeMappingFile(TUBEMAPFILEPATH+c.getLabel());
+                    Map m = manager.readTubeMappingFile(TUBEMAPFILEPATH+c.getLabel());
                     
-                    List l = mapper.convertToTubes(c, tm.getMapping(), true);
+                    List l = mapper.convertToTubes(c, m, true);
                     for(int n=0; n<l.size(); n++) {
                         Container c1 = (Container)l.get(n);
                         tubes.add(c1);

@@ -23,6 +23,7 @@ public class Container {
     public static final String RESERVOIR_MP16 = "Reservoir on MP16";
     public static final String RESERVOIR_PYR = "Reservoir Pyr bttm";
     public static final String RK_RIPLATE_DW = "RK riplate dw/MP16-24";
+    public static final String MICRONIC96TUBEMP16 = "Micronic96TubeMP16";
     
     public static final String EMPTY = "EMPTY";
     public static final String FILLED = "FILLED";
@@ -89,7 +90,10 @@ public class Container {
             return 96;
         if(RK_RIPLATE_DW.equals(type))
             return 96;
-        
+        if(TUBE.equals(type))
+            return 1;
+        if(MICRONIC96TUBEMP16.equals(type))
+            return 96;
         return 0;
     }
     

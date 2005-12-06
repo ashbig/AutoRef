@@ -13,7 +13,7 @@ import java.util.*;
  * @author  DZuo
  */
 public class TubeMap {
-    public static final String NOTUBE = "No Tube";
+    public static final String NOTUBE = "NO TUBE";
     private String barcode;
     private Map mapping;
     

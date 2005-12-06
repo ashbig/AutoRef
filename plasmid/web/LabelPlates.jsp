@@ -38,6 +38,7 @@
           <html:option value="<%=Container.RESERVOIR_MP16%>"><%=Container.RESERVOIR_MP16%></html:option>
           <html:option value="<%=Container.RESERVOIR_PYR%>"><%=Container.RESERVOIR_PYR%></html:option>
           <html:option value="<%=Container.RK_RIPLATE_DW%>"><%=Container.RK_RIPLATE_DW%></html:option>
+          <html:option value="<%=Container.MICRONIC96TUBEMP16%>"><%=Container.MICRONIC96TUBEMP16%></html:option>
         </html:select>
     </td>
   </tr>
