@@ -111,9 +111,12 @@ public class GenerateContainersAction extends Action {
                 }
             }
             manager.setSampleids(samples);
-            manager.setSampleToidsForLineages(samples, lineages);
+            List newSampleLineages = manager.setSampleToidsForLineages(samples, lineages);
+            if(newSampleLineages == null) {
+                throw new Exception("Error occured while setting sampleids for sample lineages.");
+            }
             ProcessExecution execution = new ProcessExecution(0, ProcessExecution.COMPLETE, null, info.getProcessname(), info.getResearchername(), info.getProtocolname());
-            execution.setLineages(lineages);
+            execution.setLineages(newSampleLineages);
             execution.setInputObjects(srcContainers);
             execution.setOutputObjects(destContainers);
             

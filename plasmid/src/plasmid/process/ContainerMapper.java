@@ -92,7 +92,7 @@ public class ContainerMapper {
             Container c = new Container(0, Container.TUBE, barcode, null, Location.BIOBANK, Container.getCapacity(Container.TUBE), Container.FILLED);
             s.setContainerlabel(barcode);
             s.setPositions(1);
-            if(isWorking)
+            if(isWorking && s.getType().equals(Sample.GLYCEROL))
                 s.setType(Sample.WORKING_GLYCEROL);
             c.addSample(s);
             tubes.add(c);

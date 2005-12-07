@@ -34,7 +34,8 @@ public class Importer {
     //public static final String filepath = "G:\\plasmid\\korsmeyer_vector\\"; 
     //public static final String filepath = "G:\\plasmid\\decaprio_checked\\";
     //public static final String filepath = "G:\\plasmid\\VC\\";  
-    public static final String filepath = "G:\\plasmid\\FT\\";  
+    //public static final String filepath = "G:\\plasmid\\FT\\";  
+    public static final String filepath = "G:\\plasmid\\howleypluslivingston_from_access\\";  
    
     private List tables;
     private String error;

@@ -39,7 +39,7 @@
           <td height="15" class="mainbodytext">Vector Collection</td>
         </tr>
         <tr> 
-          <td height="15" class="lftsubtxt">- <a href="GetAllVectors.do" class="leftsubnavtext">view all vectors</a></td>
+          <td height="15" class="lftsubtxt">- <a href="GetAllVectors.do" class="leftsubnavtext">view empty vectors</a></td>
         </tr>
       </table></td>
   </tr>
