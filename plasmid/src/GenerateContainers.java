@@ -18,6 +18,8 @@ public class GenerateContainers {
     
     //public static final String URL = "http://128.103.32.179/PLASMID/";
     public static final String URL = "http://128.103.32.228/PLID/";
+    //public static final String URL = "http://128.103.32.228/PLASMID/";
+    
     private String worklistName;
     
     /** Creates a new instance of GenerateContainers */
