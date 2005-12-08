@@ -16,8 +16,8 @@ public class GenerateContainers {
     public static final String TECAN_LOG_FILE_PATH = "G:\\plasmid\\test\\tecan\\";
     //public static final String TECAN_LOG_FILE_PATH = "C:\\Gemini\\test\\";
     
-    public static final String URL = "http://128.103.32.179/PLASMID/";
-    
+    //public static final String URL = "http://128.103.32.179/PLASMID/";
+    public static final String URL = "http://128.103.32.228/PLID/";
     private String worklistName;
     
     /** Creates a new instance of GenerateContainers */
