@@ -87,7 +87,7 @@ public class DefTableManager extends TableManager {
     }
     
     public List getVocabularies(String table, String column, DatabaseTransaction dt) {
-        String sql = "select "+column+" from "+table;
+        String sql = "select "+column+" from "+table+" order by "+column;
         
         List l = new ArrayList();
         ResultSet rs = null;
