@@ -20,25 +20,35 @@
         <TD width="100%">
 <p class="homeMainText">PlasmID Contact Information</p>
 <table width="100%" border="0">
-  <tr>
-    <td width="61%" valign="top" class="featuretext"> 
-      <p class="underbullet">If you have questions about storing, receiving, or searching 
-        for clones that are not answered in the FAQs, please <a href="http://dnaseq.med.harvard.edu/contact_us.htm">click 
-        here</a> to contact Stephanie Mohr.</p>
-      <p class="underbullet">PlasmID was created and is maintained by the staff of the 
-        <a href="http://www.dfhcc.harvard.edu" target="_blank">Dana Farber/Harvard 
-        Cancer Center</a> (DF/HCC) DNA Resource Core, hosted at the <a href="http://www.hip.harvard.edu" target="_blank">Harvard 
-        Institute of Proteomics</a> and located at the Broad Institute.</p>
-      <p class="underbullet">To learn more about the DF/HCC and other core facilities 
-        at the DF/HCC, <a href="http://dfhcc.harvard.edu" target="_blank">click 
-        here</a>.</span></p>
-      <p class="underbullet">To learn more about the DNA Resource Core, including our 
-        DNA sequencing services, <a href="http://dnaseq.med.harvard.edu">click 
-        here</a>.</span></p>
-            </span> </p>
-      <p class="underbullet">Comments, suggestions and all other questions, please contact <a href="mailto:dongmei_zuo@hms.harvard.edu">PlasmID support</a>.</p>
-</td>
-    <td width="39%"><img src="Biobank_small.jpg" width="311" height="466"></td>
+  <tr> 
+    <td width="58%" height="444" valign="top"> 
+      <p class="homepageText3">The <a href="http://dnaseq.med.harvard.edu/" title="DNA Resource Core" target="_blank">DF/HCC 
+        DNA Resource Core</a> provides DNA sequencing services in addition to 
+        plasmid repository services. </p>
+      <p class="homepageText3">The core is hosted by the Harvard Institute of 
+        Proteomics (<a href="http://www.hip.harvard.edu/" title="Harvard Institute of Proteomics" target="_blank">HIP</a>) 
+        at <a href="http://hms.harvard.edu/hms/home.asp" title="Harvard Medical School" target="_blank">Harvard 
+        Medical School</a>.</p>
+      <p class="homepageText3">We are located in Kendall Square, Cambridge.</p>
+      <blockquote>
+        <p><span class="mainbodytextlarge">Mailing address:</span><br>
+          <span class="homeMainText">320 Charles St.<br>
+          Cambridge, MA 02141</span></p>
+        <p><span class="mainbodytextlarge">Our billing (for your PO) is handled 
+          by:</span><br>
+          <span class="homeMainText"> DF/HCC DNA Resource Core<br>
+          BCMP Department<br>
+          240 Longwood Ave.<br>
+          Boston, MA 02115</span></p>
+        <p><span class="mainbodytextlarge">Contact Info:</span><br>
+          <span class="homeMainText">For questions about the collection or to 
+          inquire about sharing plasmids, please contact <a href="http://dnaseq.med.harvard.edu/contact_us.htm" title="Contact Stephanie Mohr" target="_blank">Stephanie 
+          Mohr</a>.<br>
+          </span><span class="homeMainText">For all other questions, please contact 
+          <a href="mailto:dongmei_zuo@hms.harvard.edu">PlasmID Support</a>.</span></p>
+      </blockquote></td>
+    <td width="42%" align="center" valign="middle"><img src="biobank_arm_no_effect.gif" width="250" height="396"> 
+      <p class="homepageLink">&nbsp;</p></td>
   </tr>
 </table>
         </TD>

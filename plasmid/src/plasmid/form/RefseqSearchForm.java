@@ -30,6 +30,7 @@ public class RefseqSearchForm extends ActionForm {
     private boolean shrna;
     private boolean genomicfragment;
     private boolean tfbindsite;
+    private boolean genome;
     private boolean fusion;
     private boolean closed;
     private String marker;
@@ -55,6 +56,7 @@ public class RefseqSearchForm extends ActionForm {
     public boolean getShrna() {return shrna;}
     public boolean getGenomicfragment() {return genomicfragment;}
     public boolean getTfbindsite() {return tfbindsite;}
+    public boolean getGenome() {return genome;}
     public boolean getFusion() {return fusion;}
     public boolean getClosed() {return closed;}
     public String getMarker() {return marker;}
@@ -80,6 +82,7 @@ public class RefseqSearchForm extends ActionForm {
     public void setShrna(boolean s) {this.shrna = s;}
     public void setGenomicfragment(boolean s) {this.genomicfragment = s;}
     public void setTfbindsite(boolean s) {this.tfbindsite = s;}
+    public void setGenome(boolean b) {this.genome = b;}
     public void setFusion(boolean s) {this.fusion = s;}
     public void setClosed(boolean s) {this.closed = s;}
     public void setMarker(String s) {this.marker = s;}

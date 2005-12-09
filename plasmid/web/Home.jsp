@@ -14,99 +14,91 @@
 
 <body>
 <jsp:include page="homeTitle.jsp" />
-<table width="1000" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
-
-  <TBODY>
-    <TR> 
-      <TD width="100%" height="519"> 
-        <div align="center">
-<table width="100%" height="104" border="0">
-            <tr valign="top"> 
-              <td width="32%" height="100" align="center" valign="middle" bgcolor="#FFFFFF" class="tableinfo"><font color=#000000><font size=4>Welcome 
-                to the Plasmid Information Database (PlasmID)<br>
-                at the Dana Farber/Harvard Cancer Center DNA Resource Core</font></font></td>
-            </tr>
-          </table>
-
-        </div>
-        <table width="100%" height="301" border="0" cellpadding="3" cellspacing="3">
-          <tr> 
-            <td width="31%" height="235" rowspan="2" valign="top" bgcolor="#FFFFFF"> 
-              <p class="homepageText3"><strong>Collection 
-                Includes</strong></p>
-              <ul>
-                <li class="alert"><strong>genome-scale ORF collections from:</strong><br>
-                  <span class="mainbodytexthead"><em>Pseudomonas (&gt;2300 clones)<br>
-                  Yeast (&gt;4500 clones)<br>
-                  Y. pestis (&gt;3900 clones)<br>
-                  V. cholera (&gt;2000 clones)<br>
-                  F. tularensis (&gt;1200 clones)</em></span><br>
-                </li>
-                <li class="alert"><strong>&gt;6,000 human clones, including &gt;500 
-                  kinase ORFs </strong><strong>in recombinational cloning vectors</strong><br>
-                </li>
-                <li class="alert"><strong>genomic fragments, cDNAs and other constructs 
-                  from viruses, mouse, humans and more</strong><br>
-                </li>
-                <li class="alert"><strong>vectors for routine and cutting-edge 
-                  molecular biology techniques</strong></li>
-              </ul></td>
-            <td width="36%" height="62" class="mainbodytextlarge"> 
-              <p align="center">Please 
-                register and sign in.<br>
-                <span class="mainbodytext">Log-in status affects what you can 
-                view from the collection.</span></p>
-              </td>
-            <td width="33%" rowspan="2" align="left" valign="top"> <p class="homepageText3">Getting 
-                Started</p>
-              <ul>
-                <li><span class="homepageText3"><a href="OrderOverview.jsp">Search and Order Plasmids</a></span><br>
-                </li>
-                <li><span class="homepageText3"><a href="Submission.jsp">Donate Plasmids</a></span><span class="morehit"><br>
-                  </span></li>
-                <li><span class="homepageText3"><a target="_blank" href="collection_overview.jsp">Overview of the Collection</a><br>
-                  </span></li>
-                <li><span class="homepageText3"><a href="Contactus.jsp">Contact Us</a><br>
-                  </span></li>
-                <li><span class="homepageText3"><a href="http://dnaseq.med.harvard.edu" title="DNA Resource Core Homepage" target="_blank">DNA 
-                  Resource Core</a><br>
-                  </span></li>
-                <li><span class="homepageText3"><a href="http://www.dfhcc.harvard.edu" title="Dana Farber Harvard Cancer Center" target="_blank">DF/HCC</a></span></li>
-              </ul></td>
-          </tr>
-          <tr>
-            <td height="189" align="center" valign="middle" class="mainbodytextlarge"><img src="tubesninecartoon.jpg" width="303" height="183"></td>
-          </tr>
-        </table>
-        <table width="100%" border="0" cellspacing="3" cellpadding="3">
-         
-          <tr> 
-            <td bgcolor="#CCCCCC"> <p class="morehit">DFHCC<br>
-                Member Institutions:</p></td>
-            <td bgcolor="#CCCCCC" class="morehit"><a href="http://www.hms.harvard.edu" title="Harvard Medical School" target="_blank">Harvard 
-              Medical School</a></td>
-            <td bgcolor="#CCCCCC" class="morehit"><a href="http://www.hsph.harvard.edu" title="Harvard School of Public Health" target="_blank">Harvard 
-              School of Public Health</a></td>
-            <td bgcolor="#CCCCCC" class="morehit"><a href="http://www.bidmc.harvard.edu/sites/bidmc/home.asp" title="Beth Israel Deaconess Medical Center" target="_blank">Beth 
+<table width="100%" border="0" cellspacing="3" cellpadding="3">
+  <tr> 
+    <td width="50%" height="275" align="left" valign="top">
+	     <!-- ImageReady Slices (monday_3.ai) -->
+      <IMG SRC="monday_4.gif" WIDTH=376 HEIGHT=275 BORDER=0 ALT="" USEMAP="#monday_4_Map"> 
+      <MAP NAME="monday_4_Map">
+        <AREA SHAPE="rect" ALT="" COORDS="99,91,277,119" HREF="http://128.103.32.228/PLASMID/Submission.jsp">
+        <AREA SHAPE="rect" ALT="" COORDS="72,180,304,208" HREF="http://128.103.32.228/PLASMID/collection_overview.jsp">
+        <AREA SHAPE="rect" ALT="" COORDS="86,136,290,163" HREF="http://128.103.32.228/PLASMID/OrderOverview.jsp">
+      </MAP> 
+      <!-- End ImageReady Slices -->  
+      </td>
+    <td width="50%" height="275"> 
+ 	 <!-- Begin "New in the Repository" Blockquote -->
+	 <blockquote> 
+        <p align="left" class="homepageText3">New in the Repository</p>
+        <ul>
+          <li> 
+            <div align="left">&gt;3900 <em>Y. pestis </em>ORFs (sequence-verified) 
+            </div>
+          </li>
+          <li> 
+            <div align="left">&gt;2300 Pseudomonas ORFs (sequence-verified)</div>
+          </li>
+          <li> 
+            <div align="left">pPRIME vectors for shRNA (Elledge lab) </div>
+          </li>
+          <li> 
+            <div align="left">shRNAs vs. RB1, PTEN, EP400 (p400), CDKN1A (p21)</div>
+          </li>
+          <li> 
+            <div align="left">Yeast expression vectors with fluorescent tags</div>
+          </li>
+          <li> 
+            <div align="left">Viral genes and genomes (HPVs, BPV-1, SV40)</div>
+          </li>
+          <li> 
+            <div align="left">Plasmids from DF/HCC members S. Elledge, D. Livingston, 
+              J. Decaprio and P. Howley</div>
+          </li>
+        </ul>
+      </blockquote>
+	   <!-- End "New in the Repository" Blockquote -->
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" align="left" valign="top"><span class="alert">Please register 
+      and sign in.<br>
+      Sign-in status affects what you can view and request.</span></td>
+    <td height="75"><html:form action="Logon.do"><table bgcolor="#CCCCCC" width="350" border="0">
+  <tr> 
+    <td width="12%" valign="baseline" class="formlabel">Email:</td>
+    <td width="28%">
+        <html:text property="email" styleClass="text" size="30"/>
+    </td>    
+    <td valign="baseline" class="text"><html:submit styleClass="text" value="Login"/></td>
+  </tr>
+  <tr> 
+    <td width="12%" valign="baseline" class="formlabel">Password:</td>
+    <td width="28%">
+        <html:password property="password" styleClass="text" size="30" maxlength="20"/>        
+    </td>
+    <td valign="baseline" class="text"><a href="FindPassword.jsp">Find Password</a></td>
+  </tr>
+</table>
+      </html:form></td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="1" cellpadding="4">
+          <tr align="left" valign="top" bgcolor="#6699cc" class="homepageText3"> 
+            <td width="12%" class="homeMainText"> DF/HCC Member Institutions:</td>
+            <td width="12%" class="homeMainText"><a href="http://www.bidmc.harvard.edu/sites/bidmc/home.asp" title="Beth Israel Deaconess Medical Center" target="_blank">Beth 
               Israel Deaconess Medical Center</a></td>
-            <td bgcolor="#CCCCCC" class="morehit"><a href="http://www.brighamandwomens.org/" title="Brigham & Women's Hospital" target="_blank">Brigham 
+            <td width="12%" class="homeMainText"><a href="http://www.brighamandwomens.org/" title="Brigham & Women's Hospital" target="_blank">Brigham 
               & Women's Hospital</a></td>
-            <td bgcolor="#CCCCCC" class="morehit"><a href="http://www.dfci.harvard.edu/" title="Dana-Farber Cancer Institute" target="_blank">Dana-Farber 
-              Cancer Institute</a></td>
-            <td bgcolor="#CCCCCC" class="morehit"><a href="http://www.mgh.harvard.edu/" title="Massachusetts General Hospital" target="_blank">Massachusetts 
-              General Hospital</a></td>
-            <td bgcolor="#CCCCCC" class="morehit"><a href="Massachusetts General Hospital" title="Children's Hospital Boston" target="_blank">Children's 
+            <td width="12%" class="homeMainText"><a href="http://www.childrenshospital.org/" title="Children's Hospital Boston" target="_blank">Children's 
               Hospital Boston</a></td>
-          </tr>
-		   <tr> 
-            <td height="45" colspan="8"> 
-              <div align="center" class="homepageLink">For 
-                information on DNA sequencing and other DNA Resource Core services, 
-                please <a href="http://dnaseq.med.harvard.edu" title="DNA Resource Core Home Page" target="_blank">CLICK 
-                HERE</a>. <span class="morehit"><br>
-                Have questions not answered in our <a target="_blank" href="FAQ.jsp">faq</a>? Please 
-                contact <a href="http://dnaseq.med.harvard.edu/contact_us.htm" title="Contact DNA Resource Core" target="_blank">stephanie 
-                mohr</a>.</span></div></td>
+            <td width="12%" class="homeMainText"><a href="http://www.dfci.harvard.edu/" title="Dana Farber Cancer Institute" target="_blank">Dana 
+              Farber Cancer Institute</a></td>
+            <td width="12%" class="homeMainText"><a href="http://hms.harvard.edu/hms/home.asp" title="Harvard Medical School" target="_blank">Harvard 
+              Medical School</a></td>
+            <td width="12%" class="homeMainText"><a href="http://www.hsph.harvard.edu/" title="Harvard School of Public Health" target="_blank">Harvard 
+              School of Public Health</a></td>
+            <td width="12%"><a href="http://www.mgh.harvard.edu/" title="Massachusetts General Hospital" target="_blank" class="homeMainText">Massachusetts 
+              General Hospital</a></td>
           </tr>
         </table>
       </TD>

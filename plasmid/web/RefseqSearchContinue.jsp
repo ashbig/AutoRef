@@ -65,7 +65,8 @@
             genomic fragment </td>
             <td width="21%" class="underbullet"><html:checkbox property="tfbindsite"/>
             trxn factor bind site </td>
-            <td width="20%" class="underbullet"></td>
+            <td width="20%" class="underbullet"><html:checkbox property="genome"/>
+            genome</td>
         </tr>
         <tr> 
           <td height="9" colspan="6">&nbsp;</td>

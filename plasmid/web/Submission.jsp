@@ -14,62 +14,57 @@
 
 <body>
 <jsp:include page="submissionTitle.jsp" />
-<table width="1000" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
-<TBODY>
+<TABLE borderColor=#ffffff width=1000 align=center 
+      bgColor=#ffffff border=0>
+  <TBODY>
     <TR> 
-        <TD width="100%">
-<p class="homeMainText">Plasmid Submission </p>
-<p class="itemtext"><u>What to expect when you submit clones</u></P> 
-<ul>
-  <li class="underbullet"> We&#8217;ll work with you to try to make transfer of 
-    clones and supporting information as easy as possible by providing support, 
-    supplies, and pick-up</li>
-  <li class="underbullet">We prefer to receive plasmids as DNA rather than in 
-    bacteria but if this presents an undo burden on your lab, we can receive plasmids 
-    in bacteria</li>
-  <li class="underbullet"> Information can be submitted in any of several formats 
-    supported by the core, including but not limited to PDF, Excel, FileMaker, 
-    Clone Manager, Vector NTI, and GenBank format files</li>
-  <li class="underbullet">The minimum information needed for plasmid submission 
-    is a plasmid map or sequence, information about selection and growth conditions, 
-    and the name of the authors and/or references that should be cited by those 
-    who order the clone. If you can give us more information &#8230; so much the 
-    better</li>
-  <li class="underbullet">In some cases, approval from your institution&#8217;s 
-    technology transfer office will be required before the clones can be entered 
-    into our repository</li>
-</ul>
-<p class="itemtext"><u>What will happen to the clones and supporting information 
-  after they are gathered</u></p>
-        
-<ul>
-  <li class="underbullet">Clones will be transformed into an appropriate phage-resistant 
-    host strain</li>
-  <li class="underbullet">Two or more glycerol stocks will be created from each 
-    clone (archival stock and one or more stocks for distribution) and stored 
-    in separate locations</li>
-  <li class="underbullet">Information will be curated and reformatted for entry 
-    into the database, and a PDF file of vector maps and/or clone maps will be 
-    made available along with any sequence text files provided by the donor</li>
-  <li class="underbullet">Clones will be distributed to academic researchers who 
-    request the plasmid after a signed copy of the UB-MTA has been returned to 
-    the core facility (further restrictions on distribution or special MTAs can 
-    be added)</li>
-</ul>
-        
-<span class="featuretext">If you would like to submit clones to the repository, 
-please contact Stephanie Mohr <a href="mailto:stephanie_mohr@hms.harvard.edu"><span class="featuretext">by 
-email</span></a> or by phone 617-324-4251.</span>
-</p>
+      <TD align="left" valign="top"> <p class="homepageText3">What You Do ...</p>
+        <ul>
+          <li class="homepageText3">Provide Plasmids as DNA</li>
+          <li class="homepageText3">Provide Supporting Information</li>
+          <li class="homepageText3">Contact us to arrange drop-off or pick-up</li>
+          <li class="homepageText3">Forward Requests by e-mail or refer requestors 
+            directly to PlasmID</li>
+        </ul></TD>
+      <TD align="left" valign="top"> <span class="homepageText3">... What We Do 
+        </span> <div align="left"> 
+          <ul>
+            <li class="homepageText3">Transform DNA into a phage-resistant host 
+              strain</li>
+            <li class="homepageText3">Create working and archival glycerol stocks</li>
+            <li class="homepageText3">Store stocks in our automated freezer storage 
+              system</li>
+            <li class="homepageText3">Curate information to be added to PlasmID</li>
+            <li class="homepageText3">Handle MTAs, obtain institutional permissions, 
+              and accomodate restrictions</li>
+            <li class="homepageText3">Distribute the Plasmids to Academic and 
+              Non-Profit labs who request them (U.S. and abroad)</li>
+          </ul>
+        </div></TD>
+    </TR>
+    <TR align="left" valign="top" class="homepageText3"> 
+      <TD width="50%" bordercolor="#999999"> <div align="left">THE OLD WAY ...</div></TD>
+      <TD width="50%" height="20"> <div align="left">... THE NEW WAY</div></TD>
+    </TR>
+    <TR align="left" valign="top"> 
+      <TD><img src="file://///Hipfs/hipdata/smohr/PlasmID%20November%202005%20Update/oldway.gif" width="466" height="195"></TD>
+      <TD><img src="file://///Hipfs/hipdata/smohr/PlasmID%20November%202005%20Update/newway.gif" width="467" height="194"></TD>
+    </TR>
+    <TR> 
+      <TD height="99" colspan="2"> <p align="center" class="homeMainText">If you 
+          would like to share clones with the repository, please contact Stephanie 
+          Mohr <a 
+            href="mailto:stephanie_mohr@hms.harvard.edu">by email</a> or by phone 
+          617-324-4251. </p>
+        <p class="homeMainText">Useful Downloads for Plasmid Submission<br>
 <ul>
   <li class="underbullet"><a target="_blank" href="MQF.pdf">Material Qualification Form</a></li>
   <li class="underbullet"><a target="_blank" href="PIT.pdf">Plasmid Intake Template</a></li>
-</ul>
-</p>
-        </TD>
+</ul></p>
+        <p></p></TD>
     </TR>
   </TBODY>
-</table>
+</TABLE>
 <jsp:include page="footer.jsp" /></body>
 </html>
 

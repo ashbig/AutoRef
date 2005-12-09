@@ -72,6 +72,7 @@ public class RefseqSearchContinueAction extends Action {
         boolean shrna = ((RefseqSearchForm)form).getShrna(); 
         boolean genomicfragment = ((RefseqSearchForm)form).getGenomicfragment();  
         boolean tfbindsite = ((RefseqSearchForm)form).getTfbindsite();
+        boolean genome = ((RefseqSearchForm)form).getGenome();
         int pagesize = ((RefseqSearchForm)form).getPagesize();
         int page = ((RefseqSearchForm)form).getPage();
 
@@ -84,6 +85,8 @@ public class RefseqSearchContinueAction extends Action {
             clonetypes.add(Clone.GENOMIC_FRAGMENT);
         if(tfbindsite) 
             clonetypes.add(Clone.TFBINDSITE);
+        if(genome) 
+            clonetypes.add(Clone.GENOME);
         
         User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
         List restrictions = new ArrayList();

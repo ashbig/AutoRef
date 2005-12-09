@@ -23,6 +23,7 @@ public class Clone implements Serializable {
     public static final String PROMOTER = "promoter";
     public static final String TRANSPOSON = "transposon";
     public static final String GENE = "gene";
+    public static final String GENOME = "genome";
     public static final String NOINSERT = "No insert";
     public static final String NO_RESTRICTION = "No restriction";
     public static final String NON_PROFIT = "Academic and non-profit labs";

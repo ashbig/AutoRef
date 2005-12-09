@@ -24,24 +24,24 @@
 
 <table width="100%" border="0">
   <tr> 
-    <td width="58%" rowspan="3" valign="top"> <p><span class="mainbodytextlarge">Looking 
-        for a specific gene insert? </span> <span class="morehit"><br>
-        </span><span class="alert"><a href="GetDataForRefseqSearch.do">search by reference sequence</a></span></p>
-      <p><span class="mainbodytextlarge">Looking for an 'empty vector'? </span><span class="morehit"><br>
-        </span><span class="alert"><a href="GetAllVectors.do">view all vectors</a></span></p>
-      <p><span class="mainbodytextlarge">Ready to check out? </span><span class="morehit"><br>
-        </span><span class="alert">click the shopping cart icon to initiate check-out 
-        (top right of any page)</span><br>
+    <td width="58%" rowspan="3" valign="top"> <p><span class="homepageText3">Looking 
+        for a specific gene insert? </span><span class="morehit"><br>
+        </span><span class="homeMainText"><a href="GetDataForRefseqSearch.do">Search by reference sequence</a></span></p>
+      <p><span class="homepageText3">Looking for an 'empty vector'? </span><span class="morehit"><br>
+        </span><span class="homeMainText"><a href="GetAllVectors.do">View all vectors</a></span></p>
+      <p><span class="homepageText3">Ready to check out? </span><span class="morehit"><br>
+        </span><span class="homeMainText">Click the <a href="ViewCart.do">shopping cart</a> icon to initiate 
+        check-out (top right of any page)</span><br>
         <br>
-        <span class="mainbodytextlarge">Can't find what you're looking for? </span><span class="morehit"><br>
-        </span><span class="alert">please be sure you logged in because log-in 
-        effects what clones you can view.<br>
+        <span class="homepageText3">Can't find what you're looking for? </span><span class="morehit"><br>
+        </span><span class="homeMainText">Please be sure you logged in because 
+        log-in effects what clones you can view.<br>
         <a href="http://dnaseq.med.harvard.edu/plasmid-related_links.htm" title="Plasmid Links Page" target="_blank">CLICK 
         HERE</a> to see other resources for clones.</span></p>
-      <p class="text"><span class="mainbodytextlarge">Don't recognize an organisms' 
+      <p class="text"><span class="homepageText3">Don't recognize an organisms' 
         name? </span><span class="morehit"><br>
-        </span><span class="alert">the <a target="_blank" href="collection_overview.jsp">collection overview</a> includes common names 
-        for organisms in our collection</span></td>
+        </span><span class="homeMainText">The <a target="_blank" href="collection_overview.jsp">collection overview</a> includes common 
+        names for organisms in our collection</span></td>
     <td width="42%" height="140" valign="top"> 
       <table width="100%" border="3">
         <tr class="tableheader"> 
@@ -99,13 +99,9 @@
 
 <table width="100%" border="0">
   <tr>
-  <td height="28" colspan="8"> <div align="center" class="homepageLink">For 
-                information on DNA sequencing and other DNA Resource Core services, 
-                please <a href="http://dnaseq.med.harvard.edu" title="DNA Resource Core Home Page" target="_blank">CLICK 
-                HERE</a>. <span class="morehit"><br>
-                Have questions not answered in our faq (top right of page)? Please 
-                contact <a href="http://dnaseq.med.harvard.edu/contact_us.htm" title="Contact DNA Resource Core" target="_blank">stephanie 
-                mohr</a>.</span></div></td>
+  <td height="28" colspan="8"> <div align="center" class="homeMainText">Have questions 
+        not answered in our <a target="_blank" href="FAQ.jsp">FAQ</a>? Please contact <a href="http://dnaseq.med.harvard.edu/contact_us.htm" title="Contact DNA Resource Core" target="_blank">Stephanie 
+        Mohr</a>.</div></td>
   </tr>
 </table>
     </td>
