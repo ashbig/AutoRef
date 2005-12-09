@@ -115,6 +115,7 @@ public class RefseqSearchForm extends ActionForm {
         shrna = false;
         genomicfragment = false;
         tfbindsite = false;
+        genome = false;
         fusion = false;
         closed=false;
         marker = "All";

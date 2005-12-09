@@ -62,6 +62,7 @@ public class RefseqSearchAction extends Action {
         ((RefseqSearchForm)form).setShrna(true);
         ((RefseqSearchForm)form).setGenomicfragment(true);
         ((RefseqSearchForm)form).setTfbindsite(true);
+        ((RefseqSearchForm)form).setGenome(true);
         
         DatabaseTransaction dt = null;
         Connection conn = null;
