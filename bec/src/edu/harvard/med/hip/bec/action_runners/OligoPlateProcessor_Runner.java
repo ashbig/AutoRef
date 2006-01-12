@@ -72,7 +72,8 @@ public class OligoPlateProcessor_Runner extends ProcessRunner
                                  sql_plate_update += ", descr_oligo_processing = '" + oligo_container.getCommentOrder() +" "+ m_order_comment+ "'";
                              if (  m_sequencing_comment != null && m_sequencing_comment.trim().length() > 0)
                                  sql_plate_update += ", descr_sequencing ='" + oligo_container.getCommentSequencing() +" "+ m_sequencing_comment+ "'";
-                             DatabaseTransaction.executeUpdate(sql_plate_update, conn);
+                           sql_plate_update  += " where oligocontainerid = "+oligo_container.getId();
+                           DatabaseTransaction.executeUpdate(sql_plate_update, conn);
 
                            sql_history = "insert into process_object (processid,objectid,objecttype)";
                             sql_history+=" values("+process_id+", (select oligocontainerid from oligocontainer where label = '"+plate_name+"'),"+Constants.PROCESS_OBJECT_TYPE_CONTAINER+")";
@@ -113,7 +114,7 @@ public class OligoPlateProcessor_Runner extends ProcessRunner
                 ordcom = (ordcom == null) ? "": ordcom;
                 seqcom = rs.getString("descr_sequencing");
                 seqcom = (seqcom == null) ?"":seqcom;
-                containers.add( new OligoContainer(rs.getString("label"),
+                containers.add( new OligoContainer(rs.getString("label"), rs.getInt("oligocontainerid"), 
                         rs.getInt("status"), m_user.getId(),
                         ordcom, seqcom));
             }
@@ -139,14 +140,16 @@ public class OligoPlateProcessor_Runner extends ProcessRunner
         {
             BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
             sysProps.verifyApplicationSettings();
+   edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
 
 
             user = AccessManager.getInstance().getUser("htaycher123","htaycher");
             input = new OligoPlateProcessor_Runner();
+            input.setProcessType(Constants.PROCESS_PROCESS_OLIGO_PLATE);
             input.setOrderComment("ads");
             input.setUser(user);
             input.setPlateStatus( OligoContainer.STATUS_RECIEVED );
-             input.setInputData(Constants.ITEM_TYPE_PLATE_LABELS,  "OPLATE000369 OPLATE000370 ");
+             input.setInputData(Constants.ITEM_TYPE_PLATE_LABELS,  "OPLATE000369 OPLATE000370 OPLATE000632 ");
              input.run();
         }catch(Exception e)
         {
