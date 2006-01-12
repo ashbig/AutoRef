@@ -1,5 +1,5 @@
 /**
- * $Id: OligoContainer.java,v 1.5 2005-02-11 20:59:27 Elena Exp $
+ * $Id: OligoContainer.java,v 1.6 2006-01-12 19:04:35 Elena Exp $
  *
  * File     	: Container.java
 
@@ -73,6 +73,17 @@ public class OligoContainer
         m_comment_sequencing =  seqcomment;
     }
       
+    public OligoContainer(String label, int id, int status, int userid, 
+            String ordcomment, String seqcomment) 
+    {
+         m_label = label;
+         m_id = id;
+        m_status = status;
+        m_userid = userid;
+        m_comment_order =  ordcomment;
+        m_comment_sequencing =  seqcomment;
+    }
+    
     public OligoContainer() throws BecDatabaseException
     {
         m_id = BecIDGenerator.getID("containerid");
