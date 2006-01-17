@@ -73,7 +73,7 @@ public abstract class AbstractAgarContainerMapper extends OneToOneContainerMappe
         String type;
         Vector oldSamples = container.getSamples();
         
-        int position = 1;
+        int position;
         int expectedWellNum = getWell();
         int actualWellNum = oldSamples.size();
         
@@ -92,11 +92,14 @@ public abstract class AbstractAgarContainerMapper extends OneToOneContainerMappe
                 type = Sample.getType(protocol.getProcessname());   
             }
             
+            position = s.getPosition();
+            if(position > expectedWellNum)
+                position = position - expectedWellNum;
+            
             Sample newSample = new Sample(type, position, newContainer.getId(), s.getConstructid(), s.getOligoid(), Sample.GOOD);
             newSample.setCloneid(s.getCloneid());
             newContainer.addSample(newSample);
             sampleLineageSet.addElement(new SampleLineage(s.getId(), newSample.getId()));
-            position++;
         }
     }
     
