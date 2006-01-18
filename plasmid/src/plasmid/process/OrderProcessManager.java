@@ -784,6 +784,7 @@ public class OrderProcessManager {
         c.add("Canada");
         c.add("Denmark");
         c.add("Germany");
+        c.add("Japan");
         c.add("Korea");
         c.add("Netherlands");
         c.add("Spain");
