@@ -96,7 +96,7 @@ public abstract class AbstractAgarToCultureMapper extends OneToOneContainerMappe
         int row = getRow();
         int platenumOnDest = getPlatenumOnDest();
         int n=platenum*row*column/platenumOnDest/colonynum;
-        while(n*colonynum<(platenum+1)*row*column/platenumOnDest && n<oldSamples.size()) {
+        while(n*colonynum<(platenum+1)*row*column/platenumOnDest) {
             Sample s = null;
             try {
                 s = container.getSample(n+1);
