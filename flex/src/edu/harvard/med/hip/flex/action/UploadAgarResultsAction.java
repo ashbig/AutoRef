@@ -201,9 +201,11 @@ public class UploadAgarResultsAction extends ResearcherAction {
                 
                 if(well > 48)
                     well = well - 48;
-                
+               
+                /**
                 if(well > container.getSamples().size())
                     break;
+                */
                 
                 int found = count.getFound();
                 Sample sample = null;
