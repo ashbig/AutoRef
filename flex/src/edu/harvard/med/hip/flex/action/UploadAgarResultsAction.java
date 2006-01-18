@@ -217,6 +217,9 @@ public class UploadAgarResultsAction extends ResearcherAction {
                     return new ActionForward(mapping.getInput());
                 }
                 
+                if(sample == null)
+                    continue;
+                
                 // if(sample.getType().toUpperCase().indexOf("EMPTY") == -1) {
                 // create a new result
                 Result result =
