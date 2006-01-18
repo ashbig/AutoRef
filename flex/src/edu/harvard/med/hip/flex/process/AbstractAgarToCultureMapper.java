@@ -65,7 +65,7 @@ public abstract class AbstractAgarToCultureMapper extends OneToOneContainerMappe
             
             String newBarcode = projectCode+protocol.getProcesscode()+threadid+leftString+subthread;
             Container newContainer = new Container(newContainerType, null, newBarcode, f1.getThreadid());
-    
+            
             int index = 0;
             Enumeration enum = containers.elements();
             boolean addNewContainer = false;
@@ -97,14 +97,22 @@ public abstract class AbstractAgarToCultureMapper extends OneToOneContainerMappe
         int platenumOnDest = getPlatenumOnDest();
         int n=platenum*row*column/platenumOnDest/colonynum;
         while(n*colonynum<(platenum+1)*row*column/platenumOnDest && n<oldSamples.size()) {
-            Sample s = (Sample)oldSamples.elementAt(n);
-            type = getType(container, s, protocol);
-
-            for(int i=0; i<colonynum; i++) {
-                Sample newSample = new Sample(type[i], index+i, newContainer.getId(), s.getConstructid(), s.getOligoid(), Sample.GOOD);
-                newSample.setCloneid(s.getCloneid());
-                newContainer.addSample(newSample);
-                sampleLineageSet.addElement(new SampleLineage(s.getId(), newSample.getId()));
+            Sample s = null;
+            try {
+                s = container.getSample(n+1);
+            } catch (FlexCoreException ex) {
+                System.out.println(ex);
+            }
+            
+            if(s != null) {
+                type = getType(container, s, protocol);
+                
+                for(int i=0; i<colonynum; i++) {
+                    Sample newSample = new Sample(type[i], index+i, newContainer.getId(), s.getConstructid(), s.getOligoid(), Sample.GOOD);
+                    newSample.setCloneid(s.getCloneid());
+                    newContainer.addSample(newSample);
+                    sampleLineageSet.addElement(new SampleLineage(s.getId(), newSample.getId()));
+                }
             }
             index = index+colonynum*getPlatenumOnDest();
             n++;
@@ -139,7 +147,7 @@ public abstract class AbstractAgarToCultureMapper extends OneToOneContainerMappe
         edu.harvard.med.hip.flex.process.Process p =
         edu.harvard.med.hip.flex.process.Process.findCompleteProcess(container, protocol);
         Result result = Result.findResult(s, p);
-
+        
         try {
             int colony = Integer.parseInt(result.getValue());
             
@@ -147,7 +155,7 @@ public abstract class AbstractAgarToCultureMapper extends OneToOneContainerMappe
                 for(int i=0; i<colonynum; i++) {
                     type[i] = Sample.getType(newProtocol.getProcessname());
                 }
-            } else {                
+            } else {
                 for(int i=0; i<colony; i++) {
                     type[i] = Sample.getType(newProtocol.getProcessname());
                 }
