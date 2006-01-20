@@ -120,7 +120,7 @@
         <html:select property="group" styleClass="text" value="<%=Constants.ACADEMIC%>">
             <html:options name="groups"/>
         </html:select>
-        <a href="http://www.dfhcc.harvard.edu/search/members.shtml" target="_blank">check if your PI is a DF/HCC memeber</a>
+        <a href="http://www.dfhcc.harvard.edu/about-dfhcc/member-directory/" target="_blank">check if your PI is a DF/HCC memeber</a>
     </td>        
   </tr>
 

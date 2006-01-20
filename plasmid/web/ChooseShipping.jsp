@@ -25,6 +25,12 @@
 
 <html:errors/>
 
+<p class="text"><i>
+You will need a Purchase Order number and a shipping account number to complete your order. 
+If you don't provide a shipping account number, a shipping charge will be determined during shipping and charged to your account.
+You can save your cart and return to check-out another time (remember to sign in to see your saved cart).
+</i></p>
+
 <html:form action="EnterAddress.do">
 
 <p class="text">Order Summary:</p>
@@ -51,7 +57,6 @@
 </table>
 
 <p class="text">Shipping Information:</p>
-<p class="text"><i>If you don't provide a shipping account number, a shipping charge will be determined during shipping and charged to your account.</i></p>
 <table width="100%" border="0">
   <tr> 
     <td class="formlabel" width="20%">Choose shipping method:</td>
