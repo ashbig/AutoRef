@@ -151,7 +151,13 @@ public class EnterCultureFileAction extends ResearcherAction {
         ArrayList resultList = converter.getResultList();
         int n=0;
         for(int i=0; i<resultList.size(); i++) {
-            Sample s = container.getSample(i+1);
+            Sample s = null;
+            try {
+                s = container.getSample(i+1);
+            } catch (FlexCoreException ex) {
+                System.out.println(ex);
+            }
+            
             if(s != null) {
                 newForm.setResult(n, (String)resultList.get(i));
                 n++;
