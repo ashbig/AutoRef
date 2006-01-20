@@ -149,8 +149,13 @@ public class EnterCultureFileAction extends ResearcherAction {
         newForm.setFormFile(cultureFile);
         newForm.reset(container);
         ArrayList resultList = converter.getResultList();
+        int n=0;
         for(int i=0; i<resultList.size(); i++) {
-            newForm.setResult(i, (String)resultList.get(i));
+            Sample s = container.getSample(i+1);
+            if(s != null) {
+                newForm.setResult(n, (String)resultList.get(i));
+                n++;
+            }
         }
         Map resultMap = getResultStats(resultList);
         request.setAttribute(Constants.RESULT_STATS_KEY,resultMap);
