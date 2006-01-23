@@ -126,7 +126,7 @@ public class EnterCultureFileAction extends ResearcherAction {
         FileResultConverter converter = null;
         
         if(Protocol.ENTER_CULTURE_FILE.equals(protocolName)) {
-            converter = new CultureResultConverter(input, container.getSamples().size());
+            converter = new CultureResultConverter(input);
         } else {
             converter = new DNAResultConverter(input, container.getSamples().size());
         }
