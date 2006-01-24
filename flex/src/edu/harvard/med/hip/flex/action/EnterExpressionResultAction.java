@@ -93,19 +93,19 @@ public class EnterExpressionResultAction extends ResearcherAction {
         if (filename == null || filename.getFileName().trim().equals("")) {
             hasFile = false;
         }
-          
+        
         if (floFilename == null || floFilename.getFileName().trim().equals("")) {
             hasFloFile = false;
         }
-                
+        
         if (proFilename == null || proFilename.getFileName().trim().equals("")) {
             hasProFile = false;
         }
-                
+        
         if (restrictFilename == null || restrictFilename.getFileName().trim().equals("")) {
             hasRestrictFile = false;
         }
-                
+        
         if (colonyFilename == null || colonyFilename.getFileName().trim().equals("")) {
             hasColonyFile = false;
         }
@@ -116,7 +116,7 @@ public class EnterExpressionResultAction extends ResearcherAction {
             errors.add("filename", new ActionError("error.file.invalid", filename.getFileName()));
             saveErrors(request,errors);
             isRetInput = true;
-        }        
+        }
         if(hasFloFile && floFilename.getFileSize() == 0) {
             // display error message on entry form
             errors.add("floFilename", new ActionError("error.file.invalid", floFilename.getFileName()));
@@ -174,7 +174,7 @@ public class EnterExpressionResultAction extends ResearcherAction {
             isRetInput = true;
         }
         
-        if(isRetInput) {            
+        if(isRetInput) {
             boolean well = ((EnterResultForm)form).getWell();
             boolean sampleid = ((EnterResultForm)form).getSampleid();
             boolean geneSymbol = ((EnterResultForm)form).getGeneSymbol();
@@ -222,6 +222,7 @@ public class EnterExpressionResultAction extends ResearcherAction {
         try {
             t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
+            
             ExpressionCloneContainer.updateResults(conn,cloneidList,pcrResultList,floResultList,proteinResultList,restrictionResultList,colonyResultList);
             CloneContainer.update(conn, cloneidList, statusList, commentsList);
             
@@ -241,14 +242,18 @@ public class EnterExpressionResultAction extends ResearcherAction {
             List newRestrictResultList = new ArrayList();
             List newColonyResultList = new ArrayList();
             Vector samples = container.getSamples();
+
             for(int i=0; i<samples.size(); i++) {
                 ExpressionCloneSample sample = (ExpressionCloneSample)samples.get(i);
+                if(Sample.CONTROL_POSITIVE.equals(sample.getType()) || Sample.CONTROL_NEGATIVE.equals(sample.getType()) || Sample.EMPTY.equals(sample.getType())) {
+                    continue;
+                }
+                
                 String pcr = sample.getPcrresult();
                 String flo = sample.getFloresult();
                 String colony = sample.getColonyresult();
                 String restriction = sample.getRestrictionresult();
                 String protein = sample.getProteinresult();
-                
                 String newPcrResult = ((String)pcrResultList.get(i)).trim();
                 if(!newPcrResult.equals(pcr.trim())) {
                     if(!newPcrResult.equals(CloneSample.NOT_DONE)) {
