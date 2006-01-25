@@ -781,18 +781,29 @@ public class OrderProcessManager {
     
     public static List getCountryList() {
         List c = new ArrayList();
+        c.add("Australia");
+        c.add("Belgium");
         c.add("Canada");
+        c.add("China");
         c.add("Denmark");
+        c.add("Finland");
+        c.add("France");
         c.add("Germany");
+        c.add("India");
         c.add("Italy");
         c.add("Japan");
         c.add("Korea");
+        c.add("Mexico");
         c.add("Netherlands");
+        c.add("Norway");
+        c.add("Russia");
         c.add("Spain");
+        c.add("Sweden");
+        c.add("Switzerland");
         c.add("Taiwan");
         c.add("United Kindom");
         c.add("USA");
-      
+
         return c;
     }
 }
