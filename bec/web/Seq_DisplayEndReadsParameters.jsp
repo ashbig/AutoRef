@@ -18,22 +18,28 @@
 <body >
 
 
-<jsp:include page="NavigatorBar_Administrator.jsp" />
-	<p><P>
-<br>
-<table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
-    <tr>
-        
-    <td > <font color="#008000" size="5"><b> Available sets of parameters for Clone 
-      Scoring</font> 
-      <hr>
-    
-    <p>
-    </td>
-    </tr>
-</table>
+<table width="100%" border="0" cellpadding="10" style='padding: 0; margin: 0; '>
+  <tr>
+    <td><%@ include file="page_application_title.html" %></td>
+  </tr>
+  <tr>
+    <td ><%@ include file="page_menu_bar.jsp" %></td>
+  </tr>
+  <tr>
+    <td><table width="100%" border="0">
+        <tr> 
+          <td  rowspan="3" align='left' valign="top" width="160"  bgcolor='#1145A6'>
+		  <jsp:include page="page_left_menu.jsp" /></td>
+          <td  valign="top"> <jsp:include page="page_location.jsp" />
+           </td>
+        </tr>
+        <tr> 
+          <td valign="top"> <jsp:include page="page_title.jsp" /></td>
+        </tr>
+        <tr> 
+          <td>
 
-<div align="center">
+<!--<div align="center">
   <center>
   <table border="0" cellpadding="0" cellspacing="0" width="80%">
     <tr>
@@ -43,7 +49,7 @@
 </i> <a href="Help_ConfigureSystem.jsp">[parameter help file]</a>. </td></tr>
   </table>
   </center>
-</div>
+</div>-->
 
 
 <% ArrayList specs = (ArrayList)request.getAttribute("specs");
@@ -59,7 +65,7 @@ else if (specs.size() > 0 )
         Spec spec = (Spec)specs.get(spec_count); 
        
 %>
-<table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
+<table border="0" cellpadding="0" cellspacing="0" width="90%" align=center>
 <tr><td colspan=2>
 
 <P> <font  size="4"> <b>Set Name</b></font> <%= spec.getName() %> 
@@ -75,7 +81,7 @@ else if (specs.size() > 0 )
 	<tr> 
     <td >&nbsp; </td>  </tr></td></tr> -->
   <tr> 
-    <td colspan=2 ><p><b>Penalties for mutation in gene regions</b> </p> 
+    <td colspan=2 ><p><b>Penalties for discrepancies in insert regions</b> </p> 
      
       <table width="85%" border="0" align="center">
         <tr class='headerRow'> 
@@ -145,9 +151,9 @@ else if (specs.size() > 0 )
   </tr>
 <% row_count = 0;%>
     </tr>
-	<tr><td colspan="2"> &nbsp;</td></tr> <td colspan=2 ><p><b>Penalties for mutation in linker region</b> </p> 
+	<tr><td colspan="2"> &nbsp;</td></tr> <td colspan=2 ><p><b>Penalties for discrepancies in linker region</b> </p> 
      
-      <table width="85%" border="0" align="center">
+      <table width="90%" border="0" align="center">
         <tr  class='headerRow'> 
           <td >Base Confidence</div></td>
           <td >High </div></td>
@@ -176,13 +182,13 @@ else if (specs.size() > 0 )
   </tr>
 <tr><td colspan="2"> &nbsp;</td></tr>
   <tr><td colspan="2">
-  <p><b>Penalties for mutation introdues by ambiguous bases</b><p>
+  <p><b>Penalties for discrepancies introdues by ambiguous bases</b><p>
 		<input type="checkbox" name="show" value="1" checked onclick="javascript:showhide('divShowHide', this.checked);">
 		Show </p>
       <p></p>
 	  <DIV ID="divShowHide" STYLE="  position:relative;  clip:rect(0px 120px 120px 0px); "> 
 	  <% row_count = 0;%>
-        <table width="85%" border="0" align="center">
+        <table width="90%" border="0" align="center">
           <tr  class='headerRow'> 
             <td ><div align="right">Base                 Confidence </div></td>
             <td ><div align="center">High</div></td>
@@ -241,6 +247,13 @@ else if (specs.size() > 0 )
 <hr>
 
 <%}}%>
+ </tr>
+      </table></td>
+  </tr>
+  <tr>
+    <td><%@ include file="page_footer.jsp" %></td>
+  </tr>
+</table>
 </body>
 
 </html>

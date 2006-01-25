@@ -16,21 +16,10 @@
 <title>Polymorpism Detector Parameters</title>
 <LINK REL=StyleSheet HREF="application_styles.css" TYPE="text/css" MEDIA=screen>
 <link href="application_styles.css" rel="stylesheet" type="text/css">
+<script language="JavaScript" src="<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>scripts.js"></script>
+
 </head>
 <body>
-<jsp:include page="NavigatorBar_Administrator.jsp" />
-	<p><P>
-<br>
-<table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
-    <tr>
-        <td >
-    <font color="#008000" size="5"><b> Create new set of parameters for Polymorphism Detection</font>
-    <hr>
-    
-    <p>
-    </td>
-    </tr>
-</table>
 
 <div align="center">
   <center>
@@ -105,7 +94,7 @@ for (Enumeration e =ft.keys() ; e.hasMoreElements() ;)
 	<td bgColor="#e4e9f8"><font color="#000080"><input name="PL_MATCH_LENGTH" type="text" value="100"  width="120">&nbsp;</font></td>
   </tr>
   <tr>
-    <td bgColor="#e4e9f8"><div align="right"><font color="#000080">requered percent 
+    <td bgColor="#e4e9f8"><div align="right"><font color="#000080">required percent 
         identity:&nbsp;&nbsp;&nbsp;</font></div></td>
 	<td bgColor="#e4e9f8"><font color="#000080">
       <input name="PL_MATCH_IDENTITY" type="text" value="95"  width="120">

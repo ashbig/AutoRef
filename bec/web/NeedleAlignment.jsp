@@ -43,7 +43,7 @@
 <table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
   
   <TR> 
-    <TD width="35%" >Bec ID:</td>
+    <TD width="35%" >ACE Sequence ID:</td>
     <td ><%= request.getAttribute("expsequenceid")  %></TD>
   </TR>
  
@@ -65,7 +65,7 @@ if ( request.getAttribute("trimend") != null)
   <% if (request.getAttribute("refsequenceid") != null)
 {%>
   <TR> 
-    <TD >Reference Sequence:</td>
+    <TD >ACE Reference Sequence ID:</td>
     <td><a href="#" onCLick="window.open('<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetItem.do?forwardName=<%=Constants.REFSEQUENCE_DEFINITION_INT%>&amp;ID=<%= request.getAttribute("refsequenceid") %>','newWndNt','width=500,height=400,menubar=no,location=no,scrollbars=yes');return false;" > 
 		<%= request.getAttribute("refsequenceid")%></a></TD>
   </TR>

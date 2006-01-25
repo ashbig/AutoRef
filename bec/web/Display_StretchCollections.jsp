@@ -24,15 +24,7 @@
         {
                 forwardName = request.getParameter("forwardName") ;
         }
-	 Object title = null;
-	 if (request.getAttribute(Constants.JSP_TITLE ) == null)
-	 { 
-	 	title =  request.getParameter(  Constants.JSP_TITLE  );
-	}
-	else
-	{
-		title = request.getAttribute( Constants.JSP_TITLE );
-	}
+	
 int forwardName_int = 0;
 if (forwardName instanceof String) forwardName_int = Integer.parseInt((String)forwardName);
 else if (forwardName instanceof Integer) forwardName_int = ((Integer) forwardName).intValue();
@@ -43,14 +35,30 @@ else if (forwardName instanceof Integer) forwardName_int = ((Integer) forwardNam
 </head>
 <body>
 <%  if ( request.getAttribute("caller") == null ) {%>
-<jsp:include page="NavigatorBar_Administrator.jsp" />
-<%}%>
+<table width="100%" border="0" cellpadding="10" style='padding: 0; margin: 0; '>
+  <tr>
+    <td><%@ include file="page_application_title.html" %></td>
+  </tr>
+  <tr>
+    <td ><%@ include file="page_menu_bar.jsp" %></td>
+  </tr>
+  <tr>
+    <td><table width="100%" border="0">
+        <tr> 
+          <td  rowspan="3" align='left' valign="top" width="160"  bgcolor='#1145A6'>
+		  <jsp:include page="page_left_menu.jsp" /></td>
+          <td  valign="top"> <jsp:include page="page_location.jsp" />
+           </td>
+        </tr>
+        <tr> 
+          <td valign="top"> <jsp:include page="page_title.jsp" /></td>
+        </tr>
+        <tr> 
+          <td><!-- TemplateBeginEditable name="EditRegion1" -->
+           <%}%>
 	<p><P>
 <br>
 
-<table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
-<tr><td > <font color="#008000" size="5"><b> <%= title %></font>
-<hr><p></td> </tr></table>
 
 <div align="center">
   <center>  <table border="0" cellpadding="0" cellspacing="0" width="84%">
@@ -64,7 +72,7 @@ else if (forwardName instanceof Integer) forwardName_int = ((Integer) forwardNam
 Hashtable  stretch_collections = (Hashtable) request.getAttribute("stretch_collections");
 ArrayList items = (ArrayList)request.getAttribute("items");
 int item_type = Integer.parseInt( (String)request.getAttribute("item_type")); 
-String item_title =  "Clone Id: "; 
+String item_title =  "Clone ID: "; 
 
 %>
 
@@ -101,7 +109,7 @@ for (int index = 0; index < items.size(); index ++)
 
 %>
 
-<tr> <td  ><strong>&nbsp;&nbsp; Reference Sequence Id: </strong></td>
+<tr> <td  ><strong>&nbsp;&nbsp; Reference Sequence ID: </strong></td>
 <td   ><a href="#" onCLick="window.open('<%=edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetItem.do?forwardName=<%=Constants.REFSEQUENCE_DEFINITION_INT%>&amp;ID=<%= ((StretchCollection)stretchColl.get(0)).getRefSequenceId()%>','<%= ((StretchCollection)stretchColl.get(0)).getRefSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" > <strong><%= ((StretchCollection)stretchColl.get(0)).getRefSequenceId()%></a></strong></td></TR>
 <tr><td colspan='2'><P>
 
@@ -114,9 +122,9 @@ for (int index = 0; index < items.size(); index ++)
   <table width="95%" border="1" align="center" cellpadding="2" cellspacing="2">
         <th>Contig Name </th>
         <th>Contig Type</th>
-        <th>Contig Id </th>
-        <th>Cds Start </th>
-        <th>Cds Stop</th>
+        <th>Contig ID </th>
+        <th>CDS Start </th>
+        <th>CDS Stop</th>
         <th>LQR defined</th>
         <th>Alignment </th>
         <th>Discrepancy Report </th>
@@ -178,5 +186,15 @@ else {%>No discrepancies<%}%>
 <%}%>
 </TABLE>
 
+<%  if ( request.getAttribute("caller") == null ) {%>
+<!-- TemplateEndEditable --></td>
+        </tr>
+      </table></td>
+  </tr>
+  <tr>
+    <td><%@ include file="page_footer.jsp" %></td>
+  </tr>
+</table>
+<%}%>
 </body>
 </html>

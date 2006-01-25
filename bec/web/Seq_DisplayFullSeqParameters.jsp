@@ -19,20 +19,35 @@
 
 </head>
 
-<jsp:include page="NavigatorBar_Administrator.jsp" />
-	<p><P>
-<br>
-<table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
-    <tr><td ><font color="#008000" size="5"><b> Available sets of parameters for Biological Evaluation of Clones</font>
-    <hr><p></td></tr></table>
+<body>
+	<table width="100%" border="0" cellpadding="10" style='padding: 0; margin: 0; '>
+  <tr>
+    <td><%@ include file="page_application_title.html" %></td>
+  </tr>
+  <tr>
+    <td ><%@ include file="page_menu_bar.jsp" %></td>
+  </tr>
+  <tr>
+    <td><table width="100%" border="0">
+        <tr> 
+          <td  rowspan="3" align='left' valign="top" width="160"  bgcolor='#1145A6'>
+		  <jsp:include page="page_left_menu.jsp" /></td>
+          <td  valign="top"> <jsp:include page="page_location.jsp" />
+           </td>
+        </tr>
+        <tr> 
+          <td valign="top"> <jsp:include page="page_title.jsp" /></td>
+        </tr>
+        <tr> 
+          <td>
 
-<div align="center">
+<!--<div align="center">
   <center><table border="0" cellpadding="0" cellspacing="0" width="80%">
     <tr><td width="100%"><html:errors/></td>
     </tr><tr><td><i>If you are not sure about certain parameter settings use default settings 
-           </i> <a href="<%=edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Help_ConfigureSystem.jsp">[parameter help file]</a>. 
+           </i> <a href="Help_ConfigureSystem.jsp">[parameter help file]</a>. 
           </i></td></tr></table></center>
-</div>
+</div>-->
 
  
  
@@ -55,10 +70,10 @@ else if (sets.size() > 0 )
 <P>
  <P>
  
-<table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
+<table border="0" cellpadding="0" cellspacing="0" width="90%" align=center>
   <tr>  <td colspan="2"> <p> <font  size="4"> <b>Set Name &nbsp;&nbsp;</b></font><%= spec.getName() %>      <p> </td>  </tr>
  
-  <tr>     <td colspan=2><b>Maximum acceptable number of discrepancies (gene region): <p></p>
+  <tr>     <td colspan=2><b>Maximum acceptable number of discrepancies (insert region): <p></p>
       
       <table width="85%" border="0" align="center">
         <tr class='headerRow'> 
@@ -272,7 +287,7 @@ else if (sets.size() > 0 )
   <tr> <td colspan="2"> &nbsp;</td></tr> 
   
   <% row_count = 0;%>
- <tr> <td colspan=2> <b>Maximum acceptable number of discrepancies introduced by ambiquous 
+ <tr> <td colspan=2> <b>Maximum acceptable number of discrepancies introduced by ambiguous 
         bases:</b>
 		<input type="checkbox" name="show" value="1" checked onclick="javascript:showhide('divShowHide', this.checked);">
 		Show </p>
@@ -316,14 +331,14 @@ else if (sets.size() > 0 )
           <td ><div align="center"> <%= spec.getParameterByNameString("FS_NCDS_FAIL_L")%>             </div></td>
         </tr>
         <tr class=<%= row_class[row_count++ % 2]%>> 
-          <td >Frameshift Insertion</td>
+          <td >Frameshift insertion</td>
           <td ><div align="center"> <%= spec.getParameterByNameString("FS_NFRAME_PASS_H")%>             </div></td>
           <td ><div align="center"> <%= spec.getParameterByNameString("FS_NFRAME_PASS_L")%>             </div></td>
           <td ><div align="center"> <%= spec.getParameterByNameString("FS_NFRAME_FAIL_H")%>            </div></td>
           <td ><div align="center"> <%= spec.getParameterByNameString("FS_NFRAME_FAIL_L")%>             </div></td>
         </tr>
 		<tr class=<%= row_class[row_count++ % 2]%>> 
-          <td >Inframe Insertion</td>
+          <td >Inframe insertion</td>
           <td ><div align="center"> <%= spec.getParameterByNameString("FS_NINFRAME_PASS_H" )%>             </div></td>
           <td ><div align="center"> <%= spec.getParameterByNameString("FS_NINFRAME_PASS_L")%>             </div></td>
           <td ><div align="center"> <%= spec.getParameterByNameString("FS_NINFRAME_FAIL_H" )%>            </div></td>
@@ -366,5 +381,12 @@ else if (sets.size() > 0 )
 <hR>
 
 <%}}%>
+ </tr>
+      </table></td>
+  </tr>
+  <tr>
+    <td><%@ include file="page_footer.jsp" %></td>
+  </tr>
+</table>
 </body>
 </html>

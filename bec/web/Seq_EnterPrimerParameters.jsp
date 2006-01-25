@@ -71,25 +71,14 @@
 		</script>
 <LINK REL=StyleSheet HREF="application_styles.css" TYPE="text/css" MEDIA=screen>
 <link href="application_styles.css" rel="stylesheet" type="text/css">
+<script language="JavaScript" src="<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>scripts.js"></script>
+
 </head>
 
 <body >
 
-<jsp:include page="NavigatorBar_Administrator.jsp" />
-	<p><P>
-<br>
-<table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
-    <tr>
-        <td >
-    <font color="#008000" size="5"><b> Create new set of parameters for Primer Designer</font>
-    <hr>
-    
-    <p>
-    </td>
-    </tr>
-</table>
 
-<div align="center">
+<!--<div align="center">
   <center>
   <table border="0" cellpadding="0" cellspacing="0" width="80%">
     <tr>
@@ -102,13 +91,13 @@
       </tr>
   </table>
   </center>
-</div>
+</div>-->
  <html:form action="/Seq_SubmitSpec.do" > 
 <input name="forwardName" type="hidden" value="<%=Primer3Spec.PRIMER3_SPEC_INT%>" > 
 
 <% String[] row_class = {"evenRowColoredFont","oddRowColoredFont"} ; int row_count = 0;%>
 
-<table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
+<table border="0" cellpadding="0" cellspacing="0" width="90%" align=center>
   <tr> 
     <td colspan=2><div align="right"> <b> <a href="<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetSpec.do?forwardName=<%=Spec.PRIMER3_SPEC_INT * Spec.SPEC_SHOW_USER_ONLY_SPECS %> ">        View Mine </a>
 &nbsp;&nbsp;<a href="<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetSpec.do?forwardName=<%=Spec.PRIMER3_SPEC_INT%>">         View All </a></b>
@@ -123,7 +112,7 @@
     <td colspan="2"> <b>Set Name</b> <input type="text" name="SET_NAME" size="53" value=""> 
       <p> </td>
   </tr>
-  <tr class='headerRow'>     <td height="42" colspan="2">Primer Picking Parameters</td>  </tr>
+  <tr class='headerRow'>     <td height="42" colspan="2">Primer Design Parameters</td>  </tr>
   <tr> 
     <td colspan="2"> 
     <table width="100%">
@@ -200,10 +189,10 @@
         Single Strand (Compliment to coding strand, reverse primers only)</p>
       <p align="left"> 
         <input type="radio" name="p_number_of_strands" value="<%= Primer3Wrapper.WALKING_TYPE_BOTH_STRAND %>" >
-        Both Strands(Both forward and reverse primers)
+        Both Strands (Both forward and reverse primers until meet in middle)
      <p align="left"> 
         <input type="radio" name="p_number_of_strands" value="<%= Primer3Wrapper.WALKING_TYPE_BOTH_STRAND_DOUBLE_COVERAGE %>" >
-      Both Strands(Both forward and reverse primers, double coverage)</td>
+      Both Strands (Both forward and reverse primers, double coverage)</td>
   </tr>
 
 

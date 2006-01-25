@@ -1,4 +1,3 @@
-<%@ page contentType="text/html"%>
 <%@ page language="java" %>
 <%@ page errorPage="ProcessError.do"%>
 
@@ -23,6 +22,10 @@
 
 String[] border_line_style ={"solid","dotted","dashed"}; 
 String[] border_line_color={"#FF00FF", "#00FF00", "#FF0000","#00FFFF","#6B8E23","#DAA520","black","#D2691E","#9400D3","#708090"};
+String[] clone_style_color={"#99FFFF", "#99CCFF", "#9999FF","#9999CC","#0066CC","#006699","#006666","#006633","#006600","#003366"};
+
+
+String redirection = edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION");
 
 int border_line_style_counter = 0;
 int border_line_color_counter = 0;
@@ -32,12 +35,26 @@ int border_line_color_counter = 0;
 <html>
 
 <body>
-<jsp:include page="NavigatorBar_Administrator.jsp" /> 
-<p><P><br>
-<table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
-<tr><td > <font color="#008000" size="5"><b> Container Quality Report</font><hr>
-<p></td> </tr></table>
-
+<table width="100%" border="0" cellpadding="10" style='padding: 0; margin: 0; '>
+  <tr>
+    <td><%@ include file="page_application_title.html" %></td>
+  </tr>
+  <tr>
+    <td ><%@ include file="page_menu_bar.jsp" %></td>
+  </tr>
+  <tr>
+    <td><table width="100%" border="0">
+        <tr> 
+          <td  rowspan="3" align='left' valign="top" width="160"  bgcolor='#1145A6'>
+		  <jsp:include page="page_left_menu.jsp" /></td>
+          <td  valign="top"> <jsp:include page="page_location.jsp" />
+           </td>
+        </tr>
+        <tr> 
+          <td valign="top"> <jsp:include page="page_title.jsp" /></td>
+        </tr>
+        <tr> 
+          <td><!-- TemplateBeginEditable name="EditRegion1" -->
 <div align="center">
 <center><table border="0" cellpadding="0" cellspacing="0" width="80%">
     <tr> <td width="100%"><html:errors/></td></tr></table></center></div>
@@ -47,12 +64,12 @@ int border_line_color_counter = 0;
 Container container = (Container)request.getAttribute("container") ;
 %>
 <table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
-<tr>     <td width="19%"><strong>Label: </strong></td>    <td width="81%">       <%= container.getLabel() %>    </td>  </tr>
-<tr> <td><strong>Container Id: </strong></td><td>       <%= container.getId() %>    </td>  </tr>
-<tr>     <td><strong>Container Type: </strong></td>    <td>       <%= container.getType() %>    </td>  </tr>
+<tr>     <td width="19%"><strong>Plate Label: </strong></td>    <td width="81%">       <%= container.getLabel() %>    </td>  </tr>
+<tr> <td><strong>Plate ID: </strong></td><td>       <%= container.getId() %>    </td>  </tr>
+<tr>     <td><strong>Plate Type: </strong></td>    <td>       <%= container.getType() %>    </td>  </tr>
  <tr><td><strong>Cloning Strategy: </strong></td><td> 
     <% if ( container.getCloningStrategyId() != BecIDGenerator.BEC_OBJECT_ID_NOTSET){%> 
-      <a href="<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetItem.do?forwardName=<%= Constants.CLONING_STRATEGY_DEFINITION_INT %>&amp;ID=<%= container.getCloningStrategyId() %>">
+      <a href="<%= redirection %>Seq_GetItem.do?forwardName=<%= Constants.CLONING_STRATEGY_DEFINITION_INT %>&amp;ID=<%= container.getCloningStrategyId() %>">
 	    <%= container.getCloningStrategyId() %></A>
 	    <%} else {%> &nbsp; <%}%>    </td></tr>
 </table><P><P></P></P>
@@ -86,8 +103,7 @@ Container container = (Container)request.getAttribute("container") ;
                 sample = (UICloneSample)container.getSamples().get(count);
 if ( forwardName == Constants.CONTAINER_RESULTS_VIEW)
 {
-                anchor = "<A HREF=\"\" onClick=\"window.open('"+
-edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") +"Seq_GetItem.do?forwardName="+ Constants.SAMPLE_ISOLATE_RANKER_REPORT + "&amp;ID="+ sample.getIsolateTrackingId()+"&amp;container_label="+container.getLabel()+"','newWndNt','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;\"><div align=center>"+ sample.getPosition()+"</div></a>";
+                anchor = "<A HREF=\"\" onClick=\"window.open('"+redirection +"Seq_GetItem.do?forwardName="+ Constants.SAMPLE_ISOLATE_RANKER_REPORT + "&amp;ID="+ sample.getIsolateTrackingId()+"&amp;container_label="+container.getLabel()+"','newWndNt','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;\"><div align=center>"+ sample.getPosition()+"</div></a>";
 }
 /*if (forwardName == Constants.PROCESS_APROVE_ISOLATE_RANKER && sample.getIsolateTrackingEngine() != null)
 {
@@ -120,27 +136,14 @@ edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRE
                 {
                         int rank = sample.getRank();
                         switch ( rank )
+
                         {
-                                case 1: 
+                                case 1:case 2: case 3: case 4: case 5: case 6: case 7: case 8: case 9: case 10: case 11: case 12: 
                                 {
-                                        cell_data[row][col] =" <td class='green' style='" + border_style +"' >"+anchor+"</td>";
+                                        cell_data[row][col] =" <td style='background-color:"+clone_style_color[rank-1]+"' style='" + border_style +"' >"+anchor+"</td>";
                                         break;
                                 }
-                                case 2:
-                                {
-                                        cell_data[row][col] =" <td class='orange' style='"+ border_style +"' >"+anchor+"</td>";
-                                        break;
-}
-                                case 3:
-                                {
-                                    cell_data[row][col] =" <td class='yellow' style='"+border_style +"' >"+anchor+"</td>";
-                                    break;
-                                }
-                                case 4:
-                                {
-                                    cell_data[row][col] =" <td class='red' style='"+ border_style +"' >"+anchor+"</td>";
-                                    break;
-                                }
+                               
                                 case -1://not analized
                                 {
                                     cell_data[row][col] =" <td class='notanalized' style='"+ border_style +"' >"+anchor+"</td>";
@@ -156,6 +159,7 @@ edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRE
                                     cell_data[row][col] =" <td class='black' style='"+ border_style +"' >"+anchor+"</td>";
                                 }   
                         }
+                        
                }
   }
 	%>
@@ -210,26 +214,26 @@ edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRE
 <P><P></P></P>	
 <table width="52%" border="0" align="center" CELLSPACING="4">
   <th colspan="2">Color Schema </th>
+  <% int count_color = 0;%>
   <tr> 
     <td width="80%" ><strong>Best Isolate in the group:</strong></td>
-    <td width="20%" class="green">&nbsp;</td>
+    <td width="20%" bgcolor='<%= clone_style_color[count_color++]%>'>&nbsp;</td>
   </tr>
   <tr> 
     <td  ><strong> Second best isolate in the group:</strong></td>
-    <td  class="orange">&nbsp; </td>
+    <td  bgcolor='<%= clone_style_color[count_color++]%>'>&nbsp; </td>
   </tr>
+  
   <tr> 
     <td ><strong>Third best isolate in the group:</strong></td>
-    <td class="yellow" >&nbsp;</td>
+    <td bgcolor='<%= clone_style_color[count_color++]%>' >&nbsp;<A target="_blank" HREF="<%= redirection %>color_schema.jsp"> Continue..</a></td>
   </tr>
-  <tr> 
-    <td  > <strong>Worst isolate in the group:</strong></td>
-    <td class="red"></td>
-  </tr>
+ 
   <tr> 
     <td ><b> Isolate that can not be used :</b></td>
     <td  class="black"  ></td>
   </tr>
+  
   <tr> 
     <td ><b> Isolate with no data :</b></td>
     <td  class="brown"  ></td>
@@ -256,6 +260,13 @@ edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRE
     <td  class="nosample" align=center  >white</td>
   </tr>
 </table>
-
+<!-- TemplateEndEditable --></td>
+        </tr>
+      </table></td>
+  </tr>
+  <tr>
+    <td><%@ include file="page_footer.jsp" %></td>
+  </tr>
+</table>
 </body>
 </html>

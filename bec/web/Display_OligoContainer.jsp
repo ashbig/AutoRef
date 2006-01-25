@@ -1,4 +1,3 @@
-<%@ page contentType="text/html"%>
 <%@ page language="java" %>
 <%@ page errorPage="ProcessError.do"%>
 
@@ -16,9 +15,7 @@
 <html>
 
 <body>
-<jsp:include page="NavigatorBar_Administrator.jsp" />
-	<p><P>
-<br>
+
 <%
         Object forwardName = null;
         if ( request.getAttribute("forwardName") != null)
@@ -29,15 +26,7 @@
         {
                 forwardName = request.getParameter("forwardName") ;
         }
-	 Object title = null;
-	 if (request.getAttribute(Constants.JSP_TITLE ) == null)
-	 { 
-	 	title =  request.getParameter(  Constants.JSP_TITLE  );
-	}
-	else
-	{
-		title = request.getAttribute( Constants.JSP_TITLE );
-	}
+	
 int forwardName_int = 0;
 if (forwardName instanceof String) forwardName_int = Integer.parseInt((String)forwardName);
 else if (forwardName instanceof Integer) forwardName_int = ((Integer) forwardName).intValue();
@@ -46,16 +35,26 @@ String[] row_class = {"evenRow","oddRow"} ; int row_count = 0;
 
 %>
 
-<table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
-    <tr>
-        <td >
-    <font color="#008000" size="5"><b> <%= title%>  </font>
-    <hr>
-    
-    <p>
-    </td>
-    </tr>
-</table>
+<table width="100%" border="0" cellpadding="10" style='padding: 0; margin: 0; '>
+  <tr>
+    <td><%@ include file="page_application_title.html" %></td>
+  </tr>
+  <tr>
+    <td ><%@ include file="page_menu_bar.jsp" %></td>
+  </tr>
+  <tr>
+    <td><table width="100%" border="0">
+        <tr> 
+          <td  rowspan="3" align='left' valign="top" width="160"  bgcolor='#1145A6'>
+		  <jsp:include page="page_left_menu.jsp" /></td>
+          <td  valign="top"> <jsp:include page="page_location.jsp" />
+           </td>
+        </tr>
+        <tr> 
+          <td valign="top"> <jsp:include page="page_title.jsp" /></td>
+        </tr>
+        <tr> 
+          <td><!-- TemplateBeginEditable name="EditRegion1" -->
 
 <div align="center">
   <center>
@@ -67,7 +66,6 @@ String[] row_class = {"evenRow","oddRow"} ; int row_count = 0;
   </table>
   </center>
 </div>
-<p></p>
 
 <% if (forwardName_int == Constants.PROCESS_PROCESS_OLIGO_PLATE)
 {%><form action="RunProcess.do" >
@@ -76,33 +74,33 @@ String[] row_class = {"evenRow","oddRow"} ; int row_count = 0;
 <%}%>
 
 
-<table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
+<table border="0" cellpadding="0" cellspacing="0" width="90%" align=center>
   <tr> 
-    <td ><strong>Plate Label:</strong></td>
+    <td ><strong>Plate label:</strong></td>
     <td > 
       <%= container.getLabel() %>
     </td>
   </tr>
   <tr> 
-    <td><strong>Plate Id:</strong></td>
+    <td><strong>Plate ID:</strong></td>
     <td> 
       <%= container.getId() %>
     </td>
   </tr>
   <tr> 
-    <td><strong>Order Date:</strong></td>
+    <td><strong>Order date:</strong></td>
     <td> 
       <%= container.getCreateDate() %>
     </td>
   </tr>
    <tr> 
-    <td><strong>Plate Status:</strong></td>
+    <td><strong>Plate status:</strong></td>
     <td><%= container.getStatusAsString() %></td>
   </tr> 
 <% if ( forwardName_int == Constants.PROCESS_PROCESS_OLIGO_PLATE)
 {%>
 <tr> 
-    <td><strong>Set Container Status:</strong></td>
+    <td><strong>Set plate status:</strong></td>
    <td>
      <select name="status">
       <!--  <option  value="<%= OligoContainer.STATUS_ORDER_SENT%>" >Ordered </option> -->
@@ -114,7 +112,7 @@ String[] row_class = {"evenRow","oddRow"} ; int row_count = 0;
 <%}%>
  
   <tr> 
-    <td><strong>Order Comments</strong></td>
+    <td><strong>Order comments:</strong></td>
     <td> <% if ( forwardName_int == Constants.PROCESS_PROCESS_OLIGO_PLATE)
 {%> <textarea name="order_comments" rows='6' cols='50' >
 <% if ( container.getCommentOrder()!= null){%> <%= container.getCommentOrder() %>  <%}%> </TEXTAREA>
@@ -123,7 +121,7 @@ String[] row_class = {"evenRow","oddRow"} ; int row_count = 0;
     </td>
   </tr>
  <tr> 
-    <td><strong>Sequencing Comments</strong></td>
+    <td><strong>Sequencing comments:</strong></td>
     <td> 
 <% if ( forwardName_int == Constants.PROCESS_PROCESS_OLIGO_PLATE )
 {%> <textarea name="sequencing_comments" rows='6' cols='50' <% if ( container.getStatus() !=  OligoContainer.STATUS_RECIEVED){%>disabled<%}%>>
@@ -140,11 +138,11 @@ String[] row_class = {"evenRow","oddRow"} ; int row_count = 0;
 <P><P></P></P>
 <%if (container.getSamples() != null && container.getSamples().size() > 0)
 {%>
-<table border="1" cellpadding="0" cellspacing="0" width="74%" align=center>
+<table border="1" cellpadding="0" cellspacing="0" width="90%" align=center>
     <tr class='headerRow'>
     <!--   <td>Sample Id</td> -->
- <td><div align='centre'>Position</div></td>
- <td><div align='centre'>Clone Id</div></td>
+ <td><div align='centre'>Well</div></td>
+ <td><div align='centre'>Clone ID</div></td>
 <td><div align='centre'>Oligo Name</div></td>
 <td><div align='centre'>Oligo Sequence</div></td>
 <td><div align='centre'>Oligo Position on Sequence</div></td>
@@ -173,5 +171,14 @@ String[] row_class = {"evenRow","oddRow"} ; int row_count = 0;
 
 <% if (forwardName_int == Constants.PROCESS_PROCESS_OLIGO_PLATE)
 {%><div align="center">  <p> <input type="submit" value="Submit" > </div> </form ><%}%>
+
+ <!-- TemplateEndEditable --></td>
+        </tr>
+      </table></td>
+  </tr>
+  <tr>
+    <td><%@ include file="page_footer.jsp" %></td>
+  </tr>
+</table>
 </body>
 </html>

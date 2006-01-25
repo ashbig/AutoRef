@@ -10,81 +10,74 @@
 <%@ page import="edu.harvard.med.hip.bec.util.*" %>
 <%@ page import="edu.harvard.med.hip.bec.user.*"%>
 <%@ page import="edu.harvard.med.hip.bec.Constants"%>
-
 <html>
-
 <head>
-
 <title>Select Process</title>
-
 <link href="application_styles.css" rel="stylesheet" type="text/css">
 </head>
-
 <body >
-
-<jsp:include page="NavigatorBar_Administrator.jsp" />
-	<p><P>
-<br>
-
-<% 
-User user = (User)session.getAttribute(Constants.USER_KEY);
- boolean isAdmin = false;
- boolean is_eval_version =  false;
-if (edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("IS_EVALUATION_VERSION") != null) is_eval_version = true;
-int user_level = 0;
-if (user.getUserGroup().equals("Researcher")) user_level = 0;
-else if (user.getUserGroup().equals("Researcher2")) user_level = 1;
-else if (user.getUserGroup().equals("Manager")) user_level =2;
-else if (user.getUserGroup().equals("Administrator")) user_level = 3;
-%>
-<table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
-<tr><td ><font color="#008000" size="5"><b> Processes <hr>     </td> </tr></table>
 
 <div align="center">
   <center> <table border="0" cellpadding="0" cellspacing="0" width="80%">
     <tr> <td  ><html:errors/></td> </tr> </table>
   </center></div>
 <html:form action="/SelectProcess.do" > 
-<table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
+
+<%Object forwardName = null;
+if ( request.getAttribute("forwardName") != null)
+{
+        forwardName = request.getAttribute("forwardName") ;
+}
+else
+{
+        forwardName = request.getParameter("forwardName") ;
+}
+ Object title = null;
+ int forwardName_int = 0;
+if (forwardName!= null && forwardName instanceof String  ) forwardName_int = Integer.parseInt((String)forwardName);
+else if (forwardName!= null && forwardName instanceof Integer ) forwardName_int = ((Integer) forwardName).intValue(); 
+%>
+
+<table border="0" cellpadding="0" cellspacing="0" width="90%" align='center'>
 <tr><td align="right"> <br> Please make selection and click 'Continue' button.   </td></tr>
-  <tr class='headerRow'>     <td  height="25" > Transfer       plate information from FLEX into ACE</td>  </tr>
-  <tr class='evenRowColoredFontNotBold'> 
-    <td  height="29" >&nbsp; 
-      <input <%if (user_level < 3) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_UPLOAD_PLATES %> <%if (isAdmin) {%>checked <%}%>  >
-      Upload template plates information (settings required)</td>
-  </tr>
-  <tr class ='headerRow'>     <td  height="25" > Manipulate       end reads and perform isolate ranking</td>  </tr>
+ 
+<% if (forwardName_int == Constants.UI_SELECT_PROCESS_EREAD_MANIPULATION_PAGE){%>
+  <tr class ='headerRow'>     <td  height="25" > End reads manipulation</td>  </tr>
   <tr class='evenRowColoredFontNotBold'> 
     <td height="29">&nbsp; 
-      <input  <%if ( user_level < 3) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_SELECT_VECTOR_FOR_END_READS   %> >
-      Request end reads sequencing (settings required)</td>
+      <input  checked type="radio" name="forwardName" value="<%= Constants.PROCESS_SELECT_VECTOR_FOR_END_READS   %>" >
+      Request end read sequencing (settings required)</td>
   </tr>
   <tr class='evenRowColoredFontNotBold'> 
     <td  height="25" >&nbsp; 
-      <input  <%if ( user_level  < 3) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_RUN_END_READS_WRAPPER  %> >
-      Run end reads wrapper </td>
+      <input   type="radio" name="forwardName" value="<%= Constants.PROCESS_RUN_END_READS_WRAPPER  %>" >
+      Check quality and distribute end reads </td>
   </tr>
  <tr class='evenRowColoredFontNotBold'> 
     <td  height="25">&nbsp; 
-      <input  <%if ( user_level  < 3) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_RUN_ASSEMBLER_FOR_END_READS  %> >
-      Run assembler for end reads </td>
+      <input   type="radio" name="forwardName" value="<%= Constants.PROCESS_RUN_ASSEMBLER_FOR_END_READS  %>" >
+      Run assembler for end reads *</td>
   </tr>
- 
   <tr class='evenRowColoredFontNotBold'> 
-    <td height="25" >&nbsp; 
-      <input  <%if ( user_level  < 3) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_RUN_ISOLATE_RUNKER  %>>
-      Run isolate ranker (settings required) </td>
+    <td   height="25"  >&nbsp; 
+      <input    type="radio" name="forwardName" value="<%= Constants.PROCESS_RUN_ASSEMBLER_FOR_ALL_READS  %>">
+      Run generic assembler **</td>
   </tr>
+  
+  <tr  > 
+    <td   height="25"  ><P>*Operates on plate level, but can evaluate clones with only one read.
+      </td>
+  </tr>
+   <tr  > 
+    <td   height="25"  ><P>**Operates on clone level and requiers more than one trace per clone.
+      </td>
+  </tr>
+  <%}%>
 
-<% if (! is_eval_version )
-//edu.harvard.med.hip.utility.ApplicationHostDeclaration.IS_BIGHEAD_FOR_EXPRESSION_EVALUATION)
-{%>
-  <tr class='evenRowColoredFontNotBold'> 
-    <td  height="29" >&nbsp; 
-      <input  <%if ( user_level  < 3) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_SET_CLONE_FINAL_STATUS  %>>
-      Set clone final status  <p></td>
-  </tr>
-  <tr class='headerRow'>     <td  height="25" > Design internal primers</td>  </tr>
+
+ <% if (forwardName_int == Constants.UI_SELECT_PROCESS_INTERNAL_PRIMERS_PAGE){%>
+
+  <tr class='headerRow'>     <td  height="25" >Internal primers design and order</td>  </tr>
   <tr> 
    <!-- <td   height="25"  >&nbsp; 
       <input disabled type="radio" name="forwardName" value= = Constants.PROCESS_PUT_CLONES_ON_HOLD %>>      Put clones on hold 
@@ -92,142 +85,71 @@ else if (user.getUserGroup().equals("Administrator")) user_level = 3;
   </tr>
   <tr class='evenRowColoredFontNotBold'> 
     <td   height="25"  >&nbsp; 
-      <input  <%if ( user_level  < 3) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_RUN_PRIMER3 %> >
+      <input  checked type="radio" name="forwardName" value="<%= Constants.PROCESS_RUN_PRIMER3 %>" >
       Run primer designer (settings required) </td>  
   </tr>
+ 
   <tr class='evenRowColoredFontNotBold'> 
     <td   height="25"  >&nbsp; 
-      <input disabled <%if ( user_level  < 3) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_ADD_NEW_INTERNAL_PRIMER  %> >
-      Add new internal primer </td>
-  </tr>
-  <tr class='evenRowColoredFontNotBold'> 
-    <td   height="25"  >&nbsp; 
-      <input  <%if ( user_level  < 3) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_APPROVE_INTERNAL_PRIMERS %> >
-      Approve internal primers<P> </td>
+      <input   type="radio" name="forwardName" value="<%= Constants.PROCESS_APPROVE_INTERNAL_PRIMERS %>" >
+      Approve internal primers </td>
   </tr>
 
 
 <tr class='evenRowColoredFontNotBold'> 
     <td   height="25"  >&nbsp; 
-      <input  <%if ( user_level < 3) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_ORDER_INTERNAL_PRIMERS %> >
+      <input  type="radio" name="forwardName" value="<%= Constants.PROCESS_ORDER_INTERNAL_PRIMERS %>" >
       Order internal primers </td>
   </tr>
  <tr class='evenRowColoredFontNotBold'> 
     <td   height="25"  >&nbsp; 
-      <input  <%if ( user_level  < 3) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_PROCESS_OLIGO_PLATE %> >
-      Process oligo plates<P> </td>
+      <input  type="radio" name="forwardName" value="<%= Constants.PROCESS_PROCESS_OLIGO_PLATE %>" >
+      Track oligo plate<P> </td>
   </tr>
  
-<tr class='evenRowColoredFontNotBold'> 
-    <td   height="25"  >&nbsp; 
-      <input  <%if ( user_level  < 3) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_FIND_GAPS %> >
-      Run Gap Mapper (settings required) </td>
-  </tr>
 <%}%>
-<tr class='headerRow'>     <td  height="25"> Evaluate Clones</td></tr>
 
-<% if (! is_eval_version)
-{%>
+<% if (forwardName_int == Constants.UI_SELECT_PROCESS_PAGE){%>
+
+<tr class='headerRow'>     <td  height="25"> Evaluate clones</td></tr>
+
+
   <tr class='evenRowColoredFontNotBold'> 
     <td   height="25"  >&nbsp; 
-      <input  <%if ( user_level  < 3) {%>disabled <%}%>  type="radio" name="forwardName" value=<%= Constants.PROCESS_RUN_ASSEMBLER_FOR_ALL_READS  %>>
-      Run assembly wrapper </td>
-  </tr>
- <!-- <tr class='evenRowColoredFontNotBold'> 
-    <td   height="25"  >&nbsp; 
-      <input <%if ( user_level  < 3) {%>disabled <%}%>  type="radio" name="forwardName" value=<%= Constants.PROCESS_SUBMIT_ASSEMBLED_SEQUENCE  %> >
-      Submit assembled sequences </td>
-  </tr>-->
-<tr class='evenRowColoredFontNotBold'> 
-    <td   height="25"  >&nbsp; 
-      <input  <%if ( user_level  < 3) {%>disabled <%}%>  type="radio" name="forwardName" value=<%= Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE  %> >
-      Find low quality regions in clone sequences (settings required) </td>
-  </tr>
-<%}%>
-<TR class='evenRowColoredFontNotBold' ><TD COlspan=2 bgcolor="#DCE8FC" >&nbsp;</TD></TR>
-  <tr class='evenRowColoredFontNotBold'> 
-    <td   height="25"  >&nbsp; 
-      <input <%if ( user_level  < 3) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_RUN_DISCREPANCY_FINDER %> >
+      <input checked type="radio" name="forwardName" value="<%= Constants.PROCESS_RUN_DISCREPANCY_FINDER %>" >
       Run discrepancy finder  </td>
   </tr>
-  <tr class='evenRowColoredFontNotBold'> 
-    <td   height="25"  >&nbsp; 
-      <input   <%if ( user_level  < 3) {%>disabled <%}%>  type="radio" name="forwardName" value=<%= Constants.PROCESS_RUNPOLYMORPHISM_FINDER %> >
-      Run polymorphism finder (settings required)  </td>
+<tr class='evenRowColoredFontNotBold'> 
+    <td height="25" >&nbsp; 
+      <input type="radio" name="forwardName" value="<%= Constants.PROCESS_RUN_ISOLATE_RUNKER  %>">
+      Run isolate ranker (settings required) </td>
   </tr>
-  <tr class='evenRowColoredFontNotBold'> 
-    <td   height="25"  >&nbsp; 
-      <input <%if ( user_level < 2) {%>disabled <%}%>  type="radio" name="forwardName" value=<%= Constants.PROCESS_RUN_DECISION_TOOL%>>
-      Run decision tool (settings required)   <P></td>
-  </tr>
-
-  <tr class='evenRowColoredFontNotBold'> 
-    <td   height="25"  >&nbsp; 
-      <input <%if ( user_level < 2) {%>disabled <%}%>  type="radio" name="forwardName" value=<%= Constants.PROCESS_RUN_DECISION_TOOL_NEW%>>
-      Run <i> new </i> decision tool  (settings required)   <P></td>
-  </tr>
- <tr class='evenRowColoredFontNotBold'> 
-    <td   height="25"  >&nbsp; 
-      <input <%if ( user_level < 2) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_NOMATCH_REPORT%>>
-      Run report for clone that fail to match to the reference sequence  
-      <P></td>
-  </tr>
-
-<tr class='headerRow'>     <td  height="25" > View Options</td></tr>
 <tr class='evenRowColoredFontNotBold'> 
     <td   height="25"  >&nbsp; 
-      <input  type="radio" name="forwardName" value=<%= Constants.PROCESS_SELECT_PLATES_TO_CHECK_READS_AVAILABILITY %>>
-      View end reads availability </td>
-</tr>
-
-
-<tr class='evenRowColoredFontNotBold'> 
-    <td   height="25"  >&nbsp; 
-      <input   type="radio" name="forwardName" value=<%= Constants.PROCESS_VIEW_INTERNAL_PRIMERS  %> >
-      View internal primers  </td>
+      <input   type="radio" name="forwardName" value="<%= Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE  %>" >
+      Find low quality regions in clone sequences (settings required) </td>
   </tr>
   
- <% if (! is_eval_version  )
-//edu.harvard.med.hip.utility.ApplicationHostDeclaration.IS_BIGHEAD_FOR_EXPRESSION_EVALUATION)
-{%>
+  <tr class='evenRowColoredFontNotBold'> 
+    <td   height="25"  >&nbsp; 
+      <input    type="radio" name="forwardName" value="<%= Constants.PROCESS_FIND_GAPS %>" >
+      Run Gap Mapper (settings required) </td>
+  </tr>
 
+  
+  <tr class='evenRowColoredFontNotBold'> 
+    <td   height="25"  >&nbsp; 
+      <input  type="radio" name="forwardName" value="<%= Constants.PROCESS_RUNPOLYMORPHISM_FINDER %>" >
+      Run polymorphism finder (settings required)  </td>
+  </tr>
 
-<tr class='evenRowColoredFontNotBold'> 
-    <td   height="25"  >&nbsp; 
-      <input   type="radio" name="forwardName" value=<%= Constants.PROCESS_VIEW_OLIGO_ORDER_BY_CLONEID %> >
-      View oligo order(s) for Clone<P> </td>
-</tr>
-<tr class='evenRowColoredFontNotBold'> 
-    <td   height="25"  >&nbsp; 
-      <input   type="radio" name="forwardName" value=<%= Constants.PROCESS_VIEW_OLIGO_PLATE %> >
-      View oligo plate<P> </td>
-</tr>
-<tr class='evenRowColoredFontNotBold'> 
-    <td   height="25"  >&nbsp; 
-      <input   type="radio" name="forwardName" value=<%= Constants.STRETCH_COLLECTION_REPORT_ALL_INT  %> >
-      View all contig collections        </td>
-</tr>
-<tr class='evenRowColoredFontNotBold'> 
-    <td   height="25"  >&nbsp; 
-      <input   type="radio" name="forwardName" value=<%= Constants.STRETCH_COLLECTION_REPORT_INT  %> >
-      View latest contig collection      <P> </td>
-</tr>
+  
+  <%}%>
+ 
+ 
+  <% if (forwardName_int == Constants.UI_SELECT_PROCESS_DELETE_DATA_PAGE){%>
 
-<tr class='evenRowColoredFontNotBold'> 
-    <td   height="25"  >&nbsp; 
-    <input type="radio" name="forwardName" value=<%= Constants.LQR_COLLECTION_REPORT_INT%>>
-    View Low Quality Regions for clone sequences   <P></td>
-</tr>
-<!--
-<tr class='headerRow'>     <td  height="25"> Stand alone processes</td></tr>
-<tr class='evenRowColoredFontNotBold'> 
-        <td   height="29"  >&nbsp; 
-      <input type="radio" name="forwardName" value=<%= Constants.PROCESS_RUN_DISCREPANCY_FINDER_STANDALONE %> >
-      Run Discrepancy Finder on a set of sequences<br>
-        <font color="#ECECFF">a </td>
-</tr>-->
-<%}%>
-<tr class='headerRow'>     <td  height="25" > Delete Options</td></tr>
+  <tr class='headerRow'>     <td  height="25" > Delete Options</td></tr>
 
 <tr class='evenRowColoredFontNotBold'> 
     <td   height="25"  >&nbsp; 
@@ -235,63 +157,74 @@ else if (user.getUserGroup().equals("Administrator")) user_level = 3;
 </tr>
 <tr class='evenRowColoredFontNotBold'> 
     <td   height="25"  >&nbsp; 
-      <input <%if ( user_level  < 3) {%>disabled <%}%>  type="radio" name="forwardName" value=<%= Constants.PROCESS_DELETE_PLATE %>>
+      <input   type="radio" name="forwardName" value="<%= Constants.PROCESS_DELETE_PLATE %>">
       Delete plate </td>
 </tr>
 <tr class='evenRowColoredFontNotBold'> 
     <td   height="25"  >&nbsp; 
-      <input <%if ( user_level  < 3){%>disabled <%}%>  type="radio" name="forwardName" value=<%= Constants.PROCESS_DELETE_CLONE_READS %>>
-      Delete clone forward and reverse end reads (no trace files will be deleted) </td>
+      <input checked type="radio" name="forwardName" value="<%= Constants.PROCESS_DELETE_CLONE_READS %>">
+      Delete clone forward and reverse end reads from database*</td>
 </tr>
 <tr class='evenRowColoredFontNotBold'> 
     <td   height="25"  >&nbsp; 
-      <input <%if ( user_level  < 3){%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_DELETE_CLONE_FORWARD_READ  %>>
-      Delete clone forward end reads (no trace files will be deleted) </td>
+      <input  type="radio" name="forwardName" value="<%= Constants.PROCESS_DELETE_CLONE_FORWARD_READ  %>">
+      Delete clone forward end reads  from database*</td>
 </tr>
 <tr class='evenRowColoredFontNotBold'> 
     <td   height="25"  >&nbsp; 
-      <input <%if ( user_level  < 3) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_DELETE_CLONE_REVERSE_READ  %>>
-      Delete clone reverse end reads (no trace files will be deleted) </td>
+      <input type="radio" name="forwardName" value="<%= Constants.PROCESS_DELETE_CLONE_REVERSE_READ  %>">
+      Delete clone reverse end reads  from database*</td>
+</tr>
+<tr class='evenRowColoredFontNotBold'> 
+    <td   height="25"  >&nbsp; 
+      <input type="radio" name="forwardName" value="<%= Constants.PROCESS_DELETE_CLONE_SEQUENCE %>">
+      Delete clone sequence  from database*</td>
+</tr>
+<tr class='evenRowColoredFontNotBold'> 
+    <td   height="25"  >&nbsp; 
+      <input  type="radio" name="forwardName" value="<%= Constants.PROCESS_REANALYZE_CLONE_SEQUENCE %>">
+      Reanalyze clone sequence <P></td>
 </tr>
 
-<tr class='evenRowColoredFontNotBold'> 
-    <td   height="25"  >&nbsp; 
-      <input <%if ( user_level  < 3) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_REANALYZE_CLONE_SEQUENCE %>>
-      Reanalyze clone sequence </td>
-</tr>
-<tr class='evenRowColoredFontNotBold'> 
-    <td   height="25"  >&nbsp; 
-      <input <%if ( user_level  < 3) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_DELETE_CLONE_SEQUENCE %>>
-      Delete clone sequence <P></td>
-</tr>
 <tr class='evenRowColoredFontNotBold'> 
     <td   height="25"  >&nbsp; 
      Hard drive operations </td>
 </tr>
 <tr class='evenRowColoredFontNotBold'> 
     <td   height="25"  >&nbsp; 
-      <input type="radio" name="forwardName" value=<%= Constants.PROCESS_GET_TRACE_FILE_NAMES  %>>
-      Get trace files' names </td>
+      <input type="radio" name="forwardName" value="<%= Constants.PROCESS_GET_TRACE_FILE_NAMES  %>">
+      Get trace file names </td>
 </tr>
 
 <tr class='evenRowColoredFontNotBold'> 
     <td   height="25"  >&nbsp; 
-      <input <%if ( user_level  < 3) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_MOVE_TRACE_FILES %> >
-      Move trace files from clone directory into temporary directory </td>
+      <input type="radio" name="forwardName" value="<%= Constants.PROCESS_MOVE_TRACE_FILES %>" >
+      Move trace file from clone directory into temporary directory (allows trace files recovery)</td>
 </tr> 
 
 <tr class='evenRowColoredFontNotBold'> 
     <td   height="25"  >&nbsp; 
-      <input <%if ( user_level  < 3){%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_DELETE_TRACE_FILES %> >
-      Delete trace files from hard drive </td>
+      <input  type="radio" name="forwardName" value="<%= Constants.PROCESS_DELETE_TRACE_FILES %>" >
+      Delete trace files from hard drive (no recovery possible)</td>
 </tr> 
+<tr class='evenRowColoredFontNotBold'> 
+    <td   height="25"  >&nbsp; 
+      <input  type="radio" name="forwardName" value="<%= Constants.PROCESS_CLEANUP_INTERMIDIATE_FILES_FROM_HARD_DRIVE %>" >
+      Clean-up hard drive** </td>
+</tr> 
+<tr  > 
+    <td     > <P><P>*  This removes sequence and analysis data, but the trace files themselves remain on hard drive.
+    <P>** This deletes all intermidiate files from hard drive. </td>
+</tr> 
+
+<%}%>
+  
 <tr > 
     <td> <br>
       <b></b> <div align="center"> 
-      <input type="submit" value="continue" name="submit">    <br></div>
+      <input type="submit" value="Continue" name="submit">    <br></div>
     </td>
 </tr>
-
 </table>
 
 

@@ -18,21 +18,28 @@
 </head>
 
 <body>
-<jsp:include page="NavigatorBar_Administrator.jsp" />
-	<p><P>
-<br>
-<table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
-    <tr>
-        <td >
-    <font color="#008000" size="5"><b> available sets of parameters for Primer Designer</font>
-    <hr>
-    
-    <p>
-    </td>
-    </tr>
-</table>
+<table width="100%" border="0" cellpadding="10" style='padding: 0; margin: 0; '>
+  <tr>
+    <td><%@ include file="page_application_title.html" %></td>
+  </tr>
+  <tr>
+    <td ><%@ include file="page_menu_bar.jsp" %></td>
+  </tr>
+  <tr>
+    <td><table width="100%" border="0">
+        <tr> 
+          <td  rowspan="3" align='left' valign="top" width="160"  bgcolor='#1145A6'>
+		  <jsp:include page="page_left_menu.jsp" /></td>
+          <td  valign="top"> <jsp:include page="page_location.jsp" />
+           </td>
+        </tr>
+        <tr> 
+          <td valign="top"> <jsp:include page="page_title.jsp" /></td>
+        </tr>
+        <tr> 
+          <td>
 
-<div align="center">
+<!--<div align="center">
   <center>
   <table border="0" cellpadding="0" cellspacing="0" width="80%">
     <tr>
@@ -44,7 +51,7 @@
       </tr>
   </table>
   </center>
-</div>
+</div>-->
 
 <hr>
 
@@ -63,7 +70,7 @@ else
 	Primer3Spec spec = (Primer3Spec) sets.get(count);
  
 	%>
-<table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
+<table border="0" cellpadding="0" cellspacing="0" width="90%" align=center>
 <tr>     <td colspan ="2"><b>Set Name</b>&nbsp;&nbsp<%= spec.getName() %> <P></P></td>  </tr>
 <tr class='headerRow' height="48">     <td colspan="4" >Primer Design Parameters</td>  </tr>
 <tr class=<%= row_class[row_count++ % 2]%> > 
@@ -121,7 +128,7 @@ if ( spec.getParameterByNameString("p_number_of_strands".toUpperCase()).equals( 
 else if ( spec.getParameterByNameString("p_number_of_strands".toUpperCase()).equals( String.valueOf(Primer3Wrapper.WALKING_TYPE_ONE_STRAND_REVERSE) ))
 {%>Single Strands (reverse primers only)      <%}
 else if ( spec.getParameterByNameString("p_number_of_strands".toUpperCase()).equals( String.valueOf(Primer3Wrapper.WALKING_TYPE_BOTH_STRAND ) ))
-{%>Both Strands (Both forward and reverse primers)      <%}
+{%>Both Strands (Both forward and reverse primers until meet in middle)      <%}
 else if ( spec.getParameterByNameString("p_number_of_strands".toUpperCase()).equals( String.valueOf(Primer3Wrapper.WALKING_TYPE_BOTH_STRAND_DOUBLE_COVERAGE) ))
 {%>Both Strands (Both forward and reverse primers, double coverage)      <%}%>
  </td>
@@ -131,7 +138,13 @@ else if ( spec.getParameterByNameString("p_number_of_strands".toUpperCase()).equ
 
 <%}}%>
 
-
+ </tr>
+      </table></td>
+  </tr>
+  <tr>
+    <td><%@ include file="page_footer.jsp" %></td>
+  </tr>
+</table>
 
 
 </body>

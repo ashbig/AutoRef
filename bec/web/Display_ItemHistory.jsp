@@ -1,4 +1,3 @@
-<%@ page contentType="text/html"%>
 <%@ page language="java" %>
 <%@ page errorPage="ProcessError.do"%>
 
@@ -15,25 +14,38 @@
 <html>
 
 <body>
-<jsp:include page="NavigatorBar_Administrator.jsp" />
-	<p><P>
-<br>
-<table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
-<tr><td >    <font color="#008000" size="5"><b> Container Process History  </font>
-<hr><p></td></tr></table>
-
+<table width="100%" border="0" cellpadding="10" style='padding: 0; margin: 0; '>
+  <tr>
+    <td><%@ include file="page_application_title.html" %></td>
+  </tr>
+  <tr>
+    <td ><%@ include file="page_menu_bar.jsp" %></td>
+  </tr>
+  <tr>
+    <td><table width="100%" border="0">
+        <tr> 
+          <td  rowspan="3" align='left' valign="top" width="160"  bgcolor='#1145A6'>
+		  <jsp:include page="page_left_menu.jsp" /></td>
+          <td  valign="top"> <jsp:include page="page_location.jsp" />
+           </td>
+        </tr>
+        <tr> 
+          <td valign="top"> <jsp:include page="page_title.jsp" /></td>
+        </tr>
+        <tr> 
+          <td><!-- TemplateBeginEditable name="EditRegion1" -->
 <div align="center">
   <center><table border="0" cellpadding="0" cellspacing="0" width="80%">
     <tr><td width="100%"><html:errors/></td></tr></table>
   </center></div>
 <p></p>
-<table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
+<table border="0" cellpadding="0" cellspacing="0" width="90%" align=center>
 <tr><td>
 
 <%  
   
     int item_type = Integer.parseInt( (String)request.getAttribute("item_type"));
-    String item_title ="Id:"; 
+    String item_title ="ID:"; 
     if (item_type == Constants.ITEM_TYPE_CLONEID)
      {
         item_title ="Clone "+item_title;
@@ -109,4 +121,14 @@
 
 </td></tr>
 </table>
+
+<!-- TemplateEndEditable --></td>
+        </tr>
+      </table></td>
+  </tr>
+  <tr>
+    <td><%@ include file="page_footer.jsp" %></td>
+  </tr>
+</table>
+</body>
 </html>

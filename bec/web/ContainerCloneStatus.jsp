@@ -1,4 +1,3 @@
-<%@ page contentType="text/html"%>
 <%@ page language="java" %>
 <%@ page errorPage="ProcessError.do"%>
 
@@ -17,19 +16,27 @@
 <LINK REL=StyleSheet HREF="application_styles.css" TYPE="text/css" MEDIA=screen>
 
 <body>
-<jsp:include page="NavigatorBar_Administrator.jsp" />
-	<p><P>
-<br>
-<table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
-    <tr>
-        <td >
-    <font color="#008000" size="5"><b> Container Check End Reads Availability  </font>
-    <hr>
-    
-    <p>
-    </td>
-    </tr>
-</table>
+
+<table width="100%" border="0" cellpadding="10" style='padding: 0; margin: 0; '>
+  <tr>
+    <td><%@ include file="page_application_title.html" %></td>
+  </tr>
+  <tr>
+    <td ><%@ include file="page_menu_bar.jsp" %></td>
+  </tr>
+  <tr>
+    <td><table width="100%" border="0">
+        <tr> 
+          <td  rowspan="3" align='left' valign="top" width="160"  bgcolor='#1145A6'>
+		  <jsp:include page="page_left_menu.jsp" /></td>
+          <td  valign="top"> <jsp:include page="page_location.jsp" />
+           </td>
+        </tr>
+        <tr> 
+          <td valign="top"> <jsp:include page="page_title.jsp" /></td>
+        </tr>
+        <tr> 
+          <td><!-- TemplateBeginEditable name="EditRegion1" -->
 
 <div align="center">
   <center>
@@ -51,13 +58,13 @@
     </td>
   </tr>
   <tr> 
-    <td><strong>Container Id:</strong></td>
+    <td><strong>Plate ID:</strong></td>
     <td> 
       <%= container.getId() %>
     </td>
   </tr>
    <tr> 
-    <td><strong>Container Type:</strong></td>
+    <td><strong>Plate Type:</strong></td>
     <td> 
       <%= container.getType() %>
     </td>
@@ -65,7 +72,7 @@
   
   
   <tr> 
-    <td><strong>Cloning Strategy</strong></td>
+    <td><strong>Cloning Strategy:</strong></td>
     <td> 
       <a href="<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION")  %>Seq_GetItem.do?forwardName=<%= Constants.CLONING_STRATEGY_DEFINITION_INT %>&amp;ID=<%= container.getCloningStrategyId() %>">
 	    <%= container.getCloningStrategyId() %></A>
@@ -75,9 +82,9 @@
   
 </table>
 <P><P></P></P>
-<table border="1" cellpadding="0" cellspacing="0" width="84%" align=center>
+<table border="1" cellpadding="0" cellspacing="0" width="90%" align=center>
     <tr class='headerRow' >
-       <td >Position</td>
+       <td >Well</td>
         <td >Type</td>
         <td >Forward End Read</td>
         <td >Reverse End Read</td>
@@ -137,5 +144,15 @@ else{%>&nbsp;<%}%>
      
     
     </table>
+    
+    
+     <!-- TemplateEndEditable --></td>
+        </tr>
+      </table></td>
+  </tr>
+  <tr>
+    <td><%@ include file="page_footer.jsp" %></td>
+  </tr>
+</table>
 </body>
 </html>

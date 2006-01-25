@@ -46,7 +46,7 @@ ArrayList clone_sequences = (ArrayList)request.getAttribute("clone_sequences");
 %>
 <table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
   <tr> 
-    <td width="39%"><strong>Container Label:</strong></td>
+    <td width="39%"><strong>Plate Label:</strong></td>
     <td width="61%"> <%= request.getAttribute("container_label") %> </td>
   </tr>
   

@@ -24,15 +24,7 @@
         {
                 forwardName = request.getParameter("forwardName") ;
         }
-	 Object title = null;
-	 if (request.getAttribute(Constants.JSP_TITLE ) == null)
-	 { 
-	 	title =  request.getParameter(  Constants.JSP_TITLE  );
-	}
-	else
-	{
-		title = request.getAttribute( Constants.JSP_TITLE );
-	}
+	
 int forwardName_int = 0;
 if (forwardName instanceof String) forwardName_int = Integer.parseInt((String)forwardName);
 else if (forwardName instanceof Integer) forwardName_int = ((Integer) forwardName).intValue();
@@ -42,20 +34,27 @@ else if (forwardName instanceof Integer) forwardName_int = ((Integer) forwardNam
     
 </head>
 <body>
-<jsp:include page="NavigatorBar_Administrator.jsp" />
-	<p><P>
-<br>
-
-<table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
-    <tr>
+<table width="100%" border="0" cellpadding="10" style='padding: 0; margin: 0; '>
+  <tr>
+    <td><%@ include file="page_application_title.html" %></td>
+  </tr>
+  <tr>
+    <td ><%@ include file="page_menu_bar.jsp" %></td>
+  </tr>
+  <tr>
+    <td><table width="100%" border="0">
+        <tr> 
+          <td  rowspan="3" align='left' valign="top" width="160"  bgcolor='#1145A6'>
+		  <jsp:include page="page_left_menu.jsp" /></td>
+          <td  valign="top"> <jsp:include page="page_location.jsp" />
+           </td>
+        </tr>
+        <tr> 
+          <td valign="top"> <jsp:include page="page_title.jsp" /></td>
+        </tr>
+        <tr> 
+          <td><!-- TemplateBeginEditable name="EditRegion1" -->
         
-    <td > <font color="#008000" size="5"><b> <%= title %></font>
-<hr>
-    
-    <p>
-    </td>
-    </tr>
-</table>
 
 <div align="center">
   <center>
@@ -182,6 +181,13 @@ for (int oligo_count = 0; oligo_count < olc.getOligos().size();oligo_count++)
 {%><div align="center">  <p> <input type="submit" value="Submit" > </div>
 <input name="forwardName" type="hidden" value="<%= forwardName %>" >
  <input name="forwardAllApprovedPrimerIds" type="hidden" value="<%= request.getAttribute("forwardAllApprovedPrimerIds") %>" ><%}%>
- 
+  <!-- TemplateEndEditable --></td>
+        </tr>
+      </table></td>
+  </tr>
+  <tr>
+    <td><%@ include file="page_footer.jsp" %></td>
+  </tr>
+</table>
 </body>
 </html>

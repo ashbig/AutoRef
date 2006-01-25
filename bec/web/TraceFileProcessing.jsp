@@ -49,51 +49,19 @@
 
 	   /*End of functions.*/
 //--></script>
-    <title><bean:message key="bec.name"/> : Process trace files</title>
+    <title> Process trace files</title>
      <% 
-String title = null;
-if (request.getParameter(Constants.JSP_TITLE ) != null)
- { 
-    title = (String)request.getParameter(  Constants.JSP_TITLE  );
- }
-else if  (request.getAttribute(Constants.JSP_TITLE ) != null)
-{
-    title = (String)request.getAttribute(  Constants.JSP_TITLE  );
- }
-Object forwardName = null;
-if ( request.getAttribute("forwardName") != null)
-{
-        forwardName = request.getAttribute("forwardName") ;
-}
-else
-{
-        forwardName = request.getParameter("forwardName") ;
-}
-int forwardName_int = 0;
-if (forwardName instanceof String) forwardName_int = Integer.parseInt((String)forwardName);
-else if (forwardName instanceof Integer) forwardName_int = ((Integer) forwardName).intValue();
 
+Object forwardName = ( request.getAttribute("forwardName") != null) ? 
+     request.getAttribute("forwardName") :  request.getParameter("forwardName") ;
+
+int forwardName_int = (forwardName instanceof String) ? 
+ Integer.parseInt((String)forwardName) : ((Integer) forwardName).intValue();
+System.out.println(forwardName_int);
 %>
 </head>
 <body>
-<jsp:include page="NavigatorBar_Administrator.jsp" />
-	<p><P>
-<br>
 
-<table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
-    <tr>
-        <td > <font color="#008000" size="5"><b>  <%= title %>
-    <hr>  <p>  </td> </tr></table>
-
-<div align="center">
-  <center>
-  <table border="0" cellpadding="0" cellspacing="0" width="80%">
-    <tr>
-      <td width="100%"><html:errors/></td>
-    </tr>
-  </table>
-  </center>
-</div>
 
  <form name ="TraceFileProcessing" action="TraceFileProcessing.do" METHOD=POST ENCTYPE="multipart/form-data" 
 	onsubmit="return validateForm(this);">
@@ -105,10 +73,10 @@ else if (forwardName instanceof Integer) forwardName_int = ((Integer) forwardNam
 {%>
 <table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
     
-    <tr><td width="30%" ><b>Container labels:</td>
+    <tr><td width="30%" ><b>Plate labels:</td>
      <td> <textarea name="items"  rows="10"></textarea></td>  </tr>
            <tr><td  colspan=2>&nbsp;</td></tr>
-           <tr><td><b>Please specify read direction </td>
+           <tr><td>Please select read direction </td>
 <td><input type=radio name=read_direction value="<%= Constants.READ_DIRECTION_FORWARD %>" checked>Forward
 <input type=radio name=read_direction value="<%= Constants.READ_DIRECTION_REVERSE %>">Reverse
 </td></tr>
@@ -120,15 +88,15 @@ else if (forwardName instanceof Integer) forwardName_int = ((Integer) forwardNam
 <%} 
 else if ( forwardName_int == Constants.PROCESS_INITIATE_TRACEFILES_TRANSFER)
 {%>
-<table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
-<tr><td>Enter the renaming file name</td><td><input type="file" name="fileName" id="fileName" value="">		</td></tr>
+<table border="0" cellpadding="0" cellspacing="0" width="90%" align=center>
+<tr><td>Select the trace renaming file name</td><td><input type="file" name="fileName" id="fileName" value="">		</td></tr>
 <%if ( BecProperties.getInstance().isInDebugMode() ) 
 {%>
 
 <tr><td>Please specify directory where trace files are located</td><td><input type="text" name="inputdir" id="inputdir" value="">		</td></tr>
 <tr><td>Please specify directory where renamed trace files must go</td><td><input type="text" name="outputdir" id="outputdir" value="">		</td></tr>
 <%}%>
-<tr><td>Delete trace files from input directory</td>
+<tr><td>Delete trace files from input directory after upload? </td>
 <td><input type="radio" name="delete"  value="YES">Yes
 	<input type="radio" name="delete"  value="NO" checked>	No
 </td></tr>
@@ -138,20 +106,16 @@ else if ( forwardName_int == Constants.PROCESS_INITIATE_TRACEFILES_TRANSFER)
 else if ( forwardName_int == Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRANSFER)
 {%>
 <table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
-<tr><td><b>Please specify maping file(format: sequencing facility plate name&nbsp; &nbsp;&nbsp;FLEX plate label)</td><td><input type="file" name="fileName" id="fileName" value="">		</td></tr>
+<tr><td>Please specify mapping file (format: sequencing facility plate name \t user plate label)</td><td><input type="file" name="fileName" id="fileName" value="">		</td></tr>
 <%if ( BecProperties.getInstance().isInDebugMode() ) 
 {%>
 
-<tr><td><b>Please specify directory where trace files are located</td><td><input type="text" name="inputdir" id="inputdir" value="">		</td></tr>
+<tr><td>Please select directory where trace files are located</td><td><input type="text" name="inputdir" id="inputdir" value="">		</td></tr>
 <%}%>
-<tr><td><b>Please specify trace files' naming format </td>
+<tr><td>Please select trace files' naming format </td>
 <td>
 <table border='0'>
-<!--<tr><td><input type=radio name=sequencing_facility value=<%=SequencingFacilityFileName.SEQUENCING_FACILITY_BROAD%> >Broad Institute
-</td></tr><tr><td><input type=radio name=sequencing_facility value=<%=SequencingFacilityFileName.SEQUENCING_FACILITY_HTMBC%> checked>HTMBC
-</td></tr><tr><td><input type=radio name=sequencing_facility value=<%= SequencingFacilityFileName.SEQUENCING_FACILITY_AGENCORD%> >Agencourt 
-</td></tr><tr><td><input type=radio name=sequencing_facility value=<%= SequencingFacilityFileName.SEQUENCING_FACILITY_KOLODNER%> >Kolodner 
-</td></tr>-->
+
 <% Hashtable formats =(Hashtable) DatabaseToApplicationDataLoader.getTraceFileFormats();
 String format_name = null;
 int item_count = 0;
@@ -177,5 +141,7 @@ for (Enumeration en = formats.keys(); en.hasMoreElements(); )
 
 
 </form>
+
+</td></tr></table>
 </body>
 </html>

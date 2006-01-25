@@ -24,17 +24,17 @@
 </div>
 <% Stretch stretch =(Stretch) request.getAttribute("stretch"); %>
 <table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
-  <TR><TD width="35%" ><strong>Stretch Id:</strong></td>    <td ><%= stretch.getId()%></TD>  </TR>
+  <TR><TD width="35%" ><strong>Stretch ID:</strong></td>    <td ><%= stretch.getId()%></TD>  </TR>
   <TR><TD width="35%" ><strong>Stretch Type:</strong></td>    <td ><%= Stretch.getStretchTypeAsString( stretch.getType() ) %></TD>  </TR>
- <TR><TD width="35%" ><strong>Cds Start:</strong></td>    <td ><%= stretch.getCdsStart()%></TD>  </TR>
- <TR><TD width="35%" ><strong>Cds Stop:</strong></td>    <td ><%= stretch.getCdsStop()%></TD>  </TR>
-<TR><TD width="35%" ><strong>Stretch Collection Id:</strong></td>    <td >
+ <TR><TD width="35%" ><strong>CDS Start:</strong></td>    <td ><%= stretch.getCdsStart()%></TD>  </TR>
+ <TR><TD width="35%" ><strong>CDS Stop:</strong></td>    <td ><%= stretch.getCdsStop()%></TD>  </TR>
+<TR><TD width="35%" ><strong>Stretch Collection ID:</strong></td>    <td >
 
 <%if ( stretch.getType() == Stretch.GAP_TYPE_CONTIG || stretch.getType() == Stretch.GAP_TYPE_LOW_QUALITY)
     {%>
 <TR>     <TD colspan=2 >&nbsp; </TD>  </TR>
 <TR><TD width="35%" ><strong>Orientation:</strong></td>    <td ><%= Constants.getOrientationAsStringFullName(stretch.getOrientation())%></TD>  </TR>
-<TR><TD width="35%" ><strong>Stretch Sequence Id:</strong></td>    <td ><%= stretch.getSequence().getId()%></TD>  </TR>
+<TR><TD width="35%" ><strong>Stretch Sequence ID:</strong></td>    <td ><%= stretch.getSequence().getId()%></TD>  </TR>
 <TR><TD width="35%" ><strong>Sequence Analysis Status:</strong></td>    <td ><%= BaseSequence.getSequenceAnalyzedStatusAsString(stretch.getAnalysisStatus())%></TD>  </TR>
  
 <TR>     <TD colspan=2 >&nbsp; </TD>  </TR>

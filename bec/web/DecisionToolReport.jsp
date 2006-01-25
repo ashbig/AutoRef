@@ -1,4 +1,3 @@
-<%@ page contentType="text/html"%>
 <%@ page language="java" %>
 <%@ page errorPage="ProcessError.do"%>
 
@@ -20,19 +19,27 @@
 
 </head>
 <body>
-<jsp:include page="NavigatorBar_Administrator.jsp" /> 
-	<p><P>
-<br>
-<table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
-    <tr>
-        <td >
-    <font color="#008000" size="5"><b> <%= request.getAttribute(Constants.JSP_TITLE)%>  </font>
-    <hr>
-    
-    <p>
-    </td>
-    </tr>
-</table>
+<table width="100%" border="0" cellpadding="10" style='padding: 0; margin: 0; '>
+  <tr>
+    <td><%@ include file="page_application_title.html" %></td>
+  </tr>
+  <tr>
+    <td ><%@ include file="page_menu_bar.jsp" %></td>
+  </tr>
+  <tr>
+    <td><table width="100%" border="0">
+        <tr> 
+          <td  rowspan="3" align='left' valign="top" width="160"  bgcolor='#1145A6'>
+		  <jsp:include page="page_left_menu.jsp" /></td>
+          <td  valign="top"> <jsp:include page="page_location.jsp" />
+           </td>
+        </tr>
+        <tr> 
+          <td valign="top"> <jsp:include page="page_title.jsp" /></td>
+        </tr>
+        <tr> 
+          <td><!-- TemplateBeginEditable name="EditRegion1" -->
+
 
 <div align="center">
   <center>
@@ -52,9 +59,9 @@
 <table border="1" cellpadding="0" cellspacing="0" width="84%" align=center>
     <tr >
         <th bgcolor="#1145A6" width="15%"><strong><font color="#FFFFFF">Plate</font></strong></th>
-       <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Position</font></strong></th>
+       <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Well</font></strong></th>
        <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Sample Type</font></strong></th>
-        <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Clone Id</font></strong></th>
+        <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Clone ID</font></strong></th>
         <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Clone Status</font></strong></th>
          <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Sequence ID</font></strong></th>
         <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Sequence Status</font></strong></th>
@@ -120,7 +127,14 @@ if ( clone_info != null )
 	</tr>
 	<%}}%>
     </table>
-<P><P>
+<!-- TemplateEndEditable --></td>
+        </tr>
+      </table></td>
+  </tr>
+  <tr>
+    <td><%@ include file="page_footer.jsp" %></td>
+  </tr>
+</table>
 
 </body>
 </html>

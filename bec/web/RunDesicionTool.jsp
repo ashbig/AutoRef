@@ -1,46 +1,44 @@
 <%@ page language="java" %>
 <%@ page errorPage="ProcessError.do"%>
-<%@ page import="java.util.*" %>
-
-
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ page import="edu.harvard.med.hip.bec.*" %>
-<%@ page import="edu.harvard.med.hip.bec.coreobjects.spec.*" %>
-<%@ page import="edu.harvard.med.hip.bec.coreobjects.endreads.*" %>
-<html>
-
-
+<%@ page import="edu.harvard.med.hip.bec.util.*" %>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><!-- InstanceBegin template="/Templates/my_template.dwt.jsp" codeOutsideHTMLIsLocked="false" -->
+<head>
+<title>Untitled Document</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<!-- InstanceParam name="OptionalRegion1" type="boolean" value="true" -->
+</head>
 
 <body>
-
-<%ArrayList specs = (ArrayList)request.getAttribute(Constants.SPEC_COLLECTION);
-   
-%>
- 
-<jsp:include page="NavigatorBar_Administrator.jsp" />
-	<p><P>
-<br>
-<table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
-    <tr>
-        <td >
-    <font color="#008000" size="5"><b> Run Decision Tool</font>
-    <hr>
-    
-    <p>
-    </td>
-    </tr>
-</table>
-
-<div align="center">
+<table width="100%" border="0" cellpadding="10" style='padding: 0; margin: 0; '>
+  <tr>
+    <td><%@ include file="page_application_title.html" %></td>
+  </tr>
+  <tr>
+    <td ><%@ include file="page_menu_bar.jsp" %></td>
+  </tr>
+  <tr>
+    <td><table width="100%" border="0">
+        <tr> 
+          <td  rowspan="3" align='left' valign="top" width="160"  bgcolor='#1145A6'>
+		  <jsp:include page="page_left_menu.jsp" /></td>
+          <td  valign="top"> <jsp:include page="page_location.jsp" />
+           </td>
+        </tr>
+        <tr> 
+          <td valign="top"> <jsp:include page="page_title.jsp" /></td>
+        </tr>
+        <tr> 
+          <td><!-- InstanceBeginEditable name="EditRegion1" -->
+           <%ArrayList specs = (ArrayList)request.getAttribute(Constants.SPEC_COLLECTION); %>
+           <div align="center">
   <center>
   <table border="0" cellpadding="0" cellspacing="0" width="80%">
     <tr>
       <td width="100%"><html:errors/></td>
     </tr>
 	<tr>
-        <td><i>If you are not sure about certain settings, please, consult help</i> </i> <a href="<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Help_PlateUploader.jsp">[parameter help file]</a>. 
+        <td><i>If you are not sure about certain settings, please, consult help</i> </i> <a href="Help_PlateUploader.jsp">[parameter help file]</a>. 
           </i></td>
       </tr>
   </table>
@@ -94,7 +92,13 @@
   
 </div>
 </html:form> 
+            <!-- InstanceEndEditable --></td>
+        </tr>
+      </table></td>
+  </tr>
+  <tr>
+    <td><%@ include file="page_footer.jsp" %></td>
+  </tr>
+</table>
 </body>
-</html>
-
-
+<!-- InstanceEnd --></html>

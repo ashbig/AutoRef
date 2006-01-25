@@ -18,16 +18,9 @@
 
 <body >
 
-<jsp:include page="NavigatorBar_Administrator.jsp" />
-	<p><P>
-<br>
-<table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
-  <tr><td >
-  <font color="#008000" size="5"><b> Create new set of parameters for Biological Evaluation of Clones</font>
-  <hr><p></td></tr>
-</table>
 
-<div align="center">
+
+<!--<div align="center">
  <center>
  <table border="0" cellpadding="0" cellspacing="0" width="80%">
   <tr>
@@ -37,12 +30,12 @@
      unchanged </i> <a href="Help_ConfigureSystem.jsp">[parameter help file]</a>. 
      </i></td>   </tr> </table>
  </center>
-</div>
+</div>-->
 
  
 <html:form action="/Seq_SubmitSpec.do" > 
 <input name="forwardName" type="hidden" value="<%=FullSeqSpec.FULL_SEQ_SPEC_INT%>">
-<table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
+<table border="0" cellpadding="0" cellspacing="0" width="90%" align=center>
  <tr> 
   <td colspan =2><div align="right"><b> <a href="<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetSpec.do?forwardName=<%=Spec.FULL_SEQ_SPEC_INT * Spec.SPEC_SHOW_USER_ONLY_SPECS %> "> 
     View Mine </a>&nbsp;&nbsp;<a href="<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetSpec.do?forwardName=<%=Spec.FULL_SEQ_SPEC_INT%>"> 
@@ -56,9 +49,9 @@
  <% String[] row_class = {"evenRowColoredFont","oddRowColoredFont"} ; int row_count = 0;%>
  
  <tr><td colspan="2">&nbsp; </td></tr>
- <tr> <td colspan=2><b>Maximum acceptable number of discrepancies (gene region)</b> 
- <P> <input type='radio' name='isMissense' value='1' checked>Process conservative & non-conservative substitutions together (set parameters for Missense substitution, parameters for conservative & non-conservative substitutions will not be taken into account)
- <P><input type='radio' name='isMissense' value='0'>Process conservative & non-conservative substitutions separately (set parameters for Conservative and Non-conservative substitution, parameters for Missense substitution will not be taken into account)
+ <tr> <td colspan=2><b>Maximum acceptable number of discrepancies (insert region)</b> 
+ <P> <input type='radio' name='isMissense' value='1' checked>Process conservative & non-conservative substitutions together (System will use the penalty values for missense substitutions; system will ignore values for conservative and non-conservative substitutions)
+ <P><input type='radio' name='isMissense' value='0'>Process conservative & non-conservative substitutions separately (System will use the penalty values for conservative and non-conservative substitutions; system will ignore values for missense substitutions)
    
    
    <table width="85%" border="0" align="center">
@@ -66,7 +59,7 @@
      <td ><div align="center">Threshold</div></td>
      <td colspan=2><div align="center">PASS        </div></td>
      <td colspan=2><div align="center">FAIL        </div></td>
-     <td ><div align="center">Ignor if polymorphism </div></td>
+     <td ><div align="center">Ignore if polymorphism </div></td>
     </tr>
     <tr class='headerRow'>    
         <td ><div align="right">Base        Confidence </div></td>    
@@ -209,7 +202,7 @@
  <tr><td colspan=2>&nbsp; </td></tr>
 <tr>
   <td colspan="2"> <p><b> Maximum acceptable number of discrepancies 
-    introduced by ambiquous bases: </b>
+    introduced by ambiguous bases: </b>
 		<P><input type="checkbox" name="show" value="1" checked onclick="javascript:showhide('divShowHide', this.checked);">
 		Show 
    
@@ -250,21 +243,21 @@
        </div></td>
     </tr>
     <tr class=<%= row_class[row_count++ % 2]%>> 
-     <td  > Substituttion cds       region </td>
+     <td  > Substitution cds       region </td>
      <td  ><div align="center">         <input name="FS_NCDS_PASS_H" type="input" id="FS_NCDS_PASS_H" value="0" size="5" onBlur="checkNumeric(this,0,100,'','','');">      </div></td>
      <td  ><div align="center">         <input name="FS_NCDS_PASS_L" type="input" id="FS_NCDS_PASS_L" value="0" size="5" onBlur="checkNumeric(this,0,100,'','','');">       </div></td>
      <td  ><div align="center">         <input name="FS_NCDS_FAIL_H" type="input" id="FS_NCDS_FAIL_H" value="19" size="5" onBlur="checkNumeric(this,0,100,'','','');">      </div></td>
      <td  ><div align="center">         <input name="FS_NCDS_FAIL_L" type="input" id="FS_NCDS_FAIL_L" value="99" size="5" onBlur="checkNumeric(this,0,100,'','','');">       </div></td>
     </tr>
     <tr class=<%= row_class[row_count++ % 2]%>> 
-     <td  > Frameshift Insertion</td>
+     <td  > Frameshift insertion</td>
      <td  ><div align="center">         <input name="FS_NFRAME_PASS_H" type="input" id="FS_NFRAME_PASS_H" value="0" size="5" onBlur="checkNumeric(this,0,100,'','','');">       </div></td>
      <td  ><div align="center">         <input name="FS_NFRAME_PASS_L" type="input" id="FS_NFRAME_PASS_L" value="0" size="5" onBlur="checkNumeric(this,0,100,'','','');">       </div></td>
      <td  ><div align="center">         <input name="FS_NFRAME_FAIL_H" type="input" id="FS_NFRAME_FAIL_H" value="19" size="5" onBlur="checkNumeric(this,0,100,'','','');">       </div></td>
      <td  ><div align="center">         <input name="FS_NFRAME_FAIL_L" type="input" id="FS_NFRAME_FAIL_L" value="99" size="5" onBlur="checkNumeric(this,0,100,'','','');">       </div></td>
     </tr>
 		<tr class=<%= row_class[row_count++ % 2]%>> 
-     <td  > Inframe Insertion</td>
+     <td  > Inframe insertion</td>
      <td  ><div align="center">         <input name="FS_NINFRAME_PASS_H" type="input" id="FS_NINFRAME_PASS_H" value="0" size="5" onBlur="checkNumeric(this,0,100,'','','');">      </div></td>
      <td  ><div align="center">         <input name="FS_NINFRAME_PASS_L" type="input" id="FS_NINFRAME_PASS_L" value="0" size="5" onBlur="checkNumeric(this,0,100,'','','');">       </div></td>
      <td  ><div align="center">         <input name="FS_NINFRAME_FAIL_H" type="input" id="FS_NINFRAME_FAIL_H" value="19" size="5" onBlur="checkNumeric(this,0,100,'','','');">       </div></td>

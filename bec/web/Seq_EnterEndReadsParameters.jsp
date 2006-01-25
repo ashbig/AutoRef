@@ -20,19 +20,13 @@
 <body >
 
 
-<jsp:include page="NavigatorBar_Administrator.jsp" />
-	<p><P>
-<br>
-<table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
-<tr><td > <font color="#008000" size="5"><b> Create new set of parameter for Clone       Scoring</font> 
-      <hr><p></td></tr></table>
 
-<div align="center">
+<!--<div align="center">
   <center><table border="0" cellpadding="0" cellspacing="0" width="80%">
     <tr><td width="100%"><html:errors/></td>
     </tr><tr><td><i>If you are not sure about certain parameter settings, use default settings  
 </i> <a href="Help_ConfigureSystem.jsp">[parameter help file]</a>. </td></tr>
-  </table></center></div>
+  </table></center></div>-->
 
 <html:form action="/Seq_SubmitSpec.do" > 
 
@@ -56,10 +50,10 @@
 </td></tr>
 
   <tr> 
-    <td colspan=2 ><p><b>Penalty for mutation in the gene region</b> </p> 
-     <input type='radio' name='isMissense' value='1' checked>Process conservative & non-conservative substitutions together (set penalties for Missense substitution, penalties for conservative & non-conservative substitutions will not be taken into account)
- <P><input type='radio' name='isMissense' value='0'>Process conservative & non-conservative substitutions separately (set penalties for Conservative and Non-conservative substitution, penalties for Missense substitution will not be taken into account)
-      <table width="85%" border="0" align="center">
+    <td colspan=2 ><p><b>Penalties for discrepancy in the insert region</b> </p> 
+     <input type='radio' name='isMissense' value='1' checked>Process conservative & non-conservative substitutions together (System will use the penalty values for missense substitutions; system will ignore values for conservative and non-conservative substitutions)
+ <P><input type='radio' name='isMissense' value='0'>Process conservative & non-conservative substitutions separately (System will use the penalty values for  conservative & non-conservative substitutions; system will ignore values for missense substitutions)
+      <table width="90%" border="0" align="center">
         <tr class='headerRow'> 
 	 <td ><div align="right">Base Confidence</div></td>
           <td><div align="center">High </div></td>
@@ -110,20 +104,20 @@
             </div></td>
         </tr>
         <tr class=<%= row_class[row_count++ % 2]%>>  
-          <td >No translation (no ATG)</td>
+          <td >No translation (e.g., no ATG)</td>
           <td ><div align="center">               <input name="ER_NOTRANSLATION_H" type="input" id="ER_NOTRANSLATION_H" value="1000" size="10" onBlur="checkNumeric(this,0,1000,'','','');">            </div></td>
           <td ><div align="center">               <input name="ER_NOTRANSLATION_L" type="input" id="ER_NOTRANSLATION_L" value="1000" size="10" onBlur="checkNumeric(this,0,1000,'','','');">            </div></td>
         </tr>
         <tr class=<%= row_class[row_count++ % 2]%> >
-            <td ><strong><font color="#000080">Post-elongation (no stop codon)</font></strong></td>
+            <td ><font color="#000080">Post-elongation (e.g., no stop codon)</font></td>
           <td ><div align="center">               <input name="ER_PLONG_H" type="input" id="ER_PLONG_H" value="1000" size="10" onBlur="checkNumeric(this,0,1000,'','','');">            </div></td>
           <td ><div align="center">               <input name="ER_PLONG_L" type="input" id="ER_PLONG_L" value="1000" size="10" onBlur="checkNumeric(this,0,1000,'','','');">            </div></td>
         </tr>
       </table></td>
   </tr>
-  <tr><td colspan="2"> &nbsp;</td></tr><td colspan=2 ><p><b>Penalty for mutation in the linker region</b> </p> 
+  <tr><td colspan="2"> &nbsp;</td></tr><td colspan=2 ><p><b>Penalties for discrepancies in the linker region</b> </p> 
      <% row_count = 0;%>
-      <table width="85%" border="0" align="center">
+      <table width="90%" border="0" align="center">
         <tr class='headerRow'> 
           <td ><div align="right">Base Confidence</div></td>
           <td ><div align="center">High </div></td>
@@ -151,13 +145,13 @@
       </table></td>
   </tr>
 <tr><td colspan="2"> &nbsp;</td></tr>  <tr><td colspan="2">
-      <p><b>Penalty for mutation introduced by ambiguous bases
+      <p><b>Penalties for discrepancies introduced by ambiguous bases
 </b> <P><input type="checkbox" name="show" value="1" checked onclick="javascript:showhide('divShowHide', this.checked);">
 		Show </p>
       <p></p>
 	  <DIV ID="divShowHide" STYLE="  position:relative;  clip:rect(0px 120px 120px 0px); "> 
    <% row_count = 0;%>
-     <table width="85%" border="0" align="center">
+     <table width="90%" border="0" align="center">
           <tr class='headerRow'> 
             <td ><div align="right">Base Confidence</div></td>
             <td ><div align="center">High </div></td>
@@ -179,12 +173,12 @@
             <td ><div align="center">                 <input name="ER_NCDS_PASS_L" type="input" id="ER_NCDS_PASS_L" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');">              </div></td>
           </tr>
           <tr  class=<%= row_class[row_count % 2] %>> 
-            <td >Frameshift Insertion</font></strong></td>
+            <td >Frameshift insertion</font></strong></td>
             <td ><div align="center">                 <input name="ER_NFRAME_PASS_H" type="input" id="ER_NFRAME_PASS_H" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');">              </div></td>
             <td ><div align="center">                 <input name="ER_NFRAME_PASS_L" type="input" id="ER_NFRAME_PASS_L" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');">              </div></td>
           </tr>
           <tr  class=<%= row_class[row_count % 2] %>> 
-            <td >Inframe Insertion</font></strong></td>
+            <td >Inframe insertion</font></strong></td>
             <td ><div align="center">                 <input name="ER_NINFRAME_PASS_H" type="input" id="ER_NINFRAME_PASS_H" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');">              </div></td>
             <td ><div align="center">                 <input name="ER_NINFRAME_PASS_L" type="input" id="ER_NINFRAME_PASS_L" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');">              </div></td>
           </tr>

@@ -6,20 +6,14 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ page import="java.util.*" %>
 <%@ page import="edu.harvard.med.hip.bec.*" %>
+<%@ page import="edu.harvard.med.hip.bec.util.*" %>
 <html>
 <head>
 <title>Run report</title>
 </head>
 <body >
-<jsp:include page="NavigatorBar_Administrator.jsp" />
-	<p><P>
-<br>
-<table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
-    <tr>
-        <td > <font color="#008000" size="5"><b> Create Report </font>    <hr>    <p>    </td>
-    </tr>
-</table>
 
+<% String redirection = BecProperties.getInstance().getProperty("JSP_REDIRECTION");%>
 <div align="center">
   <center>
   <table border="0" cellpadding="0" cellspacing="0" width="80%">
@@ -27,7 +21,7 @@
   </table>
   <table border="0" cellpadding="0" cellspacing="0" width="80%">
     <tr>      <td width="100%">
- <i>If you are not sure about certain parameter please consult <a href="Help_ReportRunner.jsp"> help
+ <i>If you are not sure about certain parameter please consult <a href="<%= redirection%>help/Help_ReportRunner.html"> help
 </a>. </i> 
   </td>    </tr>
   </table>
@@ -48,89 +42,89 @@
   </tr>
   <tr> 
     <td width="50%" bgColor="#e4e9f8" ><div align="center"><font color="000080"><strong>&nbsp;&nbsp;&nbsp;Clone 
-        Information: </strong></font></div></td>
+        information: </strong></font></div></td>
     <td width="50%" bgColor="#e4e9f8"><div align="center"><font color="000080"><strong>Clone 
-              Raw Data Information</strong></font></div></td>
+              raw data information:</strong></font></div></td>
   </tr>
   <tr> 
-    <td >   <input type="checkbox" name="clone_id" value="1">    Clone Id</td>
-    <td >   <input type="checkbox" name="dir_name" value="1"> Directory Name</td>
+    <td >   <input type="checkbox" name="clone_id" value="1">    Clone ID</td>
+    <td >   <input type="checkbox" name="dir_name" value="1"> Directory name</td>
   </tr>
   <tr> 
-    <td><input type="checkbox" name="clone_final_status" value="1">      Clone Final Status</td>
+    <td><input type="checkbox" name="clone_final_status" value="1">      Clone final status</td>
           <td> <input type="checkbox" name="read_length" value="1">
-            End Reads Length(High Quality Region)</td>
+            End reads length( high quality region)</td>
   </tr>
   <tr> 
-    <td> <input type="checkbox" name="plate_label" value="1">      Plate Label</td>
-    <td> <input type="checkbox" name="assembly_attempt_status" value="1">  Clone Sequence assembly attempt status</td>
+    <td> <input type="checkbox" name="plate_label" value="1">      Plate label</td>
+    <td> <input type="checkbox" name="assembly_attempt_status" value="1"> Status of clone sequence assembly</td>
   </tr>
   <tr> 
-    <td> <input type="checkbox" name="sample_type" value="1">      Sample Type</td>
+    <td> <input type="checkbox" name="sample_type" value="1">      Sample type</td>
     <td>&nbsp;</td>
   </tr>
   <tr> 
-    <td> <input type="checkbox" name="position" value="1">      Sample Position</td>
-    <td>&nbsp;</td>
-  </tr>
-<tr> 
-    <td> <input type="checkbox" name="score" value="1">      Clone Score</td>
+    <td> <input type="checkbox" name="position" value="1">      Sample Well</td>
     <td>&nbsp;</td>
   </tr>
 <tr> 
-    <td> <input type="checkbox" name="rank" value="1">      Clone Rank</td>
+    <td> <input type="checkbox" name="score" value="1">      Clone score</td>
+    <td>&nbsp;</td>
+  </tr>
+<tr> 
+    <td> <input type="checkbox" name="rank" value="1">      Clone rank</td>
     <td>&nbsp;</td>
   </tr>
   <tr> 
     <td bgColor="#e4e9f8"><div align="center"><font color="000080"><strong>Reference 
-        Sequence Information</strong></font></div></td>
+        sequence information:</strong></font></div></td>
     <td bgColor="#e4e9f8"><div align="center" ><font color="000080"><strong>Clone 
-        Assembly Information</strong></font></div></td>
+        assembly information:</strong></font></div></td>
   </tr>
   <tr> 
     <td>      <input type="checkbox" name="ref_sequence_id" value="1">      Sequence ID</td>
-    <td>      <input type="checkbox" name="clone_seq_id" value="1">      Clone Sequence Id</td>
+    <td>      <input type="checkbox" name="clone_seq_id" value="1">      Clone sequence ID</td>
   </tr>
   <tr> 
-    <td><input type="checkbox" name="ref_cds_start" value="1">      CDS Start</td>
-    <td><input type="checkbox" name="clone_status" value="1">      Clone Sequence Analysis Status</td>
+    <td><input type="checkbox" name="ref_cds_start" value="1">      CDS start</td>
+    <td><input type="checkbox" name="clone_status" value="1"> Status of     clone sequence analysis</td>
   </tr>
   <tr> 
-    <td> <input type="checkbox" name="ref_cds_stop" value="1">      CDS Stop</td>
-    <td><input type="checkbox" name="clone_seq_cds_start" value="1">    Clone Sequence Cds Start</td>
+    <td> <input type="checkbox" name="ref_cds_stop" value="1">      CDS stop</td>
+    <td><input type="checkbox" name="clone_seq_cds_start" value="1">    Clone sequence CDS start</td>
   </tr>
   <tr> 
-    <td><input type="checkbox" name="ref_cds_length" value="1">      CDS Length</td>
-    <td>  <input type="checkbox" name="clone_seq_cds_stop" value="1">  Clone Sequence Cds Stop</td>
+    <td><input type="checkbox" name="ref_cds_length" value="1">      CDS length</td>
+    <td>  <input type="checkbox" name="clone_seq_cds_stop" value="1">  Clone sequence CDS stop</td>
   </tr>
   <tr> 
-    <td > <input type="checkbox" name="ref_gc" value="1">     GC Content</td>
-      <td>  <input type="checkbox" name="clone_seq_text" value="1">   Clone Sequence</td>
+    <td > <input type="checkbox" name="ref_gc" value="1">     GC content</td>
+      <td>  <input type="checkbox" name="clone_seq_text" value="1">   Clone sequence</td>
    </tr>
   <tr> 
-    <td> <input type="checkbox" name="ref_seq_text" value="1">      Sequence Text</td>
-    <td><input type="checkbox" name="clone_discr_high" value="1">    Discrepancies High Quality (separated by type)</td>
+    <td> <input type="checkbox" name="ref_seq_text" value="1">      Sequence text</td>
+    <td><input type="checkbox" name="clone_discr_high" value="1">   High quality  discrepancies (separated by type)</td>
  
   </tr>
   <tr> 
     <td> <input type="checkbox" name="ref_cds" value="1">     CDS</td>
-    <td> <input type="checkbox" name="clone_disc_low" value="1">   Discrepancies Low Quality (separated by type)</td>
+    <td> <input type="checkbox" name="clone_disc_low" value="1"> Low quality  discrepancies (separated by type)</td>
   
   </tr>
   <tr> 
-    <td> <input type="checkbox" name="ref_gi" value="1">      GI Number</td>
+    <td> <input type="checkbox" name="ref_gi" value="1">      GI number</td>
     <td>&nbsp;</td>
   </tr>
   <tr> 
-    <td>  <input type="checkbox" name="ref_gene_symbol" value="1">      Gene Symbol</td>
+    <td>  <input type="checkbox" name="ref_gene_symbol" value="1">      Gene symbol</td>
     <td>&nbsp;</td>
   </tr>
     <tr>
     <td><input type="checkbox" name="ref_species_id" value="1">
-          Species Specific ID</td><td>&nbsp;</td> </tr>
+          Species specific ID</td><td>&nbsp;</td> </tr>
   <tr>
      <td><input type="checkbox" name="ref_ids" value="1">
-          All Available Identifiers</td> <td>&nbsp;</td></tr>
+          All available identifiers</td> <td>&nbsp;</td></tr>
   
 </table>
 

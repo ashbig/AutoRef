@@ -25,15 +25,7 @@
         {
                 forwardName = request.getParameter("forwardName") ;
         }
-	 Object title = null;
-	 if (request.getAttribute(Constants.JSP_TITLE ) == null)
-	 { 
-	 	title =  request.getParameter(  Constants.JSP_TITLE  );
-	}
-	else
-	{
-		title = request.getAttribute( Constants.JSP_TITLE );
-	}
+	
 int forwardName_int = 0;
 if (forwardName instanceof String) forwardName_int = Integer.parseInt((String)forwardName);
 else if (forwardName instanceof Integer) forwardName_int = ((Integer) forwardName).intValue();
@@ -43,14 +35,28 @@ else if (forwardName instanceof Integer) forwardName_int = ((Integer) forwardNam
     
 </head>
 <body>
-<jsp:include page="NavigatorBar_Administrator.jsp" />
-	<p><P>
-<br>
 
-<table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
-<tr><td > <font color="#008000" size="5"><b> <%= title %></font>
-<hr><p></td> </tr></table>
 
+<table width="100%" border="0" cellpadding="10" style='padding: 0; margin: 0; '>
+  <tr>
+    <td><%@ include file="page_application_title.html" %></td>
+  </tr>
+  <tr>
+    <td ><%@ include file="page_menu_bar.jsp" %></td>
+  </tr>
+  <tr>
+    <td><table width="100%" border="0">
+        <tr> 
+          <td  rowspan="3" align='left' valign="top" width="160"  bgcolor='#1145A6'>
+		  <jsp:include page="page_left_menu.jsp" /></td>
+          <td  valign="top"> <jsp:include page="page_location.jsp" />
+           </td>
+        </tr>
+        <tr> 
+          <td valign="top"> <jsp:include page="page_title.jsp" /></td>
+        </tr>
+        <tr> 
+          <td><!-- TemplateBeginEditable name="EditRegion1" -->
 <div align="center">
   <center>  <table border="0" cellpadding="0" cellspacing="0" width="84%">
     <tr>      <td width="100%"><html:errors/></td>    </tr>
@@ -85,13 +91,13 @@ for (int index = 0; index < items.size(); index ++)
     <% if (  str_collection != null )
 {   %>
 
-<tr> <td  ><strong>&nbsp;&nbsp; Reference Sequence Id: </strong></td>
+<tr> <td  ><strong>&nbsp;&nbsp; Reference sequence ID: </strong></td>
 <td   ><a href="#" onCLick="window.open('<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetItem.do?forwardName=<%=Constants.REFSEQUENCE_DEFINITION_INT%>&amp;ID=<%= str_collection.getRefSequenceId()%>','<%= str_collection.getRefSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" > <strong><%= str_collection.getRefSequenceId()%></a></strong></td></TR>
-<tr> <td  ><strong>&nbsp;&nbsp; Clone Sequence Id: </strong></td>
+<tr> <td  ><strong>&nbsp;&nbsp; Clone sequence ID: </strong></td>
 <td   ><a href="#" onCLick="window.open('<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetItem.do?forwardName=<%=Constants.CLONE_SEQUENCE_DEFINITION_REPORT_INT%>&amp;ID=<%= str_collection.getCloneSequenceId()%>','<%= str_collection.getCloneSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" > <%= str_collection.getCloneSequenceId() %></a></strong></td></TR>
-<tr> <td  ><strong>&nbsp;&nbsp; Clone Sequence Analysis Status: </strong></td>
+<tr> <td  ><strong>&nbsp;&nbsp; Clone sequence analysis status: </strong></td>
 <td >&nbsp </td></tr>
-<tr> <td  ><strong>&nbsp;&nbsp; Clone Sequence Aligment: </strong></td>
+<tr> <td  ><strong>&nbsp;&nbsp; Clone sequence aligment: </strong></td>
 <td   >
 <input type=BUTTON value=Alignment onClick="window.open('<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetItem.do?forwardName=<%=Constants.READSEQUENCE_NEEDLE_ALIGNMENT_INT%>&amp;ID=<%= str_collection.getCloneSequenceId() %>&amp;TYPE=<%= BaseSequence.CLONE_SEQUENCE%>&amp;<%=BaseSequence.THEORETICAL_SEQUENCE_STR%>=<%= str_collection.getRefSequenceId()%>','<%= str_collection.getCloneSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;">
   
@@ -109,6 +115,16 @@ for (int index = 0; index < items.size(); index ++)
 <%}%>
 
 <%}%>
+</table>
+
+
+<!-- TemplateEndEditable --></td>
+        </tr>
+      </table></td>
+  </tr>
+  <tr>
+    <td><%@ include file="page_footer.jsp" %></td>
+  </tr>
 </table>
 </body>
 </html>
