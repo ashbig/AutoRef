@@ -1,5 +1,5 @@
 /**
- * $Id: OligoContainer.java,v 1.6 2006-01-12 19:04:35 Elena Exp $
+ * $Id: OligoContainer.java,v 1.7 2006-01-25 16:41:45 Elena Exp $
  *
  * File     	: Container.java
 
@@ -60,6 +60,37 @@ public class OligoContainer
             return (OligoContainer)containers.get(0);
         else 
             return null;
+    }
+    
+    
+      public static void getAll( ) throws BecUtilException, BecDatabaseException
+    {
+     
+        String sql = "select  OLIGOCONTAINERID ,LABEL ,USERID ,ORDERDATE, STATUS ,"
++" DESCR_OLIGO_PROCESSING  ,DESCR_SEQUENCING from oligocontainer ";
+        CachedRowSet crs = null;
+        try
+        {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            crs = t.executeQuery(sql);
+            while(crs.next())
+            {
+               System.out.println("update oligocontainer set DESCR_OLIGO_PROCESSING ='"+ 
+               crs.getString("DESCR_OLIGO_PROCESSING")+"',  DESCR_SEQUENCING='"+ crs.getString("DESCR_SEQUENCING")
+               +"' where oligocontainerid = "+crs.getInt("OLIGOCONTAINERID") 
+             );
+              
+             }
+        
+        } catch (Exception ex)
+        {
+            throw new BecDatabaseException("Error occured while initializing container: \n"+ex.getMessage());
+        } 
+        finally
+        {
+            DatabaseTransaction.closeResultSet(crs);
+        }
+       
     }
     
     
@@ -281,9 +312,9 @@ public class OligoContainer
        
         try
         {
-           OligoContainer c = OligoContainer.getById(124);
+           OligoContainer.getAll();
          
-           System.out.println(c.getId());
+          
         }
         catch(Exception e)
         {

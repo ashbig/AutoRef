@@ -1,10 +1,225 @@
-function IsEmpty(aTextField) {
-   if ((aTextField.value.length==0) ||
-   (aTextField.value==null)) {
+function validate_add_format(formElement)
+{
+ 
+if( IsEmpty(formElement.FORMATNAME)) {
+    alert("Format name cannot be empty");
+    return false;
+}
+ if ( IsEmpty(formElement.EXAMPLE_TRACE_FILE_NAME)){
+alert("Example trace files name cannot be empty");
+    return false;
+}
+
+ if( IsEmpty(formElement.PLATE_LABEL_COLUMN)){
+alert("Plate label column cannot be empty. Default value -1.");
+    return false;
+}
+if ( IsEmpty(formElement.PLATE_LABEL_START)){
+alert("Plate label start cannot be empty. Default value -1.");
+    return false;
+}
+ if( IsEmpty(formElement.PLATE_LABEL_LENGTH)){
+alert("Plate label length cannot be empty. Default value -1.");
+    return false;
+}
+if( IsEmpty(formElement.POSITION_COLUMN)) {
+alert("Position column cannot be empty. Default value -1.");
+    return false;
+}
+if( IsEmpty(formElement.POSITION_START)){
+alert("Position start cannot be empty. Default value -1.");
+    return false;
+}
+if (IsEmpty(formElement.POSITION_LENGTH)){
+alert("Position length cannot be empty. Default value -1.");
+    return false;
+}
+
+if ( IsEmpty(formElement.DIRECTION_COLUMN) ){
+alert("Direction column cannot be empty. Default value -1.");
+    return false;
+}
+if ( IsEmpty(formElement.DIRECTION_START)){
+alert("Direction start cannot be empty. Default value -1.");
+    return false;
+}
+if ( IsEmpty(formElement.DIRECTION_LENGTH)){
+alert("Direction lengh cannot be empty. Default value -1.");
+    return false;
+}
+
+
+return true;
+}
+
+
+//-------------------------------------------------------------
+function validate_add_format(formElement)
+{
+ 
+if( IsEmpty(formElement.FORMATNAME)) 
+{
+    alert("Format name cannot be empty");
+    return false;
+}
+if( IsEmpty(formElement.FORMATNAME)) 
+{
+    alert("Format name cannot be empty");
+    return false;
+}
+return true;
+}
+
+//------------------------------------------------
+function validate_add_project(formElement)
+{
+if( IsEmpty(formElement.projectname)) 
+{
+    alert("Projectt name cannot be empty");
+    return false;
+}
+if( IsEmpty(formElement.projectcode)) 
+{
+    alert("Project code cannot be empty");
+    return false;
+}
+return true;
+}
+
+
+//-------------------------------------------------
+
+function validate_add_speciesname(formElement)
+{
+if( IsEmpty(formElement.speciesname)) 
+{
+    alert("Species name cannot be empty");
+    return false;
+}
+
+return true;
+}
+
+
+//-------------------------------------------------
+ 
+
+function validate_add_nametype(formElement)
+{
+if( IsEmpty(formElement.nametype)) 
+{
+    alert("Annotation type cannot be empty");
+    return false;
+}
+
+return true;
+}
+
+
+//-------------------------------------------------
+
+
+
+function validate_add_sequencingprimer(formElement)
+{
+if( IsEmpty(formElement.primername)) 
+{
+    alert("Primer name cannot be empty");
+    return false;
+}
+if( IsEmpty(formElement.sequence)) 
+{
+    alert("Sequence cannot be empty");
+    return false;
+}
+
+return true;
+}
+
+
+//-------------------------------------------------
+
+function validate_add_linker(formElement)
+{
+if( IsEmpty(formElement.linkername)) 
+{
+    alert("Linker name cannot be empty");
+    return false;
+}
+if( IsEmpty(formElement.linkersequence)) 
+{
+    alert("Sequence cannot be empty");
+    return false;
+}
+
+return true;
+}
+
+
+//-------------------------------------------
+function validate_initprocess(formElement, item_type_project_name)
+   {
+for ( count = 0; count < formElement.item_type.length; count++)
+{
+if (formElement.item_type[count].checked==true     && formElement.item_type[count].value==  item_type_project_name)
+{
+      formElement.items.value =formElement.project_name.value;
+}
+}
+
+if( IsEmpty(formElement.items)) 
+{
+    alert("Please submit items to process.");
+    return false;
+}
+return true;
+   }
+   //---------------------------
+function validate_upload_hipplates(formElement)
+{
+if( IsEmpty(formElement.plate_names)) 
+{
+    alert("Please submit plate names.");
+    return false;
+}
+
+
+return true;
+}
+
+//-------------------------------------------------
+ 
+
+   function trim(strText)
+    { 
+		// this will get rid of leading spaces 
+
+		while (strText.substring(0,1) == ' ') 
+			strText = strText.substring(1, strText.length); 
+
+		// this will get rid of trailing spaces 
+		while (strText.substring(strText.length-1,strText.length) == ' ') 
+			strText = strText.substring(0, strText.length-1); 
+
+	   return strText; 
+	} 
+
+
+
+function IsEmpty(aTextField) 
+{
+
+var aTextField_value = aTextField.value;
+aTextField_value=trim(aTextField_value);
+   if (aTextField_value==null || aTextField_value.length==0)
+ 
+{
+      aTextField.focus();
       return true;
    }
    else { return false; }
 }	
+
 
 
 // Show/Hide functions for non-pointer layer/objects
@@ -106,7 +321,7 @@ function chkNumeric(objName,minval,maxval,comma,period,hyphen)
 // (can be in any order, and don't have to be comma, period, or hyphen)
 // if all numbers allow commas, periods, hyphens or whatever,
 // just hard code it here and take out the passed parameters
-var checkOK = "0123456789" + comma + period + hyphen;
+var checkOK = "-+0123456789" + comma + period + hyphen;
 var checkStr = objName;
 var allValid = true;
 var decPoints = 0;

@@ -305,7 +305,7 @@ additional_jsp_buffer.append( "<OPTION VALUE=" + IsolateTrackingEngine.FINAL_STA
 
 additional_jsp_buffer.append("</SELECT></td> </tr>");
 
-additional_jsp_buffer.append("<P><P><tr><td>"+line_padding+"<input type = checkbox name = 'isCreateDistributionFile' >Create distribution file for Accepted/Rejected clones? [<a href='"+ edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION")+"help/help_clone_data_output_xml_format.html' target='_blank'>sample template file</a>]</td> </tr>");
+//additional_jsp_buffer.append("<P><P><tr><td>"+line_padding+"<input type = checkbox name = 'isCreateDistributionFile' >Create export file for Accepted/Rejected clones (XML format, to be used by other applications)? [<a href='"+ edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION")+"help/help_clone_data_output_xml_format.html' target='_blank'>sample template file</a>]</td> </tr>");
 
 additional_jsp = additional_jsp_buffer.toString();
     break;

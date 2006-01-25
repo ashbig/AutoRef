@@ -29,6 +29,21 @@ public class FileOperations
         return fl.exists();
     }
     
+    
+     public static void            deleteFilesInDirectory(String directoryname_delete_files_from)throws Exception
+    {
+        File directory_delete_files_from = new File(directoryname_delete_files_from);
+        if (! ( directory_delete_files_from.exists() && directory_delete_files_from.isDirectory() )) return;
+        File[]  files_to_delete = directory_delete_files_from.listFiles();
+        if ( files_to_delete != null && files_to_delete.length> 0)
+        {
+            for ( int  count = 0;  count < files_to_delete.length;  count++)
+            {
+               files_to_delete[ count].delete();
+            }
+        }
+               
+    }
     public static void createDirectory(String directory_path, boolean exsits_exit)   throws Exception
     {
         File directory = new File(directory_path);

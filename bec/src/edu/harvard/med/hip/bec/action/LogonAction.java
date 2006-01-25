@@ -12,8 +12,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.6 $
- * $Date: 2005-01-20 16:55:43 $
+ * $Revision: 1.7 $
+ * $Date: 2006-01-25 16:44:47 $
  * $Author: Elena $
  *
  ******************************************************************************
@@ -65,7 +65,7 @@ import edu.harvard.med.hip.bec.Constants;
  * Implementation of <strong>Action</strong> that validates a user logon.
  *
  * @author $Author: Elena $
- * @version $Revision: 1.6 $ $Date: 2005-01-20 16:55:43 $
+ * @version $Revision: 1.7 $ $Date: 2006-01-25 16:44:47 $
  */
 
 public final class LogonAction extends Action
@@ -167,6 +167,11 @@ public final class LogonAction extends Action
    
     // Forward control to the specified success URI
     request.setAttribute("process_mode", "debug");
+    //to load into template
+    request.setAttribute("forwardName", new Integer(Constants.UI_ABOUT_PAGE));
+    request.setAttribute(Constants.JSP_TITLE, "ACE overview");
+    request.setAttribute(Constants.JSP_CURRENT_LOCATION, "Home > ACE Overview");
+           
     return (mapping.findForward("success"));
     
 }

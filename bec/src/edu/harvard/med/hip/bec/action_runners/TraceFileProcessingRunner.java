@@ -523,12 +523,12 @@ ProcessRunner runner = new TraceFileProcessingRunner();
 runner.setProcessType(Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRANSFER);
 ((TraceFileProcessingRunner)runner).setReadType(Constants.READ_TYPE_ENDREAD_STR);//m_read_type= read_type;}
 //runner.setSequencingFacility(SequencingFacilityFileName.SEQUENCING_FACILITY_KOLODNER);
-((TraceFileProcessingRunner)runner).setInputDirectory("C:\\bio\\plate_dump");
+((TraceFileProcessingRunner)runner).setInputDirectory("E:\\Sequences for BEC\\files_to_transfer");
 //runner.setOutputDirectory( "C:\\bio\\original_files");
-((TraceFileProcessingRunner)runner).setRenamingFile(new  FileInputStream("C:\\bio\\plate_dump\\map.txt"));
-((TraceFileProcessingRunner)runner).setFormatName("HMBCT");
+((TraceFileProcessingRunner)runner).setRenamingFile(new  FileInputStream("C:\\bio\\map.txt"));
+((TraceFileProcessingRunner)runner).setFormatName("VCX plates");
      runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
-       ((TraceFileProcessingRunner)runner).setDelete("YES");
+       ((TraceFileProcessingRunner)runner).setDelete("NO");
            
        
                 

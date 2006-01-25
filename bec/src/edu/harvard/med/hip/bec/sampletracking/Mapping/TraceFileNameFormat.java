@@ -38,6 +38,7 @@ public class TraceFileNameFormat
     private String      m_position_separator = null;//</SEPARATOR>
     private String      m_direction_separator = null;//</SEPARATOR>
     private int         m_direction_of_file_name_reading = READING_LEFT_TO_RIGHT;
+    private String      m_example_file_name = null;
     
     /** Creates a new instance of TraceFileNameFormat */
     public TraceFileNameFormat() {    }
@@ -59,7 +60,7 @@ public class TraceFileNameFormat
      public int         getDirectionLength (){ return m_direction_length    ;}//DIRECTION_START>
      public int         getDirectionStart(){ return m_direction_start;}
      public int         getFileNameReadingDirection(){ return m_direction_of_file_name_reading;}
-     
+     public String      getExampleFileName(){ return m_example_file_name;}
      
     public void         setFormatName (String v){   m_format_name    = v;}//FORMAT_NAME> 
       public void       setPlateSeparator (String v){   m_plate_separator   = v ;}//</SEPARATOR>
@@ -78,9 +79,9 @@ public class TraceFileNameFormat
     public void         setDirectionStart(int v){ m_direction_start = v;}
      public void        setId(int v){ m_id = v;}
      public void        setFileNameReadingDirection(int v){  m_direction_of_file_name_reading = v;}
+     public void        setExampleFileName(String v){ m_example_file_name = v;}
      
-     
-     
+     /*
     public  String  toXML()
     {
         return toXML(this);
@@ -121,9 +122,106 @@ public class TraceFileNameFormat
 
         return sf.toString();
     }
- 
+ */
+     
+     public boolean isFormatDefinitionOK() throws  Exception
+     {
+         boolean result = false;
+         if ( m_format_name == null || m_format_name.trim().length()<1 )  throw new Exception("Format name not set.");
+         if (   m_example_file_name != null && m_example_file_name.trim().length()<1) throw new Exception("Example file name not set.");
+         {
+             
+                 try
+                 {
+                     isFormatItemDefinitionOK(m_direction_of_file_name_reading,m_example_file_name, m_plate_separator, m_plate_label_column, m_plate_label_start,m_plate_label_length);
+                 }
+                 catch(Exception e)
+                 {
+                      throw new BecUtilException("Problem: Plate label definition. "+e.getMessage());
+                 }
+                 try
+                 {
+                    isFormatItemDefinitionOK(m_direction_of_file_name_reading,m_example_file_name, m_position_separator, m_position_column, m_position_start,m_position_length);
+                 }
+                 catch(Exception e)
+                 {
+                      throw new Exception("Problem: position definition. "+e.getMessage());    
+                 }
+                 try
+                 {
+                     if (isDirectionDefined())
+                     isFormatItemDefinitionOK(m_direction_of_file_name_reading,m_example_file_name, m_direction_separator, m_direction_column, m_direction_start,m_direction_length);
+
+                 }
+                  catch(Exception e)
+                 {
+                      throw new Exception("Problem: direction definition. "+e.getMessage());    
+                 }
+             
+         }
+         return result;
+     }
     
-    public void insert (Connection conn)throws BecDatabaseException
+     private boolean isDirectionDefined()
+     {
+         if ( m_direction_separator != null && m_direction_separator.trim().length()> 0) return true;
+         if ( m_direction_start > 0 && m_direction_length > 0 ) return true;
+         
+        return false;
+     }
+     
+     
+   
+     private boolean isFormatItemDefinitionOK(int direction_of_file_name_reading,String file_name,
+                String separator, int column, int start, int length)
+                throws Exception
+     {
+         ArrayList items = new ArrayList();
+         String item_descr = null;
+         
+         file_name = file_name.trim();
+           if ( separator != null && separator.trim().length()> 0)
+           {
+               // check for column definition
+               if ( column < 1)  throw new Exception("Column number less than zero.");
+                items = Algorithms.splitString(file_name, separator);
+                if ( items.size() < column) throw new Exception("Column number over total number of columns("+items.size()+").");
+                item_descr = getItemDescription(items,direction_of_file_name_reading,column );
+                if ( start == 0 ) throw new Exception("Start cannot be zero.");
+                if ( start > 0 )
+                {
+                    if ( start > item_descr.length())throw new Exception("Wrong start definition.");
+                    if (  length == 0 )throw new Exception("Length cannot be zero.");
+                    if (  start > 0 && length > 0 && (start + length-1) > item_descr.length()) throw new Exception("Wrong length definition.");
+             
+                    if (  start < 0 && length > 0 && (start + length) > item_descr.length()) throw new Exception("Wrong length definition.");
+                }
+            }
+           else
+           {
+               if ( (start < 1 || start > file_name.length()) ||
+                ( (start + length) < 1 || (start + length) > file_name.length() )) throw new Exception("Wrong definition for start and/or length of item.");
+                
+           }
+          return true;
+       
+     }
+     
+     
+   private String                   getItemDescription(ArrayList items,
+                            int direction_of_file_name_reading,int column )
+   {
+       if (  direction_of_file_name_reading==    READING_LEFT_TO_RIGHT )
+       {
+           return (String) items.get(column - 1);
+       }
+       else if ( direction_of_file_name_reading ==   READING_RIGHT_TO_LEFT )
+       {
+           return (String)items.get(items.size() - column);
+       }
+       return "";
+   }
+    public synchronized void insert (Connection conn)throws BecDatabaseException
     {
         Statement stmt = null;
         if (m_format_name == null || m_format_name.length()==0) return;
@@ -137,11 +235,11 @@ public class TraceFileNameFormat
                  +" PLATE_LABEL_COLUMN ,PLATE_LABEL_START  ,PLATE_LABEL_LENGTH ,"
                  +" POSITION_COLUMN,POSITION_START  ,POSITION_LENGTH  ,DIRECTION_FORWARD "
                  +" ,DIRECTION_REVERSE  ,DIRECTION_COLUMN,DIRECTION_LENGTH  ," 
-                 + "DIRECTION_START ,POSITION_SEPARATOR  ,DIRECTION_SEPARATOR, READING_DIRECTION ) values ('"
+                 + "DIRECTION_START ,POSITION_SEPARATOR  ,DIRECTION_SEPARATOR, READING_DIRECTION , EXAMPLE_FILE_NAME) values ('"
                  +m_format_name +"',"+m_id+",'"+m_plate_separator+"',"+m_plate_label_column+","+m_plate_label_start+
                  ","+m_plate_label_length+","+m_position_column+","+m_position_start+","+m_position_length
 +",'"+m_direction_forward+"','"+m_direction_reverse+"',"+m_direction_column+","+m_direction_length+
-","+m_direction_start+",'"+m_position_separator+"','"+m_direction_separator+"',"+m_direction_of_file_name_reading+")";
+","+m_direction_start+",'"+m_position_separator+"','"+m_direction_separator+"',"+m_direction_of_file_name_reading+",'"+m_example_file_name+"')";
        // System.out.println(sql);
             stmt = conn.createStatement();
             stmt.executeUpdate(sql);
@@ -154,7 +252,60 @@ public class TraceFileNameFormat
             DatabaseTransaction.closeStatement(stmt);
         }
     }
-   
+    
+    public boolean isSame(TraceFileNameFormat format)
+    {
+      if ( 
+            m_plate_label_column == format.getPlateLabelColumn() &&
+            m_plate_label_start == format.getPlateLabelStart() && //PLATE_LABEL_START>
+            m_plate_label_length == format.getPlateLabelLength() && //PLATE_LABEL_LENGTH>
+            m_position_column == format.getPositionColumn() && //POSITION_COLUMN>
+            m_position_start == format.getPositionStart() &&//POSITION_START> 
+            m_position_length == format.getPositionLength() && //POSITION_LENGTH>
+             
+            m_direction_column == format.getDirectionColumn()&& //DIRECTION_COLUMN>
+            m_direction_length == format.getDirectionLength()&&//DIRECTION_START>
+            m_direction_start == format.getDirectionStart()&& //DIRECTION_START>
+            m_direction_of_file_name_reading == format.getFileNameReadingDirection()) 
+      {
+          if (  m_plate_separator.equalsIgnoreCase(format.getPlateSeparator()) &&
+                m_direction_forward.equalsIgnoreCase(format.getDirectionForward()) &&
+                m_direction_reverse.equalsIgnoreCase(format.getDirectionReverse()) &&
+                m_position_separator.equalsIgnoreCase(format.getPlateSeparator()) &&
+                m_direction_separator.equalsIgnoreCase( format.getDirectionSeparator()) 
+             )
+              return true;
+          else 
+              return false;
+           
+      }
+       else
+          return false;
+      
+     
+    }
+    public synchronized static void  deleteFormatById(Connection conn, int mode, String item_id)    throws BecDatabaseException
+    {
+        String sql = null;
+        try
+        {
+            if ( mode == 0)//format id
+            {
+                sql = "delete from TRACEFILEFORMAT where  FORMATID = "+item_id;
+            }
+            else if ( mode == 1)//name
+            {
+                sql = "delete from TRACEFILEFORMAT   FORMATNAME ='"+item_id+"'";
+            }
+            DatabaseTransaction.executeUpdate(sql,conn);
+          
+        } 
+        catch (Exception sqlE)
+        {
+            throw new BecDatabaseException("Error occured while deleting trace file format with "+item_id+"\n"+sqlE);
+        }
+    }
+   /*
     public static void    writeXMLFile(String xml_file_name, ArrayList formats)throws Exception
     {
         TraceFileNameFormat format = null;
@@ -176,11 +327,72 @@ public class TraceFileNameFormat
       format_file.flush();
       format_file.close();
     }
+    *
+    *
+    *public String toStringg()
+    **/
+    
+    public String           toString()
+    {
+        return "FORMATNAME"+ "----"+ this.getFormatName()+" "
+       +"PLATE_SEPARATOR"+ "----"+ this.getPlateSeparator()+" " 
+       +"POSITION_SEPARATOR"+ "----"+ this.getPositionSeparator()+" "
+       +"DIRECTION_SEPARATOR"+ "----"+ this.getDirectionSeparator()+" "
+       +"PLATE_LABEL_COLUMN"+ "----"+this.getPlateLabelColumn()+" "
+       
+       +"PLATE_LABEL_START"+ "----"+this.getPlateLabelStart()+" "    
+        +"PLATE_LABEL_LENGTH"+ "----"+this.getPlateLabelLength()+" "   
+        +"POSITION_COLUMN"+ "----"+this.getPositionColumn()+" "   
+        +"POSITION_START"+ "----"+this.getPositionStart()+" "
+        +"POSITION_LENGTH"+ "----"+this.getPositionLength()+" "   
+        +"DIRECTION_FORWARD"+ "----"+ this.getDirectionForward()+" "  
+        +"DIRECTION_REVERSE"+ "----"+ this.getDirectionReverse()+" "   
+        +"DIRECTION_COLUMN"+ "----"+this.getDirectionColumn()+" "   
+        +"DIRECTION_LENGTH"+ "----"+this.getDirectionLength()+" " 
+        +"DIRECTION_START"+ "----"+this.getDirectionStart()+" "   
+        +"EXAMPLE_TRACE_FILE_NAME"+ "----"+ this.getExampleFileName();
+    }
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        // TODO code application logic here
+    public static void main(String[] args) 
+    {
+          TraceFileNameFormat format = new TraceFileNameFormat();
+        format.setFormatName ( "abc");  //FORMAT_NAME> 
+         format.setExampleFileName( "FKGS001230.1A10_F_080.ab1 ");   //DIRECTION_COLUMN>
+       format.setPlateSeparator ("_");//</SEPARATOR>
+       format.setPlateLabelColumn ( 3);   //DIRECTION_COLUMN>
+      format.setPlateLabelStart ( 4);   //DIRECTION_COLUMN>
+      format.setPlateLabelLength (-1);   //DIRECTION_COLUMN>
+      
+         format.setPositionSeparator ("_");//</SEPARATOR>
+          format.setPositionColumn ( 3);   //DIRECTION_COLUMN>
+      format.setPositionStart ( 1);   //DIRECTION_COLUMN>
+       format.setPositionLength (3);   //DIRECTION_COLUMN>
+      
+       format.setDirectionForward ("F");   //DIRECTION_FORWARD>
+       format.setDirectionReverse ("R");   //DIRECTION_REVERSE>
+      
+       format.setDirectionSeparator ("_");//</SEPARATOR>
+       format.setDirectionColumn ( 2);   //DIRECTION_COLUMN>
+        format.setDirectionLength (-1);   //DIRECTION_COLUMN>
+       format.setDirectionStart ( -1);   //DIRECTION_COLUMN>
+       format.setFileNameReadingDirection(TraceFileNameFormat.READING_RIGHT_TO_LEFT);
+       try
+       {
+          format.isFormatDefinitionOK();
+       }
+       catch(Exception e)
+       {
+        System.out.println(e.getMessage());
+       }
+     SequencingFacilityFileName    br= new SequencingFacilityFileName(format.getExampleFileName(), format, true);
+       
+       System.out.println(br.getPlateName());
+       System.out.println(br.getWellName());
+       System.out.println(br.getOrientation());
+       System.exit(0);
+        
     }
     
 }

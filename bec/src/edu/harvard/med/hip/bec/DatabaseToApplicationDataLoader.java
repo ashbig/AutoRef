@@ -48,7 +48,7 @@ public class DatabaseToApplicationDataLoader
     private static Hashtable      m_species_definition = null;
     private static Hashtable      m_trace_file_formats = null;
   
-    public static void            loadDefinitionsFromDatabase()
+    public synchronized static void            loadDefinitionsFromDatabase()
     {
         loadProjectDefinition();
         loadBiologicalSpeciesNames();
@@ -73,7 +73,7 @@ public class DatabaseToApplicationDataLoader
                  +" PLATE_LABEL_COLUMN ,PLATE_LABEL_START  ,PLATE_LABEL_LENGTH ,"
                  +" POSITION_COLUMN,POSITION_START  ,POSITION_LENGTH  ,DIRECTION_FORWARD "
                  +" ,DIRECTION_REVERSE  ,DIRECTION_COLUMN,DIRECTION_LENGTH  ," 
-                 + "DIRECTION_START ,POSITION_SEPARATOR  ,DIRECTION_SEPARATOR  from TRACEFILEFORMAT ";
+                 + "DIRECTION_START ,POSITION_SEPARATOR  ,DIRECTION_SEPARATOR, EXAMPLE_FILE_NAME  from TRACEFILEFORMAT ";
        
         try
         {
@@ -98,6 +98,7 @@ public class DatabaseToApplicationDataLoader
                 format.setDirectionLength (rs.getInt("DIRECTION_LENGTH"));  //DIRECTION_START>
                 format.setDirectionStart(rs.getInt("DIRECTION_START"));
                 format.setFileNameReadingDirection(rs.getInt("READING_DIRECTION"));
+                format.setExampleFileName(rs.getString("EXAMPLE_FILE_NAME"));
                 m_trace_file_formats.put(format.getFormatName (),format);
                 }
            
@@ -275,11 +276,17 @@ public class DatabaseToApplicationDataLoader
      //00000000000000000000000000
       public static void main(String args[])
     {
-        TraceFileNameFormat format = null;
+           BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
+        sysProps.verifyApplicationSettings();
+      
+        TraceFileNameFormat format = null;   String    item_value =null;
     DatabaseToApplicationDataLoader.loadTraceFileFormats();
    for(Enumeration e=  DatabaseToApplicationDataLoader.getTraceFileFormats().elements(); e.hasMoreElements();)
    {
         format = (TraceFileNameFormat)e.nextElement();
+         item_value = "<a href="+ BecProperties.getInstance().getProperty("JSP_REDIRECTION") +"Seq_GetItem.do?forwardName="
+                    + Constants.PROCESS_DELETE_TRACE_FILE_FORMAT +"&ID="+ format.getId() +" onclick=\"return confirm('Are you sure you want to delete format "+ format.getFormatName() +"?');\">Delete </a>";
+                  
    }
       }
 }

@@ -52,7 +52,7 @@ public class DeleteObjectRunner extends ProcessRunner
             case  Constants.PROCESS_DELETE_TRACE_FILES :return "delete Trace Files from hard drive";
             case Constants.PROCESS_MOVE_TRACE_FILES:return "move Trace Files from clone directories";
             case Constants.PROCESS_REANALYZE_CLONE_SEQUENCE: return "delete result of clone sequence analysis";
-                                    
+             case Constants.PROCESS_CLEANUP_INTERMIDIATE_FILES_FROM_HARD_DRIVE: return "clean-up hard drive";                      
              default: return  "";
         }
      }
@@ -86,7 +86,9 @@ public class DeleteObjectRunner extends ProcessRunner
                        switch( this.m_process_type)
                        {
                             case  Constants.PROCESS_GET_TRACE_FILE_NAMES :{getTraceFileNames((String)sql_groups_of_items.get(count),report_file_name); break;}
-                             case Constants.PROCESS_DELETE_PLATE : 
+                            case Constants.PROCESS_CLEANUP_INTERMIDIATE_FILES_FROM_HARD_DRIVE:{ deleteIntermediateFiles((String)sql_groups_of_items.get(count),report_file_name); break;}
+                          
+                           case Constants.PROCESS_DELETE_PLATE : 
                             case Constants.PROCESS_DELETE_CLONE_READS : 
                             case Constants.PROCESS_DELETE_CLONE_FORWARD_READ : 
                             case Constants.PROCESS_DELETE_CLONE_REVERSE_READ : 
@@ -142,6 +144,111 @@ public class DeleteObjectRunner extends ProcessRunner
     }
     
     //----------------------------------------------------
+    private void            deleteIntermediateFiles(String sql_groups_of_items,String report_file_name) throws Exception
+    {
+        ArrayList directoryNames = getDirectoryNames(sql_groups_of_items);
+       
+        EndReadsWrapperRunner erw = new EndReadsWrapperRunner();
+        String common_path = erw.getOuputBaseDir();
+        String dir_name = null; File directory  = null;
+        for ( int count = 0; count < directoryNames.size(); count++)
+        {
+            dir_name = (String)directoryNames.get(count);
+            directory = new File(common_path+File.separator+ dir_name +File.separator);
+            deleteIntermediateFilesForClone(directory,report_file_name);
+            
+           
+        }
+        
+    }
+    
+    
+    private void            deleteIntermediateFilesForClone(File clone_directory, String report_file_name)
+    {
+         String directory_name = null;
+    ArrayList messages = new ArrayList();
+        messages.add("Cleanning directory "+clone_directory.getAbsolutePath());
+        if (clone_directory.exists() &&  clone_directory.isDirectory() )
+        {   
+                directory_name = clone_directory.getAbsolutePath() + File.separator + PhredWrapper.SEQUENCE_DIR_NAME ;
+                try
+                {
+                    messages.add("Deleting files from directory "+directory_name);
+                    FileOperations.deleteFilesInDirectory(directory_name);
+                    messages.add("Finished delete files from directory "+directory_name);
+                }
+                catch(Exception e)
+                {
+                    m_error_messages.add(e.getMessage());
+                    messages.add("Failed delete files from directory "+directory_name);
+                }
+                directory_name = clone_directory + File.separator + PhredWrapper.QUALITY_DIR_NAME  ;
+               try
+                {
+                    messages.add("Deleting files from directory "+directory_name);
+                    FileOperations.deleteFilesInDirectory(directory_name);
+                    messages.add("Finished delete files from directory "+directory_name);
+                }
+                catch(Exception e)
+                {
+                    m_error_messages.add(e.getMessage());
+                    messages.add("Failed delete files from directory "+directory_name);
+                }
+     directory_name = clone_directory + File.separator + PhredWrapper.PHD_DIR_NAME  ;
+               try
+                {
+                    messages.add("Deleting files from directory "+directory_name);
+                    FileOperations.deleteFilesInDirectory(directory_name);
+                    messages.add("Finished delete files from directory "+directory_name);
+                }
+                catch(Exception e)
+                {
+                    m_error_messages.add(e.getMessage());
+                    messages.add("Failed delete files from directory "+directory_name);
+                }
+     directory_name = clone_directory + File.separator + PhredWrapper.EDIT_DIR_NAME  ;
+               try
+                {
+                    messages.add("Deleting files from directory "+directory_name);
+                    FileOperations.deleteFilesInDirectory(directory_name);
+                    messages.add("Finished delete files from directory "+directory_name);
+                }
+                catch(Exception e)
+                {
+                    m_error_messages.add(e.getMessage());
+                    messages.add("Failed delete files from directory "+directory_name);
+                }
+     directory_name = clone_directory + File.separator + PhredWrapper.CONTIG_DIR_NAME ;
+                try
+                {
+                    messages.add("Deleting files from directory "+directory_name);
+                    FileOperations.deleteFilesInDirectory(directory_name);
+                    messages.add("Finished delete files from directory "+directory_name);
+                }
+                catch(Exception e)
+                {
+                    m_error_messages.add(e.getMessage());
+                    messages.add("Failed delete files from directory "+directory_name);
+                }
+     directory_name = clone_directory + File.separator + PhredWrapper. CONSENSUS_DIR_NAME  ;
+                try
+                {
+                    messages.add("Deleting files from directory "+directory_name);
+                    FileOperations.deleteFilesInDirectory(directory_name);
+                    messages.add("Finished delete files from directory "+directory_name);
+                }
+                catch(Exception e)
+                {
+                    m_error_messages.add(e.getMessage());
+                    messages.add("Failed delete files from directory "+directory_name);
+                }
+               printReport(messages,   report_file_name , "clean-up hard drive");
+               
+        }
+
+    }
+    
+   
     private void            getTraceFileNames(String sql_groups_of_items,String report_file_name) throws Exception
     {
         ArrayList directoryNames = getDirectoryNames(sql_groups_of_items);
@@ -291,7 +398,7 @@ public class DeleteObjectRunner extends ProcessRunner
                 sql_for_deletion = getSqlDeleteCloneSequenceAnalysisResult(sql_items);
                 break;
             }
-          //  case  Constants.PROCESS_UPDATE_REFERENCE_SEQUENCE : break;
+           //  case  Constants.PROCESS_UPDATE_REFERENCE_SEQUENCE : break;
   
             default: m_error_messages.add("Action not set.");
         }
@@ -600,7 +707,7 @@ sql = "update  result set resultvalueid = null, resulttype = "+Result.RESULT_TYP
         try
         {
             in =  new FileWriter(report_file_name, true);
-            in.write(title);
+            in.write(title + Constants.LINE_SEPARATOR );
             for (int count =0; count < sql_statements.size(); count++)
             {
                   in.write( (String) sql_statements.get(count)+ Constants.LINE_SEPARATOR);
@@ -632,9 +739,8 @@ sql = "update  result set resultvalueid = null, resulttype = "+Result.RESULT_TYP
         sysProps.verifyApplicationSettings();
        edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
     
-           input.setProcessType(Constants.PROCESS_DELETE_PLATE);
-           String items = "VCXXG002290-2.012-1   ASA001213 ";
-           input.setInputData( Constants.ITEM_TYPE_PLATE_LABELS, items);
+           input.setProcessType(Constants.PROCESS_CLEANUP_INTERMIDIATE_FILES_FROM_HARD_DRIVE);
+           input.setInputData( Constants.ITEM_TYPE_CLONEID, "111315 133676 -100 ");
            input.run();
             
         }

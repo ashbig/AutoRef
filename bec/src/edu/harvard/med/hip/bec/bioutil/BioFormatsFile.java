@@ -107,7 +107,7 @@ public class BioFormatsFile {
             File f = new File("C:\\BEC\\submit_clone_sequence.txt");
             InputStream input = new FileInputStream(f);
             ArrayList ar = BioFormatsFile.readFASTAFile(input) ;
-            System.out.println(ar.size());
+           
         }
         catch(Exception e){}
       }

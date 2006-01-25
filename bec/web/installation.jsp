@@ -2,7 +2,7 @@
 "http://www.w3.org/TR/html4/loose.dtd">
 <HTML>
 <HEAD>
-
+<%@ page import="edu.harvard.med.hip.bec.util.*" %>
 	
 
        <link rel=stylesheet type="text/css" href="/style/format.css">
@@ -111,15 +111,15 @@
           <li> Prepare a <b>vector sequence</b> libraries (Fasta format file) 
             that will be used by cross-match for vector trimming. All vector files 
             should be placed in one directory. Edit<b> phredPhrap.perl</b> script 
-            to reflect location of the cloning vectors' sequence files <a href="<%= redirection%>help_phredPhrapScript.html" target="_blank">(see 
+            to reflect location of the cloning vectors' sequence files <a href="help_phredPhrapScript.html" target="_blank">(see 
             example of phredPhrap.perl)</a>.</li>
           <li> Edit the <b>phred, cross_match and phrap</b> scripts. The following 
             perl scripts should be edited (phredPhrap.perl, tagRepeats.perl, findSequenceMatchesforConsed.perl, 
             addReads2Conseq.perl, transferConsensusTags.perl).. </li>
-          <li>Edit <a href="<%= redirection%>help_PhredPhrap.html"  target="_blank"> 
+          <li>Edit <a href="help_PhredPhrap.html"  target="_blank"> 
             Phred Parameter File (phredpar.dat) </a>to add a new chemistry if 
             needed.</li>
-          <li>Compile Trimming_java_script.java and <a href="<%= redirection%>help_phredPhrapScript.html"  target="_blank">reflect 
+          <li>Compile Trimming_java_script.java and <a href="help_phredPhrapScript.html"  target="_blank">reflect 
             location of the script</a> in phredPhrap.perl. This script is used 
             to allow user additional quality trimming of the trace files before 
             start of assembly (see ACE user guide).</li>
@@ -131,20 +131,20 @@
             Optional: rebuild user blastable databases if applicable.</li>
           <li> Get ACE package distribution .war file from Harvard Institute of 
             Proteomics and load it..</li>
-          <li>Change<a href="<%= redirection%>help_WebXMLChange.html" target="_blank"> 
+          <li>Change<a href="help_WebXMLChange.html" target="_blank"> 
             web.xml</a> file to reflect location of ACE database schema.</li>
-          <li> Edit <a href="<%= redirection%>help_ACEConfigurationFile.html"  target="_blank">ACE 
+          <li> Edit <a href="help_ACEConfigurationFile.html"  target="_blank">ACE 
             configuration file</a> to reflect server settings. Check wether all 
             server configuration settings were properly reflected in configuration 
             file on ACE Start-up. You will see error messages printed in Tomcat 
             window, if something was not setup properly. In the case of any error: 
             shutdown Tomcat, edit configuration file and rebuild ACE.</li>
           <li>If you are planing to use Polymorphism Finder (see ACE user guide), 
-            edit <a href="<%= redirection%>help_PolymFinderConfigurationFile.html"  target="_blank">configuration 
+            edit <a href="help_PolymFinderConfigurationFile.html"  target="_blank">configuration 
             file for the module</a>.</li>
         </ul>
-        <p class="disclaimer">&copy; 2005 by <a href="mailto:hip_informatics@hms.harvard.edu" >Helen 
-          Taycher </a><a href="mailto:hip_informatics@hms.harvard.edu"></a> last changed 
+        <p class="disclaimer">&copy; 2005 by <a href="mailto:<%=  BecProperties.getInstance().getACEEmailAddress() %>" >Helen 
+          Taycher </a><a href="mailto:<%=  BecProperties.getInstance().getACEEmailAddress() %>"></a> last changed 
           September 1, 2005</p></td>
     </tr>
    

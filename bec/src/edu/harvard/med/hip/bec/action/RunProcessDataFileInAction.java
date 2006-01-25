@@ -38,7 +38,7 @@ import edu.harvard.med.hip.bec.sampletracking.objects.*;
  */
    
 
-public class RunProcessDataFileInAction extends ResearcherAction
+public class RunProcessDataFileInAction extends BecAction
 {
     
     

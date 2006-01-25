@@ -446,6 +446,16 @@ public class Algorithms
         return arr;
     }    
   
+     
+    public static String            getXMLFileHeader()
+    {
+        return "<?xml version='1.0' encoding='ISO-8859-1'?>"
+    +"<!DOCTYPE web-app      PUBLIC '-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN' "
+    +" 'http://java.sun.com/dtd/web-app_2_3.dtd'> ";
+
+    }
+     
+     //--------------------------------
     public static void main(String args[])
     {
       

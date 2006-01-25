@@ -1,5 +1,5 @@
 /**
- * $Id: Container.java,v 1.31 2005-11-14 16:10:40 Elena Exp $
+ * $Id: Container.java,v 1.32 2006-01-25 16:41:44 Elena Exp $
  *
  * File     	: Container.java
 
@@ -1248,8 +1248,8 @@ public class Container
               BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
             sysProps.verifyApplicationSettings();
         
-           ArrayList plateNames = Container.findContainerLabelsForProcess(Constants.PROCESS_SELECT_PLATES_FOR_END_READS,  75);
-                   
+         ArrayList pr_history = Container.getProcessHistoryItems( "VCXXG002291-1.012-1");
+               // ArrayList pr_history = Container.getProcessHistoryItems( "BSA000768");          
         }
         catch(Exception e)
         {

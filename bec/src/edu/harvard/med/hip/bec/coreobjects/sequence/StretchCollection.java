@@ -415,7 +415,7 @@ vi.	Type of definition (coverage low quality / no coverage )
          Stretch lqr = null;
          StringBuffer stretch_collection_html_description = new StringBuffer();
          StringBuffer stretch_html_description = null;
-         String header = " <th>Name </th><th>Cds Region</th><th>Sequence Region</th>"
+         String header = " <th>Name </th><th>CDS Region</th><th>Sequence Region</th>"
          +" <th>Sequence</th><th>Discrepancy Report </th>";
          ArrayList discrepancies = null;
          String discrepancy_report_button_text = null;

@@ -169,6 +169,7 @@ public class Constants {
     
     //jsp tags
     public static final String ADDITIONAL_JSP = "additional_jsp";
+    public static final String JSP_CURRENT_LOCATION = "page_location";
     public static final String JSP_TITLE = "title";
     public static final String SPEC_COLLECTION = "spec_collection";
     public static final String SPEC_TITLE_COLLECTION = "spec_title_collection";
@@ -253,8 +254,11 @@ public class Constants {
     public static final int         PROCESS_SUBMIT_CLONE_COLLECTION  = 97;
     public static final int         PROCESS_SUBMIT_CLONE_SEQUENCES  = 101;
 
- public static final int         PROCESS_SET_CLONE_FINAL_STATUS  = 102;
-public static final int         PROCESS_REANALYZE_CLONE_SEQUENCE  = 103;
+    public static final int         PROCESS_SET_CLONE_FINAL_STATUS  = 102;
+    public static final int         PROCESS_REANALYZE_CLONE_SEQUENCE  = 103;
+     public static final int         PROCESS_VERIFY_TRACE_FILE_FORMAT =105;
+       public static final int         PROCESS_DELETE_TRACE_FILE_FORMAT =106;
+      public static final int           PROCESS_CLEANUP_INTERMIDIATE_FILES_FROM_HARD_DRIVE =107;
 
     // max process 103
 
@@ -287,6 +291,8 @@ public static final int         PROCESS_REANALYZE_CLONE_SEQUENCE  = 103;
     public static final int STRETCH_COLLECTION_REPORT_ALL_INT = 24;
     public static final int LQR_COLLECTION_REPORT_INT = 25;
     public static final int AVAILABLE_SPECIFICATION_INT = 26;
+    public static final int         DISPLAY_TRACE_FILE_FORMAT_EXAMPLE =27;
+   
 
 
 
@@ -366,4 +372,24 @@ public static String           getItemTypeAsString(int object_type)
         
         return fmt.format(number);
     }
-}
+    
+    
+    //UI ids for page load
+    public static final int UI_ABOUT_PAGE = -3000;
+    public static final int UI_HELP_PAGE = -3001;
+    public static final int UI_SELECT_PROCESS_PAGE = -3002;
+    public static final int UI_GENERAL_REPORT_PAGE = -3003;
+    public static final int UI_ISOLATE_RANKER_SPEC_PAGE = -3004;
+    public static final int UI_PRIMER_DESIGNER_SPEC_PAGE = -3005;
+    public static final int UI_POLYMFINDER_SPEC_PAGE = -3006;
+    public static final int UI_CLONEEVAL_SPEC_PAGE = -3007;
+    public static final int UI_SEQUENCETRIMMING_SPEC_PAGE = -3008;
+    
+     public static final int UI_VIEW_PROCESS_RESULTS_PAGE = -3009;
+     public static final int UI_SELECT_PROCESS_DELETE_DATA_PAGE = -3010;  
+     public static final int UI_SELECT_PROCESS_UPLOAD_DATA_PAGE = -3011; 
+     
+     public static final int UI_SELECT_PROCESS_EREAD_MANIPULATION_PAGE = -3012;
+public static final int UI_SELECT_PROCESS_SET_CLONE_STATUS = -3013;
+public static final int UI_SELECT_PROCESS_INTERNAL_PRIMERS_PAGE = -3014;
+      }

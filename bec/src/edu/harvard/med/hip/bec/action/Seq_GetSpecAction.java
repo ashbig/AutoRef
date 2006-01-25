@@ -39,7 +39,7 @@ import edu.harvard.med.hip.bec.form.*;
 import edu.harvard.med.hip.bec.user.*;
 import edu.harvard.med.hip.bec.Constants;
 
-public class Seq_GetSpecAction extends ResearcherAction
+public class Seq_GetSpecAction extends BecAction
 {
 
 
@@ -63,7 +63,8 @@ public class Seq_GetSpecAction extends ResearcherAction
 
             String username = user.getUsername();
             request.setAttribute("forwardName", new Integer(forwardName));
-
+            request.setAttribute(Constants.JSP_CURRENT_LOCATION, getPageLocation(forwardName));
+            request.setAttribute(Constants.JSP_TITLE, getPageTitle(forwardName));
             //show spec by id
             if ( forwardName >= Spec.SPEC_SHOW_SPEC)
             {
@@ -240,11 +241,52 @@ public class Seq_GetSpecAction extends ResearcherAction
         }
         catch (Exception e)
         {
-            System.out.println(e.getMessage());
+            //System.out.println(e.getMessage());
             request.setAttribute(Action.EXCEPTION_KEY, e);
             return (mapping.findForward("error"));
         }
         return (mapping.findForward("error"));
+    }
+    
+    
+    private String              getPageTitle(int forwardName)
+    {
+        switch(forwardName)
+        {
+            case Spec.END_READS_SPEC_INT: return"Clone Ranking ";
+            case Spec.FULL_SEQ_SPEC_INT:return "Acceptance Criteria";
+            case Primer3Spec.PRIMER3_SPEC_INT:return"Primer Designer Settings";
+            case PolymorphismSpec.POLYMORPHISM_SPEC_INT:return"Polymorphism Detector Settings";
+            case SlidingWindowTrimmingSpec.TRIM_SLIDING_WINDOW_SPEC_INT:return"Sequence Trimming Settings";
+            case Spec.END_READS_SPEC_INT * Spec.SPEC_SHOW_USER_ONLY_SPECS:return"Clone Ranking ";
+            case Spec.FULL_SEQ_SPEC_INT * Spec.SPEC_SHOW_USER_ONLY_SPECS:return"Acceptance Criteria";
+            case Spec.PRIMER3_SPEC_INT * Spec.SPEC_SHOW_USER_ONLY_SPECS:return"Primer Designer Settings";
+            case Spec.POLYMORPHISM_SPEC_INT * Spec.SPEC_SHOW_USER_ONLY_SPECS:return"Polymorphism Detector Settings";
+            case Spec.TRIM_SLIDING_WINDOW_SPEC_INT * Spec.SPEC_SHOW_USER_ONLY_SPECS:return"Sequence Trimming Settings";
+            case  Spec.SPEC_DELETE_SPEC:return"Delete Specification";
+            case Constants.AVAILABLE_SPECIFICATION_INT:return"Process Configurations";
+            default: return "";
+      
+        }
+    }
+    private String              getPageLocation(int forwardName)
+    {
+        switch(forwardName)
+        {
+            case Spec.END_READS_SPEC_INT: return"Home > Analysis Settings > All Available Clone Ranking Settings";
+            case Spec.FULL_SEQ_SPEC_INT:return "Home > Analysis Settings > All Available Clone Acceptance Criteria";
+            case Primer3Spec.PRIMER3_SPEC_INT:return"Home > Analysis Settings > All Available Primer Designer Settings";
+            case PolymorphismSpec.POLYMORPHISM_SPEC_INT:return"Home > Analysis Settings > All Available Polymorphism Detector Settings";
+            case SlidingWindowTrimmingSpec.TRIM_SLIDING_WINDOW_SPEC_INT:return"Home > Analysis Settings > All Available Sequence Trimming Settings";
+            case Spec.END_READS_SPEC_INT * Spec.SPEC_SHOW_USER_ONLY_SPECS:return"Home > Analysis Settings > User Clone Ranking Settings";
+            case Spec.FULL_SEQ_SPEC_INT * Spec.SPEC_SHOW_USER_ONLY_SPECS:return"Home > Analysis Settings > User Clone Acceptance Criteria ";
+            case Spec.PRIMER3_SPEC_INT * Spec.SPEC_SHOW_USER_ONLY_SPECS:return"Home > Analysis Settings > User Primer Designer Settings";
+            case Spec.POLYMORPHISM_SPEC_INT * Spec.SPEC_SHOW_USER_ONLY_SPECS:return"Home > Analysis Settings > User  Polymorphism Detector Settings";
+            case Spec.TRIM_SLIDING_WINDOW_SPEC_INT * Spec.SPEC_SHOW_USER_ONLY_SPECS:return"Home > Analysis Settings > User Sequence Trimming Settings";
+            case  Spec.SPEC_DELETE_SPEC:return"Home > Analysis Settings > Delete Specification";
+            case Constants.AVAILABLE_SPECIFICATION_INT:return"Hame > View > Process Configurations";
+            default: return "";
+        }
     }
 
 }

@@ -63,7 +63,12 @@ else if (forwardName!= null && forwardName instanceof Integer ) forwardName_int 
       <input    type="radio" name="forwardName" value="<%= Constants.PROCESS_RUN_ASSEMBLER_FOR_ALL_READS  %>">
       Run generic assembler **</td>
   </tr>
-  
+  <tr class='evenRowColoredFontNotBold'> 
+    <td   height="25"  >&nbsp; 
+     <input   type="radio" name="forwardName" value="<%= Constants.PROCESS_SUBMIT_CLONE_SEQUENCES %>">
+     
+     Upload clones sequence from file</td>
+</tr>
   <tr  > 
     <td   height="25"  ><P>*Operates on plate level, but can evaluate clones with only one read.
       </td>

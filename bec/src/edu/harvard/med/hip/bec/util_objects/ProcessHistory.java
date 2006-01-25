@@ -198,7 +198,7 @@ public class ProcessHistory
               return "select s.containerid, POSITION, s.sampleid as sampleid,  flexcloneid  as CLONEID, sc.refsequenceid as refsequenceid,  i.CONSTRUCTID,  i.ISOLATETRACKINGID as ISOLATETRACKINGID  "
  +" from flexinfo f,isolatetracking i, sample s,  sequencingconstruct sc, containerheader ch   where  f.isolatetrackingid=i.isolatetrackingid and "
 +" i.sampleid=s.sampleid and ch.containerid=s.containerid   and sc.constructid=i.constructid  and s.sampleid in "
-+" (select min(sampleid ) from sample where sampletype='ISOLATE' and containerid in (select containerid from containerheader where label ='"+items.get(0)+"') )";
++" (select min(sampleid ) from sample where sampletype='ISOLATE' and containerid in (select containerid from containerheader where Upper(label) ='"+items.get(0)+"') )";
 
             } 
             case Constants.ITEM_TYPE_CLONEID:

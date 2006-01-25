@@ -35,7 +35,7 @@ import edu.harvard.med.hip.bec.util.*;
 import edu.harvard.med.hip.bec.Constants;
 import edu.harvard.med.hip.bec.sampletracking.objects.*;
 
-public class TraceFileProcessingAction extends ResearcherAction
+public class TraceFileProcessingAction extends BecAction
 {
     
     
@@ -44,21 +44,25 @@ public class TraceFileProcessingAction extends ResearcherAction
                 throws ServletException, IOException
     {
         ActionErrors errors = new ActionErrors();
-        
+          
         int forwardName = ((SubmitDataFileForm)form).getForwardName();
         Thread t = null;
         try
         {
             User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
+             System.out.println("user "+user); 
+     
             ProcessRunner runner = new TraceFileProcessingRunner();
             runner.setProcessType(forwardName);
+            request.setAttribute(Constants.JSP_CURRENT_LOCATION,getPageLocation(forwardName));
+               request.setAttribute(Constants.JSP_TITLE,getPageTitle(forwardName));
+                
             switch (forwardName)
             {
                 case Constants.PROCESS_CREATE_FILE_FOR_TRACEFILES_TRANSFER:
                 {
                      String items = (String)request.getParameter("items");
-                    request.setAttribute(Constants.JSP_TITLE,"Processing Request for Plates Upload");
-                  //     request.setAttribute(Constants.ADDITIONAL_JSP,"Processing plates:\n"+items.toUpperCase().trim() +". Files will be send to you by e-mail.");
+                   //     request.setAttribute(Constants.ADDITIONAL_JSP,"Processing plates:\n"+items.toUpperCase().trim() +". Files will be send to you by e-mail.");
                  
                     request.setAttribute(Constants.ADDITIONAL_JSP,"Processing plates:\n"+items.trim() +". Files will be send to you by e-mail.");
                     ((TraceFileProcessingRunner)runner).setReadDirection((String)request.getParameter("read_direction"));
@@ -69,7 +73,6 @@ public class TraceFileProcessingAction extends ResearcherAction
                 }
                 case Constants.PROCESS_INITIATE_TRACEFILES_TRANSFER:
                 {
-                    request.setAttribute(Constants.JSP_TITLE,"Processing Request for Trace Files Transfer");
                     request.setAttribute(Constants.ADDITIONAL_JSP,"Report will be send to you by e-mail.");
              
                     String inputdir = (String)request.getParameter("inputdir");
@@ -96,7 +99,6 @@ public class TraceFileProcessingAction extends ResearcherAction
                 }
                 case Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRANSFER:
                 {
-                    request.setAttribute(Constants.JSP_TITLE,"Processing Request for Creating Renaming File for Trace Files");
                     request.setAttribute(Constants.ADDITIONAL_JSP,"Application will put renaming file into input directory. Report will be send to you by e-mail.");
                     String inputdir = (String)request.getParameter("inputdir");
                     ((TraceFileProcessingRunner) runner).setInputDirectory(inputdir);
@@ -136,8 +138,45 @@ public class TraceFileProcessingAction extends ResearcherAction
         
     }
 
-
+    
+    private String          getPageTitle(int forwardName)
+    {
+        switch (forwardName)
+        {
+                case Constants.PROCESS_CREATE_FILE_FOR_TRACEFILES_TRANSFER:
+                 return "  Processing Request for Plate Upload";
+                 
+                    
+                case Constants.PROCESS_INITIATE_TRACEFILES_TRANSFER:
+                 return "Processing Request for Trace Files Transfer";
+                   
+                case Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRANSFER:
+                return "Processing Request for Creating Trace Renaming File for Trace Files";
+         default: return "";
+        }
+     }
+     
+    
+    private String          getPageLocation(int forwardName)
+    {
+        switch (forwardName)
+        {
+                case Constants.PROCESS_CREATE_FILE_FOR_TRACEFILES_TRANSFER:
+                 return " Home > Trace Files >  Processing Request for Plate Upload";
+                 
+                    
+                case Constants.PROCESS_INITIATE_TRACEFILES_TRANSFER:
+                 return "Home > Trace Files > Upload Trace Files ";
+                   
+                case Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRANSFER:
+                return "Home > Trace Files >  Create Renaming File";
+         default: return "";
+        }
+     }
+                
 
 
     
 }
+
+

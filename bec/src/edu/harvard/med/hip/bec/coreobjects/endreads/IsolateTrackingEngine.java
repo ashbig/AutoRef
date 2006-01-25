@@ -135,7 +135,7 @@ public class IsolateTrackingEngine
       }
     
        
-    public void insert(Connection conn)throws BecDatabaseException
+    public synchronized void insert(Connection conn)throws BecDatabaseException
     {
         String sql = null;
         if ( m_construct_id == -1)

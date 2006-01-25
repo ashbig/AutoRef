@@ -41,8 +41,9 @@ import edu.harvard.med.hip.bec.ui_objects.*;
 import edu.harvard.med.hip.bec.*;
 import edu.harvard.med.hip.bec.sampletracking.objects.*;
 import edu.harvard.med.hip.bec.programs.needle.*;
+import edu.harvard.med.hip.bec.sampletracking.mapping.*;
 
-public class Seq_GetItemAction extends ResearcherAction
+public class Seq_GetItemAction extends BecAction
 {
     
     
@@ -56,10 +57,11 @@ public class Seq_GetItemAction extends ResearcherAction
         ActionErrors errors = new ActionErrors();
         int forwardName = ((Seq_GetSpecForm)form).getForwardName();
          request.setAttribute("forwardName", new Integer(forwardName));
+         request.setAttribute(Constants.JSP_CURRENT_LOCATION, getPageLocation(forwardName));
+          request.setAttribute(Constants.JSP_TITLE, getPageTitle(forwardName));
                    
         String label = null;int id = -1;Container container = null;
-        String title = "";
-        try
+         try
         {
             if ( forwardName == Constants.CONTAINER_PROCESS_HISTORY || forwardName 
                 ==Constants.CONTAINER_DEFINITION_INT ||
@@ -69,6 +71,7 @@ public class Seq_GetItemAction extends ResearcherAction
               //   forwardName == Constants.PROCESS_ACTIVATE_CLONES ||
                  forwardName == Constants.PROCESS_CHECK_READS_AVAILABILITY 
                //  || forwardName == Constants.PROCESS_APROVE_ISOLATE_RANKER
+                 
                  )//rocessing from container label
                {
                      
@@ -100,11 +103,11 @@ public class Seq_GetItemAction extends ResearcherAction
              //  forwardName == Constants.CONSTRUCT_DEFINITION_REPORT ||
                forwardName == Constants.CLONE_SEQUENCE_DEFINITION_REPORT_INT ||
                forwardName == Constants.STRETCH_REPORT_INT ||
-               forwardName == Constants.STRETCH_COLLECTION_REPORT_INT
+               forwardName == Constants.STRETCH_COLLECTION_REPORT_INT 
                )
                {
                    String str_id = (String) request.getParameter("ID");
-                   if ( str_id != null)  id = Integer.parseInt(str_id);
+                   if ( str_id != null )  id = Integer.parseInt(str_id);
                        
                 }
             switch  (forwardName)
@@ -124,7 +127,6 @@ public class Seq_GetItemAction extends ResearcherAction
                          }
                     }
                     ArrayList items = new ArrayList(); items.add(String.valueOf(clone_id));
-                    request.setAttribute(Constants.JSP_TITLE,"View Gaps and Contigs");
                     request.setAttribute("stretch_collections",stretch_collections);
                     request.setAttribute("items", items);
                     request.setAttribute("caller", Constants.NO_MENU_TO_SHOW);
@@ -245,7 +247,6 @@ public class Seq_GetItemAction extends ResearcherAction
                     ArrayList ar =  UICloneSample.getCloneInfo( String.valueOf(id),Constants.ITEM_TYPE_ISOLATETRASCKING_ID,false, true);
                     if (ar != null && ar.size() > 0)
                          sample = (UICloneSample) ar.get(0);
-                    System.out.println("sample "+sample == null);
                         //get clone sequences && end reads
                     ArrayList end_reads = Read.getReadByIsolateTrackingId( id );
                     String discrepancy_report_for_endread = null;
@@ -394,8 +395,6 @@ public class Seq_GetItemAction extends ResearcherAction
                     
                     UIUtils ut= new UIUtils();
                     String needle_output = null;
-                   
-            //        System.out.print("seq_id "+request.getParameter(BaseSequence.THEORETICAL_SEQUENCE_STR));   
                     if ( request.getParameter(BaseSequence.THEORETICAL_SEQUENCE_STR) != null)
                     {
                         int refseq_id = Integer.parseInt(request.getParameter(BaseSequence.THEORETICAL_SEQUENCE_STR));
@@ -466,7 +465,6 @@ public class Seq_GetItemAction extends ResearcherAction
                     request.setAttribute("bioevaluation", Spec.getAllSpecsByType(Spec.FULL_SEQ_SPEC_INT, false));
                     request.setAttribute("polymerphism", Spec.getAllSpecsByType(Spec.POLYMORPHISM_SPEC_INT, false));
                     request.setAttribute("slidingwindow", Spec.getAllSpecsByType(Spec.TRIM_SLIDING_WINDOW_SPEC_INT, false));
-                    request.setAttribute(Constants.JSP_TITLE,"Select Specification to view");
                     return (mapping.findForward("choose_spec"));
                 }
                 case Spec.PRIMER3_SPEC_INT * Spec.SPEC_DELETE_SPEC:
@@ -495,8 +493,7 @@ public class Seq_GetItemAction extends ResearcherAction
 
                     }
                      request.setAttribute("container",container);
-                     title = "Clone Data for container " + label;
-                    request.setAttribute(Constants.JSP_TITLE,title);
+                    request.setAttribute(Constants.JSP_TITLE,"Clone Data for Plate " + label);
                     return (mapping.findForward("show_clone_status_list"));
                 }
                 case Constants.AVAILABLE_CONTAINERS_INT:
@@ -513,7 +510,6 @@ public class Seq_GetItemAction extends ResearcherAction
                     } );
                     request.setAttribute("labels",labels);
                      request.setAttribute( Constants.ADDITIONAL_JSP, "<script language='JavaScript' src='"+edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") +"scripts.js'></script> ") ;
-                    request.setAttribute(Constants.JSP_TITLE,"Available Containers");
                     return (mapping.findForward("display_info"));
                      
                 }
@@ -523,7 +519,6 @@ public class Seq_GetItemAction extends ResearcherAction
                      label = (String)request.getParameter(Constants.CONTAINER_BARCODE_KEY);
                     label =label.toUpperCase().trim();
                      
-         //  System.out.println(label +" getitem "+ forwardName);
                      ArrayList oligo_containers = OligoContainer.findContainersInfoFromLabel(label, OligoContainer.MODE_NOTRESTORE_SAMPLES);
                      OligoContainer oligo_container = null;
                     if ( oligo_containers != null && oligo_containers.size() == 1)
@@ -539,19 +534,17 @@ public class Seq_GetItemAction extends ResearcherAction
                          oligo_container.restoreSamples();
                      }
                      //set title
-                     title="View Oligo Plate";
- //  System.out.println(label+oligo_container.getId());
-                    request.setAttribute(Constants.JSP_TITLE,title);
                     request.setAttribute("container",oligo_container);
                     return (mapping.findForward("display_oligo_container"));
                 }
+             
             
             }
             
         }
         catch (Exception e)
         {
-            System.out.println(e.getMessage());
+           // System.out.println(e.getMessage());
             request.setAttribute(Action.EXCEPTION_KEY, e);
             return (mapping.findForward("error"));
         }
@@ -664,7 +657,84 @@ public class Seq_GetItemAction extends ResearcherAction
        return uiclonesequences;
         
     }
-                   
+          
+    
+    private String          getPageTitle(int forwardId)
+    {
+        switch(forwardId )
+        {
+             //   forwardName ==Constants.PROCESS_PUT_CLONES_ON_HOLD : return " ";
+            //   case Constants.PROCESS_ACTIVATE_CLONES : return " ";
+            case Constants.PROCESS_CHECK_READS_AVAILABILITY : return "End Reads Availability";
+            //  : return " ";case Constants.PROCESS_APROVE_ISOLATE_RANKER
+
+            case Constants.SCOREDSEQUENCE_DEFINITION_INT : return " ";
+            case Constants.REFSEQUENCE_DEFINITION_INT : return " ";
+            case  Constants.ANALYZEDSEQUENCE_DISCREPANCY_REPORT_DEFINITION_INT : return " ";
+            case Constants.READSEQUENCE_NEEDLE_ALIGNMENT_INT : return " ";
+            case Constants.VECTOR_DEFINITION_INT : return " ";
+            case Constants.LINKER_DEFINITION_INT : return " ";
+            case Constants.CLONING_STRATEGY_DEFINITION_INT : return "Cloning Strategy ";
+            case Constants.SAMPLE_ISOLATE_RANKER_REPORT : return " ";
+            case Constants.READ_REPORT_INT : return " ";
+            //  case Constants.CONSTRUCT_DEFINITION_REPORT : return " ";
+            case Constants.CLONE_SEQUENCE_DEFINITION_REPORT_INT : return " ";
+            case Constants.STRETCH_REPORT_INT : return " ";
+            
+            case Constants.AVAILABLE_VECTORS_DEFINITION_INT: return "Available Vectors";
+            case Constants.AVAILABLE_LINKERS_DEFINITION_INT: return "Available Linkers";
+             case Constants.AVAILABLE_SPECIFICATION_INT: return "Available Process Configurations";
+            case Constants.AVAILABLE_CONTAINERS_INT: return "Available Plates";
+           case Constants.CONTAINER_PROCESS_HISTORY : return "Plate History "; 
+            case Constants.CONTAINER_DEFINITION_INT : return "Plate Description ";
+            case Constants.CONTAINER_RESULTS_VIEW : return "Plate Results ";
+            case Constants.CONTAINER_ISOLATE_RANKER_REPORT : return "Plate Results";
+           
+            case Constants.STRETCH_COLLECTION_REPORT_INT:                return "View Gaps and Contigs";
+
+             case Constants.PROCESS_VIEW_OLIGO_PLATE:return "View Oligo Plate";
+              case Spec.PRIMER3_SPEC_INT * Spec.SPEC_DELETE_SPEC: return "Select Specification to delete";
+
+            default: return "";
+         }
+    }
+    
+    
+     private String          getPageLocation(int forwardId)
+    {
+        switch(forwardId )
+        {
+             case Constants.AVAILABLE_VECTORS_DEFINITION_INT: return "Home > View > Vectors";
+           case Constants.AVAILABLE_LINKERS_DEFINITION_INT: return "Home > View >  Linkers";
+           case Constants.AVAILABLE_SPECIFICATION_INT: return "Home > View >  Process Configurations";
+            case Constants.AVAILABLE_CONTAINERS_INT: return "Home > View > Plates";
+            case Constants.CONTAINER_PROCESS_HISTORY : return "Home > View > Plate History "; 
+            case Constants.CONTAINER_DEFINITION_INT : return "Home > View > Plate Description ";
+            case Constants.CONTAINER_RESULTS_VIEW : return "Home > View > Plate Results";
+            case Constants.CONTAINER_ISOLATE_RANKER_REPORT : return "Home > View > Plate Results";
+            //   forwardName ==Constants.PROCESS_PUT_CLONES_ON_HOLD : return " ";
+            //   case Constants.PROCESS_ACTIVATE_CLONES : return " ";
+            case Constants.PROCESS_CHECK_READS_AVAILABILITY : return "Home > Process > View Process Results > View Available End Reads";
+            //  : return " ";case Constants.PROCESS_APROVE_ISOLATE_RANKER
+
+            case Constants.SCOREDSEQUENCE_DEFINITION_INT : return " ";
+            case Constants.REFSEQUENCE_DEFINITION_INT : return " ";
+            case  Constants.ANALYZEDSEQUENCE_DISCREPANCY_REPORT_DEFINITION_INT : return " ";
+            case Constants.READSEQUENCE_NEEDLE_ALIGNMENT_INT : return " ";
+            case Constants.VECTOR_DEFINITION_INT : return " ";
+            case Constants.LINKER_DEFINITION_INT : return " ";
+            case Constants.CLONING_STRATEGY_DEFINITION_INT : return "Home > View Cloning Strategy ";
+            case Constants.SAMPLE_ISOLATE_RANKER_REPORT : return " ";
+            case Constants.READ_REPORT_INT : return " ";
+            //  case Constants.CONSTRUCT_DEFINITION_REPORT : return " ";
+            case Constants.CLONE_SEQUENCE_DEFINITION_REPORT_INT : return " ";
+            case Constants.STRETCH_REPORT_INT : return " ";
+            case Constants.STRETCH_COLLECTION_REPORT_INT : return " ";
+            
+            case Constants.PROCESS_VIEW_OLIGO_PLATE:return "Home > Process > View Process Results > View Oligo Plate";
+            default: return "";
+         }
+    }
   public static void main(String args[])
     {
         try
@@ -695,3 +765,4 @@ public class Seq_GetItemAction extends ResearcherAction
         catch(Exception e){}
       }
 }
+                                 

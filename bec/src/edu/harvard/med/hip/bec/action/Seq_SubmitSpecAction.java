@@ -37,7 +37,7 @@ import edu.harvard.med.hip.bec.form.*;
 import edu.harvard.med.hip.bec.user.*;
 import edu.harvard.med.hip.bec.Constants;
 
-public class Seq_SubmitSpecAction  extends ResearcherAction
+public class Seq_SubmitSpecAction  extends BecAction
 {
     
     
@@ -57,7 +57,9 @@ public class Seq_SubmitSpecAction  extends ResearcherAction
             //get system user
             User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
             String username = user.getUsername();
-            
+             request.setAttribute(Constants.JSP_CURRENT_LOCATION, getPageLocation(forwardName));
+            request.setAttribute(Constants.JSP_TITLE, getPageTitle(forwardName));
+           
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
             
@@ -209,6 +211,32 @@ public class Seq_SubmitSpecAction  extends ResearcherAction
             
             DatabaseTransaction.closeConnection(conn);
             
+        }
+    }
+    
+    
+    private String              getPageTitle(int forwardName)
+    {
+        switch(forwardName)
+        {
+           case EndReadsSpec.END_READS_SPEC_INT:return "New Set of Parameters for  Clone Ranking";
+            case FullSeqSpec.FULL_SEQ_SPEC_INT:return "New Set of Parameters for  Clone Acceptance";
+            case PolymorphismSpec.POLYMORPHISM_SPEC_INT:return "New Set of Parameters for  Polymorphism Detection";
+            case Primer3Spec.PRIMER3_SPEC_INT:return "New Set of Parameters for  Primer Design";
+            case SlidingWindowTrimmingSpec.TRIM_SLIDING_WINDOW_SPEC_INT:return "New Set of Parameters  for Sequence Trimming";
+            default: return "";
+        }
+    }
+    private String              getPageLocation(int forwardName)
+    {
+        switch(forwardName)
+        {
+            case EndReadsSpec.END_READS_SPEC_INT:return "Home > Analysis Settings > Clone Ranking";
+            case FullSeqSpec.FULL_SEQ_SPEC_INT:return "Home > Analysis Settings > Clone Acceptance Criteria";
+            case PolymorphismSpec.POLYMORPHISM_SPEC_INT:return "Home > Analysis Settings > Polymorphism Detection";
+            case Primer3Spec.PRIMER3_SPEC_INT:return "Home > Analysis Settings > Primer Design";
+            case SlidingWindowTrimmingSpec.TRIM_SLIDING_WINDOW_SPEC_INT:return "Home > Analysis Settings > Sequence Trimming";
+            default: return "";
         }
     }
 }

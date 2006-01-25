@@ -52,6 +52,93 @@ public class IsolateRankerRunner extends ProcessRunner
     {
         // The database connection used for the transaction
             Connection conn = null;
+            ArrayList ar_plate_names_sql = new ArrayList();
+            ArrayList ar_construct_ids = new ArrayList();
+            ArrayList temp = new ArrayList();
+             int container_id = -1;
+             IsolateRanker isolate_ranker = null;
+            try
+            {
+                //  build 5 plates strings
+                ar_plate_names_sql = prepareItemsListForSQL();
+                for (int count = 0; count < ar_plate_names_sql.size(); count++)
+                {
+                    // array of Integer
+                    ar_construct_ids.addAll( Construct.getIdsByPlateNames( (String)ar_plate_names_sql.get(count)));
+                }
+               
+                // clean up duplicates from different plates
+                TreeSet no_duplicates_set = new TreeSet(ar_construct_ids);
+                ar_construct_ids = new ArrayList(no_duplicates_set);
+                
+                // conncection to use for transactions
+                conn = DatabaseTransaction.getInstance().requestConnection();
+               
+                isolate_ranker = new IsolateRanker();
+                isolate_ranker.setAcceptanceCriteria(m_fullseq_spec);
+                isolate_ranker.setCloneRankingCriteria(  m_endreads_spec);
+                isolate_ranker.setConstructIds( ar_construct_ids );
+                isolate_ranker.run(conn);
+                if ( isolate_ranker.getErrorMessages() != null && isolate_ranker.getErrorMessages().size() > 0)
+                        m_error_messages.addAll( isolate_ranker.getErrorMessages() );
+
+
+                     //request object
+                if (isolate_ranker.getProcessedConstructId().size() > 0)
+                {
+
+                    ArrayList processes = new ArrayList();
+                    Request actionrequest = new Request(BecIDGenerator.BEC_OBJECT_ID_NOTSET,
+                                                new java.util.Date(),
+                                                m_user.getId(),
+                                                processes,
+                                                Constants.TYPE_OBJECTS);
+// Process object create
+                     //create specs array for the process
+                    ArrayList specs = new ArrayList();
+                    specs.add(m_fullseq_spec);
+                    specs.add( m_endreads_spec );
+
+                    ProcessExecution process = new ProcessExecution( BecIDGenerator.BEC_OBJECT_ID_NOTSET,
+                                                                ProcessDefinition.ProcessIdFromProcessName(ProcessDefinition.RUN_ENDREADS_EVALUATION),
+                                                                actionrequest.getId(),
+                                                                specs,
+                                                                Constants.TYPE_OBJECTS) ;
+                    processes.add(process);
+                     //finally we must insert request
+                    actionrequest.insert(conn);
+
+                    String sql = "";
+                    Statement stmt = conn.createStatement();
+                    for (int construct_count = 0; construct_count < isolate_ranker.getProcessedConstructId().size();construct_count++)
+                    {
+                        sql = "insert into process_object (processid,objectid,objecttype) values("+process.getId()+","+((Integer)isolate_ranker.getProcessedConstructId().get(construct_count)).intValue()+","+Constants.PROCESS_OBJECT_TYPE_CONSTRUCT+")";
+                        stmt.executeUpdate(sql);
+                    }
+                   conn.commit();
+                }
+            }
+
+            catch(Exception ex1)
+            {
+                 ex1.printStackTrace();
+                m_error_messages.add(ex1.getMessage());
+                DatabaseTransaction.rollback(conn);
+            }
+            finally
+            {
+                sendEMails( getTitle() );
+                if ( conn != null ) DatabaseTransaction.closeConnection(conn);
+            }
+
+    }
+
+    
+    /*
+     *  public void run_process()
+    {
+        // The database connection used for the transaction
+            Connection conn = null;
             ArrayList master_container_ids = new ArrayList();
              int container_id = -1;
              IsolateRanker isolate_ranker = null;
@@ -123,6 +210,7 @@ public class IsolateRankerRunner extends ProcessRunner
 
     }
 
+*/
 
 
 
@@ -137,12 +225,11 @@ public class IsolateRankerRunner extends ProcessRunner
             edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
 
         ProcessRunner runner = new IsolateRankerRunner();
-        runner.setInputData(Constants.ITEM_TYPE_PLATE_LABELS, "JSA001431 ");
+        runner.setInputData(Constants.ITEM_TYPE_PLATE_LABELS, " YGS000359-1 YGS000359-2  ");
       //  runner.setContainerLabels(master_container_labels );
         runner.setProcessType( Constants.PROCESS_RUN_ISOLATE_RUNKER );
         Spec spec_f = Spec.getSpecById(91, Spec.FULL_SEQ_SPEC_INT);
-        System.out.println(spec_f instanceof FullSeqSpec);
-        ((IsolateRankerRunner)runner).setCutoffValuesSpec( (FullSeqSpec)Spec.getSpecById(91, Spec.FULL_SEQ_SPEC_INT));
+         ((IsolateRankerRunner)runner).setCutoffValuesSpec( (FullSeqSpec)Spec.getSpecById(91, Spec.FULL_SEQ_SPEC_INT));
         ((IsolateRankerRunner)runner).setPenaltyValuesSpec( (EndReadsSpec)Spec.getSpecById(1, Spec.END_READS_SPEC_INT));
        runner.setUser(  AccessManager.getInstance().getUser("htaycher123","htaycher"));
         runner.run();

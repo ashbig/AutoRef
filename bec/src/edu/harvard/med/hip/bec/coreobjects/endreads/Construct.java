@@ -90,7 +90,7 @@ public class Construct
        // m_linker5_id = l5id;
     }
     
-    public void insert(Connection conn) throws BecDatabaseException
+    public synchronized void insert(Connection conn) throws BecDatabaseException
     {
         if ( m_id == BecIDGenerator.BEC_OBJECT_ID_NOTSET)
             m_id = BecIDGenerator.getID("constructid");
@@ -490,6 +490,8 @@ S1 = (RS1 * RL1 + ExpectedScore * (CDSLenght - RL1)) / CDSLenght;
          String sql_plate_ids = Algorithms.convertStringArrayToString(plate_ids, ",");
          return getConstructsFromPlates(sql_plate_ids);
       }
+      
+      
      public static ArrayList getConstructsFromPlates( String plate_ids)throws BecDatabaseException
      {
          ArrayList constructs = new ArrayList();
@@ -540,6 +542,81 @@ S1 = (RS1 * RL1 + ExpectedScore * (CDSLenght - RL1)) / CDSLenght;
              
             }
             return constructs;
+        } catch (Exception sqlE)
+        {
+            throw new BecDatabaseException("Error occured while getting sample with id:\n"+sqlE+"\nSQL: "+sql);
+        } finally
+        {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+    }
+    
+     public static ArrayList  getIdsByPlateNames(String plate_names)throws BecDatabaseException
+     {
+          ArrayList construct_ids = new ArrayList();
+       
+          String sql = "select   distinct constructid  from isolatetracking iso,  sample s, containerheader c "
+        +"  where iso.sampleid=s.sampleid and s.containerid = c.containerid and label in ( "
+         + plate_names + "  ) and constructid > 0 order by  constructid ";
+        RowSet rs = null;
+        int cur_construct_id = -1;
+        Construct cur_construct = null;
+        try
+        {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            
+            while(rs.next())
+            {
+               construct_ids.add( new Integer(rs.getInt("constructid")));
+            }
+            return construct_ids;
+        } catch (Exception sqlE)
+        {
+            throw new BecDatabaseException("Error occured while getting construct ids\nSQL: "+sql);
+        } finally
+        {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+     }
+     
+     
+     public static Construct getConstructById( String construct_id) throws BecDatabaseException
+     {
+         String sql = "select const.constructid as constructid, flexcloneid as cloneid, "
+          +" refsequenceid,format,cloningstrategyid,"
+         +" iso.isolatetrackingid as isolatetrackingid,status, ASSEMBLY_STATUS,score, rank, sampleid "
+        +" from isolatetracking iso, sequencingconstruct const, flexinfo f "
+        +"  where iso.constructid=const.constructid and f.isolatetrackingid = iso.isolatetrackingid and  "
+         +"  iso.constructid="+construct_id;
+        RowSet rs = null;
+        int cur_construct_id = -1;
+        Construct construct = null;
+        try
+        {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            
+            while(rs.next())
+            {
+                //create isolate tracking 
+                IsolateTrackingEngine istr = new IsolateTrackingEngine();
+                istr.setRank(rs.getInt("rank") ) ;// results of the end read analysis
+                istr.setScore(rs.getInt("score") );// results of the end read analysis
+                istr.setStatus(rs.getInt("status") );
+                istr.setSampleId(rs.getInt("sampleid") );
+                istr.setId( rs.getInt("isolatetrackingid") );
+                istr.setAssemblyStatus( rs.getInt("ASSEMBLY_STATUS"));
+                istr.setConstructId( rs.getInt("constructid"));// identifies the agar; several (four) isolates will have the same id
+                istr.setCloneId( rs.getInt("cloneid"));
+                
+                construct = new Construct(  istr.getConstructId(), -1, 
+                                                      rs.getInt("refsequenceid"), rs.getInt("format"), 
+                                                      rs.getInt("cloningstrategyid") ); 
+                construct.addIsolateTracking(istr);
+                             
+            }
+            return construct;
         } catch (Exception sqlE)
         {
             throw new BecDatabaseException("Error occured while getting sample with id:\n"+sqlE+"\nSQL: "+sql);

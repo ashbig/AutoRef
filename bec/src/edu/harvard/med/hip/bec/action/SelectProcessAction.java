@@ -37,7 +37,7 @@ import edu.harvard.med.hip.bec.util.*;
  *
  * @author  htaycher
  */
-public class SelectProcessAction extends ResearcherAction
+public class SelectProcessAction extends BecAction
 {
     
     /**
@@ -57,7 +57,9 @@ public class SelectProcessAction extends ResearcherAction
         
         ActionErrors errors = new ActionErrors();
         int forwardName = ((Seq_GetSpecForm)form).getForwardName();
-      
+         request.setAttribute(Constants.JSP_TITLE,getProcessTitle(forwardName));
+        request.setAttribute(Constants.JSP_CURRENT_LOCATION, getPageLocation(forwardName));
+                   
         Thread t = null;
         try
         {
@@ -112,10 +114,10 @@ public class SelectProcessAction extends ResearcherAction
                
                     primers.add(ol);
                     spec_collection.add( primers);
-                    spec_names.add("5p primer");
+                    spec_names.add("5p primer:");
                     control_names.add("5p_primerid");
                     spec_collection.add(  primers);
-                    spec_names.add("3p primer");
+                    spec_names.add("3p primer:");
                     control_names.add("3p_primerid");
                     request.setAttribute(Constants.SPEC_COLLECTION, spec_collection);
                     request.setAttribute(Constants.SPEC_TITLE_COLLECTION, spec_names);
@@ -133,13 +135,11 @@ public class SelectProcessAction extends ResearcherAction
                 case Constants.PROCESS_SELECT_PLATES_TO_CHECK_READS_AVAILABILITY:
                 {
                      request.setAttribute("forwardName", new Integer(Constants.PROCESS_CHECK_READS_AVAILABILITY));
-                    request.setAttribute(Constants.JSP_TITLE,getProcessTitle(forwardName));
                      return (mapping.findForward("scan_label"));
                 }
                 case Constants.PROCESS_VIEW_OLIGO_PLATE:
                 {
                      request.setAttribute("forwardName", new Integer(forwardName));
-                    request.setAttribute(Constants.JSP_TITLE,getProcessTitle(forwardName));
                      return (mapping.findForward("scan_label"));
                 }
                 case Constants.PROCESS_RUN_ISOLATE_RUNKER://run isolate runker
@@ -150,7 +150,7 @@ public class SelectProcessAction extends ResearcherAction
                     ArrayList spec_names = new ArrayList();
                     ArrayList control_names = new ArrayList();
                     spec_collection.add( FullSeqSpec.getAllSpecNames() );
-                    spec_names.add("Bio Evaluation of Clones");
+                    spec_names.add("Clone acceptance criteria:");
                     control_names.add(Spec.FULL_SEQ_SPEC);
                     spec_collection.add(  EndReadsSpec.getAllSpecNames());
                      spec_names.add("End reads Evaluation");
@@ -189,20 +189,17 @@ public class SelectProcessAction extends ResearcherAction
                         }
                         case  Constants.PROCESS_DELETE_TRACE_FILES :
                         {
-                            file_description = "<I>You are about to delete trace files from clone directories. The <B>requested file format</b> is: <p> <i> absolute file name (file path information included - c:/dirname)</i>."
-                            +" The process will take some time. E-mail report will be sent to you upon completion."; 
-                            file_title =  "Please select the file with trace files' information:";
+                            file_description = "This process deletes trace files from hard drive. They will never be available for future use.  For source of files to delete, user must supply full path and filename. To get this information, user should use 'Get Trace File Names', under Process -> Delete Data."; 
+                            file_title =  "Please select the file:";
                             break;
                         }
                         case  Constants.PROCESS_MOVE_TRACE_FILES:
                         {
-                            file_description = "<I>You are about to move trace files from clone directories into common directory. The <B>requested file format</b> is: <p> <i> absolute file name (file path information included - c:/dirname)</i>."
-                            +" The process will take some time. E-mail report will be sent to you upon completion."; 
-                            file_title =  "Please select the file with trace files' information:";
+                            file_description = "The process moves trace files out of the active directory into a temporary directory in order to save them allowing future use. For source of files to move, user must supply full path and filename. To get this information, user should use 'Get Trace File Names', under Process -> Delete Data. (In order for this to work, the application administrator will have had to set up the temporary directory during setup).";
+                            file_title =  "Please select the file:";
                             break;
                         }
                     }
-                    request.setAttribute(Constants.JSP_TITLE,getProcessTitle(forwardName) );
                     request.setAttribute(Constants.FILE_DESCRIPTION, file_description);
                     request.setAttribute(Constants.FILE_TITLE, file_title);
                     request.setAttribute(Constants.FILE_NAME,Constants.FILE_NAME);
@@ -242,6 +239,7 @@ public class SelectProcessAction extends ResearcherAction
                 case Constants.PROCESS_PROCESS_OLIGO_PLATE:
                 case Constants.PROCESS_SET_CLONE_FINAL_STATUS:
                     case Constants.PROCESS_REANALYZE_CLONE_SEQUENCE:
+                case Constants.PROCESS_CLEANUP_INTERMIDIATE_FILES_FROM_HARD_DRIVE:         
                 
                {
                     ArrayList spec_collection = new ArrayList();
@@ -261,7 +259,7 @@ public class SelectProcessAction extends ResearcherAction
                         case Constants.PROCESS_RUN_DECISION_TOOL_NEW:
                         {
                             spec_collection.add( FullSeqSpec.getAllSpecNames()  );
-                            spec_names.add("Bio Evaluation of Clones: ");
+                            spec_names.add("Clone acceptance criteria:");
                             control_names.add(Spec.FULL_SEQ_SPEC);
                             break;
                          }
@@ -276,7 +274,7 @@ public class SelectProcessAction extends ResearcherAction
                          case Constants.PROCESS_FIND_GAPS:
                          {
                              spec_collection.add( SlidingWindowTrimmingSpec.getAllSpecNames() );
-                             spec_names.add("Sliding Window Algorithm Parameters:");
+                             spec_names.add("Sliding window algorithm parameters:");
                              control_names.add(Spec.TRIM_SLIDING_WINDOW_SPEC);
                              break;
                          }
@@ -287,8 +285,7 @@ public class SelectProcessAction extends ResearcherAction
                         request.setAttribute(Constants.SPEC_TITLE_COLLECTION, spec_names);
                         request.setAttribute(Constants.SPEC_CONTROL_NAME_COLLECTION,control_names);
                     }
-                    request.setAttribute(Constants.JSP_TITLE,getProcessTitle(forwardName));
-                    
+                            
                     return (mapping.findForward("initiate_process"));
                 }
                 
@@ -299,7 +296,6 @@ public class SelectProcessAction extends ResearcherAction
                     +"The process will take some time. The e-mail report will be sent to you upon completion."; 
                     String file_title = "Please select the sequence information file:";
                     String additional_jsp = "<INPUT TYPE=CHECKBOX NAME='send_needle_results' value=0>Attach needle aligment files.";
-                    request.setAttribute(Constants.JSP_TITLE, getProcessTitle(forwardName));
                     request.setAttribute(Constants.FILE_DESCRIPTION, file_description);
                     request.setAttribute(Constants.FILE_TITLE, file_title);
                     request.setAttribute(Constants.FILE_NAME,Constants.FILE_NAME);
@@ -326,7 +322,7 @@ public class SelectProcessAction extends ResearcherAction
         }
         catch (Exception e)
         {
-            System.out.println(e.getMessage());
+           // System.out.println(e.getMessage());
             request.setAttribute(Action.EXCEPTION_KEY, e);
             return (mapping.findForward("error"));
         }
@@ -338,49 +334,122 @@ public class SelectProcessAction extends ResearcherAction
           switch  (forwardName)
           {
             case Constants.PROCESS_CREATE_REPORT:return "";
-            case Constants.PROCESS_UPLOAD_PLATES:return "";
-            case Constants.PROCESS_SELECT_VECTOR_FOR_END_READS :return "";
-            case Constants.PROCESS_SELECT_PLATES_FOR_END_READS: return "Request End Reads";
-            case Constants.PROCESS_SELECT_PLATES_TO_CHECK_READS_AVAILABILITY: return "Select Plate to Check Clone Status";
-            case Constants.PROCESS_VIEW_OLIGO_PLATE:return "Select Oligo Plate";
+            case Constants.PROCESS_UPLOAD_PLATES:return "Upload Plates ";
+            case Constants.PROCESS_SELECT_VECTOR_FOR_END_READS :return "Request End Reads Sequencing -> Select Vector";
+            case Constants.PROCESS_SELECT_PLATES_FOR_END_READS: return "Request End Reads Sequencing -> Select Primers and Plates";
             case Constants.PROCESS_RUN_ISOLATE_RUNKER: return "Run Isolate Ranker";
-            case Constants.PROCESS_SUBMIT_ASSEMBLED_SEQUENCE: return "Submit Sequence data for set of clones";
-            case  Constants.PROCESS_DELETE_TRACE_FILES : return "Submit list of trace files to delete";
-            case  Constants.PROCESS_MOVE_TRACE_FILES: return"Submit list of trace files to move";
-            case Constants.PROCESS_DELETE_PLATE :  return "Delete plates";
-            case Constants.PROCESS_DELETE_CLONE_READS : return "Delete clone end reads (forward and reverse";
-            case Constants.PROCESS_DELETE_CLONE_FORWARD_READ :return"Delete clone forward end reads";
-            case Constants.PROCESS_DELETE_CLONE_REVERSE_READ : return"Delete clone reverse end reads";
-            case Constants.PROCESS_DELETE_CLONE_SEQUENCE : return"Delete clone sequences";
-            case Constants.PROCESS_REANALYZE_CLONE_SEQUENCE:return"Reanalyze clone sequesnce"; 
-            case  Constants.PROCESS_GET_TRACE_FILE_NAMES :return"Get trace files' names";
-            case Constants.PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING  :  return"Get order list for resequencing of end reads";
-            case Constants.PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING  : return"Get order list for resequencing of internal reads";
-            case Constants.PROCESS_CREATE_REPORT_TRACEFILES_QUALITY: return"Create trace files quality report";
-            case Constants.PROCESS_RUN_END_READS_WRAPPER: return"Run end reads wrapper";
-            case Constants.PROCESS_RUN_ASSEMBLER_FOR_END_READS: return"Run assembler for end reads";
-            case Constants.PROCESS_ADD_NEW_INTERNAL_PRIMER :return"Add new internal primer";
-            case Constants.PROCESS_VIEW_OLIGO_ORDER_BY_CLONEID:return"View gene specific oligos ordered for clone";
-            case Constants.PROCESS_PROCESS_OLIGO_PLATE:return "Update oligo plates status"; 
-            case Constants.PROCESS_SET_CLONE_FINAL_STATUS:return "Set clones final status";
-            case Constants.PROCESS_RUN_PRIMER3:return"Run primer designer for the set of clones";
-            case Constants.PROCESS_RUN_DECISION_TOOL:return "Run desicion tool";
-            case Constants.PROCESS_RUN_DECISION_TOOL_NEW:return "Run new desicion tool";
-            case Constants.PROCESS_RUNPOLYMORPHISM_FINDER:return "Run polymorphism finder for the set of clones";
-            case Constants.PROCESS_RUN_DISCREPANCY_FINDER:  return "Run discrepancy finder for the set of clones";
-            case Constants.PROCESS_APPROVE_INTERNAL_PRIMERS:return"Approve internal primers";
-            case Constants.PROCESS_VIEW_INTERNAL_PRIMERS:     return"View internal primers";
-            case Constants.PROCESS_ORDER_INTERNAL_PRIMERS:  return"Order internal primers";
-            case Constants.PROCESS_RUN_ASSEMBLER_FOR_ALL_READS:  return"Assemble clone sequences";  
-            case Constants.STRETCH_COLLECTION_REPORT_INT: return"View last set of contigs for clone";
-            case Constants.STRETCH_COLLECTION_REPORT_ALL_INT:   return"View all sets of contigs for contigs for clone";
-            case Constants.LQR_COLLECTION_REPORT_INT:  return"View low quality regions for clone sequences";
-             case  Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE: return "Run low quality regions findeer for clone sequences";
-            case  Constants.PROCESS_FIND_GAPS:return"Run gap mapper";
-            case Constants.PROCESS_NOMATCH_REPORT:return"Run 'NO MATCH' report";
-            case Constants.PROCESS_RUN_DISCREPANCY_FINDER_STANDALONE:return "Run Discrepancy Finder for set of sequences";
-            default: return "";
+            case Constants.PROCESS_SUBMIT_ASSEMBLED_SEQUENCE: return "Submit Sequence Data for Set of Clones";
+           
+               
+             case Constants.PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING  : return"Get order list for resequencing of internal reads";
+            case Constants.PROCESS_RUN_END_READS_WRAPPER: return"Check Quality and Distribute End Reads";
+            case Constants.PROCESS_RUN_ASSEMBLER_FOR_END_READS: return"Run Assembler for End Reads";
+            case Constants.PROCESS_ADD_NEW_INTERNAL_PRIMER :return"Add New Internal Primer";
+            case Constants.PROCESS_PROCESS_OLIGO_PLATE:return "Track Oligo Plate"; 
+            case Constants.PROCESS_SET_CLONE_FINAL_STATUS:return "Set Final Clone  Status";
+            case Constants.PROCESS_RUN_PRIMER3:return"Run Primer Designer ";
+             case Constants.PROCESS_RUNPOLYMORPHISM_FINDER:return "Run Polymorphism Finder";
+            case Constants.PROCESS_RUN_DISCREPANCY_FINDER:  return "Run Discrepancy Finder";
+            case Constants.PROCESS_APPROVE_INTERNAL_PRIMERS:return"Approve Internal Primers";
+            case Constants.PROCESS_ORDER_INTERNAL_PRIMERS:  return"Order Internal Primers";
+            case Constants.PROCESS_RUN_ASSEMBLER_FOR_ALL_READS:  return"Assemble Clone Sequences";  
+             case  Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE: return "Run Low Quality Regions Finder in Clone Sequences";
+            case  Constants.PROCESS_FIND_GAPS:return"Run Gap Mapper";
+            case Constants.PROCESS_RUN_DISCREPANCY_FINDER_STANDALONE:return "Run Discrepancy Finder";
+            
+            
+              
+              case Constants.PROCESS_VIEW_OLIGO_ORDER_BY_CLONEID:return"View Oligo Order(s) for Clone(s)";
+             case Constants.PROCESS_VIEW_OLIGO_PLATE:return "View Oligo Plate";
+           case Constants.STRETCH_COLLECTION_REPORT_INT: return"View Latest Contig Collection";
+            case Constants.STRETCH_COLLECTION_REPORT_ALL_INT:   return"View All Contig Collections";
+            case Constants.LQR_COLLECTION_REPORT_INT:  return"View Low Quality Regions for Clone Sequences";
+            case Constants.PROCESS_VIEW_INTERNAL_PRIMERS:     return"View Internal Primers";
+           
+        
+              case Constants.PROCESS_SELECT_PLATES_TO_CHECK_READS_AVAILABILITY: return "View Available End Reads";
+           
+              
+        case Constants.PROCESS_NOMATCH_REPORT:return"Mismatched Clones";
+        case Constants.PROCESS_CREATE_REPORT_TRACEFILES_QUALITY: return"Trace File Quality";
+        case Constants.PROCESS_RUN_DECISION_TOOL:return "Quick Decision Tool";
+        case Constants.PROCESS_RUN_DECISION_TOOL_NEW:return "Detailed Decision Tool";
+        case Constants.PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING  :  return"End Read";
+        
+          case  Constants.PROCESS_DELETE_TRACE_FILES : return "Delete Trace Files from Hard Drive";
+            case  Constants.PROCESS_MOVE_TRACE_FILES: return"Move Trace Files from Clone Directory into Temporary Directory";
+             case Constants.PROCESS_DELETE_PLATE :  return "Delete Plate";
+            case Constants.PROCESS_DELETE_CLONE_READS : return "Delete Clone Forward and Reverse End Reads from Database";
+            case Constants.PROCESS_DELETE_CLONE_FORWARD_READ :return"Delete Clone Forward End Reads  from Database";
+            case Constants.PROCESS_DELETE_CLONE_REVERSE_READ : return"Delete Clone Reverse End Reads from Database";
+            case Constants.PROCESS_DELETE_CLONE_SEQUENCE : return"Delete Clone Sequences";
+            case Constants.PROCESS_REANALYZE_CLONE_SEQUENCE:return"Reanalyze Clone Sequence"; 
+            case  Constants.PROCESS_GET_TRACE_FILE_NAMES :return"Get Trace File Names";
+              case Constants.PROCESS_CLEANUP_INTERMIDIATE_FILES_FROM_HARD_DRIVE  : return "Clean-up hard drive ";  
+              default: return "";
           }
+   }
+          
+          
+    public String      getPageLocation(int forwardName)
+   {
+          switch  (forwardName)
+          {
+            case Constants.PROCESS_CREATE_REPORT:return "";
+            case Constants.PROCESS_UPLOAD_PLATES:return "Home > Process > Upload Plates";
+            case Constants.PROCESS_SELECT_VECTOR_FOR_END_READS :return "Home > Process > Read Manipulation > Request End Reads Sequencing";
+            case Constants.PROCESS_SELECT_PLATES_FOR_END_READS: return "Home > Process > Read Manipulation > Request End Reads Sequencing";
+             case Constants.PROCESS_RUN_ISOLATE_RUNKER: return "Home > Process > Evaluate Clones > Run Isolate Ranker";
+            case Constants.PROCESS_SUBMIT_ASSEMBLED_SEQUENCE: return "Submit Sequence data for set of clones";
+           
+             
+              case Constants.PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING  : return"Get order list for resequencing of internal reads";
+             case Constants.PROCESS_RUN_END_READS_WRAPPER: return"Home > Process > Read Manipulation  > Check Quality and Distribute End Reads";
+            case Constants.PROCESS_RUN_ASSEMBLER_FOR_END_READS: return"Home > Process > Read Manipulation  > Run Assembler for End Reads";
+            case Constants.PROCESS_ADD_NEW_INTERNAL_PRIMER :return"Home > Process > Internal Primer Design and Order > Add New Internal Primer";
+            case Constants.PROCESS_PROCESS_OLIGO_PLATE:return "Home > Process >  Internal Primer Design and Order  > Track Oligo Plate"; 
+            case Constants.PROCESS_SET_CLONE_FINAL_STATUS:return "Home > Process > Set Final Clones  Status";
+            case Constants.PROCESS_RUN_PRIMER3:return"Home > Process >  Internal Primer Design and Order  > Run Primer Designer";
+             case Constants.PROCESS_RUNPOLYMORPHISM_FINDER:return "Home > Process > Evaluate Clones > Run Polymorphism Finder";
+            case Constants.PROCESS_RUN_DISCREPANCY_FINDER:  return "Home > Process > Evaluate Clones > Run Discrepancy Finder";
+            case Constants.PROCESS_APPROVE_INTERNAL_PRIMERS:return"Home > Process >  Internal Primer Design and Order  > Approve Internal Primers";
+            case Constants.PROCESS_ORDER_INTERNAL_PRIMERS:  return"Home > Process >  Internal Primer Design and Order  > Order Internal Primers";
+            case Constants.PROCESS_RUN_ASSEMBLER_FOR_ALL_READS:  return"Home > Process > Read Manipulation > Assemble Clone Sequences";  
+             case  Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE: return "Home > Process > Evaluate Clones > Run Low Quality Regions Finder in Clone Sequences";
+            case  Constants.PROCESS_FIND_GAPS:return"Home > Process > Evaluate Clones > Run Gap Mapper";
+             case Constants.PROCESS_RUN_DISCREPANCY_FINDER_STANDALONE:return "Home > Process > Evaluate Clones > Run Discrepancy Finder";
+           
+             case Constants.PROCESS_SELECT_PLATES_TO_CHECK_READS_AVAILABILITY: return "Home > Process > View Process Results > View Available End Reads";
+            case Constants.PROCESS_VIEW_OLIGO_PLATE:return "Home > Process > View Process Results > View Oligo Plate";
+              case Constants.STRETCH_COLLECTION_REPORT_INT: return"Home > Process > View Process Results > View Lastest Contigs Collection";
+            case Constants.STRETCH_COLLECTION_REPORT_ALL_INT:   return"Home > Process > View Process Results > View All Contig Collections";
+            case Constants.LQR_COLLECTION_REPORT_INT:  return"Home > Process > View Process Results > View Low Quality Regions for Clone Sequences";
+           case Constants.PROCESS_VIEW_INTERNAL_PRIMERS:     return"Home > Process > View Process Results > View Internal Primers";
+           case Constants.PROCESS_VIEW_OLIGO_ORDER_BY_CLONEID:return"Home > Process > View Process Results > View Oligo Order(s) for Clone(s)";
+           
+             
+             
+            case Constants.PROCESS_NOMATCH_REPORT:return"Home > Reports > Mismatch Clones";
+            case Constants.PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING  :  return"Home > Reports > End Reads Report";
+           case Constants.PROCESS_CREATE_REPORT_TRACEFILES_QUALITY: return"Home > Reports > Trace Files Quality Report";
+           case Constants.PROCESS_RUN_DECISION_TOOL:return "Home > Reports > Quick Decision Tool";
+            case Constants.PROCESS_RUN_DECISION_TOOL_NEW:return "Home > Reports > Detailed Desicion Tool";
+           
+              case  Constants.PROCESS_DELETE_TRACE_FILES : return "Home > Process > Delete data  > Delete Trace Files from Hard Drive";
+            case  Constants.PROCESS_MOVE_TRACE_FILES: return"Home > Process > Delete data > Move Trace Files from Clone Directory into Temporary Directory";
+            case Constants.PROCESS_DELETE_PLATE :  return "Home > Process > Delete data > Delete Plate";
+            case Constants.PROCESS_DELETE_CLONE_READS : return "Home > Process > Delete data > Delete Clones Forward and Reverse End Reads";
+            case Constants.PROCESS_DELETE_CLONE_FORWARD_READ :return"Home > Process > Delete data > Delete Clones Forward End Reads";
+            case Constants.PROCESS_DELETE_CLONE_REVERSE_READ : return"Home > Process > Delete data > Delete Clones Reverse End Reads";
+            case Constants.PROCESS_DELETE_CLONE_SEQUENCE : return"Home > Process > Delete data > Delete Clone Sequence";
+            case Constants.PROCESS_REANALYZE_CLONE_SEQUENCE:return"Home > Process > Delete data > Reanalyze Clone Sequence "; 
+            case  Constants.PROCESS_GET_TRACE_FILE_NAMES :return"Home > Process > Delete data > Get Trace File Names";
+              case Constants.PROCESS_CLEANUP_INTERMIDIATE_FILES_FROM_HARD_DRIVE: return "Home > Process > Delete data > Clean-up hard drive ";
+               
+              
+              default: return "";
+          }
+          
    }
        
          

@@ -79,7 +79,7 @@ public abstract class ProcessRunner implements Runnable
      public abstract void       run_process();
      
      
-     public void run()
+     public synchronized void run()
      {
          
           try
@@ -133,6 +133,7 @@ public abstract class ProcessRunner implements Runnable
                 case  Constants.PROCESS_DELETE_TRACE_FILES :
                 case  Constants.PROCESS_MOVE_TRACE_FILES:
                     case  Constants.PROCESS_REANALYZE_CLONE_SEQUENCE:
+             case Constants.PROCESS_CLEANUP_INTERMIDIATE_FILES_FROM_HARD_DRIVE:
                 {((DeleteObjectRunner)this).run_process();  break; }
                 case Constants.PROCESS_CREATE_FILE_FOR_TRACEFILES_TRANSFER:
                 case Constants.PROCESS_INITIATE_TRACEFILES_TRANSFER:

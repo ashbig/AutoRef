@@ -2,53 +2,6 @@
 <%@ page import="java.util.*" %>
 <link href="application_styles.css" rel="stylesheet" type="text/css">
 
-<script defer="defer" type="text/javascript">
-
-<!--
-  
-/*Start of form validation: items not empty*/
-
-  function validateForm(formElement)
-   {
-   
-   for ( count = 0; count < formElement.item_type.length; count++)
-    {
-        if (formElement.item_type[count].checked==true     && formElement.item_type[count].value== <%= Constants.ITEM_TYPE_PROJECT_NAME %>)
-        {
-              formElement.items.value =formElement.project_name.value;
-               }
-    }
-
-    
-          var str =  trim(formElement.items.value);
-        if (( formElement.items.value == null) || ( str == "" ) )
-	{
-		alert("Please submit items to process.");
-                formElement.items.focus();
-                return false;
-   	}
-   	else { return true;}
-   }
-   function trim(strText)
-    { 
-		// this will get rid of leading spaces 
-
-		while (strText.substring(0,1) == ' ') 
-			strText = strText.substring(1, strText.length); 
-
-		// this will get rid of trailing spaces 
-		while (strText.substring(strText.length-1,strText.length) == ' ') 
-			strText = strText.substring(0, strText.length-1); 
-
-	   return strText; 
-	} 
-
- 
-
-
-
-	   /*End of functions.*/
-//--></script>
 
  <%
 Object forwardName = null;
@@ -61,6 +14,7 @@ else
 {
         forwardName = request.getParameter("forwardName") ;
 }
+
 int forwardName_int = 0;
 if (forwardName instanceof String) forwardName_int = Integer.parseInt((String)forwardName);
 else if (forwardName instanceof Integer) forwardName_int = ((Integer) forwardName).intValue();
@@ -112,6 +66,7 @@ case Constants.PROCESS_DELETE_CLONE_READS  :{ isPlateLabel = true;isPlateLabelCh
 case Constants.PROCESS_DELETE_CLONE_FORWARD_READ :{ isPlateLabel = true;isPlateLabelChecked=true; isCloneId = true;  break;}
 case Constants.PROCESS_DELETE_CLONE_REVERSE_READ  :{ isPlateLabel = true;isPlateLabelChecked=true; isCloneId = true;  break;}
 case Constants.PROCESS_DELETE_CLONE_SEQUENCE: { isCloneId = true; isCloneIdChecked= true;isACECloneSequenceId = true;break;}
+case Constants.PROCESS_CLEANUP_INTERMIDIATE_FILES_FROM_HARD_DRIVE:{ isCloneId = true; isCloneIdChecked= true;break;}
 case  Constants.PROCESS_GET_TRACE_FILE_NAMES :{ isCloneId = true; isCloneIdChecked= true;break;}
 case Constants.PROCESS_VIEW_OLIGO_ORDER_BY_CLONEID:{ isCloneId = true; isCloneIdChecked= true;break;}
 case  Constants.PROCESS_DELETE_TRACE_FILES :{ break;}
@@ -187,11 +142,8 @@ project_combo_text+="</select>";
 
 
 %>
-
-
-
 <table width="100%" border="0" cellspacing="2" cellpadding="2">
-<tr class='headerRow'> <td colspan=2 >Select Items Type: </td></tr>
+<tr class='headerRow'> <td colspan=2 >Select item type: </td></tr>
 <tr>  <td width='40%'> <%=cells[0] %> <%if ( project_cell==0) {%> <%= project_combo_text %> <%}%></td>
 <td>  <%=cells[2] %>  <%if ( project_cell==2) {%> <%= project_combo_text %> <%}%></td></tr>
 <tr> <td>  <%=cells[1] %>  <%if ( project_cell==1) {%> <%= project_combo_text %> <%}%></td>
@@ -200,7 +152,7 @@ project_combo_text+="</select>";
 <td>   <%=cells[5] %>   <%if ( project_cell==5) {%> <%= project_combo_text %> <%}%></td></tr><%}%> 
 
 
-  <tr class='headerRow'> <td colspan=2 >Enter All search Items</td>   </tr>
+  <tr class='headerRow'> <td colspan=2 >Enter all items:</td>   </tr>
   <tr> 
     <td align="center" colspan=2><textarea name="items"  rows="10"></textarea></td>
   </tr>

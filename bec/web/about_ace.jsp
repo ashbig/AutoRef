@@ -1,33 +1,45 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<%@ page errorPage="ProcessError.do"%>
 <%@ page language="java" %>
-<html>
-
+<%@ page errorPage="ProcessError.do"%>
+<%@ page import="edu.harvard.med.hip.bec.util.*" %>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><!-- InstanceBegin template="/Templates/my_template.dwt.jsp" codeOutsideHTMLIsLocked="false" -->
 <head>
-<meta http-equiv="Content-Language" content="en-us">
-<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
-<title>about ACE Project</title>
+<title>Untitled Document</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<!-- InstanceParam name="OptionalRegion1" type="boolean" value="true" -->
 </head>
 
 <body>
-<div align='center'><jsp:include page="NavigatorBar_Administrator.jsp" /></div>
-	<p><P>
-<br>
+<table width="100%" border="0" cellpadding="10" style='padding: 0; margin: 0; '>
+  <tr>
+    <td><%@ include file="page_application_title.html" %></td>
+  </tr>
+  <tr>
+    <td ><%@ include file="page_menu_bar.jsp" %></td>
+  </tr>
+  <tr>
+    <td><table width="100%" border="0">
+        <tr> 
+          <td  rowspan="3" align='left' valign="top" width="160"  bgcolor='#1145A6'>
+<jsp:include page="page_left_menu.jsp" /></td>
+          <td  valign="top"> <jsp:include page="page_location.jsp" />
+           </td>
+        </tr>
+        <tr> 
+          <td valign="top"> <jsp:include page="page_title.jsp" /></td>
+        </tr>
+        <tr> 
+          <td><!-- InstanceBeginEditable name="EditRegion1" -->
+                   
 <div align="center">
   <center>
-  <table border="0" cellpadding="0" cellspacing="0" width="74%">
-    <tr>
-        <td width="50%"><font color="#008000" size="5"><b>welcome to ACE Project</b></font></td>
-      <td width="50%"></td>
-    </tr>
+  <table border="0" cellpadding="0" cellspacing="0" width="90%">
+    
     <tr>
       <td width="100%" colspan="2">
-        <hr>
         <p><span style="font-family: Times New Roman; mso-fareast-font-family: Times New Roman; mso-ansi-language: EN-US; mso-fareast-language: EN-US; mso-bidi-language: AR-SA"><span style="mso-spacerun: yes; font-family: Times New Roman; mso-fareast-font-family: Times New Roman; mso-ansi-language: EN-US; mso-fareast-language: EN-US; mso-bidi-language: AR-SA">&nbsp;</span></span></p>
-          <p align="left"><a><font size="3" color="#000080">With ACE, users can perform
-            the following steps:</font></a></p>
-        <table width="100%" border="0">
-          <tbody>
+          <p align="left"><a><font size="3" color="#000080">With ACE, users can perform            the following steps:</font></a></p>
+        </tr>
             <tr>
               <td width="7%" bgColor="#b8c6ed">
                 <p align="center">1</p>
@@ -65,18 +77,20 @@
               </td>
                 <td width="93%" bgColor="#e4e9f8"><font color="#000080">Delete wrong data</font></td>
             </tr>
-          </tbody>
-        </table>
+          <tr><td colspan=2><P>
           <p><font color="#000000"><span style="mso-spacerun: yes; font-family: Times New Roman; mso-fareast-font-family: Times New Roman; mso-ansi-language: EN-US; mso-fareast-language: EN-US; mso-bidi-language: AR-SA">If
-            you have a question, please contact <a href="mailto:hip_informatics@hms.harvard.edu">ACE
-            development Group</a>.</span></font></td>
-    </tr>
+            you have a question, please contact <a href="mailto:<%= BecProperties.getInstance().getACEEmailAddress() %>">ACE
+            informatics team</a>.</span></font></td>    </tr>
   </table><br><br>
-  <a href="login.jsp"><img border="0" src="jpg/home.gif"></a>
   </center>
 </div>
-
+            <!-- InstanceEndEditable --></td>
+        </tr>
+      </table></td>
+  </tr>
+  <tr>
+    <td><%@ include file="page_footer.jsp" %></td>
+  </tr>
+</table>
 </body>
-
-</html>
-
+<!-- InstanceEnd --></html>

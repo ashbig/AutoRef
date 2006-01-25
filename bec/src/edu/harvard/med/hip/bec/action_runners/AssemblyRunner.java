@@ -414,7 +414,7 @@ public class AssemblyRunner extends ProcessRunner
                    return "select flexcloneid, flexsequenceid,  refsequenceid, iso.isolatetrackingid as isolatetrackingid , containerid, s.sampleid as sampleid"
 + " from isolatetracking iso,  sample s, sequencingconstruct  constr , flexinfo f "
 +" where constr.constructid = iso.constructid and iso.sampleid=s.sampleid and f.isolatetrackingid=iso.isolatetrackingid "
-+" and status in ("+ status +") and containerid in ( select containerid from containerheader where label in "
++" and status in ("+ status +") and containerid in ( select containerid from containerheader where Upper(label) in "
 + "("+sql_items + ")) order by containerid ,refsequenceid";
                   
                 }
@@ -652,7 +652,7 @@ public static void main(String args[])
 
      User user = AccessManager.getInstance().getUser("htaycher123","htaycher");
       runner = new AssemblyRunner();
-               runner.setInputData(Constants.ITEM_TYPE_PLATE_LABELS,"VCXXG002290-4.012-1 ");  
+               runner.setInputData(Constants.ITEM_TYPE_PLATE_LABELS,"VCXXG002291-2.012-1");  
     runner.setUser(user);
             runner.setProcessType(Constants.PROCESS_RUN_ASSEMBLER_FOR_END_READS);
   System.out.println(runner.getUser() == null);

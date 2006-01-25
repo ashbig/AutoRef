@@ -40,15 +40,20 @@ borders_9  {"border:dashed 1px green"}
 borders_10  {"border:solid 2px magen"}
 
 
-.red {	background-color:#9999CC;}
-.green {	background-color: #99FFFF;}
+.clone_rank =  {	background-color:#9999CC;
+background-color: #99FFFF;}
+background-color: #9999FF;}
+background-color: #99CCFF;}
+
 .black {	background-color: #999999;}
 .brown {	background-color: #ffe4c4;}
-.yellow {	background-color: #9999FF;}
-.orange {	background-color: #99CCFF;}
 .control {	background-color: #CCCCFF;}
 .empty {	background-color: #CCCCCC;}
 .nosample {	background-color: white;}
 .notanalized {	background-color: white;}
 .nomatch {	background-color: #ADFF2F;}
 
+.red {	background-color: #9999CC;}
+.green {	background-color: #99FFFF;}
+.yellow {	background-color: #9999FF;}
+.orange {	background-color: #99CCFF;}

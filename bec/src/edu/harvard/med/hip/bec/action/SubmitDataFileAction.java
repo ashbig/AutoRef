@@ -40,7 +40,7 @@ import org.apache.struts.upload.*;
 
 
 
-public class SubmitDataFileAction extends ResearcherAction
+public class SubmitDataFileAction extends BecAction
 {
     
     public ActionForward becPerform(ActionMapping mapping,

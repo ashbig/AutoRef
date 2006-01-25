@@ -4,8 +4,8 @@
  *
  * 
  * The following information is used by CVS
- * $Revision: 1.9 $
- * $Date: 2005-11-14 16:09:12 $
+ * $Revision: 1.10 $
+ * $Date: 2006-01-25 16:41:26 $
  * $Author: Elena $
  *
  ******************************************************************************
@@ -24,7 +24,7 @@ import java.util.*;
  * Holds sytem level properties.
  *
  * @author     $Author: Elena $
- * @version    $Revision: 1.9 $ $Date: 2005-11-14 16:09:12 $
+ * @version    $Revision: 1.10 $ $Date: 2006-01-25 16:41:26 $
  */
 
 public class BecProperties
@@ -49,6 +49,9 @@ public class BecProperties
     private boolean     m_isHipInternalVersion = false;
     private int         m_plate_naming_type = edu.harvard.med.hip.bec.sampletracking.objects.Container.PLATE_TYPE_96_A1_H12;
     private String      m_ace_email_address = null;
+    private Hashtable   m_start_codons = null;
+    private Hashtable   m_stop_codons_closed = null;
+    private Hashtable   m_stop_codons_open = null;
     /**
      * Protected constructor.
      *
@@ -139,10 +142,25 @@ public class BecProperties
             m_blastable_db = new Hashtable();
             m_vector_libraries = new Hashtable();
             m_polymorffinder_blastable_db = new Hashtable();
+            m_start_codons = new Hashtable();
+            m_stop_codons_closed = new Hashtable();
+            m_stop_codons_open = new Hashtable();
             String key = null;
            for (Enumeration e = m_properties.keys() ; e.hasMoreElements() ;)
            {
                 key = (String) e.nextElement();
+                  if ( key.indexOf("CODON_START_") != -1 && key.indexOf("_NAME") == -1 )
+                {
+                    m_start_codons.put(m_properties.getProperty(key+"_NAME"), m_properties.getProperty(key));
+                }
+                 if ( key.indexOf("CODON_STOP_CLOSED_") != -1 && key.indexOf("_NAME") == -1 )
+                {
+                    m_stop_codons_closed.put(m_properties.getProperty(key+"_NAME"), m_properties.getProperty(key));
+                }
+                 if ( key.indexOf("CODON_STOP_OPEN_") != -1 && key.indexOf("_NAME") == -1 )
+                {
+                    m_stop_codons_open.put(m_properties.getProperty(key+"_NAME"), m_properties.getProperty(key));
+                }
                 if ( key.indexOf("VECTOR_FN_") != -1 && key.indexOf("_NAME") == -1 )
                 {
                     m_vector_libraries.put(m_properties.getProperty(key+"_NAME"), m_properties.getProperty(key));
@@ -293,7 +311,10 @@ public class BecProperties
     }
     public          String getACEEmailAddress(){ return m_ace_email_address;}
     
-    
+     public Hashtable   getStartCodons(){ return m_start_codons ;}
+    public Hashtable    getStopClosedCodons(){ return m_stop_codons_closed ;}
+    public Hashtable    getStopFusionCodons(){ return m_stop_codons_open ;}
+  
     
     private  InputStream getInputStream(String name) {
         return (Thread.currentThread().getContextClassLoader().getResourceAsStream(name));

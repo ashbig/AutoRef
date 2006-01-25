@@ -89,52 +89,93 @@ public class SequencingFacilityFileName
                                 int read_direction, String file_name)
      {
            ArrayList items = null;
-           String temp = null;
+           String column_context = null;
            if ( separator != null && separator.length() > 0)
            {
                items = Algorithms.splitString(file_name, separator);
                if (items != null && items.size()>0 && column_number > 0 && column_number - 1 < items.size() )
                {
-                   temp = (String) items.get( column_number -1);
+                   column_context =  getItemDescription( items,read_direction, column_number );
                    //System.out.println(column_number +" "+ items.size());
-                   if ( item_length > 0)
+                   if (item_start<0 &&  item_length <0)// whole column
                    {
-                        if (read_direction == TraceFileNameFormat.READING_RIGHT_TO_LEFT)
-                            return temp.substring( temp.length() - 1 - item_length);
-                        else
-                            return temp.substring(0, item_length);
+                       return column_context;
                    }
-                   else
-                       return (String) items.get( column_number -1);
+                   else if ( item_length > 0 && item_start< 0 )// n places from column
+                   {
+                        if ( column_context.length() < item_length)return null;
+                           
+                        if (read_direction == TraceFileNameFormat.READING_RIGHT_TO_LEFT)
+                            return column_context.substring( column_context.length() -  item_length+1,column_context.length()+1);
+                        else
+                        {
+                            return column_context.substring(0, item_length);
+                        }
+                   }
+                   else if ( item_start > 0 )
+                   {
+                       if (item_length > 0)
+                       {
+                           if (read_direction == TraceFileNameFormat.READING_RIGHT_TO_LEFT)
+                                return column_context.substring( column_context.length() - item_start - item_length+1 , column_context.length() - item_start+1);
+                           else
+                              return column_context.substring(item_start-1, item_start-1+item_length);
+                       }
+                       else
+                       {
+                           if (read_direction == TraceFileNameFormat.READING_RIGHT_TO_LEFT)
+                                return column_context.substring(0, column_context.length() - item_start   + 1);
+                            else
+                                return column_context.substring (item_start-1);
+                       }
+                        
+                   }
+                       
                }
                else{ return null;}
            }
            else
            {
-                if ( file_name.length() < item_start + item_length ) return null;
+                 if ( file_name.length() < item_start + item_length ) return null;
                  if (read_direction == TraceFileNameFormat.READING_RIGHT_TO_LEFT)
                  {
-                     temp=""; int start = -1; int stop = -1;
+                     column_context=""; int start = -1; int stop = -1;
                      char[] name = file_name.toCharArray();
                      if ( item_length  < 1 )
                      {
-                         temp = file_name.substring(0,  file_name.length() - item_start +1);
+                         column_context = file_name.substring(0,  file_name.length() - item_start +1);
                      }
                      else 
                      {
-                         temp = file_name.substring(file_name.length() - item_start  - item_length +1, file_name.length() - item_start +1);
+                         column_context = file_name.substring(file_name.length() - item_start  - item_length +1, file_name.length() - item_start +1);
                      }
                  }
                  else
                  {
-                     if ( item_length < 1 ) temp =  file_name.substring(item_start - 1);
-                     else temp = file_name.substring(item_start - 1,item_start - 1+ item_length);
+                     if ( item_length < 1 ) column_context =  file_name.substring(item_start - 1);
+                     else column_context = file_name.substring(item_start - 1,item_start - 1+ item_length);
                  }
-                if ( temp != null && temp.length() > 0) return temp;
+                if ( column_context != null && column_context.length() > 0) return column_context;
                 else return null;
            }
+            return null;
            
      }
+     
+     
+     private String                   getItemDescription(ArrayList items,
+                            int direction_of_file_name_reading,int column )
+   {
+       if (  direction_of_file_name_reading==    TraceFileNameFormat.READING_LEFT_TO_RIGHT )
+       {
+           return (String) items.get(column - 1);
+       }
+       else if ( direction_of_file_name_reading ==   TraceFileNameFormat.READING_RIGHT_TO_LEFT )
+       {
+           return (String)items.get(items.size() - column);
+       }
+       return "";
+   }
     /** Creates a new instance of BroadFileName */
   /*  public SequencingFacilityFileName(String file_name, int seq_facility_code)
     {
@@ -318,10 +359,7 @@ public class SequencingFacilityFileName
               TraceFileNameFormat format = null;
     edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadTraceFileFormats();
        // br= new SequencingFacilityFileName("6356_h02_jlha_ksg001756_h02_i_002.ab1", edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.getTraceFileFormat("test 2"), false);
-        br= new SequencingFacilityFileName("YSG01438A03F.ab1", edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.getTraceFileFormat("RL1"), true);
-       br= new SequencingFacilityFileName("YSG01438A03F.ab1", edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.getTraceFileFormat("RL"), true);
-       br= new SequencingFacilityFileName("YSG01438A3F1.ab1", edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.getTraceFileFormat("RL2"), true);
-      
+        br= new SequencingFacilityFileName("JLWE_KGS001230-1A10_F080.ab1", edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.getTraceFileFormat("dsfsd"), true);
         
         //  br= new SequencingFacilityFileName("YSG01438.379_A03.ab1", edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.getTraceFileFormat("Kolodner"), false);
   

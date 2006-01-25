@@ -82,7 +82,8 @@ public class OligoPlateProcessor_Runner extends ProcessRunner
                             DatabaseTransaction.commit(conn);
                        }
                         catch(Exception e1)
-                       {m_error_messages.add("Cannot process oligo plate " + plate_name +"\n"+e1.getMessage());}
+                       {
+                           m_error_messages.add("Cannot process oligo plate " + plate_name +"\n"+e1.getMessage());}
                     }
                 }
           }
@@ -149,7 +150,7 @@ public class OligoPlateProcessor_Runner extends ProcessRunner
             input.setOrderComment("ads");
             input.setUser(user);
             input.setPlateStatus( OligoContainer.STATUS_RECIEVED );
-             input.setInputData(Constants.ITEM_TYPE_PLATE_LABELS,  "OPLATE000369 OPLATE000370 OPLATE000632 ");
+             input.setInputData(Constants.ITEM_TYPE_PLATE_LABELS,  "OPLATE000999 ");
              input.run();
         }catch(Exception e)
         {

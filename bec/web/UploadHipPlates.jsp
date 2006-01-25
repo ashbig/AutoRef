@@ -9,53 +9,64 @@
 <%@ page import="edu.harvard.med.hip.bec.*" %>
 <%@ page import="edu.harvard.med.hip.bec.coreobjects.spec.*" %>
 <%@ page import="edu.harvard.med.hip.bec.coreobjects.endreads.*" %>
+<%@ page import="edu.harvard.med.hip.bec.util.*" %>
 <html>
 
+<head>
+<script language="JavaScript" src="<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>scripts.js"></script>
 
+</head>
 
 <body>
 
 <% ArrayList linkers = (ArrayList ) request.getAttribute(Constants.LINKER_COL_KEY);
    ArrayList vectors = (ArrayList ) request.getAttribute(Constants.VECTOR_COL_KEY);
 %>
- 
-<jsp:include page="NavigatorBar_Administrator.jsp" />
-	<p><P>
-<br>
-<table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
-    <tr>
-        <td >
-    <font color="#008000" size="5"><b> Upload Plate Information from FLEX into ACE</font>
-    <hr>
-    
-    <p>
-    </td>
-    </tr>
-</table>
+ <table width="100%" border="0" cellpadding="10" style='padding: 0; margin: 0; '>
+  <tr>
+    <td><%@ include file="page_application_title.html" %></td>
+  </tr>
+  <tr>
+    <td ><%@ include file="page_menu_bar.jsp" %></td>
+  </tr>
+  <tr>
+    <td><table width="100%" border="0">
+        <tr> 
+          <td  rowspan="3" align='left' valign="top" width="160"  bgcolor='#1145A6'>
+		  <jsp:include page="page_left_menu.jsp" /></td>
+          <td  valign="top"> <jsp:include page="page_location.jsp" />
+           </td>
+        </tr>
+        <tr> 
+          <td valign="top"> <jsp:include page="page_title.jsp" /></td>
+        </tr>
+        <tr> 
+          <td><!-- TemplateBeginEditable name="EditRegion1" -->
 
-<div align="center">
+
+<!--<div align="center">
   <center>
   <table border="0" cellpadding="0" cellspacing="0" width="80%">
     <tr>
       <td width="100%"><html:errors/></td>
     </tr>
 	<tr>
-        <td><i>If you are not sure about certain settings, please, consult help</i> </i> <a href="<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Help_PlateUploader.jsp">[parameter help file]</a>. 
+        <td><i>If you are not sure about certain settings, please, consult help</i> </i> <a href="Help_PlateUploader.jsp">[parameter help file]</a>. 
           </i></td>
       </tr>
   </table>
   </center>
-</div>
+</div>-->
 
 
-<html:form action="/RunProcess.do" >  
+<form action="RunProcess.do" onsubmit="return validate_upload_hipplates(this);">  
 <input name="forwardName" type="hidden" value="<%= request.getAttribute("forwardName") %>" > 
 
-<table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
+<table border="0" cellpadding="0" cellspacing="0" width="90%" align=center>
   <tr> 
 		<td>
 
-<strong>Enter palte names here: </strong><p></p></td>
+<strong>Enter plate names here: </strong><p></p></td>
 <td>
  <textarea name="plate_names" id="plate_names" rows="10">
  </textarea>
@@ -77,8 +88,13 @@
     <td  bgColor="#e4e9f8"><b>Start Codon</b></td>
     <TD bgColor="#e4e9f8"> 
     <SELECT NAME="start_codon">
-     		<OPTION VALUE="ATG" selected>ATG
-                <OPTION VALUE="NON">Natural
+     		 <%  String value = null;String name = null;
+for (Enumeration e = BecProperties.getInstance().getStartCodons().keys() ; e.hasMoreElements() ;)
+{
+	name = (String) e.nextElement();
+	value = (String)BecProperties.getInstance().getStartCodons().get(name);%>
+	 <OPTION VALUE='<%= value %>'> <%= name%>
+<%}%>
     </SELECT>
      </div></td>
   </tr>
@@ -87,8 +103,13 @@
     <td  bgColor="#b8c6ed"><b>Fusion Stop Codon</b></td>
     <TD bgColor="#b8c6ed"> 
     <SELECT NAME="fusion_stop_codon">
-                <OPTION VALUE="GGA">GGA
-                <OPTION VALUE="TTG" selected>TTG
+                <% 
+for (Enumeration e = BecProperties.getInstance().getStopFusionCodons().keys() ; e.hasMoreElements() ;)
+{
+	name = (String) e.nextElement();
+	value = (String)BecProperties.getInstance().getStopFusionCodons().get(name);%>
+	 <OPTION VALUE='<%= value %>'> <%= name%>
+<%}%>
     	</SELECT>
      </div></td>
   </tr>
@@ -96,10 +117,13 @@
     <td  bgColor="#e4e9f8"><b>Closed Stop Codon</b></td>
     <TD bgColor="#e4e9f8"> 
     <SELECT NAME="closed_stop_codon">
-   		<OPTION VALUE="TGA" >TGA
-                <OPTION VALUE="TAA" >TAA
-                <OPTION VALUE="TAG" >TAG
-                <OPTION VALUE="NON" selected>Natural
+   		<%  
+for (Enumeration e = BecProperties.getInstance().getStopClosedCodons().keys() ; e.hasMoreElements() ;)
+{
+	name = (String) e.nextElement();
+	value = (String)BecProperties.getInstance().getStopClosedCodons().get(name);%>
+	 <OPTION VALUE='<%= value %>'> <%= name%>
+<%}%>
     	</SELECT>
      </div></td>
   </tr>
@@ -167,7 +191,17 @@
     &nbsp; 
     <input type="reset" value="Reset" name="B2">
 </div>
-</html:form> 
+</form> 
+
+ <!-- TemplateEndEditable --></td>
+        </tr>
+      </table></td>
+  </tr>
+  <tr>
+    <td><%@ include file="page_footer.jsp" %></td>
+  </tr>
+</table>
+
 </body>
 </html>
 

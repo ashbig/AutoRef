@@ -33,7 +33,7 @@ public class IsolateRanker
       
     private Construct         m_construct = null;
     private ArrayList        m_constructs = null;
-    private ArrayList        m_conontainer_ids = null;
+    private ArrayList        m_construct_ids = null;
     private EndReadsSpec      m_penalty_spec = null;
     private FullSeqSpec       m_cutoff_spec = null;
     private DiscrepancyFinder       i_discrepancy_finder = null;//default:used by all functions
@@ -53,6 +53,11 @@ public class IsolateRanker
         m_finished_constructs = new ArrayList();
          
     }
+     public IsolateRanker()
+     {
+         m_error_messages = new ArrayList();
+        m_finished_constructs = new ArrayList();
+     }
     
     public IsolateRanker(FullSeqSpec fs, EndReadsSpec er, Construct c)
     {
@@ -65,7 +70,10 @@ public class IsolateRanker
     }
     
  
-    
+    public void             setConstructIds( ArrayList   v){     m_construct_ids = v;}
+    public void             setCloneRankingCriteria( EndReadsSpec v){     m_penalty_spec = v;}
+    public void             setAcceptanceCriteria( FullSeqSpec     v){  m_cutoff_spec = v;}
+   
     
      public ArrayList       getErrorMessages(){ return m_error_messages ;}
      public ArrayList       getProcessedConstructId(){ return   m_finished_constructs;}
@@ -83,6 +91,15 @@ public class IsolateRanker
         else if (m_construct != null)
         {
             runConstruct( m_construct, conn);
+        }
+        else if (m_construct_ids != null)
+        {
+            
+             for (int count = 0; count < m_construct_ids.size(); count++)
+            {
+                m_construct = Construct.getConstructById(String.valueOf( ( Integer) m_construct_ids.get(count))) ;
+                runConstruct( m_construct, conn);
+            }
         }
     }
     

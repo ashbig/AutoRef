@@ -3,7 +3,7 @@
 <%@ page errorPage="ProcessError.do"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-
+<%@ page import="edu.harvard.med.hip.bec.util.*" %>
 <html>
 
 <head>
@@ -15,47 +15,23 @@
 <body>
 
 <div align="center">
-  <center>
+  
  
   <table border="0" width="90%" height="518" cellpadding="0">
    
-     <tr><TD colspan="2"> <div align="center">
-  <center>
-  <table border="0" width="790" height="121" cellpadding="0">
-    <tr>
-     <td width="542" height="1" valign="top" align="left" rowspan="2">
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; <!--<img border="0" src="./jpg/earth.gif" width="76" height="76"> -->
-		<img border="0" src="./jpg/pc&woman.gif" width="96" height="76"></a>&nbsp;&nbsp;&nbsp;
-      </td> 
-      <td width="238" height="1" valign="top" align="right">
-        &nbsp;
-        <p>
-        <a href="Logout.do">
-		<img border="0" src="./jpg/logout.gif" width="50" height="17"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-      </td>
-    </tr>
-    <tr>
-      <td width="238" height="1" valign="bottom" align="right">
-        &nbsp;<a href="http://www.hip.harvard.edu"><img border="0" src="./jpg/bar_2.gif" width="187" height="24"></a>
-      </td>
-    </tr>
-    <tr>
-      <td width="784" colspan="2" height="32" valign="top" align="left">
-        <p> <map name="FPMap0">
-        <area href="about_ace.html" shape="rect" coords="22, 5, 76, 22">
-        <area href="installation.jsp" shape="rect" coords="83, 6, 171, 23">
-        <area href="Help_GeneralHelp.jsp" shape="rect" coords="179, 3, 273, 23">
-        <area href="mailto:hip_informatics@hms.harvard.edu" shape="rect" coords="280, 2, 363, 23">
-		</map><img border="0" src="./jpg/bar_11.jpg" width="454" height="24" usemap="#FPMap0">
-		<a href="http://www.hms.harvard.edu"><img border="0" src="./jpg/bar_13.jpg" width="315" height="24"></a></p>
-		<p><html:errors/></p>
-      </td>
-    </tr>
-    
-</table>
-</td></tr>
-    </tr>
+     <tr> 
+            
+          <tr>
+            <td height="22" colspan=2><h1 style='font: bold, 22px, Times New Roman ;text-align: center; color: #3333CC;white-space: nowrap'>Welcome 
+          to Automatic Clone Evaluation (ACE)</h1>
+        
+        </td>
+          </tr>
+		  <td height="1" colspan=2 align=center> <a href="http://www.hip.harvard.edu"><b>Harvard Institute of Proteomics</b></a></td>
+          </tr>
+			  <tr><td colspan=2><p><html:errors/></p></td>          </tr>
+   <tr><td colspan=2><hr></td></tr>
+
     <tr>
       <td width="22%" valign="top" height="350">
       
@@ -65,7 +41,7 @@
     <html:form action="logon.do" focus="username">
     <table width="153" bordercolor="#0033CC" border="1" cellspacing="0" cellpadding="0" height="468">  
      <tr>
-              <td width="142" height="19" bgcolor="#0033CC">&nbsp;&nbsp; <b><font color="#FFFFFF">ACE 
+              <td width="142" height="19" bgcolor="#1145A6" align="center">&nbsp;&nbsp; <b><font color="#FFFFFF">ACE 
                 Login</font></b></td>      
      </tr>
      <tr>
@@ -93,9 +69,9 @@
      </font></p>
      <p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
      <map name="FPMap4">
-     <area href="mailto:hip_informatics@hms.harvard.edu" shape="rect" coords="0, 4, 23, 23"></map>
+     <area href="mailto:<%=  BecProperties.getInstance().getACEEmailAddress() %>" shape="rect" coords="0, 4, 23, 23"></map>
 	 <img border="0" src="./jpg/email_us.gif" width="24" height="24" usemap="#FPMap4">&nbsp;&nbsp;&nbsp;<br>
-     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font color="#008080">Email us</font></p>
+     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#008080">Contact Us</font></p>
   <center>
   <p>&nbsp;
      </center>
@@ -109,17 +85,17 @@
       
       
       </td>
-      <td width="78%" valign="top" height="350">
-        <table border="0" width="99%" height="105">
+      <td  valign="top" height="350">
+        <table  width='98%' bordercolor="#0033CC" border="1" cellspacing="0" cellpadding="0" height="468">  
           <tr> 
-            <td width="100%" bgcolor="#0066FF" height="21"><font color="#FFFFFF"><b>Welcome 
-              to ACE&nbsp;</b></font></td>
+            <td  bgcolor="#1145A6" height="21" align="center"><font color="#FFFFFF"><b>Welcome 
+              to ACE</b></font></td>
           </tr>
           <tr> 
-            <td width="100%" bgcolor="#EBEFFA" height="78" valign="top" align="left"> 
-              <table border="0" cellpadding="0" cellspacing="0" width="98%" height="207">
+            <td height="438"  valign="center"  bgcolor="#EBEFFA" > 
+              <table border="0" cellpadding="0" cellspacing="0" width="98%"  align="center">
                 <tr> 
-                  <td width="2%" height="207" align="center"><img src="./jpg/bec_schema.jpg"  border="0"> 
+                  <td align="center"><img src="./jpg/bec_schema.jpg"  border="0"> 
                 </tr>
               </table></td>
           </tr>

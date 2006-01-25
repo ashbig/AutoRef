@@ -122,7 +122,7 @@ public abstract class Spec
             return null;
         } catch(Exception sqlE)
         {
-            System.out.println(sqlE.getMessage());
+         //   System.out.println(sqlE.getMessage());
             throw new BecDatabaseException(sqlE+"\nSQL: "+sql);
         } finally
         {
@@ -181,7 +181,7 @@ public abstract class Spec
             return null;
         } catch(Exception sqlE)
         {
-            System.out.println(sqlE.getMessage());
+           // System.out.println(sqlE.getMessage());
             throw new BecDatabaseException(sqlE+"\nSQL: "+sql);
         } finally
         {
@@ -223,7 +223,7 @@ public abstract class Spec
            }
         } catch (Exception sqlE)
         {
-            System.out.println(sqlE.getMessage());
+          //  System.out.println(sqlE.getMessage());
             throw new BecDatabaseException(sqlE+"\nSQL: "+sql);
         } finally
         {
