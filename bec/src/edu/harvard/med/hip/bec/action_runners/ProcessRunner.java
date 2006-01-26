@@ -187,9 +187,9 @@ public abstract class ProcessRunner implements Runnable
                 case Constants.PROCESS_PROCESS_OLIGO_PLATE :  
                 
                 case -Constants.PROCESS_ADD_NEW_VECTOR      :    
-                case -Constants.PROCESS_SUBMIT_REFERENCE_SEQUENCES      :    
-                case -Constants.PROCESS_SUBMIT_CLONE_COLLECTION      :    
-                case -Constants.PROCESS_SUBMIT_CLONE_SEQUENCES       :    
+             //   case -Constants.PROCESS_SUBMIT_REFERENCE_SEQUENCES      :    
+               // case -Constants.PROCESS_SUBMIT_CLONE_COLLECTION      :    
+             //   case -Constants.PROCESS_SUBMIT_CLONE_SEQUENCES       :    
                 case Constants.PROCESS_SET_CLONE_FINAL_STATUS:
                 case Constants.PROCESS_RUN_END_READS :  //run order for end reads
                  case Constants.PROCESS_RUN_ISOLATE_RUNKER :  //run isolate runker
@@ -263,6 +263,10 @@ public abstract class ProcessRunner implements Runnable
                 case Constants.PROCESS_SUBMIT_REFERENCE_SEQUENCES   :    
                 case Constants.PROCESS_SUBMIT_CLONE_COLLECTION   :    
                 case Constants.PROCESS_SUBMIT_CLONE_SEQUENCES   : 
+                     case -Constants.PROCESS_SUBMIT_REFERENCE_SEQUENCES   :    
+                case -Constants.PROCESS_SUBMIT_CLONE_COLLECTION   :    
+                case -Constants.PROCESS_SUBMIT_CLONE_SEQUENCES   : 
+              
                     result=false;
            }
            return result;

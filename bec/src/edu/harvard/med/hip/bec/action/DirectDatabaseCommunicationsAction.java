@@ -945,7 +945,7 @@ item_value = "<div align=center><a href=\'"+ BecProperties.getInstance().getProp
             case Constants.PROCESS_ADD_PROJECT_DEFINITION  : return"Add Project Definition"; 
             case Constants.PROCESS_ADD_NEW_VECTOR  : return"Add Vector"; 
             case Constants.PROCESS_SUBMIT_REFERENCE_SEQUENCES  :return"Submit Reference Sequence Information"; 
-            case Constants.PROCESS_SUBMIT_CLONE_SEQUENCES:return"Submit Clone Sequence";
+            case Constants.PROCESS_SUBMIT_CLONE_SEQUENCES:return"Upload Clone Sequences";
             case Constants.PROCESS_SUBMIT_CLONE_COLLECTION  : return"Submit Clone Collection";
             case Constants.PROCESS_ADD_NEW_COMMON_PRIMER :return"Add Sequencing Primer";
             case Constants.PROCESS_ADD_NEW_CLONINGSTRATEGY:return"Add Cloning Strategy"; 
@@ -954,7 +954,7 @@ item_value = "<div align=center><a href=\'"+ BecProperties.getInstance().getProp
             case Constants.PROCESS_VERIFY_TRACE_FILE_FORMAT: return "Verify New Trace File Name Format";
             case -Constants.PROCESS_ADD_NEW_VECTOR  :return "Request to Add Vector ";
             case -Constants.PROCESS_SUBMIT_REFERENCE_SEQUENCES  :return "Request for Reference Sequence Submission";
-            case -Constants.PROCESS_SUBMIT_CLONE_SEQUENCES:return "Request for Clone Sequence Submission";
+            case -Constants.PROCESS_SUBMIT_CLONE_SEQUENCES:return "Request for Clone Sequence Upload";
             case -Constants.PROCESS_SUBMIT_CLONE_COLLECTION  :return"Request for Clone Collection Submission";
             case -Constants.PROCESS_ADD_NEW_CONNECTION_VECTOR_LINKER:return"Request to Add Link between Vector and Sequencing Primer";
             case -Constants.PROCESS_ADD_NEW_COMMON_PRIMER  :return"Request to Add Sequencing Primer ";
@@ -984,7 +984,7 @@ item_value = "<div align=center><a href=\'"+ BecProperties.getInstance().getProp
              case Constants.PROCESS_ADD_PROJECT_DEFINITION  : return"Home > Cloning Project Settings > Project Definition"; 
             case Constants.PROCESS_ADD_NEW_VECTOR  : return"Home > Cloning Project Settings > Vector Information"; 
             case Constants.PROCESS_SUBMIT_REFERENCE_SEQUENCES  :return"Home > Process > Upload Plate Information > Submit Reference Sequence Information"; 
-            case Constants.PROCESS_SUBMIT_CLONE_SEQUENCES:return"Home > Process > Upload Plate Information > Submit Clone Sequence";
+            case Constants.PROCESS_SUBMIT_CLONE_SEQUENCES:return"Home > Process > Upload Clone Sequences";
             case Constants.PROCESS_SUBMIT_CLONE_COLLECTION  : return"Home > Process > Upload Plate Information > Submit Clone Collection";
             case Constants.PROCESS_ADD_NEW_COMMON_PRIMER :return"Home > Cloning Project Settings > Sequencing Primer";
            case -Constants.PROCESS_ADD_NEW_CLONINGSTRATEGY:
@@ -995,7 +995,7 @@ item_value = "<div align=center><a href=\'"+ BecProperties.getInstance().getProp
             case Constants.PROCESS_VERIFY_TRACE_FILE_FORMAT: return "Home > Cloning Project Settings > Add Trace File Name Format";
             case -Constants.PROCESS_ADD_NEW_VECTOR  :return "Home > Cloning Project Settings > Add Vector"; 
             case -Constants.PROCESS_SUBMIT_REFERENCE_SEQUENCES  :return "Home > Process > Upload Plate Information > Submit Reference Sequence Information"; 
-            case -Constants.PROCESS_SUBMIT_CLONE_SEQUENCES:return "Home > Process > Upload Plate Information > Submit Clone Sequence";
+            case -Constants.PROCESS_SUBMIT_CLONE_SEQUENCES:return "Home > Process > Upload Clone Sequence";
             case -Constants.PROCESS_SUBMIT_CLONE_COLLECTION  :return"Home > Process > Upload Plate Information > Submit Clone Collection";
             case -Constants.PROCESS_ADD_NEW_CONNECTION_VECTOR_LINKER:return"Request to Add Connection between Vector and Sequencing Primer";
             case -Constants.PROCESS_ADD_NEW_COMMON_PRIMER  :return"Home > Cloning Project Settings > Sequencing Primer ";

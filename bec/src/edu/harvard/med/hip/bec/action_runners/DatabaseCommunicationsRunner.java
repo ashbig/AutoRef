@@ -218,7 +218,7 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
        }
        String sql = "select flexcloneid, process_status, cloningstrategyid,  refsequenceid, iso.isolatetrackingid as isolatetrackingid  "
         + " from isolatetracking iso,  sequencingconstruct  constr , flexinfo f "
-        +" where constr.constructid = iso.constructid and f.isolatetrackingid=iso.isolatetrackingid "
+        +" where iso.PROCESS_STATUS = "+IsolateTrackingEngine.FINAL_STATUS_INPROCESS +"and constr.constructid = iso.constructid and f.isolatetrackingid=iso.isolatetrackingid "
         +" and f.flexcloneid in ("+clones_to_process.toString() +")   order by flexcloneid";
        ArrayList clone_descriptions = null;
        try
@@ -830,7 +830,7 @@ private boolean isCloneCollectionNameExists(CloneCollection collection, Connecti
             DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
             DatabaseCommunicationsRunner runner = new DatabaseCommunicationsRunner();
             runner.setUser(user);
-            File f = new File("C:\\BEC\\submit_clone_sequence.txt");
+            File f = new File("C:\\test.txt");
             InputStream input = new FileInputStream(f);
             runner.setInputStream(input);
             runner.setProcessType( -Constants.PROCESS_SUBMIT_CLONE_SEQUENCES);

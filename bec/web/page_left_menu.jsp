@@ -187,6 +187,9 @@ String image = "<img border='0' src='" + red_arrow_pass +"' width = '6' height='
 <%= image %><a href="page_main.jsp?forwardName=<%=Constants.UI_SELECT_PROCESS_PAGE%>&amp;<%=Constants.JSP_CURRENT_LOCATION%>=Home > Process > Evaluate Clones&amp;<%= Constants.JSP_TITLE%>=Evaluate clones" title="Evaluate Clones">Evaluate clones</a><br/>
 
 <%= image %><a href="page_main.jsp?forwardName=<%=Constants.UI_SELECT_PROCESS_INTERNAL_PRIMERS_PAGE%>&amp;<%=Constants.JSP_CURRENT_LOCATION%>=Home > Process > Internal Primer Design and Order&amp;<%= Constants.JSP_TITLE%>=Internal Primer Design and Order" title="Internal primer design and order">Internal primer design and order</a><br/>
+
+<%= image %><a href="DirectDatabaseCommunications.do?forwardName=<%= Constants.PROCESS_SUBMIT_CLONE_SEQUENCES %>"    title="Upload clones sequences">Upload clones sequences</a><br/>
+
 <%= image %><a href="SelectProcess.do?forwardName=<%=Constants.PROCESS_SET_CLONE_FINAL_STATUS%>" title="Set final clone status">Set final clone status</a><br/>
 
 
