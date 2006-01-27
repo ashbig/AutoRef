@@ -231,8 +231,13 @@ public class GetResearcherAction extends ResearcherAction{
                     b = true;
                 }
                 
-                if(workflowid == Workflow.TRANSFER_TO_EXP_JP1520 || workflowid == Workflow.TRANSFER_TO_EXP_PLP_DS_3xFlag || workflowid == Workflow.TRANSFER_TO_EXP_PLP_DS_3xMyc
-                || workflowid == Workflow.TRANSFER_TO_EXP_pCITE_GST || workflowid == Workflow.TRANSFER_TO_EXP_pDEST17 || workflowid == Workflow.TRANSFER_TO_EXP_pBY011) {
+                if(workflowid == Workflow.TRANSFER_TO_EXP_JP1520 
+                || workflowid == Workflow.TRANSFER_TO_EXP_PLP_DS_3xFlag 
+                || workflowid == Workflow.TRANSFER_TO_EXP_PLP_DS_3xMyc
+                || workflowid == Workflow.TRANSFER_TO_EXP_pCITE_GST 
+                || workflowid == Workflow.TRANSFER_TO_EXP_pDEST17 
+                || workflowid == Workflow.TRANSFER_TO_EXP_pBY011
+                || workflowid == Workflow.TRANSFER_TO_EXP_pLDNT7_nFLAG) {
                     List newContainerids = new ArrayList();
                     for(int i=0; i<newContainers.size(); i++) {
                         Container newContainer = (Container)newContainers.elementAt(i);

@@ -31,6 +31,7 @@ public class CloningStrategy {
     public static final int GATEWAY_pCITE_GST = 17;
     public static final int GATEWAY_pDEST17 = 19;
     public static final int GATEWAY_EXPRESSION_pBY011 = 12;
+    public static final int CREATOR_EXPRESSION_pLDNT7_nFLAG = 22;
     
     protected int id;
     protected String name;
@@ -228,6 +229,10 @@ public class CloningStrategy {
         
         if(workflowid == Workflow.TRANSFER_TO_EXP_pBY011) {
             return GATEWAY_EXPRESSION_pBY011;
+        }
+        
+        if(workflowid == Workflow.TRANSFER_TO_EXP_pLDNT7_nFLAG) {
+            return CREATOR_EXPRESSION_pLDNT7_nFLAG;
         }
         
         return 0;

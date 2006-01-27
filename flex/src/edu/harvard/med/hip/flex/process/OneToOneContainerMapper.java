@@ -107,13 +107,17 @@ public class OneToOneContainerMapper implements ContainerMapper {
                 if(workflow.getId() == Workflow.TRANSFER_TO_EXP_pBY011) {
                     newBarcode = newBarcode+".003";
                 }
+                if(workflow.getId() == Workflow.TRANSFER_TO_EXP_pLDNT7_nFLAG) {
+                    newBarcode = newBarcode+".017";
+                }
             } else if(Protocol.GENERATE_GLYCEROL_PLATES.equals(protocol.getProcessname()) &&
             (workflow.getId()==Workflow.TRANSFER_TO_EXP_JP1520 
             || workflow.getId()==Workflow.TRANSFER_TO_EXP_PLP_DS_3xFlag 
             || workflow.getId()==Workflow.TRANSFER_TO_EXP_PLP_DS_3xMyc
             || workflow.getId()==Workflow.TRANSFER_TO_EXP_pCITE_GST
             || workflow.getId()==Workflow.TRANSFER_TO_EXP_pDEST17
-            || workflow.getId()==Workflow.TRANSFER_TO_EXP_pBY011)) {
+            || workflow.getId()==Workflow.TRANSFER_TO_EXP_pBY011
+            || workflow.getId()==Workflow.TRANSFER_TO_EXP_pLDNT7_nFLAG)) {
                 String labelPrefix = null;
                 if(project.getId()==Project.HUMAN) {
                     labelPrefix = "HsxXG";
