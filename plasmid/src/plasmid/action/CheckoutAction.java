@@ -133,8 +133,7 @@ public class CheckoutAction extends UserAction {
         ((CheckoutForm)form).setCostOfCollections(collectionPrice);
         ((CheckoutForm)form).setCostForShipping(0.0);
            
-        DefTableManager def = new DefTableManager();
-        List shippingMethods = def.getVocabularies("shippingmethod", "method");
+        List shippingMethods = DefTableManager.getVocabularies("shippingmethod", "method");
         request.setAttribute("shippingMethods", shippingMethods);
         
         return (mapping.findForward("success"));

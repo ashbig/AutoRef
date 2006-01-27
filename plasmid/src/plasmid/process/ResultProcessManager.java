@@ -32,8 +32,7 @@ public class ResultProcessManager {
      * @return A list of result types.
      */
     public List getResultTypes() {
-        DefTableManager manager = new DefTableManager();
-        return manager.getVocabularies("resulttype", "resulttype");
+        return DefTableManager.getVocabularies("resulttype", "resulttype");
     }
     
     public Map uploadAgarResults(InputStream input) throws Exception {/**

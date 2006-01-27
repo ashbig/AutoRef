@@ -9,7 +9,7 @@
     <td height="25"><a href="OrderOverview.jsp" class="leftnavtext">Overview</a></td>
   </tr>
   <tr> 
-    <td height=45" valign="middle"> <table width="100%" border="0">
+    <td valign="middle"> <table width="100%" border="0">
         <tr> 
           <td height="15" class="mainbodytext">Search Plasmids</td>
         </tr>
@@ -18,8 +18,12 @@
             reference sequence</a></td>
         </tr>
         <tr> 
-          <td height="15" class="lftsubtxt">- <a href="#" class="leftsubnavtext">by 
+          <td height="15" class="lftsubtxt">- <a href="GetVectorPropertyTypes.do" class="leftsubnavtext">by 
             vector</a></td>
+        </tr>
+        <tr> 
+          <td height="15" class="lftsubtxt">- <a href="GetCloneSearchTypes.do" class="leftsubnavtext">by 
+            clone</a></td>
         </tr>
       </table></td>
   </tr>

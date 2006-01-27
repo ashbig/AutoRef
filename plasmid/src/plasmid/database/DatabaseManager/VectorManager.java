@@ -445,4 +445,27 @@ public class VectorManager extends TableManager {
         
         return id;
     }
+    
+    public static List getAllVectorPerpertyTypes() {
+        List types = new ArrayList();
+        String sql = "select propertytype from vectorpropertytype order by propertytype";
+        DatabaseTransaction t = null;
+        ResultSet rs = null;
+        try {
+            t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            while(rs.next()) {
+                String type = rs.getString(1);
+                types.add(type);
+            }
+        } catch (Exception ex) {
+            if(Constants.DEBUG) {
+                System.out.println(ex);
+            }
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+        
+        return types;
+    }
 }

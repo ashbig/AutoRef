@@ -43,6 +43,8 @@ public class Constants {
     public static final String ORDER_CLONE = "OrderClone";
     public static final String ORDER_COLLECTION = "OrderCollection";
     
+    public static final String ALL = "All";
+    
     /** Creates a new instance of Constants */
     public Constants() {
     }    

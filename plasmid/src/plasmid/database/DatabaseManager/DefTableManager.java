@@ -106,6 +106,61 @@ public class DefTableManager extends TableManager {
         return l;
     }
      
+    public static List getVocabularies(String table, String columnKnown, String columnUnknown, String column) {
+        List results = new ArrayList();
+        String sql = "select "+columnUnknown+" from "+table+" where "+columnKnown+"=? order by "+columnUnknown;
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, column);
+            rs = DatabaseTransaction.executeQuery(stmt);
+            while(rs.next()) {
+                String rt = rs.getString(1);
+                results.add(rt);
+            }
+        } catch (Exception ex) {
+            if(Constants.DEBUG) {
+                System.out.println("Error occured while querying "+table);
+                System.out.println(ex);
+            }
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+            DatabaseTransaction.closeConnection(conn);
+        }
+        
+        return results;
+    }
+     
+    public static List getVocabularies(String table, String column) {
+        String sql = "select "+column+" from "+table+" order by "+column;
+        
+        List l = new ArrayList();
+        DatabaseTransaction t = null;
+        ResultSet rs = null;
+        try {
+            t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            while(rs.next()) {
+                String s = rs.getString(1);
+                l.add(s);
+            }
+        } catch (Exception ex) {
+            if(Constants.DEBUG) {
+                System.out.println(ex);
+            }
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+        
+        return l;
+    }
+    
     public static int getNextid(String seqname) {
         String sql = "select "+seqname+".nextval from dual";
         DatabaseTransaction t = null;
@@ -127,28 +182,6 @@ public class DefTableManager extends TableManager {
         }
         
         return id;
-    }
-    
-    public List getVocabularies(String table, String column) {
-        String sql = "select "+column+" from "+table;
-        
-        List l = new ArrayList();
-        DatabaseTransaction t = null;
-        ResultSet rs = null;
-        try {            
-            t = DatabaseTransaction.getInstance();
-            rs = t.executeQuery(sql);
-            while(rs.next()) {
-                String s = rs.getString(1);
-                l.add(s);
-            }
-        } catch (Exception ex) {
-            handleError(ex, "Error occured while querying "+table);
-        } finally {
-            t.closeResultSet(rs);
-        }
-        
-        return l;
     }
     
     public static String getVocabulary(String table, String columnKnown, String columnUnknown, String column) {

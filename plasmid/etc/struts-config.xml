@@ -192,6 +192,11 @@
       <forward  name="success"   path="/ViewCloneDetail.jsp"/>
     </action>
      
+    <action    path="/GetCloneSearchTypes"
+               type="plasmid.action.GetCloneSearchTypesAction">
+      <forward  name="success"   path="/SearchClone.jsp"/>
+    </action>
+     
     <action    path="/GetCollection"
                type="plasmid.action.GetCollectionAction"
                name="viewCollectionForm"
@@ -229,6 +234,11 @@
               scope="request"
               input="/GetVectorDetailAction">
       <forward  name="success"   path="/ViewVectorDetail.jsp"/>
+    </action>
+     
+    <action    path="/GetVectorPropertyTypes"
+               type="plasmid.action.GetVectorPropertyTypesAction">
+      <forward  name="success"   path="/VectorSearch.jsp"/>
     </action>
      
     <action    path="/LabelPlates"
