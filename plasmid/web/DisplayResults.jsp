@@ -21,7 +21,7 @@
     <td width="136" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle"> 
       <jsp:include page="menu.jsp" />
 	</td>
-    <td align="left" valign="top">
+    <td width="864" align="left" valign="top">
 	<jsp:include page="searchByRefseqTitle.jsp" />
       <html:form action="SetDisplay.do">
 <html:hidden property="pagesize"/>

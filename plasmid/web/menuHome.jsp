@@ -1,7 +1,7 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ page import="plasmid.Constants" %> 
 
-<table width="100%" border="0">
+<table width="136" border="0">
   <tr> 
     <td height="31" align="center" valign="middle"><font size="2" face="Verdana, Arial, Helvetica, sans-serif"><strong>Home</strong></font></td>
   </tr>

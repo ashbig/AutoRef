@@ -44,6 +44,7 @@ public class Clone implements Serializable {
     protected String status;
     protected String specialtreatment;
     protected String source;
+    protected String description;
     
     protected List synonyms;
     protected List publications;
@@ -65,7 +66,7 @@ public class Clone implements Serializable {
     public Clone(int cloneid, String name, String type, String verified,
     String vermethod, String domain, String subdomain, String restriction, 
     String comments, int vectorid, String vectorname, String clonemap, String status,
-    String specialtreatment, String source) {
+    String specialtreatment, String source, String description) {
         this.cloneid = cloneid;
         this.name = name;
         this.type = type;
@@ -81,6 +82,7 @@ public class Clone implements Serializable {
         this.status = status;
         this.specialtreatment = specialtreatment;
         this.source = source;
+        this.description = description;
     }
         
     private void writeObject(java.io.ObjectOutputStream out)
@@ -111,6 +113,7 @@ public class Clone implements Serializable {
     public List getProperties() {return properties;}
     public String getSpecialtreatment() {return specialtreatment;}
     public String getSource() {return source;}
+    public String getDescription() {return description;}
     
     public void setCloneid(int id) {this.cloneid = id;}
     public void setName(String s) {this.name = s;}
@@ -130,6 +133,7 @@ public class Clone implements Serializable {
     public void setProperties(List l) {this.properties = l;}
     public void setSpecialtreatment(String s) {this.specialtreatment = s;}
     public void setSource(String s) {this.source = s;}
+    public void setDescription(String s) {this.description = s;}
     
     public List getSynonyms() {return synonyms;}
     public void setSynonyms(List l) {this.synonyms = l;}

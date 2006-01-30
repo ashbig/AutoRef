@@ -24,12 +24,12 @@ public class CloneInfo extends Clone implements Serializable{
     public CloneInfo(int cloneid, String name, String type, String verified,
     String vermethod, String domain, String subdomain, String restriction, 
     String comments, int vectorid, String vectorname, String clonemap, String status,
-    String specialtreatment, String source)  {
-        super(cloneid,name, type,verified,vermethod,domain,subdomain, restriction,comments,vectorid, vectorname,clonemap,status,specialtreatment,source);
+    String specialtreatment, String source, String desc)  {
+        super(cloneid,name, type,verified,vermethod,domain,subdomain, restriction,comments,vectorid, vectorname,clonemap,status,specialtreatment,source,desc);
     }
     
     public CloneInfo(String term, Clone c) {
-        super(c.getCloneid(), c.getName(), c.getType(), c.getVerified(),c.getVermethod(), c.getDomain(),c.getSubdomain(),c.getRestriction(), c.getComments(),c.getVectorid(),c.getVectorname(), c.getClonemap(), c.getStatus(), c.getSpecialtreatment(), c.getSource());
+        super(c.getCloneid(), c.getName(), c.getType(), c.getVerified(),c.getVermethod(), c.getDomain(),c.getSubdomain(),c.getRestriction(), c.getComments(),c.getVectorid(),c.getVectorname(), c.getClonemap(), c.getStatus(), c.getSpecialtreatment(), c.getSource(), c.getDescription());
         this.term = term;
         super.setAuthors(c.getAuthors());
         super.setGrowths(c.getGrowths());
@@ -41,7 +41,7 @@ public class CloneInfo extends Clone implements Serializable{
     }
     
     public CloneInfo(Clone c) {
-        super(c.getCloneid(), c.getName(), c.getType(), c.getVerified(),c.getVermethod(), c.getDomain(),c.getSubdomain(),c.getRestriction(), c.getComments(),c.getVectorid(),c.getVectorname(), c.getClonemap(), c.getStatus(), c.getSpecialtreatment(), c.getSource());
+        super(c.getCloneid(), c.getName(), c.getType(), c.getVerified(),c.getVermethod(), c.getDomain(),c.getSubdomain(),c.getRestriction(), c.getComments(),c.getVectorid(),c.getVectorname(), c.getClonemap(), c.getStatus(), c.getSpecialtreatment(), c.getSource(), c.getDescription());
         super.setAuthors(c.getAuthors());
         super.setGrowths(c.getGrowths());
         super.setHosts(c.getHosts());

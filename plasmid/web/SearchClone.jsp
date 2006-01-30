@@ -20,7 +20,7 @@
       <jsp:include page="menu.jsp" />
 	</td>
     <td width="83%" align="left" valign="top">
-	<jsp:include page="searchByRefseqTitle.jsp" />
+	<jsp:include page="searchByCloneTitle.jsp" />
       <html:form action="RefseqSearchContinue.do">
       <table width="100%" height="118" border="0" align="center">
         <tr> 

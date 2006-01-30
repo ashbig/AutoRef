@@ -1,14 +1,13 @@
 <table width="100%" border="0">
         <tr> 
           <td bgcolor="#6699CC" class="mainbodytexthead">Plasmid Order & Order &gt; Search 
-            Plasmids &gt; by reference sequence</td>
+            Plasmids &gt; by vector</td>
         </tr>
         <tr>
           <td height="29" valign="bottom" bgcolor="#FFFFFF" class="mainbodytextlarge">Search 
-            Plasmids By Reference Sequence</td>
+            Plasmids By Vector</td>
         </tr>
         <tr>
-          <td bgcolor="#FFFFFF" class="mainbodytexthead">Search available plasmids using reference
-            sequence information</td>
+          <td bgcolor="#FFFFFF" class="mainbodytexthead">Search available plasmids using vector information</td>
         </tr>
       </table>

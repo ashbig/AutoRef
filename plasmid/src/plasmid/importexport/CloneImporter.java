@@ -104,6 +104,9 @@ public class CloneImporter {
                 if("source".equalsIgnoreCase(columnName)) {
                     c.setSource(columnInfo);
                 }
+                if("description".equalsIgnoreCase(columnName)) {
+                    c.setDescription(columnInfo);
+                }
             }
             
             java.text.NumberFormat fmt = java.text.NumberFormat.getInstance();

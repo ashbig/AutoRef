@@ -20,11 +20,14 @@
     <td width="136" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle"> 
       <jsp:include page="menu.jsp" />
 	</td>
-    <td align="left" valign="top">
+    <td width="864" align="left" valign="top">
 	<jsp:include page="viewAllVectorsTitle.jsp" />
       <html:form action="SetVectorDisplay.do">
 
 <p class="mainbodytexthead">List of search terms found</p>
+<p class="text">This is only clones without inserts ('empty vectors').  
+Many other vectors are represented in the repository 
+(try 'search by reference sequence' or 'view collection').</P>
 <p class="mainbodytexthead" align="right"><a target="_blank" href="TermDefinition.jsp">Explanation of Terms</a></p>
 <table width="100%" border="0">
   <tr>
@@ -32,7 +35,7 @@
     <td class="tableheader"><a href="SetVectorDisplay.do?sortby=cloneid">Clone ID</a></td>
     <td class="tableheader"><a href="SetVectorDisplay.do?sortby=clonetype">Clone Type</a></td>
     <td class="tableheader"><a href="SetVectorDisplay.do?sortby=vectorname">Vector Name</a></td>
-    <td class="tableheader"><a href="SetVectorDisplay.do?sortby=selection">Selection Markers</a></td>
+    <td class="tableheader">Description</td>
     <td class="tableheader">Special MTA</td>
     <td class="tableheader">&nbsp;</td>
   </tr>
@@ -44,11 +47,7 @@
     <td><a target="_blank" href="GetCloneDetail.do?cloneid=<bean:write name="clone" property="cloneid"/>"><bean:write name="clone" property="name"/></a></td>
     <td><bean:write name="clone" property="type"/></td>
     <td><a target="_blank" href="GetVectorDetail.do?vectorid=<bean:write name="clone" property="vectorid"/>"><bean:write name="clone" property="vectorname"/></a></td>
-    <td>
-    <logic:iterate name="clone" property="selections" id="selection">
-        <bean:write name="selection" property="hosttype"/>: <bean:write name="selection" property="marker"/>
-    </logic:iterate>
-    </td>
+    <td><bean:write name="clone" property="description"/></td>
     <td><bean:write name="clone" property="specialtreatment"/></td>
     <html:form action="SetVectorDisplay.do">
     <input type="hidden" name="cloneid" value="<bean:write name="clone" property="cloneid"/>"/>

@@ -20,7 +20,7 @@
       <jsp:include page="menu.jsp" />
 	</td>
     <td width="83%" align="left" valign="top">
-	<jsp:include page="searchByRefseqTitle.jsp" />
+	<jsp:include page="searchByVectorTitle.jsp" />
       <html:form action="RefseqSearch.do" enctype="multipart/form-data">
         <table width="100%" border="0" align="center">
           <tr> 

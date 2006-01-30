@@ -1,4 +1,4 @@
-<table width="100%" border="0">
+<table width="136" border="0">
   <tr> 
     <td height="31" align="center" valign="middle"><font size="2" face="Verdana, Arial, Helvetica, sans-serif"><strong>Plasmid 
       Order</strong></font></td>

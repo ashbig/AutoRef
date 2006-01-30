@@ -41,6 +41,10 @@
     <td class="mainbodytext"><bean:write name="clone" property="specialtreatment"/></td>
   </tr>
   <tr> 
+    <td class="tablebody">Description:</td>
+    <td colspan="3" class="mainbodytext"><bean:write name="clone" property="description"/></td>
+  </tr>
+  <tr> 
     <td class="tablebody">Comments:</td>
     <td colspan="3" class="mainbodytext"><bean:write name="clone" property="comments"/></td>
   </tr>

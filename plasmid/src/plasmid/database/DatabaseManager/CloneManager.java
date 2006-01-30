@@ -31,8 +31,8 @@ public class CloneManager extends TableManager {
             return true;
         
         String sql = "insert into clone"+
-        " (cloneid, clonename, clonetype, verified, vermethod, domain, subdomain, restriction, comments, vectorid, vectorname, clonemapfilename, status, specialtreatment, source)"+
-        " values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        " (cloneid, clonename, clonetype, verified, vermethod, domain, subdomain, restriction, comments, vectorid, vectorname, clonemapfilename, status, specialtreatment, source, description)"+
+        " values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         try {
             PreparedStatement stmt = conn.prepareStatement(sql);
             
@@ -53,6 +53,7 @@ public class CloneManager extends TableManager {
                 stmt.setString(13, c.getStatus());
                 stmt.setString(14, c.getSpecialtreatment());
                 stmt.setString(15, c.getSource());
+                stmt.setString(16, c.getDescription());
                 
                 DatabaseTransaction.executeUpdate(stmt);
             }
@@ -388,7 +389,7 @@ public class CloneManager extends TableManager {
      */
     public Map queryClonesByCloneid(List cloneids, boolean isInsert, boolean isSelection, boolean isWorkingStorage) {
         String sql = "select clonename, clonetype, verified, vermethod,"+
-        " domain, subdomain, restriction, comments, vectorid, vectorname, clonemapfilename,status,specialtreatment,source"+
+        " domain, subdomain, restriction, comments, vectorid, vectorname, clonemapfilename,status,specialtreatment,source,description"+
         " from clone where cloneid=?";
         
         return performQueryClones(cloneids, isInsert, isSelection, isWorkingStorage, sql);
@@ -396,7 +397,7 @@ public class CloneManager extends TableManager {
     
     public Map queryAvailableClonesByCloneid(List cloneids, boolean isInsert, boolean isSelection, boolean isWorkingStorage) {
         String sql = "select clonename, clonetype, verified, vermethod,"+
-        " domain, subdomain, restriction, comments, vectorid, vectorname, clonemapfilename,status,specialtreatment,source"+
+        " domain, subdomain, restriction, comments, vectorid, vectorname, clonemapfilename,status,specialtreatment,source,description"+
         " from clone where cloneid=? and status='"+Clone.AVAILABLE+"'";
         
         return performQueryClones(cloneids, isInsert, isSelection, isWorkingStorage, sql);
@@ -404,7 +405,7 @@ public class CloneManager extends TableManager {
     
     public Map queryAvailableClonesByCloneid(List cloneids, boolean isInsert, boolean isSelection, boolean isWorkingStorage, List restrictions, List clonetypes) {
         String sql = "select clonename, clonetype, verified, vermethod,"+
-        " domain, subdomain, restriction, comments, vectorid, vectorname, clonemapfilename,status,specialtreatment,source"+
+        " domain, subdomain, restriction, comments, vectorid, vectorname, clonemapfilename,status,specialtreatment,source,description"+
         " from clone where cloneid=? and status='"+Clone.AVAILABLE+"'";
         
         if(clonetypes != null && clonetypes.size()>0) {
@@ -422,7 +423,7 @@ public class CloneManager extends TableManager {
     
     public Clone queryCloneByCloneid(int cloneid) {
         String sql = "select clonename, clonetype, verified, vermethod,"+
-        " domain, subdomain, restriction, comments, vectorid, vectorname, clonemapfilename, status,specialtreatment,source"+
+        " domain, subdomain, restriction, comments, vectorid, vectorname, clonemapfilename, status,specialtreatment,source,description"+
         " from clone where cloneid="+cloneid;
         String sql2 = "select d.insertid, d.insertorder, d.sizeinbp, d.species, d.format, d.source,d.geneid,d.name,d.description,d.targetseqid,d.targetgenbank,d.hasdiscrepancy,d.hasmutation,d.refseqid,d.region"+
         " from dnainsert d, clone c"+
@@ -472,7 +473,8 @@ public class CloneManager extends TableManager {
                 String status = rs.getString(12);
                 String specialtreatment = rs.getString(13);
                 String src = rs.getString(14);
-                c = new Clone(cloneid,clonename,clonetype,verified,vermethod,domain,subdomain, restriction,comments,vectorid,vectorname,clonemap,status,specialtreatment,src);
+                String d = rs.getString(15);
+                c = new Clone(cloneid,clonename,clonetype,verified,vermethod,domain,subdomain, restriction,comments,vectorid,vectorname,clonemap,status,specialtreatment,src,d);
                 
                 List inserts = new ArrayList();
                 ResultSet rs2 = t.executeQuery(sql2);
@@ -708,7 +710,8 @@ public class CloneManager extends TableManager {
                     String status = rs.getString(12);
                     String specialtreatment = rs.getString(13);
                     String src = rs.getString(14);
-                    CloneInfo c = new CloneInfo(Integer.parseInt(cloneid),clonename,clonetype,verified,vermethod,domain,subdomain, restriction,comments,vectorid,vectorname,clonemap,status,specialtreatment,src);
+                    String des = rs.getString(15);
+                    CloneInfo c = new CloneInfo(Integer.parseInt(cloneid),clonename,clonetype,verified,vermethod,domain,subdomain, restriction,comments,vectorid,vectorname,clonemap,status,specialtreatment,src,des);
                     
                     if(isInsert) {
                         List inserts = new ArrayList();
