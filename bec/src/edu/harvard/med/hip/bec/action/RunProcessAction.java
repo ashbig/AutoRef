@@ -163,6 +163,7 @@ public class RunProcessAction extends BecAction
                 //    item_ids = item_ids.trim();
                     int item_type = Integer.parseInt(request.getParameter("item_type"));
                     
+                    item_ids = ProcessRunner.cleanUpItems(item_type, item_ids);
                      ArrayList oligo_calculations = new ArrayList();
                      ArrayList items = Algorithms.splitString(item_ids);
                      ArrayList oligo_calculations_per_item = new ArrayList();
@@ -216,6 +217,8 @@ public class RunProcessAction extends BecAction
                  //   item_ids = item_ids.trim();
                     item_ids = item_ids.toUpperCase().trim();
                     int item_type = Integer.parseInt(request.getParameter("item_type"));
+                     item_ids = ProcessRunner.cleanUpItems(item_type, item_ids);
+                   
                     
                      Hashtable stretch_collections = new Hashtable();
                      ArrayList items = Algorithms.splitString(item_ids);
@@ -275,7 +278,8 @@ public class RunProcessAction extends BecAction
                     //item_ids = item_ids.trim();
                    
                     int item_type = Integer.parseInt(request.getParameter("item_type"));
-                    
+                     item_ids = ProcessRunner.cleanUpItems(item_type, item_ids);
+                   
                      ArrayList items = Algorithms.splitString(item_ids);
                      StretchCollection lqr_for_clone = null; 
                      int cloneid = 0;
