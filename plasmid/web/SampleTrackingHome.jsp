@@ -27,7 +27,7 @@
 <html:errors/>
 
 <ul>
-    <li class="text"><a href="LabelPlates.jsp">Label Containers</a>
+    <li class="text"><a href="LabelPlates.jsp">Create New Container Labels</a>
     <li class="text"><a href="SelectProcess.jsp">Generate Worklist</a>
     <li class="text"><a href="GetResultTypes.do">Enter Results</a>
 </ul>

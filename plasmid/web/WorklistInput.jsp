@@ -26,6 +26,10 @@
     <td width="83%" align="left" valign="top">
         <jsp:include page="generateWorklistTitle.jsp" />
 <html:errors/>
+
+<p class="alert">Please note that the mapping between the source plates and the destination
+plates is the same as your input order.</p>
+
       <html:form action="WorklistInput.do">
 
 <table width="100%" border="0">

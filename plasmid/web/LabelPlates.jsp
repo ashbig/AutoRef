@@ -28,7 +28,7 @@
       <html:form action="LabelPlates.do">
 <table width="100%" border="0">
   <tr> 
-    <td width="16%" class="formlabel">Choose container type:</td>
+    <td width="20%" class="formlabel">Choose container type:</td>
     <td colspan="2">
         <html:select property="type" styleClass="itemtext">
           <html:option value="<%=Container.COSTAR_FLT%>"><%=Container.COSTAR_FLT%></html:option>
@@ -43,7 +43,7 @@
     </td>
   </tr>
   <tr> 
-    <td width="16%" class="formlabel">Number of labels (>0):</td>
+    <td width="20%" class="formlabel">Number of new containers (>0):</td>
     <td colspan="2">
         <html:text property="number" styleClass="itemtext" size="30" value="1"/>
     </td>
@@ -60,7 +60,7 @@
     <td width="64%" class="itemtext">example: 12345678-CrArc</td>
   </tr>
   <tr> 
-    <td width="16%" class="formlabel">&nbsp;</td>
+    <td width="20%" class="formlabel">&nbsp;</td>
     <td colspan="2">
         <html:submit styleClass="itemtext" value="Get Labels"/>
     </td>
