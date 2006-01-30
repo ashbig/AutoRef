@@ -68,7 +68,7 @@
     </tr>  </table>  </center></div>
 
 
-<form action="RunProcess.do"  onsubmit="return validate_initprocess(this, <%= Constants.ITEM_TYPE_PROJECT_NAME %>);"> 
+<form action="RunProcess.do" method='POST' onsubmit="return validate_initprocess(this, <%= Constants.ITEM_TYPE_PROJECT_NAME %>);"> 
 <input name="forwardName" type="hidden" value="<%= forwardName %>" > 
 
 <table border="0" cellpadding="10" cellspacing="2" width="90%" align=center>
