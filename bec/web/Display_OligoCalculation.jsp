@@ -68,7 +68,7 @@ else if (forwardName instanceof Integer) forwardName_int = ((Integer) forwardNam
 
 
 <% if (forwardName_int == -Constants.PROCESS_APPROVE_INTERNAL_PRIMERS)
-{%><form action="RunProcess.do" ><%}%>
+{%><form action="RunProcess.do" method='POST' ><%}%>
 
 <% 
 

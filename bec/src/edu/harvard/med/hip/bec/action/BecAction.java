@@ -17,8 +17,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.4 $
- * $Date: 2006-01-25 16:44:47 $
+ * $Revision: 1.5 $
+ * $Date: 2006-01-30 19:15:34 $
  * $Author: Elena $
  *
  ******************************************************************************
@@ -60,7 +60,7 @@ import edu.harvard.med.hip.bec.user.*;
  *    be returned.
  *
  * @author     $Author: Elena $
- * @version    $Revision: 1.4 $ $Date: 2006-01-25 16:44:47 $
+ * @version    $Revision: 1.5 $ $Date: 2006-01-30 19:15:34 $
  */
 public abstract class BecAction extends org.apache.struts.action.Action {
     
@@ -88,13 +88,10 @@ public abstract class BecAction extends org.apache.struts.action.Action {
         HttpSession session = request.getSession(false);
         if(isUserLoggedIn(session)) 
          {
-             System.out.println("BEC ACTION LOGED");
-             return becPerform(mapping,form,request,response);
+               return becPerform(mapping,form,request,response);
         } else {
-                System.out.println("BEC ACTION NOT LOGED");
             errors.add(ActionErrors.GLOBAL_ERROR,
             new ActionError("error.user.notloggedin"));
-                System.out.println("errors "+ errors.size());
             saveErrors(request,errors);
             return mapping.findForward("login");
         }

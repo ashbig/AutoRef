@@ -615,11 +615,8 @@ public abstract class ProcessRunner implements Runnable
      
      public void cleanUpItems()
      {
-         System.out.println(m_items);
-          m_items = cleanUpItems(m_items_type, m_items);
-           System.out.println(m_items);
+         m_items = cleanUpItems(m_items_type, m_items);
         
-       
      }
     
      
