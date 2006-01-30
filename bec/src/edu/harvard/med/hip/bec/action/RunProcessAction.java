@@ -602,7 +602,7 @@ if ( request.getParameter("plate_name") != null)((PrimerOrderRunner)runner).setP
                        runner.setProcessType(forwardName);
                                               
                     t = new Thread(runner);                    t.start();
-                    request.setAttribute(Constants.ADDITIONAL_JSP,"Processing items:<P>"+item_ids);
+                    request.setAttribute(Constants.ADDITIONAL_JSP,"Processing items:<P>"+ runner.getItems());
                     break;
                    
                    // runner(  request,  forwardName,  user);
@@ -611,7 +611,8 @@ if ( request.getParameter("plate_name") != null)((PrimerOrderRunner)runner).setP
                 case Constants.PROCESS_SHOW_CLONE_HISTORY:
                 {
                     String  item_ids = (String) request.getParameter("items");
-                   ArrayList process_items = edu.harvard.med.hip.bec.util_objects.ProcessHistory.getProcessHistory( Integer.parseInt(request.getParameter("item_type")), item_ids.toUpperCase().trim());
+                    item_ids=ProcessRunner.cleanUpItems(Constants.ITEM_TYPE_CLONEID, item_ids);
+                    ArrayList process_items = edu.harvard.med.hip.bec.util_objects.ProcessHistory.getProcessHistory( Integer.parseInt(request.getParameter("item_type")), item_ids.toUpperCase().trim());
                      request.setAttribute("process_items",process_items);
                     request.setAttribute("item_type",request.getParameter("item_type"));
                     return mapping.findForward("display_item_history"); 
@@ -716,7 +717,7 @@ if ( request.getParameter("plate_name") != null)((PrimerOrderRunner)runner).setP
                          runner.setProcessType(forwardName);
                  
                     t = new Thread( runner);                    t.start();
-                    request.setAttribute(Constants.ADDITIONAL_JSP,"Processing items:<P>"+item_ids);
+                    request.setAttribute(Constants.ADDITIONAL_JSP,"Processing items:<P>"+ runner.getItems());
                     break;
                 }
                  case Constants.PROCESS_RUN_DECISION_TOOL_NEW:
@@ -773,7 +774,7 @@ if ( request.getParameter("plate_name") != null)((PrimerOrderRunner)runner).setP
                         );
                     
                     t = new Thread( runner);                    t.start();
-                     request.setAttribute(Constants.ADDITIONAL_JSP,"Processing items:<P>"+item_ids);
+                     request.setAttribute(Constants.ADDITIONAL_JSP,"Processing items:<P>"+ runner.getItems());
                     break;
                 }
                

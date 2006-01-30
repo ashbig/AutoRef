@@ -69,7 +69,7 @@ public abstract class ProcessRunner implements Runnable
          m_items_type = type;
          m_items = item_ids;
          m_items_original = m_items;
-         cleanUpItems();
+        this.cleanUpItems();
         
      }
      public  String             getItems()   {      return  m_items;    }   
@@ -615,38 +615,19 @@ public abstract class ProcessRunner implements Runnable
      
      public void cleanUpItems()
      {
-         char[] items_char = null;
-         StringBuffer final_string = new StringBuffer();
-         if ( m_items_type == Constants.ITEM_TYPE_CLONEID ||
-            m_items_type == Constants.ITEM_TYPE_ACE_CLONE_SEQUENCE_ID ||
-            m_items_type == Constants.ITEM_TYPE_ACE_REF_SEQUENCE_ID ||
-            m_items_type == Constants.ITEM_TYPE_FLEXSEQUENCE_ID)
-         {
-             ArrayList items = Algorithms.splitString(m_items);
-             if (items == null || items.size() < 1) return;
-             
-             for (int count = 0; count < items.size(); count++)
-             {
-                 items_char = ((String)items.get(count)).toCharArray();
-                 for ( int char_count = 0; char_count < items_char.length; char_count++)
-                 {
-                     if ( ! Character.isDigit(items_char[char_count]) ) break;
-                     if ( char_count == items_char.length - 1)
-                         final_string.append( (String)items.get(count) + " ");
-                    
-                 }
-             }
-          //   System.out.println(final_string.toString());
-             m_items = final_string.toString();
-         
-         }
+         System.out.println(m_items);
+          m_items = cleanUpItems(m_items_type, m_items);
+           System.out.println(m_items);
+        
+       
      }
     
      
      
      public static String cleanUpItems(int items_type, String submit_items)
      {
-         char[] items_char = null;
+         
+         int item_value=-1;
          StringBuffer final_string = new StringBuffer();
          if ( items_type == Constants.ITEM_TYPE_CLONEID ||
             items_type == Constants.ITEM_TYPE_ACE_REF_SEQUENCE_ID ||
@@ -658,16 +639,18 @@ public abstract class ProcessRunner implements Runnable
              
              for (int count = 0; count < items.size(); count++)
              {
-                 items_char = ((String)items.get(count)).toCharArray();
-                 for ( int char_count = 0; char_count < items_char.length; char_count++)
-                 {
-                     if ( ! Character.isDigit(items_char[char_count]) ) break;
-                     if ( char_count == items_char.length - 1)
-                         final_string.append( (String)items.get(count) + " ");
-                    
-                 }
+                 try
+                  {
+                      item_value= Integer.parseInt( (String)items.get(count));
+                       System.out.println(item_value);
+                      // should not be 0
+                       if ( items_type == Constants.ITEM_TYPE_CLONEID && item_value < 1) continue;
+                      final_string.append( item_value + " ");
+                   
+                  }
+                  catch(Exception e){}
              }
-          //   System.out.println(final_string.toString());
+             
             return final_string.toString();
          
          }
