@@ -403,7 +403,7 @@ public class CloneManager extends TableManager {
         return performQueryClones(cloneids, isInsert, isSelection, isWorkingStorage, sql);
     }
     
-    public Map queryAvailableClonesByCloneid(List cloneids, boolean isInsert, boolean isSelection, boolean isWorkingStorage, List restrictions, List clonetypes) {
+    public Map queryAvailableClonesByCloneid(List cloneids, boolean isInsert, boolean isSelection, boolean isWorkingStorage, List restrictions, List clonetypes, String species) {
         String sql = "select clonename, clonetype, verified, vermethod,"+
         " domain, subdomain, restriction, comments, vectorid, vectorname, clonemapfilename,status,specialtreatment,source,description"+
         " from clone where cloneid=? and status='"+Clone.AVAILABLE+"'";
@@ -416,6 +416,10 @@ public class CloneManager extends TableManager {
         if(restrictions != null && restrictions.size()>0) {
             String s = StringConvertor.convertFromListToSqlString(restrictions);
             sql = sql+" and restriction in ("+s+")";
+        }
+        
+        if(species != null) {
+            sql = sql+" and domain='"+species+"'";
         }
         
         return performQueryClones(cloneids, isInsert, isSelection, isWorkingStorage, sql);

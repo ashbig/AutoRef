@@ -23,12 +23,12 @@ public class PAGenbankQueryHandler extends GeneQueryHandler {
     }
     
     public void doQuery() throws Exception {
-        doQuery(null, null);
+        doQuery(null, null, null);
     }
     
-    public void doQuery(List restrictions, List clonetypes) throws Exception {
+    public void doQuery(List restrictions, List clonetypes, String species) throws Exception {
         String sql = "select distinct cloneid from dnainsert where upper(targetgenbank) = upper(?)";
-        executeQuery(sql, restrictions, clonetypes);
+        executeQuery(sql, restrictions, clonetypes, species);
     }
     
 }

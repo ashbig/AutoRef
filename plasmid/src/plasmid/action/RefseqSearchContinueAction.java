@@ -131,7 +131,7 @@ public class RefseqSearchContinueAction extends Action {
             }
             
             try {
-                handler.doQuery(restrictions, clonetypes);
+                handler.doQuery(restrictions, clonetypes, species);
                 directFoundList = handler.convertFoundToCloneinfo();
                 searchList = handler.getNofound();
                 totalCount = totalCount+handler.getFoundCloneCount();
@@ -156,7 +156,7 @@ public class RefseqSearchContinueAction extends Action {
         }
         
         try {
-            handler.doQuery(restrictions, clonetypes);
+            handler.doQuery(restrictions, clonetypes, species);
             
             List founds = handler.convertFoundToCloneinfo();
             List nofounds = handler.getNofound();

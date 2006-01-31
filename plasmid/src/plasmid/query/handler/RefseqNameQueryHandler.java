@@ -29,11 +29,11 @@ public class RefseqNameQueryHandler extends GeneQueryHandler {
     public void doQuery() throws Exception {
     }
     
-    public void doQuery(List restrictions, List clonetypes) throws Exception {
+    public void doQuery(List restrictions, List clonetypes, String species) throws Exception {
         String sql = "select distinct cloneid from dnainsert where refseqid in"+
         " (select refid from refseqname where upper(nametype)=upper('"+nametype+"')"+
         " and upper(namevalue) = upper(?))";
-        executeQuery(sql, restrictions, clonetypes);
+        executeQuery(sql, restrictions, clonetypes, species);
     }
     
 }

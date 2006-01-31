@@ -67,7 +67,7 @@ public abstract class GeneQueryHandler {
     
     public abstract void doQuery() throws Exception;
     
-    public abstract void doQuery(List restrictions, List clonetypes) throws Exception;
+    public abstract void doQuery(List restrictions, List clonetypes, String species) throws Exception;
     
     public int getNumOfFoundClones() {
         return found.size();
@@ -78,10 +78,10 @@ public abstract class GeneQueryHandler {
     }
     
     protected void executeQuery(String sql) throws Exception {
-        executeQuery(sql, null, null);
+        executeQuery(sql, null, null, null);
     }
     
-    protected void executeQuery(String sql, List restrictions, List clonetypes) throws Exception {
+    protected void executeQuery(String sql, List restrictions, List clonetypes, String species) throws Exception {
         if(terms == null || terms.size() == 0)
             return;
         
@@ -110,7 +110,7 @@ public abstract class GeneQueryHandler {
         DatabaseTransaction.closeStatement(stmt);
         
         CloneManager manager = new CloneManager(conn);
-        Map foundClones = manager.queryAvailableClonesByCloneid(new ArrayList(cloneids), true, true, false,restrictions,clonetypes);
+        Map foundClones = manager.queryAvailableClonesByCloneid(new ArrayList(cloneids), true, true, false,restrictions,clonetypes,species);
         /**
         Set ks = foundClones.keySet();
         Iterator it = ks.iterator();

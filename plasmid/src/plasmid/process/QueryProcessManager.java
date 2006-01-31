@@ -36,7 +36,7 @@ public class QueryProcessManager {
             conn = t.requestConnection();
             CloneManager manager = new CloneManager(conn);
             List cloneids = manager.queryCloneidsByCloneType(clonetypes);
-            Map clones = manager.queryAvailableClonesByCloneid(cloneids, false, true, false, restrictions, clonetypes);
+            Map clones = manager.queryAvailableClonesByCloneid(cloneids, false, true, false, restrictions, clonetypes, null);
             Set ks = clones.keySet();
             Iterator iter = ks.iterator();
             while(iter.hasNext()) {
