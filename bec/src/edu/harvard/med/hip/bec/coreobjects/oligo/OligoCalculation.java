@@ -154,7 +154,7 @@ public class OligoCalculation
    
    
     
-    public void insert(Connection conn) throws BecDatabaseException
+    public synchronized  void insert(Connection conn) throws BecDatabaseException
     {
         Statement stmt = null;
          String sql = null;

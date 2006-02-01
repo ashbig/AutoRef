@@ -16,7 +16,7 @@ import java.util.*;
 
 /**
  * This class represents an oligo object.
- * $Id: Oligo.java,v 1.15 2005-03-15 20:20:22 Elena Exp $
+ * $Id: Oligo.java,v 1.16 2006-02-01 14:07:57 Elena Exp $
  * @@File:	Oligo.java
 
  */
@@ -213,7 +213,7 @@ public class Oligo
      * insert oligos into Oligo table.
      */
 
-    public void insert(Connection conn) throws BecDatabaseException
+    public synchronized void insert(Connection conn) throws BecDatabaseException
     {
         Statement stmt = null;
         if (m_sequence==null || m_sequence.length()==0) return;
