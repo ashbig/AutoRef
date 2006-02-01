@@ -2,6 +2,8 @@
 <%@ page errorPage="ProcessError.do"%>
 <%@ page import="plasmid.Constants" %> 
 <%@ page import="plasmid.coreobject.RefseqNameType" %> 
+<%@ page import="plasmid.form.RefseqSearchForm" %> 
+<%@ page import="plasmid.coreobject.Clone" %> 
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -25,7 +27,6 @@
 	<jsp:include page="searchByRefseqTitle.jsp" />
       <html:form action="SetDisplay.do">
 <html:hidden property="pagesize"/>
-<html:hidden property="page"/>
         <html:hidden property="species"/>
         <html:hidden property="refseqType"/>
 
@@ -52,9 +53,28 @@
   </tr>
 </table>
 
+<bean:define id="size" name="refseqSearchForm" property="pagesize"/>
+<bean:define id="total" name="numOfFound"/>
 <logic:notEqual name="displayPage" value="nofound">
 <p class="mainbodytexthead">List of search terms found</p>
-<p class="mainbodytexthead" align="right"><a target="_blank" href="TermDefinition.jsp">Explanation of Terms</a></p>
+<table width="100%" border="0">
+    <tr class="mainbodytexthead">
+        <td align="left" class="mainbodytexthead">Page: 
+            <html:select property="page">
+                <%  
+                    for(int i=0; i<Integer.parseInt(total.toString())/Integer.parseInt(size.toString())+1; i++) {
+                %>
+                        <html:option value="<%=(new Integer(i+1)).toString()%>"/>
+                <%  }
+                %>
+            </html:select>
+            <html:submit property="button" value="Display"/>
+        </td>
+        <td align="right" class="mainbodytexthead"><a target="_blank" href="TermDefinition.jsp">Explanation of Terms</a></td>
+    </tr>
+</table>
+
+<p>
 <table width="100%" border="0">
   <tr>
     <td class="tableheader">&nbsp;</td>
@@ -75,13 +95,24 @@
   </tr>
 
   <logic:equal name="displayPage" value="indirect">
-  <% int i=((Integer)request.getAttribute("pagesize")).intValue()*(((Integer)request.getAttribute("page")).intValue()-1);%>
-  <logic:iterate name="found" id="clone">
+  <% int i=((Integer)request.getAttribute("pagesize")).intValue()*(((Integer)request.getAttribute("page")).intValue()-1);
+  %>
+  <logic:iterate name="found" id="clone" length="pagesize" offset="<%=(new Integer(i)).toString()%>">
   <tr class="tableinfo"> 
     <td><%=++i%></td>
     <td><bean:write name="clone" property="term"/></td>
     <td><a target="_blank" href="GetCloneDetail.do?cloneid=<bean:write name="clone" property="cloneid"/>&species=<bean:write name="species"/>"><bean:write name="clone" property="name"/></a></td>
     <td><bean:write name="clone" property="type"/></td>
+    <logic:equal name="clone" property="type" value="<%=Clone.NOINSERT%>">
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    </logic:equal>
+    <logic:notEqual name="clone" property="type" value="<%=Clone.NOINSERT%>">
     <logic:iterate name="clone" property="inserts" id="insert">
     <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.GENEID%>">
     <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=gene&cmd=Retrieve&dopt=Graphics&list_uids=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
@@ -113,6 +144,7 @@
     <logic:iterate name="clone" property="selections" id="selection">
         <bean:write name="selection" property="hosttype"/>: <bean:write name="selection" property="marker"/>
     </logic:iterate>
+    </logic:notEqual>
     </td>
     <td><bean:write name="clone" property="specialtreatment"/></td>
     <html:form action="SetDisplay.do">
@@ -140,12 +172,22 @@
 
   <logic:equal name="displayPage" value="direct">
   <% int i=((Integer)request.getAttribute("pagesize")).intValue()*(((Integer)request.getAttribute("page")).intValue()-1);%>
-  <logic:iterate name="directFounds" id="clone">
+  <logic:iterate name="directFounds" id="clone" length="pagesize" offset="<%=(new Integer(i)).toString()%>">
   <tr class="tableinfo"> 
     <td><%=++i%></td>
     <td><bean:write name="clone" property="term"/></td>
     <td><a target="_blank" href="GetCloneDetail.do?cloneid=<bean:write name="clone" property="cloneid"/>&species=<bean:write name="species"/>"><bean:write name="clone" property="name"/></a></td>
     <td><bean:write name="clone" property="type"/></td>
+    <logic:equal name="clone" property="type" value="<%=Clone.NOINSERT%>">
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    </logic:equal>
+    <logic:notEqual name="clone" property="type" value="<%=Clone.NOINSERT%>">
     <logic:iterate name="clone" property="inserts" id="insert">
     <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.GENEID%>">
     <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=gene&cmd=Retrieve&dopt=Graphics&list_uids=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
@@ -172,6 +214,7 @@
     <td><bean:write name="insert" property="hasdiscrepancy"/></td>    
     <td><bean:write name="insert" property="format"/></td>
     </logic:iterate>
+    </logic:notEqual>
     <td><a target="_blank" href="GetVectorDetail.do?vectorid=<bean:write name="clone" property="vectorid"/>"><bean:write name="clone" property="vectorname"/></a></td>
     <td>
     <logic:iterate name="clone" property="selections" id="selection">

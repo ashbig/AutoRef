@@ -2,6 +2,7 @@
 <%@ page errorPage="ProcessError.do"%>
 <%@ page import="plasmid.Constants" %> 
 <%@ page import="plasmid.coreobject.RefseqNameType" %> 
+<%@ page import="plasmid.coreobject.Clone" %> 
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -81,6 +82,16 @@
     <td><%=++i%></td>
     <td><a target="_blank" href="GetCloneDetail.do?cloneid=<bean:write name="clone" property="cloneid"/>"><bean:write name="clone" property="name"/></a></td>
     <td><bean:write name="clone" property="type"/></td>
+    <logic:equal name="clone" property="type" value="<%=Clone.NOINSERT%>">
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    </logic:equal>
+    <logic:notEqual name="clone" property="type" value="<%=Clone.NOINSERT%>">
     <logic:iterate name="clone" property="inserts" id="insert">
     <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.GENEID%>">
     <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=gene&cmd=Retrieve&dopt=Graphics&list_uids=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
@@ -101,6 +112,7 @@
     <td><bean:write name="insert" property="hasdiscrepancy"/></td>
     <td><bean:write name="insert" property="format"/></td>
     </logic:iterate>
+    </logic:notEqual>
     <td><a target="_blank" href="GetVectorDetail.do?vectorid=<bean:write name="clone" property="vectorid"/>"><bean:write name="clone" property="vectorname"/></a></td>
     <td>
     <logic:iterate name="clone" property="selections" id="selection">

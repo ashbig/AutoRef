@@ -44,6 +44,7 @@ public class Constants {
     public static final String ORDER_COLLECTION = "OrderCollection";
     
     public static final String ALL = "All";
+    public static final int PAGESIZE = 10;
     
     /** Creates a new instance of Constants */
     public Constants() {

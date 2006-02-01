@@ -73,8 +73,10 @@ public class RefseqSearchContinueAction extends Action {
         boolean genomicfragment = ((RefseqSearchForm)form).getGenomicfragment();  
         boolean tfbindsite = ((RefseqSearchForm)form).getTfbindsite();
         boolean genome = ((RefseqSearchForm)form).getGenome();
-        int pagesize = ((RefseqSearchForm)form).getPagesize();
-        int page = ((RefseqSearchForm)form).getPage();
+        int pagesize = Constants.PAGESIZE;
+        int page = 1;
+        ((RefseqSearchForm)form).setPagesize(pagesize);
+        ((RefseqSearchForm)form).setPage(page);
 
         List clonetypes = new ArrayList();
         if(cdna)

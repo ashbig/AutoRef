@@ -14,14 +14,13 @@ import org.apache.struts.action.ActionMapping;
 
 import java.util.*;
 
+import plasmid.Constants;
+
 /**
  *
  * @author  DZuo
  */
-public class RefseqSearchForm extends ActionForm {
-    public static final int PAGESIZE = 25;
-    public static final int PAGE = 1;
-    
+public class RefseqSearchForm extends ActionForm {    
     private String species;
     private String refseqType;
     private String searchType;
@@ -40,8 +39,8 @@ public class RefseqSearchForm extends ActionForm {
     private boolean plk;
     private boolean pby011;
     private boolean pgex2tk;
-    private int pagesize = PAGESIZE;
-    private int page = PAGE;
+    private int pagesize;
+    private int page;
     private String displayPage;
     private String sortby;
     private String cloneid;
@@ -125,7 +124,6 @@ public class RefseqSearchForm extends ActionForm {
         plk = false;
         pby011 = false;
         pgex2tk = false;
-        pagesize = PAGESIZE;
         forward = null;
     }
 }
