@@ -9,6 +9,8 @@
 <%@ page import="edu.harvard.med.hip.bec.util.*" %>
 <html>
 <head>
+<script language="JavaScript" src="<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>scripts.js"></script>
+
 <title>Run report</title>
 </head>
 <body >
@@ -28,7 +30,7 @@
   </center>
 </div>
 
-<html:form action="/RunProcess.do" > 
+<form action="RunProcess.do" method='POST' onsubmit="return validate_run_report(this);"> 
 <input name="forwardName" type="hidden" value="<%=Constants.PROCESS_CREATE_REPORT%>" >
 
 <table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
@@ -143,7 +145,7 @@
     &nbsp; 
     <input type="reset" value="Reset" name="B2">
 </div>
-</html:form> 
+</form> 
 </body>
 
 </html>

@@ -187,6 +187,18 @@ if( IsEmpty(formElement.plate_names))
 return true;
 }
 
+
+
+function validate_run_report(formElement)
+{
+if( IsEmpty(formElement.items)) 
+{
+    alert("Please submit items to process.");
+    return false;
+}
+return true;
+}
+
 //-------------------------------------------------
  
 
