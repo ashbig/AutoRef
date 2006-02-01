@@ -121,13 +121,13 @@
           <tr> 
             <td><div align="left">Start:</div></td>
             <td><div align="left"> 
-                <input  type='text' name='DIRECTION_LENGTH' size='10' value='-1' onBlur= "checkNumeric(this,-1,100,'','',''); ">
+                <input  type='text' name='DIRECTION_START' size='10' value='-1' onBlur= "checkNumeric(this,-1,100,'','',''); ">
               </div></td>
           </tr>
           <tr> 
             <td><div align="left">Length:</div></td>
             <td><div align="left"> 
-                <input type='text' name='DIRECTION_START' size='10' value='-1' onBlur= "checkNumeric(this,-1,100,'','',''); ">
+                <input type='text' name='DIRECTION_LENGTH' size='10' value='-1' onBlur= "checkNumeric(this,-1,100,'','',''); ">
               </div></td>
           </tr>
           <tr> 
