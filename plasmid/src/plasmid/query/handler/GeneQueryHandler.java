@@ -14,6 +14,7 @@ import plasmid.database.*;
 import plasmid.database.DatabaseManager.*;
 import plasmid.coreobject.*;
 import plasmid.query.coreobject.CloneInfo;
+import plasmid.Constants;
 
 /**
  *
@@ -112,13 +113,13 @@ public abstract class GeneQueryHandler {
         CloneManager manager = new CloneManager(conn);
         Map foundClones = manager.queryAvailableClonesByCloneid(new ArrayList(cloneids), true, true, false,restrictions,clonetypes,species);
         /**
-        Set ks = foundClones.keySet();
-        Iterator it = ks.iterator();
-        while(it.hasNext()) {
-            String s = (String)it.next();
-            Clone c = (Clone)foundClones.get(s);
-        }
-        */
+         * Set ks = foundClones.keySet();
+         * Iterator it = ks.iterator();
+         * while(it.hasNext()) {
+         * String s = (String)it.next();
+         * Clone c = (Clone)foundClones.get(s);
+         * }
+         */
         Set keys = found.keySet();
         Iterator iter = keys.iterator();
         Map newFound = new HashMap();
@@ -144,7 +145,7 @@ public abstract class GeneQueryHandler {
         found = newFound;
         DatabaseTransaction.closeConnection(conn);
     }
-        
+    
     public void filterFoundByClonetype(List clonetypes) {
         Set keys = found.keySet();
         Iterator iter = keys.iterator();
@@ -160,7 +161,7 @@ public abstract class GeneQueryHandler {
                 String clonetype = c.getType();
                 if(clonetypes.contains(clonetype)) {
                     newClones.add(c);
-                } 
+                }
             }
             
             if(newClones.size()>0) {
@@ -173,7 +174,7 @@ public abstract class GeneQueryHandler {
         }
         
         found = newFound;
-   }
+    }
     
     public List convertFoundToCloneinfo() {
         if(found == null)
@@ -195,5 +196,44 @@ public abstract class GeneQueryHandler {
         }
         
         return cloneinfos;
+    }
+    
+    protected List executeQueryClones(String sql) {
+        DatabaseTransaction t = null;
+        ResultSet rs = null;
+        List clones = new ArrayList();
+        try {
+            t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            while(rs.next()) {        
+                int cloneid = rs.getInt(1);
+                String clonename = rs.getString(2);
+                String clonetype = rs.getString(3);
+                String status = rs.getString(4);
+                String verified = rs.getString(5);
+                String vermethod = rs.getString(6);
+                String domain = rs.getString(7);
+                String subdomain = rs.getString(8);
+                String restriction = rs.getString(9);
+                String comments = rs.getString(10);
+                String mapfilename = rs.getString(11);
+                int vectorid = rs.getInt(12);
+                String vectorname = rs.getString(13);
+                String specialtreatment = rs.getString(14);
+                String source = rs.getString(15);
+                String description = rs.getString(16);
+                Clone c = new Clone(cloneid, clonename, clonetype, verified, vermethod, domain, subdomain, restriction, comments, vectorid, vectorname, mapfilename, status, specialtreatment, source, description);
+                clones.add(c);
+            }
+        } catch (Exception ex) {
+            if(Constants.DEBUG) {
+                System.out.println(ex);
+            }
+            
+            return null;
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+        return clones;
     }
 }

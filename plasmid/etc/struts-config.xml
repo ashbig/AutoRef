@@ -86,6 +86,9 @@
     <form-bean      name="viewCollectionForm"
                     type="plasmid.form.ViewCollectionForm"/>
                     
+    <form-bean      name="vectorSearchForm"
+                    type="plasmid.form.VectorSearchForm"/>
+                    
  </form-beans>
 
   <!-- ========== Global Forward Definitions ============================== -->
@@ -237,6 +240,7 @@
     </action>
      
     <action    path="/GetVectorPropertyTypes"
+               name="vectorSearchForm"
                type="plasmid.action.GetVectorPropertyTypesAction">
       <forward  name="success"   path="/VectorSearch.jsp"/>
     </action>
@@ -385,6 +389,13 @@
               validate="true">
       <forward  name="success"   path="/ConfirmResultFile.jsp"/>
       <forward  name="fail"   path="/ResultTypeNotFound.jsp"/>
+    </action>
+      
+    <action    path="/VectorSearch"
+               type="plasmid.action.VectorSearchAction"
+               name="vectorSearchForm"
+              input="/VectorSearch.jsp">
+      <forward  name="success"   path="/VectorSearchContinue.jsp"/>
     </action>
     
     <action    path="/ViewCart"

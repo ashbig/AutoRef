@@ -1,13 +1,14 @@
 /*
- * GetVectorPropertyTypesAction.java
+ * VectorSearchAction.java
  *
- * Created on January 27, 2006, 2:01 PM
+ * Created on February 2, 2006, 3:47 PM
  */
 
 package plasmid.action;
 
 import java.util.*;
 import java.io.*;
+import java.sql.*;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -22,15 +23,17 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 
-import plasmid.database.DatabaseManager.DefTableManager;
-import plasmid.Constants;
 import plasmid.form.VectorSearchForm;
+import plasmid.coreobject.*;
+import plasmid.Constants;
+import plasmid.database.DatabaseManager.UserManager;
+import plasmid.query.handler.*;
 
 /**
  *
  * @author  DZuo
  */
-public class GetVectorPropertyTypesAction extends Action {
+public class VectorSearchAction extends Action {
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
      * response (or forward to another web component that will create it).
@@ -54,12 +57,36 @@ public class GetVectorPropertyTypesAction extends Action {
         
         // get the parameters specified by the customer
         ActionErrors errors = new ActionErrors();
-        List species = DefTableManager.getVocabularies("species", "genusspecies");
-        species.add(0, Constants.ALL);
-        List types = DefTableManager.getVocabularies("vectorPropertytype", "propertytype");
-        request.setAttribute("species", species);
-        request.getSession().setAttribute("types", types);
-        ((VectorSearchForm)form).setVectortype(types);
-        return (mapping.findForward("success"));
+        String species = ((VectorSearchForm)form).getSpecies();
+        if(Constants.ALL.equals(species))
+            species = null;
+        List types = ((VectorSearchForm)form).getVectortype();
+        List vectortypes = (List)request.getSession().getAttribute("types");
+        List properties = new ArrayList();
+        
+        for(int i=0; i<types.size(); i++) {
+            boolean b = ((Boolean)types.get(i)).booleanValue();
+            if(b) {
+                properties.add((String)vectortypes.get(i));
+            }
+        }
+                
+        User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
+        List restrictions = new ArrayList();
+        restrictions.add(Clone.NO_RESTRICTION);
+        if(user != null) {
+            List ress = UserManager.getUserRestrictions(user);
+            restrictions.addAll(ress);
+        } 
+        
+        VectorQueryHandler handler = new VectorQueryHandler();
+        List clones = handler.queryClones(properties, restrictions, species, Clone.AVAILABLE);
+        
+        if(clones == null) {
+            return (mapping.findForward("error"));
+        }
+        
+        request.setAttribute("numberOfClones", new Integer(clones.size()));
+        return (mapping.findForward("success"));        
     }
 }

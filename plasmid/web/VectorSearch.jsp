@@ -21,7 +21,7 @@
 	</td>
     <td width="83%" align="left" valign="top">
 	<jsp:include page="searchByVectorTitle.jsp" />
-      <html:form action="RefseqSearch.do" enctype="multipart/form-data">
+      <html:form action="VectorSearch.do" enctype="multipart/form-data">
         <table width="100%" border="0" align="center">
           <tr> 
             <td height="10" colspan="3" valign="middle" class="tableheader"><strong>Select 
@@ -39,18 +39,16 @@
   <tr> 
     <td colspan="6" class="tableheader">Please choose vector type</td>
   </tr>
-  <% int i=0; %>
-  <logic:iterate name="types" id="type">
-  <% if(i>0 && i%3 == 0) {%>
+  <logic:iterate name="types" id="type" indexId="i">
+  <% if(Integer.parseInt(i.toString())>0 && Integer.parseInt(i.toString())%3 == 0) {%>
   </tr>
   <% } %>
-  <% if(i%3 == 0) {%>
+  <% if(Integer.parseInt(i.toString())%3 == 0) {%>
   <tr> 
     <td>&nbsp;</td>
   <% } %>
-    <td class="underbullet"> <input type="checkbox" name="checkbox32" value="checkbox">
+    <td class="underbullet"> <html:checkbox property='<%="vectortype["+i+"]"%>'/>
       <bean:write name="type"/> </td>
-  <% i++; %>
   </logic:iterate>
   <tr> 
     <td>&nbsp;</td>
