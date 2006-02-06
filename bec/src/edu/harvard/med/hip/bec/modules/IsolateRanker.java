@@ -239,7 +239,7 @@ public class IsolateRanker
             //finaly check for reads
             ArrayList reads = Read.getReadByIsolateTrackingId( it.getId() );
             Read read = null;
-            int return_value = 3;
+            int return_value = 0;
             if (reads != null && reads.size() > 0 )
             {
                 it.setEndReads(reads);
@@ -250,19 +250,20 @@ public class IsolateRanker
                     if ( read.getType() == Read.TYPE_ENDREAD_FORWARD_SHORT    
                        || read.getType() == Read.TYPE_ENDREAD_REVERSE_SHORT)
                     {
-                        return_value = 0;
+                        return_value = return_value + 0;
                     }
-                    if ( read.getStatus() == Read.STATUS_NOT_ANALIZED
+                    else if ( read.getStatus() == Read.STATUS_NOT_ANALIZED
                     && ( read.getType() == Read.TYPE_ENDREAD_FORWARD
                     || read.getType() == Read.TYPE_ENDREAD_REVERSE))
                     {
-                        return_value = -3;
+                        return -3;
                     }
-                    if ( read.getType() == Read.TYPE_ENDREAD_FORWARD_NO_MATCH
+                    else if ( read.getType() == Read.TYPE_ENDREAD_FORWARD_NO_MATCH
                     || read.getType() == Read.TYPE_ENDREAD_REVERSE_NO_MATCH)
                     {
                         return 3;
                     }
+                    else return_value+=3;
                 }
                 return return_value;
                         
