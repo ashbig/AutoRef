@@ -960,82 +960,85 @@ public class DiscrepancyDescription
                 case DiscrepancyDescription.TYPE_AA:
                         return writeAADiscrepancyInXMLFormat();
                 case DiscrepancyDescription.TYPE_NOT_AA_LINKER : 
-                        return writeNonRNADiscrepancyInXMLFormat(this.m_linker, "nucleotide_definition ", this.m_linker.getNumber());
+                        return writeNonRNADiscrepancyInXMLFormat(this.m_linker, this.m_linker.getNumber()+1);
                 case DiscrepancyDescription.TYPE_NOT_AA_AMBIQUOUS:
                 case DiscrepancyDescription.TYPE_NOT_AA_REFSEQUENCE_AMB :
-                    return writeNonRNADiscrepancyInXMLFormat(this.m_rna_without_aa, "nucleotide_definition ", this.m_rna_without_aa.getNumber());
+                    return writeNonRNADiscrepancyInXMLFormat(this.m_rna_without_aa,  this.m_rna_without_aa.getNumber()+1);
                  default: return "";
              }
        }
        
        
        private String               writeNonRNADiscrepancyInXMLFormat(Mutation discrepancy,
-                    String discrepancy_type, int discrepancy_number)
+                     int discrepancy_number)
        {
-           StringBuffer discrepancy_in_xml_format = new StringBuffer();  
-            discrepancy_in_xml_format.append(" <discrepancy number='"+ discrepancy_number+"' description=''>");
-          discrepancy_in_xml_format.append(" <"+discrepancy_type + " changetype='" + discrepancy.getMutationTypeAsString());
-            discrepancy_in_xml_format.append("' quality='"+ discrepancy.getQualityAsString() );
-            discrepancy_in_xml_format.append(" ref_position='" + discrepancy.getPosition() );
-            discrepancy_in_xml_format.append("' exp_position='"+ discrepancy .getExpPosition() ); 
-            discrepancy_in_xml_format.append("' length='"+ discrepancy.getLength() );
-            discrepancy_in_xml_format.append("' chage_ori='" + discrepancy.getSubjectStr() ); 
-            discrepancy_in_xml_format.append("' change_mut='" + discrepancy.getQueryStr() +    " />"); 
-          discrepancy_in_xml_format.append(" </discrepancy>" + Constants.LINE_SEPARATOR);
-            return discrepancy_in_xml_format.toString();
+StringBuffer discrepancy_in_xml_format = new StringBuffer();  
+discrepancy_in_xml_format.append( Constants.LINE_SEPARATOR+"\t <discrepancy number='"+ discrepancy_number+"' description=''>");
+discrepancy_in_xml_format.append( Constants.LINE_SEPARATOR+" <nucleotide_definition changetype='" + discrepancy.getChangeType());
+discrepancy_in_xml_format.append("' quality='"+ discrepancy.getQuality() );
+discrepancy_in_xml_format.append("' ref_position='" + discrepancy.getPosition() );
+discrepancy_in_xml_format.append("' exp_position='"+ discrepancy .getExpPosition() ); 
+discrepancy_in_xml_format.append("' length='"+ discrepancy.getLength() );
+discrepancy_in_xml_format.append("' chage_ori='" + discrepancy.getSubjectStr() ); 
+discrepancy_in_xml_format.append("' change_mut='" + discrepancy.getQueryStr() +    "' />"); 
+discrepancy_in_xml_format.append(" </discrepancy>" + Constants.LINE_SEPARATOR);
+return discrepancy_in_xml_format.toString();
 
        }
        
-        /*      
-            discrepancies_in_xml_format.append(" <discrepancy number="1" description="">
-  discrepancies_in_xml_format.append(" <nucleotide_definition changetype="1" quality="1" ref_position="1" exp_position="1" length="1" chage_ori="a" change_mut="c" p_flag="1" p_id="" p_date="" codon_ori="" codon_mut="" codon_position="" /> 
-  discrepancies_in_xml_format.append(" <aa_definition changetype="1" quality="1" ref_position="1" exp_position="1" length="1" change_ori="a" change_mut="c" /> 
-  discrepancies_in_xml_format.append(" </discrepancy>" +
- */
+        
         
         private String               writeAADiscrepancyInXMLFormat()
        {
             StringBuffer discrepancy_in_xml_format = new StringBuffer();  
-            discrepancy_in_xml_format.append(" <discrepancy number='"+ m_aa.getNumber()+"' description=''>");
+            discrepancy_in_xml_format.append(" \t<discrepancy number='"+ (m_aa.getNumber()+1)+"' description=''>");
           
             for ( int count = 0; count < m_rna_describes_aa.size(); count++)
             {
                 discrepancy_in_xml_format.append( writeRNADiscrepancyInXMLFormat( (RNAMutation) m_rna_describes_aa.get(count)));
             }
             
-            writeNonRNADiscrepancyInXMLFormat( m_aa,  "",  1);
-          discrepancy_in_xml_format.append(" </discrepancy>" + Constants.LINE_SEPARATOR);
+           discrepancy_in_xml_format.append(  writeAADiscrepancyInXMLFormat( m_aa));
+            discrepancy_in_xml_format.append(" </discrepancy>" + Constants.LINE_SEPARATOR);
             return discrepancy_in_xml_format.toString();
        }
         
+               private String               writeAADiscrepancyInXMLFormat(Mutation discrepancy )
+       {
+StringBuffer discrepancy_in_xml_format = new StringBuffer();  
+discrepancy_in_xml_format.append( Constants.LINE_SEPARATOR+"\t\t <aa_definition changetype='" + discrepancy.getChangeType());
+discrepancy_in_xml_format.append("' quality='"+ discrepancy.getQuality() );
+discrepancy_in_xml_format.append("' ref_position='" + discrepancy.getPosition() );
+discrepancy_in_xml_format.append("' exp_position='"+ discrepancy .getExpPosition() ); 
+discrepancy_in_xml_format.append("' length='"+ discrepancy.getLength() );
+discrepancy_in_xml_format.append("' chage_ori='" + discrepancy.getSubjectStr() ); 
+discrepancy_in_xml_format.append("' change_mut='" + discrepancy.getQueryStr() +    "' />"); 
+return discrepancy_in_xml_format.toString();
+
+       }
         
         private String               writeRNADiscrepancyInXMLFormat(RNAMutation discrepancy)
        {
             StringBuffer discrepancy_in_xml_format = new StringBuffer();  
-            discrepancy_in_xml_format.append(" <nucleotide_definition changetype='" + discrepancy.getMutationTypeAsString());
-            discrepancy_in_xml_format.append("' quality='"+ discrepancy.getQualityAsString() );
-            discrepancy_in_xml_format.append(" ref_position='" + discrepancy.getPosition() );
+            discrepancy_in_xml_format.append( Constants.LINE_SEPARATOR+" <nucleotide_definition changetype='" + discrepancy.getChangeType());
+            discrepancy_in_xml_format.append("' quality='"+ discrepancy.getQuality() );
+            discrepancy_in_xml_format.append("' ref_position='" + discrepancy.getPosition() );
             discrepancy_in_xml_format.append("' exp_position='"+ discrepancy .getExpPosition() ); 
             discrepancy_in_xml_format.append("' length='"+ discrepancy.getLength() );
             discrepancy_in_xml_format.append("' chage_ori='" + discrepancy.getSubjectStr() ); 
             discrepancy_in_xml_format.append("' change_mut='" + discrepancy.getQueryStr() );
-            discrepancy_in_xml_format.append("' p_flag='" + discrepancy.getPolymorphismFlagAsString());
-            discrepancy_in_xml_format.append("' p_id='" + discrepancy.getPolymorphismId());
+            discrepancy_in_xml_format.append("' p_flag='" + discrepancy.getPolymorphismFlag());
+            discrepancy_in_xml_format.append("' p_id='");
+            if ( discrepancy.getPolymorphismId() != null ) discrepancy_in_xml_format.append( discrepancy.getPolymorphismId());
             discrepancy_in_xml_format.append("' p_date='" + discrepancy.getPolymorphismDate());
             discrepancy_in_xml_format.append("' codon_ori='" + discrepancy.getCodonOri());
             discrepancy_in_xml_format.append("' codon_mut='" + discrepancy.getCodonMut());
-            discrepancy_in_xml_format.append("' codon_position='" + discrepancy.getCodonPos()+   " />" + Constants.LINE_SEPARATOR); 
+            discrepancy_in_xml_format.append("' codon_position='" + discrepancy.getCodonPos()+   "' />" + Constants.LINE_SEPARATOR); 
          
             return discrepancy_in_xml_format.toString();
        }
        
-        /*      
-            discrepancies_in_xml_format.append(" <discrepancy number="1" description="">
-  discrepancies_in_xml_format.append(" <nucleotide_definition changetype="1" quality="1" ref_position="1" exp_position="1" length="1" chage_ori="a" change_mut="c" p_flag="1" p_id="" p_date="" codon_ori="" codon_mut="" codon_position="" /> 
-  discrepancies_in_xml_format.append(" <aa_definition changetype="1" quality="1" ref_position="1" exp_position="1" length="1" change_ori="a" change_mut="c" /> 
-  discrepancies_in_xml_format.append(" </discrepancy>" +
- */
-       //-------------------------------------------
+            //-------------------------------------------
         public static void main(String args[])
         {
             try

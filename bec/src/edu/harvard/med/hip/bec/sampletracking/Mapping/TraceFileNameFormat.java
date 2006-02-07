@@ -192,15 +192,13 @@ public class TraceFileNameFormat
                 {
                     if ( start > item_descr.length())throw new Exception("Wrong start definition.");
                     if (  length == 0 )throw new Exception("Length cannot be zero.");
-                    if (  start > 0 && length > 0 && (start + length-1) > item_descr.length()) throw new Exception("Wrong length definition.");
-             
-                    if (  start < 0 && length > 0 && (start + length) > item_descr.length()) throw new Exception("Wrong length definition.");
+                    if (  length > 0 && (start + length-1) > item_descr.length()) throw new Exception("Wrong length definition.");
                 }
             }
            else
            {
                if ( (start < 1 || start > file_name.length()) ||
-                ( (start + length) < 1 || (start + length) > file_name.length() )) throw new Exception("Wrong definition for start and/or length of item.");
+                ( (start > 0 &&  length > 0 ) && (start + length -1) > file_name.length() )) throw new Exception("Wrong definition for start and/or length of item.");
                 
            }
           return true;
@@ -359,25 +357,25 @@ public class TraceFileNameFormat
     {
           TraceFileNameFormat format = new TraceFileNameFormat();
         format.setFormatName ( "abc");  //FORMAT_NAME> 
-         format.setExampleFileName( "FKGS001230.1A10_F_080.ab1 ");   //DIRECTION_COLUMN>
-       format.setPlateSeparator ("_");//</SEPARATOR>
-       format.setPlateLabelColumn ( 3);   //DIRECTION_COLUMN>
-      format.setPlateLabelStart ( 4);   //DIRECTION_COLUMN>
+         format.setExampleFileName( "KSG002372-B02_I.ab1");   //DIRECTION_COLUMN>
+       format.setPlateSeparator ("-");//</SEPARATOR>
+       format.setPlateLabelColumn ( 1);   //DIRECTION_COLUMN>
+      format.setPlateLabelStart ( -1);   //DIRECTION_COLUMN>
       format.setPlateLabelLength (-1);   //DIRECTION_COLUMN>
       
-         format.setPositionSeparator ("_");//</SEPARATOR>
-          format.setPositionColumn ( 3);   //DIRECTION_COLUMN>
+         format.setPositionSeparator ("-");//</SEPARATOR>
+          format.setPositionColumn ( 2);   //DIRECTION_COLUMN>
       format.setPositionStart ( 1);   //DIRECTION_COLUMN>
        format.setPositionLength (3);   //DIRECTION_COLUMN>
       
-       format.setDirectionForward ("F");   //DIRECTION_FORWARD>
-       format.setDirectionReverse ("R");   //DIRECTION_REVERSE>
+       format.setDirectionForward ("R");   //DIRECTION_FORWARD>
+       format.setDirectionReverse ("F");   //DIRECTION_REVERSE>
       
-       format.setDirectionSeparator ("_");//</SEPARATOR>
-       format.setDirectionColumn ( 2);   //DIRECTION_COLUMN>
+      // format.setDirectionSeparator ("");//</SEPARATOR>
+       format.setDirectionColumn ( -1);   //DIRECTION_COLUMN>
         format.setDirectionLength (-1);   //DIRECTION_COLUMN>
-       format.setDirectionStart ( -1);   //DIRECTION_COLUMN>
-       format.setFileNameReadingDirection(TraceFileNameFormat.READING_RIGHT_TO_LEFT);
+       format.setDirectionStart (  -1);   //DIRECTION_COLUMN>
+       format.setFileNameReadingDirection(TraceFileNameFormat.READING_LEFT_TO_RIGHT);
        try
        {
           format.isFormatDefinitionOK();
@@ -386,11 +384,24 @@ public class TraceFileNameFormat
        {
         System.out.println(e.getMessage());
        }
-     SequencingFacilityFileName    br= new SequencingFacilityFileName(format.getExampleFileName(), format, true);
        
-       System.out.println(br.getPlateName());
-       System.out.println(br.getWellName());
-       System.out.println(br.getOrientation());
+       edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadTraceFileFormats();
+       format = edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.getTraceFileFormat("test_format");
+     ArrayList result = new ArrayList();
+       
+      // try to define direction
+          SequencingFacilityFileName  fname = new SequencingFacilityFileName(format.getExampleFileName(), format );
+          String[] item = new String[2];
+          item[0]="Plate name";item[1]=fname.getPlateName();
+          result.add(item); item = new String[2];
+          item[0]="Well name";item[1]= fname.getWellName();      result.add(item); item = new String[2];
+          item[0]="Well number"; item[1]= String.valueOf(fname.getWellNumber());      result.add(item); item = new String[2];
+          item[0]="Direction";
+          if (fname != null)   item[1]= fname.getOrientation();     
+          result.add(item);
+     //   System.out.println(br.getPlateName());
+      // System.out.println(br.getWellName());
+      // System.out.println(br.getOrientation());
        System.exit(0);
         
     }

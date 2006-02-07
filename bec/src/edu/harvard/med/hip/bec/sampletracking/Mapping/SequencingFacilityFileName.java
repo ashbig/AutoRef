@@ -32,7 +32,8 @@ public class SequencingFacilityFileName
     
     private String          m_additional_info = null;
     
-     public SequencingFacilityFileName(String file_name, TraceFileNameFormat format, boolean isEndReads)
+    
+      public SequencingFacilityFileName(String file_name, TraceFileNameFormat format, boolean isEndReads)
     {
        if ( format == null ) return;
        m_file_name = file_name;
@@ -83,6 +84,44 @@ public class SequencingFacilityFileName
        
     }
      
+     
+     
+   public  SequencingFacilityFileName (String file_name, TraceFileNameFormat format)
+    {
+        if ( format == null ) return;
+       m_file_name = file_name;
+       m_extention = file_name.substring( file_name.lastIndexOf('.')+1);
+        
+       ArrayList items = null;
+       String file_name_without_extention = file_name.substring(0,  file_name.lastIndexOf('.'));
+       // extract plate
+       m_plate_name = setField(format.getPlateSeparator(), format.getPlateLabelColumn(), 
+                                format.getPlateLabelStart(), format.getPlateLabelLength(), 
+                                format.getFileNameReadingDirection(),    file_name_without_extention);
+       if ( m_plate_name == null )  return;
+       
+       //extract well
+       m_well_name = setField(format.getPositionSeparator(), format.getPositionColumn(),  
+                            format.getPositionStart(), format.getPositionLength(), 
+                            format.getFileNameReadingDirection(), file_name_without_extention);
+       if ( m_well_name == null ) return;
+     
+       try
+       {
+            m_well_number = edu.harvard.med.hip.bec.sampletracking.objects.Container.convertPositionFrom_alphanumeric_to_int(m_well_name);
+            if ( m_well_number < 0 ){m_isProperName=false; return;}
+       }
+       catch(Exception e)
+       {
+           m_isProperName=false; return;
+       }
+       
+      //extract direction
+       m_orientation = setField(format.getDirectionSeparator(), format.getDirectionColumn(),
+                    format.getDirectionStart(), format.getDirectionLength(), 
+                    format.getFileNameReadingDirection(), file_name_without_extention);
+       
+    }
             
      private String setField(String separator, int column_number,
                                 int item_start, int item_length,
@@ -136,7 +175,7 @@ public class SequencingFacilityFileName
            }
            else
            {
-                 if ( file_name.length() < item_start + item_length ) return null;
+                 if ( file_name.length() < item_start + item_length -1 ) return null;
                  if (read_direction == TraceFileNameFormat.READING_RIGHT_TO_LEFT)
                  {
                      column_context=""; int start = -1; int stop = -1;

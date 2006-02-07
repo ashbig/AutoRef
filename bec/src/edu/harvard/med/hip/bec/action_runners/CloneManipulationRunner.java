@@ -24,6 +24,7 @@ import edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.coreobjects.endreads.*;
 import edu.harvard.med.hip.bec.coreobjects.sequence.*;
 import edu.harvard.med.hip.bec.coreobjects.feature.*;
+import edu.harvard.med.hip.bec.coreobjects.spec.*;
 import  edu.harvard.med.hip.bec.util_objects.*;
 import edu.harvard.med.hip.bec.sampletracking.objects.*;
 /**
@@ -100,8 +101,12 @@ public class CloneManipulationRunner extends ProcessRunner
                                  (  m_clone_final_status == IsolateTrackingEngine.FINAL_STATUS_ACCEPTED ||
                                         m_clone_final_status == IsolateTrackingEngine.FINAL_STATUS_REJECTED))
                                  {
-                                     writeDistributionFile( count,current_items , distribution_file_name);
+                                    if ( count == sql_groups_of_items.size()-1)  
+                                        process_messages.append(Constants.LINE_SEPARATOR +"Distribution file name is " + distribution_file_name);
+                       
+                                     writeDistributionFile( count,sql_groups_of_items.size()-1,current_items , distribution_file_name);
                                  }
+                                 
                                  conn.commit();
                             }
                             catch(Exception e)
@@ -110,8 +115,8 @@ public class CloneManipulationRunner extends ProcessRunner
                                  
                             }
                         }
-    
                         
+                           
                         break;
                     }
                   
@@ -135,31 +140,72 @@ public class CloneManipulationRunner extends ProcessRunner
     
     
   
-    private void         writeDistributionFile( int dump_count, String sql_clone_ids , String distribution_file_name) throws Exception
+    private void         writeDistributionFile( int dump_count, int number_of_cycles, 
+                String sql_clone_ids , String distribution_file_name) throws Exception
     {
         ArrayList distribution_file_messages = new ArrayList();
+         FileWriter fr =  new FileWriter(distribution_file_name, true);
+         
+         //write header
         if ( dump_count == 0) 
         {
-                distribution_file_messages.add( Algorithms.getXMLFileHeader());
-                 distribution_file_messages.add( "<clone-data-collections>");
+                fr.write(  Algorithms.getXMLFileHeader() + Constants.LINE_SEPARATOR);
+                fr.write(  "<clone-data-collections>");
+                fr.flush();
         }
         ArrayList clone_data = getCloneData(sql_clone_ids);
-        Hashtable sequences = getCloneSequences(clone_data);
-        ArrayList clone_data_in_xml_format =  transferCloneDataIntoXMLFormat(clone_data, sequences);
-       distribution_file_messages.addAll(clone_data_in_xml_format);
-       distribution_file_messages.add( "</clone-data-collections>");
-        Algorithms. writeArrayIntoFile( distribution_file_messages,true, distribution_file_name);
+        Hashtable cloning_strategies = getCloningStrategies(clone_data);
+        writeClones(clone_data, cloning_strategies, fr);
+        
+        //write footer
+        if ( dump_count == number_of_cycles )fr.write( "</clone-data-collections>");
+        fr.close();
     }
-                               
+      
+    private Hashtable       getCloningStrategies(ArrayList clone_data)throws Exception
+    {
+        Hashtable cloning_strategies = new Hashtable();
+        CloneDescription clone_desc = null;
+        CloningStrategy cloning_strategy= null;
+        for (int count = 0; count < clone_data.size(); count++)
+        {
+            clone_desc = (CloneDescription) clone_data.get(count);
+            if ( !cloning_strategies.containsKey(new Integer(clone_desc.getCloningStrategyId())))
+
+            {
+                try
+                {
+                    cloning_strategy =  CloningStrategy.getById(clone_desc.getCloningStrategyId());
+                    cloning_strategy.setLinker3(BioLinker.getLinkerById(cloning_strategy.getLinker3Id()));
+                    cloning_strategy.setLinker5(BioLinker.getLinkerById(cloning_strategy.getLinker5Id()));
+                    
+                    cloning_strategies.put(new Integer(clone_desc.getCloningStrategyId()),cloning_strategy);
+                }
+                catch(Exception e)
+                {
+                    m_error_messages.add("Cannot get cloning strategy information\n"+e.getMessage());
+                    throw new Exception();
+                }
+            }
+
+        }
+        return cloning_strategies;
+    }
     private ArrayList       getCloneData(String sql_clone_ids) throws Exception
     {
         ArrayList clone_data = new ArrayList ();
                 ResultSet rs = null;
               CloneDescription seq_desc = null;
-        String sql = " select flexcloneid as cloneid, label, position, flexsequenceid as userrefsequenceid, cs.sequenceid as clone_sequenceid "
+       /* String sql = " select process_status, flexcloneid as cloneid, label, position, flexsequenceid as userrefsequenceid, cs.sequenceid as clone_sequenceid "
         +" from flexinfo f, isolatetracking iso, sample s, containerheader c, assembledsequence cs "
         + " where f.isolatetrackingid=iso.isolatetrackingid and s.sampleid=iso.sampleid and s.containerid = c.containerid and cs.isolatetrackingid = iso.isolatetrackingid "
         +" and flexcloneid in ("+sql_clone_ids+") order by flexcloneid, cs.sequenceid";
+        **/
+              String sql = " select cloningstrategyid, process_status, flexcloneid as cloneid, label, position, flexsequenceid as userrefsequenceid, cs.sequenceid as clone_sequenceid, "
+        +" cs.refsequenceid as refsequenceid from flexinfo f, isolatetracking iso, sample s, containerheader c, assembledsequence cs, sequencingconstruct  sc "
+        + " where sc.constructid = iso.constructid and f.isolatetrackingid=iso.isolatetrackingid and s.sampleid=iso.sampleid and s.containerid = c.containerid and cs.isolatetrackingid = iso.isolatetrackingid "
+        +" and flexcloneid in ("+sql_clone_ids+") order by flexcloneid, cs.sequenceid";
+    
         try
         {
               // DatabaseTransactionLocal t = DatabaseTransactionLocal.getInstance();
@@ -173,8 +219,11 @@ public class CloneManipulationRunner extends ProcessRunner
                 seq_desc.setPlateName(rs.getString("label")); 
                 seq_desc.setPosition(rs.getInt("position"));
                 seq_desc.setCloneSequenceId(rs.getInt("clone_sequenceid")); 
+                seq_desc.setBecRefSequenceId( rs.getInt("refsequenceid"));
               //  seq_desc.setIsolateTrackingId( rs.getInt("isolatetrackingid"));
                  seq_desc.setCloneId(  rs.getInt("cloneid"));
+                 seq_desc.setCloneFinalStatus( rs.getInt("process_status"));
+                 seq_desc.setCloningStrategyId(rs.getInt("cloningstrategyid"));
                  //seq_desc.setCloneFinalStatus( rs.getInt("process_status"));
                // seq_desc.setCloningStrategyId(rs.getInt("cloningstrategyid"));
                 // seq_desc.setContainerId(rs.getInt("containerid"));
@@ -191,79 +240,78 @@ public class CloneManipulationRunner extends ProcessRunner
         {
             DatabaseTransactionLocal.closeResultSet(rs);
         }
-        return clone_data;
+        
     }
     
-    
-    private Hashtable        getCloneSequences(ArrayList clone_data) throws Exception
+    private void writeClones(ArrayList clone_data, Hashtable cloning_strategies, 
+                FileWriter fr) throws Exception
+    {
+        CloneDescription clone_description = null;
+        CloningStrategy cloning_strategy = null;
+        for (int count = 0; count < clone_data.size(); count ++)
+        {
+            clone_description = (CloneDescription) clone_data.get(count);
+            cloning_strategy = (CloningStrategy) cloning_strategies.get(new Integer(clone_description.getCloningStrategyId()));
+            fr.write( getCloneInXMLFormat(clone_description, cloning_strategy));
+            
+            fr.flush();
+            
+        }
+    }
+        
+    private CloneSequence        getCloneSequence(int clone_id) throws Exception
     {
         CloneSequence clone_sequence = null;
         CloneDescription clone_description = null;
         ArrayList discrepancy_descriptions = null;
-        Hashtable clone_sequences = new Hashtable();
-        for (int count = 0; count < clone_data.size(); count++)
-        {
-             clone_description = (CloneDescription) clone_data.get(count);
-             clone_sequence = CloneSequence.getOneByCloneId(clone_description.getCloneId());
-             discrepancy_descriptions = DiscrepancyDescription.assembleDiscrepancyDefinitions( clone_sequence.getDiscrepancies());
-             clone_sequence.setDiscrepancies(discrepancy_descriptions);
-             clone_sequences.put( new Integer(clone_description.getCloneId()), clone_sequence);
-        }
-        return clone_sequences;
-    }
-    private ArrayList       transferCloneDataIntoXMLFormat(ArrayList clone_data, Hashtable sequences)throws Exception
-    {
-        ArrayList clone_data_in_xml_format = new ArrayList();
-        CloneDescription clone_description = null;
-        for (int count = 0; count < clone_data.size(); count ++)
-        {
-            clone_description = (CloneDescription) clone_data.get(count);
-            clone_data_in_xml_format.add( getCloneInXMLFormta(clone_description, sequences));
-        }
-        return  clone_data_in_xml_format ;
+        
+          clone_sequence = CloneSequence.getOneByCloneId(clone_id);
+         discrepancy_descriptions = DiscrepancyDescription.assembleDiscrepancyDefinitions( clone_sequence.getDiscrepancies());
+         clone_sequence.setDiscrepancies(discrepancy_descriptions);
+         return clone_sequence;
+        
     }
     
     
-    private String getCloneInXMLFormta(CloneDescription clone_description, Hashtable sequences) throws Exception
+    private String getCloneInXMLFormat(CloneDescription clone_description, CloningStrategy cloning_strategy) throws Exception
     {
         StringBuffer clone_data_in_xml_format = new StringBuffer();
-        CloneSequence clone_sequence = (CloneSequence)sequences.get(new Integer(clone_description.getCloneId()));
+        CloneSequence clone_sequence =  getCloneSequence( clone_description.getCloneId());
+        RefSequence ref_sequence = new RefSequence(clone_description.getBecRefSequenceId(), false);
+clone_data_in_xml_format.append(" <clone-data cloneid='" +clone_description.getCloneId());
+clone_data_in_xml_format.append("' well='"+clone_description.getPosition()+"' pale_label='" + clone_description.getPlateName());
+clone_data_in_xml_format.append("' referense_sequence_id='" +clone_description.getFlexSequenceId()+ "' clone-status='"+clone_description.getCloneFinalStatus()+"'>"+Constants.LINE_SEPARATOR);
+
+clone_data_in_xml_format.append(" <reference_data>"+Constants.LINE_SEPARATOR);
+clone_data_in_xml_format.append("<target_sequence>" + ref_sequence.getCodingSequence()+Constants.LINE_SEPARATOR);
+clone_data_in_xml_format.append("</target_sequence>"+Constants.LINE_SEPARATOR);
+clone_data_in_xml_format.append("<linker_5 description='' sequence='"+cloning_strategy.getLinker5().getSequence()+"'/>"+Constants.LINE_SEPARATOR);
+clone_data_in_xml_format.append("<linker_3 description='' sequence='"+cloning_strategy.getLinker3().getSequence()+"'/>"+Constants.LINE_SEPARATOR);
+clone_data_in_xml_format.append("</reference_data>"+Constants.LINE_SEPARATOR);
         
-        clone_data_in_xml_format.append(" <clone-data cloneid='" +clone_description.getCloneId());
-        clone_data_in_xml_format.append("' well='"+clone_description.getPosition()+"' pale_label='" + clone_description.getPlateName());
-        clone_data_in_xml_format.append("' referense_sequence_id='" +clone_description.getFlexSequenceId()+ "'>"+Constants.LINE_SEPARATOR);
- clone_data_in_xml_format.append(" <sequence_description cds_start='" + clone_sequence.getCdsStart());
-  clone_data_in_xml_format.append("  cds_stop='" + clone_sequence.getCdsStop()+"' id='"+ clone_description.getCloneSequenceId() );
- clone_data_in_xml_format.append("   linker_start='"+clone_sequence.getLinker5Start() );
- clone_data_in_xml_format.append("   linker_stop='"+ clone_sequence.getLinker3Stop() +"'>"+Constants.LINE_SEPARATOR);
-  
- clone_data_in_xml_format.append("  <sequence-text>"+clone_sequence.getText()+" </sequence-text> "+Constants.LINE_SEPARATOR);
-  clone_data_in_xml_format.append(" <sequence-score>"+clone_sequence.getScores()+"</sequence-score>" +Constants.LINE_SEPARATOR);
-//---------------------  
-/* String discrepancy_summary_cds_region = 
-  (String)DiscrepancyDescription.detailedDiscrepancyreport( clone_sequence.getDiscrepancies() , "type") ;
- String discrepancy_summary_linker5ds_region = 
-  (String)DiscrepancyDescription.detailedDiscrepancyreport( clone_sequence.getDiscrepancies() , "type") ;
-String discrepancy_summary_linker3_region = 
-  (String)DiscrepancyDescription.detailedDiscrepancyreport( clone_sequence.getDiscrepancies() , "type") ;
-//---------------------
-            
-  clone_data_in_xml_format.append(" <discrepancy_summary cds_region='"+discrepancy_summary_cds_region+"'");
-clone_data_in_xml_format.append(" linker5_region='"+discrepancy_summary_linker5ds_region+"'");
-clone_data_in_xml_format.append(" linker3_region='"+discrepancy_summary_linker3_region+"' />"+Constants.LINE_SEPARATOR);
-*/
-  
-  clone_data_in_xml_format.append(" <discrepancy_collection> " +Constants.LINE_SEPARATOR);
+clone_data_in_xml_format.append(" <sequence_description cds_start='" + clone_sequence.getCdsStart());
+clone_data_in_xml_format.append("'  cds_stop='" + clone_sequence.getCdsStop()+"' id='"+ clone_description.getCloneSequenceId() );
+clone_data_in_xml_format.append("'   linker_start='"+clone_sequence.getLinker5Start() );
+clone_data_in_xml_format.append("'   linker_stop='"+ clone_sequence.getLinker3Stop() +"'>"+Constants.LINE_SEPARATOR);
+
+clone_data_in_xml_format.append("  <sequence-text>"+clone_sequence.getText()+" </sequence-text> "+Constants.LINE_SEPARATOR);
+clone_data_in_xml_format.append(" <sequence-score>"+clone_sequence.getScores()+"</sequence-score>" +Constants.LINE_SEPARATOR);
+
+clone_data_in_xml_format.append(" <discrepancy_collection> " +Constants.LINE_SEPARATOR);
    
-clone_data_in_xml_format.append( getDiscrepancyCollectionInXMLFormta(clone_sequence.getDiscrepancies()));
- clone_data_in_xml_format.append(" </discrepancy_collection>" +Constants.LINE_SEPARATOR);
-  clone_data_in_xml_format.append(" </sequence_description>" +Constants.LINE_SEPARATOR);
- clone_data_in_xml_format.append("  </clone-data>" +Constants.LINE_SEPARATOR);
-        return clone_data_in_xml_format.toString();
+
+clone_data_in_xml_format.append( getDiscrepancyCollectionInXMLFormat(clone_sequence.getDiscrepancies())+Constants.LINE_SEPARATOR);
+clone_data_in_xml_format.append(" </discrepancy_collection>" +Constants.LINE_SEPARATOR );
+clone_data_in_xml_format.append(" </sequence_description>" +Constants.LINE_SEPARATOR );
+clone_data_in_xml_format.append("  </clone-data>" +Constants.LINE_SEPARATOR );
+
+return clone_data_in_xml_format.toString() ;
+
+
     }
     
     
-    private String getDiscrepancyCollectionInXMLFormta(ArrayList clone_discrepancies)
+    private String getDiscrepancyCollectionInXMLFormat(ArrayList clone_discrepancies)
     {
         StringBuffer discrepancies_in_xml_format = new StringBuffer();
         DiscrepancyDescription discrepancy_description = null;
@@ -273,11 +321,7 @@ clone_data_in_xml_format.append( getDiscrepancyCollectionInXMLFormta(clone_seque
             discrepancy_description= (DiscrepancyDescription)clone_discrepancies.get(count);
             xml_discription = discrepancy_description.writeInXMLFormat();
             discrepancies_in_xml_format.append( xml_discription);
-   
-    
-            
         }
-     
         return discrepancies_in_xml_format.toString();
     }
     //---------------------------------------------------------
@@ -293,9 +337,10 @@ clone_data_in_xml_format.append( getDiscrepancyCollectionInXMLFormta(clone_seque
             DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
             CloneManipulationRunner runner = new CloneManipulationRunner();
             runner.setUser(user);
-            runner.setInputData(Constants.ITEM_TYPE_CLONEID, "158499 158507 158515 158523 158579 ");
+            runner.setInputData(Constants.ITEM_TYPE_CLONEID, "158784  158499 158507 158515 158523 158579 ");
             runner.setProcessType(Constants.PROCESS_SET_CLONE_FINAL_STATUS);
             runner.setCloneFinalStatus(IsolateTrackingEngine.FINAL_STATUS_REJECTED);
+            runner.setIsCreateDistributionFile(true);
             runner.run();
       
         }
