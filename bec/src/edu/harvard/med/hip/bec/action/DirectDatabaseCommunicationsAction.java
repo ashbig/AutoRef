@@ -568,18 +568,19 @@ item_value = "<div align=center><a href=\'"+ BecProperties.getInstance().getProp
   public static ArrayList parseTraceFileNameForUI(TraceFileNameFormat format) throws Exception
   {
       ArrayList result = new ArrayList();
-      //try wthout direction, always should work
-  
-      SequencingFacilityFileName fname= new SequencingFacilityFileName(format.getExampleFileName(), format, false );
-      if ( fname == null) return null;
-      // try to define direction
-      SequencingFacilityFileName  fname_1 = new SequencingFacilityFileName(format.getExampleFileName(), format, true );
-      String[] item = new String[2];
-      item[0]="Plate name";item[1]=fname.getPlateName();      result.add(item); item = new String[2];
-      item[0]="Well name";item[1]= fname.getWellName();      result.add(item); item = new String[2];
-      item[0]="Well number"; item[1]= String.valueOf(fname.getWellNumber());      result.add(item); item = new String[2];
-  if (fname_1 != null) 
-        item[0]="Direction";item[1]= fname_1.getOrientation();      result.add(item);
+      SequencingFacilityFileName  fname = new SequencingFacilityFileName(format.getExampleFileName(), format );
+      String[] item = {"Plate name", "Not Defined"};
+      if (fname != null) { item[1]=fname.getPlateName();  }
+      result.add(item); 
+      item = new String[2]; item[0]="Well name";
+      if (fname != null){ item[1]= fname.getWellName();  }
+      result.add(item); item = new String[2];
+      item[0]="Well number";
+      if (fname != null){ item[1]= String.valueOf(fname.getWellNumber());}
+      result.add(item); item = new String[2];
+      item[0]="Direction"; item[1]="Not Defined";
+      if (fname != null && fname.getOrientation() != null)   item[1]= fname.getOrientation();     
+          result.add(item);
       return result;
   }
   
@@ -1006,29 +1007,37 @@ item_value = "<div align=center><a href=\'"+ BecProperties.getInstance().getProp
     //99999999999999999999999999999999999999
      public static void main(String args[])
     {
+        ArrayList trace_filename_parsing_result =null;
+            
         try
         {
-             ArrayList trace_filename_parsing_result =null;
-               BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
+                BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
         sysProps.verifyApplicationSettings();
         edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
-
+/*
         TraceFileNameFormat format = new TraceFileNameFormat();
 format.setFormatName ( "abc");  //FORMAT_NAME> 
 format.setFileNameReadingDirection( TraceFileNameFormat.READING_LEFT_TO_RIGHT);
-format.setPlateSeparator ("_");//</SEPARATOR>
-format.setPositionSeparator ("_");//</SEPARATOR>
-format.setDirectionSeparator ("_");//</SEPARATOR>
+format.setPlateSeparator ("-");//</SEPARATOR>
+format.setPositionSeparator ("-");//</SEPARATOR>
+//format.setDirectionSeparator ("");//</SEPARATOR>
 format.setPlateLabelColumn ( 1);   //DIRECTION_COLUMN>
 
 format.setPositionColumn ( 2);   //DIRECTION_COLUMN>
+format.setPositionLength(3);
+format.setPositionStart(1);
+
 format.setDirectionForward ("F");   //DIRECTION_FORWARD>
 format.setDirectionReverse ("R");   //DIRECTION_REVERSE>
-format.setDirectionColumn ( 3);   //DIRECTION_COLUMN>
-format.setExampleFileName( "JLWE_KGS001230-1_A10_F_080.ab1 ".trim());   //DIRECTION_COLUMN>
+format.setDirectionColumn ( -1);   //DIRECTION_COLUMN>
+format.setExampleFileName( "KSG002372-G01_I.ab1");   //DIRECTION_COLUMN>
      
                                format.isFormatDefinitionOK();
-                                trace_filename_parsing_result = parseTraceFileNameForUI(format);
+                               */
+TraceFileNameFormat format = DatabaseToApplicationDataLoader.getTraceFileFormat("test_format");
+
+
+trace_filename_parsing_result = parseTraceFileNameForUI(format);
                           
                                        
                                     
