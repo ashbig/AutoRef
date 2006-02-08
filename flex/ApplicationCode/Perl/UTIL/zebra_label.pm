@@ -24,8 +24,8 @@ my %kLISTS = (
       FO_Y_CUR   => '5'
    },
    _REQUIRED_LABEL => {
-      LH_X       => '1',
-      LH_Y       => '1',
+      LH_X       => '3',
+      LH_Y       => '3',
       OPORT      => '1',
       LABELTYPE  => '1',
       FO_Y_INCR  => '1'
