@@ -23,9 +23,9 @@ public class PrintLabel {
         * static variables
         **/
        static final String printerName = "zebra";
-       static final int labelWidth = 25;
+       static final int labelWidth = 48;
        //static final int labelHeight = 15;
-       static final int labelHeight = 8;
+       static final int labelHeight = 6;
        
        /** 
         * Creates new PrintLabel 
