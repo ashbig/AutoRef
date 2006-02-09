@@ -4,17 +4,23 @@
     "http://java.sun.com/dtd/web-app_2_3.dtd">
 
 <clone-data-collections>
-    <clone-data	cloneid='1'  well='B01'	pale_label='Y'	referense_sequence_id='1'>
-    	<sequence_description cds_start='1'    cds_stop='1' id='1' linker_start='1' linker_stop='1'>
+    <clone-data	cloneid='1'  well='B01'	pale_label='Y'	referense_sequence_id='1' clone-status='1'>
+        <reference_data>
+            <target_sequence>
+                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+            </target_sequence>
+            <linker_5 description="" sequence='aaaaaaaaaaaaaa'/>
+            <linker_3 description="" sequence='ccccccccccccccc'/>
+            
+        </reference_data>
+                
+    	<sequence_data cds_start='1'    cds_stop='1' id='1' linker_start='1' linker_stop='1'>
 			<sequence-text>
                             aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-
 			</sequence-text>
 			<sequence-score>
                             10 20 10 20 30 30 
-
 			</sequence-score>
-			<discrepancy_summary cds_region='' linker5_region = '' linker3_region='' />
 			<discrepancy_collection>
 				<discrepancy number ='1' description=''>
 					<nucleotide_definition
@@ -26,7 +32,7 @@
 				</discrepancy >
 
 			</discrepancy_collection>
-		</sequence_description>
+		</sequence_data>
     </clone-data>
 
 </clone-data-collections>

@@ -10,7 +10,7 @@
       
      
 <table border="0" align="center" width="90%">
-<tr><td><H1 align="center"> <font color="#0099CC">Chages to phredPhrap script</font></H1>
+<tr><td><H1 align="center"> <font color="#0099CC">Changes to phredPhrap script</font></H1>
 </td></tr>
   <tr> 
     <td> 
@@ -18,7 +18,7 @@
 	  <P> Raw sequence data typically contains vector sequences. phredPhrap uses 
         <a href="http://bozeman.genome.washington.edu/">CrossMatch</a> for vector 
         masking. Vector libraries are submitted in FASTA-format text files. ACE 
-        allows user to have unlimmited number of vector files to be used by cross_match. 
+        allows user to have unlimited number of vector files to be used by cross_match. 
         Each vector library should be mapped in <a href="<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>help/help_ACEConfigurationFile.html">AceConfiguration.properties</a> 
         file. 
     </td>
@@ -27,21 +27,21 @@
     <td><h2>&nbsp;</h2>
       <h2><font color="#0099CC">Quality Trimming</font></h2>
       <p>We found that additional trimming of trace files can be useful in many 
-        cases, specially density of sequencing coverage is low. ACE allows user 
+        cases, specially if density of sequencing coverage is low. ACE allows user 
         to specify criteria for trace files trimming (how many bases to trim at 
-        the begining/end of the trace file, and phed score for quality trimming).</p></td>
+        the beginning/end of the trace file, and phred score for quality trimming).</p></td>
   </tr>
   <tr> 
     <td><p>&nbsp;</p>
-      <h2><font color="#0099CC">Changes to phradPhrap scrip</font></h2> <p>To 
-        run ACE you need to change phredPhrap.perl script to allow:</p>
+      <h2><font color="#0099CC">Changes to phredPhrap scrip</font></h2> <p>To 
+        run ACE you need to change phredPhrap script to allow:</p>
       <ul>
-        <li> use of multipal vector sequence libraries by cross_match</li>
+        <li>use of multiple vector sequence libraries by cross_match;</li>
         <li>user specified quality trimming of trace files. </li>
       </ul></td>
   </tr>
   <tr>
-    <td><strong># Get the paramenter from user input.</strong><br>
+    <td><strong># Get the parameter from user input.</strong><br>
 <br>
 <br>
 $trim_score =&quot;&quot;;<br>

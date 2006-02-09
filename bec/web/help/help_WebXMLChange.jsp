@@ -42,12 +42,12 @@
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;param-value&gt;your_password&lt;/param-value&gt;<br>
             &lt;/init-param&gt;<br>
             &lt;!-- for oracle database --&gt; </p>
-        <li> Modify <a href="<%= redirection%>help_ACEConfigurationFile.html">ApplicationHostSettings.properties</a> 
+   <!--     <li> Modify <a href="<%= redirection%>help_ACEConfigurationFile.html">ApplicationHostSettings.properties</a> 
           file from TOMCAT_HOME/webapps/ACE/WEB-INF/classes/config directory with 
           text editor programm.</li>
         <li> Modify <a href="<%= redirection%>help_PolymFinderConfigurationFile.html">ModuleSettings.properties</a> 
           file from TOMCAT_HOME/webapps/ACE/WEB-INF/classes/config directory with 
-          text editor.</li>
+          text editor.</li>-->
         <li>Start-up TOMCAT server again.</li>
         <li>Try to register to verify that application is working</li>
       </ul></td>
