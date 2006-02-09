@@ -28,7 +28,7 @@
       <html:form action="SetDisplay.do">
 <html:hidden property="pagesize"/>
         <html:hidden property="species"/>
-        <html:hidden property="refseqType"/>
+  <!--      <html:hidden property="refseqType"/> -->
 
 <table width="100%" border="0">
   <tr>
