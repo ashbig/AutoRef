@@ -354,6 +354,7 @@
               input="/RefseqSearchContinue.jsp">
       <forward  name="success"   path="/DisplayResults.jsp"/>
       <forward  name="success_collection"   path="/ViewCollection.jsp"/>
+      <forward  name="success_vector_search"   path="/DisplayVectorSearchResults.jsp"/>
     </action>
          
     <action    path="/SetVectorDisplay"
@@ -396,6 +397,13 @@
                name="vectorSearchForm"
               input="/VectorSearch.jsp">
       <forward  name="success"   path="/VectorSearchContinue.jsp"/>
+    </action>
+      
+    <action    path="/VectorSearchContinue"
+               type="plasmid.action.VectorSearchContinueAction"
+               name="vectorSearchForm"
+              input="/VectorSearchContinue.jsp">
+      <forward  name="success"   path="/DisplayVectorSearchResults.jsp"/>
     </action>
     
     <action    path="/ViewCart"
