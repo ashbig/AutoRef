@@ -1,13 +1,14 @@
 /*
- * GetCollectionAction.java
+ * VectorSearchContinueAction.java
  *
- * Created on November 7, 2005, 10:51 AM
+ * Created on February 7, 2006, 11:05 AM
  */
 
 package plasmid.action;
 
 import java.util.*;
 import java.io.*;
+import java.sql.*;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -22,17 +23,15 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 
-import plasmid.coreobject.*;
+import plasmid.form.VectorSearchForm;
 import plasmid.Constants;
-import plasmid.database.DatabaseManager.*;
 import plasmid.process.QueryProcessManager;
-import plasmid.form.*;
 
 /**
  *
  * @author  DZuo
  */
-public class GetCollectionAction extends Action {
+public class VectorSearchContinueAction extends Action {
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
      * response (or forward to another web component that will create it).
@@ -57,38 +56,36 @@ public class GetCollectionAction extends Action {
         // get the parameters specified by the customer
         ActionErrors errors = new ActionErrors();
         
-        String collectionName = ((ViewCollectionForm)form).getCollectionName();
-        
-        User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
-        List restrictions = new ArrayList();
-        restrictions.add(Clone.NO_RESTRICTION);
-        if(user != null) {
-            List ress = UserManager.getUserRestrictions(user);
-            restrictions.addAll(ress);
-        } 
+        String display = ((VectorSearchForm)form).getDisplay();
+        List clones = ((VectorSearchForm)form).getClones();
+        String species = ((VectorSearchForm)form).getSpecies();
         
         int pagesize = Constants.PAGESIZE;
         int page = 1;
-        request.setAttribute("displayPage", "indirect");        
+        ((VectorSearchForm)form).setPagesize(pagesize);
+        ((VectorSearchForm)form).setPage(page);
+        
+        request.setAttribute("displayPage", "indirect");
         request.setAttribute("pagesize", new Integer(pagesize));
         request.setAttribute("page",  new Integer(page));
+        request.setAttribute("species", species);
         
         QueryProcessManager manager = new QueryProcessManager();
-        CollectionInfo info = manager.getCollection(collectionName, CollectionInfo.DISTRIBUTION, restrictions, true);
-        
-        if(info == null) {
-            if(Constants.DEBUG)
-                System.out.println("Cannot get collection with name: "+collectionName);
+        if(Constants.BUTTON_DISPLAY_ALL.equals(display)) {
+            List found = manager.queryCloneInfosByClones(clones);
             
-            errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.general", "Cannot get collection with name: "+collectionName));
-            saveErrors(request, errors);
-            return (mapping.findForward("error"));
+            if(found == null) {
+                errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.query.notfound"));
+                saveErrors(request, errors);
+                return (mapping.findForward("error"));
+            }
+            
+            int totalCount = found.size();
+            request.getSession().setAttribute("totalCount", new Integer(totalCount));
+            request.getSession().setAttribute("numOfFound", new Integer(totalCount));
+            request.getSession().setAttribute("found", found);
         }
-        
-        request.getSession().setAttribute(Constants.SINGLECOLLECTION, info);       
-        request.getSession().setAttribute("found", info.getClones());
         return (mapping.findForward("success"));
     }
 }
-
 

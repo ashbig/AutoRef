@@ -72,8 +72,7 @@ public class PrepareRegistrationAction extends Action {
             return mapping.findForward("error");
         }
         
-        DefTableManager manager = new DefTableManager();
-        List groups = manager.getVocabularies("usergroup", "usergroup", t);
+        List groups = DefTableManager.getVocabularies("usergroup", "usergroup");
         List pis = UserManager.getAllPis();
         
         if(pis == null) {

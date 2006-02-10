@@ -27,7 +27,7 @@ import plasmid.form.VectorSearchForm;
 import plasmid.coreobject.*;
 import plasmid.Constants;
 import plasmid.database.DatabaseManager.UserManager;
-import plasmid.query.handler.*;
+import plasmid.process.QueryProcessManager;
 
 /**
  *
@@ -60,33 +60,34 @@ public class VectorSearchAction extends Action {
         String species = ((VectorSearchForm)form).getSpecies();
         if(Constants.ALL.equals(species))
             species = null;
-        List types = ((VectorSearchForm)form).getVectortype();
+        boolean [][] types = ((VectorSearchForm)form).getVectortype();
         List vectortypes = (List)request.getSession().getAttribute("types");
         List properties = new ArrayList();
         
-        for(int i=0; i<types.size(); i++) {
-            boolean b = ((Boolean)types.get(i)).booleanValue();
-            if(b) {
-                properties.add((String)vectortypes.get(i));
+        for(int i=0; i<types.length; i++) {
+            for(int j=0; i<types[i].length; j++) {
+                boolean b = types[i][j];
+                if(b) {
+                    properties.add((String)vectortypes.get(i));
+                }
             }
         }
-                
-        User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
-        List restrictions = new ArrayList();
-        restrictions.add(Clone.NO_RESTRICTION);
-        if(user != null) {
-            List ress = UserManager.getUserRestrictions(user);
-            restrictions.addAll(ress);
-        } 
         
-        VectorQueryHandler handler = new VectorQueryHandler();
-        List clones = handler.queryClones(properties, restrictions, species, Clone.AVAILABLE);
+        QueryProcessManager manager = new QueryProcessManager();
+        User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
+        List clones = manager.queryClonesByVector(user, properties, species, Clone.AVAILABLE);
         
         if(clones == null) {
             return (mapping.findForward("error"));
         }
         
+        Set vectors = manager.getVectorNamesFromClones(clones);
+        ((VectorSearchForm)form).setVectorname(vectors);
+        ((VectorSearchForm)form).setClones(clones);
         request.setAttribute("numberOfClones", new Integer(clones.size()));
-        return (mapping.findForward("success"));        
+        request.setAttribute("vectors", vectors);
+        request.setAttribute("species", species);
+        
+        return (mapping.findForward("success"));
     }
 }

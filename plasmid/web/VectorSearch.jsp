@@ -1,5 +1,6 @@
 <%@ page language="java" %>
 <%@ page errorPage="ProcessError.do"%>
+<%@ page import="plasmid.Constants" %> 
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -37,31 +38,40 @@
 <p>
 <table width="100%" border="0">
   <tr> 
-    <td colspan="6" class="tableheader">Please choose vector type</td>
+    <td colspan="5" class="tableheader">Please select desired vector properties</td>
   </tr>
-  <logic:iterate name="types" id="type" indexId="i">
+  <tr></tr>
+  <logic:iterate name="types" id="type" indexId="n">
+  <tr>
+    <td>&nbsp;</td>
+    <td align="center" class="textcolumn" colspan="4"><bean:write name="type" property="key"/></td>
+  </tr>
+  <logic:iterate name="type" id="t" property="value" indexId="i">
   <% if(Integer.parseInt(i.toString())>0 && Integer.parseInt(i.toString())%3 == 0) {%>
   </tr>
   <% } %>
   <% if(Integer.parseInt(i.toString())%3 == 0) {%>
   <tr> 
     <td>&nbsp;</td>
+    <td>&nbsp;</td>
   <% } %>
-    <td class="underbullet"> <html:checkbox property='<%="vectortype["+i+"]"%>'/>
-      <bean:write name="type"/> </td>
+    <td class="underbullet"> <html:checkbox property='<%="vectortype["+n+"]["+i+"]"%>'/>
+          <bean:write name="t"/> 
+    </td>
   </logic:iterate>
+  </logic:iterate>
+  <tr></tr>
   <tr> 
     <td>&nbsp;</td>
     <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
+    <td colspan="3" class="text">Logic operator:
+    <html:radio property="logicOperator" value="<%=Constants.AND%>">And</html:radio>
+    <html:radio property="logicOperator" value="<%=Constants.OR%>">Or</html:radio>
+    </td>
   </tr>
 
   <tr> 
-    <td>&nbsp;</td>
-<td><input type="submit" name="Submit" value="Search"></td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
+    <td colspan="5" align="center"><html:submit value="Continue"/></td>
   </tr>
 </table>
       </html:form></td>

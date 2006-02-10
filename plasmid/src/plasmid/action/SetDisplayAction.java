@@ -152,6 +152,9 @@ public class SetDisplayAction extends Action {
         
         if("collection".equals(forward))
             return (mapping.findForward("success_collection"));
+        if("vectorSearchResult".equals(forward)) 
+            return (mapping.findForward("success_vector_search"));
+       
         return (mapping.findForward("success"));
     }
 }

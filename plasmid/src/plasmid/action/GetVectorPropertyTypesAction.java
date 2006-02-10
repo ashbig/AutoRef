@@ -23,6 +23,7 @@ import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 
 import plasmid.database.DatabaseManager.DefTableManager;
+import plasmid.database.DatabaseManager.VectorManager;
 import plasmid.Constants;
 import plasmid.form.VectorSearchForm;
 
@@ -56,10 +57,22 @@ public class GetVectorPropertyTypesAction extends Action {
         ActionErrors errors = new ActionErrors();
         List species = DefTableManager.getVocabularies("species", "genusspecies");
         species.add(0, Constants.ALL);
-        List types = DefTableManager.getVocabularies("vectorPropertytype", "propertytype");
+        Map types = VectorManager.getAllVectorPerpertyTypes();
+        Set keys = types.keySet();
+        Iterator iter = keys.iterator();
+        int n=0;
+        while(iter.hasNext()) {
+            String k = (String)iter.next();
+            List l = (List)types.get(k);
+            int m = l.size();
+            if(m > n) 
+                n = m;
+        }
+        ((VectorSearchForm)form).setVectortypes(keys.size(), n);
+        ((VectorSearchForm)form).setLogicOperator(Constants.AND);
+        
         request.setAttribute("species", species);
         request.getSession().setAttribute("types", types);
-        ((VectorSearchForm)form).setVectortype(types);
         return (mapping.findForward("success"));
     }
 }

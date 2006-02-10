@@ -135,6 +135,8 @@ public class DnaInsert {
             return RefseqNameType.GENBANK;
         if(VC.equals(species))
             return RefseqNameType.VCNUMBER;
-        return RefseqNameType.GENEID;
+        if(RefseqNameType.GENEID != null)
+            return RefseqNameType.GENEID;
+        return "";
     }
 }

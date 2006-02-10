@@ -16,6 +16,7 @@ import plasmid.util.*;
 import plasmid.database.*;
 import plasmid.Constants;
 import plasmid.database.DatabaseManager.*;
+import plasmid.query.handler.*;
 
 /**
  *
@@ -94,5 +95,54 @@ public class QueryProcessManager {
             DatabaseTransaction.closeConnection(conn);
         }
         return c;
+    }
+    
+    public List queryClonesByVector(User user, List properties, String species, String status) {
+        List restrictions = new ArrayList();
+        restrictions.add(Clone.NO_RESTRICTION);
+        if(user != null) {
+            List ress = UserManager.getUserRestrictions(user);
+            restrictions.addAll(ress);
+        }
+        
+        VectorQueryHandler handler = new VectorQueryHandler();
+        List clones = handler.queryClones(properties, restrictions, species, status);
+        
+        return clones;
+    }
+    
+    public List queryCloneInfosByClones(List clones) {
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        List found = new ArrayList();
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            CloneManager manager = new CloneManager(conn);
+            found = manager.performQueryClones(clones, true, true, false);
+        } catch (Exception ex) {
+            if(Constants.DEBUG) {
+                System.out.println(ex);
+            }
+            return null;
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
+        }
+        return found;
+    }
+    
+    public Set getVectorNamesFromClones(List clones) {
+        Set vectors = new TreeSet();
+        
+        if(clones == null)
+            return vectors;
+        
+        for(int i=0; i<clones.size(); i++) {
+            Clone c = (Clone)clones.get(i);
+            String vector = c.getVectorname();
+            vectors.add(vector);
+        }
+        
+        return vectors;
     }
 }

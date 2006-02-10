@@ -1,5 +1,6 @@
 <%@ page language="java" %>
 <%@ page errorPage="ProcessError.do"%>
+<%@ page import="plasmid.Constants" %> 
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -21,7 +22,9 @@
 	</td>
     <td width="83%" align="left" valign="top">
 	<jsp:include page="searchByVectorTitle.jsp" />
-      <html:form action="VectorSearch.do" enctype="multipart/form-data">
+      <html:form action="VectorSearchContinue.do">
+
+        <html:hidden property="species"/>
 
 <table width="100%" height="58" border="0" align="center">
 <tr>
@@ -34,36 +37,41 @@
   <table width="100%" border="0">
     <tr>
       <td width="4%">&nbsp;</td>
-      <td width="96%"><input type="submit" name="Submit3" value="Display Results"></td>
+      <td width="96%"><html:submit property="display" value="<%=Constants.BUTTON_DISPLAY_ALL%>"/></td>
     </tr>
   </table>
-  </form>
+
 <table width="100%" border="0">
   <tr> 
     <td colspan="6" class="tableheader">Limit your search result by choosing the 
       vectors that you want to display</td>
   </tr>
-  <tr> 
-    <td width="3%">&nbsp;</td>
-    <td width="19%" class="underbullet"> <input type="checkbox" name="checkbox32" value="checkbox">
-      pDONR201 </td>
-    <td width="18%" class="underbullet"> <input type="checkbox" name="checkbox322" value="checkbox">
-      pDONR221</td>
-    <td width="19%" class="underbullet"> <input type="checkbox" name="checkbox323" value="checkbox">
-      pDNR-Dual</td>
-    <td width="21%" class="underbullet">&nbsp;</td>
-    <td width="20%" class="underbullet">&nbsp;</td>
+  <logic:iterate name="vectors" id="vector" indexId="i">
+  <% if(Integer.parseInt(i.toString())>0 && Integer.parseInt(i.toString())%3 == 0) {%>
   </tr>
+  <% } %>
+  <% if(Integer.parseInt(i.toString())%3 == 0) {%>
   <tr> 
     <td>&nbsp;</td>
-    <td class="underbullet"> <input type="checkbox" name="checkbox326" value="checkbox">
-      pLKO.1</td>
-    <td class="underbullet"> <input type="checkbox" name="checkbox324" value="checkbox">
-      pBY011</td>
-    <td colspan="3" class="underbullet"> <input type="checkbox" name="checkbox325" value="checkbox">
-      pGEX2tk-Cre</td>
+  <% } %>
+    <td class="underbullet"> <html:checkbox property='<%="vectorname["+i+"]"%>'/>
+      <bean:write name="vector"/> </td>
+  </logic:iterate>
+  <tr> 
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+
+  <tr> 
+    <td>&nbsp;</td>
+<td><html:submit property="display" value="<%=Constants.BUTTON_DISPLAY%>"/></td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
   </tr>
 </table>
+
       </html:form></td>
   </tr>
 </table>

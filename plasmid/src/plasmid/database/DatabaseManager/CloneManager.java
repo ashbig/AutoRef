@@ -387,42 +387,59 @@ public class CloneManager extends TableManager {
      * @return A map with cloneid as the key and Clone object as the value. Return null if
      *  error occured.
      */
-    public Map queryClonesByCloneid(List cloneids, boolean isInsert, boolean isSelection, boolean isWorkingStorage) {
-        String sql = "select clonename, clonetype, verified, vermethod,"+
+    public Map queryClonesByCloneid(List cloneids, boolean isInsert, boolean isSelection, boolean isWorkingStorage, List restrictions, List clonetypes, String species, String status, int start, int end, String orderColumn) {
+        String sq = "select clonename, clonetype, verified, vermethod,"+
         " domain, subdomain, restriction, comments, vectorid, vectorname, clonemapfilename,status,specialtreatment,source,description"+
         " from clone where cloneid=?";
-        
-        return performQueryClones(cloneids, isInsert, isSelection, isWorkingStorage, sql);
-    }
-    
-    public Map queryAvailableClonesByCloneid(List cloneids, boolean isInsert, boolean isSelection, boolean isWorkingStorage) {
-        String sql = "select clonename, clonetype, verified, vermethod,"+
-        " domain, subdomain, restriction, comments, vectorid, vectorname, clonemapfilename,status,specialtreatment,source,description"+
-        " from clone where cloneid=? and status='"+Clone.AVAILABLE+"'";
-        
-        return performQueryClones(cloneids, isInsert, isSelection, isWorkingStorage, sql);
-    }
-    
-    public Map queryAvailableClonesByCloneid(List cloneids, boolean isInsert, boolean isSelection, boolean isWorkingStorage, List restrictions, List clonetypes, String species) {
-        String sql = "select clonename, clonetype, verified, vermethod,"+
-        " domain, subdomain, restriction, comments, vectorid, vectorname, clonemapfilename,status,specialtreatment,source,description"+
-        " from clone where cloneid=? and status='"+Clone.AVAILABLE+"'";
-        
+               
         if(clonetypes != null && clonetypes.size()>0) {
             String s = StringConvertor.convertFromListToSqlString(clonetypes);
-            sql = sql+" and clonetype in ("+s+")";
+            sq = sq+" and clonetype in ("+s+")";
         }
         
         if(restrictions != null && restrictions.size()>0) {
             String s = StringConvertor.convertFromListToSqlString(restrictions);
-            sql = sql+" and restriction in ("+s+")";
+            sq = sq+" and restriction in ("+s+")";
         }
         
         if(species != null) {
-            sql = sql+" and domain='"+species+"'";
+            sq = sq+" and domain='"+species+"'";
         }
         
+        if(status != null) 
+            sq += " and status='"+status+"'";
+        
+        if(orderColumn != null)
+            sq += " order by "+orderColumn;
+        
+        if(start < 0 && end < 0)
+            return performQueryClones(cloneids, isInsert, isSelection, isWorkingStorage, sq);
+    
+        String sql = "select * from ("+sq+") where rownum<"+end+
+        " minus (select * from ("+sq+") where rownum<"+start+")";
+        
         return performQueryClones(cloneids, isInsert, isSelection, isWorkingStorage, sql);
+    }
+    
+    /**
+     * Query the database to get a list of Clone objects for given list of cloneid.
+     * @param cloneids A list of cloneid as String.
+     * @param isInsert Insert will be queried if it is true.
+     * @param isSelection Selection will be queried if it is true.
+     * @param isWorkingStorage Working storage location will be queried if it is true.
+     * @return A map with cloneid as the key and Clone object as the value. Return null if
+     *  error occured.
+     */
+    public Map queryClonesByCloneid(List cloneids, boolean isInsert, boolean isSelection, boolean isWorkingStorage) {
+        return queryClonesByCloneid(cloneids, isInsert, isSelection, isWorkingStorage, null, null, null, null, -1, -1, null);
+    }
+    
+    public Map queryAvailableClonesByCloneid(List cloneids, boolean isInsert, boolean isSelection, boolean isWorkingStorage) {
+        return queryClonesByCloneid(cloneids, isInsert, isSelection, isWorkingStorage, null, null, null, Clone.AVAILABLE, -1, -1, null);
+    }
+    
+    public Map queryAvailableClonesByCloneid(List cloneids, boolean isInsert, boolean isSelection, boolean isWorkingStorage, List restrictions, List clonetypes, String species) {
+        return queryClonesByCloneid(cloneids, isInsert, isSelection, isWorkingStorage, restrictions, clonetypes, species, Clone.AVAILABLE, -1, -1, null);
     }
     
     public Clone queryCloneByCloneid(int cloneid) {
@@ -667,11 +684,9 @@ public class CloneManager extends TableManager {
         if(cloneids == null || cloneids.size() == 0)
             return clones;
         
-        String sql2 = "select d.insertid, d.insertorder, d.sizeinbp, d.species, d.format, d.source,d.geneid,d.name,d.description,d.targetseqid,d.targetgenbank,d.hasdiscrepancy,d.hasmutation,d.refseqid,d.region"+
-        " from dnainsert d, clone c"+
-        " where c.cloneid=d.cloneid and c.cloneid=?";
-        String sql3 = "select hosttype, marker from cloneselection where cloneid=?";
-        String sql4 = "select containerlabel, position, positionx, positiony from sample where cloneid=? and sampletype=? order by sampleid desc";
+        String sql2 = getInsertSql();
+        String sql3 = getSelectionSql();
+        String sql4 = getStorageSql();
         
         PreparedStatement stmt = null;
         PreparedStatement stmt2 = null;
@@ -679,9 +694,6 @@ public class CloneManager extends TableManager {
         PreparedStatement stmt4 = null;
         
         ResultSet rs = null;
-        ResultSet rs2 = null;
-        ResultSet rs3 = null;
-        ResultSet rs4 = null;
         
         int currentCloneid = 0;
         try {
@@ -718,59 +730,21 @@ public class CloneManager extends TableManager {
                     CloneInfo c = new CloneInfo(Integer.parseInt(cloneid),clonename,clonetype,verified,vermethod,domain,subdomain, restriction,comments,vectorid,vectorname,clonemap,status,specialtreatment,src,des);
                     
                     if(isInsert) {
-                        List inserts = new ArrayList();
                         stmt2.setInt(1, Integer.parseInt(cloneid));
-                        rs2 = DatabaseTransaction.executeQuery(stmt2);
-                        while(rs2.next()) {
-                            int insertid = rs2.getInt(1);
-                            int insertorder = rs2.getInt(2);
-                            int size = rs2.getInt(3);
-                            String species = rs2.getString(4);
-                            String format = rs2.getString(5);
-                            String source = rs2.getString(6);
-                            String geneid = rs2.getString(7);
-                            String name = rs2.getString(8);
-                            String description = rs2.getString(9);
-                            String targetseqid = rs2.getString(10);
-                            String targetgenbank = rs2.getString(11);
-                            String hasdiscrepancy = rs2.getString(12);
-                            String hasmutation = rs2.getString(13);
-                            int refseqid = rs2.getInt(14);
-                            String region = rs2.getString(15);
-                            DnaInsert insert = new DnaInsert(insertid,insertorder, size, species, format, source, Integer.parseInt(cloneid),geneid,name,description,targetseqid,targetgenbank,hasdiscrepancy,hasmutation,region,refseqid);
-                            inserts.add(insert);
-                        }
+                        List inserts = getInserts(stmt2, Integer.parseInt(cloneid));
                         c.setInserts(inserts);
-                        DatabaseTransaction.closeResultSet(rs2);
                     }
                     
                     if(isSelection) {
-                        List selections = new ArrayList();
                         stmt3.setInt(1, Integer.parseInt(cloneid));
-                        rs3 = DatabaseTransaction.executeQuery(stmt3);
-                        while(rs3.next()) {
-                            String hosttype = rs3.getString(1);
-                            String marker = rs3.getString(2);
-                            CloneSelection selection = new CloneSelection(Integer.parseInt(cloneid),hosttype,marker);
-                            selections.add(selection);
-                        }
+                        List selections = getSelections(stmt3, Integer.parseInt(cloneid));
                         c.setSelections(selections);
-                        DatabaseTransaction.closeResultSet(rs3);
                     }
                     
                     if(isWorkingStorage) {
                         stmt4.setInt(1, Integer.parseInt(cloneid));
                         stmt4.setString(2, Sample.WORKING_GLYCEROL);
-                        rs4 = DatabaseTransaction.executeQuery(stmt4);
-                        if(rs4.next()) {
-                            String label = rs4.getString(1);
-                            int position = rs4.getInt(2);
-                            String x = rs4.getString(3);
-                            String y = rs4.getString(4);
-                            c.setPlate(label);
-                            c.setPosition(position);
-                            c.setWell(x, y);
-                        }
+                        setStorage(stmt4, c);
                     }
                     
                     clones.put(cloneid, c);
@@ -788,6 +762,133 @@ public class CloneManager extends TableManager {
             DatabaseTransaction.closeStatement(stmt3);
         }
         return clones;
+    }
+    
+    public List performQueryClones(List clones, boolean isInsert, boolean isSelection, boolean isWorkingStorage) {
+        List infos = new ArrayList();
+        if(clones == null || clones.size() == 0)
+            return infos;
+        
+        String sql2 = getInsertSql();
+        String sql3 = getSelectionSql();
+        String sql4 = getStorageSql();
+        
+        PreparedStatement stmt2 = null;
+        PreparedStatement stmt3 = null;
+        PreparedStatement stmt4 = null;
+        
+        int currentCloneid = 0;
+        try {
+            if(isInsert)
+                stmt2 = conn.prepareStatement(sql2);
+            if(isSelection)
+                stmt3 = conn.prepareStatement(sql3);
+            if(isWorkingStorage)
+                stmt4 = conn.prepareStatement(sql4);
+            
+            for(int i=0; i<clones.size(); i++) {
+                Clone clone = (Clone)clones.get(i);
+                CloneInfo c = new CloneInfo(null, clone);
+                int cloneid = clone.getCloneid();
+                currentCloneid = cloneid;
+                
+                if(isInsert) {
+                    stmt2.setInt(1,cloneid);
+                    List inserts = getInserts(stmt2, cloneid);
+                    c.setInserts(inserts);
+                }
+                
+                if(isSelection) {
+                    stmt3.setInt(1, cloneid);
+                    List selections = getSelections(stmt3, cloneid);
+                    c.setSelections(selections);
+                }
+                
+                if(isWorkingStorage) {
+                    stmt4.setInt(1, cloneid);
+                    stmt4.setString(2, Sample.WORKING_GLYCEROL);
+                    setStorage(stmt4, c);
+                }
+                infos.add(c);
+            }
+        } catch (Exception ex) {
+            handleError(ex, "Error occured while query clones by cloneid: "+currentCloneid);
+            return null;
+        } finally {
+            DatabaseTransaction.closeStatement(stmt4);
+            DatabaseTransaction.closeStatement(stmt2);
+            DatabaseTransaction.closeStatement(stmt3);
+        }
+        return infos;
+    }
+    
+    private String getInsertSql() {
+        return "select d.insertid, d.insertorder, d.sizeinbp, d.species, d.format, d.source,d.geneid,d.name,d.description,d.targetseqid,d.targetgenbank,d.hasdiscrepancy,d.hasmutation,d.refseqid,d.region"+
+        " from dnainsert d, clone c"+
+        " where c.cloneid=d.cloneid and c.cloneid=?";
+    }
+    
+    private String getSelectionSql() {
+        return "select hosttype, marker from cloneselection where cloneid=?";
+    }
+    
+    private String getStorageSql() {
+        return "select containerlabel, position, positionx, positiony from sample where cloneid=? and sampletype=? order by sampleid desc";
+    }
+    
+    private List getInserts(PreparedStatement stmt, int cloneid) throws Exception {
+        List inserts = new ArrayList();
+        ResultSet rs2 = DatabaseTransaction.executeQuery(stmt);
+        while(rs2.next()) {
+            int insertid = rs2.getInt(1);
+            int insertorder = rs2.getInt(2);
+            int size = rs2.getInt(3);
+            String species = rs2.getString(4);
+            String format = rs2.getString(5);
+            String source = rs2.getString(6);
+            String geneid = rs2.getString(7);
+            String name = rs2.getString(8);
+            String description = rs2.getString(9);
+            String targetseqid = rs2.getString(10);
+            String targetgenbank = rs2.getString(11);
+            String hasdiscrepancy = rs2.getString(12);
+            String hasmutation = rs2.getString(13);
+            int refseqid = rs2.getInt(14);
+            String region = rs2.getString(15);
+            DnaInsert insert = new DnaInsert(insertid,insertorder, size, species, format, source, cloneid,geneid,name,description,targetseqid,targetgenbank,hasdiscrepancy,hasmutation,region,refseqid);
+            inserts.add(insert);
+        }
+        DatabaseTransaction.closeResultSet(rs2);
+        
+        return inserts;
+    }
+    
+    private List getSelections(PreparedStatement stmt, int cloneid) throws Exception {
+        List selections = new ArrayList();
+        ResultSet rs3 = DatabaseTransaction.executeQuery(stmt);
+        while(rs3.next()) {
+            String hosttype = rs3.getString(1);
+            String marker = rs3.getString(2);
+            CloneSelection selection = new CloneSelection(cloneid,hosttype,marker);
+            selections.add(selection);
+        }
+        DatabaseTransaction.closeResultSet(rs3);
+        
+        return selections;
+    }
+    
+    private void setStorage(PreparedStatement stmt, CloneInfo c) throws Exception {
+        ResultSet rs4 = DatabaseTransaction.executeQuery(stmt);
+        if(rs4.next()) {
+            String label = rs4.getString(1);
+            int position = rs4.getInt(2);
+            String x = rs4.getString(3);
+            String y = rs4.getString(4);
+            c.setPlate(label);
+            c.setPosition(position);
+            c.setWell(x, y);
+        }
+        DatabaseTransaction.closeResultSet(rs4);
     }
     
     public List findRestrictedClones(List cloneidStrings, List restrictions) {
@@ -830,7 +931,7 @@ public class CloneManager extends TableManager {
         
         return restrictedClones;
     }
-        
+    
     public List findShippingRestrictedClones(List cloneidStrings) {
         String sql = "select clonename, domain from clone where cloneid=?";
         PreparedStatement stmt = null;

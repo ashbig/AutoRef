@@ -21,31 +21,31 @@ import plasmid.Constants;
  * @author  DZuo
  */
 public class RefseqSearchForm extends ActionForm {    
-    private String species;
-    private String refseqType;
-    private String searchType;
-    private String searchString;
-    private boolean cdna;
-    private boolean shrna;
-    private boolean genomicfragment;
-    private boolean tfbindsite;
-    private boolean genome;
-    private boolean fusion;
-    private boolean closed;
-    private String marker;
-    private boolean pdonr201;
-    private boolean pdonr221;
-    private boolean pdnrdual;
-    private boolean plk;
-    private boolean pby011;
-    private boolean pgex2tk;
-    private int pagesize;
-    private int page;
-    private String displayPage;
-    private String sortby;
-    private String cloneid;
-    private String button;
-    private String forward;
+    protected String species;
+    protected String refseqType;
+    protected String searchType;
+    protected String searchString;
+    protected boolean cdna;
+    protected boolean shrna;
+    protected boolean genomicfragment;
+    protected boolean tfbindsite;
+    protected boolean genome;
+    protected boolean fusion;
+    protected boolean closed;
+    protected String marker;
+    protected boolean pdonr201;
+    protected boolean pdonr221;
+    protected boolean pdnrdual;
+    protected boolean plk;
+    protected boolean pby011;
+    protected boolean pgex2tk;
+    protected int pagesize;
+    protected int page;
+    protected String displayPage;
+    protected String sortby;
+    protected String cloneid;
+    protected String button;
+    protected String forward;
     
     public String getSpecies() {return species;}
     public String getRefseqType() {return refseqType;}

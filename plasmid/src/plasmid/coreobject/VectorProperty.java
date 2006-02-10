@@ -11,6 +11,10 @@ package plasmid.coreobject;
  * @author  DZuo
  */
 public class VectorProperty {
+    public static final String ASSAY="Assay";
+    public static final String CLONING="Cloning System";
+    public static final String EXPRESSION="Expression";
+    
     private int vectorid;
     private String propertyType;
     

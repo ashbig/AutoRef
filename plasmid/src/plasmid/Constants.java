@@ -6,8 +6,8 @@
 
 package plasmid;
 
-import plasmid.coreobject.User;
 import plasmid.util.FlexProperties;
+import plasmid.coreobject.*;
 
 /**
  *
@@ -45,6 +45,15 @@ public class Constants {
     
     public static final String ALL = "All";
     public static final int PAGESIZE = 10;
+    
+    public static final String BUTTON_DISPLAY_ALL = "Display All Results";
+    public static final String BUTTON_DISPLAY = "Display Results";
+    public static final String AND = "And";
+    public static final String OR = "Or";
+    
+    public static final String ASSAY = VectorProperty.ASSAY;
+    public static final String CLONING = VectorProperty.CLONING;
+    public static final String EXPRESSION = VectorProperty.EXPRESSION;
     
     /** Creates a new instance of Constants */
     public Constants() {

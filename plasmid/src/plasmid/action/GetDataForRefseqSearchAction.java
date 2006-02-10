@@ -57,9 +57,7 @@ public class GetDataForRefseqSearchAction extends Action {
         ActionErrors errors = new ActionErrors();
         DatabaseTransaction dt = null;
         try {
-            dt = DatabaseTransaction.getInstance();
-            DefTableManager defTableManager = new DefTableManager();
-            List species = defTableManager.getVocabularies("Species", "genusspecies", dt);
+            List species = DefTableManager.getVocabularies("Species", "genusspecies");
            // List refseqTypes = defTableManager.getVocabularies("refseqtype", "refseqtype", dt);
             
             if(species == null) {

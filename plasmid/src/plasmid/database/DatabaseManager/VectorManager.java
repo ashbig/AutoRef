@@ -360,6 +360,60 @@ public class VectorManager extends TableManager {
         return v;
     }
     
+    public int getVectorid(String name) {
+        String sql = "select vectorid from vector where name=?";
+        int id = 0;
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, name);
+            ResultSet rs = DatabaseTransaction.executeQuery(stmt);
+            if(rs.next()) {
+                id = rs.getInt(1);
+            }
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+        } catch (Exception ex) {
+            if(Constants.DEBUG) {
+                System.out.println(ex);
+            }
+        }
+        
+        return id;
+    }
+    
+    public static Map getAllVectorPerpertyTypes() {
+        Map types = new TreeMap();
+        String sql = "select category,propertytype from vectorpropertytype order by category, propertytype";
+        DatabaseTransaction t = null;
+        ResultSet rs = null;
+        try {
+            t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            String lastCategory = null;
+            List l = null;
+            while(rs.next()) {
+                String category = rs.getString(1);
+                String type = rs.getString(2);
+                if(lastCategory != null && lastCategory.equals(category)) {
+                    l.add(type);
+                } else {
+                    l = new ArrayList();
+                    l.add(type);
+                    lastCategory = category;
+                    types.put(category, l);
+                }
+            }
+        } catch (Exception ex) {
+            if(Constants.DEBUG) {
+                System.out.println(ex);
+            }
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+        
+        return types;
+    }
+    
     public static void main(String args[]) {
         DatabaseTransaction t = null;
         Connection conn = null;
@@ -368,6 +422,7 @@ public class VectorManager extends TableManager {
             t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
             VectorManager manager = new VectorManager(conn);
+            /**
             CloneVector v = manager.queryCloneVector(3);
             System.out.println(v.getName());
             System.out.println(v.getDescription());
@@ -417,55 +472,23 @@ public class VectorManager extends TableManager {
                 System.out.println(p.getParentvectorname());
                 System.out.println(p.getComments());
             }
+             **/
+            Map types = VectorManager.getAllVectorPerpertyTypes();
+            Set keys = types.keySet();
+            Iterator iter = keys.iterator();
+            while(iter.hasNext()) {
+                String category = (String)iter.next();
+                List l = (List)types.get(category);
+                for(int i=0; i<l.size(); i++) {
+                    String type = (String)l.get(i);
+                    System.out.println(category+": "+type);
+                }
+            }
         } catch (Exception ex) {
             System.out.println(ex);
         } finally {
             DatabaseTransaction.closeConnection(conn);
             System.exit(0);
         }
-    }
-    
-    public int getVectorid(String name) {
-        String sql = "select vectorid from vector where name=?";
-        int id = 0;
-        try {
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1, name);
-            ResultSet rs = DatabaseTransaction.executeQuery(stmt);
-            if(rs.next()) {
-                id = rs.getInt(1);
-            }
-            DatabaseTransaction.closeResultSet(rs);
-            DatabaseTransaction.closeStatement(stmt);
-        } catch (Exception ex) {
-            if(Constants.DEBUG) {
-                System.out.println(ex);
-            }
-        }
-        
-        return id;
-    }
-    
-    public static List getAllVectorPerpertyTypes() {
-        List types = new ArrayList();
-        String sql = "select propertytype from vectorpropertytype order by propertytype";
-        DatabaseTransaction t = null;
-        ResultSet rs = null;
-        try {
-            t = DatabaseTransaction.getInstance();
-            rs = t.executeQuery(sql);
-            while(rs.next()) {
-                String type = rs.getString(1);
-                types.add(type);
-            }
-        } catch (Exception ex) {
-            if(Constants.DEBUG) {
-                System.out.println(ex);
-            }
-        } finally {
-            DatabaseTransaction.closeResultSet(rs);
-        }
-        
-        return types;
     }
 }

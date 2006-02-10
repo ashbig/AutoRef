@@ -28,13 +28,17 @@ public class GenbankQueryHandler extends GeneQueryHandler {
         super(terms);
     }
     
+    public void doQuery(List restrictions, List clonetypes, String species) throws Exception {
+        doQuery(restrictions,clonetypes,species,-1,-1, null);
+    }
+        
     public void doQuery() throws Exception {
         doQuery(null, null, null);
-    }
+    }  
     
-    public void doQuery(List restrictions, List clonetypes, String species) throws Exception {
+    public void doQuery(List restrictions, List clonetypes, String species, int start, int end, String column) throws Exception {
         String sql = "select distinct cloneid from clonegenbank where upper(accession) = upper(?)";
-        executeQuery(sql, restrictions, clonetypes, species);
+        executeQuery(sql, restrictions, clonetypes, species, start, end, column);
     }
     
     public static void main(String args[]) {
@@ -94,5 +98,5 @@ public class GenbankQueryHandler extends GeneQueryHandler {
             System.out.println(ex);
         }
         System.exit(0);
-    }
+    }    
 }

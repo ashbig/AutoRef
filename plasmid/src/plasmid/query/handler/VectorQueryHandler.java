@@ -55,11 +55,46 @@ public class VectorQueryHandler extends GeneQueryHandler {
         
         return executeQueryClones(sql);
     }
+     
+    /**
+     * Query database to get a list of Clone IDs.
+     *
+     * @param vectors List of vector names.
+     * @param restrictions List of clone restrictions.
+     * @param species Clone species. If it is null, it represents all species.
+     * @param status Clone status. If it is null, it represents all status.
+     * @return A list of Clone IDs as String. Return null if any exception occurs.
+     */
     
-    public void doQuery() throws Exception {
+    public List queryCloneids(List vectors, List restrictions, String species, String status) {
+        if(vectors == null)
+            return null;
+        
+        String s = StringConvertor.convertFromListToSqlString(vectors);
+        String sql = "select cloneid from clone where vectorname in ("+s+"))";
+        
+        if(restrictions != null && restrictions.size()>0) {
+            String res = StringConvertor.convertFromListToSqlString(restrictions);
+            sql = sql+" and restriction in ("+res+")";
+        }
+        
+        if(species != null) {
+            sql = sql+" and domain='"+species+"'";
+        }
+        
+        if(status != null) {
+            sql = sql+" and status='"+status+"'";
+        }
+        
+        return executeQueryClones(sql);
     }
     
     public void doQuery(List restrictions, List clonetypes, String species) throws Exception {
     }
     
+    public void doQuery() throws Exception {
+    }
+    
+    public void doQuery(List restrictions, List clonetypes, String species, int start, int end, String column) throws Exception {
+    }
 }
