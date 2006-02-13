@@ -96,7 +96,7 @@ public class PhredOutputFileName
         
        m_filename = m_filename.toUpperCase();
         ArrayList arr = Algorithms.splitString( m_filename,  SEPARATOR);
-        if (arr.size() != 5)
+        if ( arr.size() < 5 || arr.size() > 6 )// new format with timestamp
             throw new BecUtilException("Wrong file name.");
         m_plateid = (String) arr.get(0);
         m_wellid =  (String) arr.get(1);

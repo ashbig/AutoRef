@@ -83,7 +83,7 @@ public class NamingFileEntry
             else
                 return m_plateid+DILIM+m_wellid+DILIM+"0"+DILIM+"0"+DILIM+m_orientation+m_readnum+".ab1";
         }
-         public String getNamingFileEntyInfo()
+         public String getNamingFileEntryInfo()
         {
             if ( m_sequenceid != -1)
                  return m_plateid+DILIM+m_wellid+DILIM+m_sequenceid+DILIM+m_cloneid+DILIM+m_orientation+m_readnum;

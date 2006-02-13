@@ -69,7 +69,10 @@ public class TraceFilesDistributor
         for (int count = 0; count < sourceFiles.length; count++)
         {
             traceFile = sourceFiles[count];
+            //initial version : remove extension
             file_info = traceFile.getName().substring(0, traceFile.getName().indexOf('.'));
+            //remove time stamp part
+            file_info = file_info.substring(0, file_info.lastIndexOf("_"));
               // check this file shoud be distibuted
             if ( m_name_of_files_to_distribute == null ||
                 (m_name_of_files_to_distribute != null &&

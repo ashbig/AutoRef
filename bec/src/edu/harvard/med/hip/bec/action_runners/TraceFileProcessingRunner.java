@@ -29,7 +29,7 @@ public class TraceFileProcessingRunner extends ProcessRunner
     
     private String              m_renaming_file_name = "rename";
      private String             m_read_direction = null;
-    private String             m_read_type = null;
+    private int                  m_read_type = Constants.READ_TYPE_ENDREAD;
     private String             m_file_extension = null;
     private String             m_inputdir = null;
     private String             m_outputdir = null;
@@ -44,7 +44,7 @@ public class TraceFileProcessingRunner extends ProcessRunner
     private String              INPUT_DIR = edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("TRACE_FILES_TRANCFER_INPUT_DIR");
   
     public void setReadDirection(String read_direction)    { m_read_direction = read_direction;}
-    public void setReadType(String read_type)    { m_read_type = read_type;    }//m_read_type= read_type;}
+    public void setReadType(int read_type)    { m_read_type = read_type;    }//m_read_type= read_type;}
     public void setFileExtension(String ext){ m_file_extension = ext;}
     public void     setSequencingFacility(int v){m_sequencing_facility = v;}
     public String getTitle()    { return "Request for trace files manipulation.";    }
@@ -123,12 +123,13 @@ public class TraceFileProcessingRunner extends ProcessRunner
          //lot of plate names that are not in the folder
          ArrayList plate_names_for_processing =  getPlateNames( sequencing_facility_file_items, plate_map_names);
    
+         String time_stamp = String.valueOf(System.currentTimeMillis());
          for (int plate_count = 0; plate_count < plate_names_for_processing.size(); plate_count++)
          {
             ArrayList hip_clone_items =  getCloneDescriptions((String)plate_names_for_processing.get(plate_count));
             ArrayList renaming_file_entries = getRenamingFileEnties(sequencing_facility_file_items, 
                                                                  hip_clone_items,
-                                                                    plate_map_names);
+                                                                    plate_map_names, time_stamp+plate_count);
             Algorithms.writeArrayIntoFile( renaming_file_entries, true, renaming_file_name);
            
          }
@@ -216,7 +217,7 @@ public class TraceFileProcessingRunner extends ProcessRunner
                 try
                 {
                  //   if ( isUseTraceFileNameFormat )
-                         br= new SequencingFacilityFileName(file_name, m_format,m_read_type.equals( Constants.READ_TYPE_ENDREAD_STR) );
+                         br= new SequencingFacilityFileName(file_name, m_format,m_read_type == Constants.READ_TYPE_ENDREAD );
                   //  else
                     //    br= new SequencingFacilityFileName(file_name, m_sequencing_facility);
                 }
@@ -228,7 +229,7 @@ public class TraceFileProcessingRunner extends ProcessRunner
                 }
                 if ( br.isWriteFormat() ) 
                 {
-                    if ( m_read_type.equals( Constants.READ_TYPE_ENDREAD_STR)
+                    if ( m_read_type == Constants.READ_TYPE_ENDREAD
                         || m_sequencing_facility == SequencingFacilityFileName.SEQUENCING_FACILITY_HTMBC
                           && (  br.getOrientation().equalsIgnoreCase("F") || br.getOrientation().equalsIgnoreCase("R")))
                     {
@@ -254,7 +255,8 @@ public class TraceFileProcessingRunner extends ProcessRunner
    
       private ArrayList  getRenamingFileEnties(ArrayList sequencing_facility_file_items, 
                                                 ArrayList           hip_clone_items,
-                                                Hashtable           plate_map_names)
+                                                Hashtable           plate_map_names,
+                                                String time_stamp)
       {
           ArrayList renaming_file_entries = new ArrayList();;
           Hashtable file_entries = new Hashtable();
@@ -279,7 +281,9 @@ public class TraceFileProcessingRunner extends ProcessRunner
               hip_file_entry.setOrientation(original_file_info.getOrientation());
               file_name = createHipFileName( hip_file_entry);
               if ( original_file_info.getVersion() != null) file_name+="."+original_file_info.getVersion();
-             file_name+="."+original_file_info.getExtension();
+             
+              file_name += "_"+time_stamp + count + "."+original_file_info.getExtension();
+               
              renaming_file_entries.add(original_file_info.getFileName()+"\t"+file_name);
           }
          
@@ -402,7 +406,7 @@ public class TraceFileProcessingRunner extends ProcessRunner
          Connection conn = null;
          try
          {
-             if (m_read_type.equals( Constants.READ_TYPE_INTERNAL_STR ))
+             if (m_read_type == Constants.READ_TYPE_INTERNAL)
              {
                  if (BecProperties.getInstance().isInternalHipVersion()  )
                  {
@@ -420,7 +424,7 @@ public class TraceFileProcessingRunner extends ProcessRunner
                      +" where s.oligocontainerid = c.oligocontainerid and f.flexcloneid = s.cloneid and label in ("+label+")";
                  }
              }
-             else if (  m_read_type.equals( Constants.READ_TYPE_ENDREAD_STR))
+             else if (  m_read_type == Constants.READ_TYPE_ENDREAD )
              {
                  conn = DatabaseTransaction.getInstance().requestConnection();
                      sql = "select position, flexcloneid , flexsequencingplateid as containerid, flexsequenceid , label "
@@ -497,15 +501,16 @@ public class TraceFileProcessingRunner extends ProcessRunner
      private String createHipFileName(NamingFileEntry entry) 
      {
          String fn = "";
-         if (  m_read_type.equals( Constants.READ_TYPE_ENDREAD_STR) )
+         if (  m_read_type == Constants.READ_TYPE_ENDREAD )
          {
              entry.setReadNum(0);
-           fn=entry.getNamingFileEntyInfo() ;
+           fn=entry.getNamingFileEntryInfo() ;
          }
-         else if (  m_read_type.equals( Constants.READ_TYPE_INTERNAL_STR) )
+         else if (  m_read_type== Constants.READ_TYPE_INTERNAL )
          {
-              entry.setReadNum(1);
-              fn = entry.getNamingFileEntyInfo();
+             entry.setReadNum(1);
+             // entry.setOrientation(  entry.getOrientation()+ time_stamp);
+              fn = entry.getNamingFileEntryInfo();
          }
          return fn;
      }
@@ -519,14 +524,19 @@ public class TraceFileProcessingRunner extends ProcessRunner
               BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
         sysProps.verifyApplicationSettings();
       edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadTraceFileFormats();
-ProcessRunner runner = new TraceFileProcessingRunner();
+       ProcessRunner runner =  new EndReadsWrapperRunner();
+        runner.setInputData( edu.harvard.med.hip.bec.Constants.ITEM_TYPE_PLATE_LABELS, "JSE001381");
+         runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
+    runner.setProcessType(Constants.PROCESS_RUN_END_READS_WRAPPER);
+        runner.run();
+/*ProcessRunner runner = new TraceFileProcessingRunner();
 runner.setProcessType(Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRANSFER);
-((TraceFileProcessingRunner)runner).setReadType(Constants.READ_TYPE_ENDREAD_STR);//m_read_type= read_type;}
+((TraceFileProcessingRunner)runner).setReadType(Constants.READ_TYPE_ENDREAD);//m_read_type= read_type;}
 //runner.setSequencingFacility(SequencingFacilityFileName.SEQUENCING_FACILITY_KOLODNER);
-((TraceFileProcessingRunner)runner).setInputDirectory("E:\\Sequences for BEC\\files_to_transfer");
+((TraceFileProcessingRunner)runner).setInputDirectory("C:\\bio\\plate_dump");
 //runner.setOutputDirectory( "C:\\bio\\original_files");
-((TraceFileProcessingRunner)runner).setRenamingFile(new  FileInputStream("C:\\bio\\map.txt"));
-((TraceFileProcessingRunner)runner).setFormatName("VCX plates");
+((TraceFileProcessingRunner)runner).setRenamingFile(new  FileInputStream("C:\\bio\\map_jsa1714.txt"));
+((TraceFileProcessingRunner)runner).setFormatName("RZPD internal under 100");
      runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
        ((TraceFileProcessingRunner)runner).setDelete("NO");
            
@@ -544,6 +554,7 @@ runner.setProcessType(Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRAN
           //                runner.setProcessType(Constants.PROCESS_INITIATE_TRACEFILES_TRANSFER);
          //        runner.setUser(  AccessManager.getInstance().getUser("htaycher345","htaycher"));
     runner.run();
+ **/
          }catch(Exception e){}
          System.exit(0);
      }
