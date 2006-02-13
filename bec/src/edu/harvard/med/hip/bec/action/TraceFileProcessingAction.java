@@ -66,7 +66,7 @@ public class TraceFileProcessingAction extends BecAction
                  
                     request.setAttribute(Constants.ADDITIONAL_JSP,"Processing plates:\n"+items.trim() +". Files will be send to you by e-mail.");
                     ((TraceFileProcessingRunner)runner).setReadDirection((String)request.getParameter("read_direction"));
-                    ((TraceFileProcessingRunner)runner).setReadType((String)request.getParameter("read_type"));
+                    ((TraceFileProcessingRunner)runner).setReadType(Integer.parseInt((String)request.getParameter("read_type")));
                     runner.setInputData(Constants.ITEM_TYPE_PLATE_LABELS,items.toUpperCase().trim() );
                   
                     break;
@@ -102,7 +102,7 @@ public class TraceFileProcessingAction extends BecAction
                     request.setAttribute(Constants.ADDITIONAL_JSP,"Application will put renaming file into input directory. Report will be send to you by e-mail.");
                     String inputdir = (String)request.getParameter("inputdir");
                     ((TraceFileProcessingRunner) runner).setInputDirectory(inputdir);
-                    ((TraceFileProcessingRunner) runner).setReadType((String)request.getParameter("read_type"));
+                    ((TraceFileProcessingRunner) runner).setReadType(Integer.parseInt((String)request.getParameter("read_type")));
                     String temp = (String)request.getParameter("sequencing_facility");
                     ((TraceFileProcessingRunner) runner).setFormatName( temp);
     

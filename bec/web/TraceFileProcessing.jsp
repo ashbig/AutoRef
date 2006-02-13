@@ -131,8 +131,8 @@ for (Enumeration en = formats.keys(); en.hasMoreElements(); )
 <tr><td>&nbsp;</td></tr>
 </td></tr>
 <tr><td><b>Please specify the read type </td>
-<td><input type=radio name=read_type value="<%= Constants.READ_TYPE_ENDREAD_STR%>" checked>End Read
-<input type=radio name=read_type value="<%= Constants.READ_TYPE_INTERNAL_STR%>" >Internal Read
+<td><input type=radio name=read_type value="<%= Constants.READ_TYPE_ENDREAD%>" checked>End Read
+<input type=radio name=read_type value="<%= Constants.READ_TYPE_INTERNAL%>" >Internal Read
 </td></tr>
 
 </table>
