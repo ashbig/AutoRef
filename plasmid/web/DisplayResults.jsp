@@ -26,12 +26,7 @@
     <td width="864" align="left" valign="top">
 	<jsp:include page="searchByRefseqTitle.jsp" />
 
-<html:form action="RefseqSearchContinue.do">
-<html:hidden property="cdna"/>
-<html:hidden property="shrna"/>
-<html:hidden property="genomicfragment"/>
-<html:hidden property="tfbindsite"/>
-<html:hidden property="genome"/>
+<html:form action="SetDisplay.do">
 <table width="100%" border="0">
   <tr>
     <logic:equal name="refseqSearchForm" property="display" value="genbank">
@@ -45,13 +40,13 @@
   </tr>  
   <tr>
     <logic:equal name="refseqSearchForm" property="display" value="genbank">
-    <td class="tableinfo"><a href="RefseqSearchContinue.do?displayPage=direct&page=1&cdna=<bean:write name="refseqSearchForm" property="cdna"/>"><bean:write name="numOfDirectFound"/></a></td>
-    <td class="tableinfo"><a href="RefseqSearchContinue.do?displayPage=indirect&page=1&cdna=<bean:write name="refseqSearchForm" property="cdna"/>"><bean:write name="numOfFound"/></a></td>
+    <td class="tableinfo"><a href="SetDisplay.do?displayPage=direct&page=1"><bean:write name="numOfDirectFound"/></a></td>
+    <td class="tableinfo"><a href="SetDisplay.do?displayPage=indirect&page=1"><bean:write name="numOfFound"/></a></td>
     </logic:equal>
     <logic:equal name="refseqSearchForm" property="display" value="symbol">
-    <td class="tableinfo"><a href="RefseqSearchContinue.do?displayPage=indirect&page=1&cdna=<bean:write name="refseqSearchForm" property="cdna"/>"><bean:write name="numOfFound"/></a></td>
+    <td class="tableinfo"><a href="SetDisplay.do?displayPage=indirect&page=1"><bean:write name="numOfFound"/></a></td>
     </logic:equal>
-    <td class="tableinfo"><a href="RefseqSearchContinue.do?displayPage=nofound&page=1&cdna=<bean:write name="refseqSearchForm" property="cdna"/>"><bean:write name="numOfNoFounds"/></a></td>
+    <td class="tableinfo"><a href="SetDisplay.do?displayPage=nofound&page=1"><bean:write name="numOfNoFounds"/></a></td>
   </tr>
 </table>
 
@@ -85,18 +80,18 @@
 <table width="100%" border="0">
   <tr>
     <td class="tableheader">&nbsp;</td>
-    <td class="tableheader">Search Term</td>
-    <td class="tableheader">Clone ID</td>
-    <td class="tableheader">Clone Type</td>
-    <td class="tableheader">Species Specific ID</td>
-    <td class="tableheader">Gene Symbol</td>
+    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=searchterm">Search Term</a></td>
+    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=cloneid">Clone ID</a></td>
+    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=clonetype">Clone Type</a></td>
+    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=geneid">Species Specific ID</a></td>
+    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=genesymbol">Gene Symbol</td>
     <td class="tableheader">Gene Name</td>
-    <td class="tableheader">Reference Sequence</td>
-    <td class="tableheader">Mutation</td>
-    <td class="tableheader">Discrepancy</td>
-    <td class="tableheader">Insert Format</td>
-    <td class="tableheader">Vector</td>
-    <td class="tableheader">Selection Markers</td>
+    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=targetseq">Reference Sequence</a></td>
+    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=insertmutation">Mutation</a></td>
+    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=insertdiscrepancy">Discrepancy</a></td>
+    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=insertformat">Insert Format</a></td>
+    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=vectorname">Vector</a></td>
+    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=selection">Selection Markers</a></td>
     <td class="tableheader">Special MTA</td>
     <td class="tableheader">&nbsp;</td>
   </tr>
@@ -104,7 +99,7 @@
   <logic:equal name="refseqSearchForm" property="displayPage" value="indirect">
   <% int i= Integer.parseInt(size.toString())*(Integer.parseInt(p.toString())-1);
   %>
-  <logic:iterate name="found" id="clone">
+  <logic:iterate name="found" id="clone" length="size" offset="<%=(new Integer(i)).toString()%>">
 
   <tr class="tableinfo"> 
     <td><%=++i%></td>
@@ -156,12 +151,7 @@
     </logic:iterate>
     </td>
     <td><bean:write name="clone" property="specialtreatment"/></td>
-    <html:form action="RefseqSearchContinue.do">
-    <html:hidden property="cdna"/>
-    <html:hidden property="shrna"/>
-    <html:hidden property="genomicfragment"/>
-    <html:hidden property="tfbindsite"/>
-    <html:hidden property="genome"/>
+    <html:form action="SetDisplay.do">
     <td valign="center">
         <input type="hidden" name="displayPage" value="indirect"/>
         <input type="hidden" name="cloneid" value="<bean:write name="clone" property="cloneid"/>"/>
@@ -174,7 +164,7 @@
 
   <logic:equal name="refseqSearchForm" property="displayPage" value="direct">
   <%  int i= Integer.parseInt(size.toString())*(Integer.parseInt(p.toString())-1);%>
-  <logic:iterate name="directFounds" id="clone">
+  <logic:iterate name="directFounds" id="clone" length="size" offset="<%=(new Integer(i)).toString()%>">
   <tr class="tableinfo"> 
     <td><%=++i%></td>
     <td><bean:write name="clone" property="term"/></td>
@@ -224,7 +214,7 @@
     </logic:iterate>
     </td>
     <td><bean:write name="clone" property="specialtreatment"/></td>
-    <html:form action="RefseqSearchContinue.do">
+    <html:form action="SetDisplay.do">
     <html:hidden property="cdna"/>
     <html:hidden property="shrna"/>
     <html:hidden property="genomicfragment"/>

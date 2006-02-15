@@ -143,6 +143,8 @@ public class SetDisplayAction extends Action {
             Collections.sort(clones, new SelectionMarkerComparator());
         if("specialtreatment".equals(sortby))
             Collections.sort(clones, new CloneSpecialTreatmentComparator());
+        if("genesymbol".equals(sortby))
+            Collections.sort(clones, new InsertNameComparator());
         
         if("indirect".equals(displayPage)) {
             request.getSession().setAttribute("found", clones);

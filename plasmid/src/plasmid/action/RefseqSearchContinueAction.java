@@ -58,6 +58,9 @@ public class RefseqSearchContinueAction extends Action {
     HttpServletResponse response)
     throws ServletException, IOException {
         
+        request.getSession().removeAttribute("directFounds");
+        request.getSession().setAttribute("display", "symbol");
+        
         // get the parameters specified by the customer
         ActionErrors errors = new ActionErrors();
         String species = ((RefseqSearchForm)form).getSpecies();
@@ -69,32 +72,7 @@ public class RefseqSearchContinueAction extends Action {
         boolean genomicfragment = ((RefseqSearchForm)form).getGenomicfragment();
         boolean tfbindsite = ((RefseqSearchForm)form).getTfbindsite();
         boolean genome = ((RefseqSearchForm)form).getGenome();
-        int pagesize = ((RefseqSearchForm)form).getPagesize();
-        int page = ((RefseqSearchForm)form).getPage();
-        
-        String button = ((RefseqSearchForm)form).getButton();
-        String forward = ((RefseqSearchForm)form).getForward();
-        if(button != null && button.equals("Add To Cart")) {
-            String cloneid = ((RefseqSearchForm)form).getCloneid();
-            if(Integer.parseInt(cloneid) <= 0) {
-                errors.add(ActionErrors.GLOBAL_ERROR,
-                new ActionError("error.database.error","Invalid clone ID."));
-                return (mapping.findForward("error"));
-            }
-            
-            List shoppingcart = (List)request.getSession().getAttribute(Constants.CART);
-            if(shoppingcart == null) {
-                shoppingcart = new ArrayList();
-            }
-            ShoppingCartItem item = new ShoppingCartItem(0, cloneid, 1, ShoppingCartItem.CLONE);
-            ShoppingCartItem.addToCart(shoppingcart, item);
-            
-            request.getSession().setAttribute(Constants.CART, shoppingcart);
-            request.getSession().setAttribute(Constants.CART_STATUS, Constants.UPDATED);
-            
-            if("collection".equals(forward))
-                return (mapping.findForward("success_collection"));
-        }
+        ((RefseqSearchForm)form).setPage(1);
         
         List clonetypes = new ArrayList();
         if(cdna)
@@ -151,11 +129,11 @@ public class RefseqSearchContinueAction extends Action {
             }
             
             try {
-                handler.doQuery(restrictions, clonetypes, species, (page-1)*pagesize, page*pagesize, "cloneid", Clone.AVAILABLE);
+                handler.doQuery(restrictions, clonetypes, species, -1, -1, null, Clone.AVAILABLE);
                 directFoundList = handler.convertFoundToCloneinfo();
                 searchList = handler.getNofound();
                 totalFoundCloneCount = handler.queryTotalFoundCloneCounts(restrictions, clonetypes, species, Clone.AVAILABLE);
-                request.setAttribute("directFounds", directFoundList);
+                request.getSession().setAttribute("directFounds", directFoundList);
                 //request.setAttribute("numOfDirectFound", new Integer(handler.getFoundCloneCount()));
             } catch (Exception ex) {
                 if(Constants.DEBUG)
@@ -175,15 +153,15 @@ public class RefseqSearchContinueAction extends Action {
         }
         
         try {
-            handler.doQuery(restrictions, clonetypes, species, (page-1)*pagesize, page*pagesize, "cloneid", Clone.AVAILABLE);
+            handler.doQuery(restrictions, clonetypes, species, -1, -1, null, Clone.AVAILABLE);
             List founds = handler.convertFoundToCloneinfo();
             List nofounds = handler.getNofound();
-            totalFoundCloneCount = handler.queryTotalFoundCloneCounts(restrictions, clonetypes, species, Clone.AVAILABLE);            
+            totalFoundCloneCount = handler.getFoundCloneCount();            
             int numOfNoFounds = nofounds.size();
-            request.setAttribute("numOfFound", new Integer(totalFoundCloneCount));
-            request.setAttribute("numOfNoFounds", new Integer(numOfNoFounds));
-            request.setAttribute("found", founds);
-            request.setAttribute("nofound", nofounds);
+            request.getSession().setAttribute("numOfFound", new Integer(totalFoundCloneCount));
+            request.getSession().setAttribute("numOfNoFounds", new Integer(numOfNoFounds));
+            request.getSession().setAttribute("found", founds);
+            request.getSession().setAttribute("nofound", nofounds);
             return (mapping.findForward("success"));
         } catch (Exception ex) {
             if(Constants.DEBUG)
