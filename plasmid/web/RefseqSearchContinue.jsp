@@ -22,8 +22,7 @@
     <td width="83%" align="left" valign="top">
 	<jsp:include page="searchByRefseqTitle.jsp" />
       <html:form action="RefseqSearchContinue.do">
-        <html:hidden property="species"/>
-        <html:hidden property="refseqType"/>
+
       <table width="100%" height="118" border="0" align="center">
         <tr> 
           <td height="10" colspan="6" class="tableheader"><strong>Select search 
@@ -59,13 +58,13 @@
             <td width="3%">&nbsp;</td>
             <td width="19%" class="underbullet"><html:checkbox property="cdna"/>
                 cDNA </td>
-            <td width="18%" class="underbullet"><html:checkbox property="shrna"/>
+            <td width="18%" class="underbullet"><html:checkbox property="shrna" />
             shRNA </td>
-            <td width="19%" class="underbullet"><html:checkbox property="genomicfragment"/>
+            <td width="19%" class="underbullet"><html:checkbox property="genomicfragment" />
             genomic fragment </td>
-            <td width="21%" class="underbullet"><html:checkbox property="tfbindsite"/>
+            <td width="21%" class="underbullet"><html:checkbox property="tfbindsite" />
             trxn factor bind site </td>
-            <td width="20%" class="underbullet"><html:checkbox property="genome"/>
+            <td width="20%" class="underbullet"><html:checkbox property="genome" />
             genome</td>
         </tr>
         <tr> 

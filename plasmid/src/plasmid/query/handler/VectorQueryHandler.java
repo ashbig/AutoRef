@@ -88,13 +88,14 @@ public class VectorQueryHandler extends GeneQueryHandler {
         
         return executeQueryClones(sql);
     }
-    
-    public void doQuery(List restrictions, List clonetypes, String species) throws Exception {
-    }
-    
+        
     public void doQuery() throws Exception {
     }
     
-    public void doQuery(List restrictions, List clonetypes, String species, int start, int end, String column) throws Exception {
+    public void doQuery(List restrictions, List clonetypes, String species, String status) throws Exception {
     }
+    
+    public void doQuery(List restrictions, List clonetypes, String species, int start, int end, String column, String status) throws Exception {
+    }
+
 }

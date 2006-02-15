@@ -30,6 +30,7 @@ import plasmid.form.RefseqSearchForm;
 import plasmid.coreobject.*;
 import plasmid.util.StringConvertor;
 import plasmid.query.handler.*;
+import plasmid.process.OrderProcessManager;
 
 /**
  *
@@ -59,25 +60,48 @@ public class RefseqSearchContinueAction extends Action {
         
         // get the parameters specified by the customer
         ActionErrors errors = new ActionErrors();
-        
-        request.getSession().removeAttribute("directFounds");
-        request.getSession().removeAttribute("numOfDirectFound");
-        request.getSession().setAttribute("display", "symbol");
-        
         String species = ((RefseqSearchForm)form).getSpecies();
         String refseqType = ((RefseqSearchForm)form).getRefseqType();
         String searchType = ((RefseqSearchForm)form).getSearchType();
         String searchString = ((RefseqSearchForm)form).getSearchString();
         boolean cdna = ((RefseqSearchForm)form).getCdna();
-        boolean shrna = ((RefseqSearchForm)form).getShrna(); 
-        boolean genomicfragment = ((RefseqSearchForm)form).getGenomicfragment();  
+        boolean shrna = ((RefseqSearchForm)form).getShrna();
+        boolean genomicfragment = ((RefseqSearchForm)form).getGenomicfragment();
         boolean tfbindsite = ((RefseqSearchForm)form).getTfbindsite();
         boolean genome = ((RefseqSearchForm)form).getGenome();
-        int pagesize = Constants.PAGESIZE;
-        int page = 1;
-        ((RefseqSearchForm)form).setPagesize(pagesize);
-        ((RefseqSearchForm)form).setPage(page);
-
+        int pagesize = ((RefseqSearchForm)form).getPagesize();
+        int page = ((RefseqSearchForm)form).getPage();
+        System.out.println("species: "+species);
+        System.out.println("refseqType: "+refseqType);
+        System.out.println("searchType: "+searchType);
+        System.out.println("searchString: "+searchString);
+        System.out.println("cdna: "+cdna);
+        System.out.println("page: "+page);
+        
+        String button = ((RefseqSearchForm)form).getButton();
+        String forward = ((RefseqSearchForm)form).getForward();
+        if(button != null && button.equals("Add To Cart")) {
+            String cloneid = ((RefseqSearchForm)form).getCloneid();
+            if(Integer.parseInt(cloneid) <= 0) {
+                errors.add(ActionErrors.GLOBAL_ERROR,
+                new ActionError("error.database.error","Invalid clone ID."));
+                return (mapping.findForward("error"));
+            }
+            
+            List shoppingcart = (List)request.getSession().getAttribute(Constants.CART);
+            if(shoppingcart == null) {
+                shoppingcart = new ArrayList();
+            }
+            ShoppingCartItem item = new ShoppingCartItem(0, cloneid, 1, ShoppingCartItem.CLONE);
+            ShoppingCartItem.addToCart(shoppingcart, item);
+            
+            request.getSession().setAttribute(Constants.CART, shoppingcart);
+            request.getSession().setAttribute(Constants.CART_STATUS, Constants.UPDATED);
+            
+            if("collection".equals(forward))
+                return (mapping.findForward("success_collection"));
+        }
+        
         List clonetypes = new ArrayList();
         if(cdna)
             clonetypes.add(Clone.CDNA);
@@ -85,41 +109,41 @@ public class RefseqSearchContinueAction extends Action {
             clonetypes.add(Clone.SHRNA);
         if(genomicfragment)
             clonetypes.add(Clone.GENOMIC_FRAGMENT);
-        if(tfbindsite) 
+        if(tfbindsite)
             clonetypes.add(Clone.TFBINDSITE);
-        if(genome) 
+        if(genome)
             clonetypes.add(Clone.GENOME);
         
+        if(clonetypes.size() == 0) {
+            errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.clonetype.empty"));
+            saveErrors(request, errors);
+            return (new ActionForward(mapping.getInput()));
+        }
+            
         User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
         List restrictions = new ArrayList();
         restrictions.add(Clone.NO_RESTRICTION);
         if(user != null) {
             List ress = UserManager.getUserRestrictions(user);
             restrictions.addAll(ress);
-        } 
-        
-        request.setAttribute("species", species);
-        request.setAttribute("refseqType", refseqType);
-        request.setAttribute("displayPage", "indirect");
-        request.setAttribute("pagesize", new Integer(pagesize));
-        request.setAttribute("page",  new Integer(page));
+        }
         
         StringConvertor sc = new StringConvertor();
         List searchList = sc.convertFromStringToList(searchString, " \t\n\r\f");
-
+        
         if(searchList.size() == 0) {
             errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.searchstring.invalid"));
             saveErrors(request, errors);
             return (new ActionForward(mapping.getInput()));
         }
         
-        int totalCount = 0;
         GeneQueryHandler handler = null;
         List directFoundList = null;
-       
+        int totalFoundCloneCount = 0;
+        
         if(GeneQueryHandler.GENBANK.equals(searchType) || GeneQueryHandler.GI.equals(searchType)) {
-            request.getSession().setAttribute("display", "genbank");
-            request.setAttribute("displayPage", "direct");
+            ((RefseqSearchForm)form).setDisplay("genbank");
+            ((RefseqSearchForm)form).setDisplayPage("direct");
             
             if(GeneQueryHandler.GENBANK.equals(searchType))
                 handler = StaticQueryHandlerFactory.makeGeneQueryHandler(GeneQueryHandler.DIRECT_GENBANK, searchList);
@@ -133,13 +157,12 @@ public class RefseqSearchContinueAction extends Action {
             }
             
             try {
-                handler.doQuery(restrictions, clonetypes, species);
+                handler.doQuery(restrictions, clonetypes, species, (page-1)*pagesize, page*pagesize, "cloneid", Clone.AVAILABLE);
                 directFoundList = handler.convertFoundToCloneinfo();
                 searchList = handler.getNofound();
-                totalCount = totalCount+handler.getFoundCloneCount();
-                
-                request.getSession().setAttribute("directFounds", directFoundList);
-                request.getSession().setAttribute("numOfDirectFound", new Integer(handler.getFoundCloneCount()));
+                totalFoundCloneCount = handler.queryCloneCounts(restrictions, clonetypes, species, Clone.AVAILABLE);
+                request.setAttribute("directFounds", directFoundList);
+                //request.setAttribute("numOfDirectFound", new Integer(handler.getFoundCloneCount()));
             } catch (Exception ex) {
                 if(Constants.DEBUG)
                     System.out.println(ex);
@@ -156,20 +179,17 @@ public class RefseqSearchContinueAction extends Action {
             saveErrors(request, errors);
             return (mapping.findForward("error"));
         }
-        
+        System.out.println("displayPage: "+((RefseqSearchForm)form).getDisplayPage());
         try {
-            handler.doQuery(restrictions, clonetypes, species);
-            
+            handler.doQuery(restrictions, clonetypes, species, (page-1)*pagesize, page*pagesize, "cloneid", Clone.AVAILABLE);
             List founds = handler.convertFoundToCloneinfo();
             List nofounds = handler.getNofound();
-            totalCount = totalCount+handler.getFoundCloneCount();
-            int numOfFounds = handler.getFoundCloneCount();
-            int numOfNoFounds = handler.getNumOfNoFoundClones();
-            request.getSession().setAttribute("totalCount", new Integer(totalCount));
-            request.getSession().setAttribute("numOfFound", new Integer(numOfFounds));
-            request.getSession().setAttribute("numOfNoFounds", new Integer(numOfNoFounds));
-            request.getSession().setAttribute("found", founds);
-            request.getSession().setAttribute("nofound", nofounds);
+            totalFoundCloneCount = handler.queryCloneCounts(restrictions, clonetypes, species, Clone.AVAILABLE);            
+            int numOfNoFounds = nofounds.size();
+            request.setAttribute("numOfFound", new Integer(totalFoundCloneCount));
+            request.setAttribute("numOfNoFounds", new Integer(numOfNoFounds));
+            request.setAttribute("found", founds);
+            request.setAttribute("nofound", nofounds);
             return (mapping.findForward("success"));
         } catch (Exception ex) {
             if(Constants.DEBUG)

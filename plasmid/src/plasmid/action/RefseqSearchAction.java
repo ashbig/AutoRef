@@ -58,11 +58,6 @@ public class RefseqSearchAction extends Action {
         
         // get the parameters specified by the customer
         ActionErrors errors = new ActionErrors();
-        ((RefseqSearchForm)form).setCdna(true);
-        ((RefseqSearchForm)form).setShrna(true);
-        ((RefseqSearchForm)form).setGenomicfragment(true);
-        ((RefseqSearchForm)form).setTfbindsite(true);
-        ((RefseqSearchForm)form).setGenome(true);
         
         DatabaseTransaction dt = null;
         Connection conn = null;
@@ -71,12 +66,10 @@ public class RefseqSearchAction extends Action {
             conn = dt.requestConnection();
             
             String species = ((RefseqSearchForm)form).getSpecies();
-           // String refseqType = ((RefseqSearchForm)form).getRefseqType();
             RefseqManager manager = new RefseqManager(conn);
             List nameTypes = manager.queryNameTypes(species, RefseqNameType.SEARCH);
             
-            request.setAttribute("species", species);
-            //request.setAttribute("refseqType", refseqType);
+            ((RefseqSearchForm)form).resetBooleanValues();
             request.setAttribute("nameTypes", nameTypes);
             return (mapping.findForward("success"));
         } catch (Throwable th) {

@@ -387,17 +387,18 @@ public class CloneManager extends TableManager {
      * @return A map with cloneid as the key and Clone object as the value. Return null if
      *  error occured.
      */
-    public Map queryClonesByCloneid(List cloneids, boolean isInsert, boolean isSelection, boolean isWorkingStorage, List restrictions, List clonetypes, String species, String status, int start, int end, String orderColumn) {
+    public Map queryClonesByCloneid(List cloneids, boolean isInsert, boolean isSelection, boolean isWorkingStorage, List restrictions, List clonetypes, String species, String status) {
         String sq = "select clonename, clonetype, verified, vermethod,"+
-        " domain, subdomain, restriction, comments, vectorid, vectorname, clonemapfilename,status,specialtreatment,source,description"+
-        " from clone where cloneid=?";
-               
-        if(clonetypes != null && clonetypes.size()>0) {
+        " domain, subdomain, restriction, comments, vectorid, vectorname,"+
+        " clonemapfilename,status,specialtreatment,source,description,cloneid"+
+        " from clone where cloneid =?";
+        
+        if(clonetypes != null) {
             String s = StringConvertor.convertFromListToSqlString(clonetypes);
             sq = sq+" and clonetype in ("+s+")";
         }
         
-        if(restrictions != null && restrictions.size()>0) {
+        if(restrictions != null) {
             String s = StringConvertor.convertFromListToSqlString(restrictions);
             sq = sq+" and restriction in ("+s+")";
         }
@@ -406,19 +407,10 @@ public class CloneManager extends TableManager {
             sq = sq+" and domain='"+species+"'";
         }
         
-        if(status != null) 
+        if(status != null)
             sq += " and status='"+status+"'";
         
-        if(orderColumn != null)
-            sq += " order by "+orderColumn;
-        
-        if(start < 0 && end < 0)
-            return performQueryClones(cloneids, isInsert, isSelection, isWorkingStorage, sq);
-    
-        String sql = "select * from ("+sq+") where rownum<"+end+
-        " minus (select * from ("+sq+") where rownum<"+start+")";
-        
-        return performQueryClones(cloneids, isInsert, isSelection, isWorkingStorage, sql);
+        return performQueryClones(cloneids, isInsert, isSelection, isWorkingStorage, sq);
     }
     
     /**
@@ -431,15 +423,15 @@ public class CloneManager extends TableManager {
      *  error occured.
      */
     public Map queryClonesByCloneid(List cloneids, boolean isInsert, boolean isSelection, boolean isWorkingStorage) {
-        return queryClonesByCloneid(cloneids, isInsert, isSelection, isWorkingStorage, null, null, null, null, -1, -1, null);
+        return queryClonesByCloneid(cloneids, isInsert, isSelection, isWorkingStorage, null, null, null, null);
     }
     
     public Map queryAvailableClonesByCloneid(List cloneids, boolean isInsert, boolean isSelection, boolean isWorkingStorage) {
-        return queryClonesByCloneid(cloneids, isInsert, isSelection, isWorkingStorage, null, null, null, Clone.AVAILABLE, -1, -1, null);
+        return queryClonesByCloneid(cloneids, isInsert, isSelection, isWorkingStorage, null, null, null, Clone.AVAILABLE);
     }
     
     public Map queryAvailableClonesByCloneid(List cloneids, boolean isInsert, boolean isSelection, boolean isWorkingStorage, List restrictions, List clonetypes, String species) {
-        return queryClonesByCloneid(cloneids, isInsert, isSelection, isWorkingStorage, restrictions, clonetypes, species, Clone.AVAILABLE, -1, -1, null);
+        return queryClonesByCloneid(cloneids, isInsert, isSelection, isWorkingStorage, restrictions, clonetypes, species, Clone.AVAILABLE);
     }
     
     public Clone queryCloneByCloneid(int cloneid) {
@@ -680,7 +672,7 @@ public class CloneManager extends TableManager {
     }
     
     private Map performQueryClones(List cloneids, boolean isInsert, boolean isSelection, boolean isWorkingStorage, String sql) {
-        Map clones = new HashMap();
+        Map clones = new TreeMap();
         if(cloneids == null || cloneids.size() == 0)
             return clones;
         
@@ -706,10 +698,9 @@ public class CloneManager extends TableManager {
                 stmt4 = conn.prepareStatement(sql4);
             
             for(int i=0; i<cloneids.size(); i++) {
-                String cloneid = (String)cloneids.get(i);
-                currentCloneid = Integer.parseInt(cloneid);
-                
-                stmt.setInt(1, Integer.parseInt(cloneid));
+                String cid = (String)cloneids.get(i);
+                currentCloneid = Integer.parseInt(cid);
+                stmt.setInt(1, currentCloneid);
                 rs = DatabaseTransaction.executeQuery(stmt);
                 if(rs.next()) {
                     String clonename = rs.getString(1);
@@ -727,39 +718,41 @@ public class CloneManager extends TableManager {
                     String specialtreatment = rs.getString(13);
                     String src = rs.getString(14);
                     String des = rs.getString(15);
-                    CloneInfo c = new CloneInfo(Integer.parseInt(cloneid),clonename,clonetype,verified,vermethod,domain,subdomain, restriction,comments,vectorid,vectorname,clonemap,status,specialtreatment,src,des);
+                    int cloneid = rs.getInt(16);
+                    CloneInfo c = new CloneInfo(cloneid,clonename,clonetype,verified,vermethod,domain,subdomain, restriction,comments,vectorid,vectorname,clonemap,status,specialtreatment,src,des);
                     
                     if(isInsert) {
-                        stmt2.setInt(1, Integer.parseInt(cloneid));
-                        List inserts = getInserts(stmt2, Integer.parseInt(cloneid));
+                        stmt2.setInt(1, cloneid);
+                        List inserts = getInserts(stmt2, cloneid);
                         c.setInserts(inserts);
                     }
                     
                     if(isSelection) {
-                        stmt3.setInt(1, Integer.parseInt(cloneid));
-                        List selections = getSelections(stmt3, Integer.parseInt(cloneid));
+                        stmt3.setInt(1, cloneid);
+                        List selections = getSelections(stmt3, cloneid);
                         c.setSelections(selections);
                     }
                     
                     if(isWorkingStorage) {
-                        stmt4.setInt(1, Integer.parseInt(cloneid));
+                        stmt4.setInt(1, cloneid);
                         stmt4.setString(2, Sample.WORKING_GLYCEROL);
                         setStorage(stmt4, c);
                     }
                     
-                    clones.put(cloneid, c);
+                    clones.put(cid, c);
                 } else {
-                    clones.put(cloneid, null);
+                    clones.put(cid, null);
                 }
-                DatabaseTransaction.closeResultSet(rs);
             }
+            DatabaseTransaction.closeResultSet(rs);
         } catch (Exception ex) {
-            handleError(ex, "Error occured while query clones by cloneid: "+currentCloneid);
+            handleError(ex, "Error occured while query clones");
             return null;
         } finally {
             DatabaseTransaction.closeStatement(stmt);
             DatabaseTransaction.closeStatement(stmt2);
             DatabaseTransaction.closeStatement(stmt3);
+            DatabaseTransaction.closeStatement(stmt4);
         }
         return clones;
     }
@@ -991,6 +984,57 @@ public class CloneManager extends TableManager {
             DatabaseTransaction.closeStatement(stmt);
         }
         return cloneids;
+    }
+    
+    public static int queryCloneCounts(Map foundList, List nofound, String sql) {
+        if(foundList == null || foundList.size() == 0)
+            return 0;
+        
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        String currentCloneid = "";
+        int totalCount = 0;
+        
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            stmt = conn.prepareStatement(sql);
+            Set terms = foundList.keySet();
+            Iterator iter = terms.iterator();
+            while(iter.hasNext()) {
+                String term = (String)iter.next();
+                List cloneids = (List)foundList.get(term);
+                int count = 0;
+                for(int i=0; i<cloneids.size(); i++) {
+                    String cloneid = (String)cloneids.get(i);
+                    currentCloneid = cloneid;
+                    stmt.setInt(1, Integer.parseInt(cloneid));
+                    rs = DatabaseTransaction.executeQuery(stmt);
+                    if(rs.next()) {
+                        int n = rs.getInt(1);
+                        count += n;
+                    }
+                }
+                if(count>0) {
+                    totalCount += count;
+                } else {
+                    nofound.add(term);
+                }
+            }
+        } catch (Exception ex) {
+            if(Constants.DEBUG) {
+                System.out.println("Error occured while query clone counts by cloneid: "+currentCloneid);
+                System.out.println(ex);
+            }
+            return 0;
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+            DatabaseTransaction.closeConnection(conn);
+        }
+        return totalCount;
     }
     
     public static void main(String args[]) {

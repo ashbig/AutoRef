@@ -25,49 +25,55 @@
 	</td>
     <td width="864" align="left" valign="top">
 	<jsp:include page="searchByRefseqTitle.jsp" />
-      <html:form action="SetDisplay.do">
-<html:hidden property="pagesize"/>
-<html:hidden property="page"/>
-        <html:hidden property="species"/>
-  <!--      <html:hidden property="refseqType"/> -->
 
+<html:form action="RefseqSearchContinue.do">
+<html:hidden property="cdna"/>
+<html:hidden property="shrna"/>
+<html:hidden property="genomicfragment"/>
+<html:hidden property="tfbindsite"/>
+<html:hidden property="genome"/>
 <table width="100%" border="0">
   <tr>
-    <logic:equal name="display" value="genbank">
+    <logic:equal name="refseqSearchForm" property="display" value="genbank">
     <td class="tablebody">Clones found by direct match</td>
     <td class="tablebody">Clones found by indirect match</td>
     </logic:equal>
-    <logic:equal name="display" value="symbol">
+    <logic:equal name="refseqSearchForm" property="display" value="symbol">
     <td class="tablebody">Matches found</td>
     </logic:equal>
     <td class="tablebody">Search terms not found</td>
   </tr>  
   <tr>
-    <logic:equal name="display" value="genbank">
-    <td class="tableinfo"><a href="SetDisplay.do?displayPage=direct&species=<bean:write name="species"/>"><bean:write name="numOfDirectFound"/></a></td>
-    <td class="tableinfo"><a href="SetDisplay.do?displayPage=indirect&species=<bean:write name="species"/>"><bean:write name="numOfFound"/></a></td>
+    <logic:equal name="refseqSearchForm" property="display" value="genbank">
+    <td class="tableinfo"><a href="RefseqSearchContinue.do?displayPage=direct&page=1&cdna=<bean:write name="refseqSearchForm" property="cdna"/>"><bean:write name="numOfDirectFound"/></a></td>
+    <td class="tableinfo"><a href="RefseqSearchContinue.do?displayPage=indirect&page=1&cdna=<bean:write name="refseqSearchForm" property="cdna"/>"><bean:write name="numOfFound"/></a></td>
     </logic:equal>
-    <logic:equal name="display" value="symbol">
-    <td class="tableinfo"><a href="SetDisplay.do?displayPage=indirect&species=<bean:write name="species"/>"><bean:write name="numOfFound"/></a></td>
+    <logic:equal name="refseqSearchForm" property="display" value="symbol">
+    <td class="tableinfo"><a href="RefseqSearchContinue.do?displayPage=indirect&page=1&cdna=<bean:write name="refseqSearchForm" property="cdna"/>"><bean:write name="numOfFound"/></a></td>
     </logic:equal>
-    <td class="tableinfo"><a href="SetDisplay.do?displayPage=nofound&species=<bean:write name="species"/>"><bean:write name="numOfNoFounds"/></a></td>
+    <td class="tableinfo"><a href="RefseqSearchContinue.do?displayPage=nofound&page=1&cdna=<bean:write name="refseqSearchForm" property="cdna"/>"><bean:write name="numOfNoFounds"/></a></td>
   </tr>
 </table>
 
 <bean:define id="size" name="refseqSearchForm" property="pagesize"/>
+<bean:define id="p" name="refseqSearchForm" property="page"/>
 <bean:define id="total" name="numOfFound"/>
-<logic:notEqual name="displayPage" value="nofound">
+
+<logic:notEqual name="refseqSearchForm" property="displayPage" value="nofound">
 <p class="mainbodytexthead">List of search terms found</p>
 <table width="100%" border="0">
     <tr class="mainbodytexthead">
         <td align="left" class="mainbodytexthead">Page: 
             <html:select property="page">
-                <%  
-                    for(int i=0; i<Integer.parseInt(total.toString())/Integer.parseInt(size.toString())+1; i++) {
+                <%  int i=0;
+                    while(i<Integer.parseInt(total.toString())/Integer.parseInt(size.toString())) {
                 %>
                         <html:option value="<%=(new Integer(i+1)).toString()%>"/>
-                <%  }
+                <%      i++;
+                    }
+                    if((Integer.parseInt(total.toString())%Integer.parseInt(size.toString()))>0)
                 %>
+                        <html:option value="<%=(new Integer(i+1)).toString()%>"/>
             </html:select>
             <html:submit property="button" value="Display"/>
         </td>
@@ -79,30 +85,31 @@
 <table width="100%" border="0">
   <tr>
     <td class="tableheader">&nbsp;</td>
-    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=searchterm&displayPage=<bean:write name="displayPage"/>&species=<bean:write name="species"/>">Search Term</a></td>
-    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=cloneid&displayPage=<bean:write name="displayPage"/>&species=<bean:write name="species"/>">Clone ID</a></td>
-    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=clonetype&displayPage=<bean:write name="displayPage"/>&species=<bean:write name="species"/>">Clone Type</a></td>
-    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=geneid&displayPage=<bean:write name="displayPage"/>&species=<bean:write name="species"/>">Species Specific ID</a></td>
+    <td class="tableheader">Search Term</td>
+    <td class="tableheader">Clone ID</td>
+    <td class="tableheader">Clone Type</td>
+    <td class="tableheader">Species Specific ID</td>
     <td class="tableheader">Gene Symbol</td>
     <td class="tableheader">Gene Name</td>
-    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=targetseq&displayPage=<bean:write name="displayPage"/>&species=<bean:write name="species"/>">Reference Sequence</a></td>
-    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=insertmutation&displayPage=<bean:write name="displayPage"/>&species=<bean:write name="species"/>">Mutation</a></td>
-    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=insertdiscrepancy&displayPage=<bean:write name="displayPage"/>&species=<bean:write name="species"/>">Discrepancy</a></td>
-    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=insertformat&displayPage=<bean:write name="displayPage"/>&species=<bean:write name="species"/>">Insert Format</a></td>
-    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=vectorname&displayPage=<bean:write name="displayPage"/>&species=<bean:write name="species"/>">Vector</a></td>
-    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=selection&displayPage=<bean:write name="displayPage"/>&species=<bean:write name="species"/>">Selection Markers</a></td>
+    <td class="tableheader">Reference Sequence</td>
+    <td class="tableheader">Mutation</td>
+    <td class="tableheader">Discrepancy</td>
+    <td class="tableheader">Insert Format</td>
+    <td class="tableheader">Vector</td>
+    <td class="tableheader">Selection Markers</td>
     <td class="tableheader">Special MTA</td>
     <td class="tableheader">&nbsp;</td>
   </tr>
 
-  <logic:equal name="displayPage" value="indirect">
-  <% int i=((Integer)request.getAttribute("pagesize")).intValue()*(((Integer)request.getAttribute("page")).intValue()-1);
+  <logic:equal name="refseqSearchForm" property="displayPage" value="indirect">
+  <% int i= Integer.parseInt(size.toString())*(Integer.parseInt(p.toString())-1);
   %>
-  <logic:iterate name="found" id="clone" length="pagesize" offset="<%=(new Integer(i)).toString()%>">
+  <logic:iterate name="found" id="clone">
+
   <tr class="tableinfo"> 
     <td><%=++i%></td>
     <td><bean:write name="clone" property="term"/></td>
-    <td><a target="_blank" href="GetCloneDetail.do?cloneid=<bean:write name="clone" property="cloneid"/>&species=<bean:write name="species"/>"><bean:write name="clone" property="name"/></a></td>
+    <td><a target="_blank" href="GetCloneDetail.do?cloneid=<bean:write name="clone" property="cloneid"/>&species=<bean:write name="refseqSearchForm" property="species"/>"><bean:write name="clone" property="name"/></a></td>
     <td><bean:write name="clone" property="type"/></td>
     <logic:equal name="clone" property="type" value="<%=Clone.NOINSERT%>">
     <td>&nbsp;</td>
@@ -113,6 +120,7 @@
     <td>&nbsp;</td>
     <td>&nbsp;</td>
     </logic:equal>
+
     <logic:notEqual name="clone" property="type" value="<%=Clone.NOINSERT%>">
     <logic:iterate name="clone" property="inserts" id="insert">
     <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.GENEID%>">
@@ -140,44 +148,37 @@
     <td><bean:write name="insert" property="hasdiscrepancy"/></td>
     <td><bean:write name="insert" property="format"/></td>
     </logic:iterate>
+    </logic:notEqual>
     <td><a target="_blank" href="GetVectorDetail.do?vectorid=<bean:write name="clone" property="vectorid"/>"><bean:write name="clone" property="vectorname"/></a></td>
     <td>
     <logic:iterate name="clone" property="selections" id="selection">
         <bean:write name="selection" property="hosttype"/>: <bean:write name="selection" property="marker"/>
     </logic:iterate>
-    </logic:notEqual>
     </td>
     <td><bean:write name="clone" property="specialtreatment"/></td>
-    <html:form action="SetDisplay.do">
-    <html:hidden property="pagesize"/>
-    <html:hidden property="page"/>
-    <html:hidden property="species"/>
-    <html:hidden property="refseqType"/>
-    <input type="hidden" name="displayPage" value="indirect"/>
-    <input type="hidden" name="cloneid" value="<bean:write name="clone" property="cloneid"/>"/>
-    <logic:equal name="clone" property="isAddedToCart" value="true">
-        <td valign="center" bgcolor="blue">
-            <input name="button" type="submit" class="itemtext" value="Add To Cart"/>
-        </td>
-    </logic:equal>
-    <logic:notEqual name="clone" property="isAddedToCart" value="true">
-        <td valign="center">
-            <input name="button" type="submit" class="itemtext" value="Add To Cart"/>
-        </td>
-    </logic:notEqual>
+    <html:form action="RefseqSearchContinue.do">
+    <html:hidden property="cdna"/>
+    <html:hidden property="shrna"/>
+    <html:hidden property="genomicfragment"/>
+    <html:hidden property="tfbindsite"/>
+    <html:hidden property="genome"/>
+    <td valign="center">
+        <input type="hidden" name="displayPage" value="indirect"/>
+        <input type="hidden" name="cloneid" value="<bean:write name="clone" property="cloneid"/>"/>
+        <input name="button" type="submit" class="itemtext" value="Add To Cart"/> 
+    </td> 
     </html:form>
-    </td>
     </tr>
   </logic:iterate>
   </logic:equal>
 
-  <logic:equal name="displayPage" value="direct">
-  <% int i=((Integer)request.getAttribute("pagesize")).intValue()*(((Integer)request.getAttribute("page")).intValue()-1);%>
-  <logic:iterate name="directFounds" id="clone" length="pagesize" offset="<%=(new Integer(i)).toString()%>">
+  <logic:equal name="refseqSearchForm" property="displayPage" value="direct">
+  <%  int i= Integer.parseInt(size.toString())*(Integer.parseInt(p.toString())-1);%>
+  <logic:iterate name="directFounds" id="clone">
   <tr class="tableinfo"> 
     <td><%=++i%></td>
     <td><bean:write name="clone" property="term"/></td>
-    <td><a target="_blank" href="GetCloneDetail.do?cloneid=<bean:write name="clone" property="cloneid"/>&species=<bean:write name="species"/>"><bean:write name="clone" property="name"/></a></td>
+    <td><a target="_blank" href="GetCloneDetail.do?cloneid=<bean:write name="clone" property="cloneid"/>&species=<bean:write name="refseqSearchForm" property="species"/>"><bean:write name="clone" property="name"/></a></td>
     <td><bean:write name="clone" property="type"/></td>
     <logic:equal name="clone" property="type" value="<%=Clone.NOINSERT%>">
     <td>&nbsp;</td>
@@ -223,24 +224,17 @@
     </logic:iterate>
     </td>
     <td><bean:write name="clone" property="specialtreatment"/></td>
-
-    <html:form action="SetDisplay.do">
-    <html:hidden property="pagesize"/>
-    <html:hidden property="page"/>
-    <html:hidden property="species"/>
-    <html:hidden property="refseqType"/>
+    <html:form action="RefseqSearchContinue.do">
+    <html:hidden property="cdna"/>
+    <html:hidden property="shrna"/>
+    <html:hidden property="genomicfragment"/>
+    <html:hidden property="tfbindsite"/>
+    <html:hidden property="genome"/>
     <input type="hidden" name="displayPage" value="direct"/>
     <input type="hidden" name="cloneid" value="<bean:write name="clone" property="cloneid"/>"/>
-    <logic:equal name="clone" property="isAddedToCart" value="true">
-        <TD valign="center" bgcolor="blue">
-            <input name="button" type="submit" class="itemtext" value="Add To Cart"/>
-        </td>
-    </logic:equal>
-    <logic:notEqual name="clone" property="isAddedToCart" value="true">
         <TD valign="center">
             <input name="button" type="submit" class="itemtext" value="Add To Cart"/>
         </td>
-    </logic:notEqual>
     </html:form>
     </tr>
   </logic:iterate>
@@ -248,7 +242,7 @@
 </table>
 </logic:notEqual>
 
-<logic:equal name="displayPage" value="nofound">
+<logic:equal name="refseqSearchForm" property="displayPage" value="nofound">
 <p class="mainbodytexthead">List of search terms not found</p>
 <table width="50%" border="0">
   <tr>
@@ -262,7 +256,8 @@
 </table>
 </logic:equal>
 
-      </html:form></td>
+</html:form>
+      </td>
   </tr>
 </table>
 <jsp:include page="footer.jsp" /></body>

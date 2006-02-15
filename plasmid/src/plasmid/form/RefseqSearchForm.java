@@ -15,6 +15,8 @@ import org.apache.struts.action.ActionMapping;
 import java.util.*;
 
 import plasmid.Constants;
+import plasmid.coreobject.*;
+import plasmid.query.handler.GeneQueryHandler;
 
 /**
  *
@@ -46,6 +48,7 @@ public class RefseqSearchForm extends ActionForm {
     protected String cloneid;
     protected String button;
     protected String forward;
+    protected String display;
     
     public String getSpecies() {return species;}
     public String getRefseqType() {return refseqType;}
@@ -72,12 +75,13 @@ public class RefseqSearchForm extends ActionForm {
     public String getCloneid() {return cloneid;}
     public String getButton() {return button;}
     public String getForward() {return forward;}
+    public String getDisplay() {return display;}
     
     public void setSpecies(String s) {this.species = s;}
     public void setRefseqType(String s) {this.refseqType = s;}
     public void setSearchType(String s) {this.searchType = s;}
     public void setSearchString(String s) {this.searchString = s;}
-    public void setCdna(boolean s) {this.cdna = s;}
+    public void setCdna(boolean s) {this.cdna = s; System.out.println("setCdna: "+s);}
     public void setShrna(boolean s) {this.shrna = s;}
     public void setGenomicfragment(boolean s) {this.genomicfragment = s;}
     public void setTfbindsite(boolean s) {this.tfbindsite = s;}
@@ -98,6 +102,7 @@ public class RefseqSearchForm extends ActionForm {
     public void setCloneid(String id) {this.cloneid = id;}
     public void setButton(String s) {this.button = s;}
     public void setForward(String s) {this.forward = s;}
+    public void setDisplay(String s) {this.display = s;}
     
     /**
      * Reset all properties to their default values.
@@ -105,26 +110,33 @@ public class RefseqSearchForm extends ActionForm {
      * @param mapping The mapping used to select this instance
      * @param request The servlet request we are processing
      */
-    public void reset(ActionMapping mapping, HttpServletRequest request) {
-        species = null;
-        refseqType = null;
-        searchType = null;
-        searchString = null;
+    public void reset(ActionMapping mapping, HttpServletRequest request) {     
+        System.out.println("calling reset");
         cdna = false;
         shrna = false;
         genomicfragment = false;
         tfbindsite = false;
         genome = false;
-        fusion = false;
-        closed=false;
+    }
+    
+    public void resetValues() {
+        species = DnaInsert.HUMAN;
+        //refseqType = RefseqNameType.SYMBOL;
+        searchType = GeneQueryHandler.SYMBOL;
+        searchString = null;
         marker = "All";
-        pdonr201 = false;
-        pdonr221 = false;
-        pdnrdual = false;
-        plk = false;
-        pby011 = false;
-        pgex2tk = false;
-        forward = null;
+        page = 1;
+        pagesize = Constants.PAGESIZE;
+        displayPage = "indirect";
+        display = "symbol";
+    }
+    
+    public void resetBooleanValues() {
+        cdna = true;
+        shrna = true;
+        genomicfragment = true;
+        tfbindsite = true;
+        genome = true;
     }
 }
 

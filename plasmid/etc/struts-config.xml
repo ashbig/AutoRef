@@ -219,7 +219,6 @@
     <action    path="/GetDataForRefseqSearch"
                type="plasmid.action.GetDataForRefseqSearchAction"
                name="refseqSearchForm"
-              scope="request"
               input="/GetDataForRefseqSearch.do">
       <forward  name="success"   path="/RefseqSearch.jsp"/>
     </action>
@@ -307,7 +306,6 @@
     <action    path="/RefseqSearch"
                type="plasmid.action.RefseqSearchAction"
                name="refseqSearchForm"
-              scope="request"
               input="/RefseqSearch.jsp">
       <forward  name="success"   path="/RefseqSearchContinue.jsp"/>
     </action>
@@ -315,7 +313,6 @@
     <action    path="/RefseqSearchContinue"
                type="plasmid.action.RefseqSearchContinueAction"
                name="refseqSearchForm"
-              scope="request"
               input="/RefseqSearchContinue.jsp">
       <forward  name="success"   path="/DisplayResults.jsp"/>
     </action>

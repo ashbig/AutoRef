@@ -25,6 +25,7 @@ import org.apache.struts.util.MessageResources;
 import plasmid.database.*;
 import plasmid.database.DatabaseManager.*;
 import plasmid.Constants;
+import plasmid.form.RefseqSearchForm;
 
 /**
  *
@@ -71,6 +72,7 @@ public class GetDataForRefseqSearchAction extends Action {
             }  */
             request.setAttribute("allSpecies", species);
             //request.setAttribute("refseqTypes", refseqTypes);
+            ((RefseqSearchForm)form).resetValues();
             return (mapping.findForward("success"));
         } catch (Throwable th) {
             if(Constants.DEBUG)
