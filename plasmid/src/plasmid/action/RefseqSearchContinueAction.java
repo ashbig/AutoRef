@@ -71,12 +71,6 @@ public class RefseqSearchContinueAction extends Action {
         boolean genome = ((RefseqSearchForm)form).getGenome();
         int pagesize = ((RefseqSearchForm)form).getPagesize();
         int page = ((RefseqSearchForm)form).getPage();
-        System.out.println("species: "+species);
-        System.out.println("refseqType: "+refseqType);
-        System.out.println("searchType: "+searchType);
-        System.out.println("searchString: "+searchString);
-        System.out.println("cdna: "+cdna);
-        System.out.println("page: "+page);
         
         String button = ((RefseqSearchForm)form).getButton();
         String forward = ((RefseqSearchForm)form).getForward();
@@ -160,7 +154,7 @@ public class RefseqSearchContinueAction extends Action {
                 handler.doQuery(restrictions, clonetypes, species, (page-1)*pagesize, page*pagesize, "cloneid", Clone.AVAILABLE);
                 directFoundList = handler.convertFoundToCloneinfo();
                 searchList = handler.getNofound();
-                totalFoundCloneCount = handler.queryCloneCounts(restrictions, clonetypes, species, Clone.AVAILABLE);
+                totalFoundCloneCount = handler.queryTotalFoundCloneCounts(restrictions, clonetypes, species, Clone.AVAILABLE);
                 request.setAttribute("directFounds", directFoundList);
                 //request.setAttribute("numOfDirectFound", new Integer(handler.getFoundCloneCount()));
             } catch (Exception ex) {
@@ -179,12 +173,12 @@ public class RefseqSearchContinueAction extends Action {
             saveErrors(request, errors);
             return (mapping.findForward("error"));
         }
-        System.out.println("displayPage: "+((RefseqSearchForm)form).getDisplayPage());
+        
         try {
             handler.doQuery(restrictions, clonetypes, species, (page-1)*pagesize, page*pagesize, "cloneid", Clone.AVAILABLE);
             List founds = handler.convertFoundToCloneinfo();
             List nofounds = handler.getNofound();
-            totalFoundCloneCount = handler.queryCloneCounts(restrictions, clonetypes, species, Clone.AVAILABLE);            
+            totalFoundCloneCount = handler.queryTotalFoundCloneCounts(restrictions, clonetypes, species, Clone.AVAILABLE);            
             int numOfNoFounds = nofounds.size();
             request.setAttribute("numOfFound", new Integer(totalFoundCloneCount));
             request.setAttribute("numOfNoFounds", new Integer(numOfNoFounds));

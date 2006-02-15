@@ -81,7 +81,7 @@ public class RefseqSearchForm extends ActionForm {
     public void setRefseqType(String s) {this.refseqType = s;}
     public void setSearchType(String s) {this.searchType = s;}
     public void setSearchString(String s) {this.searchString = s;}
-    public void setCdna(boolean s) {this.cdna = s; System.out.println("setCdna: "+s);}
+    public void setCdna(boolean s) {this.cdna = s;}
     public void setShrna(boolean s) {this.shrna = s;}
     public void setGenomicfragment(boolean s) {this.genomicfragment = s;}
     public void setTfbindsite(boolean s) {this.tfbindsite = s;}
@@ -111,7 +111,6 @@ public class RefseqSearchForm extends ActionForm {
      * @param request The servlet request we are processing
      */
     public void reset(ActionMapping mapping, HttpServletRequest request) {     
-        System.out.println("calling reset");
         cdna = false;
         shrna = false;
         genomicfragment = false;
