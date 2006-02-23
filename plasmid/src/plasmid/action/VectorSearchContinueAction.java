@@ -24,8 +24,11 @@ import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 
 import plasmid.form.VectorSearchForm;
+import plasmid.form.RefseqSearchForm;
 import plasmid.Constants;
 import plasmid.process.QueryProcessManager;
+import plasmid.coreobject.Clone;
+import plasmid.coreobject.User;
 
 /**
  *
@@ -57,34 +60,54 @@ public class VectorSearchContinueAction extends Action {
         ActionErrors errors = new ActionErrors();
         
         String display = ((VectorSearchForm)form).getDisplay();
-        List clones = ((VectorSearchForm)form).getClones();
         String species = ((VectorSearchForm)form).getSpecies();
+        List clones = ((VectorSearchForm)form).getClones();
         
-        int pagesize = Constants.PAGESIZE;
-        int page = 1;
-        ((VectorSearchForm)form).setPagesize(pagesize);
-        ((VectorSearchForm)form).setPage(page);
-        
-        request.setAttribute("displayPage", "indirect");
-        request.setAttribute("pagesize", new Integer(pagesize));
-        request.setAttribute("page",  new Integer(page));
-        request.setAttribute("species", species);
-        
+        User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
+                
         QueryProcessManager manager = new QueryProcessManager();
-        if(Constants.BUTTON_DISPLAY_ALL.equals(display)) {
-            List found = manager.queryCloneInfosByClones(clones);
-            
-            if(found == null) {
-                errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.query.notfound"));
-                saveErrors(request, errors);
-                return (mapping.findForward("error"));
+        
+        if(Constants.BUTTON_DISPLAY.equals(display)) {
+            List vectornames = ((VectorSearchForm)form).getVectornames();
+            Set checkedVectornames = new TreeSet();
+            for(int i=0; i<vectornames.size(); i++) {
+                boolean vectornameBoolean = ((VectorSearchForm)form).getVectornameBoolean(i);
+                if(vectornameBoolean) {
+                    String vectorname = (String)vectornames.get(i);
+                    checkedVectornames.add(vectorname);
+                }
             }
+            clones = manager.queryClonesByVector(user, checkedVectornames, species, Clone.AVAILABLE, false);
             
-            int totalCount = found.size();
-            request.getSession().setAttribute("totalCount", new Integer(totalCount));
-            request.getSession().setAttribute("numOfFound", new Integer(totalCount));
-            request.getSession().setAttribute("found", found);
+            ((VectorSearchForm)form).setVectornames(checkedVectornames);
+            ((VectorSearchForm)form).setClones(clones);
+            ((VectorSearchForm)form).resetVectornameBooleanValues(checkedVectornames);
+            request.setAttribute("numberOfClones", new Integer(clones.size()));
+            
+            return (new ActionForward(mapping.getInput()));
         }
+       
+        RefseqSearchForm f = new RefseqSearchForm();
+        f.setPage(1);
+        f.setPagesize(Constants.PAGESIZE);
+        f.setDisplayPage("indirect");
+        f.setSpecies(species);
+        f.setForward("vectorSearchResult");
+        request.getSession().setAttribute("refseqSearchForm", f);
+        
+        List found = manager.queryCloneInfosByClones(clones);
+        
+        if(found == null) {
+            errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.query.notfound"));
+            saveErrors(request, errors);
+            return (mapping.findForward("error"));
+        }
+        
+        int totalCount = found.size();
+        request.getSession().setAttribute("totalCount", new Integer(totalCount));
+        request.getSession().setAttribute("numOfFound", new Integer(totalCount));
+        request.getSession().setAttribute("found", found);
+        
         return (mapping.findForward("success"));
     }
 }

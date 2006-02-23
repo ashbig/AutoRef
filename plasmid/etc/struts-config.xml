@@ -240,7 +240,8 @@
      
     <action    path="/GetVectorPropertyTypes"
                name="vectorSearchForm"
-               type="plasmid.action.GetVectorPropertyTypesAction">
+               type="plasmid.action.GetVectorPropertyTypesAction"
+               input="/GetVectorPropertyTypes.do">
       <forward  name="success"   path="/VectorSearch.jsp"/>
     </action>
      
@@ -347,7 +348,6 @@
     <action    path="/SetDisplay"
                type="plasmid.action.SetDisplayAction"
                name="refseqSearchForm"
-              scope="request"
               input="/RefseqSearchContinue.jsp">
       <forward  name="success"   path="/DisplayResults.jsp"/>
       <forward  name="success_collection"   path="/ViewCollection.jsp"/>

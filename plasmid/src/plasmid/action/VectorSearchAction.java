@@ -28,6 +28,8 @@ import plasmid.coreobject.*;
 import plasmid.Constants;
 import plasmid.database.DatabaseManager.UserManager;
 import plasmid.process.QueryProcessManager;
+import plasmid.query.coreobject.QueryOperator;
+import plasmid.util.StringConvertor;
 
 /**
  *
@@ -58,35 +60,24 @@ public class VectorSearchAction extends Action {
         // get the parameters specified by the customer
         ActionErrors errors = new ActionErrors();
         String species = ((VectorSearchForm)form).getSpecies();
-        if(Constants.ALL.equals(species))
-            species = null;
-        boolean [][] types = ((VectorSearchForm)form).getVectortype();
-        List vectortypes = (List)request.getSession().getAttribute("types");
-        List properties = new ArrayList();
         
-        for(int i=0; i<types.length; i++) {
-            for(int j=0; i<types[i].length; j++) {
-                boolean b = types[i][j];
-                if(b) {
-                    properties.add((String)vectortypes.get(i));
-                }
-            }
-        }
+        Map types = ((VectorSearchForm)form).getTypes();
         
         QueryProcessManager manager = new QueryProcessManager();
         User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
-        List clones = manager.queryClonesByVector(user, properties, species, Clone.AVAILABLE);
+        List operators = manager.getVectorQueryOperators(types, (VectorSearchForm)form);
+        Set vectorids = manager.getVectoridFromQueryOperators(operators, Constants.AND);
+        List clones = manager.queryClonesByVector(user, vectorids, species, Clone.AVAILABLE);
         
         if(clones == null) {
             return (mapping.findForward("error"));
         }
         
         Set vectors = manager.getVectorNamesFromClones(clones);
-        ((VectorSearchForm)form).setVectorname(vectors);
+        ((VectorSearchForm)form).setVectornames(vectors);
         ((VectorSearchForm)form).setClones(clones);
+        ((VectorSearchForm)form).resetVectornameBooleanValues(vectors);
         request.setAttribute("numberOfClones", new Integer(clones.size()));
-        request.setAttribute("vectors", vectors);
-        request.setAttribute("species", species);
         
         return (mapping.findForward("success"));
     }

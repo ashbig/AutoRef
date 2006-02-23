@@ -32,30 +32,32 @@ public class VectorQueryHandler extends GeneQueryHandler {
      * @param status Clone status. If it is null, it represents all status.
      * @return A list of Clone objects. Return null if any exception occurs.
      */
-    public List queryClones(List properties, List restrictions, String species, String status) {
-        if(properties == null)
-            return null;
+    public List queryClones(Set vectorids, List restrictions, String species, String status) {
+        if(vectorids == null || vectorids.size() == 0)
+            return new ArrayList();
         
-        String s = StringConvertor.convertFromListToSqlString(properties);
-        String sql = "select * from clone where vectorid in"+
-        " (select vectorid from vectorproperty where propertytype in ("+s+"))";
+        List vectoridList = new ArrayList(vectorids);
+        String vs = StringConvertor.convertFromListToSqlList(vectoridList);
+        String sql = "select * from clone where vectorid in ("+vs+")";
         
-        if(restrictions != null && restrictions.size()>0) {
-            String res = StringConvertor.convertFromListToSqlString(restrictions);
-            sql = sql+" and restriction in ("+res+")";
-        }
-        
-        if(species != null) {
-            sql = sql+" and domain='"+species+"'";
-        }
-        
-        if(status != null) {
-            sql = sql+" and status='"+status+"'";
-        }
+        sql = appendSql(sql, restrictions, species, status);
         
         return executeQueryClones(sql);
     }
-     
+    
+    public List queryClonesByVectornames(Set vectornames, List restrictions, String species, String status) {
+        if(vectornames == null || vectornames.size() == 0)
+            return new ArrayList();
+        
+        List vectoridList = new ArrayList(vectornames);
+        String vs = StringConvertor.convertFromListToSqlString(vectoridList);
+        String sql = "select * from clone where vectorname in ("+vs+")";
+                
+        sql = appendSql(sql, restrictions, species, status);
+       
+        return executeQueryClones(sql);
+    }
+    
     /**
      * Query database to get a list of Clone IDs.
      *
@@ -73,6 +75,21 @@ public class VectorQueryHandler extends GeneQueryHandler {
         String s = StringConvertor.convertFromListToSqlString(vectors);
         String sql = "select cloneid from clone where vectorname in ("+s+"))";
         
+        sql = appendSql(sql, restrictions, species, status);
+        
+        return executeQueryClones(sql);
+    }
+    
+    public void doQuery() throws Exception {
+    }
+    
+    public void doQuery(List restrictions, List clonetypes, String species, String status) throws Exception {
+    }
+    
+    public void doQuery(List restrictions, List clonetypes, String species, int start, int end, String column, String status) throws Exception {
+    }
+    
+    private String appendSql(String sql, List restrictions, String species, String status) {
         if(restrictions != null && restrictions.size()>0) {
             String res = StringConvertor.convertFromListToSqlString(restrictions);
             sql = sql+" and restriction in ("+res+")";
@@ -86,16 +103,6 @@ public class VectorQueryHandler extends GeneQueryHandler {
             sql = sql+" and status='"+status+"'";
         }
         
-        return executeQueryClones(sql);
+        return sql;
     }
-        
-    public void doQuery() throws Exception {
-    }
-    
-    public void doQuery(List restrictions, List clonetypes, String species, String status) throws Exception {
-    }
-    
-    public void doQuery(List restrictions, List clonetypes, String species, int start, int end, String column, String status) throws Exception {
-    }
-
 }

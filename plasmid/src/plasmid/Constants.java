@@ -47,7 +47,7 @@ public class Constants {
     public static final int PAGESIZE = 10;
     
     public static final String BUTTON_DISPLAY_ALL = "Display All Results";
-    public static final String BUTTON_DISPLAY = "Display Results";
+    public static final String BUTTON_DISPLAY = "Search";
     public static final String AND = "And";
     public static final String OR = "Or";
     

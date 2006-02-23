@@ -152,11 +152,18 @@
     </td>
     <td><bean:write name="clone" property="specialtreatment"/></td>
     <html:form action="SetDisplay.do">
-    <td valign="center">
         <input type="hidden" name="displayPage" value="indirect"/>
         <input type="hidden" name="cloneid" value="<bean:write name="clone" property="cloneid"/>"/>
-        <input name="button" type="submit" class="itemtext" value="Add To Cart"/> 
-    </td> 
+    <logic:equal name="clone" property="isAddedToCart" value="true">
+        <TD valign="center" bgcolor="blue">
+            <input name="button" type="submit" class="itemtext" value="Add To Cart"/>
+        </td>
+    </logic:equal>
+    <logic:notEqual name="clone" property="isAddedToCart" value="true">
+        <TD valign="center">
+            <input name="button" type="submit" class="itemtext" value="Add To Cart"/>
+        </td>
+    </logic:notEqual>
     </html:form>
     </tr>
   </logic:iterate>
@@ -215,16 +222,18 @@
     </td>
     <td><bean:write name="clone" property="specialtreatment"/></td>
     <html:form action="SetDisplay.do">
-    <html:hidden property="cdna"/>
-    <html:hidden property="shrna"/>
-    <html:hidden property="genomicfragment"/>
-    <html:hidden property="tfbindsite"/>
-    <html:hidden property="genome"/>
     <input type="hidden" name="displayPage" value="direct"/>
     <input type="hidden" name="cloneid" value="<bean:write name="clone" property="cloneid"/>"/>
+    <logic:equal name="clone" property="isAddedToCart" value="true">
+        <TD valign="center" bgcolor="blue">
+            <input name="button" type="submit" class="itemtext" value="Add To Cart"/>
+        </td>
+    </logic:equal>
+    <logic:notEqual name="clone" property="isAddedToCart" value="true">
         <TD valign="center">
             <input name="button" type="submit" class="itemtext" value="Add To Cart"/>
         </td>
+    </logic:notEqual>
     </html:form>
     </tr>
   </logic:iterate>

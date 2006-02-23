@@ -22,7 +22,7 @@
 	</td>
     <td width="83%" align="left" valign="top">
 	<jsp:include page="searchByVectorTitle.jsp" />
-      <html:form action="VectorSearch.do" enctype="multipart/form-data">
+      <html:form action="VectorSearch.do">
         <table width="100%" border="0" align="center">
           <tr> 
             <td height="10" colspan="3" valign="middle" class="tableheader"><strong>Select 
@@ -41,10 +41,21 @@
     <td colspan="5" class="tableheader">Please select desired vector properties</td>
   </tr>
   <tr></tr>
-  <logic:iterate name="types" id="type" indexId="n">
+  <% int index=0;%>
+  <logic:iterate name="vectorSearchForm" property="types" id="type" indexId="n">
   <tr>
     <td>&nbsp;</td>
-    <td align="center" class="textcolumn" colspan="4"><bean:write name="type" property="key"/></td>
+    <td class="textcolumn" colspan="4" >
+    <table><tr>
+        <td width="50%" class="text">
+            <bean:write name="type" property="key"/>
+        </td>
+        <td class="text">
+            <html:radio property='<%="logicOperator["+n+"]"%>' value="<%=Constants.AND%>">And</html:radio>
+            <html:radio property='<%="logicOperator["+n+"]"%>' value="<%=Constants.OR%>">Or</html:radio>
+        </td>
+    </tr></table>
+    </td>
   </tr>
   <logic:iterate name="type" id="t" property="value" indexId="i">
   <% if(Integer.parseInt(i.toString())>0 && Integer.parseInt(i.toString())%3 == 0) {%>
@@ -55,20 +66,12 @@
     <td>&nbsp;</td>
     <td>&nbsp;</td>
   <% } %>
-    <td class="underbullet"> <html:checkbox property='<%="vectortype["+n+"]["+i+"]"%>'/>
+    <td class="underbullet"> <html:checkbox property='<%="vectortype["+index+"]"%>'/>
           <bean:write name="t"/> 
     </td>
+  <% index++;%>
   </logic:iterate>
   </logic:iterate>
-  <tr></tr>
-  <tr> 
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td colspan="3" class="text">Logic operator:
-    <html:radio property="logicOperator" value="<%=Constants.AND%>">And</html:radio>
-    <html:radio property="logicOperator" value="<%=Constants.OR%>">Or</html:radio>
-    </td>
-  </tr>
 
   <tr> 
     <td colspan="5" align="center"><html:submit value="Continue"/></td>

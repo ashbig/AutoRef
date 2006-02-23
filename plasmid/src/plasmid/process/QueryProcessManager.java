@@ -11,12 +11,13 @@ import java.sql.*;
 import java.io.*;
 
 import plasmid.coreobject.*;
-import plasmid.query.coreobject.CloneInfo;
+import plasmid.query.coreobject.*;
 import plasmid.util.*;
 import plasmid.database.*;
 import plasmid.Constants;
 import plasmid.database.DatabaseManager.*;
 import plasmid.query.handler.*;
+import plasmid.form.VectorSearchForm;
 
 /**
  *
@@ -97,7 +98,11 @@ public class QueryProcessManager {
         return c;
     }
     
-    public List queryClonesByVector(User user, List properties, String species, String status) {
+    public List queryClonesByVector(User user, Set vectorids, String species, String status) {
+        return queryClonesByVector(user,vectorids,species,status,true);
+    }
+    
+    public List queryClonesByVector(User user, Set vectors, String species, String status, boolean vectorid) {
         List restrictions = new ArrayList();
         restrictions.add(Clone.NO_RESTRICTION);
         if(user != null) {
@@ -106,7 +111,12 @@ public class QueryProcessManager {
         }
         
         VectorQueryHandler handler = new VectorQueryHandler();
-        List clones = handler.queryClones(properties, restrictions, species, status);
+        List clones = null;
+        if(vectorid) {
+            clones = handler.queryClones(vectors, restrictions, species, status);
+        } else {
+            clones = handler.queryClonesByVectornames(vectors, restrictions, species, status);
+        }
         
         return clones;
     }
@@ -144,5 +154,71 @@ public class QueryProcessManager {
         }
         
         return vectors;
+    }
+    
+    public List getVectorQueryOperators(Map types, VectorSearchForm form) {
+        Set categories = types.keySet();
+        Iterator iter = categories.iterator();
+        int i=0;
+        int index=i;
+        List operators = new ArrayList();
+        while(iter.hasNext()) {
+            String category = (String)iter.next();
+            List properties = (List)types.get(category);
+            String logicOperator = form.getLogicOperator(i);
+            int j=0;
+            List checkedProperties = new ArrayList();
+            while(j<properties.size()) {
+                String property = (String)properties.get(j);
+                boolean b = form.getVectortype(index);
+                if(b) {
+                    checkedProperties.add(property);
+                }
+                index++;
+                j++;
+            }
+           
+            if(checkedProperties.size()>0) {
+                QueryOperator q = new QueryOperator(checkedProperties, logicOperator);
+                operators.add(q);
+            }
+            i++;
+        }
+        
+        return operators;
+    }
+    
+    public Set getVectoridFromQueryOperators(List operators, String logicOperator) {
+        Set allVectorids = null;
+        for(int i=0; i<operators.size();i++) {
+            QueryOperator op = (QueryOperator)operators.get(i);
+            String logicOp = op.getLogicOperator();
+            List l = op.getValues();
+            Set vectorids = null;
+            for(int j=0; j<l.size(); j++) {
+                String s = (String)l.get(j);
+                Set vectoridSet = VectorManager.getVectoridByProperty(s);
+                if(vectorids == null) {
+                    vectorids = vectoridSet;
+                } else {
+                    if(logicOp.equals(Constants.AND)) {
+                        vectorids.retainAll(vectoridSet);
+                    } else {
+                        vectorids.addAll(vectoridSet);
+                    }
+                }
+            }
+            if(allVectorids == null) {
+                allVectorids = vectorids;
+            } else {
+                if(logicOperator.equals(Constants.AND)) {
+                    allVectorids.retainAll(vectorids);
+                } else {
+                    allVectorids.addAll(vectorids);
+                }
+            }
+        }
+        
+        return allVectorids;
     }
 }

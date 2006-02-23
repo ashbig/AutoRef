@@ -58,21 +58,12 @@ public class GetVectorPropertyTypesAction extends Action {
         List species = DefTableManager.getVocabularies("species", "genusspecies");
         species.add(0, Constants.ALL);
         Map types = VectorManager.getAllVectorPerpertyTypes();
-        Set keys = types.keySet();
-        Iterator iter = keys.iterator();
-        int n=0;
-        while(iter.hasNext()) {
-            String k = (String)iter.next();
-            List l = (List)types.get(k);
-            int m = l.size();
-            if(m > n) 
-                n = m;
-        }
-        ((VectorSearchForm)form).setVectortypes(keys.size(), n);
-        ((VectorSearchForm)form).setLogicOperator(Constants.AND);
         
+        ((VectorSearchForm)form).setTypes(types);
+        ((VectorSearchForm)form).resetVectortypes(types);
+        ((VectorSearchForm)form).resetLogicOperators(types.size());
         request.setAttribute("species", species);
-        request.getSession().setAttribute("types", types);
+        
         return (mapping.findForward("success"));
     }
 }

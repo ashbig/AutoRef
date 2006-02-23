@@ -22,42 +22,41 @@ import plasmid.Constants;
  */
 public class VectorSearchForm extends ActionForm {
     private String species;
-    private boolean vectortype[][];
+    private List vectortype;
+    private Map types;
     private List vectorname;
     private String display;
     private List clones;
-    private int pagesize;
-    private int page;
-    private String logicOperator;
+    private String logicOperator[];
+    private List vectornameBoolean;
     
     /** Creates a new instance of VectorSearchForm */
     public VectorSearchForm() {
     }
     
-    public void setSpecies(String s) {this.species = s;}
+    public void setSpecies(String s) {       
+        if(Constants.ALL.equals(s)) 
+            s = null;
+            
+        this.species = s;
+    }
     public String getSpecies() {return species;}
     
-    public void setVectortype(int i, int j, boolean s) {
-        this.vectortype[i][j] = s;
+    public void setVectortype(int i, boolean b) {
+        vectortype.set(i, new Boolean(b));
     }
-    public boolean getVectortype(int i, int j) {
-        return vectortype[i][j];
+    
+    public boolean getVectortype(int i) {
+        return ((Boolean)vectortype.get(i)).booleanValue();
     }
+    
+    public void setTypes(Map types) {this.types = types;}
+    public Map getTypes() {return types;}
     
     public void setVectorname(int i, String s) {this.vectorname.set(i, s);}
     public String getVectorname(int i) {return (String)vectorname.get(i);}
     
-    public void setVectortypes(int m, int n) {
-        vectortype = new boolean[m][n];
-        for(int i=0; i<m; i++) {
-            for(int j=0; j<n; j++) {
-                vectortype[i][j] = false;
-            }
-        }
-    }
-    public boolean[][] getVectortype() {return vectortype;}
-    
-    public void setVectorname(Set s) {
+    public void setVectornames(Set s) {
         vectorname = new ArrayList();
         Iterator iter = s.iterator();
         while(iter.hasNext()) {
@@ -66,7 +65,15 @@ public class VectorSearchForm extends ActionForm {
         }
     }
     
-    public List getVectorname() {return vectorname;}
+    public List getVectornames() {return vectorname;}
+    
+    public void setVectornameBoolean(int i, boolean b) {
+        vectornameBoolean.set(i, new Boolean(b));
+    }
+    
+    public boolean getVectornameBoolean(int i) {
+        return ((Boolean)vectornameBoolean.get(i)).booleanValue();
+    }
     
     public String getDisplay() {return display;}
     public void setDisplay(String s) {this.display = s;}
@@ -74,14 +81,49 @@ public class VectorSearchForm extends ActionForm {
     public List getClones() {return clones;}
     public void setClones(List l) {this.clones = l;}
     
-    public int getPagesize() {return pagesize;}
-    public void setPagesize(int i) {this.pagesize = i;}
+    //   public int getPagesize() {return pagesize;}
+    //   public void setPagesize(int i) {this.pagesize = i;}
     
-    public int getPage() {return page;}
-    public void setPage(int i) {this.page = i;}
+    //   public int getPage() {return page;}
+    //   public void setPage(int i) {this.page = i;}
     
-    public String getLogicOperator() {return logicOperator;}
-    public void setLogicOperator(String s) {this.logicOperator = s;}
+    public String getLogicOperator(int i) {return logicOperator[i];}
+    public void setLogicOperator(int i, String s) {this.logicOperator[i] = s;}
+    
+    public void resetVectortypes(Map types) {
+        vectortype = new ArrayList();
+        Set keys = types.keySet();
+        Iterator iter = keys.iterator();
+        int i=0;
+        while(iter.hasNext()) {
+            String s = (String)iter.next();
+            List l = (List)types.get(s);
+            int j=0;
+            while(j<l.size()) {
+                vectortype.add(i, new Boolean(false));
+                i++;
+                j++;
+            }
+        }
+    }
+    
+    public void resetLogicOperators(int m) {
+        logicOperator = new String[m];
+        for(int i=0; i<m; i++) {
+            logicOperator[i] = Constants.AND;
+        }
+    }
+    
+    public void resetVectornameBooleanValues(Collection vectors) {
+        Iterator iter = vectors.iterator();
+        vectornameBoolean = new ArrayList();
+        int i = 0;
+        while(iter.hasNext()) {
+            String v = (String)iter.next();
+            vectornameBoolean.add(i, new Boolean(false));
+            i++;
+        }
+    }
     
     /**
      * Reset all properties to their default values.
@@ -91,14 +133,15 @@ public class VectorSearchForm extends ActionForm {
      */
     public void reset(ActionMapping mapping, HttpServletRequest request) {
         if(vectortype != null) {
-            for(int i=0; i<vectortype.length; i++) {
-                boolean [] b = vectortype[i];
-                for(int j=0; j<vectortype[i].length; j++) {
-                    vectortype[i][j] = false;
-                }
+            for(int i=0; i<vectortype.size(); i++) {
+                vectortype.set(i, new Boolean(false));
             }
         }
         
-        logicOperator = Constants.AND;
+        if(vectornameBoolean != null) {
+            for(int i=0; i<vectornameBoolean.size(); i++) {
+                vectornameBoolean.set(i, new Boolean(false));
+            }
+        }
     }
 }

@@ -24,8 +24,6 @@
 	<jsp:include page="searchByVectorTitle.jsp" />
       <html:form action="VectorSearchContinue.do">
 
-        <html:hidden property="species"/>
-
 <table width="100%" height="58" border="0" align="center">
 <tr>
     <td class="alertheader"><p>We found <bean:write name="numberOfClones"/> clones for your search. You can limit 
@@ -46,7 +44,7 @@
     <td colspan="6" class="tableheader">Limit your search result by choosing the 
       vectors that you want to display</td>
   </tr>
-  <logic:iterate name="vectors" id="vector" indexId="i">
+  <logic:iterate name="vectorSearchForm" property="vectornames" id="vector" indexId="i">
   <% if(Integer.parseInt(i.toString())>0 && Integer.parseInt(i.toString())%3 == 0) {%>
   </tr>
   <% } %>
@@ -54,7 +52,7 @@
   <tr> 
     <td>&nbsp;</td>
   <% } %>
-    <td class="underbullet"> <html:checkbox property='<%="vectorname["+i+"]"%>'/>
+    <td class="underbullet"> <html:checkbox property='<%="vectornameBoolean["+i+"]"%>'/>
       <bean:write name="vector"/> </td>
   </logic:iterate>
   <tr> 

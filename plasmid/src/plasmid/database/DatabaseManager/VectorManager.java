@@ -413,7 +413,28 @@ public class VectorManager extends TableManager {
         
         return types;
     }
-    
+        
+    public static Set getVectoridByProperty(String property) {
+        String sql = "select vectorid from vectorproperty where propertytype='"+property+"'";
+        Set vectorids = new TreeSet();
+        DatabaseTransaction t = null;
+        try {
+            t = DatabaseTransaction.getInstance();
+            ResultSet rs = t.executeQuery(sql);
+            while(rs.next()) {
+                int id = rs.getInt(1);
+                vectorids.add((new Integer(id)).toString());
+            }
+            DatabaseTransaction.closeResultSet(rs);
+        } catch (Exception ex) {
+            if(Constants.DEBUG) {
+                System.out.println(ex);
+            }
+        }
+        
+        return vectorids;
+    }
+        
     public static void main(String args[]) {
         DatabaseTransaction t = null;
         Connection conn = null;

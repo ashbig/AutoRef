@@ -73,6 +73,7 @@ public class RefseqSearchContinueAction extends Action {
         boolean tfbindsite = ((RefseqSearchForm)form).getTfbindsite();
         boolean genome = ((RefseqSearchForm)form).getGenome();
         ((RefseqSearchForm)form).setPage(1);
+        ((RefseqSearchForm)form).setForward("success");
         
         List clonetypes = new ArrayList();
         if(cdna)

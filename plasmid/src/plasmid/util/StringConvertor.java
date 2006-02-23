@@ -10,6 +10,7 @@ import java.util.*;
 import java.lang.*;
 
 import plasmid.Constants;
+import plasmid.query.coreobject.QueryOperator;
 
 /**
  *
@@ -89,6 +90,31 @@ public class StringConvertor {
             s = s.substring(0, index);
         
         return s;
+    }
+    
+    public static String convertFromQueryOperatorToSqlString(List operators, String logicOperator, String columnName) {
+        String sql = null;
+        for(int i=0; i<operators.size();i++) {
+            if(sql != null) {
+                sql += " "+logicOperator;
+            }
+            
+            QueryOperator op = (QueryOperator)operators.get(i);
+            String logicOp = op.getLogicOperator();
+            List l = op.getValues();
+            for(int j=0; j<l.size(); j++) {
+                String s = (String)l.get(j);
+                if(sql == null) {
+                    sql = "("+columnName+"='"+s+"'";
+                } else if(j==0) {
+                    sql += " ("+columnName+"='"+s+"'";
+                } else {
+                    sql += " "+logicOp+" "+columnName+"='"+s+"'";
+                }
+            }
+            sql += ")";
+        }
+        return sql;
     }
     
     public static void main(String args[]) {

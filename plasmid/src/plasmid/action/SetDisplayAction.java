@@ -59,18 +59,6 @@ public class SetDisplayAction extends Action {
     throws ServletException, IOException {
         // get the parameters specified by the customer
         ActionErrors errors = new ActionErrors();
-       
-        //String cdna = ((RefseqSearchForm)form).getCdna();
-        //String shrna = ((RefseqSearchForm)form).getShrna();
-        //String fusion = ((RefseqSearchForm)form).getFusion();
-        //String closed = ((RefseqSearchForm)form).getClosed();
-        //String marker = ((RefseqSearchForm)form).getMarker();
-        //String pdonr201 = ((RefseqSearchForm)form).getPdonr201();
-        //String pdonr221 = ((RefseqSearchForm)form).getPdonr221();
-        //String pdnrdual = ((RefseqSearchForm)form).getPdnrdual();
-        //String plk = ((RefseqSearchForm)form).getPlk();
-        //String pby011 = ((RefseqSearchForm)form).getPby011();
-        //String pgex2tk = ((RefseqSearchForm)form).getPgex2tk();
         
         int pagesize = ((RefseqSearchForm)form).getPagesize();
         int page = ((RefseqSearchForm)form).getPage();
@@ -78,13 +66,13 @@ public class SetDisplayAction extends Action {
         String species = ((RefseqSearchForm)form).getSpecies();
         String refseqType = ((RefseqSearchForm)form).getRefseqType();
         String forward = ((RefseqSearchForm)form).getForward();
-        
+      
         request.setAttribute("pagesize", new Integer(pagesize));
         request.setAttribute("page",  new Integer(page));
         request.setAttribute("displayPage", displayPage);
         request.setAttribute("species", species);
         request.setAttribute("refseqType", refseqType);
-                
+        
         List clones = null;
         if("indirect".equals(displayPage)) {
             clones = (List)request.getSession().getAttribute("found");
@@ -116,6 +104,9 @@ public class SetDisplayAction extends Action {
             
             if("collection".equals(forward))
                 return (mapping.findForward("success_collection"));
+            
+            if("vectorSearchResult".equals(forward))
+                return (mapping.findForward("success_vector_search"));
             
             return (mapping.findForward("success"));
         }
@@ -154,9 +145,9 @@ public class SetDisplayAction extends Action {
         
         if("collection".equals(forward))
             return (mapping.findForward("success_collection"));
-        if("vectorSearchResult".equals(forward)) 
+        if("vectorSearchResult".equals(forward))
             return (mapping.findForward("success_vector_search"));
-       
+        
         return (mapping.findForward("success"));
     }
 }
