@@ -610,9 +610,12 @@ S1 = (RS1 * RL1 + ExpectedScore * (CDSLenght - RL1)) / CDSLenght;
                 istr.setConstructId( rs.getInt("constructid"));// identifies the agar; several (four) isolates will have the same id
                 istr.setCloneId( rs.getInt("cloneid"));
                 
-                construct = new Construct(  istr.getConstructId(), -1, 
+                if ( construct == null)
+                {
+                    construct = new Construct(  istr.getConstructId(), -1, 
                                                       rs.getInt("refsequenceid"), rs.getInt("format"), 
                                                       rs.getInt("cloningstrategyid") ); 
+                }
                 construct.addIsolateTracking(istr);
                              
             }
