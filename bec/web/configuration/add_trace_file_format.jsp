@@ -26,7 +26,7 @@
 
 <body>
 <table width="74%" border="0" align="center">
-<tr><td> Example trace file name: </td>
+<tr><td> Example trace file name (extension REQUIRED): </td>
   <td><input type='text' name='EXAMPLE_TRACE_FILE_NAME' size='50' value=''>     </td>
   </tr>
   <tr> 
