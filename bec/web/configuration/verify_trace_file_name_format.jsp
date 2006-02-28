@@ -140,11 +140,11 @@ item = (String[]) arr.get(count);
           </tr>
           <tr> 
             <td><div align="left">Start:</div></td>
-            <td><div align="left"> <%= request.getAttribute("DIRECTION_LENGTH")%>              </div></td>
+            <td><div align="left"> <%= request.getAttribute("DIRECTION_START")%>              </div></td>
           </tr>
           <tr> 
             <td><div align="left">Length:</div></td>
-            <td><div align="left"> <%= request.getAttribute("DIRECTION_START")%>              </div></td>
+            <td><div align="left"> <%= request.getAttribute("DIRECTION_LENGTH")%>              </div></td>
           </tr>
           <tr> 
             <td>Forward Definition:</td>
