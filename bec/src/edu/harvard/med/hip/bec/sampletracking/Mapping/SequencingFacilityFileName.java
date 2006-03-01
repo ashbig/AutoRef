@@ -264,7 +264,13 @@ public class SequencingFacilityFileName
     }
     
    
-        
+        public String toString()
+        {
+            return "File name: "+          m_file_name +
+    "\t Platename:  "+ m_plate_name +"\t Well name : "+ m_well_name+"\t well number: "+ m_well_number 
+    + "\t well version: "+m_version +"\t orientation : "+  m_orientation 
+    +" \t extension : "+ m_extention ;
+        }
     /*
     
     ///D248P100FA1.T0.scf

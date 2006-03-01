@@ -128,7 +128,7 @@ private static final int DIRECTION_SEPARATOR_STATUS =   15 ;
    public static void main(String[] args)
   {
      try{
-         TraceFileNameFormatParser SAXHandler = new TraceFileNameFormatParser();
+ /*        TraceFileNameFormatParser SAXHandler = new TraceFileNameFormatParser();
         SAXParser parser = new SAXParser();
         parser.setContentHandler(SAXHandler);
         parser.setErrorHandler(SAXHandler);
@@ -149,7 +149,7 @@ format.setDirectionReverse ("R");//DIRECTION_REVERSE>
 format.setDirectionColumn (5);//DIRECTION_COLUMN>
          TraceFileNameFormat.writeXMLFile( xml_file_name, formats);
     
-            
+       */     
   }
   catch(Exception e){
      e.printStackTrace(System.err);

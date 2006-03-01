@@ -357,25 +357,25 @@ public class TraceFileNameFormat
     {
           TraceFileNameFormat format = new TraceFileNameFormat();
         format.setFormatName ( "abc");  //FORMAT_NAME> 
-         format.setExampleFileName( "KSG002372-B02_I.ab1");   //DIRECTION_COLUMN>
-       format.setPlateSeparator ("-");//</SEPARATOR>
-       format.setPlateLabelColumn ( 1);   //DIRECTION_COLUMN>
-      format.setPlateLabelStart ( -1);   //DIRECTION_COLUMN>
+         format.setExampleFileName( "87c07don5.ab1");   //DIRECTION_COLUMN>
+       format.setPlateSeparator ("");//</SEPARATOR>
+       format.setPlateLabelColumn ( -1);   //DIRECTION_COLUMN>
+      format.setPlateLabelStart ( 8);   //DIRECTION_COLUMN>
       format.setPlateLabelLength (-1);   //DIRECTION_COLUMN>
       
-         format.setPositionSeparator ("-");//</SEPARATOR>
-          format.setPositionColumn ( 2);   //DIRECTION_COLUMN>
-      format.setPositionStart ( 1);   //DIRECTION_COLUMN>
+         format.setPositionSeparator ("");//</SEPARATOR>
+          format.setPositionColumn ( -1);   //DIRECTION_COLUMN>
+      format.setPositionStart ( 5);   //DIRECTION_COLUMN>
        format.setPositionLength (3);   //DIRECTION_COLUMN>
       
-       format.setDirectionForward ("R");   //DIRECTION_FORWARD>
-       format.setDirectionReverse ("F");   //DIRECTION_REVERSE>
+       format.setDirectionForward ("5");   //DIRECTION_FORWARD>
+       format.setDirectionReverse ("3");   //DIRECTION_REVERSE>
       
       // format.setDirectionSeparator ("");//</SEPARATOR>
        format.setDirectionColumn ( -1);   //DIRECTION_COLUMN>
-        format.setDirectionLength (-1);   //DIRECTION_COLUMN>
-       format.setDirectionStart (  -1);   //DIRECTION_COLUMN>
-       format.setFileNameReadingDirection(TraceFileNameFormat.READING_LEFT_TO_RIGHT);
+        format.setDirectionLength (1);   //DIRECTION_COLUMN>
+       format.setDirectionStart (  1);   //DIRECTION_COLUMN>
+       format.setFileNameReadingDirection(TraceFileNameFormat.READING_RIGHT_TO_LEFT);
        try
        {
           format.isFormatDefinitionOK();
@@ -386,7 +386,7 @@ public class TraceFileNameFormat
        }
        
        edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadTraceFileFormats();
-       format = edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.getTraceFileFormat("test_format");
+       //format = edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.getTraceFileFormat("test_format");
      ArrayList result = new ArrayList();
        
       // try to define direction
