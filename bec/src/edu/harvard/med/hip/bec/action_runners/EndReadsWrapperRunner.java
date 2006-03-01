@@ -95,8 +95,7 @@ public class EndReadsWrapperRunner extends ProcessRunner
                 conn = DatabaseTransaction.getInstance().requestConnection();
 
                 tfb.distributeNotActiveChromatFiles(m_inputTraceDir,  m_outputBaseDir_wrongformatfiles, m_empty_samples_directory,m_control_samples_directory);
-                m_error_messages.addAll( tfb.getErrorMesages());
-
+              
                 tfb.distributeInternalReadsChromatFiles(m_inputTraceDir, m_outputBaseDir);
                 m_error_messages.addAll( tfb.getErrorMesages());
 
@@ -108,7 +107,7 @@ public class EndReadsWrapperRunner extends ProcessRunner
                for (int count = 0; count < sql_groups_of_items.size(); count++)
                {
                     ArrayList expected_chromat_file_names = getExspectedChromatFileNames(conn, (String)sql_groups_of_items.get(count) );
-                       //distribute chromat files
+                 //distribute chromat files
                     tfb.setNameOfFilesToDistibute(expected_chromat_file_names);
                     ArrayList chromat_files_names = tfb.distributeEndReadsChromatFiles(m_inputTraceDir, m_outputBaseDir);
                     m_error_messages.addAll( tfb.getErrorMesages());
@@ -157,7 +156,7 @@ public class EndReadsWrapperRunner extends ProcessRunner
                                 plate_id,    edu.harvard.med.hip.bec.sampletracking.objects.Container.convertPositionFrom_int_to_alphanumeric( position),
                                sequence_id,   0);
                // System.out.println(entry.toString());
-                res.add( entry.getNamingFileEntyInfo() );
+                res.add( entry.getNamingFileEntryInfo() );
             }
             return res;
         } catch (Exception sqlE)
@@ -301,18 +300,18 @@ public class EndReadsWrapperRunner extends ProcessRunner
          User user  = null;
         try
         {
-            user = AccessManager.getInstance().getUser("htaycher123","htaycher");
-        
-
-        //Thread t = new Thread(runner);
-       // t.start();
-         BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
+              BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
         sysProps.verifyApplicationSettings();
         edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
 
+            user = AccessManager.getInstance().getUser("htaycher123","htaycher");
+        
+
+     
        ProcessRunner runner =  new EndReadsWrapperRunner();
-        runner.setInputData( edu.harvard.med.hip.bec.Constants.ITEM_TYPE_PLATE_LABELS, "VCcxXG002290-3.012-1");
+        runner.setInputData( edu.harvard.med.hip.bec.Constants.ITEM_TYPE_PLATE_LABELS, "JSA001714");
          runner.setUser(user);
+         runner.setProcessType(Constants.PROCESS_RUN_END_READS_WRAPPER);
         runner.run();
 }
         catch(Exception e){}
