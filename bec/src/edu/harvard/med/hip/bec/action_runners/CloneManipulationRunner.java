@@ -19,6 +19,7 @@ import javax.sql.*;
 
 import edu.harvard.med.hip.bec.user.*;
 import edu.harvard.med.hip.bec.util.*;
+import edu.harvard.med.hip.bec.file.*;
 import edu.harvard.med.hip.bec.*;
 import edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.coreobjects.endreads.*;
@@ -106,7 +107,13 @@ public class CloneManipulationRunner extends ProcessRunner
                        
                                      writeDistributionFile( count,sql_groups_of_items.size()-1,current_items , distribution_file_name);
                                  }
-                                 
+                                 //clean up hraddrive
+                                  if (   m_clone_final_status == IsolateTrackingEngine.FINAL_STATUS_ACCEPTED ||
+                                        m_clone_final_status == IsolateTrackingEngine.FINAL_STATUS_REJECTED)
+                                 {
+                                   
+                                     deleteIntermidiateFilesFromHardDrice(current_items );
+                                 }
                                  conn.commit();
                             }
                             catch(Exception e)
@@ -136,10 +143,71 @@ public class CloneManipulationRunner extends ProcessRunner
         
         
     }
-    
-    
-    
+    //-------------------------------------------------------------------------------------
+    public void            deleteIntermidiateFilesFromHardDrice(String current_clone_ids)throws Exception
+    {
+        ArrayList clone_directories = getCloneDirectories(current_clone_ids);
+        deleteIntermidiateFilesFromHardDrice( clone_directories );
+    }
   
+  private  ArrayList    getCloneDirectories(String current_clone_ids)throws Exception
+  {
+      ArrayList clone_directories = new ArrayList ();
+      ResultSet rs = null;
+      CloneDescription clone_desc = null;
+                 String sql = " select   flexcloneid as cloneid,  flexsequenceid as userrefsequenceid  from flexinfo f, isolatetracking iso, sequencingconstruct  sc "
+        + " where sc.constructid = iso.constructid and f.isolatetrackingid=iso.isolatetrackingid and flexcloneid in ("+current_clone_ids+") ";
+    
+        try
+        {
+              // DatabaseTransactionLocal t = DatabaseTransactionLocal.getInstance();
+            rs = DatabaseTransaction.getInstance().executeQuery(sql);
+
+            while(rs.next())
+            {
+                clone_desc = new CloneDescription();
+                 clone_desc.setFlexSequenceId(rs.getInt("userrefsequenceid"));
+                  clone_desc.setCloneId(  rs.getInt("cloneid"));
+                clone_directories.add( clone_desc );
+            }
+            return clone_directories;
+        } catch (Exception sqlE)
+        {
+            throw new BecDatabaseException("Error occured while getting clone information /SQL: "+sql);
+        } finally
+        {
+            DatabaseTransactionLocal.closeResultSet(rs);
+        }
+        
+      
+  }
+    
+  private void          deleteIntermidiateFilesFromHardDrice(ArrayList clone_directories )throws Exception
+  {
+      EndReadsWrapperRunner er = new EndReadsWrapperRunner();
+      String trace_files_root = er.getOuputBaseDir();
+      CloneDescription clone_desc = null;
+     
+      String trace_files_clone_directory = null;
+      for (int count = 0; count < clone_directories.size(); count++)
+      {
+          clone_desc= (CloneDescription)clone_directories.get(count);
+          trace_files_clone_directory = trace_files_root+File.pathSeparator + clone_desc.getFlexSequenceId() + File.pathSeparator + clone_desc.getCloneId();
+          cleanUpDirectory(trace_files_clone_directory);
+      }
+  }
+  
+  private void          cleanUpDirectory(String trace_files_clone_directory)throws Exception
+  {
+      //clean up all phred files
+        FileOperations.deleteAllFilesFormDirectory(trace_files_clone_directory + File.separator +"quality_dir");
+        FileOperations.deleteAllFilesFormDirectory(trace_files_clone_directory + File.separator +"sequence_dir");
+
+        //delete all .phd files from previous processing
+        FileOperations.deleteAllFilesFormDirectory(trace_files_clone_directory + File.separator +"phd_dir");
+         
+  }
+    //--------------------------------------------------------------------------------
     private void         writeDistributionFile( int dump_count, int number_of_cycles, 
                 String sql_clone_ids , String distribution_file_name) throws Exception
     {
