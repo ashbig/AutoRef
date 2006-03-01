@@ -113,7 +113,15 @@ additional_jsp_buffer.append("\nform.elements."+  PhredPhrap.QUALITY_TRIMMING_FI
 additional_jsp_buffer.append("form.elements."+  PhredPhrap.QUALITY_TRIMMING_LAST_BASE+".value = 800;\n	}");
 additional_jsp_buffer.append("\n }  \n -->\n</Script>");
 
-additional_jsp_buffer.append("\n <tr><td>");
+if (forwardName_int== Constants.PROCESS_FIND_GAPS)
+    {
+        additional_jsp_buffer.append("\n <tr><td colspan=2>");
+        }
+else
+    {
+        additional_jsp_buffer.append("\n <tr><td>");
+        }
+
 additional_jsp_buffer.append("<table width='90%' border='0' cellspacing='2' cellpadding='2' aligh='center'>");
 additional_jsp_buffer.append("<tr> <td colspan='2'>&nbsp;<strong>For assembly process</strong> </td> </tr>");
 
@@ -128,6 +136,9 @@ for (Enumeration e = BecProperties.getInstance().getVectorLibraries().keys() ; e
 	additional_jsp_buffer.append(" <OPTION VALUE='" + vector_file_path +"'>"+vector_name);
 }
 
+int score_value = 20;
+if (forwardName_int== Constants.PROCESS_FIND_GAPS) score_value=15;
+
 additional_jsp_buffer.append("</select></td> </tr>");
 additional_jsp_buffer.append("<tr> <td colspan='2'><strong>Low Quality Reads manipulation</strong></td> </tr>");
 
@@ -137,7 +148,13 @@ additional_jsp_buffer.append("<tr> <td colspan='2'>"+line_padding+"<input type='
 additional_jsp_buffer.append("<tr> <td colspan='2'><strong> <input type='checkbox' checked name='all' id='all' onClick='isTrimm(this, this.checked)'>");
 additional_jsp_buffer.append(" Perform quality trimming</strong></td> </tr>");
  additional_jsp_buffer.append(" <tr> <td>"+line_padding+"Phred score:&nbsp;&nbsp; </td>");
- additional_jsp_buffer.append(" <td><input type = text value = 20 name='"+PhredPhrap.QUALITY_TRIMMING_SCORE+"' ></td> </tr>");
+ additional_jsp_buffer.append(" <td><input type = text value ="+score_value+" name='"+PhredPhrap.QUALITY_TRIMMING_SCORE+"' >");
+if (forwardName_int== Constants.PROCESS_FIND_GAPS)
+    {
+        additional_jsp_buffer.append("&nbsp;&nbsp;(should be <16)");
+        }
+ 
+ additional_jsp_buffer.append("</td> </tr>");
  additional_jsp_buffer.append(" <tr> <td>"+line_padding+"First base to include: &nbsp;&nbsp; </td>");
 additional_jsp_buffer.append(" <td><input type = text value = 50 name='"+PhredPhrap.QUALITY_TRIMMING_FIRST_BASE+"' ></td>");
 additional_jsp_buffer.append(" </tr> <tr> <td>"+line_padding+"Last base to include:</td> <td><input type = text value = 900 name='"+PhredPhrap.QUALITY_TRIMMING_LAST_BASE + "' ></td> </table>");
@@ -305,7 +322,7 @@ additional_jsp_buffer.append( "<OPTION VALUE=" + IsolateTrackingEngine.FINAL_STA
 
 additional_jsp_buffer.append("</SELECT></td> </tr>");
 
-//additional_jsp_buffer.append("<P><P><tr><td>"+line_padding+"<input type = checkbox name = 'isCreateDistributionFile' >Create export file for Accepted/Rejected clones (XML format, to be used by other applications)? [<a href='"+ edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION")+"help/help_clone_data_output_xml_format.html' target='_blank'>sample template file</a>]</td> </tr>");
+additional_jsp_buffer.append("<P><P><tr><td>"+line_padding+"<input type = checkbox name = 'isCreateDistributionFile' >Create export file for Accepted/Rejected clones (XML format, to be used by other applications)? [<a href='"+ edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION")+"help/help_clone_data_output_xml_format.html' target='_blank'>sample template file</a>]</td> </tr>");
 
 additional_jsp = additional_jsp_buffer.toString();
     break;
