@@ -193,7 +193,7 @@ public class CloneManipulationRunner extends ProcessRunner
       for (int count = 0; count < clone_directories.size(); count++)
       {
           clone_desc= (CloneDescription)clone_directories.get(count);
-          trace_files_clone_directory = trace_files_root+File.pathSeparator + clone_desc.getFlexSequenceId() + File.pathSeparator + clone_desc.getCloneId();
+          trace_files_clone_directory = trace_files_root+File.separator + clone_desc.getFlexSequenceId() + File.separator + clone_desc.getCloneId();
           cleanUpDirectory(trace_files_clone_directory);
       }
   }
@@ -401,13 +401,13 @@ return clone_data_in_xml_format.toString() ;
         try
         {
 
-            user = AccessManager.getInstance().getUser("htaycher123","htaycher");
+            user = AccessManager.getInstance().getUser("htaycher123","me");
             BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
             sysProps.verifyApplicationSettings();
             DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
             CloneManipulationRunner runner = new CloneManipulationRunner();
             runner.setUser(user);
-            runner.setInputData(Constants.ITEM_TYPE_CLONEID, "158784  158499 158507 158515 158523 158579 ");
+            runner.setInputData(Constants.ITEM_TYPE_CLONEID, "505 ");
             runner.setProcessType(Constants.PROCESS_SET_CLONE_FINAL_STATUS);
             runner.setCloneFinalStatus(IsolateTrackingEngine.FINAL_STATUS_REJECTED);
             runner.setIsCreateDistributionFile(true);
