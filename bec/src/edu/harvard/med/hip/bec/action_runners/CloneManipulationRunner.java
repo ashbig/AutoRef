@@ -28,6 +28,7 @@ import edu.harvard.med.hip.bec.coreobjects.feature.*;
 import edu.harvard.med.hip.bec.coreobjects.spec.*;
 import  edu.harvard.med.hip.bec.util_objects.*;
 import edu.harvard.med.hip.bec.sampletracking.objects.*;
+import edu.harvard.med.hip.bec.programs.phred.*;
 /**
  *
  * @author  htaycher
@@ -200,11 +201,12 @@ public class CloneManipulationRunner extends ProcessRunner
   private void          cleanUpDirectory(String trace_files_clone_directory)throws Exception
   {
       //clean up all phred files
-        FileOperations.deleteAllFilesFormDirectory(trace_files_clone_directory + File.separator +"quality_dir");
-        FileOperations.deleteAllFilesFormDirectory(trace_files_clone_directory + File.separator +"sequence_dir");
+        FileOperations.deleteAllFilesFormDirectory(trace_files_clone_directory + File.separator +PhredWrapper.QUALITY_DIR_NAME);
+        FileOperations.deleteAllFilesFormDirectory(trace_files_clone_directory + File.separator +PhredWrapper.CONTIG_DIR_NAME);
+ FileOperations.deleteAllFilesFormDirectory(trace_files_clone_directory + File.separator +PhredWrapper.SEQUENCE_DIR_NAME);
 
         //delete all .phd files from previous processing
-        FileOperations.deleteAllFilesFormDirectory(trace_files_clone_directory + File.separator +"phd_dir");
+        FileOperations.deleteAllFilesFormDirectory(trace_files_clone_directory + File.separator +PhredWrapper.PHD_DIR_NAME);
          
   }
     //--------------------------------------------------------------------------------
