@@ -35,7 +35,7 @@
     <td  height="25" > View options</td>
   </tr>
   <tr class='evenRowColoredFontNotBold'> 
-    <td  checked height="25"  >&nbsp; <input  type="radio" name="forwardName" value=<%= Constants.PROCESS_SELECT_PLATES_TO_CHECK_READS_AVAILABILITY %>>
+    <td   height="25"  >&nbsp; <input  type="radio" name="forwardName" CHECKED  value=<%= Constants.PROCESS_SELECT_PLATES_TO_CHECK_READS_AVAILABILITY %>>
       View availabile end reads  </td>
   </tr>
   <tr class='evenRowColoredFontNotBold'> 
