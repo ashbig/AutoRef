@@ -7,7 +7,7 @@
 	
 # comment the first line and uncomment the second before deploy
 #use lib '/kotel/data/home/jmunoz/flex/ApplicationCode/Perl';
-use lib '/usr/local/jakarta-tomcat-4.0.6/webapps/FLEX/WEB-INF/perl';
+use lib '/usr/local/jakarta-tomcat-4.0.6/webapps/PLASMID/WEB-INF/perl';
 use UTIL::zebra_label;
 use strict;
 
