@@ -93,12 +93,12 @@ public class PlateManager extends TableManager {
                 stmt.setString(3, s.getStatus());
                 int cloneid = s.getCloneid();
                 if(cloneid>0)
-                    stmt.setInt(4, s.getCloneid());   
+                    stmt.setInt(4, s.getCloneid());
                 else
                     stmt.setString(4, null);
                 stmt.setInt(5, s.getPosition());
                 stmt.setString(6, s.getPositionx());
-                stmt.setString(7, s.getPositiony());       
+                stmt.setString(7, s.getPositiony());
                 stmt.setInt(8, s.getContainerid());
                 stmt.setString(9, s.getContainerlabel());
                 stmt.setString(10, s.getResult());
@@ -139,7 +139,7 @@ public class PlateManager extends TableManager {
         }
         return true;
     }
-        
+    
     public boolean updateSampleResults(List results) {
         if(results == null || results.size() == 0)
             return true;
@@ -163,12 +163,36 @@ public class PlateManager extends TableManager {
         }
         return true;
     }
+     
+    public boolean updateSamples(List samples) {
+        if(samples == null || samples.size() == 0)
+            return true;
         
+        String sql = "update sample set sampletype=?, cloneid=? where sampleid=?";
+        
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            
+            for(int i=0; i<samples.size(); i++) {
+                Sample s = (Sample)samples.get(i);
+                stmt.setString(1, s.getType());
+                stmt.setInt(2, s.getCloneid());
+                stmt.setInt(3, s.getSampleid());
+                DatabaseTransaction.executeUpdate(stmt);
+            }
+            DatabaseTransaction.closeStatement(stmt);
+        } catch (Exception ex) {
+            handleError(ex, "Error occured while updating SAMPLE table");
+            return false;
+        }
+        return true;
+    }
+    
     public List queryContainers(List labels, boolean isSampleRestore) {
         if(labels == null)
             return null;
-
-        List containers = new ArrayList();              
+        
+        List containers = new ArrayList();
         String sql = "select containerid,containertype,oricontainerid,location,capacity,status"+
         " from containerheader where label=?";
         String sql2 = "select sampleid,sampletype,status_gb,cloneid,position,positionx,positiony,containerlabel,result"+
@@ -222,11 +246,76 @@ public class PlateManager extends TableManager {
         } catch (Exception ex) {
             handleError(ex, "Error occured while querying from CONTAINER and SAMPLE table with label: "+currentLabel);
             return null;
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeResultSet(rs2);
+            DatabaseTransaction.closeStatement(stmt);
+            DatabaseTransaction.closeStatement(stmt2);
         }
         return containers;
     }
     
-    public static void main(String args[]) {       
+    public Container queryContainer(String label, boolean isSampleRestore) {
+        if(label == null)
+            return null;
+        
+        String sql = "select containerid,containertype,oricontainerid,location,capacity,status"+
+        " from containerheader where label=?";
+        String sql2 = "select sampleid,sampletype,status_gb,cloneid,position,positionx,positiony,containerlabel,result"+
+        " from sample where containerid=? order by position";
+        
+        PreparedStatement stmt = null;
+        PreparedStatement stmt2 = null;
+        ResultSet rs = null;
+        ResultSet rs2 = null;
+        Container c = null;
+        
+        try {
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, label);
+            rs = DatabaseTransaction.executeQuery(stmt);
+            if(rs.next()) {
+                int containerid = rs.getInt(1);
+                String type = rs.getString(2);
+                String oricontainerid = rs.getString(3);
+                String location = rs.getString(4);
+                int capacity = rs.getInt(5);
+                String st = rs.getString(6);
+                c = new Container(containerid, type, label,oricontainerid,location,capacity,st);
+                
+                if(isSampleRestore) {
+                    stmt2 = conn.prepareStatement(sql2);
+                    stmt2.setInt(1, containerid);
+                    rs2 = DatabaseTransaction.executeQuery(stmt2);
+                    while(rs2.next()) {
+                        int sampleid = rs2.getInt(1);
+                        String sampletype = rs2.getString(2);
+                        String status = rs2.getString(3);
+                        int cloneid = rs2.getInt(4);
+                        int position = rs2.getInt(5);
+                        String x = rs2.getString(6);
+                        String y = rs2.getString(7);
+                        String l = rs2.getString(8);
+                        String result = rs2.getString(9);
+                        Sample s = new Sample(sampleid, sampletype, status, cloneid, position, x, y, containerid,l);
+                        s.setResult(result);
+                        c.addSample(s);
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            handleError(ex, "Error occured while querying from CONTAINER and SAMPLE table with label: "+label);
+            return null;
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeResultSet(rs2);
+            DatabaseTransaction.closeStatement(stmt);
+            DatabaseTransaction.closeStatement(stmt2);
+        }
+        return c;
+    }
+    
+    public static void main(String args[]) {
         List labels = new ArrayList();
         labels.add("HMG000406");
         labels.add("HMG000407");
