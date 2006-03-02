@@ -1,5 +1,5 @@
 /**
- * $Id: Sequence.java,v 1.2 2003-05-01 18:51:39 yanhui Exp $
+ * $Id: Sequence.java,v 1.3 2006-03-02 19:20:52 dzuo Exp $
  * The Sequence class serves as a base class for any type of DNA sequence
  * Start and Stop reprensent the position of the ATG start and the stop codon
  * @File     	: Sequence.java
@@ -140,6 +140,10 @@ public class Sequence {
      */
     public String getSeqFragmentStart() {
         int endPos = start + seqFragmentLength;
+        
+        if(endPos > text.length())
+            return text.substring(start - 1);
+        
         return (text.substring(start - 1, endPos));
     }
     
@@ -151,6 +155,10 @@ public class Sequence {
      */
     public String getSeqFragmentStop() {
         int startPos = stop-(seqFragmentLength-1);
+        
+        if(stop > text.length())
+            return text.substring(startPos);
+        
         return (text.substring(startPos, stop));
     }
     
