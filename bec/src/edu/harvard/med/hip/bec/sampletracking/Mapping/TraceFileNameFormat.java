@@ -266,11 +266,11 @@ public class TraceFileNameFormat
             m_direction_start == format.getDirectionStart()&& //DIRECTION_START>
             m_direction_of_file_name_reading == format.getFileNameReadingDirection()) 
       {
-          if (  m_plate_separator.equalsIgnoreCase(format.getPlateSeparator()) &&
-                m_direction_forward.equalsIgnoreCase(format.getDirectionForward()) &&
-                m_direction_reverse.equalsIgnoreCase(format.getDirectionReverse()) &&
-                m_position_separator.equalsIgnoreCase(format.getPlateSeparator()) &&
-                m_direction_separator.equalsIgnoreCase( format.getDirectionSeparator()) 
+          if (  Algorithms.isStringsEqual(m_plate_separator, format.getPlateSeparator(), false) &&
+                Algorithms.isStringsEqual(m_direction_forward,format.getDirectionForward(), false) &&
+                Algorithms.isStringsEqual(m_direction_reverse,format.getDirectionReverse(), false) &&
+                Algorithms.isStringsEqual(m_position_separator,format.getPlateSeparator(), false) &&
+                Algorithms.isStringsEqual(m_direction_separator, format.getDirectionSeparator(), false) 
              )
               return true;
           else 
@@ -282,6 +282,9 @@ public class TraceFileNameFormat
       
      
     }
+    
+    
+    
     public synchronized static void  deleteFormatById(Connection conn, int mode, String item_id)    throws BecDatabaseException
     {
         String sql = null;
@@ -296,6 +299,7 @@ public class TraceFileNameFormat
                 sql = "delete from TRACEFILEFORMAT   FORMATNAME ='"+item_id+"'";
             }
             DatabaseTransaction.executeUpdate(sql,conn);
+            conn.commit();
           
         } 
         catch (Exception sqlE)
@@ -348,7 +352,8 @@ public class TraceFileNameFormat
         +"DIRECTION_COLUMN"+ "----"+this.getDirectionColumn()+" "   
         +"DIRECTION_LENGTH"+ "----"+this.getDirectionLength()+" " 
         +"DIRECTION_START"+ "----"+this.getDirectionStart()+" "   
-        +"EXAMPLE_TRACE_FILE_NAME"+ "----"+ this.getExampleFileName();
+        +"EXAMPLE_TRACE_FILE_NAME"+ "----"+ this.getExampleFileName()+" "
+        +"READING DIRECTION ----"+ this.getFileNameReadingDirection();
     }
     /**
      * @param args the command line arguments
@@ -388,7 +393,7 @@ public class TraceFileNameFormat
        edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadTraceFileFormats();
        //format = edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.getTraceFileFormat("test_format");
      ArrayList result = new ArrayList();
-       
+     edu.harvard.med.hip.bec.action.DirectDatabaseCommunicationsAction. isTraceFileFormatExist(format); 
       // try to define direction
           SequencingFacilityFileName  fname = new SequencingFacilityFileName(format.getExampleFileName(), format );
           String[] item = new String[2];

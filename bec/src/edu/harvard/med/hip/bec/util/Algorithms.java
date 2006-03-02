@@ -9,6 +9,18 @@ import java.io.*;
 public class Algorithms
 {
     
+    public static boolean   isStringsEqual(String a, String b, boolean isCaseSencitive)
+    {
+        if ( a == null && b== null) return true;
+        if ( (a == null && b != null) || ( a != null && b == null)) return false;
+        if (isCaseSencitive)
+        {
+            return a.equals(b);
+        }
+        else
+            return a.equalsIgnoreCase(b);
+        
+    }
         /**
 	 * This function takes the string and converts it into a reversed sequence.
 	 * @param seq  A String object
