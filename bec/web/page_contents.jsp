@@ -61,6 +61,5 @@ case Constants.UI_CLONEEVAL_SPEC_PAGE :{jsp_name = "Seq_EnterFullSeqParameters.j
 case Constants.UI_SEQUENCETRIMMING_SPEC_PAGE :{jsp_name = "Seq_EnterSlidingWindowParameters.jsp"; break;}
 case Constants.UI_SELECT_PROCESS_UPLOAD_DATA_PAGE:   {jsp_name = "UploadNotHipPlates.jsp"; break;}
 }
-System.out.println(jsp_name);
 %>
 <jsp:include page="<%= jsp_name %>" flush="true"/> 

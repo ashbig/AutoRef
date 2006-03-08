@@ -57,7 +57,6 @@ Object forwardName = ( request.getAttribute("forwardName") != null) ?
 
 int forwardName_int = (forwardName instanceof String) ? 
  Integer.parseInt((String)forwardName) : ((Integer) forwardName).intValue();
-System.out.println(forwardName_int);
 %>
 </head>
 <body>

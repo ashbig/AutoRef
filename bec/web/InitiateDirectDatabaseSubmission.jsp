@@ -235,7 +235,6 @@ else if (forwardName_int== -Constants.PROCESS_ADD_PROJECT_DEFINITION)
 { onsubmit = "onsubmit='return validate_add_sequencingprimer(this);'";}
  else if (forwardName_int== -Constants.PROCESS_ADD_NEW_LINKER)
 { onsubmit = "onsubmit='return validate_add_linker(this);'";}
-System.out.println(onsubmit );
 %> 
 
 
