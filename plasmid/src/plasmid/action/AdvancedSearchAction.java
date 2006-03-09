@@ -1,7 +1,7 @@
 /*
- * VectorSearchAction.java
+ * AdvancedSearchAction.java
  *
- * Created on February 2, 2006, 3:47 PM
+ * Created on March 7, 2006, 11:26 AM
  */
 
 package plasmid.action;
@@ -23,19 +23,12 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 
-import plasmid.form.VectorSearchForm;
-import plasmid.coreobject.*;
-import plasmid.Constants;
-import plasmid.database.DatabaseManager.UserManager;
-import plasmid.process.QueryProcessManager;
-import plasmid.query.coreobject.QueryOperator;
-import plasmid.util.StringConvertor;
-
 /**
  *
  * @author  DZuo
  */
-public class VectorSearchAction extends Action {
+public class AdvancedSearchAction extends Action {
+    
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
      * response (or forward to another web component that will create it).
@@ -59,27 +52,8 @@ public class VectorSearchAction extends Action {
         
         // get the parameters specified by the customer
         ActionErrors errors = new ActionErrors();
-        String species = ((VectorSearchForm)form).getSpecies();
-        
-        Map types = ((VectorSearchForm)form).getTypes();
-        
-        QueryProcessManager manager = new QueryProcessManager();
-        User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
-        List operators = manager.getVectorQueryOperators(types, (VectorSearchForm)form);
-        Set vectorids = manager.getVectoridFromQueryOperators(operators, Constants.AND);
-        List clones = manager.queryClonesByVector(user, vectorids, species, Clone.AVAILABLE);
-        
-        if(clones == null) {
-            return (mapping.findForward("error"));
-        }
-        
-        List vectors = manager.getVectorNamesFromClones(clones);
-        ((VectorSearchForm)form).setVectornames(vectors);
-        ((VectorSearchForm)form).setVectors(vectors);
-        ((VectorSearchForm)form).setClones(clones);
-        ((VectorSearchForm)form).resetVectornameBooleanValues(vectors);
-        request.setAttribute("numberOfClones", new Integer(clones.size()));
         
         return (mapping.findForward("success"));
+        
     }
 }

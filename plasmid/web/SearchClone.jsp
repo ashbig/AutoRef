@@ -1,5 +1,6 @@
 <%@ page language="java" %>
 <%@ page errorPage="ProcessError.do"%>
+<%@ page import="plasmid.Constants" %> 
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -21,7 +22,7 @@
 	</td>
     <td width="83%" align="left" valign="top">
 	<jsp:include page="searchByCloneTitle.jsp" />
-      <html:form action="RefseqSearchContinue.do">
+      <html:form action="SearchClone.do">
       <table width="100%" height="118" border="0" align="center">
         <tr> 
           <td height="10" colspan="6" class="tableheader"><strong>Select search 
@@ -29,7 +30,9 @@
         </tr>
         <tr> 
           <td width="3%" height="26">&nbsp;</td>
-          <td height="26" colspan="2"> <html:select property="searchType"> <html:options name="types"/> 
+          <td height="26" colspan="2"> <html:select property="searchType"> 
+            <html:option value="<%=Constants.CLONE_SEARCH_PLASMIDCLONEID%>"/> 
+            <html:option value="<%=Constants.CLONE_SEARCH_OTHERCLONEID%>"/> 
             </html:select> </td>
           <td height="26" colspan="2">&nbsp;</td>
           <td width="24%" height="26">&nbsp;</td>

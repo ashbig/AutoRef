@@ -15,6 +15,7 @@ import org.apache.struts.action.ActionMapping;
 import java.util.*;
 
 import plasmid.Constants;
+import plasmid.coreobject.CloneVector;
 
 /**
  *
@@ -29,6 +30,7 @@ public class VectorSearchForm extends ActionForm {
     private List clones;
     private String logicOperator[];
     private List vectornameBoolean;
+    private List vectors;
     
     /** Creates a new instance of VectorSearchForm */
     public VectorSearchForm() {
@@ -56,16 +58,24 @@ public class VectorSearchForm extends ActionForm {
     public void setVectorname(int i, String s) {this.vectorname.set(i, s);}
     public String getVectorname(int i) {return (String)vectorname.get(i);}
     
-    public void setVectornames(Set s) {
+    public void setVectornames(Collection s) {
         vectorname = new ArrayList();
         Iterator iter = s.iterator();
         while(iter.hasNext()) {
-            String n = (String)iter.next();
+            CloneVector v = (CloneVector)iter.next();
+            String n = v.getName();
             vectorname.add(n);
         }
     }
     
     public List getVectornames() {return vectorname;}
+    
+    public void setVectors(Collection s) {
+        vectors = new ArrayList();
+        vectors.addAll(s);
+    }
+    
+    public List getVectors() {return vectors;}
     
     public void setVectornameBoolean(int i, boolean b) {
         vectornameBoolean.set(i, new Boolean(b));
@@ -119,7 +129,7 @@ public class VectorSearchForm extends ActionForm {
         vectornameBoolean = new ArrayList();
         int i = 0;
         while(iter.hasNext()) {
-            String v = (String)iter.next();
+            CloneVector v = (CloneVector)iter.next();
             vectornameBoolean.add(i, new Boolean(false));
             i++;
         }

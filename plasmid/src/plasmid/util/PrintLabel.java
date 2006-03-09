@@ -38,14 +38,20 @@ public class PrintLabel {
             * the status message that going to return
             **/
            StringBuffer msg = new StringBuffer();
-           
 
            try { 
                /** 
                 * Execute the command using the Runtime object and get the 
                 * Process which controls this command 
                 **/
+               /**
                String cmd = "perl /usr/local/jakarta-tomcat-4.0.6/webapps/PLASMID/WEB-INF/perl/print_label.pl " 
+                            + label + " " 
+                            + printerName + " " 
+                            + labelWidth + " " 
+                            + labelHeight ;
+               */
+               String cmd = "perl F:\\Program Files\\Apache Tomcat 4.0\\webapps\\PLASMID\\WEB-INF\\perl\\print_label.pl " 
                             + label + " " 
                             + printerName + " " 
                             + labelWidth + " " 

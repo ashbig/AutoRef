@@ -89,6 +89,12 @@
     <form-bean      name="vectorSearchForm"
                     type="plasmid.form.VectorSearchForm"/>
                     
+    <form-bean      name="cloneSearchForm"
+                    type="plasmid.form.CloneSearchForm"/>
+                    
+    <form-bean      name="advancedSearchForm"
+                    type="plasmid.form.AdvancedSearchForm"/>
+                    
  </form-beans>
 
   <!-- ========== Global Forward Definitions ============================== -->
@@ -112,6 +118,13 @@
               validate="false"
               input="/ViewCollection.jsp">
       <forward  name="success"  path="/ViewCollection.jsp"/>
+    </action>
+    
+    <action     path="/AdvancedSearch"
+                type="plasmid.action.AdvancedSearchAction"
+               name="advancedSearchForm"
+              input="/AdvancedSearch.jsp">
+      <forward  name="success"  path="/AdvancedSearchContinue.jsp"/>
     </action>
     
     <action     path="/ChangeOrderStatus"
@@ -325,6 +338,14 @@
               input="/PrepareRegistration.do">
       <forward  name="success_confirm"   path="/ConfirmRegistration.jsp"/>
       <forward  name="success"   path="/Login.jsp"/>
+    </action>
+      
+    <action    path="/SearchClone"
+               type="plasmid.action.SearchCloneAction"
+               name="cloneSearchForm"
+               scope="request"
+              input="/SearchClone.jsp">
+      <forward  name="success"   path="/DisplayResults.jsp"/>
     </action>
       
     <action    path="/SelectProcess"

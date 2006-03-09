@@ -141,19 +141,35 @@ public class QueryProcessManager {
         return found;
     }
     
-    public Set getVectorNamesFromClones(List clones) {
+    public List getVectorNamesFromClones(List clones) {
+        List found = new ArrayList();
         Set vectors = new TreeSet();
         
         if(clones == null)
-            return vectors;
+            return found;
         
         for(int i=0; i<clones.size(); i++) {
             Clone c = (Clone)clones.get(i);
             String vector = c.getVectorname();
             vectors.add(vector);
         }
-        
-        return vectors;
+                
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            VectorManager manager = new VectorManager(conn);
+            found = manager.getVectorsByName(vectors);
+        } catch (Exception ex) {
+            if(Constants.DEBUG) {
+                System.out.println(ex);
+            }
+            return null;
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
+        }
+        return found;
     }
     
     public List getVectorQueryOperators(Map types, VectorSearchForm form) {

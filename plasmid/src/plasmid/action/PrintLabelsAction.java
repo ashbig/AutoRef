@@ -43,8 +43,8 @@ public class PrintLabelsAction extends InternalUserAction{
         
         for(int i=0; i<labels.size(); i++) {
             String label = (String)labels.get(i);
-            PrintLabel.execute(label);
-            System.out.println(label);
+            String s = PrintLabel.execute(label);
+            System.out.println(s);
         }
         
         request.setAttribute(Constants.PRINT_LABEL_MESSAGE, "Labels printed.");

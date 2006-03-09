@@ -35,7 +35,13 @@ public class Importer {
     //public static final String filepath = "G:\\plasmid\\decaprio_checked\\";
     //public static final String filepath = "G:\\plasmid\\VC\\";  
     //public static final String filepath = "G:\\plasmid\\FT\\";  
-    public static final String filepath = "G:\\plasmid\\howleypluslivingston_from_access\\";  
+    //public static final String filepath = "G:\\plasmid\\howleypluslivingston_from_access\\"; 
+    //public static final String filepath = "G:\\plasmid\\Yeast_plate_2006_01\\"; 
+    //public static final String filepath = "G:\\plasmid\\Yeast_plate_2006_02\\";  
+    //public static final String filepath = "G:\\plasmid\\human_plate_not_in_plasmid_200602\\"; 
+    //public static final String filepath = "G:\\plasmid\\human_plate_in_plasmid_200602\\"; 
+    //public static final String filepath = "G:\\plasmid\\FT_2nd_batch\\"; 
+    public static final String filepath = "G:\\plasmid\\SHIV_HIPvector_IMPORT_MARCH2006\\";
    
     private List tables;
     private String error;
@@ -212,6 +218,7 @@ public class Importer {
                 if(table.getTableName().trim().equalsIgnoreCase(ImportTable.PLATE)) {
                     System.out.println("Importing PLATE");
                     plateImp.importPlateAndSample(table, cimp.getIdmap());
+                    //plateImp.importSample(table, cimp.getIdmap());
                 }
             } catch (Exception ex) {
                 setError("Error occured during import.");

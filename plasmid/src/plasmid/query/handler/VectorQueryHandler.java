@@ -12,6 +12,7 @@ import plasmid.util.StringConvertor;
 import plasmid.database.DatabaseManager.*;
 import plasmid.database.*;
 import plasmid.Constants;
+import plasmid.coreobject.Clone;
 
 /**
  *
@@ -96,7 +97,7 @@ public class VectorQueryHandler extends GeneQueryHandler {
         }
         
         if(species != null) {
-            sql = sql+" and domain='"+species+"'";
+            sql = sql+" and domain in('"+species+"', '"+Clone.NOINSERT+"')";
         }
         
         if(status != null) {

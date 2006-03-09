@@ -27,6 +27,9 @@ public class DnaInsert {
     public static final String HAD = "Human adenovirus C type 2";
     public static final String FT = "Francisella tularensis Schu 4";
     public static final String VC = "Vibrio cholerae O1 biovar eltor str. N16961";
+    public static final String DM = "Drosophila melanogaster";                          
+    public static final String CE = "Caenorhabditis elegans";                            
+    public static final String XL = "Xenopus laevis";
 
     private int insertid;
     private int order;
@@ -135,6 +138,10 @@ public class DnaInsert {
             return RefseqNameType.GENBANK;
         if(VC.equals(species))
             return RefseqNameType.VCNUMBER;
+        if(DM.equals(species))
+            return RefseqNameType.FBID;
+        if(CE.equals(species))
+            return RefseqNameType.WBGENEID;
         if(RefseqNameType.GENEID != null)
             return RefseqNameType.GENEID;
         return "";

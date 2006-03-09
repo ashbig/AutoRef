@@ -32,12 +32,17 @@ public class StaticQueryHandlerFactory {
         else if(GeneQueryHandler.DIRECT_GI.equals(type))
             return new DirectGiQueryHandler(terms);
         else if(GeneQueryHandler.PA.equals(type) || GeneQueryHandler.SGD.equals(type) 
-        || GeneQueryHandler.VCNUMBER.equals(type) || GeneQueryHandler.FTNUMBER.equals(type))
+        || GeneQueryHandler.VCNUMBER.equals(type) || GeneQueryHandler.FTNUMBER.equals(type)
+        || GeneQueryHandler.FBID.equals(type) || GeneQueryHandler.WBGENEID.equals(type))
             return new PAQueryHandler(terms);
         else if(GeneQueryHandler.PRO_GENBANK.equals(type))
             return new PAGenbankQueryHandler(terms);
         else if(GeneQueryHandler.PRO_GI.equals(type))
             return new PAGIQueryHandler(terms);
+        else if(GeneQueryHandler.PLASMIDCLONEID.equals(type))
+            return new PlasmidCloneidQueryHandler(terms);
+        else if(GeneQueryHandler.OTHERCLONEID.equals(type)) 
+            return new CloneNameQueryHandler(terms);
         else {
             RefseqNameQueryHandler h = new RefseqNameQueryHandler(terms);
             h.setNametype(type);

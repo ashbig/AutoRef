@@ -39,34 +39,25 @@
     </tr>
   </table>
 
-<table width="100%" border="0">
+<table width="100%" border="1">
   <tr> 
-    <td colspan="6" class="tableheader">Limit your search result by choosing the 
+    <td colspan="2" class="tableheader">Limit your search result by choosing the 
       vectors that you want to display</td>
   </tr>
-  <logic:iterate name="vectorSearchForm" property="vectornames" id="vector" indexId="i">
-  <% if(Integer.parseInt(i.toString())>0 && Integer.parseInt(i.toString())%3 == 0) {%>
-  </tr>
-  <% } %>
-  <% if(Integer.parseInt(i.toString())%3 == 0) {%>
-  <tr> 
-    <td>&nbsp;</td>
-  <% } %>
+  <logic:iterate name="vectorSearchForm" property="vectors" id="vector" indexId="i">
+  <tr>
     <td class="underbullet"> <html:checkbox property='<%="vectornameBoolean["+i+"]"%>'/>
-      <bean:write name="vector"/> </td>
+    <a target="_blank" href="GetVectorDetail.do?vectorid=<bean:write name="vector" property="vectorid"/>">
+      <bean:write name="vector" property="name"/></a> </td>
+    <td class="underbullet"><bean:write name="vector" property="description"/> </td>
   </logic:iterate>
-  <tr> 
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
   </tr>
+</table>
 
+<table>
   <tr> 
     <td>&nbsp;</td>
-<td><html:submit property="display" value="<%=Constants.BUTTON_DISPLAY%>"/></td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
+    <td><html:submit property="display" value="<%=Constants.BUTTON_DISPLAY%>"/></td>
   </tr>
 </table>
 

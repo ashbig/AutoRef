@@ -26,7 +26,7 @@
         <table width="100%" border="0" align="center">
           <tr> 
             <td height="10" colspan="3" valign="middle" class="tableheader"><strong>Select 
-              species</strong></td>
+              species for gene insert</strong></td>
           </tr>
           <tr> 
             <td width="3%" height="26">&nbsp;</td>

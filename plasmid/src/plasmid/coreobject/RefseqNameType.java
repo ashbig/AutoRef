@@ -24,6 +24,8 @@ public class RefseqNameType {
     public static final String SGD = "SGD Number";
     public static final String VCNUMBER = "Locus Tag (VC number)";
     public static final String FTNUMBER = "Locus Tag (FTT number)";
+    public static final String FBID = "FlyBase ID";
+    public static final String WBGENEID = "WB Gene ID";
     
     private String species;
     private String refseqtype;

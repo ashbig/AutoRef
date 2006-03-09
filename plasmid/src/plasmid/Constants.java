@@ -55,6 +55,12 @@ public class Constants {
     public static final String CLONING = VectorProperty.CLONING;
     public static final String EXPRESSION = VectorProperty.EXPRESSION;
     
+    public static final String OPERATOR_CONTAINS = "contains";
+    public static final String OPERATOR_EQUALS = "equals to";
+    
+    public static final String CLONE_SEARCH_PLASMIDCLONEID = "PlasmID Clone ID";
+    public static final String CLONE_SEARCH_OTHERCLONEID = "Other Clone ID";
+    
     /** Creates a new instance of Constants */
     public Constants() {
     }    

@@ -29,6 +29,7 @@ import plasmid.Constants;
 import plasmid.process.QueryProcessManager;
 import plasmid.coreobject.Clone;
 import plasmid.coreobject.User;
+import plasmid.coreobject.CloneVector;
 
 /**
  *
@@ -69,19 +70,24 @@ public class VectorSearchContinueAction extends Action {
         
         if(Constants.BUTTON_DISPLAY.equals(display)) {
             List vectornames = ((VectorSearchForm)form).getVectornames();
+            List vectors = ((VectorSearchForm)form).getVectors();
             Set checkedVectornames = new TreeSet();
+            List checkedVectors = new ArrayList();
             for(int i=0; i<vectornames.size(); i++) {
                 boolean vectornameBoolean = ((VectorSearchForm)form).getVectornameBoolean(i);
                 if(vectornameBoolean) {
                     String vectorname = (String)vectornames.get(i);
                     checkedVectornames.add(vectorname);
+                    CloneVector v = (CloneVector)vectors.get(i);
+                    checkedVectors.add(v);
                 }
             }
             clones = manager.queryClonesByVector(user, checkedVectornames, species, Clone.AVAILABLE, false);
             
-            ((VectorSearchForm)form).setVectornames(checkedVectornames);
+            ((VectorSearchForm)form).setVectornames(checkedVectors);
+            ((VectorSearchForm)form).setVectors(checkedVectors);
             ((VectorSearchForm)form).setClones(clones);
-            ((VectorSearchForm)form).resetVectornameBooleanValues(checkedVectornames);
+            ((VectorSearchForm)form).resetVectornameBooleanValues(checkedVectors);
             request.setAttribute("numberOfClones", new Integer(clones.size()));
             
             return (new ActionForward(mapping.getInput()));

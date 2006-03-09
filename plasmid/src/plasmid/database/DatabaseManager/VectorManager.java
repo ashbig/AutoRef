@@ -381,6 +381,46 @@ public class VectorManager extends TableManager {
         return id;
     }
     
+    public List getVectorsByName(Collection names) {
+        String sql = "select vectorid,description,form,type,sizeinbp,mapfilename,"+
+        " sequencefilename,comments from vector where name=?";
+        
+        List vectors = new ArrayList();
+        if(names == null)
+            return vectors;
+        
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = null;
+            Iterator iter = names.iterator();
+            while(iter.hasNext()) {
+                String name = (String)iter.next();
+                stmt.setString(1, name);
+                rs = DatabaseTransaction.executeQuery(stmt);
+                if(rs.next()) {
+                int vectorid = rs.getInt(1);
+                String description = rs.getString(2);
+                String form = rs.getString(3);
+                String type = rs.getString(4);
+                int size = rs.getInt(5);
+                String mapfilename = rs.getString(6);
+                String seqfilename = rs.getString(7);
+                String comments = rs.getString(8);
+                CloneVector v = new CloneVector(vectorid, name, description, form, type, size, mapfilename, seqfilename, comments);
+                vectors.add(v);
+                }
+            }
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+        } catch (Exception ex) {
+            if(Constants.DEBUG) {
+                System.out.println(ex);
+            }
+        }
+        
+        return vectors;
+    }
+    
     public static Map getAllVectorPerpertyTypes() {
         Map types = new TreeMap();
         String sql = "select category,propertytype from vectorpropertytype order by category, propertytype";

@@ -34,6 +34,10 @@ public abstract class GeneQueryHandler {
     public static final String SGD = RefseqNameType.SGD;
     public static final String VCNUMBER = RefseqNameType.VCNUMBER;
     public static final String FTNUMBER = RefseqNameType.FTNUMBER;
+    public static final String FBID = RefseqNameType.FBID;
+    public static final String WBGENEID = RefseqNameType.WBGENEID;
+    public static final String PLASMIDCLONEID = Constants.CLONE_SEARCH_PLASMIDCLONEID;
+    public static final String OTHERCLONEID = Constants.CLONE_SEARCH_OTHERCLONEID;
     
     protected Map found;
     protected Map totalFoundCloneids;
@@ -97,6 +101,7 @@ public abstract class GeneQueryHandler {
             return;
         
         foundCloneCount = 0;
+        nofound.addAll(terms);
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         Connection conn = t.requestConnection();
         PreparedStatement stmt = conn.prepareStatement(sql);
@@ -123,15 +128,14 @@ public abstract class GeneQueryHandler {
             
             if(totalClones.size() > 0)
                 totalFoundCloneids.put(term, totalClones);
-            else {
-                nofound.add(term);
-            }
         }
         DatabaseTransaction.closeResultSet(rs);
         DatabaseTransaction.closeStatement(stmt);
         
         CloneManager manager = new CloneManager(conn);
-        Map foundClones = manager.queryClonesByCloneid(new ArrayList(cloneids), true, true, false,restrictions,clonetypes,species,status);
+        Map foundClones = manager.queryClonesByCloneid(new ArrayList(cloneids), true, true, false,restrictions,clonetypes,species,status);        
+        DatabaseTransaction.closeConnection(conn);
+        
         /**
          * Set ks = foundClones.keySet();
          * Iterator it = ks.iterator();
@@ -161,7 +165,7 @@ public abstract class GeneQueryHandler {
         }
         
         found = newFound;
-        DatabaseTransaction.closeConnection(conn);
+        nofound.removeAll(found.keySet());
     }
     
     protected void executeQuery(String sql, List restrictions, List clonetypes, String species, String status) throws Exception {

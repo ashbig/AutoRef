@@ -237,7 +237,7 @@ public class CloneManager extends TableManager {
                 } else {
                     stmt.setString(15, null);
                 }
-                
+                //System.out.println(c.getSpecies());
                 DatabaseTransaction.executeUpdate(stmt);
             }
             DatabaseTransaction.closeStatement(stmt);

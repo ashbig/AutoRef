@@ -15,15 +15,15 @@
         </tr>
         <tr> 
           <td height="15" class="lftsubtxt">- <a href="GetDataForRefseqSearch.do" class="leftsubnavtext">by 
-            reference sequence</a></td>
+            gene</a></td>
         </tr>
         <tr> 
           <td height="15" class="lftsubtxt">- <a href="GetVectorPropertyTypes.do" class="leftsubnavtext">by 
             vector</a></td>
         </tr>
         <tr> 
-          <td height="15" class="lftsubtxt">- <a href="GetCloneSearchTypes.do" class="leftsubnavtext">by 
-            clone</a></td>
+          <td height="15" class="lftsubtxt">- <a href="SearchClone.jsp" class="leftsubnavtext">by 
+            clone identifier</a></td>
         </tr>
       </table></td>
   </tr>
