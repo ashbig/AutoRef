@@ -56,7 +56,7 @@ public class Constants {
     public static final String EXPRESSION = VectorProperty.EXPRESSION;
     
     public static final String OPERATOR_CONTAINS = "contains";
-    public static final String OPERATOR_EQUALS = "equals to";
+    public static final String OPERATOR_EQUALS = "equal to";
     
     public static final String CLONE_SEARCH_PLASMIDCLONEID = "PlasmID Clone ID";
     public static final String CLONE_SEARCH_OTHERCLONEID = "Other Clone ID";

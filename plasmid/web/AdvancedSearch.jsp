@@ -25,7 +25,7 @@
       <html:form action="AdvancedSearch.do">
 <table width="100%" border="0">
   <tr> 
-    <td width="15%" class="formlabel">Gene name</td>
+    <td width="15%" class="formlabel">Gene name or symbol</td>
     <td width="15%">
         <html:select property="geneNameOp" styleClass="itemtext">
           <html:option value="<%=Constants.OPERATOR_CONTAINS %>"/>

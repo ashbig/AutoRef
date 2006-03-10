@@ -43,16 +43,17 @@ public class SelectProcessAction extends InternalUserAction{
         
         String processname = ((GenerateWorklistForm)form).getProcessname();
         ((GenerateWorklistForm)form).setVolumn(3);
+        ((GenerateWorklistForm)form).setTube(true);
         
         List protocols = ProcessManager.getProtocols(processname);
         /**
-        if(protocols == null) {
-            errors.add(ActionErrors.GLOBAL_ERROR,
-            new ActionError("error.general", "Invalid process."));
-            saveErrors(request, errors);
-            return (new ActionForward(mapping.getInput()));
-        }
-        */
+         * if(protocols == null) {
+         * errors.add(ActionErrors.GLOBAL_ERROR,
+         * new ActionError("error.general", "Invalid process."));
+         * saveErrors(request, errors);
+         * return (new ActionForward(mapping.getInput()));
+         * }
+         */
         
         if(protocols != null) {
             request.setAttribute(Constants.PROTOCOLS, protocols);
@@ -63,5 +64,5 @@ public class SelectProcessAction extends InternalUserAction{
         }
         
         return mapping.findForward("success");
-    }   
+    }
 }

@@ -24,9 +24,18 @@
 
 <table width="100%" border="0">
   <tr> 
-    <td width="58%" rowspan="3" valign="top"> <p><span class="homepageText3">Looking 
-        for a specific gene insert? </span><span class="morehit"><br>
-        </span><span class="homeMainText"><a href="GetDataForRefseqSearch.do">Search by reference sequence</a></span></p>
+    <td width="58%" rowspan="3" valign="top"> 
+      <p><span class="homepageText3">Looking for a specific gene insert? </span><span class="morehit"><br>
+        </span><span class="homeMainText"><a href="GetDataForRefseqSearch.do">Search by gene</a></span></p>
+      <p><span class="homepageText3">Want to search all vectors by assay type, 
+        cloning method or expression? </span><span class="morehit"><br>
+        </span><span class="homeMainText"><a href="GetVectorPropertyTypes.do">Search by vector</a></span></p>
+      <p><span class="homepageText3">Do you know the PlasmID CloneID, FLH#, 
+        or other ID for a clone (this is different from gene IDs)? </span><span class="morehit"><br>
+        </span><span class="homeMainText"><a href="SearchClone.jsp">Search by clone identifier</a></span></p>      
+      <p><span class="homepageText3">Want more search options (gene name, 
+        vector name, author, PubMedID, etc.)? </span><span class="morehit"><br>
+        </span><span class="homeMainText"><a href="AdvancedSearch.jsp">Advanced search</a></span></p>
       <p><span class="homepageText3">Looking for an 'empty vector'? </span><span class="morehit"><br>
         </span><span class="homeMainText"><a href="GetAllVectors.do">View all vectors</a></span></p>
       <p><span class="homepageText3">Ready to check out? </span><span class="morehit"><br>
@@ -93,7 +102,15 @@
         clone, be sure to click on the clone ID and make note of both the reference(s) 
         associated with the clone and the author(s) who donated the clone. The 
         people who constructed, published, and donated the clone should be cited 
-        whenever you publish work that uses the clone that you ordered.</span></p></td>
+        whenever you publish work that uses the clone that you ordered.</span></p>
+      <p class="homepageLink"><span class="homepageText3">CloneID is your link 
+        to more info. </span><span class="mainbodytexthead"> </span><span class="morehit">click 
+        on the clone ID to view growth conditions, insert and vector info, insert 
+        sequence (if we have it), authors and references to cite, and to download 
+        a clone map (if there is one). click on a vector name to get more information 
+        about the vector. to return to this info after placing an order sign in, 
+        then go to &quot;my account&quot; (top right of the page) and &quot;view 
+        orders&quot; to monitor order status, view clones and download info.</span></p></td>
   </tr>
 </table>
 
