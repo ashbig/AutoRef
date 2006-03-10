@@ -1,6 +1,6 @@
 <table width="100%" border="0">
         <tr> 
-          <td bgcolor="#6699CC" class="mainbodytexthead">Plasmid Order & Order &gt; Search 
+          <td bgcolor="#6699CC" class="mainbodytexthead">Plasmid Search & Order &gt; Search 
             Plasmids &gt; by vector</td>
         </tr>
         <tr>
