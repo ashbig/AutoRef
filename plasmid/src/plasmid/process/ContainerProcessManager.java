@@ -187,7 +187,13 @@ public class ContainerProcessManager {
         if(setContainerids(containers)) {
             for(int i=0; i<containers.size(); i++) {
                 Container c = (Container)containers.get(i);
-                int id = c.getContainerid();
+                int id = DefTableManager.getNextid("containerlabel");
+                if(id < 0) {
+                    if(Constants.DEBUG) {
+                        System.out.println("Cannot get containerid from database.");
+                    }
+                    return false;
+                }
                 java.text.NumberFormat fmt = java.text.NumberFormat.getInstance();
                 fmt.setMaximumIntegerDigits(8);
                 fmt.setMinimumIntegerDigits(8);
