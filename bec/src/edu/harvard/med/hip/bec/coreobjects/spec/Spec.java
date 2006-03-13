@@ -276,8 +276,8 @@ public abstract class Spec
         {
             DatabaseTransaction.closeResultSet(rs);
         }
-        
-        if (names.size() != 0)   spec_name_suffix = "_" + names.size();
+        if (names.size() > 0)   spec_name_suffix = "_" + (names.size()+1);
+        else spec_name_suffix = "_1"; 
         return spec_name_suffix;
     }
     
