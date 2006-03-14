@@ -72,6 +72,7 @@ case Constants.PROCESS_VIEW_OLIGO_ORDER_BY_CLONEID:{ isCloneId = true; isCloneId
 case  Constants.PROCESS_DELETE_TRACE_FILES :{ break;}
  case Constants.PROCESS_MOVE_TRACE_FILES  :{ break;}     
    case Constants.PROCESS_REANALYZE_CLONE_SEQUENCE:{isACECloneSequenceId = true;isCloneId = true; isCloneIdChecked= true;break;  }           
+case  Constants.PROCESS_RUN_ISOLATE_RUNKER:{ isPlateLabel = true;isPlateLabelChecked=true;}
 }
 String[] cells = new String[6]; 
 cells[0]="&nbsp;";cells[1]="&nbsp;";

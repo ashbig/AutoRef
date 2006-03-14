@@ -17,7 +17,7 @@
 	padding:2px;
 	text-align:left;
 	font-family:verdana, helvetica, sans-serif;
-	font-size:11px;
+	font-size:12px;
 	font-weight:normal;
 }
 
@@ -32,14 +32,14 @@
 	padding:2px;
 	text-align:left;
 	font-family:verdana, helvetica, sans-serif;
-	font-size:11px;
+	font-size:12px;
 	font-weight:normal;
 }
 
 .submenu {
 	line-height: 140%;
 	font-family:verdana, helvetica, sans-serif;
-	font-size:9px;
+	font-size:11px;
 	padding-left:12px;
 	background-color:#C7E3FF;
 }
@@ -47,28 +47,28 @@
 .submenu a:link {
 	color:#0062BF;
 	line-height: 140%;
-	font-size:9px;
+	font-size:11px;
 	text-decoration:none;
 	font-weight:normal; 
 }
 
 .submenu a:visited {
 	color:#0062BF;
-	font-size:9px;
+	font-size:11px;
 	text-decoration:none;
 	font-weight:normal; 
 }
 
 .submenu a:active {
 	color:#0062BF;
-	font-size:9px;
+	font-size:11px;
 	text-decoration:none;
 	font-weight:normal; 
 }
 
 .submenu a:hover {
 	color:#000000;
-	font-size:9px;
+	font-size:11px;
 	text-decoration:none;
 	font-style: normal;
 	font-weight:normal;
@@ -210,6 +210,7 @@ String image = "<img border='0' src='" + red_arrow_pass +"' width = '6' height='
     
 <%= image %><a href="SelectProcess.do?forwardName=<%=Constants.PROCESS_RUN_DECISION_TOOL%>"  title="Run visual version of decision tool">Quick decision tool </a><br/>
 <%= image %><a href="SelectProcess.do?forwardName=<%=Constants.PROCESS_RUN_DECISION_TOOL_NEW%>"  title="Run decision tool ">Detailed decision tool</a><br/>
+<hr>
 <%= image %><a href="SelectProcess.do?forwardName=<%=Constants.PROCESS_NOMATCH_REPORT%>"  title="Report for clone that do not match reference sequence ">Mismatched clones</a><br/>
 <hr>
 <%= image %><a href="page_main.jsp?forwardName=<%=Constants.PROCESS_CREATE_REPORT%>&amp;<%=Constants.JSP_CURRENT_LOCATION%>=Home > Reports > General Report&amp;<%= Constants.JSP_TITLE%>=Run General Report"  title="General Report">General report</a><br/>
@@ -226,9 +227,11 @@ String image = "<img border='0' src='" + red_arrow_pass +"' width = '6' height='
 {%>
 <p id="view" class="menuOut" onclick="SwitchMenu('sub_view')" onmouseover="ChangeClass('view','menuOver')" onmouseout="ChangeClass('view','menuOut')">View</p>
 <div class="submenu" id="sub_view" style="display:none;">
+<%= image %><a href="ContainerScan.jsp?forwardName=<%=Constants.CONTAINER_RESULTS_VIEW%>&amp;<%=Constants.JSP_CURRENT_LOCATION%>=Home > View > Plate Results&amp;<%= Constants.JSP_TITLE%>=Plate Results"  title="Plate Results">Plate Results</a><br/>
+<hr>
+
 <%= image %><a href="ContainerScan.jsp?forwardName=<%=Constants.CONTAINER_PROCESS_HISTORY%>&amp;<%=Constants.JSP_CURRENT_LOCATION%>=Home > View > Plate History&amp;<%= Constants.JSP_TITLE%>=Plate History"  title="Plate History">Plate History</a><br/>
 <%= image %><a href="ContainerScan.jsp?forwardName=<%=Constants.CONTAINER_DEFINITION_INT%>&amp;<%=Constants.JSP_CURRENT_LOCATION%>=Home > View > Plate Description&amp;<%= Constants.JSP_TITLE%>=Plate Description"  title="Plate Description">Plate Description</a><br/>
-<%= image %><a href="ContainerScan.jsp?forwardName=<%=Constants.CONTAINER_RESULTS_VIEW%>&amp;<%=Constants.JSP_CURRENT_LOCATION%>=Home > View > Plate Results&amp;<%= Constants.JSP_TITLE%>=Plate Results"  title="Plate Results">Plate Results</a><br/>
 <%= image %><a href="InitiateProcess.jsp?forwardName=<%=Constants.PROCESS_SHOW_CLONE_HISTORY%>&amp;<%=Constants.JSP_CURRENT_LOCATION%>=Home > View > Clone History&amp;<%= Constants.JSP_TITLE%>=Clone History"  title="Clone History">Clone History</a><br/>
 <hr>
 <%= image %><a href="<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetItem.do?forwardName=<%=Constants.AVAILABLE_CONTAINERS_INT%>"  title="Names of containers submitted into ACE">Plates</a><br/>

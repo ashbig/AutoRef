@@ -327,6 +327,7 @@ additional_jsp_buffer.append("<P><P><tr><td>"+line_padding+"<input type = checkb
 additional_jsp = additional_jsp_buffer.toString();
     break;
 }
+case Constants.PROCESS_RUN_ISOLATE_RUNKER:{break;}
 }
 if ( isTryMode )
 {
