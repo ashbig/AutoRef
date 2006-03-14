@@ -38,12 +38,13 @@ public class OrderProcessManager {
     public List getCloneids() {return cloneids;}
     public List getCollectionNames() {return collectionNames;}
     
-    public void setAddToCartStatus(List cloneList, int cloneid, boolean b) {
+    public void setAddToCartStatus(Collection cloneList, int cloneid, boolean b) {
         if(cloneList == null)
             return;
         
-        for(int i=0; i<cloneList.size(); i++) {
-            CloneInfo c = (CloneInfo)cloneList.get(i);
+        Iterator iter = cloneList.iterator();
+        while(iter.hasNext()) {
+            CloneInfo c = (CloneInfo)iter.next();
             if(c.getCloneid() == cloneid) {
                 c.setIsAddedToCart(b);
             }

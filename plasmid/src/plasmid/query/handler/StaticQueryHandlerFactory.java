@@ -43,6 +43,14 @@ public class StaticQueryHandlerFactory {
             return new PlasmidCloneidQueryHandler(terms);
         else if(GeneQueryHandler.OTHERCLONEID.equals(type)) 
             return new CloneNameQueryHandler(terms);
+        else if(GeneQueryHandler.GENETEXTCONTAIN.equals(type))
+            return new GeneTextQueryHandler(terms);
+        else if(GeneQueryHandler.GENETEXT.equals(type))
+            return new GeneTextQueryMatchHandler(terms);
+        else if(GeneQueryHandler.VECTORNAMECONTAIN.equals(type))
+            return new VectorNameQueryHandler(terms);
+        else if(GeneQueryHandler.VECTORNAMETEXT.equals(type))
+            return new VectorNameMatchQueryHandler(terms);
         else {
             RefseqNameQueryHandler h = new RefseqNameQueryHandler(terms);
             h.setNametype(type);

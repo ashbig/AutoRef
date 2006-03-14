@@ -24,7 +24,7 @@
       <jsp:include page="menu.jsp" />
 	</td>
     <td width="864" align="left" valign="top">
-	<jsp:include page="searchByVectorTitle.jsp" />
+	<jsp:include page="searchResultTitle.jsp" />
 
 <html:form action="SetDisplay.do">
 

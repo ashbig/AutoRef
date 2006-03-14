@@ -23,6 +23,16 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 
+import plasmid.form.AdvancedSearchForm;
+import plasmid.form.RefseqSearchForm;
+import plasmid.coreobject.*;
+import plasmid.util.StringConvertor;
+import plasmid.Constants;
+import plasmid.process.QueryProcessManager;
+import plasmid.database.DatabaseManager.UserManager;
+import plasmid.query.handler.*;
+import plasmid.util.CloneInfoComparator;
+
 /**
  *
  * @author  DZuo
@@ -53,7 +63,113 @@ public class AdvancedSearchAction extends Action {
         // get the parameters specified by the customer
         ActionErrors errors = new ActionErrors();
         
-        return (mapping.findForward("success"));
+        RefseqSearchForm f = new RefseqSearchForm();
+        f.setPage(1);
+        f.setPagesize(Constants.PAGESIZE);
+        f.setDisplayPage("indirect");
+        f.setDisplay("symbol");
+        request.getSession().setAttribute("refseqSearchForm", f);
         
+        User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
+        List restrictions = new ArrayList();
+        restrictions.add(Clone.NO_RESTRICTION);
+        if(user != null) {
+            List ress = UserManager.getUserRestrictions(user);
+            restrictions.addAll(ress);
+        }
+        
+        StringConvertor sc = new StringConvertor();
+        
+        String geneName = ((AdvancedSearchForm)form).getGeneName();
+        String geneNameOp = ((AdvancedSearchForm)form).getGeneNameOp();
+        List searchListGeneName = sc.convertFromStringToList(geneName, " \t\n\r\f,;");
+        
+        String vectorName = ((AdvancedSearchForm)form).getVectorName();
+        String vectorNameOp = ((AdvancedSearchForm)form).getVectorNameOp();
+        List searchListVectorName = sc.convertFromStringToList(vectorName, " \t\n\r\f,;");
+        
+        GeneQueryHandler handler = null;
+        Set foundSet = null;
+        
+        try {
+            if(searchListGeneName != null && searchListGeneName.size()>0) {
+                if(Constants.OPERATOR_CONTAINS.equals(geneNameOp)) {
+                    handler = StaticQueryHandlerFactory.makeGeneQueryHandler(GeneQueryHandler.GENETEXTCONTAIN, searchListGeneName);
+                } else {
+                    handler = StaticQueryHandlerFactory.makeGeneQueryHandler(GeneQueryHandler.GENETEXT, searchListGeneName);
+                }
+                if(handler == null) {
+                    errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.query.notfound"));
+                    saveErrors(request, errors);
+                    return (mapping.findForward("error"));
+                }
+                
+                handler.doQuery(restrictions, null, null, -1, -1, null, Clone.AVAILABLE);
+                if(foundSet == null) {
+                    foundSet = new TreeSet(new CloneInfoComparator());
+                    foundSet.addAll(handler.convertFoundToCloneinfo());
+                    
+                    if(foundSet.size()==0)
+                        return (mapping.findForward("empty"));
+                }
+            }
+            
+            if(searchListVectorName != null && searchListVectorName.size()>0) {
+                if(Constants.OPERATOR_CONTAINS.equals(vectorNameOp)) {
+                    handler = StaticQueryHandlerFactory.makeGeneQueryHandler(GeneQueryHandler.VECTORNAMECONTAIN, searchListVectorName);
+                } else {
+                    handler = StaticQueryHandlerFactory.makeGeneQueryHandler(GeneQueryHandler.VECTORNAMETEXT, searchListVectorName);
+                }
+                if(handler == null) {
+                    errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.query.notfound"));
+                    saveErrors(request, errors);
+                    return (mapping.findForward("error"));
+                }
+                
+                if(foundSet == null) {
+                    handler.doQuery(restrictions, null, null, -1, -1, null, Clone.AVAILABLE);
+                    foundSet = new TreeSet(new CloneInfoComparator());
+                    foundSet.addAll(handler.convertFoundToCloneinfo());
+                    if(foundSet.size()==0)
+                        return (mapping.findForward("empty"));
+                } else {
+                    List cloneids = QueryProcessManager.getCloneids(foundSet);
+                    int start=0;
+                    while(start<cloneids.size()) {
+                        int end = start+1000;
+                        if(end>cloneids.size())
+                            end = cloneids.size();
+                    
+                        List l = cloneids.subList(start, end);
+                        String s = sc.convertFromListToSqlList(l);
+                        handler.doQuery(restrictions, null, null, -1, -1, null, Clone.AVAILABLE, "(select * from clone where cloneid in ("+s+"))");
+                        start += 1000;
+                        
+                        foundSet = new TreeSet(new CloneInfoComparator());
+                        foundSet.addAll(handler.convertFoundToCloneinfo());
+                    }
+                    
+                    if(foundSet.size()==0)
+                        return (mapping.findForward("empty"));                   
+                }
+            }
+        } catch (Exception ex) {
+            if(Constants.DEBUG)
+                System.out.println(ex);
+            
+            errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.query.failed"));
+            saveErrors(request, errors);
+            return (mapping.findForward("error"));
+        }
+        
+        if(foundSet.size()==0)
+            return (mapping.findForward("empty"));
+        
+        List founds = new ArrayList();
+        founds.addAll(foundSet);
+        request.getSession().setAttribute("numOfFound", new Integer(founds.size()));
+        request.getSession().setAttribute("found", founds);
+        
+        return (mapping.findForward("success"));
     }
 }

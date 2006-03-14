@@ -237,4 +237,18 @@ public class QueryProcessManager {
         
         return allVectorids;
     }
+    
+    public static List getCloneids(Collection cloneinfos) {
+        List l = new ArrayList();
+        if(cloneinfos == null)
+            return l;
+        
+        Iterator iter = cloneinfos.iterator();
+        while(iter.hasNext()) {
+            CloneInfo c = (CloneInfo)iter.next();
+            l.add((new Integer(c.getCloneid())).toString());
+        }
+        
+        return l;
+    }
 }

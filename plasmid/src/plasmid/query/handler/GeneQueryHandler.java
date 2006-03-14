@@ -38,6 +38,10 @@ public abstract class GeneQueryHandler {
     public static final String WBGENEID = RefseqNameType.WBGENEID;
     public static final String PLASMIDCLONEID = Constants.CLONE_SEARCH_PLASMIDCLONEID;
     public static final String OTHERCLONEID = Constants.CLONE_SEARCH_OTHERCLONEID;
+    public static final String GENETEXT = "Gene Text Exact Match";
+    public static final String GENETEXTCONTAIN = "Gene Text Match";
+    public static final String VECTORNAMETEXT = "Vector Name Exact Match";
+    public static final String VECTORNAMECONTAIN = "Vector Name Match";
     
     protected Map found;
     protected Map totalFoundCloneids;
@@ -83,6 +87,9 @@ public abstract class GeneQueryHandler {
     public abstract void doQuery(List restrictions, List clonetypes, String species, String status) throws Exception;
     
     public abstract void doQuery(List restrictions, List clonetypes, String species, int start, int end, String column, String status) throws Exception;
+       
+    public void doQuery(List restrictions, List clonetypes, String species, int start, int end, String column, String status, String clonetable) throws Exception {
+    }
     
     public int getNumOfFoundClones() {
         return found.size();
@@ -95,8 +102,12 @@ public abstract class GeneQueryHandler {
     protected void executeQuery(String sql) throws Exception {
         executeQuery(sql, null, null, null, null);
     }
-    
+        
     protected void executeQuery(String sql, List restrictions, List clonetypes, String species, int start, int end, String sortColumn, String status) throws Exception {
+        executeQuery(sql, restrictions, clonetypes, species, start, end, sortColumn, status, 1, false);
+    }
+    
+    protected void executeQuery(String sql, List restrictions, List clonetypes, String species, int start, int end, String sortColumn, String status, int num, boolean isLike) throws Exception {
         if(terms == null || terms.size() == 0)
             return;
         
@@ -110,7 +121,11 @@ public abstract class GeneQueryHandler {
         int n = 0;
         for(int i=0; i<terms.size(); i++) {
             String term = (String)terms.get(i);
-            stmt.setString(1, term);
+            if(isLike)
+                term = "%"+term+"%";
+            for(int m=0; m<num; m++) {
+                stmt.setString(m+1, term);
+            }
             rs = DatabaseTransaction.executeQuery(stmt);
             List clones = new ArrayList();
             List totalClones = new ArrayList();

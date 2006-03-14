@@ -22,7 +22,8 @@ public class PrintLabel {
        /**
         * static variables
         **/
-       static final String printerName = "zebra";
+       static final String printerName = "zebra";       
+       //static final String printerName = "128.103.32.158";
        static final int labelWidth = 25;
        //static final int labelHeight = 15;
        static final int labelHeight = 3;
@@ -51,14 +52,14 @@ public class PrintLabel {
                             + labelWidth + " " 
                             + labelHeight ;
                */
-               String cmd = "perl F:\\Program Files\\Apache Tomcat 4.0\\webapps\\PLASMID\\WEB-INF\\perl\\print_label.pl " 
+               String cmd = "perl \"F:\\Program Files\\Apache Tomcat 4.0\\webapps\\PLASMID\\WEB-INF\\perl\\print_label.pl\" " 
                             + label + " " 
                             + printerName + " " 
                             + labelWidth + " " 
                             + labelHeight ;
-               
+               System.out.println(cmd);
                Process p = Runtime.getRuntime().exec(cmd); 
-                      
+               System.out.println("printing label");  
                /**
                 * Use the following code to wait for the process to finish 
                 * and check the return code from the process 

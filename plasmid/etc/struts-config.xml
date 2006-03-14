@@ -124,7 +124,8 @@
                 type="plasmid.action.AdvancedSearchAction"
                name="advancedSearchForm"
               input="/AdvancedSearch.jsp">
-      <forward  name="success"  path="/AdvancedSearchContinue.jsp"/>
+      <forward  name="success"  path="/DisplayVectorSearchResults.jsp"/>
+      <forward  name="empty"  path="/DisplayEmptySearchResults.jsp"/>
     </action>
     
     <action     path="/ChangeOrderStatus"
