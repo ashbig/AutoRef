@@ -51,7 +51,7 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
         {
             case -Constants.PROCESS_ADD_NEW_VECTOR  :
             {
-               return "Request for new vector submission";
+               return "Request for new vector addition";
             }
            case -Constants.PROCESS_SUBMIT_REFERENCE_SEQUENCES  :
            {
@@ -824,16 +824,16 @@ private boolean isCloneCollectionNameExists(CloneCollection collection, Connecti
         try
         {
 
-            user = AccessManager.getInstance().getUser("htaycher123","htaycher");
+            user = AccessManager.getInstance().getUser("htaycher123","me");
             BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
             sysProps.verifyApplicationSettings();
             DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
             DatabaseCommunicationsRunner runner = new DatabaseCommunicationsRunner();
             runner.setUser(user);
-            File f = new File("C:\\test.txt");
+            File f = new File("C:\\bec\\bec\\docs\\ApplicationSetup\\VectorFile_pDon221.xml");
             InputStream input = new FileInputStream(f);
             runner.setInputStream(input);
-            runner.setProcessType( -Constants.PROCESS_SUBMIT_CLONE_SEQUENCES);
+            runner.setProcessType( -Constants.PROCESS_ADD_NEW_VECTOR);
             runner.run();
       
         }

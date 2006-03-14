@@ -37,7 +37,7 @@ import edu.harvard.med.hip.bec.ui_objects.*;
       
     public void                 setSpecId(int v){ m_spec_id = v;}
     public ArrayList            getClones(){ return m_clones;}
-    public String               getTitle()    {return "Request for Decision tool run";    }
+    public String               getTitle()    {return "Request for Quick decision tool run";    }
     
     public void run_process()
     {

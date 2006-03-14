@@ -43,16 +43,16 @@ public class DeleteObjectRunner extends ProcessRunner
      {  
          switch(this.m_process_type)
          {
-            case Constants.PROCESS_DELETE_PLATE : return "delete Plates";
-            case Constants.PROCESS_DELETE_CLONE_READS : return "delete Clone End Reads (forward and reverse";
-            case Constants.PROCESS_DELETE_CLONE_FORWARD_READ : return "delete Clone forward End Reads";
-            case Constants.PROCESS_DELETE_CLONE_REVERSE_READ : return "delete Clone reverse End Reads";
-            case Constants.PROCESS_DELETE_CLONE_SEQUENCE : return "delete Clone sequences";
-            case  Constants.PROCESS_GET_TRACE_FILE_NAMES :return "get Trace Files' names";
-            case  Constants.PROCESS_DELETE_TRACE_FILES :return "delete Trace Files from hard drive";
-            case Constants.PROCESS_MOVE_TRACE_FILES:return "move Trace Files from clone directories";
-            case Constants.PROCESS_REANALYZE_CLONE_SEQUENCE: return "delete result of clone sequence analysis";
-             case Constants.PROCESS_CLEANUP_INTERMIDIATE_FILES_FROM_HARD_DRIVE: return "clean-up hard drive";                      
+            case Constants.PROCESS_DELETE_PLATE : return "Request for delete plate run";
+            case Constants.PROCESS_DELETE_CLONE_READS : return "Request for delete clone forward and reverse end reads from database";
+            case Constants.PROCESS_DELETE_CLONE_FORWARD_READ : return "Request for delete clone forward end reads from database";
+            case Constants.PROCESS_DELETE_CLONE_REVERSE_READ : return "Request for delete clone reverse end reads from database";
+            case Constants.PROCESS_DELETE_CLONE_SEQUENCE : return "Request for delete clone sequence from database";
+            case  Constants.PROCESS_GET_TRACE_FILE_NAMES :return "Request for get trace file names";
+            case  Constants.PROCESS_DELETE_TRACE_FILES :return "Request for delete trace files from hard drive";
+            case Constants.PROCESS_MOVE_TRACE_FILES:return "Request for move trace file from clone directory into temporary directory ";
+            case Constants.PROCESS_REANALYZE_CLONE_SEQUENCE: return "Request for reanalyze clone sequence ";
+             case Constants.PROCESS_CLEANUP_INTERMIDIATE_FILES_FROM_HARD_DRIVE: return "Request for clean-up hard drive";                      
              default: return  "";
         }
      }

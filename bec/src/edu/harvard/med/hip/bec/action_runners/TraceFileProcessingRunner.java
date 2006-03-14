@@ -524,12 +524,14 @@ public class TraceFileProcessingRunner extends ProcessRunner
               BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
         sysProps.verifyApplicationSettings();
       edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadTraceFileFormats();
-       ProcessRunner runner =  new EndReadsWrapperRunner();
-        runner.setInputData( edu.harvard.med.hip.bec.Constants.ITEM_TYPE_PLATE_LABELS, "JSE001381");
+      ProcessRunner runner =  new EndReadsWrapperRunner();
+        runner.setInputData( edu.harvard.med.hip.bec.Constants.ITEM_TYPE_PLATE_LABELS, "JSA001431");
          runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
     runner.setProcessType(Constants.PROCESS_RUN_END_READS_WRAPPER);
         runner.run();
-/*ProcessRunner runner = new TraceFileProcessingRunner();
+
+      /*
+      ProcessRunner runner = new TraceFileProcessingRunner();
 runner.setProcessType(Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRANSFER);
 ((TraceFileProcessingRunner)runner).setReadType(Constants.READ_TYPE_ENDREAD);//m_read_type= read_type;}
 //runner.setSequencingFacility(SequencingFacilityFileName.SEQUENCING_FACILITY_KOLODNER);
@@ -554,7 +556,9 @@ runner.setProcessType(Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRAN
           //                runner.setProcessType(Constants.PROCESS_INITIATE_TRACEFILES_TRANSFER);
          //        runner.setUser(  AccessManager.getInstance().getUser("htaycher345","htaycher"));
     runner.run();
- **/
+       *
+       **/
+ 
          }catch(Exception e){}
          System.exit(0);
      }

@@ -87,6 +87,8 @@ public abstract class ProcessRunner implements Runnable
                
                checkProcessSettings();
                cleanUpFrozenItemsForWriteProcesses();
+               
+               System.out.println(m_items);
              
          }
          catch(Exception e)
@@ -260,13 +262,11 @@ public abstract class ProcessRunner implements Runnable
                 case Constants.   PROCESS_CREATE_FILE_FOR_TRACEFILES_TRANSFER  :    
                 case Constants.   PROCESS_INITIATE_TRACEFILES_TRANSFER  :    
                 case Constants.   PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRANSFER  :    
-                case Constants.PROCESS_SUBMIT_REFERENCE_SEQUENCES   :    
-                case Constants.PROCESS_SUBMIT_CLONE_COLLECTION   :    
-                case Constants.PROCESS_SUBMIT_CLONE_SEQUENCES   : 
-                     case -Constants.PROCESS_SUBMIT_REFERENCE_SEQUENCES   :    
+                case -Constants.PROCESS_SUBMIT_REFERENCE_SEQUENCES   :    
                 case -Constants.PROCESS_SUBMIT_CLONE_COLLECTION   :    
                 case -Constants.PROCESS_SUBMIT_CLONE_SEQUENCES   : 
-              
+               case -Constants.PROCESS_ADD_NEW_VECTOR  :
+                
                     result=false;
            }
            return result;
@@ -639,7 +639,6 @@ public abstract class ProcessRunner implements Runnable
                  try
                   {
                       item_value= Integer.parseInt( (String)items.get(count));
-                       System.out.println(item_value);
                       // should not be 0
                        if ( items_type == Constants.ITEM_TYPE_CLONEID && item_value < 1) continue;
                       final_string.append( item_value + " ");

@@ -61,7 +61,7 @@ public class DiscrepancyFinderRunner extends ProcessRunner
         ArrayList  sequence_descriptions = null;
         try
         {
-            conn = DatabaseTransaction.getInstance().requestConnection();
+           conn = DatabaseTransaction.getInstance().requestConnection();
             prepareDiscrepancyFinder();
             pst_insert_process_object = conn.prepareStatement("insert into process_object (processid,objectid,objecttype) values(?,?,"+Constants.PROCESS_OBJECT_TYPE_CLONE_SEQUENCE+")");
             pst_check_clone_sequence = conn.prepareStatement("select sequenceid from assembledsequence where sequenceid = ? and analysisstatus ="+BaseSequence.CLONE_SEQUENCE_STATUS_ASSEMBLED);

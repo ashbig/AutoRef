@@ -69,7 +69,7 @@ public class EndReadsWrapperRunner extends ProcessRunner
         m_empty_samples_directory =OUTPUT_BASE_ROOT+ERROR_EMPTY_SAMPLES_DIR;
     }
 
-    public String getTitle()     { return "Request for end reads wrapper";     }
+    public String getTitle()     { return "Request for 'check quality and distribute end reads'. ";     }
 
 
 

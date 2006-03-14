@@ -93,7 +93,7 @@ private PreparedStatement                       i_prst_get_clone_read_result = n
 public void                 setSpecId(int v){ m_spec_id = v;}
     public void                 setUserComment(String v){ m_user_comment = v;}
     public void                 setNumberOfOutputFiles(int v){ m_number_of_files= v;}
-    public String               getTitle()    {return "Request for Decision tool run";    }
+    public String               getTitle()    {return "Request for Detailed decision tool run";    }
     public void                 setFields(
                          Object is_clone_final_status,
                         Object is_plate_label,//    Plate Label</td>

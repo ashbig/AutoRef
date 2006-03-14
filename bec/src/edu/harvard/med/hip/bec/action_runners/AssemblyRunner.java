@@ -70,7 +70,14 @@ public class AssemblyRunner extends ProcessRunner
         public void         setIsDeleteLQReads(boolean v){ if ( v ) m_delete_lqreads = 1;}
         public void         setIsUseLQReadsForAssembly(boolean v){ if ( v ) m_use_lqreads_for_assembly = 1;}
    
-        public String       getTitle(){ return "Request for sequence assembler run.";}
+        public String       getTitle()
+        {
+            if ( m_assembly_mode == END_READS_ASSEMBLY)
+                return "Request for sequence assembler for end reads run.";
+            else if (  m_assembly_mode ==   FULL_SEQUENCE_ASSEMBLY )
+                return "Request for sequence assembler run.";
+            return "Request for sequence assembler run.";
+        }
 
 
         public void run_process()
@@ -295,7 +302,7 @@ public class AssemblyRunner extends ProcessRunner
                 IsolateTrackingEngine.updateAssemblyStatus(
                                 IsolateTrackingEngine.ASSEMBLY_STATUS_NO_CONTIGS,
                                 clone_definition.getIsolateTrackingId(),  conn);
-                System.out.println("Assembly null. Clone "+clone_definition.getCloneId() +" "+clone_definition.getFlexSequenceId());
+         //       System.out.println("Assembly null. Clone "+clone_definition.getCloneId() +" "+clone_definition.getFlexSequenceId());
            }
          
            else
@@ -458,8 +465,7 @@ public class AssemblyRunner extends ProcessRunner
                         seq_desc.setReadFilePath(trace_files_path +File.separator +seq_desc.getFlexSequenceId() + File.separator + seq_desc.getCloneId() );
                         res.add( seq_desc );
                 }
-               // System.out.println(entry.toString());
-
+       
             }
             return res;
         } catch (Exception sqlE)
@@ -605,7 +611,6 @@ public class AssemblyRunner extends ProcessRunner
                     sequence = SequenceManipulation.getCompliment(read.getTrimmedSequence()) ;
                     int[] arr_scores = SequenceManipulation.getScoresComplement(read.getTrimmedScores());
                     scores = Algorithms.convertArrayToString(arr_scores, " ");
-   //System.out.println(Algorithms.convertArrayToString(arr_scores, " "));
              }
              else if ( read.getType() == Read.TYPE_ENDREAD_FORWARD)
              {
@@ -652,11 +657,10 @@ public static void main(String args[])
 
      User user = AccessManager.getInstance().getUser("htaycher123","htaycher");
       runner = new AssemblyRunner();
-               runner.setInputData(Constants.ITEM_TYPE_PLATE_LABELS,"VCXXG002291-2.012-1");  
+               runner.setInputData(Constants.ITEM_TYPE_CLONEID,"186641");  
     runner.setUser(user);
-            runner.setProcessType(Constants.PROCESS_RUN_ASSEMBLER_FOR_END_READS);
-  System.out.println(runner.getUser() == null);
-           ((AssemblyRunner)runner).setAssemblyMode(AssemblyRunner.END_READS_ASSEMBLY);
+            runner.setProcessType(Constants.PROCESS_RUN_ASSEMBLER_FOR_ALL_READS);
+           ((AssemblyRunner)runner).setAssemblyMode(AssemblyRunner.FULL_SEQUENCE_ASSEMBLY);
         ((AssemblyRunner)runner).setResultType( String.valueOf(IsolateTrackingEngine.PROCESS_STATUS_ER_PHRED_RUN));
         ((AssemblyRunner)runner).setVectorFileName( "vector_empty.seq");
         ((AssemblyRunner)runner).setQualityTrimmingScore ( 0);

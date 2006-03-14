@@ -63,7 +63,7 @@ public class PlateUploadRunner extends ProcessRunner
      public  void        setStartCodon(String v){m_start_codon = v;}
     public  void        setFusionStopCodon(String v){m_fusion_stop_codon = v;}
     public  void        setClosedStopCodon(String v){m_close_stop_codon = v;}
-     public String          getTitle() {return "Request for plates upload";    }
+     public String          getTitle() {return "Request for plate information upload";    }
 
 
      public void run_process()

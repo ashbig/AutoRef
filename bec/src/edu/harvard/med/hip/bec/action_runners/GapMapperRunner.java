@@ -63,9 +63,9 @@ import java.util.*;
         switch ( m_process_type )
         {
             case Constants.PROCESS_FIND_GAPS:
-                return "Request for Gap Mapper execution";
+                return "Request for 'run gap mapper',";
             case Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE:
-                return "Request for Low Quality Regions Finder execution for clone sequences";
+                return "Request for 'find low quality regions in clone sequences'.";
             default:
                 return "";
         }

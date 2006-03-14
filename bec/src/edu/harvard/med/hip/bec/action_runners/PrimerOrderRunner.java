@@ -123,7 +123,7 @@ public class PrimerOrderRunner extends ProcessRunner
     
     
     
-    public String       getTitle()    { return "Request for Primer order";}
+    public String       getTitle()    { return "Request for primer order";}
     
     public void run_process()
     {

@@ -35,13 +35,10 @@ public class IsolateRankerRunner extends ProcessRunner
 {
 
 
-    private ArrayList           m_master_container_labels = null;//get from form
     private boolean             m_isRunPolymorphismFinder = false;//get from form
     private FullSeqSpec         m_fullseq_spec = null;
     private EndReadsSpec        m_endreads_spec = null;
-    private ArrayList           m_error_messages = null;
-
-
+ 
     public void         setCutoffValuesSpec(FullSeqSpec specs)        {m_fullseq_spec = specs;}
     public void         setPenaltyValuesSpec(EndReadsSpec specs)        {m_endreads_spec = specs;}
     public String getTitle() {    return "Request for Isolate ranker run.";   }
@@ -61,6 +58,7 @@ public class IsolateRankerRunner extends ProcessRunner
             {
                 //  build 5 plates strings
                 ar_plate_names_sql = prepareItemsListForSQL();
+                
                 for (int count = 0; count < ar_plate_names_sql.size(); count++)
                 {
                     // array of Integer
@@ -71,7 +69,7 @@ public class IsolateRankerRunner extends ProcessRunner
                 TreeSet no_duplicates_set = new TreeSet(ar_construct_ids);
                 ar_construct_ids = new ArrayList(no_duplicates_set);
                 
-                // conncection to use for transactions
+                 // conncection to use for transactions
                 conn = DatabaseTransaction.getInstance().requestConnection();
                
                 isolate_ranker = new IsolateRanker();
@@ -225,13 +223,13 @@ public class IsolateRankerRunner extends ProcessRunner
             edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
 
         ProcessRunner runner = new IsolateRankerRunner();
-        runner.setInputData(Constants.ITEM_TYPE_PLATE_LABELS, " YGS000359-1 YGS000359-2  ");
+        runner.setInputData(Constants.ITEM_TYPE_PLATE_LABELS, " ASA001215   ");
       //  runner.setContainerLabels(master_container_labels );
         runner.setProcessType( Constants.PROCESS_RUN_ISOLATE_RUNKER );
         Spec spec_f = Spec.getSpecById(91, Spec.FULL_SEQ_SPEC_INT);
          ((IsolateRankerRunner)runner).setCutoffValuesSpec( (FullSeqSpec)Spec.getSpecById(91, Spec.FULL_SEQ_SPEC_INT));
         ((IsolateRankerRunner)runner).setPenaltyValuesSpec( (EndReadsSpec)Spec.getSpecById(1, Spec.END_READS_SPEC_INT));
-       runner.setUser(  AccessManager.getInstance().getUser("htaycher123","htaycher"));
+       runner.setUser(  AccessManager.getInstance().getUser("htaycher123","me"));
         runner.run();
         }catch(Exception e){}
         System.exit(0);
