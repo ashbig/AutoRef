@@ -94,8 +94,8 @@ function fnShowVectorDetails()
       </div>
 </td>
 <td bgcolor="#e4e9f8">
-<input type=BUTTON value="Vector Details" 
- onClick="fnShowVectorDetails()">
+<!--<input type=BUTTON value="Vector Details" 
+ onClick="fnShowVectorDetails()">-->
 </td>
 </tr>
   
