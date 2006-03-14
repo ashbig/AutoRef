@@ -137,8 +137,9 @@ public class PhredWrapper
         {
             String seqOutputFileName = seqFileDir+File.separator+traceFileName+SEQ_FILE_EXT ;
             String qualOutputFileName =qualFileDir+File.separator+traceFileName+QUAL_FILE_EXT;
-	//System.out.println(seqOutputFileName);
-            //check whether the Phred output sequence file and quality file exist
+            
+            
+	      //check whether the Phred output sequence file and quality file exist
             //if not, the trace file failed the base calling step.
             boolean fileExist = (new File(seqOutputFileName)).exists();
             if (fileExist)
@@ -199,14 +200,16 @@ public class PhredWrapper
         String cmd = null;
         if (isUnix)
         {
-           
-            m_input_directoryname=Algorithms.convertWindowsFileNameIntoUnix(m_input_directoryname);
-            m_output_directoryname=Algorithms.convertWindowsFileNameIntoUnix(m_output_directoryname);
-            m_output_quality_directoryname=Algorithms.convertWindowsFileNameIntoUnix(m_output_quality_directoryname);
+           if( BecProperties.getInstance().isWindowsOS())
+           {
+                m_input_directoryname=Algorithms.convertWindowsFileNameIntoUnix(m_input_directoryname);
+                m_output_directoryname=Algorithms.convertWindowsFileNameIntoUnix(m_output_directoryname);
+                m_output_quality_directoryname=Algorithms.convertWindowsFileNameIntoUnix(m_output_quality_directoryname);
+           }
         }
         cmd = m_phredFilePath + m_IDN + m_input_directoryname +  m_ODN + m_output_directoryname + m_OQDN
         + m_output_quality_directoryname + m_trim_alg + m_trim_type + m_ezyme_sequence ;
-        return run(cmd);
+         return run(cmd);
     } 
    
    
