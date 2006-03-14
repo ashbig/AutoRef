@@ -142,7 +142,7 @@ public class SelectProcessAction extends BecAction
                      request.setAttribute("forwardName", new Integer(forwardName));
                      return (mapping.findForward("scan_label"));
                 }
-                case Constants.PROCESS_RUN_ISOLATE_RUNKER://run isolate runker
+            /*    case Constants.PROCESS_RUN_ISOLATE_RUNKER://run isolate runker
                 {
                     //get all specs for each of the three types and all plates where
                     ArrayList spec_collection = new ArrayList();
@@ -153,17 +153,13 @@ public class SelectProcessAction extends BecAction
                     spec_names.add("Clone acceptance criteria:");
                     control_names.add(Spec.FULL_SEQ_SPEC);
                     spec_collection.add(  EndReadsSpec.getAllSpecNames());
-                     spec_names.add("End reads Evaluation");
+                     spec_names.add("Clone Ranking");
                      control_names.add(Spec.END_READS_SPEC);
                     request.setAttribute(Constants.SPEC_COLLECTION, spec_collection);
                     request.setAttribute(Constants.SPEC_TITLE_COLLECTION, spec_names);
                      request.setAttribute(Constants.SPEC_CONTROL_NAME_COLLECTION,control_names);
-                    // there are isolates subject to isolateranking
-                    ArrayList plateNames = Container.findContainerLabelsForProcess(Constants.PROCESS_RUN_ISOLATE_RUNKER,-1);
-                    request.setAttribute(Constants.PLATE_NAMES_COLLECTION, plateNames);
-                    request.setAttribute("process_name", getProcessTitle(forwardName));
-                    return (mapping.findForward("select_plates"));
-                }
+                     return (mapping.findForward("initiate_process"));
+                }*/
           /*       case Constants.PROCESS_APROVE_ISOLATE_RANKER:
                 {
                     
@@ -239,7 +235,8 @@ public class SelectProcessAction extends BecAction
                 case Constants.PROCESS_PROCESS_OLIGO_PLATE:
                 case Constants.PROCESS_SET_CLONE_FINAL_STATUS:
                     case Constants.PROCESS_REANALYZE_CLONE_SEQUENCE:
-                case Constants.PROCESS_CLEANUP_INTERMIDIATE_FILES_FROM_HARD_DRIVE:         
+                case Constants.PROCESS_CLEANUP_INTERMIDIATE_FILES_FROM_HARD_DRIVE:    
+                     case Constants.PROCESS_RUN_ISOLATE_RUNKER://run isolate runker
                 
                {
                     ArrayList spec_collection = new ArrayList();
@@ -255,6 +252,17 @@ public class SelectProcessAction extends BecAction
                             control_names.add(Spec.PRIMER3_SPEC);
                             break;
                          }
+                         case Constants.PROCESS_RUN_ISOLATE_RUNKER://run isolate runker
+                        {
+                             spec_collection.add( FullSeqSpec.getAllSpecNames() );
+                            spec_names.add("Clone acceptance criteria:");
+                            control_names.add(Spec.FULL_SEQ_SPEC);
+                            spec_collection.add(  EndReadsSpec.getAllSpecNames());
+                             spec_names.add("Clone Ranking");
+                             control_names.add(Spec.END_READS_SPEC);
+                             break;
+                            
+                        }
                         case Constants.PROCESS_RUN_DECISION_TOOL:
                         case Constants.PROCESS_RUN_DECISION_TOOL_NEW:
                         {

@@ -76,7 +76,7 @@ public class Seq_SubmitSpecAction  extends BecAction
                 String[] values = (String[])request.getParameterValues(name);
                 if (name.equalsIgnoreCase("SET_NAME"))
                 {
-                    spec_name = value;
+                    spec_name = value.trim();
                 }
                 else
                 {

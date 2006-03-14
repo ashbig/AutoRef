@@ -129,7 +129,7 @@ public class RunProcessAction extends BecAction
                     
                 }
                 
-                case Constants.PROCESS_RUN_ISOLATE_RUNKER : //run isolate runker
+         /*       case Constants.PROCESS_RUN_ISOLATE_RUNKER : //run isolate runker
                 {
                     String[] labels = request.getParameterValues("chkLabel");
                      String plate_names = Algorithms.convertArrayToString(labels, " ");
@@ -151,7 +151,7 @@ public class RunProcessAction extends BecAction
                  
                     t = new Thread(runner);           t.start();
                     break;
-                }
+                }*/
                 //primer design items
                 case Constants.PROCESS_ADD_NEW_INTERNAL_PRIMER : // add new internal primer
                 case Constants.PROCESS_APPROVE_INTERNAL_PRIMERS :
@@ -417,6 +417,7 @@ public class RunProcessAction extends BecAction
                 case Constants.PROCESS_CLEANUP_INTERMIDIATE_FILES_FROM_HARD_DRIVE:
                  case  Constants.PROCESS_SET_CLONE_FINAL_STATUS:
                 case Constants.PROCESS_REANALYZE_CLONE_SEQUENCE:
+                      case Constants.PROCESS_RUN_ISOLATE_RUNKER : //run isolate runker
                // case  Constants.PROCESS_DELETE_TRACE_FILES :
   
                 {
@@ -438,6 +439,16 @@ public class RunProcessAction extends BecAction
                             }
                               break;
                           
+                        }
+                          case Constants.PROCESS_RUN_ISOLATE_RUNKER : //run isolate runker
+                        {
+                            int bioeval_spec_id = Integer.parseInt( (String) request.getParameter(Spec.FULL_SEQ_SPEC));
+                            int endread_spec_id = Integer.parseInt( (String) request.getParameter(Spec.END_READS_SPEC));
+                             runner = new IsolateRankerRunner();
+                            ((IsolateRankerRunner)runner).setCutoffValuesSpec( (FullSeqSpec)Spec.getSpecById(bioeval_spec_id, Spec.FULL_SEQ_SPEC_INT));
+                            ((IsolateRankerRunner)runner).setPenaltyValuesSpec( (EndReadsSpec)Spec.getSpecById(endread_spec_id, Spec.END_READS_SPEC_INT));
+                    
+                            break;
                         }
                         case Constants.PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING  :
                         case Constants.PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING  :
@@ -597,7 +608,10 @@ if ( request.getParameter("plate_name") != null)((PrimerOrderRunner)runner).setP
                     
                     String  item_ids = (String) request.getParameter("items");
                     String items = item_ids.toUpperCase().trim();
-                    
+                    if ( forwardName == Constants.PROCESS_RUN_ISOLATE_RUNKER ) //run isolate runker
+                    {
+                            request.setAttribute(Constants.ADDITIONAL_JSP,"Processing plates "+ items);
+                    }   
                   //  String items = item_ids.trim();
                     int items_type =  Integer.parseInt(request.getParameter("item_type"));
                 
@@ -794,7 +808,7 @@ if ( request.getParameter("plate_name") != null)((PrimerOrderRunner)runner).setP
             try
             {
                 conn.rollback();
-                System.out.println(e.getMessage());
+               // System.out.println(e.getMessage());
                 request.setAttribute(Action.EXCEPTION_KEY, e);
                 return (mapping.findForward("error"));
             } catch (Exception e1)

@@ -66,16 +66,6 @@ public final class CustomerRegistrationAction extends Action
         String organization = ((CustomerRegistrationForm) form).getOrganization();
         String usergroup = "Researcher";
         
-      //  String lastname = ((CustomerRegistrationForm) form).getLastName();
-      //  String firstname = ((CustomerRegistrationForm) form).getFirstName();
-      //  String street1 = ((CustomerRegistrationForm) form).getStreet1();
-      //  String street2 = ((CustomerRegistrationForm) form).getStreet2();
-      //  String city = ((CustomerRegistrationForm) form).getCity();
-      //  String province = ((CustomerRegistrationForm) form).getProvince();
-      //  String state = ((CustomerRegistrationForm) form).getState();
-      //  String zipcode = ((CustomerRegistrationForm) form).getZipCode();
-      //  String country = ((CustomerRegistrationForm) form).getCountry();
-     //  String phone = ((CustomerRegistrationForm) form).getPhone();
         String reminder = ((CustomerRegistrationForm) form).getReminderText();
         
         

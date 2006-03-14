@@ -189,6 +189,7 @@ public class DirectDatabaseCommunicationsAction extends BecAction
                        }
                        String identical_format_name =  isTraceFileFormatExist(  format) ;
                        if (identical_format_name != null)
+
                        {
                            request.setAttribute(Constants.ADDITIONAL_JSP,"Trace File Name Format already exists: <P>Format name: "+ identical_format_name );
                            return mapping.findForward("processing");
@@ -569,6 +570,8 @@ item_value = "<div align=center><a href=\'"+ BecProperties.getInstance().getProp
   {
       ArrayList result = new ArrayList();
       SequencingFacilityFileName  fname = new SequencingFacilityFileName(format.getExampleFileName(), format );
+
+
       String[] item = {"Plate name", "Not Defined"};
       if (fname != null) { item[1]=fname.getPlateName();  }
       result.add(item); 
@@ -640,6 +643,8 @@ item_value = "<div align=center><a href=\'"+ BecProperties.getInstance().getProp
            {
                name = (String) request.getParameter("primername");
                sequence = (String)request.getParameter("sequence") ;
+                 if( name != null) name = name.trim();
+               if ( sequence != null) sequence=sequence.trim();
                if ( name == null || name.trim().length()< 1 )  throw new Exception ("Empty linker name") ;
                if( sequence == null || sequence.trim().length()< 1) 
                    sequence="NNNN" ;
@@ -664,6 +669,8 @@ item_value = "<div align=center><a href=\'"+ BecProperties.getInstance().getProp
            {
                name = (String)request.getParameter("linkername");
                sequence = (String)request.getParameter("linkersequence") ;
+               if( name != null) name = name.trim();
+               if ( sequence != null) sequence=sequence.trim();
                if ( name == null || name.trim().length()< 1 )       throw new Exception ("Empty linker name") ;
                if( sequence == null || sequence.trim().length()< 1)    throw new Exception ("Empty linker sequence") ;
                sequence= sequence.toUpperCase().trim();name= name.trim();
@@ -926,6 +933,7 @@ item_value = "<div align=center><a href=\'"+ BecProperties.getInstance().getProp
      public static String isTraceFileFormatExist( TraceFileNameFormat format)
     {
         TraceFileNameFormat format_item = null;
+
         for(Enumeration e=  DatabaseToApplicationDataLoader.getTraceFileFormats().elements(); e.hasMoreElements();)
        {
             format_item = (TraceFileNameFormat)e.nextElement();
@@ -1034,10 +1042,10 @@ format.setExampleFileName( "KSG002372-G01_I.ab1");   //DIRECTION_COLUMN>
      
                                format.isFormatDefinitionOK();
                                */
-TraceFileNameFormat format = DatabaseToApplicationDataLoader.getTraceFileFormat("test_format");
 
-
-trace_filename_parsing_result = parseTraceFileNameForUI(format);
+        
+        //TraceFileNameFormat format = DatabaseToApplicationDataLoader.getTraceFileFormat("test_format");
+//trace_filename_parsing_result = parseTraceFileNameForUI(format);
                           
                                        
                                     
