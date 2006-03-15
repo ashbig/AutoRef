@@ -153,7 +153,7 @@ public class QueryProcessManager {
             String vector = c.getVectorname();
             vectors.add(vector);
         }
-                
+        
         DatabaseTransaction t = null;
         Connection conn = null;
         try {
@@ -193,7 +193,7 @@ public class QueryProcessManager {
                 index++;
                 j++;
             }
-           
+            
             if(checkedProperties.size()>0) {
                 QueryOperator q = new QueryOperator(checkedProperties, logicOperator);
                 operators.add(q);
@@ -250,5 +250,32 @@ public class QueryProcessManager {
         }
         
         return l;
+    }
+    
+    public Set processAdvancedQuery(Set foundSet, GeneQueryHandler handler, List restrictions) throws Exception {
+        StringConvertor sc = new StringConvertor();
+        
+        if(foundSet == null) {
+            handler.doQuery(restrictions, null, null, -1, -1, null, Clone.AVAILABLE);
+            foundSet = new TreeSet(new CloneInfoComparator());
+            foundSet.addAll(handler.convertFoundToCloneinfo());
+        } else {
+            List cloneids = QueryProcessManager.getCloneids(foundSet);
+            int start=0;
+            while(start<cloneids.size()) {
+                int end = start+1000;
+                if(end>cloneids.size())
+                    end = cloneids.size();
+                
+                List l = cloneids.subList(start, end);
+                String s = sc.convertFromListToSqlList(l);
+                handler.doQuery(restrictions, null, null, -1, -1, null, Clone.AVAILABLE, "(select * from clone where cloneid in ("+s+"))");
+                start += 1000;
+                
+                foundSet = new TreeSet(new CloneInfoComparator());
+                foundSet.addAll(handler.convertFoundToCloneinfo());
+            }
+        }
+        return foundSet;
     }
 }

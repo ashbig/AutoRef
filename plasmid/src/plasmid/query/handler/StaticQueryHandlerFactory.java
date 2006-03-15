@@ -51,6 +51,16 @@ public class StaticQueryHandlerFactory {
             return new VectorNameQueryHandler(terms);
         else if(GeneQueryHandler.VECTORNAMETEXT.equals(type))
             return new VectorNameMatchQueryHandler(terms);
+        else if(GeneQueryHandler.VECTORFEATURETEXT.equals(type))
+            return new VectorFeatureMatchQueryHandler(terms);
+        else if(GeneQueryHandler.VECTORFEATURECONTAIN.equals(type))
+            return new VectorFeatureQueryHandler(terms);
+        else if(GeneQueryHandler.AUTHORTEXT.equals(type))
+            return new AuthorNameMatchQueryHandler(terms);
+        else if(GeneQueryHandler.AUTHORCONTAIN.equals(type))
+            return new AuthorNameQueryHandler(terms);
+        else if(GeneQueryHandler.PMIDMATCH.equals(type))
+            return new PmidQueryHandler(terms);
         else {
             RefseqNameQueryHandler h = new RefseqNameQueryHandler(terms);
             h.setNametype(type);

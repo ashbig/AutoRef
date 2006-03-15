@@ -780,32 +780,27 @@ public class OrderProcessManager {
         }
     }
     
-    public static List getCountryList() {
+    public static List getCountryList() {      
         List c = new ArrayList();
-        c.add("Australia");
-        c.add("Belgium");
-        c.add("Canada");
-        c.add("China");
-        c.add("Denmark");
-        c.add("Finland");
-        c.add("France");
-        c.add("Germany");
-        c.add("India");
-        c.add("Italy");
-        c.add("Japan");
-        c.add("Korea");
-        c.add("Mexico");
-        c.add("Netherlands");
-        c.add("Norway");
-        c.add("Russia");
-        c.add("Spain");
-        c.add("Sweden");
-        c.add("Switzerland");
-        c.add("Taiwan");
-        c.add("Turkey");
-        c.add("United Kindom");
-        c.add("USA");
-
-        return c;
+        String sql = "select name from country order by name";
+          
+        DatabaseTransaction t = null;
+        ResultSet rs = null;
+        
+        try {
+            t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            while(rs.next()) {
+                String n = rs.getString(1);
+                c.add(n);
+            }
+        } catch(Exception ex) {
+            if(Constants.DEBUG) {
+                System.out.println(ex);
+            }
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+        return c;        
     }
 }

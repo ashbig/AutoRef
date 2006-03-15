@@ -22,7 +22,7 @@ public class PrintLabel {
        /**
         * static variables
         **/
-       static final String printerName = "zebra";       
+       static final String printerName = "Hip Office";       
        //static final String printerName = "128.103.32.158";
        static final int labelWidth = 25;
        //static final int labelHeight = 15;
@@ -89,10 +89,12 @@ public class PrintLabel {
                 * Handle exceptions for waitFor() 
                 **/ 
                } catch (InterruptedException intexc) { 
+                   //System.out.println(intexc);
                     msg.append("Interrupted exception from waitfor, detail: " 
                                 + intexc.getMessage()); 
                
                } catch (Exception e) {
+                   //System.out.println(e);
 		            msg.append("Exception when printing label, detail: " 
                                 + e.getMessage());
                }
@@ -101,6 +103,7 @@ public class PrintLabel {
             * Handle the exceptions for exec() 
             **/ 
            } catch (IOException e) { 
+                   //System.out.println(e);
                msg.append("IO Exception from exec, detail : " 
                                   + e.getMessage()); 
            }

@@ -42,6 +42,11 @@ public abstract class GeneQueryHandler {
     public static final String GENETEXTCONTAIN = "Gene Text Match";
     public static final String VECTORNAMETEXT = "Vector Name Exact Match";
     public static final String VECTORNAMECONTAIN = "Vector Name Match";
+    public static final String VECTORFEATURETEXT = "Vector Feature Exact Match";
+    public static final String VECTORFEATURECONTAIN = "Vector Feature Match";
+    public static final String AUTHORTEXT = "Author Name Exact Match";
+    public static final String AUTHORCONTAIN = "Author Name Contain";
+    public static final String PMIDMATCH = "PMID Exact Match";
     
     protected Map found;
     protected Map totalFoundCloneids;

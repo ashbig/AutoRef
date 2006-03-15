@@ -82,14 +82,27 @@ public class AdvancedSearchAction extends Action {
         
         String geneName = ((AdvancedSearchForm)form).getGeneName();
         String geneNameOp = ((AdvancedSearchForm)form).getGeneNameOp();
-        List searchListGeneName = sc.convertFromStringToList(geneName, " \t\n\r\f,;");
+        List searchListGeneName = sc.convertFromStringToList(geneName, ",");
         
         String vectorName = ((AdvancedSearchForm)form).getVectorName();
         String vectorNameOp = ((AdvancedSearchForm)form).getVectorNameOp();
-        List searchListVectorName = sc.convertFromStringToList(vectorName, " \t\n\r\f,;");
+        List searchListVectorName = sc.convertFromStringToList(vectorName, ",");
+        
+        String vectorFeature = ((AdvancedSearchForm)form).getVectorFeature();
+        String vectorFeatureOp = ((AdvancedSearchForm)form).getVectorFeatureOp();
+        List searchListVectorFeature = sc.convertFromStringToList(vectorFeature, ",");
+        
+        String author = ((AdvancedSearchForm)form).getAuthorName();
+        String authorOp = ((AdvancedSearchForm)form).getAuthorNameOp();
+        List searchListAuthor = sc.convertFromStringToList(author, ",");
+        
+        String pmid = ((AdvancedSearchForm)form).getPmid();
+        String pmidOp = ((AdvancedSearchForm)form).getPmidOp();
+        List searchListPmid = sc.convertFromStringToList(pmid, ",");
         
         GeneQueryHandler handler = null;
         Set foundSet = null;
+        QueryProcessManager manager = new QueryProcessManager();
         
         try {
             if(searchListGeneName != null && searchListGeneName.size()>0) {
@@ -104,14 +117,10 @@ public class AdvancedSearchAction extends Action {
                     return (mapping.findForward("error"));
                 }
                 
-                handler.doQuery(restrictions, null, null, -1, -1, null, Clone.AVAILABLE);
-                if(foundSet == null) {
-                    foundSet = new TreeSet(new CloneInfoComparator());
-                    foundSet.addAll(handler.convertFoundToCloneinfo());
-                    
-                    if(foundSet.size()==0)
-                        return (mapping.findForward("empty"));
-                }
+                foundSet = manager.processAdvancedQuery(foundSet, handler, restrictions);
+                
+                if(foundSet.size()==0)
+                    return (mapping.findForward("empty"));
             }
             
             if(searchListVectorName != null && searchListVectorName.size()>0) {
@@ -126,32 +135,63 @@ public class AdvancedSearchAction extends Action {
                     return (mapping.findForward("error"));
                 }
                 
-                if(foundSet == null) {
-                    handler.doQuery(restrictions, null, null, -1, -1, null, Clone.AVAILABLE);
-                    foundSet = new TreeSet(new CloneInfoComparator());
-                    foundSet.addAll(handler.convertFoundToCloneinfo());
-                    if(foundSet.size()==0)
-                        return (mapping.findForward("empty"));
+                foundSet = manager.processAdvancedQuery(foundSet, handler, restrictions);
+                
+                if(foundSet.size()==0)
+                    return (mapping.findForward("empty"));
+            }
+            
+            if(searchListVectorFeature != null && searchListVectorFeature.size()>0) {
+                if(Constants.OPERATOR_CONTAINS.equals(vectorFeatureOp)) {
+                    handler = StaticQueryHandlerFactory.makeGeneQueryHandler(GeneQueryHandler.VECTORFEATURECONTAIN, searchListVectorFeature);
                 } else {
-                    List cloneids = QueryProcessManager.getCloneids(foundSet);
-                    int start=0;
-                    while(start<cloneids.size()) {
-                        int end = start+1000;
-                        if(end>cloneids.size())
-                            end = cloneids.size();
-                    
-                        List l = cloneids.subList(start, end);
-                        String s = sc.convertFromListToSqlList(l);
-                        handler.doQuery(restrictions, null, null, -1, -1, null, Clone.AVAILABLE, "(select * from clone where cloneid in ("+s+"))");
-                        start += 1000;
-                        
-                        foundSet = new TreeSet(new CloneInfoComparator());
-                        foundSet.addAll(handler.convertFoundToCloneinfo());
-                    }
-                    
-                    if(foundSet.size()==0)
-                        return (mapping.findForward("empty"));                   
+                    handler = StaticQueryHandlerFactory.makeGeneQueryHandler(GeneQueryHandler.VECTORFEATURETEXT, searchListVectorFeature);
                 }
+                if(handler == null) {
+                    errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.query.notfound"));
+                    saveErrors(request, errors);
+                    return (mapping.findForward("error"));
+                }
+                
+                foundSet = manager.processAdvancedQuery(foundSet, handler, restrictions);
+                
+                if(foundSet.size()==0)
+                    return (mapping.findForward("empty"));
+            }
+            
+            if(searchListAuthor != null && searchListAuthor.size()>0) {
+                if(Constants.OPERATOR_CONTAINS.equals(authorOp)) {
+                    handler = StaticQueryHandlerFactory.makeGeneQueryHandler(GeneQueryHandler.AUTHORCONTAIN, searchListAuthor);
+                } else {
+                    handler = StaticQueryHandlerFactory.makeGeneQueryHandler(GeneQueryHandler.AUTHORTEXT, searchListAuthor);
+                }
+                if(handler == null) {
+                    errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.query.notfound"));
+                    saveErrors(request, errors);
+                    return (mapping.findForward("error"));
+                }
+                
+                foundSet = manager.processAdvancedQuery(foundSet, handler, restrictions);
+                
+                if(foundSet.size()==0)
+                    return (mapping.findForward("empty"));
+            }
+            
+            if(searchListPmid != null && searchListPmid.size()>0) {
+                if(Constants.OPERATOR_EQUALS.equals(pmidOp)) {
+                    handler = StaticQueryHandlerFactory.makeGeneQueryHandler(GeneQueryHandler.PMIDMATCH, searchListPmid);
+                }
+                
+                if(handler == null) {
+                    errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.query.notfound"));
+                    saveErrors(request, errors);
+                    return (mapping.findForward("error"));
+                }
+                
+                foundSet = manager.processAdvancedQuery(foundSet, handler, restrictions);
+                
+                if(foundSet.size()==0)
+                    return (mapping.findForward("empty"));
             }
         } catch (Exception ex) {
             if(Constants.DEBUG)
@@ -162,7 +202,7 @@ public class AdvancedSearchAction extends Action {
             return (mapping.findForward("error"));
         }
         
-        if(foundSet.size()==0)
+        if(foundSet == null || foundSet.size()==0)
             return (mapping.findForward("empty"));
         
         List founds = new ArrayList();

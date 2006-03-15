@@ -25,6 +25,9 @@
           <td height="15" class="lftsubtxt">- <a href="SearchClone.jsp" class="leftsubnavtext">by 
             clone identifier</a></td>
         </tr>
+        <tr> 
+          <td height="15" class="lftsubtxt">- <a href="AdvancedSearch.jsp" class="leftsubnavtext">advanced search</a></td>
+        </tr>
       </table></td>
   </tr>
   <tr> 
