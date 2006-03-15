@@ -115,7 +115,13 @@
         {<br>
         die &quot;no *.phd files&quot;;<br>
         }</p>
-      <p></p>
+      <p><strong> #File clean up (place this code before exit(0) statement)</strong></strong>&nbsp;</p>
+      <p>$newAceFilePath = $outputPath.&quot;/&quot;.$szAceFileToBeProduced;<br>
+        $deleteFiles = $szBaseName.&quot;*&quot;;<br>
+        <br>
+        system(&quot;mv $szAceFileToBeProduced $newAceFilePath&quot;);<br>
+        system(&quot;rm $deleteFiles&quot;);<br>
+      </p>
       <pre>&nbsp;
 </pre></td>
   </tr>
