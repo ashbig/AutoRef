@@ -147,12 +147,16 @@ public class PdrawToVntiConvertor {
                 out.write(TextFormat.format(seq.substring(i),10,true,' ')+" ");
                 
                 if((i+10) % 60 != 0) {
-                    while((i+10) % 60 != 0) {
+                    int j=i;
+                    while((j+10) % 60 != 0) {
                         out.write("           ");
-                        i = i+10;
+                        j = j+10;
                     }
                     
                     out.write(TextFormat.format((new Integer(seq.length())).toString(), 10, false, ' ')+"\n");
+                } else {
+                    out.write(TextFormat.format((new Integer(seq.length())).toString(), 10, false, ' ')+"\n");
+                    break;
                 }
             } else {
                 out.write(seq.substring(i, i+10)+" ");
