@@ -34,4 +34,5 @@ public class CloneNameQueryHandler extends GeneQueryHandler {
         String sql = "select distinct cloneid from clonename where upper(namevalue) = upper(?)";
         executeQuery(sql, restrictions, clonetypes, species, start, end, column, status);
     }    
+    
 }

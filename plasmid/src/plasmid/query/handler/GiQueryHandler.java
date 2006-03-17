@@ -39,5 +39,5 @@ public class GiQueryHandler extends GeneQueryHandler {
     public void doQuery(List restrictions, List clonetypes, String species, int start, int end, String column, String status) throws Exception {
         String sql = "select distinct cloneid from clonegi where gi = ?";
         executeQuery(sql, restrictions, clonetypes, species, start, end, column, status); 
-    }     
+    }    
 }

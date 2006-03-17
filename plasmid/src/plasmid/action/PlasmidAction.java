@@ -1,13 +1,11 @@
 /*
- * GetVectorPropertyTypesAction.java
+ * PlasmidAction.java
  *
- * Created on January 27, 2006, 2:01 PM
+ * Created on March 17, 2006, 11:05 AM
  */
 
 package plasmid.action;
 
-import java.util.*;
-import java.io.*;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -22,16 +20,13 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 
-import plasmid.database.DatabaseManager.DefTableManager;
-import plasmid.database.DatabaseManager.VectorManager;
-import plasmid.Constants;
-import plasmid.form.VectorSearchForm;
+import java.io.*;
 
 /**
  *
  * @author  DZuo
  */
-public class GetVectorPropertyTypesAction extends PlasmidAction {
+public abstract class PlasmidAction extends Action {
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
      * response (or forward to another web component that will create it).
@@ -47,23 +42,25 @@ public class GetVectorPropertyTypesAction extends PlasmidAction {
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet exception occurs
      */
-    public ActionForward plasmidPerform(ActionMapping mapping,
+    public ActionForward perform(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
     HttpServletResponse response)
     throws ServletException, IOException {
         
-        // get the parameters specified by the customer
-        ActionErrors errors = new ActionErrors();
-        List species = DefTableManager.getVocabularies("species", "genusspecies");
-        species.add(0, Constants.ALL);
-        Map types = VectorManager.getAllVectorPerpertyTypes();
+        if (mapping.getAttribute() != null) {
+            if ("request".equals(mapping.getScope()))
+                request.removeAttribute(mapping.getAttribute());
+            else
+                request.getSession().removeAttribute(mapping.getAttribute());
+        }    
         
-        ((VectorSearchForm)form).setTypes(types);
-        ((VectorSearchForm)form).resetVectortypes(types);
-        ((VectorSearchForm)form).resetLogicOperators(types.size());
-        request.setAttribute("species", species);
-        
-        return (mapping.findForward("success"));
-    }     
+        return plasmidPerform(mapping, form, request, response);
+    }
+    
+    public abstract ActionForward plasmidPerform(ActionMapping mapping,
+    ActionForm form,
+    HttpServletRequest request,
+    HttpServletResponse response)
+    throws ServletException, IOException;
 }

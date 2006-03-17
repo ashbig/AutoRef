@@ -114,6 +114,20 @@
     -->
   </tr>
   <tr> 
+    <td width="15%" class="formlabel">Species</td>
+    <td colspan="2">
+        <html:select property="species" styleClass="itemtext">
+          <html:options name="species"/>
+        </html:select>
+    </td>
+    <!--
+    <td width="18%">
+          <html:radio property="pmidAndOr" value="and"/>
+          <html:radio property="pmidAndOr" value="or"/>
+    </td>
+    -->
+  </tr>
+  <tr> 
     <td>&nbsp;</td>
     <td>&nbsp;</td>
     <td>&nbsp;</td>

@@ -32,7 +32,11 @@ public class GeneTextQueryMatchHandler extends GeneQueryHandler {
     
     public void doQuery(List restrictions, List clonetypes, String species, int start, int end, String column, String status) throws Exception {
         String sql = "select distinct cloneid from dnainsert where upper(geneid) = upper(?)"+
-        " or upper(name) = upper(?) or upper(description) = upper(?)";
-        executeQuery(sql, restrictions, clonetypes, species, start, end, column, status, 3, false);
-    }    
+        " or upper(name) = upper(?) or upper(description) = upper(?)"+
+        " union (select distinct cloneid from clonegene where upper(geneid) = upper(?))"+
+        " union (select distinct cloneid from clonegenbank where upper(accession) = upper(?))"+
+        " union (select distinct cloneid from clonegi where upper(gi) = upper(?))"+
+        " union (select distinct cloneid from clonesymbol where upper(symbol) = upper(?))";
+        executeQuery(sql, restrictions, clonetypes, species, start, end, column, status, 7, false);
+    }        
 }

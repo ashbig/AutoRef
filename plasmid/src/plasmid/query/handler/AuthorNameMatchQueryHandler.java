@@ -34,7 +34,7 @@ public class AuthorNameMatchQueryHandler extends GeneQueryHandler {
         String sql = "select distinct cloneid from cloneauthor"+
         " where authorid in (select authorid from authorinfo"+
         " where upper(authorname) = upper(?))";
-        executeQuery(sql, restrictions, clonetypes, species, start, end, column, status, 1, true);
+        executeQuery(sql, restrictions, clonetypes, species, start, end, column, status, 1, false);
     }
     
     public void doQuery(List restrictions, List clonetypes, String species, int start, int end, String column, String status, String clonetable) throws Exception {
@@ -43,7 +43,7 @@ public class AuthorNameMatchQueryHandler extends GeneQueryHandler {
         " where upper(authorname) = upper(?))"+
         " and cloneid in ("+
         " select cloneid from "+clonetable+")";
-        executeQuery(sql, restrictions, clonetypes, species, start, end, column, status, 1, true);
+        executeQuery(sql, restrictions, clonetypes, species, start, end, column, status, 1, false);
     }
     
 }

@@ -36,7 +36,7 @@ public class VectorFeatureMatchQueryHandler extends GeneQueryHandler {
         " where upper(name) = upper(?)"+
         " or upper(description) = upper(?)"+
         " or upper(maptype) = upper(?))";
-        executeQuery(sql, restrictions, clonetypes, species, start, end, column, status, 4, true);
+        executeQuery(sql, restrictions, clonetypes, species, start, end, column, status, 3, false);
     }
     
     public void doQuery(List restrictions, List clonetypes, String species, int start, int end, String column, String status, String clonetable) throws Exception {
@@ -45,6 +45,6 @@ public class VectorFeatureMatchQueryHandler extends GeneQueryHandler {
         " where upper(name) = upper(?)"+
         " or upper(description) = upper(?)"+
         " or upper(maptype) = upper(?))";
-        executeQuery(sql, restrictions, clonetypes, species, start, end, column, status, 4, true);
+        executeQuery(sql, restrictions, clonetypes, species, start, end, column, status, 3, false);
     }    
 }

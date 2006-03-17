@@ -252,11 +252,11 @@ public class QueryProcessManager {
         return l;
     }
     
-    public Set processAdvancedQuery(Set foundSet, GeneQueryHandler handler, List restrictions) throws Exception {
+    public Set processAdvancedQuery(Set foundSet, GeneQueryHandler handler, List restrictions, String species) throws Exception {
         StringConvertor sc = new StringConvertor();
         
         if(foundSet == null) {
-            handler.doQuery(restrictions, null, null, -1, -1, null, Clone.AVAILABLE);
+            handler.doQuery(restrictions, null, species, -1, -1, null, Clone.AVAILABLE);
             foundSet = new TreeSet(new CloneInfoComparator());
             foundSet.addAll(handler.convertFoundToCloneinfo());
         } else {
@@ -269,7 +269,7 @@ public class QueryProcessManager {
                 
                 List l = cloneids.subList(start, end);
                 String s = sc.convertFromListToSqlList(l);
-                handler.doQuery(restrictions, null, null, -1, -1, null, Clone.AVAILABLE, "(select * from clone where cloneid in ("+s+"))");
+                handler.doQuery(restrictions, null, species, -1, -1, null, Clone.AVAILABLE, "(select * from clone where cloneid in ("+s+"))");
                 start += 1000;
                 
                 foundSet = new TreeSet(new CloneInfoComparator());

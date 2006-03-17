@@ -39,5 +39,5 @@ public class GeneidQueryHandler extends GeneQueryHandler {
     public void doQuery(List restrictions, List clonetypes, String species, int start, int end, String column, String status) throws Exception {
         String sql = "select distinct cloneid from clonegene where geneid = ?";
         executeQuery(sql, restrictions, clonetypes, species, start, end, column, status);
-    }    
+    }        
 }

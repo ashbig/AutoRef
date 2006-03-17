@@ -68,6 +68,7 @@ public class AdvancedSearchAction extends Action {
         f.setPagesize(Constants.PAGESIZE);
         f.setDisplayPage("indirect");
         f.setDisplay("symbol");
+        f.setForward("vectorSearchResult");
         request.getSession().setAttribute("refseqSearchForm", f);
         
         User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
@@ -100,6 +101,10 @@ public class AdvancedSearchAction extends Action {
         String pmidOp = ((AdvancedSearchForm)form).getPmidOp();
         List searchListPmid = sc.convertFromStringToList(pmid, ",");
         
+        String species = ((AdvancedSearchForm)form).getSpecies();
+        if(species.equals(Constants.ALL))
+            species = null;
+        
         GeneQueryHandler handler = null;
         Set foundSet = null;
         QueryProcessManager manager = new QueryProcessManager();
@@ -117,7 +122,7 @@ public class AdvancedSearchAction extends Action {
                     return (mapping.findForward("error"));
                 }
                 
-                foundSet = manager.processAdvancedQuery(foundSet, handler, restrictions);
+                foundSet = manager.processAdvancedQuery(foundSet, handler, restrictions, species);
                 
                 if(foundSet.size()==0)
                     return (mapping.findForward("empty"));
@@ -135,7 +140,7 @@ public class AdvancedSearchAction extends Action {
                     return (mapping.findForward("error"));
                 }
                 
-                foundSet = manager.processAdvancedQuery(foundSet, handler, restrictions);
+                foundSet = manager.processAdvancedQuery(foundSet, handler, restrictions, species);
                 
                 if(foundSet.size()==0)
                     return (mapping.findForward("empty"));
@@ -153,7 +158,7 @@ public class AdvancedSearchAction extends Action {
                     return (mapping.findForward("error"));
                 }
                 
-                foundSet = manager.processAdvancedQuery(foundSet, handler, restrictions);
+                foundSet = manager.processAdvancedQuery(foundSet, handler, restrictions, species);
                 
                 if(foundSet.size()==0)
                     return (mapping.findForward("empty"));
@@ -171,7 +176,7 @@ public class AdvancedSearchAction extends Action {
                     return (mapping.findForward("error"));
                 }
                 
-                foundSet = manager.processAdvancedQuery(foundSet, handler, restrictions);
+                foundSet = manager.processAdvancedQuery(foundSet, handler, restrictions, species);
                 
                 if(foundSet.size()==0)
                     return (mapping.findForward("empty"));
@@ -188,7 +193,7 @@ public class AdvancedSearchAction extends Action {
                     return (mapping.findForward("error"));
                 }
                 
-                foundSet = manager.processAdvancedQuery(foundSet, handler, restrictions);
+                foundSet = manager.processAdvancedQuery(foundSet, handler, restrictions, species);
                 
                 if(foundSet.size()==0)
                     return (mapping.findForward("empty"));

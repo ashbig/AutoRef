@@ -300,6 +300,12 @@
       <forward  name="success"  path="/ViewOrderDetail.jsp"/>
     </action>
     
+    <action     path="/PrepareAdvancedSearch"
+                type="plasmid.action.PrepareAdvancedSearchAction"
+               name="advancedSearchForm">
+      <forward  name="success"  path="/AdvancedSearch.jsp"/>
+    </action>
+    
     <action    path="/PrepareRegistration"
                type="plasmid.action.PrepareRegistrationAction"
               input="/PrepareRegistration.do">

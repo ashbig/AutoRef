@@ -51,5 +51,4 @@ public class VectorNameQueryHandler extends GeneQueryHandler {
         " where upper(vsynonym) like upper(?))";
         executeQuery(sql, restrictions, clonetypes, species, start, end, column, status, 4, true);
     }
-    
 }

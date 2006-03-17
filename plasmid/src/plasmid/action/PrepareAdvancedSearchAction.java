@@ -1,7 +1,7 @@
 /*
- * GetVectorPropertyTypesAction.java
+ * PrepareAdvancedSearchAction.java
  *
- * Created on January 27, 2006, 2:01 PM
+ * Created on March 17, 2006, 11:00 AM
  */
 
 package plasmid.action;
@@ -23,15 +23,14 @@ import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 
 import plasmid.database.DatabaseManager.DefTableManager;
-import plasmid.database.DatabaseManager.VectorManager;
+import plasmid.form.AdvancedSearchForm;
 import plasmid.Constants;
-import plasmid.form.VectorSearchForm;
 
 /**
  *
  * @author  DZuo
  */
-public class GetVectorPropertyTypesAction extends PlasmidAction {
+public class PrepareAdvancedSearchAction extends PlasmidAction {
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
      * response (or forward to another web component that will create it).
@@ -46,24 +45,17 @@ public class GetVectorPropertyTypesAction extends PlasmidAction {
      *
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet exception occurs
-     */
-    public ActionForward plasmidPerform(ActionMapping mapping,
-    ActionForm form,
-    HttpServletRequest request,
-    HttpServletResponse response)
-    throws ServletException, IOException {
-        
-        // get the parameters specified by the customer
+     */    
+    public ActionForward plasmidPerform(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+       
         ActionErrors errors = new ActionErrors();
         List species = DefTableManager.getVocabularies("species", "genusspecies");
-        species.add(0, Constants.ALL);
-        Map types = VectorManager.getAllVectorPerpertyTypes();
+        species.add(0, Constants.ALL); 
         
-        ((VectorSearchForm)form).setTypes(types);
-        ((VectorSearchForm)form).resetVectortypes(types);
-        ((VectorSearchForm)form).resetLogicOperators(types.size());
+        ((AdvancedSearchForm)form).resetParams();
         request.setAttribute("species", species);
         
         return (mapping.findForward("success"));
-    }     
+    }
+    
 }

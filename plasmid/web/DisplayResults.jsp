@@ -26,7 +26,10 @@
     <td width="864" align="left" valign="top">
 	<jsp:include page="searchByRefseqTitle.jsp" />
 
-<html:form action="SetDisplay.do">
+<bean:define id="size" name="refseqSearchForm" property="pagesize"/>
+<bean:define id="p" name="refseqSearchForm" property="page"/>
+<bean:define id="total" name="numOfFound"/>
+
 <table width="100%" border="0">
   <tr>
     <logic:equal name="refseqSearchForm" property="display" value="genbank">
@@ -50,12 +53,9 @@
   </tr>
 </table>
 
-<bean:define id="size" name="refseqSearchForm" property="pagesize"/>
-<bean:define id="p" name="refseqSearchForm" property="page"/>
-<bean:define id="total" name="numOfFound"/>
-
 <logic:notEqual name="refseqSearchForm" property="displayPage" value="nofound">
 <p class="mainbodytexthead">List of search terms found</p>
+<html:form action="SetDisplay.do">
 <table width="100%" border="0">
     <tr class="mainbodytexthead">
         <td align="left" class="mainbodytexthead">Page: 
@@ -245,6 +245,28 @@
   </logic:iterate>
   </logic:equal>
 </table>
+</html:form>
+
+<html:form action="SetDisplay.do">
+<table width="100%" border="0">
+    <tr class="mainbodytexthead">
+        <td align="left" class="mainbodytexthead">Page: 
+            <html:select property="page">
+                <%  int k=0;
+                    while(k<Integer.parseInt(total.toString())/Integer.parseInt(size.toString())) {
+                %>
+                        <html:option value="<%=(new Integer(k+1)).toString()%>"/>
+                <%      k++;
+                    }
+                    if((Integer.parseInt(total.toString())%Integer.parseInt(size.toString()))>0)
+                %>
+                        <html:option value="<%=(new Integer(k+1)).toString()%>"/>
+            </html:select>
+            <html:submit property="button" value="Display"/>
+        </td>
+    </tr>
+</table>
+</html:form>
 </logic:notEqual>
 
 <logic:equal name="refseqSearchForm" property="displayPage" value="nofound">
@@ -261,7 +283,6 @@
 </table>
 </logic:equal>
 
-</html:form>
       </td>
   </tr>
 </table>

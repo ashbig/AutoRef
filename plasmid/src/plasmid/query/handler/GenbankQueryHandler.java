@@ -98,5 +98,5 @@ public class GenbankQueryHandler extends GeneQueryHandler {
             System.out.println(ex);
         }
         System.exit(0);
-    }    
+    }     
 }

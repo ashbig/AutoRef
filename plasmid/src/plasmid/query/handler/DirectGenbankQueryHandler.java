@@ -40,4 +40,5 @@ public class DirectGenbankQueryHandler extends GeneQueryHandler {
         String sql = "select distinct cloneid from dnainsert where upper(targetgenbank) = upper(?)";
         executeQuery(sql,restrictions,clonetypes,species, start, end, column, status);
     }  
+    
 }

@@ -37,6 +37,8 @@ public class AdvancedSearchForm extends ActionForm {
     private String pmidOp;
     private boolean pmidAndOr;
     
+    private String species;
+    
     public String getGeneName() {return geneName;}
     public void setGeneName(String s) {this.geneName = s;}
     
@@ -82,8 +84,24 @@ public class AdvancedSearchForm extends ActionForm {
     public boolean getPmidAndOr() {return pmidAndOr;}
     public void setPmidAndOr(boolean b) {this.pmidAndOr = b;}
     
+    public String getSpecies() {return species;}
+    public void setSpecies(String s) {this.species = s;}
+    
     /** Creates a new instance of AdvancedSearchForm */
     public AdvancedSearchForm() {
     }
     
+    public void resetParams() {
+        geneName=null;
+        geneNameOp=Constants.OPERATOR_CONTAINS;
+        vectorName=null;
+        vectorNameOp=Constants.OPERATOR_CONTAINS;
+        vectorFeature=null;
+        vectorFeatureOp=Constants.OPERATOR_CONTAINS;
+        authorName=null;
+        authorNameOp=Constants.OPERATOR_CONTAINS;
+        pmid=null;
+        pmidOp=Constants.OPERATOR_EQUALS;
+        species = Constants.ALL;
+    }
 }

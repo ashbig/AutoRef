@@ -26,11 +26,11 @@
     <td width="864" align="left" valign="top">
 	<jsp:include page="searchResultTitle.jsp" />
 
-<html:form action="SetDisplay.do">
-
 <bean:define id="size" name="refseqSearchForm" property="pagesize"/>
 <bean:define id="p" name="refseqSearchForm" property="page"/>
 <bean:define id="total" name="numOfFound"/>
+
+<html:form action="SetDisplay.do">
 
 <p class="mainbodytexthead">List of search terms found</p>
 <table width="100%" border="0">
@@ -149,8 +149,29 @@
     </tr>
   </logic:iterate> 
 </table>
-
 </html:form>
+
+<html:form action="SetDisplay.do">
+<table width="100%" border="0">
+    <tr class="mainbodytexthead">
+        <td align="left" class="mainbodytexthead">Page: 
+            <html:select property="page">
+                <%  int k=0;
+                    while(k<Integer.parseInt(total.toString())/Integer.parseInt(size.toString())) {
+                %>
+                        <html:option value="<%=(new Integer(k+1)).toString()%>"/>
+                <%      k++;
+                    }
+                    if((Integer.parseInt(total.toString())%Integer.parseInt(size.toString()))>0)
+                %>
+                        <html:option value="<%=(new Integer(k+1)).toString()%>"/>
+            </html:select>
+            <html:submit property="button" value="Display"/>
+        </td>
+    </tr>
+</table>
+</html:form>
+
       </td>
   </tr>
 </table>

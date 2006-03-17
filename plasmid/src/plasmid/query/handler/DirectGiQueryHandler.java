@@ -40,4 +40,5 @@ public class DirectGiQueryHandler extends GeneQueryHandler {
         String sql = "select distinct cloneid from dnainsert where targetseqid = ?";
         executeQuery(sql, restrictions, clonetypes, species, start, end, column, status);
     }  
+    
 }

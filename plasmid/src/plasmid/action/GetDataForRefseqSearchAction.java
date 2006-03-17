@@ -31,7 +31,7 @@ import plasmid.form.RefseqSearchForm;
  *
  * @author  DZuo
  */
-public class GetDataForRefseqSearchAction extends Action {
+public class GetDataForRefseqSearchAction extends PlasmidAction {
 
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
@@ -48,7 +48,7 @@ public class GetDataForRefseqSearchAction extends Action {
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet exception occurs
      */
-    public ActionForward perform(ActionMapping mapping,
+    public ActionForward plasmidPerform(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
     HttpServletResponse response)
