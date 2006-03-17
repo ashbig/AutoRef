@@ -6,7 +6,7 @@ import edu.harvard.med.hip.flex.workflow.*;
 
 /**
  * This class represents an oligo object.
- * $Id: Oligo.java,v 1.14 2005-08-26 16:20:31 dzuo Exp $
+ * $Id: Oligo.java,v 1.15 2006-03-17 17:09:08 dzuo Exp $
  * @File:	Oligo.java
  * @Date:	4/30/01
  * @author:	Wendy Mar
@@ -28,9 +28,9 @@ public class Oligo {
     private static final String YEAST_REV_3p_CLOSE = "GTATCCCCGGGAATTGCCATG";
     private static final String YEAST_REV_3p_FUSION = "";
     private static final String YEAST_REV_5p = "CAGGCTTCCAGCTGACCACC";
-    private static final String GATEWAY_YP_5p = "TACAAAAAAGCAGGCTCCACC";
-    private static final String GATEWAY_YP_3p = "GTACAAGAAAGCTGGGTCCTA";
-    private static final String GATEWAY_YP_3p_FUSION = "GTACAAGAAAGCTGGGTCCAA";
+    private static final String GATEWAY_YP_5p = "TACAAAAAAGCAGGCTCCACC";//pDNOR221 and modifier
+    private static final String GATEWAY_YP_3p = "GTACAAGAAAGCTGGGTCCTA";//pDNOR221 and modifier
+    private static final String GATEWAY_YP_3p_FUSION = "GTACAAGAAAGCTGGGTCCAA";//pDNOR221 and modifier
     private static final String INGA_5p = "AAAGCAGGCTCCACC";
     private static final String INGA_3p_FUSION = "AGAAAGCTGGGTCACTCACCAA";
     private static final String INGA_3p_CLOSE =  "AGAAAGCTGGGTCACTCACCTA";
@@ -153,10 +153,11 @@ public class Oligo {
         } else if(workflowid == Workflow.HIP_INGA) {
             tagSequence = INGA_5p + sequence;
         } else if(workflowid == Workflow.GATEWAY_WITH_EGEL || workflowid == Workflow.GATEWAY_WITH_INFUSION) {
-            if(projectId == Project.Yersinia_pseudotuberculosis || projectId == Project.Bacillus_anthracis) {
+            //if(projectId == Project.Yersinia_pseudotuberculosis || projectId == Project.Bacillus_anthracis) {
                 tagSequence = GATEWAY_YP_5p + sequence;
-            }
-            tagSequence = INGA_5p + sequence;
+           // } else {
+           //     tagSequence = INGA_5p + sequence;
+           // }
         } else {
             tagSequence = CLONETECH_5p + sequence;
         }
@@ -257,7 +258,7 @@ public class Oligo {
             }
         } else if(workflowid == Workflow.HIP_INGA) {
             tagSequence = INGA_3p_FUSION + sequence;
-        } else if (workflowid == Workflow.GATEWAY_WITH_EGEL || workflowid == Workflow.GATEWAY_WITH_INFUSION) {       
+        } else if (workflowid == Workflow.GATEWAY_WITH_EGEL || workflowid == Workflow.GATEWAY_WITH_INFUSION) {
             tagSequence = GATEWAY_YP_3p_FUSION + sequence;
         } else {
             tagSequence = CLONETECH_3p_FUSION + sequence;

@@ -26,6 +26,7 @@ public class CloningStrategy {
     public static final int YP_GATEWAY = 8;
     public static final int CREATOR_EXPRESSION_JP1520 = 10;
     public static final int GATEWAY_PGW = 14;
+    public static final int GATEWAY_PGW_2 = 23;
     public static final int CREATOR_EXPRESSION_PLP_DS_3xFlag = 15;
     public static final int CREATOR_EXPRESSION_PLP_DS_3xMyc = 16;
     public static final int GATEWAY_pCITE_GST = 17;
@@ -204,7 +205,8 @@ public class CloningStrategy {
         }
         
         if(workflowid == Workflow.GATEWAY_WITH_INFUSION) {
-            return GATEWAY_PGW;
+           // return GATEWAY_PGW;
+            return GATEWAY_PGW_2;
         }
         
         if(workflowid ==  Workflow.TRANSFER_TO_EXP_JP1520) {
