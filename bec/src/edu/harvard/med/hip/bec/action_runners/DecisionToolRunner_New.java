@@ -1755,7 +1755,8 @@ private  String getNumberOfSubmittedInternalReads( CloneDescription clone)
         for ( int trace_count = 0; trace_count < trace_files.length; trace_count++)
         {
             file_name = trace_files[trace_count].getName();
-            if ( file_name.indexOf("_F0.") == -1 && file_name.indexOf("_R0.") == -1)
+            if ( file_name.indexOf("_F0.") == -1 && file_name.indexOf("_R0.") == -1
+            || file_name.indexOf("_F0_") == -1 && file_name.indexOf("_R0_") == -1)
                 result++;
         }
     }
