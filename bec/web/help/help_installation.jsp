@@ -29,21 +29,22 @@
           (3) <a href="http://frodo.wi.mit.edu/primer3/primer3_code.html"  target="_blank">Primer3</a> for oligo calculation.</p>
         <h2> <font color="#0099CC">Instructions</font></h2>
         <ul>
-          <li> Get  <a href="http://www.phrap.org" target="_blank">phredPhrap </a> software package from The University 
-            of Washington and install them. Make sure that chemistry file is setup properly.</li>
-          <li> Download and install the <a href="http://www.emboss.org"  target="_blank">Emboss 
-            package</a>. ACE uses only needle program from the package.</li>
+          <li> Download and install <a href="http://www.phrap.org" target="_blank">phredPhrap 
+            package</a> from The University of Washington and install it.</li>
+          <li> Download and install <a href="http://www.emboss.org"  target="_blank">Emboss 
+            package</a>. ACE uses only <em>needle</em> program from the package.</li>
           <li> Download and install the <a href="ftp://ftp.ncbi.nih.gov/blast/"  target="_blank">NCBI 
             Blast</a>. ACE uses local blast version to verify cases of mismatch 
             against researcher databases.</li>
-          <li>Download and install the <a href="http://frodo.wi.mit.edu/primer3/primer3_code.html"  target="_blank">Primer3</a> used by ACE for oligo design.</li>
-          <li>Install Oracle Database software. Import dump file, provided by Hip, to create ACE database. </li>
+          <li>Download and install the <a href="http://frodo.wi.mit.edu/primer3/primer3_code.html"  target="_blank">Primer3</a> 
+            used by ACE for oligo design.</li>
+          <li>Install Oracle database software. </li>
           <li>Download and install <a href="http://jakarta.apache.org/tomcat/"  target="_blank">Tomcat 
-            Web server</a>. ACE was tested for Tomcat 4.6 &amp; 5.59 versions for 
-            Windows.</li>
+            Web server</a>. ACE was tested for Tomcat 4.6 &amp; 5.59 versions 
+            for Windows.</li>
           <li>Download and install <a href="http://www.cygwin.com/"  target="_blank">cygwin</a> 
-            if server OS is Win. EMBOSS  and phredPhrap packages do not 
-            have Windows versions. Map hard drives under cygwin. </li>
+            if server OS is Win. EMBOSS and phredPhrap packages do not have Windows 
+            versions. Map hard drives under cygwin. </li>
           <li>Create the following set of directories. The directory structure 
             is recommended, however, the user can create any directory structure 
             and give any name to the directories (see below setting application 
@@ -72,7 +73,7 @@
                 <td width="7%"><div align="center"></div></td>
                 <td>output/tmp_assembly</td>
                 <td>subdirectory of output directory. Temporary needle alignments 
-                  will be stored here. Optionally  the same files can be directed 
+                  will be stored here. Optionally the same files can be directed 
                   into temp directory</td>
               </tr>
               <tr> 
@@ -103,35 +104,41 @@
               </tr>
             </table>
             &nbsp;</li>
-          <li> Prepare a <b>vector sequence</b> libraries (Fasta format file) 
-            that will be used by cross-match for vector trimming. All vector files 
+          <li> Import dump file, provided by Hip, to create ACE database. </li>
+          <li>Prepare a <b>vector sequence</b> libraries (Fasta format file) that 
+            will be used by cross-match for vector trimming. All vector files 
             should be placed in one directory. Edit<b> phredPhrap.perl</b> script 
             to reflect location of the cloning vectors' sequence files <a href="<%= redirection%>help/help_phredPhrapScript.jsp" target="_blank">(see 
             example of phredPhrap.perl)</a>.</li>
-          <li> Edit the <b>phred, cross_match and phrap</b> scripts. The following 
-            perl scripts should be edited (phredPhrap.perl, tagRepeats.perl, findSequenceMatchesforConsed.perl, 
-            addReads2Conseq.perl, transferConsensusTags.perl).. </li>
-          <li>Edit <a href="help_PhredPhrap.html"  target="_blank"> 
-            Phred Parameter File (phredpar.dat) </a>to add a new chemistry if 
-            needed.</li>
-          <li>Compile Trimming_java_script.java and <a href="<%= redirection%>help/help_phredPhrapScript.jsp"  target="_blank">reflect 
-            location of the script</a> in phredPhrap.perl. This script is used 
-            to allow user additional quality trimming of the trace files before 
-            start of assembly (see ACE user guide).</li>
-            <li>Set-up scheduled tasks / cron jobs to: (a) clean up <em>tmp</em> 
+          <li>Copy Trimming_java_script.class and Trimming_java_script$ScoredElement.class 
+            provided by Hip on harddrive. This script is used to allow user additional 
+            quality trimming of the trace files before start of assembly (see 
+            ACE user guide).</li>
+          <li> Replace phredPhrap script by one <a href="<%= redirection%>help/help_phredPhrapScript.jsp"  target="_blank"> 
+            provided by Hip</a>. Edit the <b>phred, cross_match and phrap</b> 
+            scripts. The following perl scripts should be edited (phredPhrap, 
+            tagRepeats.perl, findSequenceMatchesforConsed.perl, addReads2Conseq.perl, 
+            transferConsensusTags.perl).</li>
+          <li>Edit <a href="help_PhredPhrap.html"  target="_blank"> Phred Parameter 
+            File (phredpar.dat) </a>to add a new chemistry if needed. Test phredPhrap 
+            package. </li>
+          <li>Set-up scheduled tasks / cron jobs to: (a) clean up <em>tmp</em> 
             directory; (b) clean up all *.in files from <em>output/needle_output</em> 
             directory; (c) clean up <em>output/tmp_assembly </em>directory; (d) 
             Optional: rebuild user blastable databases if applicable.</li>
           <li> Get ACE package distribution .war file from Harvard Institute of 
-            Proteomics and load it..</li>
+            Proteomics into /webapps directory of Tomcat server and start-up server. 
+            Shutdown server. </li>
           <li>Change<a href="<%= redirection%>help/help_WebXMLChange.jsp" target="_blank"> 
-            web.xml</a> file to reflect location of ACE database schema.</li>
+            web.xml</a> file under TomcatServerDir/webapps/ACE/WEB-INF to reflect 
+            location of ACE database schema.</li>
           <li> Edit <a href="<%= redirection%>help/help_ACEConfigurationFile.html"  target="_blank">ACE 
-            configuration file</a> to reflect server settings. Check whether all 
-            server configuration settings were properly reflected in configuration 
-            file on ACE Start-up. You will see error messages printed in Tomcat 
-            window, if something was not setup properly. In the case of any error: 
-            shutdown Tomcat, edit configuration file and rebuild ACE.</li>
+            configuration file</a> under TomcatServerDir/webapps/ACE/WEB-INF/classes/config 
+            to reflect server settings. Check whether all server configuration 
+            settings were properly reflected in configuration file on ACE Start-up. 
+            You will see error messages printed in Tomcat window, if something 
+            was not setup properly. In the case of any error: shutdown Tomcat, 
+            edit configuration file and restart server.</li>
           <li>If you are planning to use Polymorphism Finder (see ACE user guide), 
             edit <a href="<%= redirection%>help/help_PolymFinderConfigurationFile.html"  target="_blank">configuration 
             file for the module</a>.</li>
