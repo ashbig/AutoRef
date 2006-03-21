@@ -6,170 +6,160 @@
 </head>
 <body>
 <div align="center">
-  <p>Answers to Frequently Asked Questions </p>
-  <table width="80%" border="6">
-    <tr valign="top"> 
-      <td height="22" colspan="2" class="breadcrumbtextactive">VARIATIONS ON THE 
-        THEME, &quot;I CAN'T FIND THE CLONE I AM LOOKING FOR.&quot;</td>
-    </tr>
-    <tr valign="top"> 
-      <td height="65" class="tableinfo">Q: How can I be sure that I am viewing 
-        ALL of the clones that are available to me?</td>
-      <td class="homeMainText">A: Before log-in, only the clones available to 
-        all users are visible in a search. Only by registering and logging in 
-        will you be able to view the complete set of clones that you are eligible 
-        to view and order.</td>
-    </tr>
-    <tr valign="top"> 
-      <td height="151" class="tableinfo">Q: I was directed to the site by a researcher 
-        who donated clones to the repository. But I cannot find the plasmid I'm 
-        looking for. What's up with that?</td>
-      <td class="homeMainText"><p>A: There is a necessary delay between when plasmids 
-          are submitted to the repository and when they are searchable in the 
-          database. In addition, some plasmids may not be easy to find with the 
-          set of search parameters available at a given time (we are always working 
-          to improve this based on user feedback). </p>
-        <p>As of summer 2005, the group of plasmids that are in the collection 
-          but cannot be found with the currently supported searches includes the 
-          'vector-only' plasmids pGRFP, pKT146, pKT176 and pKT178. </p>
-        <p>If you have searched carefully for a plasmid that you think is in the 
-          collection and you cannot find it, please contact <a href="http://dnaseq.med.harvard.edu/contact_us.htm" target="_blank">Stephanie
-          Mohr</a>.</p></td>
-    </tr>
-    <tr valign="top"> 
-      <td class="tableinfo">Q: I cannot find a clone that will work for the type 
-        of experiments I have in mind. Are there other sources for plasmid clones?</td>
-      <td class="homeMainText">A: Yes, there are many sources for clones. Please 
-        visit the <a href="http://dnaseq.harvard.edu/plasmid-related_links.htm" target="_blank">DNA 
-        Resource Core plasmid links page</a> to see a partial list of other sources.</td>
-    </tr>
-    <tr valign="top"> 
-      <td colspan="2" class="breadcrumbtextactive">VARIATIONS ON THE THEME, &quot;WHAT 
-        DO YOU MEAN BY ... ?&quot;</td>
-    </tr>
-    <tr valign="top"> 
-      <td class="tableinfo">Q: What are &quot;FUSION&quot; and &quot;CLOSED&quot; 
-        forms of a cDNA?</td>
-      <td class="homeMainText"><p>A: &quot;FUSION&quot; and &quot;CLOSED&quot; 
-          are terms used by the <a href="http://www.hip.harvard.edu" target="_blank">Harvard Institute 
-          of Proteomics</a> that were adopted by the core. The &quot;FUSION&quot; 
-          cDNA open reading frames lack the natural stop codon at the three-prime 
-          end of the gene (the ORF is ATG to last amino acid-coding codon), in 
-          order to facilitate construction of a C-terminal fusion protein. In 
-          contrast, &quot;CLOSED&quot; cDNA ORFs have the natural stop codon of 
-          the gene (the ORF is ATG to STOP).</p>
-        <p><span class="countrytext">PLEASE ALSO SEE OUR <A HREF="TermDefinition.jsp">EXPLANATION OF TERMS</a> 
-          PAGE.</span></p></td>
-    </tr>
-    <tr valign="top"> 
-      <td class="tableinfo">Q: What is the difference between a &quot;MUTATION&quot; 
-        and a&quot;DISCREPANCY&quot;?</td>
-      <td class="homeMainText"><p>A: The &quot;MUTATION&quot; column is not the 
-          final word on the nucleotide sequence of the clone! We use &quot;mutation&quot; 
-          to indicate the presence of a purposefully engineered mutation (for 
-          example, a change introduced with the aim of creating a dominant negative 
-          or inactive form of a gene) or the presence of a fragment cloned from 
-          a mutant allele of a gene. Please note that elimination of the stop 
-          codon (&quot;fusion&quot; format) and C- or N-terminal tags (such as 
-          GST or Myc) and discrepancies that passed scientific criteria for an 
-          'accepted' clone (see below) ARE NOT LISTED AS MUTATIONS. Furthermore, 
-          tags can be part of the insert or of the vector. Look closely at the 
-          insert and vector information to determine if a fusion protein is encoded 
-          in the plasmid.</p>
-        <p> The &quot;DISCREPANCY&quot; designation was adopted from its use with 
-          the Harvard Institute of Proteomics cDNA ORF collection. These report 
-          nucleotide differences between the reference sequence the researchers 
-          were trying to clone and the actual sequence of the clone. The discrepancies 
-          could be the result of cloning an isoform or polymorphic version of 
-          the target sequence, or the result of errors introduced during the cloning 
-          process. Discrepancies usually cause only silent or conservative changes 
-          and the discrepancies present passed some set of criteria (different 
-          for different clone sets) that would have eliminated 'big' changes relative 
-          to the reference sequence. You should perform a conceptual translation 
-          of the actual sequence provided in order to check if the cDNA ORF is 
-          appropriate for your experiments.</p>
-        <p><span class="countrytext">PLEASE ALSO SEE OUR <A HREF="TermDefinition.jsp">EXPLANATION OF TERMS</a> 
-          PAGE.</span></p></td>
-    </tr>
-    <tr valign="top"> 
-      <td class="tableinfo"><p>Q: I found a cDNA I am interested in but it's in 
-          a RECOMBINATIONAL CLONING &quot;MASTER&quot; or &quot;DONOR&quot; vector. 
-        </p>
-        <p>What does this mean? </p>
-        <p>And, do you have the cDNA in an expression vector?</p></td>
-      <td class="homeMainText"><p>A: Recombinational cloning vectors use site-directed 
-          DNA recombination strategies rather than restriction enzyme-based strategies 
-          for capturing inserts and moving inserts from one vector to another. 
-          In many cases, a gene insert is first placed in a &quot;master&quot; 
-          or &quot;donor&quot; vector and can then be moved into a number of different 
-          expression vectors, depending on your experimental needs, using the 
-          appropriate recombinational cloning strategy. </p>
-        <p>For clones in pDNR-Dual, most of the MCS is removed when the insert 
-          is introduced. Inserts in pDNR-Dual can be liberated with a Sal I, Hind 
-          III digest -- but beware that the insert could have Sal I and/or Hind 
-          III sites, so you'll want to check the sequence first if you're using 
-          a restriction digest strategy.</p>
-        <p>We store master vectors in order to give the most flexibility to the 
-          most labs, since researchers will no doubt be interested in using expression 
-          vectors specific to their experiments. We make every effort to keep 
-          the database up-to-date, so if you did not find a cDNA in a specific 
-          expression vector then we probably do not currently have it in our collection.</p>
-        <p>More information about recombinational cloning can be found at website 
-          for vendors, such as Invitrogen and Clontech. In addition expression 
-          vectors are available from vendors and from labs. As is always true, 
-          you are welcome to contact the lab that created the clones to see if 
-          they are willing to share, create, or collaborate on transfer of a set 
-          of genes from a master vector to a specific expression vector.</td>
-    </tr>
-    <tr valign="top"> 
-      <td colspan="2" class="breadcrumbtextactive">OTHER FAQs</td>
-    </tr>
-    <tr valign="top"> 
-      <td class="tableinfo">Q: In what form will I receive the clones I order?</td>
-      <td class="homeMainText"><p>A: Clones are usually sent as glycerol stocks. 
-          You can find out what host strain was used by clicking the clone ID 
-          from the search results table (or from your order summary table). There, 
-          you can also find growth conditions for other host strains (for example, 
-          for yeast shuttle plasmids, the growth conditions in yeast, if supplied 
-          to us, are also presented). </p>
-        <p>Standardization reduces costs for handling and shipping. Our standard 
-          practice is to send clones as glycerol stocks in foil-sealed 96-well 
-          plates.</p></td>
-    </tr>
-    <tr valign="top"> 
-      <td class="tableinfo">Q: Do HIP cDNA/ORF clones have 5' or 3'UTR sequences?</td>
-      <td class="homeMainText"><p>A: No (for most cases). The Harvard Institute 
-          of Proteomics (HIP) collections for human, yeast, Pseudomonas, and others 
-          come from projects in which only the open reading frame (ORF) or a gene 
-          or predicted gene was cloned. For human clones, cDNA was the template 
-          but there is neither 5'UTR nor 3'UTR present. Similarly, UTRs are not 
-          present in HIP's yeast or Pseudomonas ORF clones. This gives researchers 
-          the ability to build N-terminal fusions from any &quot;closed&quot; 
-          format clones, and to build N- or C-terminal fusions from any &quot;fusion&quot; 
-          format clones. In contrast, cDNA clones from other laboratories may 
-          include (but do not necessarily include) UTRs. </p>
-        <p>Please visit the <a href="http://dnaseq.harvard.edu/plasmid-related_links.htm" target="_blank">DNA 
-          Resource Core plasmid links page</a> to find additional sources for 
-          plasmid clones, including full-length cDNAs, if you haven't been able 
-          to find an appropriate clone in our collection.</p>
-        </td>
-    </tr>
-    <tr valign="top"> 
-      <td class="tableinfo">Q: How do you handle Materials Transfer Agreements 
-        (MTAs)?</td>
-      <td class="homeMainText"><p>A: We make every effort to streamline the MTA 
-          process. We have a special arrangement with some institutions that allows 
-          us to send most clones to their researchers without a separate MTA being 
-          filled out for each transaction. For researchers at other institutions, 
-          we will ask that you send a signed copy of our standard MTA, which is 
-          based on but not identical to the Universal Biologicals MTA, before 
-          we send clones. </p>
-        <p>For some plasmids, additional MTAs will have to be signed and returned 
-          to us and/or filed with other institutions before we can send the clones.</p></td>
+  <p class="homepageText3">Answers to Frequently Asked Questions </p>
+  <p class="homepageLink"><em><strong>Sequencing is cheap insurance! </strong>We 
+    recommend that you do diagnostic tests on all clones,<br>
+    </em><em>including sequence verified clones. Feedback on your results is welcome.</em></p>
+  <table width="75%" border="0" cellspacing="3" cellpadding="3">
+    <tr>
+      <td><p align="left"><strong><em>In what form will I receive the clones?</em></strong> 
+          Within the U.S. clones are sent as glycerol stocks. For international 
+          requests, we send DNA spotted to sterile filter paper (recover by adding 
+          TE or asimilar buffer, followed by transformation). </p>
+        <p align="left"><em><strong>Can I view info about the clones I requested 
+          and check request status?</strong></em> You can always return to past 
+          requests and check request status by signing in and going to &quot;my 
+          accounts&quot; (top right of the page). Click on a specific clone order 
+          then look for the link at the bottom (# of clones) that takes you to 
+          a table of information lets you download an Excel spreadsheet with basic 
+          information about the clones.</p>
+        <p align="left"><em><strong>What's &quot;closed&quot; vs. &quot;fusion&quot; 
+          format? </strong></em>This terminology, adopted from the Harvard Institute 
+          of Proteomics (HIP), indicates that a stop codon is present (closed) 
+          or is absent (fusion) in a cDNA or ORF insert. Fusion format clones 
+          are useful for producing C-terminally tagged versions of an ORF.</p>
+        <p align="left"><em><strong>Can I use restriction enzymes with human clones 
+          in pDNR-Dual?</strong></em> The human pDNR-Dual master clones from HIP 
+          were generated using the InFusion reaction (Clontech) rather than an 
+          RE approach and most of the RE sites in the MCS are gone after the insert 
+          is introduced. In the resulting master clones, the <em>Hind</em>III 
+          and <em>Sal</em>I sites are present so that enzyme pair can be used 
+          to liberate the insert -- but beware! There could be <em>Hind</em>III 
+          or <em>Sal</em>I sites in the insert. See more on the flexibility of 
+          using the recombinational cloning approach rather than REs below.</p>
+        <p align="left"><em><strong>I cannot find the clone I am interested in. 
+          How can I find it? </strong></em></p>
+        <p align="left">(A) ARE YOU SIGNED IN? Before sign-in, only the clones 
+          available to all users are visible in a search. Register and sign in 
+          to view all the clones you are eligible to view and request. Also, there 
+          is also a necessary delay between when clones are shared with us and 
+          when they are available via the database. If you've been refered by 
+          a researcher who shared clones with the repository and can't find the 
+          clone, please contact Stephanie Mohr.</p>
+        <p align="left">(B) DID YOU USE RECOGNIZED TERMS? Please use 'official' 
+          identifiers from the NCBI Entrez Gene database or from organism-specific 
+          databases. We suggest you try your search more than one way to be sure 
+          you're seeing everything (by gene symbol and by GenBank ID, for example). 
+          In addition, we continue to work on new search types and welcome your 
+          feedback on searches. If you have searched carefully and still cannot 
+          find a clone that you are fairly certain should be in the collection, 
+          please contact Stephanie Mohr.</p>
+        <p align="left">(C) TRY OTHER SOURCES. There are many other sources for 
+          plasmids. Our <a href="http://dnaseq.med.harvard.edu/plasmid-related_links.htm" title="DF HCC DNA Resource Core Plasmid Links Page" target="_blank">Plasmid 
+          Links Page</a> is one place to start to look for other sources.</p>
+        <p align="left"> <em><strong>Will I have to get a Materials Transfer Agreement 
+          (MTA) signed in order to receive clones?</strong></em> It depends. </p>
+        <p align="left">ACADEMIC RESEARCHERS: FLEXGene clones from HIP are covered 
+          by a minimally restrictive MTA sent with clones. Most other clones are 
+          covered by our standard MTA, which has been pre-approved by some institutions 
+          and is based on the well-recognized Uniform Biologicals MTA (UB-MTA). 
+          For some clones and for some institutions, however, you will have to 
+          get a signed MTA to us before we can send the clones. In a few exceptional 
+          cases, you will have to get a third-party MTA signed before we can send 
+          the clone, as all or part of the clone is covered by MTAs from more 
+          than one institution. For more information about MTAs, including information 
+          about how to join our 'in network' group with pre-approved MTA coverage, 
+          please contact Stephanie Mohr. If you request clones and an MTA is required, 
+          the MTA will be emailed to you as a PDF file.</p>
+        <p align="left">COMPANIES: Most of the HIP FLEXGene clones are available 
+          to companies and will be covered by a minimally restrictive MTA between 
+          HIP and your company. We will email the MTA after you place a request. 
+          You are also welcome to get in touch to review the terms before placing 
+          your request.</p>
+        <p align="left"><em><strong>What is the difference between a &quot;discrepancy&quot; 
+          and a &quot;mutation&quot;? </strong></em></p>
+        <p align="left">'Discrepancy' is a term borrowed from HIP that refers 
+          to differences between the actual clone sequence and the target sequence 
+          (that is, what the researchers were trying to clone in a specific cloning 
+          effort). Discrepancies can result when the clone recovered is an isoform 
+          or naturally occuring polymorphic form of the target sequence, or from 
+          PCR, replication, or other errors. Be sure to check the insert sequence 
+          to be sure that discrepancies that were deemed 'acceptable' to HIP researchers 
+          are also acceptable to you. </p>
+        <p align="left">'Mutations' we define as changes that are known or expected 
+          to affect function. We curate an insert as containing a mutation when 
+          the insert sequence is a known mutant form (e.g. cloned from a mutant 
+          allele) or when the clone was engineered to have a mutation (e.g. in 
+          a site-specific mutagenesis effort). Please be aware that there may 
+          OR MAY NOT be experimental evidence to support the idea that a particular 
+          naturally occurring or engineered mutation results in a constitutively 
+          active, inactive, etc. form. And be further cautioned ... neither 'discrepancy' 
+          nor 'mutation' is the last word on nucleotide differences between your 
+          actual clone and the wild-type form(s). Tags can come from vectors and 
+          not be annotated as part of the insert; mutations and deletions may 
+          not be clearly annotated or detected by those who shared clones; and 
+          recombination or replication errors can change clones over time. DNA 
+          sequencing provides an inexpensive and robust means to ask if the clone 
+          you received is indeed the clone you requested and that it meets your 
+          expectations. Please perform diagnostic tests before investing a lot 
+          of time in your experiments!</p>
+        <p align="left"><em><strong>What's with recombinational cloning (pDNR-Dual, 
+          pDONR201, pDONR221, etc. vectors)?</strong></em> Most clones generated 
+          at HIP and shared with the repository are based on successful recombinational 
+          cloning methologies such as the Clontech Creator system (LoxP sites) 
+          or the Invitrogen Gateway system (att sties). You can learn more about 
+          these approaches at vendors' websites and at the HIP website http://www.hip.harvard.edu 
+          (look for inforamtion about FLEXGene clones). These flexible systems 
+          allow a single sequence-verified ORF (&quot;master&quot; or &quot;donor&quot; 
+          clone) to be used to create expression constructs for a variety of different 
+          techniques via recombination (few steps) rather than restriction enzyme 
+          cloning and ligation (several steps). In general, we keep the master 
+          clones in our collection because they give the most flexibility to the 
+          largest set of users. But in some cases, we also have expression versions. 
+          &quot;Entry&quot; or &quot;acceptor&quot; vectors used in combination 
+          with master clones to create expression constructs are available from 
+          a number of different sources, including Clontech and Invitrogen. Please 
+          visit their websites to learn more.</p>
+        <p align="left"><em><strong>Do HIP cDNA/ORF clones have 5' or 3' UTRs?</strong></em> 
+          No. The majority of HIP clone collections (including human, yeast, and 
+          more) come from projects in which only the open reading frames (ORFs) 
+          were cloned.</p>
+        <p align="left"><em><strong>Can I get help identifying a large sub-group 
+          of clones bioinformatically?</strong></em> Yes. Bioinformaticists at 
+          our host institution, HIP, may be willing to collaborate with you to 
+          identify specific sub-groups of clones that share some property (biochemical 
+          function, sub-cellular localization, up-regulated in a tissue tested 
+          by microarray, etc.). Please contact Stephanie Mohr to initiate this 
+          kind of collaborative bioinformatics-based work with bioinformaticists 
+          at HIP. Requests are reviewed and accepted on a case-by-case basis. 
+          Please note that we make some bioinformatically organized groups of 
+          clones available for view and request on the &quot;clone collections&quot; 
+          page (for example, human kinase collections and the BC1000 genes associated 
+          with breast cancer). </p>
+        <p align="left"><em><strong>Who should I cite if my work with a clone 
+          requested via PlasmID results in publication? </strong></em>The people 
+          who put in the hard work to make the clone and any appropriate references 
+          should be cited! You should be able to find this information on the 
+          clone detail page (click on the CloneID to get there). Look for clone 
+          authors and PubMed IDs (vectors can also have associated authors and 
+          PubMed IDs).</p>
+        <p align="left"><em><strong>Why am I charged for clones?</strong></em> 
+          There are very real costs associated with storage, maintenance and distribution 
+          of clones that we simply must pass along to those who request clones 
+          in order to ensure long-term stability of the repository and to adhere 
+          to the requirements of our granting agencies. Grants and institutional 
+          support help us to off-set costs and we make every effort to keep costs 
+          at a minimum through efficiency and other cost management strategies. 
+          Please note that there is no charge to store clones with the repository, 
+          and no charge to you when another group requests clones you shared with 
+          the repository. If you frequently send clones in response to requests 
+          from outside researchers, please consider passing that burden along 
+          to us.</p>
+  </td>
     </tr>
   </table>
-  <p align="left">Still have questions? Please contact <a href="http://dnaseq.med.harvard.edu/contact_us.htm" target="_blank">Stephanie
-          Mohr</a>.</p>
-</div>
+  <p align="center">Still have questions? Please contact <a href="http://dnaseq.med.harvard.edu/contact_us.htm" target="_blank">Stephanie 
+    Mohr</a>.</p>
+  </div>
 </body>
 </html>
