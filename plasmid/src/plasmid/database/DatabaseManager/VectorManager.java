@@ -423,7 +423,7 @@ public class VectorManager extends TableManager {
     
     public static Map getAllVectorPerpertyTypes() {
         Map types = new TreeMap();
-        String sql = "select category,propertytype from vectorpropertytype order by category, propertytype";
+        String sql = "select category,propertytype,displayvalue from vectorpropertytype order by category, displayvalue";
         DatabaseTransaction t = null;
         ResultSet rs = null;
         try {
@@ -434,11 +434,12 @@ public class VectorManager extends TableManager {
             while(rs.next()) {
                 String category = rs.getString(1);
                 String type = rs.getString(2);
+                String value = rs.getString(3);
                 if(lastCategory != null && lastCategory.equals(category)) {
-                    l.add(type);
+                    l.add(new VectorProperty(type, value));
                 } else {
                     l = new ArrayList();
-                    l.add(type);
+                    l.add(new VectorProperty(type, value));
                     lastCategory = category;
                     types.put(category, l);
                 }

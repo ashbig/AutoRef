@@ -185,7 +185,8 @@ public class QueryProcessManager {
             int j=0;
             List checkedProperties = new ArrayList();
             while(j<properties.size()) {
-                String property = (String)properties.get(j);
+                VectorProperty vp = (VectorProperty)properties.get(j);
+                String property = vp.getPropertyType();
                 boolean b = form.getVectortype(index);
                 if(b) {
                     checkedProperties.add(property);

@@ -31,7 +31,7 @@ import plasmid.form.VectorSearchForm;
  *
  * @author  DZuo
  */
-public class GetVectorPropertyTypesAction extends PlasmidAction {
+public class GetVectorPropertyTypesAction extends Action {
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
      * response (or forward to another web component that will create it).
@@ -47,7 +47,7 @@ public class GetVectorPropertyTypesAction extends PlasmidAction {
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet exception occurs
      */
-    public ActionForward plasmidPerform(ActionMapping mapping,
+    public ActionForward perform(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
     HttpServletResponse response)

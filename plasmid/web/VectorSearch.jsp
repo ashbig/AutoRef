@@ -1,6 +1,7 @@
 <%@ page language="java" %>
 <%@ page errorPage="ProcessError.do"%>
 <%@ page import="plasmid.Constants" %> 
+<%@ page import="plasmid.coreobject.VectorProperty" %> 
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -67,7 +68,7 @@
     <td>&nbsp;</td>
   <% } %>
     <td class="underbullet"> <html:checkbox property='<%="vectortype["+index+"]"%>'/>
-          <bean:write name="t"/> 
+        <% out.println(((VectorProperty)t).getDisplayValue()); %>
     </td>
   <% index++;%>
   </logic:iterate>

@@ -17,6 +17,7 @@ public class VectorProperty {
     
     private int vectorid;
     private String propertyType;
+    private String displayValue;
     
     /** Creates a new instance of VectorProperty */
     public VectorProperty() {
@@ -27,9 +28,16 @@ public class VectorProperty {
         this.propertyType=propertyType;
     }
     
+    public VectorProperty(String type, String value) {
+        this.propertyType = type;
+        this.displayValue = value;
+    }
+    
     public int getVectorid() {return vectorid;}
     public String getPropertyType() {return propertyType;}
+    public String getDisplayValue() {return displayValue;}
     
     public void setVectorid(int id) {this.vectorid = id;}
     public void setPropertyType(String type) {this.propertyType = type;}
+    public void setDisplayValue(String s) {this.displayValue = s;}
 }
