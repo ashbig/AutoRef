@@ -207,11 +207,10 @@ public class EndReadsWrapperRunner extends ProcessRunner
             {
                 //create file structure and distribute trace file into chromat_dir
                 read = prwrapper.run(new File(traceFile_name) );
-               if (read != null) processRead(read, conn);//reads.add(read);
+                 if (read != null) processRead(read, conn);//reads.add(read);
             }
             catch(Exception e)
             {
-                //e.printStackTrace();
                 m_error_messages.add("Error occurred while running phred on " + traceFile_name);
             }
 
@@ -227,16 +226,17 @@ public class EndReadsWrapperRunner extends ProcessRunner
           {
            //   if ( ApplicationHostDeclaration.IS_BIGHEAD_FOR_EXPRESSION_EVALUATION ) // check for read quality
            //   {
-                    if (! isSufficientQualityRead(read) )
-                    {
-                        m_error_messages.add("Read " + read.getTraceFileName()+" was not submitted into ACE, because of read low quality");
-                        File ft = new File(read.getTraceFileName());
-                        ft.delete();
-                        return;
-                    }
+                if (! isSufficientQualityRead(read) )
+                {
+                    m_error_messages.add("Read " + read.getTraceFileName()+" was not submitted into ACE, because of read low quality");
+                    File ft = new File(read.getTraceFileName());
+                    ft.delete();
+                    return;
+                }
            //   }
               //read = (Read) reads.get(count
-              istr_info = IsolateTrackingEngine.findIdandStatusFromFlexInfo(read.getFLEXPlate(), read.getFLEXWellid());
+               istr_info = IsolateTrackingEngine.findIdandStatusFromFlexInfo(read.getFLEXPlate(), read.getFLEXWellid());
+            
               read.setIsolateTrackingId( istr_info[0]);
               //get reasult id
               if ( read.getType() == Read.TYPE_ENDREAD_REVERSE || read.getType() == Read.TYPE_ENDREAD_REVERSE_FAIL)
@@ -248,16 +248,20 @@ public class EndReadsWrapperRunner extends ProcessRunner
                   resultid = read.findResultIdFromFlexInfo(Result.RESULT_TYPE_ENDREAD_FORWARD);
               }
               //insert read data
-              if ( read.getType() == Read.TYPE_ENDREAD_FORWARD || read.getType() == Read.TYPE_ENDREAD_REVERSE)
+               if ( read.getType() == Read.TYPE_ENDREAD_FORWARD || read.getType() == Read.TYPE_ENDREAD_REVERSE)
               {
                   read.setResultId(resultid);
                   read.insert(conn);
-                  String file_name = read.getTraceFileName().substring( read.getTraceFileName().lastIndexOf('\\')+1);
-                  String path_name = read.getTraceFileName().substring(0, read.getTraceFileName().lastIndexOf('\\')-1);
-                  filereference = new FileReference(BecIDGenerator.BEC_OBJECT_ID_NOTSET, file_name,  FileReference.TYPE_TRACE_FILE,    path_name );
+                 
+                  int last_index = read.getTraceFileName().lastIndexOf( File.separator);
+                    
+                  String file_name = read.getTraceFileName().substring(last_index+1);
+                  String path_name = read.getTraceFileName().substring(0, last_index-1);
+                   filereference = new FileReference(BecIDGenerator.BEC_OBJECT_ID_NOTSET, file_name,  FileReference.TYPE_TRACE_FILE,    path_name );
+                  
                   filereference.insertDataIntoDatabase(conn, resultid);
                   Result.updateResultValueId( resultid,read.getId(), conn);
-              }
+                }
 
               Result.updateType( resultid,read.getType(), conn);
               if (istr_info[1] == IsolateTrackingEngine.PROCESS_STATUS_ER_INITIATED)
@@ -271,8 +275,8 @@ public class EndReadsWrapperRunner extends ProcessRunner
           }
           catch(Exception e)
           {
-              System.out.println("Error "+read.getFLEXPlate()+"_"+read.getFLEXWellid()+"_" +read.getFLEXSequenceid()+"_"+read.getFLEXCloneId());
-              m_error_messages.add("Error "+read.getFLEXPlate()+"_"+read.getFLEXWellid()+"_" +read.getFLEXSequenceid()+"_"+read.getFLEXCloneId());
+              DatabaseTransaction.rollback(conn);
+              m_error_messages.add("Error "+read.getTraceFileName() +e.getMessage());
           }
     }
 
