@@ -180,7 +180,7 @@ public class PhredWrapper
         catch(Exception e)
         {
             e.printStackTrace();
-            throw new BecUtilException("Phred output files do not exist");
+            throw new BecUtilException("Phred output files does not exist");
         }
 	
    }
@@ -223,6 +223,8 @@ public class PhredWrapper
         {
             Runtime r = Runtime.getRuntime();
             r.traceMethodCalls(true);
+            
+            System.out.println(cmd);
              Process p = r.exec(cmd);
             BufferedInputStream berr = new BufferedInputStream(p.getErrorStream());
             BufferedInputStream binput = new BufferedInputStream(p.getInputStream());
@@ -265,8 +267,9 @@ public class PhredWrapper
             p.waitFor();
             if (p.exitValue() != 0)
             {
-                System.err.println("phred call failed" + p.exitValue());
-                return false;
+               // System.err.println("phred call failed" + p.exitValue());
+                 throw new  BecUtilException("phred call failed" + p.exitValue());
+              
             }
         } catch (IOException e)
         {

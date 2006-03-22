@@ -399,7 +399,7 @@ public class Primer3Wrapper
      *  @param querySeqFname, query sequence file name in fasta format
      *  @param outputFname, blast output file name
      */
-    private boolean run(String input, String output)
+    private boolean run(String input, String output)throws Exception
     {
         if( !(new File(input)).exists() ) return false;
                 
@@ -445,7 +445,10 @@ public class Primer3Wrapper
               eos.close();  
               process.destroy();
               int result = process.waitFor();
-              if (result != 0) return false;
+              if (result != 0) 
+              {
+                  throw new  BecUtilException("primer3 call failed" + result);
+              }
               return true;
         } catch (IOException e)
         {

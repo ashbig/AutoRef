@@ -46,6 +46,7 @@ public class DiscrepancyFinder
     private boolean      m_isRunCompliment = false;
     private String      m_input = INPUT;
     private String      m_output = OUTPUT;
+    private ArrayList       m_errors = null;
 
 
     private static final int IDENTITY_100 = 0;
@@ -75,14 +76,16 @@ public class DiscrepancyFinder
      public DiscrepancyFinder(SequencePair pair)
     {
         m_seqpair = pair;
+        m_errors= new ArrayList();
     }
 
      public DiscrepancyFinder(ArrayList pairs)
     {
         m_seqpairs = pairs;
+        m_errors= new ArrayList();
     }
 
-     public DiscrepancyFinder()    {    }
+     public DiscrepancyFinder()    {  m_errors= new ArrayList();  }
 
 
     public              String      getInputDirectory(){ return m_input;}
@@ -115,6 +118,8 @@ public class DiscrepancyFinder
     public void     setCdsStart(int v){         m_cds_start = v ;} //start of cds for query sequence if covered
     public void     setCdsStop(int v){         m_cds_stop = v ;}
    
+    public ArrayList            getErrors(){return m_errors;}
+    public void                 setErrors(ArrayList v){ m_errors = v;}
     
     //main calling function for polymorphism finder
     public void run()throws BecDatabaseException, BecUtilException
@@ -826,6 +831,13 @@ public class DiscrepancyFinder
                 cur_linker_mutation.setQuality( quality );
                 cur_linker_mutation.setExpPosition ( elements[mut_start].getQueryIndex());
                // System.out.println(cur_linker_mutation.toString());
+                if (cur_linker_mutation.getChangeType() == 0) 
+                {
+                    if (m_errors == null) m_errors = new ArrayList();
+
+                    m_errors.add("Please contact ACE development team. Problem defining type for AA discrepancy: sequence id " 
+                    + cur_linker_mutation.getSequenceId()+" discrepancy number  " + cur_linker_mutation.getNumber() );
+                  }
                 return cur_linker_mutation;
     }
 
@@ -950,7 +962,14 @@ public class DiscrepancyFinder
         cur_rna_mutation.setNumber (mut_number) ;
         cur_rna_mutation.getChangeType ( ) ;
         cur_rna_mutation.setQuality( quality );
-        
+         if (cur_rna_mutation.getChangeType() == 0) 
+        {
+            if (m_errors == null) m_errors = new ArrayList();
+      
+            m_errors.add("Please contact ACE development team. Problem defining type for AA discrepancy: sequence id " 
+            + cur_rna_mutation.getSequenceId()+" discrepancy number  " + cur_rna_mutation.getNumber() );
+      
+          }
      //   System.out.println(cur_rna_mutation.toString());
         return cur_rna_mutation;
 
@@ -978,7 +997,15 @@ public class DiscrepancyFinder
         cur_aa_mutation.setQuality( quality );
         cur_aa_mutation.getChangeType ( q_allel, s_allel ) ;
       //  System.out.println(cur_aa_mutation.toString());
-        return cur_aa_mutation;
+        if (cur_aa_mutation.getChangeType() == 0) 
+        {
+            if (m_errors == null) m_errors = new ArrayList();
+      
+            m_errors.add("Please contact ACE development team. Problem defining type for AA discrepancy: sequence id " 
+            + cur_aa_mutation.getSequenceId()+" discrepancy number  " + cur_aa_mutation.getNumber() );
+      
+          }
+          return cur_aa_mutation;
     }
 
 
