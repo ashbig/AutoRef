@@ -425,7 +425,7 @@ public class DiscrepancyDescription
                                                             FullSeqSpec cutoff_spec )
                                                             throws BecDatabaseException
     {
-       
+        Mutation mut = null;
         if ( discrepancy_descriptions == null || discrepancy_descriptions.size() ==0)
             return BaseSequence.QUALITY_GOOD;
         int global_change_type = Mutation.TYPE_NOT_DEFINE;
@@ -446,12 +446,21 @@ public class DiscrepancyDescription
             {
                 quality = discr_definition.getAADefinition().getQuality();
                 global_change_type = Mutation.getMacroChangeType(discr_definition.getAADefinition().getChangeType(),isProcessAsMissense);
-            //penalize for amb inside aa
+                //by some reason AA change type was not defined
+                if ( global_change_type == Mutation.TYPE_NOT_DEFINE && discr_definition.getRNACollection().size() == 1)
+                {
+                      mut = (Mutation) discr_definition.getRNACollection().get(0);
+                      global_change_type = Mutation.getMacroChangeType(mut.getChangeType(),isProcessAsMissense);
+                             
+                }
+                
+                //penalize for amb inside aa
                 if ( discr_definition.getRNACollection() != null)
                 {
                     for (int amb_count = 0; amb_count < discr_definition.getRNACollection().size(); amb_count++)
                     {
-                        Mutation mut = (Mutation) discr_definition.getRNACollection().get(amb_count);
+                         mut = (Mutation) discr_definition.getRNACollection().get(amb_count);
+                        // for
                         if (mut.getChangeType() ==  Mutation.TYPE_N_SUBSTITUTION_CDS ||
                             mut.getChangeType() ==  Mutation.TYPE_N_SUBSTITUTION_START_CODON 
                             || mut.getChangeType() ==  Mutation.TYPE_N_SUBSTITUTION_STOP_CODON 
