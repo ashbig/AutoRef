@@ -147,12 +147,17 @@ public class NeedleParser
                }
                 
             }
+            fin.close();
             if (res != null)
             {
                 res.setQuery(query.toUpperCase());
                 res.setSubject(ref.toUpperCase());
+                // clean up for new format that puts '-' for any letter in align that is not
+                cleanUpNewFormat( res);
             }
-            fin.close();
+          
+              
+           
          }
          catch(Exception e)
          {
@@ -285,7 +290,8 @@ public class NeedleParser
                }
             }
           
-            fin.close();
+            
+           fin.close();
             return output.toString();
          }
          catch(Exception e)
@@ -296,7 +302,50 @@ public class NeedleParser
     }
     
     
-    
+    private static  void            cleanUpNewFormat(NeedleResult res)
+    {
+        try
+        {
+            boolean isSequenceStart = false;
+
+            char[] query =  res.getQuery().toCharArray();
+            char[] subject =         res.getSubject().toCharArray();
+
+            //clean start
+            int count = 0;
+            while ( !Character.isLetter( query[count]))
+            {
+                query[count] = ' ';
+                count++;
+            }
+            count = 0;
+            while ( !Character.isLetter( subject[count]))
+            {
+                subject[count] = ' ';
+                count++;
+            }
+              count = query.length-1;
+            while ( !Character.isLetter( query[count]))
+            {
+                query[count] = ' ';
+                count--;
+            }
+            count = subject.length-1;
+            while ( !Character.isLetter( subject[count]))
+            {
+                subject[count] = ' ';
+                count--;
+            }
+
+
+            res.setQuery( String.valueOf( query));
+            res.setSubject( String.valueOf( subject));
+        }
+        catch(Exception e)
+        {
+            res = null;
+        }
+    }
     
      //******************************************
     public static void main(String args[])
@@ -311,15 +360,20 @@ public class NeedleParser
         }
      */
         
-        String queryFile = "c:\\tmp_assembly\\needle684_76.out";
+        String queryFile1 = "c:\\needleoutput\\needle138072_108926.out";
+         String queryFile = "c:\\bio\\new_needle.txt";
+      
         NeedleResult res = null;
         try
         {
+           
              res = new NeedleResult();
             
           //  NeedleParser.parse(queryFile,res);
           //  res.recalculateIdentity();
              NeedleParser.parse(queryFile,res);
+             
+              NeedleParser.parse(queryFile1,res);
             System.out.println("g");
         }catch(Exception e){}
         System.exit(0);
