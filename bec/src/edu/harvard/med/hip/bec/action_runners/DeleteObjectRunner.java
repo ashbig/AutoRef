@@ -416,6 +416,7 @@ public class DeleteObjectRunner extends ProcessRunner
         }
         catch(Exception e)
         {
+            m_error_messages.add("Can not perform delete option. Error " + e.getMessage());
             printReport(exc_items,   report_file_name, "Executed items");
             throw new BecDatabaseException( e.getMessage());
         }
@@ -682,12 +683,25 @@ sql = "update  result set resultvalueid = null, resulttype = "+Result.RESULT_TYP
         +IsolateTrackingEngine.FINAL_STATUS_ACCEPTED+","+IsolateTrackingEngine.FINAL_STATUS_REJECTED+")))";
         String active_plates = getActiveItems( sql, 1);
         ArrayList arr_active_plates= Algorithms.splitString(active_plates);
-         m_additional_info = "The following plates cannot be deleted, because at least one clone on the plate is marked as 'nonactive': ";
-        m_additional_info += Algorithms.compareTwoLists(
-                    Algorithms.splitString(m_items),
-                    arr_active_plates, 
-                    1);
-        
+         
+        ArrayList plates_with_nonactive_clones = Algorithms.compareTwoLists(
+                                            Algorithms.splitString(m_items),
+                                            arr_active_plates, 
+                                            1);
+        if (plates_with_nonactive_clones != null && plates_with_nonactive_clones.size() > 0 )
+        {
+            StringBuffer temp = new StringBuffer();
+             temp.append( "The following plates cannot be deleted, "
+             +"because at least one clone on the plate is marked as 'nonactive': ") ;
+             for ( int count = 0; count < plates_with_nonactive_clones.size(); count++)
+             {
+                 temp.append ( (String) plates_with_nonactive_clones.get(count) + " " );
+             }
+             
+             m_additional_info = temp.toString();
+        }
+         
+       
         StringBuffer plate_names = new StringBuffer();
         for (int index = 0; index < arr_active_plates.size(); index++)
         {

@@ -150,6 +150,11 @@ public class DiscrepancyFinderRunner extends ProcessRunner
                  i_discrepancy_finder.setCdsStop(0);
                  i_discrepancy_finder.setIsRunCompliment(false);
                  i_discrepancy_finder.run();
+                 if ( i_discrepancy_finder.getErrors() != null &&  i_discrepancy_finder.getErrors().size() > 0)
+                 {
+                     m_error_messages.addAll(i_discrepancy_finder.getErrors());
+                     i_discrepancy_finder.setErrors(null);
+                 }
                  if (contig_sequence.getStatus() == BaseSequence.CLONE_SEQUENCE_STATUS_NOMATCH)
                  {
                      stretch.updateContigAnalysisStatus(stretch.getId(),BaseSequence.CLONE_SEQUENCE_STATUS_NOMATCH,conn);
@@ -300,6 +305,12 @@ public class DiscrepancyFinderRunner extends ProcessRunner
             i_discrepancy_finder.setCdsStop(0);
             i_discrepancy_finder.run();
             
+            if ( i_discrepancy_finder.getErrors() != null &&  i_discrepancy_finder.getErrors().size() > 0)
+                 {
+                     m_error_messages.addAll(i_discrepancy_finder.getErrors());
+              System.out.println("eerors from d "+i_discrepancy_finder.getErrors().size());
+                     i_discrepancy_finder.setErrors(null);
+                 }
             //set cds start && stop 
             if ( (read.getType() == Read.TYPE_ENDREAD_FORWARD && ( oligo_depend_params[1] == Oligo.ORIENTATION_SENSE)
             || (read.getType() == Read.TYPE_ENDREAD_REVERSE && (oligo_depend_params[3]  == Oligo.ORIENTATION_SENSE))))
@@ -462,6 +473,12 @@ public class DiscrepancyFinderRunner extends ProcessRunner
             i_discrepancy_finder.setCdsStop(0);
             i_discrepancy_finder.setIsRunCompliment(false);
             i_discrepancy_finder.run();
+            if ( i_discrepancy_finder.getErrors() != null &&  i_discrepancy_finder.getErrors().size() > 0)
+                 {
+                     m_error_messages.addAll(i_discrepancy_finder.getErrors());
+              System.out.println("eerors from d "+i_discrepancy_finder.getErrors().size());
+                     i_discrepancy_finder.setErrors(null);
+                 }
             clonesequence.setLinker3Stop(i_discrepancy_finder.getCdsStop());
             clonesequence.setLinker5Start(i_discrepancy_finder.getCdsStart() );
         //update clone data / status
@@ -639,7 +656,7 @@ public class DiscrepancyFinderRunner extends ProcessRunner
         runner = new DiscrepancyFinderRunner();
 
        
-        runner.setInputData( Constants.ITEM_TYPE_CLONEID, " 2258 2259 119340 119452 119731   ");
+        runner.setInputData( Constants.ITEM_TYPE_CLONEID, "     171322 ");
        runner.setProcessType(Constants.PROCESS_RUN_DISCREPANCY_FINDER);
         runner.setUser(user);
         runner.run();

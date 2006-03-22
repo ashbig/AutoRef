@@ -86,9 +86,16 @@ public abstract class ProcessRunner implements Runnable
          {
                
                checkProcessSettings();
+          }
+          catch(Exception e)
+          {
+             m_error_messages.add( e.getMessage());
+             sendEMails( getTitle() );
+             return;
+          }
+          try
+          {
                cleanUpFrozenItemsForWriteProcesses();
-               
-               System.out.println(m_items);
              
          }
          catch(Exception e)
@@ -310,11 +317,14 @@ public abstract class ProcessRunner implements Runnable
              //====================================================================
              if ( m_items_type == Constants.ITEM_TYPE_PLATE_LABELS)
              {
+                 System.out.println(m_process_type);
                  if (m_process_type ==  Constants.PROCESS_RUN_END_READS_WRAPPER   //*run end reads wrapper
                 || m_process_type ==  Constants.PROCESS_RUN_ASSEMBLER_FOR_END_READS  //*run assembly wrapper
                 || m_process_type ==  Constants.PROCESS_DELETE_CLONE_READS  //
-                ||m_process_type ==  Constants.PROCESS_DELETE_CLONE_FORWARD_READ   //
-                ||m_process_type ==  Constants.PROCESS_DELETE_CLONE_REVERSE_READ   //
+                || m_process_type ==  Constants.PROCESS_DELETE_CLONE_FORWARD_READ   //
+                || m_process_type ==  Constants.PROCESS_DELETE_CLONE_REVERSE_READ   //
+                ||   m_process_type ==  Constants.PROCESS_RUN_PRIMER3  //run primer
+               
                 ) 
                 {
                     ArrayList clone_items_for_plates = null;
