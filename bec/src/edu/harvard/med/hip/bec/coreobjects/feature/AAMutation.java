@@ -88,6 +88,9 @@
                 {
                     return Mutation.TYPE_AA_SILENT_CONSERVATIVE;
                 }
+                else if ( m == null )
+                    return Mutation.TYPE_AA_POST_ELONGATION;
+                    
             }
             else if(o!= null && m != null && o.equals(m))
             {
