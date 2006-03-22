@@ -4,8 +4,8 @@
  *
  * 
  * The following information is used by CVS
- * $Revision: 1.10 $
- * $Date: 2006-01-25 16:41:26 $
+ * $Revision: 1.11 $
+ * $Date: 2006-03-22 20:57:24 $
  * $Author: Elena $
  *
  ******************************************************************************
@@ -24,7 +24,7 @@ import java.util.*;
  * Holds sytem level properties.
  *
  * @author     $Author: Elena $
- * @version    $Revision: 1.10 $ $Date: 2006-01-25 16:41:26 $
+ * @version    $Revision: 1.11 $ $Date: 2006-03-22 20:57:24 $
  */
 
 public class BecProperties
@@ -88,7 +88,7 @@ public class BecProperties
             
             //check if directory exists
             value = m_properties.getProperty("BLAST_EXE_COMMON_PATH");//=/c/blastnew/
-            if ( value == null || !isFileExsist(value +File.separator +"blastall.exe") )m_Error_messages.add("Blast exe not found");
+            if ( value == null || !isFileExsist(value ) )m_Error_messages.add("Blast (blastall) exe not found");
             
             value = m_properties.getProperty("TEMPORARY_FILES_FILE_PATH");// =/c/tmp/
             if ( value == null || !isFileExsist(value) )m_Error_messages.add("Path for temporary files is not set properly");
@@ -329,12 +329,31 @@ public class BecProperties
             String dbname = null;String dbpath = null;
         BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
         sysProps.verifyApplicationSettings();
-        Hashtable ft =  BecProperties.getInstance().getPolymFinderBlastableDatabases();     
+        edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadTraceFileFormats();
+     
+      Hashtable ft =   edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.getTraceFileFormats();
+     edu.harvard.med.hip.bec.sampletracking.mapping.TraceFileNameFormat frm = null;
+     
+     try
+     {
+      for (Enumeration e = ft.elements() ; e.hasMoreElements() ;)
+{
+    
+      frm = (edu.harvard.med.hip.bec.sampletracking.mapping.TraceFileNameFormat)e.nextElement();
+     
+  	System.out.println(frm.getFormatName());
+        }
+     }
+     catch(Exception e)
+     {
+         System.out.println(e.getMessage());
+     }
+      /* Hashtable ft =  BecProperties.getInstance().getPolymFinderBlastableDatabases();     
         for (Enumeration e = ft .keys() ; e.hasMoreElements() ;)
 {
 	 dbname = (String) e.nextElement();
    	 dbpath = (String)ft.get(dbname);
-        }
+        }*/
          }catch(Exception e){}
        
     }         

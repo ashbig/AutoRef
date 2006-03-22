@@ -58,7 +58,7 @@
 <%
  ArrayList ui_items = (ArrayList)request.getAttribute("processing_items");
     UI_GeneOligo  ui_oligo = null;
-    String[] row_class = {"evenRowColoredFont","oddRowColoredFont"} ; int row_count = 0;
+    String[] row_class = {"evenRow","oddRow"} ; int row_count = 0;
    String previous_plate_name = null;
     int prev_clone_id = 0;String clone_id = "";
     

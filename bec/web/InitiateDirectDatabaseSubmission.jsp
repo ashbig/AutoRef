@@ -124,7 +124,7 @@ break;
           StringBuffer st = new StringBuffer();
 st.append( "<tr><td bgColor='#b8c6ed'>  Please enter primer name:  </td><td  bgColor='#b8c6ed'><input type='text' name='primername' size='20' value=''></td></tr>");
 st.append( "<tr><td  bgColor='#e4e9f8'  >Please enter sequence:</td><td bgColor='#e4e9f8'> <input type='text' name='sequence' size='60' value=''> </td></tr>");
-st.append( "<tr><td  bgColor='#b8c6ed'  >Please enter Tm (optional): </td><td bgColor='#b8c6ed'> <input type='text' name='tm' size='20' value='0.0' onBlur= \";checkNumeric(this,0,100,'','',''); \"> </td></tr>");
+st.append( "<tr><td  bgColor='#b8c6ed'  >Please enter Tm (optional): </td><td bgColor='#b8c6ed'> <input type='text' name='tm' size='20' value='0.0' onBlur= \";checkNumeric(this,0,100,'.','',''); \"> </td></tr>");
 st.append( "<tr><td  bgColor='#e4e9f8'  >Please select type: </td><td bgColor='#e4e9f8'>");
 st.append( "<select name ='primertype' >");
 st.append("<option value = '"+ Oligo.TYPE_UNIVERSAL +"'>Universal ");

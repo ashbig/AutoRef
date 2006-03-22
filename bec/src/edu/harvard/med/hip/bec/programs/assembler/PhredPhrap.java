@@ -133,8 +133,8 @@ public class PhredPhrap
             p.waitFor();
             if (p.exitValue() != 0)
             {
-                System.err.println("phredphrap call failed" + p.exitValue());
-                return false;
+               // System.err.println("phredphrap call failed" + p.exitValue());
+                 throw new  BecUtilException("phredphrap call failed" + p.exitValue());
             }
         } catch (IOException e)
         {

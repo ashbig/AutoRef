@@ -45,7 +45,7 @@
   
   <tr class='evenRowColoredFontNotBold'> 
     <td   height="25"  >&nbsp; <input   type="radio" name="forwardName" value=<%= Constants.PROCESS_VIEW_OLIGO_ORDER_BY_CLONEID %> >
-      View oligo order(s) for slone(s)  </td>
+      View oligo order(s) for clone(s)  </td>
   </tr>
   <tr class='evenRowColoredFontNotBold'> 
     <td   height="25"  >&nbsp; <input   type="radio" name="forwardName" value=<%= Constants.PROCESS_VIEW_OLIGO_PLATE %> >
