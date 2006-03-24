@@ -60,7 +60,7 @@ public class DownloadClonesAction extends UserAction {
         int orderid = ((DownloadClonesForm)form).getOrderid();
         String type = ((DownloadClonesForm)form).getType();
         String collectionName = ((DownloadClonesForm)form).getCollectionName();
-        System.out.println("collectionname: "+collectionName);
+        //System.out.println("collectionname: "+collectionName);
         OrderProcessManager manager = new OrderProcessManager();
         List clones = null;        
         if(Constants.ORDER_CLONE.equals(type)) {

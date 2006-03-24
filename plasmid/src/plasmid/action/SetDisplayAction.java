@@ -66,7 +66,7 @@ public class SetDisplayAction extends Action {
         String species = ((RefseqSearchForm)form).getSpecies();
         String refseqType = ((RefseqSearchForm)form).getRefseqType();
         String forward = ((RefseqSearchForm)form).getForward();
-      
+        
         request.setAttribute("pagesize", new Integer(pagesize));
         request.setAttribute("page",  new Integer(page));
         request.setAttribute("displayPage", displayPage);
@@ -109,6 +109,14 @@ public class SetDisplayAction extends Action {
                 return (mapping.findForward("success_vector_search"));
             
             return (mapping.findForward("success"));
+        }
+        if(button != null && button.equals(Constants.DOWNLOAD)) {
+            response.setContentType("application/x-msexcel");
+            response.setHeader("Content-Disposition", "attachment;filename=Clones.xls");
+            PrintWriter out = response.getWriter();
+            OrderProcessManager manager = new OrderProcessManager();
+            manager.writeCloneList(clones, out, false, false);
+            return null;
         }
         
         String sortby = ((RefseqSearchForm)form).getSortby();

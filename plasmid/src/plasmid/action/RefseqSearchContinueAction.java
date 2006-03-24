@@ -59,7 +59,9 @@ public class RefseqSearchContinueAction extends Action {
     throws ServletException, IOException {
         
         request.getSession().removeAttribute("directFounds");
-        request.getSession().setAttribute("display", "symbol");
+        
+        ((RefseqSearchForm)form).setDisplayPage("indirect");
+        ((RefseqSearchForm)form).setDisplay("symbol");
         
         // get the parameters specified by the customer
         ActionErrors errors = new ActionErrors();
@@ -135,7 +137,7 @@ public class RefseqSearchContinueAction extends Action {
                 searchList = handler.getNofound();
                 totalFoundCloneCount = handler.queryTotalFoundCloneCounts(restrictions, clonetypes, species, Clone.AVAILABLE);
                 request.getSession().setAttribute("directFounds", directFoundList);
-                //request.setAttribute("numOfDirectFound", new Integer(handler.getFoundCloneCount()));
+                request.setAttribute("numOfDirectFound", new Integer(handler.getFoundCloneCount()));
             } catch (Exception ex) {
                 if(Constants.DEBUG)
                     System.out.println(ex);
