@@ -46,14 +46,15 @@
   <logic:iterate name="vectorSearchForm" property="types" id="type" indexId="n">
   <tr>
     <td>&nbsp;</td>
-    <td class="textcolumn" colspan="4" >
-    <table><tr>
-        <td width="50%" class="text">
-            <bean:write name="type" property="key"/>
+    <td class="subnavtext" colspan="4" >
+    <table width="100%" border="0"><tr>
+        <td width="30%" class="text">
+            Limit by <bean:write name="type" property="key"/>
         </td>
         <td class="text">
             <html:radio property='<%="logicOperator["+n+"]"%>' value="<%=Constants.AND%>">And</html:radio>
             <html:radio property='<%="logicOperator["+n+"]"%>' value="<%=Constants.OR%>">Or</html:radio>
+            (within <bean:write name="type" property="key"/>)
         </td>
     </tr></table>
     </td>

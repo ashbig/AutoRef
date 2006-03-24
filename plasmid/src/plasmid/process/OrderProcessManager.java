@@ -199,50 +199,50 @@ public class OrderProcessManager {
         List newShoppingcart = new ArrayList();
         
         try {
-        for(int i=0; i<cloneCountList.size(); i++) {
-            String count = (String)cloneCountList.get(i);
-            if(Integer.parseInt(count) > 0) {
-                String cloneid = (String)cloneids.get(i);
-                CloneInfo cloneInfo = (CloneInfo)clones.get(i);
-                cloneInfo.setQuantity(Integer.parseInt(count));
-                ShoppingCartItem s = new ShoppingCartItem(0, cloneid, Integer.parseInt(count), ShoppingCartItem.CLONE);
-                shoppingcartCopy.add(s);
-                newShoppingcart.add(cloneInfo);
+            for(int i=0; i<cloneCountList.size(); i++) {
+                String count = (String)cloneCountList.get(i);
+                if(Integer.parseInt(count) > 0) {
+                    String cloneid = (String)cloneids.get(i);
+                    CloneInfo cloneInfo = (CloneInfo)clones.get(i);
+                    cloneInfo.setQuantity(Integer.parseInt(count));
+                    ShoppingCartItem s = new ShoppingCartItem(0, cloneid, Integer.parseInt(count), ShoppingCartItem.CLONE);
+                    shoppingcartCopy.add(s);
+                    newShoppingcart.add(cloneInfo);
+                }
             }
-        }
-        } catch (Exception ex) { 
+        } catch (Exception ex) {
             if(Constants.DEBUG) {
                 System.out.println(ex);
             }
             return null;
         }
         
-        return newShoppingcart;        
+        return newShoppingcart;
     }
     
     public List updateShoppingCartForCollections(List collectionNames, List collections, List collectionCountList, List shoppingcartCopy) {
         List newShoppingcart = new ArrayList();
         
         try {
-        for(int i=0; i<collectionCountList.size(); i++) {
-            String count = (String)collectionCountList.get(i);
-            if(Integer.parseInt(count) > 0) {
-                String collectionName = (String)collectionNames.get(i);
-                CollectionInfo info = (CollectionInfo)collections.get(i);
-                info.setQuantity(Integer.parseInt(count));
-                ShoppingCartItem s = new ShoppingCartItem(0, collectionName, Integer.parseInt(count), ShoppingCartItem.COLLECTION);
-                shoppingcartCopy.add(s);
-                newShoppingcart.add(info);
+            for(int i=0; i<collectionCountList.size(); i++) {
+                String count = (String)collectionCountList.get(i);
+                if(Integer.parseInt(count) > 0) {
+                    String collectionName = (String)collectionNames.get(i);
+                    CollectionInfo info = (CollectionInfo)collections.get(i);
+                    info.setQuantity(Integer.parseInt(count));
+                    ShoppingCartItem s = new ShoppingCartItem(0, collectionName, Integer.parseInt(count), ShoppingCartItem.COLLECTION);
+                    shoppingcartCopy.add(s);
+                    newShoppingcart.add(info);
+                }
             }
-        }
-        } catch (Exception ex) { 
+        } catch (Exception ex) {
             if(Constants.DEBUG) {
                 System.out.println(ex);
             }
             return null;
         }
         
-        return newShoppingcart;     
+        return newShoppingcart;
     }
     
     public List getShoppingCartClones(List cloneids, List clones) {
@@ -318,7 +318,7 @@ public class OrderProcessManager {
             } else {
                 clones = m.queryOrderClones(orderid, user);
             }
-           
+            
             if(clones == null) {
                 if(Constants.DEBUG) {
                     System.out.println(m.getErrorMessage());
@@ -344,7 +344,7 @@ public class OrderProcessManager {
                 cloneInfo.setQuantity(quantity);
                 orderClones.add(cloneInfo);
             }
-           
+            
             return orderClones;
         } catch (Exception ex) {
             if(Constants.DEBUG) {
@@ -355,7 +355,7 @@ public class OrderProcessManager {
             DatabaseTransaction.closeConnection(conn);
         }
     }
-     
+    
     public List getOrderClonesForCollection(String collectionname, User user, boolean isWorkingStorage) {
         DatabaseTransaction t = null;
         Connection conn = null;
@@ -372,7 +372,7 @@ public class OrderProcessManager {
                 }
                 return null;
             }
-
+            
             for(int i=0; i<clones.size(); i++) {
                 CloneInfo clone = (CloneInfo)clones.get(i);
                 clone.setQuantity(1);
@@ -388,7 +388,7 @@ public class OrderProcessManager {
             DatabaseTransaction.closeConnection(conn);
         }
     }
-     
+    
     public List getOrderCollections(int orderid, User user, boolean isWorkingStorage) {
         DatabaseTransaction t = null;
         Connection conn = null;
@@ -684,10 +684,22 @@ public class OrderProcessManager {
     }
     
     public void writeCloneList(List clones, PrintWriter out, boolean isWorkingStorage) {
+        writeCloneList(clones, out, isWorkingStorage, true);
+    }
+    
+    public void writeCloneList(List clones, PrintWriter out, boolean isWorkingStorage, boolean isQuantity) {
         if(isWorkingStorage) {
-            out.println("Clone ID\tClone Type\tGene ID\tGene Symbol\tGene Name\tReference Sequence Genbank Accession\tReference Sequence GI\tInsert Format\tVector\tSelection Markers\tUse Restriction\tQuantity\tContainer\tWell\tPosition\tSpecial Treatment");
+            out.print("Clone ID\tClone Type\tGene ID\tGene Symbol\tGene Name\tReference Sequence Genbank Accession\tReference Sequence GI\tInsert Format\tVector\tSelection Markers\tUse Restriction");
+            if(isQuantity) {
+                out.print("\tQuantity");
+            }
+            out.println("\tContainer\tWell\tPosition\tSpecial Treatment");
         } else {
-            out.println("Clone ID\tClone Type\tGene ID\tGene Symbol\tGene Name\tReference Sequence Genbank Accession\tReference Sequence GI\tInsert Format\tVector\tSelection Markers\tUse Restriction\tQuantity");
+            if(isQuantity) {
+                out.println("Clone ID\tClone Type\tGene ID\tGene Symbol\tGene Name\tReference Sequence Genbank Accession\tReference Sequence GI\tInsert Format\tVector\tSelection Markers\tUse Restriction\tQuantity");
+            } else {
+                out.println("Clone ID\tClone Type\tGene ID\tGene Symbol\tGene Name\tReference Sequence Genbank Accession\tReference Sequence GI\tInsert Format\tVector\tSelection Markers\tUse Restriction");
+            }
         }
         
         for(int i=0; i<clones.size(); i++) {
@@ -701,10 +713,16 @@ public class OrderProcessManager {
                     out.print(cs.getHosttype()+": "+cs.getMarker()+";");
                 }
                 
+                out.print("\t"+c.getRestriction());
+                
+                if(isQuantity) {
+                    out.print("\t"+c.getQuantity());
+                }
+                
                 if(isWorkingStorage) {
-                    out.println("\t"+c.getRestriction()+"\t"+c.getQuantity()+"\t"+c.getPlate()+"\t"+c.getWell()+"\t"+c.getPosition()+"\t"+c.getSpecialtreatment());
+                    out.println("\t"+c.getPlate()+"\t"+c.getWell()+"\t"+c.getPosition()+"\t"+c.getSpecialtreatment());
                 } else {
-                    out.println("\t"+c.getRestriction()+"\t"+c.getQuantity());
+                    out.println();
                 }
             } else {
                 List inserts = c.getInserts();
@@ -718,10 +736,16 @@ public class OrderProcessManager {
                         out.print(cs.getHosttype()+": "+cs.getMarker()+";");
                     }
                     
+                    out.print("\t"+c.getRestriction());
+                    
+                    if(isQuantity) {
+                        out.print("\t"+c.getQuantity());
+                    }
+                    
                     if(isWorkingStorage) {
-                        out.println("\t"+c.getRestriction()+"\t"+c.getQuantity()+"\t"+c.getPlate()+"\t"+c.getWell()+"\t"+c.getPosition()+"\t"+c.getSpecialtreatment());
+                        out.println("\t"+c.getPlate()+"\t"+c.getWell()+"\t"+c.getPosition()+"\t"+c.getSpecialtreatment());
                     } else {
-                        out.println("\t"+c.getRestriction()+"\t"+c.getQuantity());
+                        out.println();
                     }
                 }
             }
@@ -780,10 +804,10 @@ public class OrderProcessManager {
         }
     }
     
-    public static List getCountryList() {      
+    public static List getCountryList() {
         List c = new ArrayList();
         String sql = "select name from country order by name";
-          
+        
         DatabaseTransaction t = null;
         ResultSet rs = null;
         
@@ -801,6 +825,6 @@ public class OrderProcessManager {
         } finally {
             DatabaseTransaction.closeResultSet(rs);
         }
-        return c;        
+        return c;
     }
 }

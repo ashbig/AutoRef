@@ -44,7 +44,7 @@ public class Constants {
     public static final String ORDER_COLLECTION = "OrderCollection";
     
     public static final String ALL = "All";
-    public static final int PAGESIZE = 10;
+    public static final int PAGESIZE = 50;
     
     public static final String BUTTON_DISPLAY_ALL = "Display All Results";
     public static final String BUTTON_DISPLAY = "Search";
@@ -60,6 +60,7 @@ public class Constants {
     
     public static final String CLONE_SEARCH_PLASMIDCLONEID = "PlasmID Clone ID";
     public static final String CLONE_SEARCH_OTHERCLONEID = "Other Clone ID";
+    public static final String DOWNLOAD = "Download";
     
     /** Creates a new instance of Constants */
     public Constants() {

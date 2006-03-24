@@ -41,8 +41,8 @@
           <td height="9" colspan="6">&nbsp;</td>
         </tr>
         <tr> 
-          <td height="10" colspan="6" class="tableheader"><strong>Enter space 
-            or new line separated term to search (maximum of 100)</strong></td>
+          <td height="10" colspan="6" class="tableheader"><strong>Enter the search terms below (maximum of 100).
+            Use space or start a new line to separate terms.</strong></td>
         </tr>
         <tr> 
           <td height="100">&nbsp; </td>

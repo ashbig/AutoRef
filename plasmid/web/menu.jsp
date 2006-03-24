@@ -33,7 +33,7 @@
   <tr> 
     <td height="45" valign="middle"> <table width="100%" border="0">
         <tr> 
-          <td height="15" class="mainbodytext">Plasmids Collection</td>
+          <td height="15" class="mainbodytext">Plasmid Collections</td>
         </tr>
         <tr> 
           <td height="15" class="lftsubtxt">- <a href="GetCollectionList.do" class="leftsubnavtext">view collections</a></td>

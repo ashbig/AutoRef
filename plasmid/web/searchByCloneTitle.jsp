@@ -9,9 +9,10 @@
         </tr>
         <tr>
           <td bgcolor="#FFFFFF" class="mainbodytexthead">
-            Search clones by PlasmID Clone ID or by one of more of the following: source lab clone ID
-            or name, FLEXGene ID (FLHXXXXXX.01X, e.g.), or GenBank Accession for a specific clone 
-            (see gene search to search with gene or mRNA accession numbers).
+Search clones (1) with one or more PlasmID clone ID number.  
+Or search (2) with a FLEXGene ID (FLHXXXXX.01X, e.g.) or with
+the GenBank Accession number for a specific clone.
+(See Gene search or Advanced Search to search for a specific gene).
           </td>
         </tr>
       </table>

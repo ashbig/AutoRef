@@ -7,6 +7,7 @@
           <td height="29" valign="bottom" bgcolor="#FFFFFF" class="mainbodytextlarge">Advanced Search</td>
         </tr>
         <tr>
-          <td bgcolor="#FFFFFF" class="mainbodytexthead">Search available plasmids using gene insert, vector, author and/or publication information</td>
+          <td bgcolor="#FFFFFF" class="mainbodytexthead">Search available plamids using gene insert, vector, author and/or publication information.
+                To search with more than one term, separate terms with a comma (,).</td>
         </tr>
       </table>

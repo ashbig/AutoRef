@@ -33,10 +33,10 @@
       <p><span class="homepageText3">Do you know the PlasmID CloneID, FLH#, 
         or other ID for a clone (this is different from gene IDs)? </span><span class="morehit"><br>
         </span><span class="homeMainText"><a href="SearchClone.jsp">Search by clone identifier</a></span></p>      
-      <!--<p><span class="homepageText3">Want more search options (gene name, 
+      <p><span class="homepageText3">Want more search options (gene name, 
         vector name, author, PubMedID, etc.)? </span><span class="morehit"><br>
-        </span><span class="homeMainText"><a href="AdvancedSearch.jsp">Advanced search</a></span></p>
-      --><p><span class="homepageText3">Looking for an 'empty vector'? </span><span class="morehit"><br>
+        </span><span class="homeMainText"><a href="PrepareAdvancedSearch.do">Advanced search</a></span></p>
+      <p><span class="homepageText3">Looking for an 'empty vector'? </span><span class="morehit"><br>
         </span><span class="homeMainText"><a href="GetAllVectors.do">View all vectors</a></span></p>
       <p><span class="homepageText3">Ready to check out? </span><span class="morehit"><br>
         </span><span class="homeMainText">Click the <a href="ViewCart.do">shopping cart</a> icon to initiate 

@@ -97,7 +97,7 @@
     -->
   </tr>
   <tr> 
-    <td width="15%" class="formlabel">PMID</td>
+    <td width="15%" class="formlabel">PubMed ID</td>
     <td width="15%">
         <html:select property="pmidOp" styleClass="itemtext">
           <html:option value="<%=Constants.OPERATOR_EQUALS %>"/>
