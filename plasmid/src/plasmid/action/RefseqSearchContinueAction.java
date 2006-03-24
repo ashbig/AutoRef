@@ -137,7 +137,7 @@ public class RefseqSearchContinueAction extends Action {
                 searchList = handler.getNofound();
                 totalFoundCloneCount = handler.queryTotalFoundCloneCounts(restrictions, clonetypes, species, Clone.AVAILABLE);
                 request.getSession().setAttribute("directFounds", directFoundList);
-                request.setAttribute("numOfDirectFound", new Integer(handler.getFoundCloneCount()));
+                request.getSession().setAttribute("numOfDirectFound", new Integer(handler.getFoundCloneCount()));
             } catch (Exception ex) {
                 if(Constants.DEBUG)
                     System.out.println(ex);
