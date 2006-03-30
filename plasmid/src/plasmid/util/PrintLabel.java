@@ -22,7 +22,7 @@ public class PrintLabel {
        /**
         * static variables
         **/
-       static final String printerName = "Hip Office";       
+       static final String printerName = "HipOffice";       
        //static final String printerName = "128.103.32.158";
        static final int labelWidth = 25;
        //static final int labelHeight = 15;

@@ -117,6 +117,7 @@ public class RefseqSearchForm extends ActionForm {
         tfbindsite = false;
         genome = false;
         sortby = null;
+        button = null;
     }
     
     public void resetValues() {

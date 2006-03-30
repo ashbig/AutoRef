@@ -31,10 +31,12 @@ public class PrintLabelsForm extends ActionForm {
     }
     
     public void setLabel(int i, String s) {
-        labels.add(i, s);
+        labels.set(i, s);
     }
     
     public List getLabels() {
         return labels;
     }
+    
+    public void setLabels(List l) {this.labels = l;}   
 }

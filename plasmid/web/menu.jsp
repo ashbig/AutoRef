@@ -26,7 +26,7 @@
             clone identifier</a></td>
         </tr>
         <tr> 
-          <td height="15" class="lftsubtxt">- <a href="PrepareAdvancedSearch.do" class="leftsubnavtext">advanced search</a></td>
+          <td height="15" class="lftsubtxt">- <a href="PrepareAdvancedSearch.do" class="leftsubnavtext">advanced text search</a></td>
         </tr>
       </table></td>
   </tr>

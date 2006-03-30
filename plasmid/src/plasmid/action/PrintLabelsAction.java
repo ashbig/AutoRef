@@ -23,6 +23,8 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 
+import java.net.*;
+
 import plasmid.form.PrintLabelsForm;
 import plasmid.Constants;
 import plasmid.util.PrintLabel;
@@ -38,16 +40,24 @@ public class PrintLabelsAction extends InternalUserAction{
     }
     
     public ActionForward internalUserPerform(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List labels = ((PrintLabelsForm)form).getLabels();        
+        List labels = ((PrintLabelsForm)form).getLabels();
         request.setAttribute(Constants.LABELS, labels);
         
+        String urlString = "http://kotel.harvard.edu:8080/FLEX/PrintLabel.do?label=";
+        URL url = null;
+        InputStream output = null;
+        BufferedReader reader = null;
         for(int i=0; i<labels.size(); i++) {
             String label = (String)labels.get(i);
-            String s = PrintLabel.execute(label);
-            System.out.println(s);
+            //String s = PrintLabel.execute(label);
+            
+            url = new URL(urlString+label);
+            output = url.openStream();
+            reader = new BufferedReader(new InputStreamReader(output));
+            reader.close();
         }
         
         request.setAttribute(Constants.PRINT_LABEL_MESSAGE, "Labels printed.");
         return mapping.findForward("success");
-    }  
+    }
 }

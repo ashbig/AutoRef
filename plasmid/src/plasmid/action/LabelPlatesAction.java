@@ -88,6 +88,9 @@ public class LabelPlatesAction extends InternalUserAction{
             labels.add(l);
         }
 
+        PrintLabelsForm f = new PrintLabelsForm();
+        f.setLabels(labels);
+        request.getSession().setAttribute("printLabelsForm", f);
         request.setAttribute(Constants.LABELS, labels);
         return mapping.findForward("success");
     }   
