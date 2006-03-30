@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.4 $
- * $Date: 2006-03-30 20:41:27 $
+ * $Revision: 1.5 $
+ * $Date: 2006-03-30 20:44:23 $
  * $Author: dzuo $
  *
  ******************************************************************************
@@ -54,7 +54,7 @@ import edu.harvard.med.hip.flex.util.*;
  *
  *
  * @author     $Author: dzuo $
- * @version    $Revision: 1.4 $ $Date: 2006-03-30 20:41:27 $
+ * @version    $Revision: 1.5 $ $Date: 2006-03-30 20:44:23 $
  */
 
 public class PrintLabelAction extends Action{
@@ -76,9 +76,9 @@ public class PrintLabelAction extends Action{
     HttpServletResponse response) throws ServletException, IOException {
         PrintLabelForm printForm = (PrintLabelForm) form;
         String label = printForm.getLabel();
-        System.out.println("label: "+label);
+        //System.out.println("label: "+label);
         String status = PrintLabel.execute(label);
-        System.out.println("Printing barcode: "+status);
+        //System.out.println("Printing barcode: "+status);
         return mapping.findForward("success");
     }    
 
