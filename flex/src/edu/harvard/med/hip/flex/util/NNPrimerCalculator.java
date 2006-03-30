@@ -1,5 +1,5 @@
 /**
- * $Id: NNPrimerCalculator.java,v 1.23 2006-03-30 18:40:17 dzuo Exp $
+ * $Id: NNPrimerCalculator.java,v 1.24 2006-03-30 19:43:59 dzuo Exp $
  * Neariest Neighborhood algorithm is used for current oligo primer calculation
  *
  * modified 12/13/01 All of the stop (close) oligos now use the universal stop
@@ -15,8 +15,7 @@ import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.database.*;
 import java.math.*;
 
-public class NNPrimerCalculator implements PrimerCalculator
-{
+public class NNPrimerCalculator implements PrimerCalculator {
     private static final double R = 1.9872;     // Gas Constant
     private static final double InitH = 0.6;    // Initial H value
     private static final double InitS = -9.0;   // Initial S value
@@ -36,8 +35,7 @@ public class NNPrimerCalculator implements PrimerCalculator
      * Constructor.  Returns a NNPrimerCalculator object
      * @return  A NNPrimerCalculator object
      */
-    public NNPrimerCalculator( )
-    {
+    public NNPrimerCalculator( ) {
         //A = 0; T = 1; C= 2; G= 3 in the two dimensional array mapping
         paramH = new double[4][4];
         paramH[0][0] = -8.0;
@@ -83,11 +81,10 @@ public class NNPrimerCalculator implements PrimerCalculator
      * @param sequence  A Sequence object
      * @return  An Oligo object represents a 5p oligo
      */
-    public Oligo calculateFivepOligo(Sequence sequence) throws FlexDatabaseException
-    {
+    public Oligo calculateFivepOligo(Sequence sequence) throws FlexDatabaseException {
         
         String subSeq = sequence.getSeqFragmentStart();
-     //   System.out.println("seq 5p fragment: "+ subSeq);
+        //   System.out.println("seq 5p fragment: "+ subSeq);
         return calTm(subSeq, TYPE_5_OPEN);
     }
     
@@ -96,16 +93,15 @@ public class NNPrimerCalculator implements PrimerCalculator
      * @param sequence  A Sequence object
      * @return  An Oligo object represents a 3p closed oligo
      */
-    public Oligo calculateThreepCloseOligo(Sequence sequence) throws FlexDatabaseException
-    {
-     
+    public Oligo calculateThreepCloseOligo(Sequence sequence) throws FlexDatabaseException {
+        
         //convert seq fragment to its reverse compliment
         String subSeq = getReverseComplement(sequence.getSeqFragmentStop());
-       //  System.out.println("The 3s reverse fragment is:" + subSeq);
+        //  System.out.println("The 3s reverse fragment is:" + subSeq);
         //new algorithem: get rid of the native stop codon
         //and use a universal stop "TAG" instead
         subSeq = UniversalStop + subSeq.substring(0, (subSeq.length()-3));
-     //   System.out.println("The 3 final: " + subSeq);
+        //   System.out.println("The 3 final: " + subSeq);
         return calTm(subSeq, TYPE_3_CLOSED);
     }
     
@@ -114,12 +110,11 @@ public class NNPrimerCalculator implements PrimerCalculator
      * @param sequence  A Sequence object
      * @return  An Oligo object represents a 3p open oligo
      */
-    public Oligo calculateThreepOpenOligo(Sequence sequence) throws FlexDatabaseException
-    {
+    public Oligo calculateThreepOpenOligo(Sequence sequence) throws FlexDatabaseException {
         String subSeq = null;
-      
+        
         subSeq = sequence.getSeqFragmentStop();
-   //     System.out.println("The 3 final: " + subSeq);
+        //     System.out.println("The 3 final: " + subSeq);
         //get rid of the stop codon at the end of the seq
         subSeq = subSeq.substring(0, (subSeq.length()-3));
         
@@ -127,7 +122,7 @@ public class NNPrimerCalculator implements PrimerCalculator
         //System.out.println(subSeq);
         
         subSeq = getReverseComplement(subSeq);
-   //     System.out.println("The 3 final: " + subSeq);
+        //     System.out.println("The 3 final: " + subSeq);
         return calTm(subSeq, TYPE_3_OPEN);
     }
     
@@ -144,10 +139,8 @@ public class NNPrimerCalculator implements PrimerCalculator
      * @param dimer  A String object
      * @return A String object
      */
-    private int convert(char dimer)
-    {
-        switch (dimer)
-        {
+    private int convert(char dimer) {
+        switch (dimer) {
             case 'A': case 'a':  return 0;
             case 'T': case 't':  return 1;
             case 'C': case 'c':  return 2;
@@ -163,8 +156,7 @@ public class NNPrimerCalculator implements PrimerCalculator
      * @param oligoType A String object indicates the types of oligos
      * @return A Oligo object
      */
-    private Oligo calTm(String subSeq, String oligoType) throws FlexDatabaseException
-    {
+    private Oligo calTm(String subSeq, String oligoType) throws FlexDatabaseException {
         //System.out.println("sequence length is: "+subSeq.length());
         double Tm = 0;
         double preTm = 0;
@@ -180,19 +172,17 @@ public class NNPrimerCalculator implements PrimerCalculator
         int indexTwo = 0; // the second index for the two-dimensional array paramH and ParamS
         Oligo oligo = null;
         double DesiredTM = getDesiredTM();
-     
-        while (Tm < DesiredTM)
-        {
-       
-           //System.out.println("TM is: "+Tm);
-           //System.out.println("position is: "+pos);
-            if (  (pos + 2 ) >= subSeq.length() )
-            {
+        
+        while (Tm < DesiredTM) {
+            
+            //System.out.println("TM is: "+Tm);
+            //System.out.println("position is: "+pos);
+            if (  (pos + 2 ) >= subSeq.length() ) {
                 pos = subSeq.length() -1 ;
                 break;
             }
-            preTm = Tm; 
-     
+            preTm = Tm;
+            
             dimerFirst = convert( subSeq.charAt(pos) ); //slide dimers from seq
             dimerSecond = convert( subSeq.charAt(pos + 1) );
             //System.out.println(dimer);
@@ -209,8 +199,7 @@ public class NNPrimerCalculator implements PrimerCalculator
         } //while
         
         //determine whether the Tm or the preTm is closer to DesiredTM
-        if (Math.abs(DESIREDTM - Tm) >= Math.abs(DESIREDTM - preTm))
-        {
+        if (Math.abs(DESIREDTM - Tm) >= Math.abs(DESIREDTM - preTm)) {
             Tm = preTm;
             pos = pos - 2;
         } //if
@@ -219,7 +208,7 @@ public class NNPrimerCalculator implements PrimerCalculator
         // Tm should not be around 60 C as calculated, actual Tm is around 55 C instead
         // Also, oligos less than 18 bases are not desirable due to high PCR non-specific binding
         // The length of short oligos are adjusted
-           // Tm calculation for oligos more than 38 bases seem to be underestimated
+        // Tm calculation for oligos more than 38 bases seem to be underestimated
         // Also, longer primers tend to form internal loops
         // All the oligos should be no more 42 bases long
         if ((pos == 19) || (pos == 20))       { pos = 21; }
@@ -233,13 +222,14 @@ public class NNPrimerCalculator implements PrimerCalculator
         
         // The oligo sequence is the substring of parameter seq50
         // Always replace the first three chars with ATG if it is 5p
-        if(TYPE_5_OPEN ==oligoType)
-        {
-           oligoSeq = "ATG" + subSeq.substring(3, pos+1);
-        } 
-        else
-        {
-            oligoSeq = subSeq.substring(0, pos+1);
+        int endPosition = pos+1;
+        if(endPosition > subSeq.length())
+            endPosition = pos;
+        if(TYPE_5_OPEN ==oligoType) {
+            oligoSeq = "ATG" + subSeq.substring(3, endPosition);
+        }
+        else {
+            oligoSeq = subSeq.substring(0, endPosition);
         }
         
         oligo = new Oligo( oligoType,oligoSeq, Tm);
@@ -257,11 +247,9 @@ public class NNPrimerCalculator implements PrimerCalculator
      * @return A String object
      */
     
-    private char getComplementBase(char base)
-    {
+    private char getComplementBase(char base) {
         
-        switch (base)
-        {
+        switch (base) {
             case 'A': case 'a' : return 'T';
             case 'C': case 'c' : return 'G';
             case 'G': case 'g' : return 'C';
@@ -279,12 +267,10 @@ public class NNPrimerCalculator implements PrimerCalculator
      * @param seq  A String object
      * @return A String object
      */
-    private String getReverseComplement(String seq)
-    {
+    private String getReverseComplement(String seq) {
         String result = "";
         String reverseSeq = Algorithms.reverseString(seq);
-        for (int i = 0; i < reverseSeq.length(); ++i)
-        {
+        for (int i = 0; i < reverseSeq.length(); ++i) {
             result += getComplementBase(reverseSeq.charAt(i));
         } // for
         return result;
@@ -295,14 +281,13 @@ public class NNPrimerCalculator implements PrimerCalculator
     //**************************************************************
     
     //Test methuod for oligo calculation
-    public void test() throws FlexDatabaseException
-    {
+    public void test() throws FlexDatabaseException {
         /*
         String seqText = "ATGGCGTTTCTCCGAAGCATGTGGGGCGTGCTGACTGCCCTGGGAAGGTCTGGAGCAGAGCTGTGCACCGGCTGTGGAAGTCGACTGCGCTCCCCCTTCAGGTAG";
         seqText += "CGGGAGGCGGGGACCCACCTGGAAGCGCCGCGGCGCCGCTATCGAGCTTCCTGCAGCGGTGGCCACCCGAGCAAGTGCCGTGGCGGGGGCGGAGAGCGGCCACGGCGGCGGCGCCTCCCCAAGTGGCCCGTTGCGTCCGACTCCAGCCTGGCAACAGAGCGAGACTCCATCTCAAATAAATAAATAAATAAATAAATAAATAAATAAATAAATAAATAAAAATGTGGAATGAATTAGGCAAGTTGGGCTGCTAATGCCTTGCCACTGAATTGAACAGCCACAGACAAACGAGAATGCACTTCTCAGGGCAAAAGAACAAATATTGATGAAGTCAATCCCAACATGCTCATTCCTTTTCCCTAATCTCATCTATTAGATGAGTTCCTCCTTCTCCCAAAGAGGAGTAGGTGAGAGGAGGTGAGAAAGAGGCCATGTCCCACTCTCCTGTGCTTCCAGGGATCAGAATTTCCCTCCCTATTAGGGAAATGCGTTTAAAAAAATTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTAAAAGTTGAGGAGTTTATTAGGGAAATATGAGAGGCATAGACACTCCAAGTGACAGAAAGAAAAGTCTGAAAATGTCCCTTCAAGCCAAGTGGGGGCCTGGCCTTGACCTCTCCAAATCAACAAGAAACTGGTGGGTTAGCAACAACATTCTCTGGCAGCCACATTGCCAGGGCATGAGTGTCTTGACCAGGACTGCCCCGCACTTCCCACCAAAGGTGGGGAGGAGACAAAGACTGTTCACAGAAGCAGTGCAAAGGCAATGAGAACTTTAAGGAAAGTTTGAGAGAGAGAGAAAGAAAGATAGAGGTGAGGAGGACCTTCACAAAGAGTCCCAGGCTTTTGGCTGTGAATGTCTCAAATACATTGACAAGTAGATGTATAAAATGTTACTGAAAAGGTAAAATGCCTAACGTCGTTTCCAACGGTTCCTCTGAACTTCTTCCCACATACCACACCACACCCCAGATGGCAGAGCCCAAAGGCCACACTTTTGAAAAAAGAAAAACAAGAATAAGCCCTGTTGCTCTTTAAGGAGAAAGGAAGGAGCTGAAGGCTGCTGGGGCCTTTCCCATGTGGCCTGTGTTGTGTAAAGCAACTTCCCAGCAGCAGCACGGCACTGTTCTAGGTGAGTGTCTCACCTTTTGTCACCCGAGCTTCAATGTACTCTATTCTCCGTTCAAGGGCTGTCAATTTCTCGTTTAGTGTTGCAAGTCTTGAACGACAAGACATATCGAACGAGTTGAGAAAGTCTGCGATTTTCTTGATGCTGCTGGTGATTATCTCAATGTACTCCCGGTTAGCCCAGTCCTGGTGAATCTCCCGCTGCACCGGATCCTCCTGTCCCGCCATGGCCG";
         System.out.println("seqText length is: "+seqText.length());
         int seqID = 219;
-        
+         
         int Start = 432;
         int Stop = 563;
         Sequence testSeq = new Sequence(seqID, Start, Stop);
@@ -311,15 +296,14 @@ public class NNPrimerCalculator implements PrimerCalculator
         String seqText = Seq.getSequencetext();
         Sequence testSeq = new Sequence(44557,Seq.getCdsstart(),Seq.getCdsstop());
         
-        try
-        {
-              System.out.println("The : " + testSeq.getSeqText(44557) );
+        try {
+            System.out.println("The : " + testSeq.getSeqText(44557) );
             System.out.println("Calculating fivep oligo...");
             Oligo result = calculateFivepOligo(testSeq);
             System.out.println(result.getSequence());
             System.out.println(result.getOligoLength());
             //		System.out.println(result.getGatewayOligoSequence());
-     //       System.out.println(result.getType());
+            //       System.out.println(result.getType());
             System.out.println(result.getTm());
             
             System.out.println("Calculating threep closed oligo...");
@@ -327,7 +311,7 @@ public class NNPrimerCalculator implements PrimerCalculator
             System.out.println(result1.getSequence());
             System.out.println(result1.getOligoLength());
             //		System.out.println(result1.getGatewayOligoSequence());
-        //    System.out.println(result1.getType());
+            //    System.out.println(result1.getType());
             System.out.println(result1.getTm());
             
             System.out.println("Calculating threep open oligo...");
@@ -335,24 +319,20 @@ public class NNPrimerCalculator implements PrimerCalculator
             System.out.println(result2.getSequence());
             System.out.println(result2.getOligoLength());
             //		System.out.println(result2.getGatewayOligoSequence());
-        //    System.out.println(result2.getType());
+            //    System.out.println(result2.getType());
             System.out.println(result2.getTm());
         }
-        catch(FlexDatabaseException e)
-        {
+        catch(FlexDatabaseException e) {
             System.out.println(e.getMessage());
         }
     }
     
     ///*******************************************************************
-    public static void main(String [] args)
-    {
+    public static void main(String [] args) {
         NNPrimerCalculator calculator = new NNPrimerCalculator();
-        try
-        {
+        try {
             calculator.test();
-        } catch (Exception ex)
-        {
+        } catch (Exception ex) {
             System.out.println(ex);
         }
         System.exit(0);
