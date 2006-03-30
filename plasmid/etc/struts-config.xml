@@ -314,8 +314,7 @@
     
     <action    path="/PrintLabels"
                type="plasmid.action.PrintLabelsAction"
-               name="printLabelsForm"
-               scope="request">
+               name="printLabelsForm">
       <forward  name="success"   path="/PrintLabels.jsp"/>
     </action>
       

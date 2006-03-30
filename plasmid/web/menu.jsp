@@ -14,6 +14,9 @@
           <td height="15" class="mainbodytext">Search Plasmids</td>
         </tr>
         <tr> 
+          <td height="15" class="lftsubtxt">- <a href="PrepareAdvancedSearch.do" class="leftsubnavtext">advanced text search</a></td>
+        </tr>
+        <tr> 
           <td height="15" class="lftsubtxt">- <a href="GetDataForRefseqSearch.do" class="leftsubnavtext">by 
             gene</a></td>
         </tr>
@@ -24,9 +27,6 @@
         <tr> 
           <td height="15" class="lftsubtxt">- <a href="SearchClone.jsp" class="leftsubnavtext">by 
             clone identifier</a></td>
-        </tr>
-        <tr> 
-          <td height="15" class="lftsubtxt">- <a href="PrepareAdvancedSearch.do" class="leftsubnavtext">advanced text search</a></td>
         </tr>
       </table></td>
   </tr>
