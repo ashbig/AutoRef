@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.3 $
- * $Date: 2006-03-30 20:35:54 $
+ * $Revision: 1.4 $
+ * $Date: 2006-03-30 20:41:27 $
  * $Author: dzuo $
  *
  ******************************************************************************
@@ -54,7 +54,7 @@ import edu.harvard.med.hip.flex.util.*;
  *
  *
  * @author     $Author: dzuo $
- * @version    $Revision: 1.3 $ $Date: 2006-03-30 20:35:54 $
+ * @version    $Revision: 1.4 $ $Date: 2006-03-30 20:41:27 $
  */
 
 public class PrintLabelAction extends Action{
@@ -71,7 +71,7 @@ public class PrintLabelAction extends Action{
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet exception occurs
      */
-    public ActionForward flexPerform(ActionMapping mapping,
+    public ActionForward perform(ActionMapping mapping,
     ActionForm form, HttpServletRequest request, 
     HttpServletResponse response) throws ServletException, IOException {
         PrintLabelForm printForm = (PrintLabelForm) form;
