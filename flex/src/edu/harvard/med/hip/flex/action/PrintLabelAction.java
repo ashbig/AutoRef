@@ -13,9 +13,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2001-07-26 22:07:13 $
- * $Author: jmunoz $
+ * $Revision: 1.2 $
+ * $Date: 2006-03-30 17:32:12 $
+ * $Author: dzuo $
  *
  ******************************************************************************
  *
@@ -53,11 +53,11 @@ import edu.harvard.med.hip.flex.util.*;
  * Action to print the barcode.
  *
  *
- * @author     $Author: jmunoz $
- * @version    $Revision: 1.1 $ $Date: 2001-07-26 22:07:13 $
+ * @author     $Author: dzuo $
+ * @version    $Revision: 1.2 $ $Date: 2006-03-30 17:32:12 $
  */
 
-public class PrintLabelAction extends ResearcherAction{
+public class PrintLabelAction extends Action{
 
     /**
      * Does the real work for the perform method which must be overriden by the
