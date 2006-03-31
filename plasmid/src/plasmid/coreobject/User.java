@@ -19,7 +19,7 @@ public class User {
     public static final String ACADEMIC = "Other academic";
     public static final String NONPROFIT = "Other non-profit organization";
     public static final String OTHER = "Other";
-    public static final String MEMBER[] = {DFHCC, HARVARD};
+    public static final String MEMBER[] = {HIP, DFHCC, HARVARD};
     public static final String INTERNAL = "Yes";
     public static final String EXTERNAL = "No";
     
