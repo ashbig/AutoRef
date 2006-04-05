@@ -392,7 +392,7 @@ public class CloneOrderManager extends TableManager {
             stmt.setInt(6, order.getOrderid());
             DatabaseTransaction.executeUpdate(stmt);
         } catch (Exception ex) {
-            handleError(ex, "Cannot update order with shipping for orderid: "+orderid);
+            handleError(ex, "Cannot update order with shipping for orderid: "+order.getOrderid());
             return false;
         } finally {
             DatabaseTransaction.closeStatement(stmt);

@@ -45,6 +45,7 @@
   </tr>
 </table>
 
+<logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
 <html:form action="ProcessShipping.do">
 <p class="text">Shipping Information</P>
 <table width="100%" border="0">
@@ -64,14 +65,12 @@
     <td class="formlabel">Tracking Number:</td>
     <td class="text"><html:text property="trackingNumber"/></td>
   </tr>
-  <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
   <tr> 
     <td class="formlabel">Who Shipped:</td>
-    <td class="text"><html:text property="whoShipped"/></td>
+    <td class="text"><bean:write property="whoShipped"/></td>
     <td class="formlabel">Who Received Shipping Confirmation:</td>
     <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="whoreceivedconfirmation"/></td>
   </tr>
-  </logic:equal>
   <tr> 
     <td class="formlabel">Shipping Received Confirmation Date:</td>
     <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="receiveconfirmationdate"/></td>
@@ -88,8 +87,8 @@
 <html:hidden name="<%=Constants.CLONEORDER%>" property="orderid"/>
 <p align="center"><html:submit styleClass="text" value="Process"/></P>
 </html:form>
+</logic:equal>
 
-<p>&nbsp;</p>
 <table width="100%" border="0">
   <tr> 
     <td colspan="2" class="featuretext">Shipping To:</td>
