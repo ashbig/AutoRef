@@ -371,6 +371,35 @@ public class CloneOrderManager extends TableManager {
         
         return true;
     }
+        
+    public boolean updateOrderWithShipping(CloneOrder order) {
+        String sql = "update cloneorder set orderstatus='"+CloneOrder.SHIPPED+"',"+
+        " shippingmethod=?,"+
+        " shippingdate=?,"+
+        " whoshipped=?,"+
+        " shippingaccount=?,"+
+        " trackingnumber=?"+
+        " where orderid=?";
+        PreparedStatement stmt = null;
+        
+        try {
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, order.getShippingmethod());
+            stmt.setDate(2, order.getShippingdate());
+            stmt.setString(3, order.getWhoshipped());
+            stmt.setString(4, order.getShippingaccount());
+            stmt.setString(5, order.getTrackingnumber());
+            stmt.setInt(6, order.getOrderid());
+            DatabaseTransaction.executeUpdate(stmt);
+        } catch (Exception ex) {
+            handleError(ex, "Cannot update order with shipping for orderid: "+orderid);
+            return false;
+        } finally {
+            DatabaseTransaction.closeStatement(stmt);
+        }
+        
+        return true;
+    }
     
     public static void main(String args[]) {
         DatabaseTransaction t = null;

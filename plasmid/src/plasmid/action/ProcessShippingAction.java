@@ -63,7 +63,7 @@ public class ProcessShippingAction  extends InternalUserAction {
             return mapping.findForward("error");
         }
         
-        SimpleDateFormat formatter = new SimpleDateFormat("MMM d, yyyy");
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yy");
         Date today = new Date();
         
         ((ProcessShippingForm)form).setShippingMethod(order.getShippingmethod());
