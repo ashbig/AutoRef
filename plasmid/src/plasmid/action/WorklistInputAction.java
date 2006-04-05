@@ -112,7 +112,16 @@ public class WorklistInputAction extends InternalUserAction{
                 return (new ActionForward(mapping.getInput()));
             }
             
-            List notEmptyDestContainers = manager.checkEmptyContainers(destContainers);
+            List emptySrcContainers = manager.checkEmptyContainers(srcContainers, Container.EMPTY);
+            if(emptySrcContainers.size()>0) {
+                String s = sc.convertFromListToString(emptySrcContainers);
+                errors.add(ActionErrors.GLOBAL_ERROR,
+                new ActionError("error.container.empty", s));
+                saveErrors(request, errors);
+                return (new ActionForward(mapping.getInput()));
+            }
+            
+            List notEmptyDestContainers = manager.checkEmptyContainers(destContainers, Container.FILLED);
             if(notEmptyDestContainers.size()>0) {
                 String s = sc.convertFromListToString(notEmptyDestContainers);
                 errors.add(ActionErrors.GLOBAL_ERROR,

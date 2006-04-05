@@ -57,9 +57,13 @@ public class InsertMutationComparator implements Comparator {
         List inserts1 = ((Clone)o1).getInserts();
         List inserts2 = ((Clone)o2).getInserts();
         
-        String s1 = ((DnaInsert)inserts1.get(0)).getHasmutation();
-        String s2 = ((DnaInsert)inserts2.get(0)).getHasmutation();
-                
+        String s1 = null;
+        String s2 = null;
+        try {
+            s1 = ((DnaInsert)inserts1.get(0)).getHasmutation();
+            s2 = ((DnaInsert)inserts2.get(0)).getHasmutation();
+        } catch (Exception ex) {}
+        
         if(s1 == null) {
             if(s2 == null) {
                 return 0;
@@ -72,7 +76,7 @@ public class InsertMutationComparator implements Comparator {
             } else {
                 return (s1.compareTo(s2));
             }
-        }     
+        }
     }
     
 }

@@ -95,6 +95,9 @@
     <form-bean      name="advancedSearchForm"
                     type="plasmid.form.AdvancedSearchForm"/>
                     
+    <form-bean      name="processShippingForm"
+                    type="plasmid.form.ProcessShippingForm"/>
+                    
  </form-beans>
 
   <!-- ========== Global Forward Definitions ============================== -->
@@ -321,6 +324,12 @@
     <action     path="/ProcessError"
                 type="edu.harvard.med.hip.flex.action.ProcessErrorAction">
        <forward name="displayError" path="/PlasmidError.jsp"/>
+    </action>
+    
+    <action    path="/ProcessShipping"
+               type="plasmid.action.ProcessShippingAction"
+               name="processShippingForm">
+      <forward  name="success"   path="/EnterShipping.jsp"/>
     </action>
 
     <action    path="/RefseqSearch"

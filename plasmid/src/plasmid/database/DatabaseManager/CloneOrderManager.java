@@ -273,7 +273,6 @@ public class CloneOrderManager extends TableManager {
             List orders = new ArrayList();
             while(rs.next()) {
                 int orderid = rs.getInt(1);
-                System.out.println("orderid: "+orderid);
                 String date = rs.getString(2);
                 String st = rs.getString(3);
                 String ponumber = rs.getString(4);

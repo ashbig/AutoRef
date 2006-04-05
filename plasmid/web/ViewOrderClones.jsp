@@ -30,10 +30,12 @@
     <td class="tableheader">&nbsp;</td>
     <td class="tableheader">Clone ID</td>
     <td class="tableheader">Clone Type</td>
-    <td class="tableheader">Gene ID</td>
+    <td class="tableheader">Species Specific ID</td>
     <td class="tableheader">Gene Symbol</td>
     <td class="tableheader">Gene Name</td>
     <td class="tableheader">Reference Sequence</td>
+    <td class="tableheader">Mutation</td>
+    <td class="tableheader">Discrepancy</td>
     <td class="tableheader">Insert Format</td>
     <td class="tableheader">Vector</td>
     <td class="tableheader">Selection Markers</td>
@@ -53,10 +55,14 @@
         <td><bean:write name="insert" property="name"/></td>
         <td><bean:write name="insert" property="description"/></td>
         <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=nucleotide&val=<bean:write name="insert" property="targetseqid"/>"><bean:write name="insert" property="targetgenbank"/></a></td>
+        <td><bean:write name="insert" property="hasMutation"/></td>
+        <td><bean:write name="insert" property="hasDiscrepancy"/></td>
         <td><bean:write name="insert" property="format"/></td>
     </logic:iterate>
     </logic:notEqual>
     <logic:equal name="clone" property="type" value="<%=Clone.NOINSERT%>">
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>

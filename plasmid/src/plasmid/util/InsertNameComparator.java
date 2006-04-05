@@ -57,9 +57,13 @@ public class InsertNameComparator implements Comparator {
         List inserts1 = ((Clone)o1).getInserts();
         List inserts2 = ((Clone)o2).getInserts();
         
-        String s1 = ((DnaInsert)inserts1.get(0)).getName();
-        String s2 = ((DnaInsert)inserts2.get(0)).getName();
-                
+        String s1 = null;
+        String s2 = null;
+        try {
+            s1 = ((DnaInsert)inserts1.get(0)).getName();
+            s2 = ((DnaInsert)inserts2.get(0)).getName();
+        } catch (Exception ex) {}
+        
         if(s1 == null) {
             if(s2 == null) {
                 return 0;
@@ -72,6 +76,6 @@ public class InsertNameComparator implements Comparator {
             } else {
                 return (s1.compareTo(s2));
             }
-        }    
-    }    
+        }
+    }
 }

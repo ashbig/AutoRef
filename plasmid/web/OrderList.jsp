@@ -36,7 +36,9 @@
         <html:select styleClass="formlabel" property="status">
             <html:option value="<%=CloneOrder.ALL%>"/>
             <html:option value="<%=CloneOrder.PENDING%>"/>
+            <html:option value="<%=CloneOrder.PENDING_MTA%>"/>
             <html:option value="<%=CloneOrder.INPROCESS%>"/>
+            <html:option value="<%=CloneOrder.SHIPPED%>"/>
         </html:select>
     </td>
     <td width="73%">
@@ -78,6 +80,12 @@
             <logic:notEqual name="order" property="status" value="<%=CloneOrder.PENDING%>">
             <option value="<%=CloneOrder.PENDING%>"/><%=CloneOrder.PENDING%>
             </logic:notEqual>
+            <logic:equal name="order" property="status" value="<%=CloneOrder.PENDING_MTA%>">
+            <option value="<%=CloneOrder.PENDING_MTA%>" selected/><%=CloneOrder.PENDING_MTA%>
+            </logic:equal>
+            <logic:notEqual name="order" property="status" value="<%=CloneOrder.PENDING_MTA%>">
+            <option value="<%=CloneOrder.PENDING_MTA%>"/><%=CloneOrder.PENDING_MTA%>
+            </logic:notEqual>
             <logic:equal name="order" property="status" value="<%=CloneOrder.INPROCESS%>">
             <option value="<%=CloneOrder.INPROCESS%>" selected/><%=CloneOrder.INPROCESS%>
             </logic:equal>
@@ -87,11 +95,30 @@
         </select>
     </td>
     </logic:equal>
-    <logic:notEqual name="order" property="status" value="<%=CloneOrder.PENDING%>">
+    <logic:notEqual name="order" property="beforeInprocess" value="-1">
         <td class="tableinfo"><bean:write name="order" property="status"/></td>
     </logic:notEqual>
     <input type="hidden" name='<%="orderid["+(i)+"]"%>' value="<bean:write name="order" property="orderid"/>">
     </logic:equal>
+    <logic:equal name="order" property="status" value="<%=CloneOrder.PENDING_MTA%>">
+    <td class="tableinfo">
+        <select name='<%="status["+(i)+"]"%>' value="<bean:write name="order" property="status"/>">
+            <logic:equal name="order" property="status" value="<%=CloneOrder.PENDING_MTA%>">
+            <option value="<%=CloneOrder.PENDING_MTA%>" selected/><%=CloneOrder.PENDING_MTA%>
+            </logic:equal>
+            <logic:notEqual name="order" property="status" value="<%=CloneOrder.PENDING_MTA%>">
+            <option value="<%=CloneOrder.PENDING_MTA%>"/><%=CloneOrder.PENDING_MTA%>
+            </logic:notEqual>
+            <logic:equal name="order" property="status" value="<%=CloneOrder.INPROCESS%>">
+            <option value="<%=CloneOrder.INPROCESS%>" selected/><%=CloneOrder.INPROCESS%>
+            </logic:equal>
+            <logic:notEqual name="order" property="status" value="<%=CloneOrder.INPROCESS%>">
+            <option value="<%=CloneOrder.INPROCESS%>" /><%=CloneOrder.INPROCESS%>
+            </logic:notEqual>
+        </select>
+    </td>
+    </logic:equal>
+
     <logic:notEqual name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
     <td class="tableinfo"><bean:write name="order" property="status"/></td>
     </logic:notEqual>

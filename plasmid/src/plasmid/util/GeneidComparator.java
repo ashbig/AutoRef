@@ -56,9 +56,13 @@ public class GeneidComparator implements Comparator {
     public int compare(Object o1, Object o2) {
         List inserts1 = ((Clone)o1).getInserts();
         List inserts2 = ((Clone)o2).getInserts();
-       
-        String s1 = ((DnaInsert)inserts1.get(0)).getGeneid();
-        String s2 = ((DnaInsert)inserts2.get(0)).getGeneid();
+        
+        String s1 = null;
+        String s2 = null;
+        try {
+            s1 = ((DnaInsert)inserts1.get(0)).getGeneid();
+            s2 = ((DnaInsert)inserts2.get(0)).getGeneid();
+        } catch (Exception ex) {}
         
         if(s1 == null) {
             if(s2 == null) {
@@ -72,6 +76,6 @@ public class GeneidComparator implements Comparator {
             } else {
                 return (s1.compareTo(s2));
             }
-        }     
-    }    
+        }
+    }
 }

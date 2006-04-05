@@ -74,7 +74,7 @@ public class GenerateContainersAction extends Action {
             if(dContainers == null) {
                 throw new Exception("Cannot get destination containers from database.");
             }
-            List nonempty = manager.checkEmptyContainers(dContainers);
+            List nonempty = manager.checkEmptyContainers(dContainers, Container.FILLED);
             if(nonempty.size()>0) {
                 throw new Exception("Some destination containers have been filled.");
             }

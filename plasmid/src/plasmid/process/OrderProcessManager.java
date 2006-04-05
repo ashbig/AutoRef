@@ -689,16 +689,16 @@ public class OrderProcessManager {
     
     public void writeCloneList(List clones, PrintWriter out, boolean isWorkingStorage, boolean isQuantity) {
         if(isWorkingStorage) {
-            out.print("Clone ID\tClone Type\tGene ID\tGene Symbol\tGene Name\tReference Sequence Genbank Accession\tReference Sequence GI\tInsert Format\tVector\tSelection Markers\tUse Restriction");
+            out.print("Clone ID\tClone Type\tGene ID\tGene Symbol\tGene Name\tReference Sequence Genbank Accession\tReference Sequence GI\tInsert Format\tVector\tSelection Markers\tMutation\tDiscrepancy");
             if(isQuantity) {
                 out.print("\tQuantity");
             }
             out.println("\tContainer\tWell\tPosition\tSpecial Treatment");
         } else {
             if(isQuantity) {
-                out.println("Clone ID\tClone Type\tGene ID\tGene Symbol\tGene Name\tReference Sequence Genbank Accession\tReference Sequence GI\tInsert Format\tVector\tSelection Markers\tUse Restriction\tQuantity");
+                out.println("Clone ID\tClone Type\tGene ID\tGene Symbol\tGene Name\tReference Sequence Genbank Accession\tReference Sequence GI\tInsert Format\tVector\tSelection Markers\tMutation\tDiscrepancy\tQuantity");
             } else {
-                out.println("Clone ID\tClone Type\tGene ID\tGene Symbol\tGene Name\tReference Sequence Genbank Accession\tReference Sequence GI\tInsert Format\tVector\tSelection Markers\tUse Restriction");
+                out.println("Clone ID\tClone Type\tGene ID\tGene Symbol\tGene Name\tReference Sequence Genbank Accession\tReference Sequence GI\tInsert Format\tVector\tSelection Markers\tMutation\tDiscrepancy");
             }
         }
         
@@ -713,7 +713,7 @@ public class OrderProcessManager {
                     out.print(cs.getHosttype()+": "+cs.getMarker()+";");
                 }
                 
-                out.print("\t"+c.getRestriction());
+                out.print("\t\t");
                 
                 if(isQuantity) {
                     out.print("\t"+c.getQuantity());
@@ -736,7 +736,7 @@ public class OrderProcessManager {
                         out.print(cs.getHosttype()+": "+cs.getMarker()+";");
                     }
                     
-                    out.print("\t"+c.getRestriction());
+                    out.print("\t"+insert.getHasmutation()+"\t"+insert.getHasdiscrepancy());
                     
                     if(isQuantity) {
                         out.print("\t"+c.getQuantity());

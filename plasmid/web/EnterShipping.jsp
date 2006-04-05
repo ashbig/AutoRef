@@ -6,7 +6,6 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ page import="plasmid.Constants" %> 
 <%@ page import="plasmid.coreobject.User" %>
-<%@ page import="plasmid.coreobject.CloneOrder" %>
 
 <html>
 <head>
@@ -24,10 +23,6 @@
 	</td>
     <td width="83%" align="left" valign="top">
 	<jsp:include page="orderHistoryTitle.jsp" />
-
-<logic:present name="ordermessage">
-<p class="text"><bean:write name="ordermessage"/></P>
-</logic:present>
 
 <table width="100%" border="0">
   <tr> 
@@ -50,24 +45,29 @@
   </tr>
 </table>
 
+<html:form action="ProcessShipping.do">
 <p class="text">Shipping Information</P>
 <table width="100%" border="0">
   <tr> 
     <td width="20%" class="formlabel">Shipping Methods:</td>
-    <td width="30%" class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="shippingmethod"/></td>
+    <td width="30%" class="text">
+        <html:select property="shippingMethod">
+            <html:options name="shippingMethods"/>
+        </html:select>
+    </td>
     <td width="20%" class="formlabel">Shipping Account:</td>
-    <td width="30%" class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="shippingaccount"/></td>
+    <td width="30%" class="text"><html:text property="shippingAccount"/></td>
   </tr>
   <tr> 
     <td class="formlabel">Shipping Date:</td>
-    <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="shippingdate"/></td>
+    <td class="text"><html:text property="shippingDate"/></td>
     <td class="formlabel">Tracking Number:</td>
-    <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="trackingnumber"/></td>
+    <td class="text"><html:text property="trackingNumber"/></td>
   </tr>
   <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
   <tr> 
     <td class="formlabel">Who Shipped:</td>
-    <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="whoshipped"/></td>
+    <td class="text"><html:text property="whoShipped"/></td>
     <td class="formlabel">Who Received Shipping Confirmation:</td>
     <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="whoreceivedconfirmation"/></td>
   </tr>
@@ -78,20 +78,18 @@
     <td class="formlabel">Who Confirmed:</td>
     <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="whoconfirmed"/></td>
   </tr>
-  <tr>
-    <td colspan="4" align="center" class="text">
-        <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
-        <logic:equal name="<%=Constants.CLONEORDER%>" property="status" value="<%=CloneOrder.INPROCESS%>">
-        <html:form action="ProcessShipping.do">
-            <html:hidden name="<%=Constants.CLONEORDER%>" property="orderid"/>
-            <html:submit styleClass="text" value="Process Shipping"/>
-        </html:form>
-        </logic:equal>
-        </logic:equal>
-    </td>
+  <tr> 
+    <td class="formlabel" colspan="4">Please enter all the plates (separate by white space):</td>
+  </tr>
+  <tr> 
+    <td class="text" colspan="4"><html:textarea rows="5" cols="60" property="containers"/></td>
   </tr>
 </table>
+<html:hidden name="<%=Constants.CLONEORDER%>" property="orderid"/>
+<p align="center"><html:submit styleClass="text" value="Process"/></P>
+</html:form>
 
+<p>&nbsp;</p>
 <table width="100%" border="0">
   <tr> 
     <td colspan="2" class="featuretext">Shipping To:</td>

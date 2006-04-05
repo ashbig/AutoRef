@@ -15,9 +15,17 @@ import java.util.*;
 public class CloneOrder {
     public static final String ALL = "All";
     public static final String PENDING = "Pending";
+    public static final String PENDING_MTA = "Pending for MTA";
     public static final String INPROCESS = "In Process";
     public static final String SHIPPED = "Shipped";
+    public static final String COMPLETE = "Complete";
     public static final String TBD = "To Be Determined";
+    public static final String allstatus[] = {
+        CloneOrder.PENDING, 
+        CloneOrder.PENDING_MTA, 
+        CloneOrder.INPROCESS, 
+        CloneOrder.SHIPPED, 
+        CloneOrder.COMPLETE};
     
     private int orderid;
     private String orderDate;
@@ -144,5 +152,29 @@ public class CloneOrder {
         } else {
             return (new Double(this.price)).toString();
         }
+    }
+    
+    public static int compareStatus(String s1, String s2) {
+        int index1 = 0;
+        int index2 = 0;
+        
+        for(int i=0; i<allstatus.length; i++) {
+            String s = allstatus[i];
+            if(s.equals(s1))
+                index1 = i;
+            if(s.equals(s2))
+                index2 = i;
+        }
+        
+        if(index1<index2)
+            return -1;
+        else if(index1 == index2)
+            return 0;
+        else 
+            return 1;
+    }
+    
+    public int getBeforeInprocess() {
+        return (CloneOrder.compareStatus(status, CloneOrder.INPROCESS));
     }
 }

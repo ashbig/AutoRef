@@ -79,11 +79,11 @@ public class ContainerProcessManager {
      * @param containers A list of Container objects.
      * @return A list of non-empty Container objects.
      */
-    public List checkEmptyContainers(List containers) {
+    public List checkEmptyContainers(List containers, String status) {
         List l = new ArrayList();
         for(int i=0; i<containers.size(); i++) {
             Container c = (Container)containers.get(i);
-            if(!Container.EMPTY.equals(c.getStatus())) {
+            if(c.getStatus().equals(status)) {
                 l.add(c.getLabel());
             }
         }

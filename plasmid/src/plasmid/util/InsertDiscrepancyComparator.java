@@ -57,9 +57,26 @@ public class InsertDiscrepancyComparator implements Comparator {
         List inserts1 = ((Clone)o1).getInserts();
         List inserts2 = ((Clone)o2).getInserts();
         
-        String s1 = ((DnaInsert)inserts1.get(0)).getHasdiscrepancy();
-        String s2 = ((DnaInsert)inserts2.get(0)).getHasdiscrepancy();
-        return (s1.compareTo(s2));
+        String s1 = null;
+        String s2 = null;
+        try {
+            s1 = ((DnaInsert)inserts1.get(0)).getHasdiscrepancy();
+            s2 = ((DnaInsert)inserts2.get(0)).getHasdiscrepancy();
+        } catch (Exception ex) {}
+        
+        if(s1 == null) {
+            if(s2 == null) {
+                return 0;
+            } else {
+                return 1;
+            }
+        } else {
+            if(s2 == null) {
+                return -1;
+            } else {
+                return (s1.compareTo(s2));
+            }
+        }
     }
     
 }
