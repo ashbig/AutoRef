@@ -57,9 +57,14 @@ public class TargetSeqidComparator implements Comparator {
         List inserts1 = ((Clone)o1).getInserts();
         List inserts2 = ((Clone)o2).getInserts();
         
-        String id1 = ((DnaInsert)inserts1.get(0)).getTargetseqid();
-        String id2 = ((DnaInsert)inserts2.get(0)).getTargetseqid();
-                
+        String id1 = null;
+        String id2 = null;
+        
+        try {
+            id1 = ((DnaInsert)inserts1.get(0)).getTargetseqid();
+            id2 = ((DnaInsert)inserts2.get(0)).getTargetseqid();
+        } catch(Exception ex) {}
+        
         if(id1 == null) {
             if(id2 == null) {
                 return 0;
@@ -72,7 +77,7 @@ public class TargetSeqidComparator implements Comparator {
             } else {
                 return (id1.compareTo(id2));
             }
-        } 
+        }
     }
     
 }
