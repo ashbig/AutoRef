@@ -827,4 +827,30 @@ public class OrderProcessManager {
         }
         return c;
     }
+        
+    public boolean updateShipping(CloneOrder order) {
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            CloneOrderManager manager = new CloneOrderManager(conn);
+            if(manager.updateOrderWithShipping(order)) {
+                DatabaseTransaction.commit(conn);
+                return true;
+            } else {
+                DatabaseTransaction.rollback(conn);
+                return false;
+            }
+        } catch(Exception ex) {
+            DatabaseTransaction.rollback(conn);
+            if(Constants.DEBUG) {
+                System.out.println(ex);
+            }
+            return false;
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
+        }
+    }
 }

@@ -71,12 +71,18 @@
     <td class="formlabel">Who Received Shipping Confirmation:</td>
     <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="whoreceivedconfirmation"/></td>
   </tr>
-  </logic:equal>
   <tr> 
     <td class="formlabel">Shipping Received Confirmation Date:</td>
     <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="receiveconfirmationdate"/></td>
     <td class="formlabel">Who Confirmed:</td>
     <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="whoconfirmed"/></td>
+  </tr>
+  </logic:equal>
+  <tr> 
+    <td colspan="4" class="formlabel">Containers shipped:</td>
+  </tr>
+  <tr> 
+    <td colspan="4" class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="shippedContainers"/></td>
   </tr>
   <tr>
     <td colspan="4" align="center" class="text">
@@ -92,6 +98,7 @@
   </tr>
 </table>
 
+<p>
 <table width="100%" border="0">
   <tr> 
     <td colspan="2" class="featuretext">Shipping To:</td>

@@ -66,11 +66,13 @@ public class ProcessShippingAction  extends InternalUserAction {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yy");
         Date today = new Date();
         
+        ((ProcessShippingForm)form).setOrderid(orderid);
         ((ProcessShippingForm)form).setShippingMethod(order.getShippingmethod());
         ((ProcessShippingForm)form).setShippingDate(formatter.format(today));
         ((ProcessShippingForm)form).setWhoShipped(user.getUsername());
         ((ProcessShippingForm)form).setShippingAccount(order.getShippingaccount());
         ((ProcessShippingForm)form).setTrackingNumber(order.getTrackingnumber());
+        ((ProcessShippingForm)form).setShippingCharge(order.getCostforshipping());
         
         List shippingMethods = DefTableManager.getVocabularies("shippingmethod", "method");
         request.setAttribute("shippingMethods", shippingMethods);

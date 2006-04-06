@@ -24,6 +24,8 @@ public class ProcessShippingForm extends ActionForm {
     private String shippingAccount;
     private String trackingNumber;
     private String containers;
+    private double shippingCharge;
+    private double totalPrice;
     
     /** Creates a new instance of ProcessShippingForm */
     public ProcessShippingForm() {
@@ -36,6 +38,8 @@ public class ProcessShippingForm extends ActionForm {
     public String getShippingAccount() {return shippingAccount;}
     public String getTrackingNumber() {return trackingNumber;}
     public String getContainers() {return containers;}
+    public double getShippingCharge() {return shippingCharge;}
+    public double getTotalPrice() {return totalPrice;}
     
     public void setOrderid(String s) {this.orderid = s;}
     public void setShippingMethod(String s) {this.shippingMethod = s;}
@@ -44,4 +48,16 @@ public class ProcessShippingForm extends ActionForm {
     public void setShippingAccount(String s) {this.shippingAccount = s;}
     public void setTrackingNumber(String s) {this.trackingNumber = s;}
     public void setContainers(String s) {this.containers = s;}
-}    
+    public void setShippingCharge(double d) {this.shippingCharge = d;}
+    public void setTotalPrice(double d) {this.totalPrice = d;}
+    
+    public void resetValues() {
+        shippingMethod = null;
+        shippingDate = null;
+        whoShipped = null;
+        shippingAccount = null;
+        trackingNumber = null;
+        containers = null;
+        shippingCharge = 0.0;
+    }
+}

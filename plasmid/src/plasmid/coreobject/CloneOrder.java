@@ -52,6 +52,8 @@ public class CloneOrder {
     private String whoconfirmed;
     private String whoreceivedconfirmation;
     
+    private String shippedContainers;
+    
     private String firstname;
     private String lastname;
     private String email;
@@ -107,6 +109,7 @@ public class CloneOrder {
     public String getWhoconfirmed() {return whoconfirmed;}
     public String getWhoreceivedconfirmation() {return whoreceivedconfirmation;}
     public String getEmail() {return email;}
+    public String getShippedContainers() {return shippedContainers;}
     
     public void setOrderid(int i) {this.orderid = i;}
     public void setOrderDate(String s) {this.orderDate = s;}
@@ -134,6 +137,7 @@ public class CloneOrder {
     public void setWhoconfirmed(String s) {this.whoconfirmed=s;}
     public void setWhoreceivedconfirmation(String s) {this.whoreceivedconfirmation=s;}
     public void setEmail(String s) {this.email = s;}
+    public void setShippedContainers(String s) {this.shippedContainers = s;}
     
     public List getItems() {return items;}
     public void setItems(List l) {this.items = l;}
@@ -152,6 +156,10 @@ public class CloneOrder {
         } else {
             return (new Double(this.price)).toString();
         }
+    }
+    
+    public double calculateTotalPrice() {
+        return costforclones+costforcollection+costforshipping;
     }
     
     public static int compareStatus(String s1, String s2) {

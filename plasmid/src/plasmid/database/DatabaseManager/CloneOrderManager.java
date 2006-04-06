@@ -177,7 +177,7 @@ public class CloneOrderManager extends TableManager {
         " shippingaddress,billingaddress,numofclones,numofcollection,costforclones,"+
         " costforcollection,costforshipping,totalprice,userid,shippingdate,whoshipped,"+
         " shippingmethod,shippingaccount,trackingnumber,receiveconfirmationdate,"+
-        " whoconfirmed,whoreceivedconfirmation"+
+        " whoconfirmed,whoreceivedconfirmation,shippedcontainers"+
         " from cloneorder where orderid="+orderid;
         
         if(user != null) {
@@ -213,6 +213,7 @@ public class CloneOrderManager extends TableManager {
                 String receiveconfirmationdate = rs.getString(21);
                 String whoconfirmed = rs.getString(22);
                 String whoreceivedconfirmation = rs.getString(23);
+                String shippedcontainers = rs.getString(24);
                 
                 order = new CloneOrder(orderid, date, st, ponumber,shippingto,billingto,shippingaddress,billingaddress, numofclones, numofcollection, costforclones, costforcollection,costforshipping, total, userid);
                 order.setShippingdate(shippingdate);
@@ -223,6 +224,7 @@ public class CloneOrderManager extends TableManager {
                 order.setReceiveconfirmationdate(receiveconfirmationdate);
                 order.setWhoconfirmed(whoconfirmed);
                 order.setWhoreceivedconfirmation(whoreceivedconfirmation);
+                order.setShippedContainers(shippedcontainers);
             }
         } catch (Exception ex) {
             handleError(ex, "Cannot query cloneorder.");
@@ -245,7 +247,7 @@ public class CloneOrderManager extends TableManager {
         " c.shippingaddress,c.billingaddress,c.numofclones,c.numofcollection,c.costforclones,"+
         " c.costforcollection,c.costforshipping,c.totalprice,c.userid,u.firstname,u.lastname,"+
         " c.shippingdate, c.whoshipped, c.shippingmethod,c.shippingaccount,c.trackingnumber,"+
-        " c.receiveconfirmationdate, c.whoconfirmed,c.whoreceivedconfirmation,u.email"+
+        " c.receiveconfirmationdate, c.whoconfirmed,c.whoreceivedconfirmation,u.email,c.shippedcontainers"+
         " from cloneorder c, userprofile u where c.userid=u.userid";
         
         if(user != null) {
@@ -298,6 +300,7 @@ public class CloneOrderManager extends TableManager {
                 String whoconfirmed = rs.getString(24);
                 String whoreceivedconfirmation = rs.getString(25);
                 String email = rs.getString(26);
+                String containers = rs.getString(27);
                 
                 CloneOrder order = new CloneOrder(orderid, date, st, ponumber,shippingto,billingto,shippingaddress,billingaddress, numofclones, numofcollection, costforclones, costforcollection,costforshipping, total, userid);
                 
@@ -312,6 +315,7 @@ public class CloneOrderManager extends TableManager {
                 order.setWhoconfirmed(whoconfirmed);
                 order.setWhoreceivedconfirmation(whoreceivedconfirmation);
                 order.setEmail(email);
+                order.setShippedContainers(containers);
                 orders.add(order);
             }
             return orders;
@@ -373,23 +377,30 @@ public class CloneOrderManager extends TableManager {
     }
         
     public boolean updateOrderWithShipping(CloneOrder order) {
-        String sql = "update cloneorder set orderstatus='"+CloneOrder.SHIPPED+"',"+
+        String sql = "update cloneorder set orderstatus=?,"+
         " shippingmethod=?,"+
         " shippingdate=?,"+
         " whoshipped=?,"+
         " shippingaccount=?,"+
-        " trackingnumber=?"+
+        " trackingnumber=?,"+
+        " costforshipping=?,"+
+        " totalprice=?,"+
+        " shippedcontainers=?"+
         " where orderid=?";
         PreparedStatement stmt = null;
         
         try {
             stmt = conn.prepareStatement(sql);
-            stmt.setString(1, order.getShippingmethod());
-            stmt.setString(2, order.getShippingdate());
-            stmt.setString(3, order.getWhoshipped());
-            stmt.setString(4, order.getShippingaccount());
-            stmt.setString(5, order.getTrackingnumber());
-            stmt.setInt(6, order.getOrderid());
+            stmt.setString(1, order.getStatus());
+            stmt.setString(2, order.getShippingmethod());
+            stmt.setString(3, order.getShippingdate());
+            stmt.setString(4, order.getWhoshipped());
+            stmt.setString(5, order.getShippingaccount());
+            stmt.setString(6, order.getTrackingnumber());
+            stmt.setDouble(7, order.getCostforshipping());
+            stmt.setDouble(8, order.getPrice());
+            stmt.setString(9, order.getShippedContainers());
+            stmt.setInt(10, order.getOrderid());
             DatabaseTransaction.executeUpdate(stmt);
         } catch (Exception ex) {
             handleError(ex, "Cannot update order with shipping for orderid: "+order.getOrderid());

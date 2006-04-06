@@ -46,7 +46,7 @@
 </table>
 
 <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
-<html:form action="ProcessShipping.do">
+<html:form action="EnterShipping.do">
 <p class="text">Shipping Information</P>
 <table width="100%" border="0">
   <tr> 
@@ -67,7 +67,7 @@
   </tr>
   <tr> 
     <td class="formlabel">Who Shipped:</td>
-    <td class="text"><bean:write property="whoShipped"/></td>
+    <td class="text"><bean:write name="processShippingForm" property="whoShipped"/></td>
     <td class="formlabel">Who Received Shipping Confirmation:</td>
     <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="whoreceivedconfirmation"/></td>
   </tr>
@@ -76,6 +76,12 @@
     <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="receiveconfirmationdate"/></td>
     <td class="formlabel">Who Confirmed:</td>
     <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="whoconfirmed"/></td>
+  </tr>
+  <tr> 
+    <td class="formlabel">Shipping Charge:</td>
+    <td class="text"><html:text property="shippingCharge"/></td>
+    <td class="formlabel"></td>
+    <td class="text"></td>
   </tr>
   <tr> 
     <td class="formlabel" colspan="4">Please enter all the plates (separate by white space):</td>

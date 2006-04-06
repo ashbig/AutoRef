@@ -180,6 +180,13 @@
               input="/ChooseShipping.jsp">
       <forward  name="success"  path="/Checkout.jsp"/>
     </action>
+    
+    <action     path="/EnterShipping"
+                type="plasmid.action.EnterShippingAction"
+               name="processShippingForm"
+              input="/EnterShipping.jsp">
+      <forward  name="success"  path="/ViewOrderDetail.jsp"/>
+    </action>
          
     <action    path="/FindPassword"
                type="plasmid.action.FindPasswordAction"
