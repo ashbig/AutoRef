@@ -20,6 +20,7 @@ public class DownloadClonesForm extends ActionForm {
     private int orderid;
     private String type;
     private String collectionName;
+    private String button;
     
     /** Creates a new instance of DownloadClonesForm */
     public DownloadClonesForm() {
@@ -28,8 +29,10 @@ public class DownloadClonesForm extends ActionForm {
     public int getOrderid() {return orderid;}
     public String getType() {return type;}
     public String getCollectionName() {return collectionName;}
+    public String getButton() {return button;}
     
     public void setOrderid(int id) {this.orderid = id;}
     public void setType(String s) {this.type = s;}
     public void setCollectionName(String s) {this.collectionName = s;}
+    public void setButton(String s) {this.button = s;}
 }

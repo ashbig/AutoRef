@@ -41,7 +41,8 @@ public class Importer {
     //public static final String filepath = "G:\\plasmid\\human_plate_not_in_plasmid_200602\\"; 
     //public static final String filepath = "G:\\plasmid\\human_plate_in_plasmid_200602\\"; 
     //public static final String filepath = "G:\\plasmid\\FT_2nd_batch\\"; 
-    public static final String filepath = "G:\\plasmid\\SHIV_HIPvector_IMPORT_MARCH2006\\";
+    //public static final String filepath = "G:\\plasmid\\SHIV_HIPvector_IMPORT_MARCH2006\\";
+    public static final String filepath = "G:\\plasmid\\Kinase_dead_200603\\";
    
     private List tables;
     private String error;

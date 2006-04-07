@@ -22,7 +22,7 @@ public class Constants {
     public static final String CART_STATUS = "Cart Status";
     public static final String SAVED = "SAVED";
     public static final String UPDATED = "UPDATED";
-    public static final String ORDERID = "Order ID";  
+    public static final String ORDERID = "Order ID";
     public static final String CLONEORDER = "Clone Order";
     public static final String ORDERS = "Clone Orders";
     public static final String ACADEMIC = User.ACADEMIC;
@@ -37,6 +37,7 @@ public class Constants {
     public static final String WORKLIST = "worklist";
     public static final String FULLWORKLIST = "fullworklist";
     public static final String WORKLISTROBOT = "worklistrobot";
+    public static final String BIOTRACY_WORKLIST_PATH = FlexProperties.getInstance().getProperty("biotracyworklist");
     
     public static final String COLLECTION = "Collections";
     public static final String SINGLECOLLECTION = "Collection";
@@ -62,7 +63,9 @@ public class Constants {
     public static final String CLONE_SEARCH_OTHERCLONEID = "Other Clone ID";
     public static final String DOWNLOAD = "Download";
     
+    public static final String BUTTON_CREATE_BIOBANK_WORKLIST = "Create BioTracy Worklist";
+    
     /** Creates a new instance of Constants */
     public Constants() {
-    }    
+    }
 }

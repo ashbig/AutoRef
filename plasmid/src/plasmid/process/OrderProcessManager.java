@@ -333,7 +333,7 @@ public class OrderProcessManager {
             }
             
             CloneManager manager = new CloneManager(conn);
-            Map found = manager.queryClonesByCloneid(items, true, true, isWorkingStorage);;
+            Map found = manager.queryClonesByCloneid(items, true, true, isWorkingStorage, true, null, null, null, Clone.AVAILABLE);
             
             List orderClones = new ArrayList();
             for(int i=0; i<clones.size(); i++) {
@@ -752,6 +752,31 @@ public class OrderProcessManager {
         }
     }
     
+    public List groupClonesByGrowth(List clones) {
+        List groups = new ArrayList();
+        Collections.sort(clones, new CloneGrowthComparator());
+        int lastid = 0;
+        int currentid = 0;
+        List l = null;
+        for(int i=0; i<clones.size(); i++) {
+            Clone c = (CloneInfo)clones.get(i);
+            currentid = c.getRecommendedGrowthCondition().getGrowthid();
+            if(currentid == lastid) {
+                l.add(c);
+            } else {
+                if(l != null) {
+                    groups.add(l);
+                }
+                l = new ArrayList();
+                l.add(c);
+                lastid = currentid;
+            }
+        }
+        groups.add(l);
+        
+        return groups;
+    }
+    
     public boolean updateOrderStatus(int orderid, String status) {
         DatabaseTransaction t = null;
         Connection conn = null;
@@ -827,7 +852,7 @@ public class OrderProcessManager {
         }
         return c;
     }
-        
+    
     public boolean updateShipping(CloneOrder order) {
         DatabaseTransaction t = null;
         Connection conn = null;
@@ -852,5 +877,34 @@ public class OrderProcessManager {
         } finally {
             DatabaseTransaction.closeConnection(conn);
         }
+    }
+    
+    public void printBioTracyWorklist(List clones, String filename) throws Exception {
+        if(clones == null || filename == null)
+            return;
+        
+        OutputStreamWriter f = new FileWriter(filename);
+        for(int i=0; i<clones.size(); i++) {
+            CloneInfo clone = (CloneInfo)clones.get(i);
+            String tube = clone.getPlate();
+            f.write(tube+"\n");
+        }
+        f.close();
+    }
+    
+    public void printBioTracySummary(List groups, String filename, String worklistFilenameRoot) throws Exception {
+        if(groups == null || filename == null)
+            return;
+        
+        OutputStreamWriter f = new FileWriter(filename);
+        f.write("File Name\tHost Type\tSelection Condition\tGrowth Condition\tComments\n");
+        for(int i=0; i<groups.size(); i++) {
+            List clones = (List)groups.get(i);
+            CloneInfo clone = (CloneInfo)clones.get(0);
+            GrowthCondition g = clone.getRecommendedGrowthCondition();
+            String fn = worklistFilenameRoot+"_"+(i+1)+".txt";
+            f.write(fn+"\t"+g.getHosttype()+"\t"+g.getSelection()+"\t"+g.getCondition()+"\t"+g.getComments()+"\n");
+        }
+        f.close();
     }
 }

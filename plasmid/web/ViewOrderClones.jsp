@@ -6,6 +6,7 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ page import="plasmid.Constants" %> 
 <%@ page import="plasmid.coreobject.Clone" %> 
+<%@ page import="plasmid.coreobject.User" %>
 
 <html>
 <head>
@@ -87,9 +88,14 @@
 <input type="hidden" name="collectionName" value="<bean:write name="collectionName"/>">
 <table width="100%" border="0">
   <tr>
-    <td width="77%">&nbsp;</td>
-    <td width="23%">
-        <html:submit styleClass="text" value="Download Clone List"/>
+    <td width="50%">&nbsp;</td>
+    <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
+    <td>
+        <html:submit styleClass="text" property="button" value="<%=Constants.BUTTON_CREATE_BIOBANK_WORKLIST%>"/>
+    </td>
+    </logic:equal>
+    <td>
+        <html:submit styleClass="text" property="button" value="Download Clone List"/>
     </td>
   </tr>
 </table>
