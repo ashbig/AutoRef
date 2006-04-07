@@ -15,7 +15,7 @@ import java.util.*;
 public class CloneOrder {
     public static final String ALL = "All";
     public static final String PENDING = "Pending";
-    public static final String PENDING_MTA = "Pending for MTA";
+    public static final String PENDING_MTA = "Pending MTA";
     public static final String INPROCESS = "In Process";
     public static final String SHIPPED = "Shipped";
     public static final String COMPLETE = "Complete";

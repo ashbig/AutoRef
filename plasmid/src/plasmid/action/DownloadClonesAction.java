@@ -7,8 +7,10 @@
 package plasmid.action;
 
 import java.util.*;
+import java.util.Date;
 import java.io.*;
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -60,9 +62,10 @@ public class DownloadClonesAction extends UserAction {
         int orderid = ((DownloadClonesForm)form).getOrderid();
         String type = ((DownloadClonesForm)form).getType();
         String collectionName = ((DownloadClonesForm)form).getCollectionName();
-        //System.out.println("collectionname: "+collectionName);
+        String button = ((DownloadClonesForm)form).getButton();
+        
         OrderProcessManager manager = new OrderProcessManager();
-        List clones = null;        
+        List clones = null;
         if(Constants.ORDER_CLONE.equals(type)) {
             clones = manager.getOrderClones(orderid, user, isWorkingStorage);
         }
@@ -77,6 +80,37 @@ public class DownloadClonesAction extends UserAction {
             errors.add(ActionErrors.GLOBAL_ERROR,
             new ActionError("error.general","Cannot get order clones from database."));
             return (mapping.findForward("error"));
+        }
+        
+        if(Constants.BUTTON_CREATE_BIOBANK_WORKLIST.equals(button) && User.INTERNAL.equals(user.getIsinternal())) {
+            List groups = manager.groupClonesByGrowth(clones);
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            Date today = new Date();
+            String filename = Constants.BIOTRACY_WORKLIST_PATH+"order"+orderid+"_"+formatter.format(today);
+            List files = new ArrayList();
+            try {
+                for(int i=0; i<groups.size(); i++) {
+                    List group = (List)groups.get(i);
+                    String worklistfilename = filename+"_"+(i+1)+".txt";
+                    manager.printBioTracyWorklist(group, worklistfilename);
+                    files.add(worklistfilename);
+                }
+                String summaryfilename = filename+"_summary.xls";
+                manager.printBioTracySummary(groups, summaryfilename, filename);
+                files.add(summaryfilename);
+            } catch (Exception ex) {
+                if(Constants.DEBUG) {
+                    System.out.println("Cannot print BioTracy worklist files.");
+                    System.out.println(ex);
+                }
+                
+                errors.add(ActionErrors.GLOBAL_ERROR,
+                new ActionError("error.general","Cannot print BioTracy worklist files."));
+                return (mapping.findForward("error"));
+            }
+            
+            request.setAttribute("files", files);
+            return (mapping.findForward("success"));
         }
         
         response.setContentType("application/x-msexcel");

@@ -164,6 +164,20 @@ public class Clone implements Serializable {
         return sc.convertFromListToString(synonyms);
     }
     
+    public String getSelectionString() {
+        String s = null;
+        for(int i=0; i<selections.size(); i++) {
+            CloneSelection cs = (CloneSelection)selections.get(i);
+            String hosttype = cs.getHosttype();
+            if(s == null) {
+                s = hosttype+": "+getMarkerString(hosttype);
+            } else {
+                s += "; "+hosttype+": "+getMarkerString(hosttype);
+            }
+        }
+        return s;
+    }
+    
     public Set getHosttypes() {        
         Set l = new TreeSet();
         
