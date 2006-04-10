@@ -40,6 +40,7 @@ vi.	Type of definition (coverage low quality / no coverage )
     private int         m_refsequence_id = -1;
     private int         m_isolatetracking_id = -1;
     private int         m_clone_sequence_id = -1;
+    private int         i_clone_sequence_analysis_status = -1;
     private int         m_spec_id = -1;
     private CloneSequence   m_clone_sequence = null;
     private int         m_clone_id = -1;
@@ -60,6 +61,7 @@ vi.	Type of definition (coverage low quality / no coverage )
     public int         getSpecId (){ return m_spec_id ; }
     public ArrayList    getStretches(){ return m_stretches;}
     public String       getHTMLDescription(){ return i_html_description; }
+    public int          getCloneSequenceAnalysisStatus(){ return i_clone_sequence_analysis_status;}
     
     public void         setId ( int v){ m_id  = v ; }
     public void         setType ( int v){ m_type  = v ; }
@@ -71,7 +73,7 @@ vi.	Type of definition (coverage low quality / no coverage )
     public void         setStretches(ArrayList v){  m_stretches = v;}
     public void         addStretch(Stretch g){ if (m_stretches == null) m_stretches = new ArrayList(); m_stretches.add(g);}
     public void         addStretches(ArrayList ar){ if (m_stretches == null) m_stretches = new ArrayList(); m_stretches.addAll(ar);}
-    
+    public void         setCloneSequenceAnalysisStatus(int v){  i_clone_sequence_analysis_status = v;}
     
     public void         setHTMLDescription(String s){ i_html_description = s;}
     

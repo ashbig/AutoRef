@@ -1092,6 +1092,34 @@ public abstract class Mutation
          
          return result;
      }
+     
+        public static ArrayList getDiscrepanciesByTypeQuality(ArrayList discrepancies,int quality, int[] type )
+    {
+        ArrayList result_discrepancy = new ArrayList();
+        Mutation mutation = null;
+        if ( discrepancies == null || discrepancies.size() == 0) return null;
+        for (int count = 0; count < discrepancies.size(); count ++)
+	{
+            mutation = (Mutation)discrepancies.get(count);
+            if (  mutation.getQuality() == quality && isRightType(mutation.getType(),type) )
+            {
+                result_discrepancy.add( mutation );
+            }
+        }
+        result_discrepancy =  Mutation.sortDiscrepanciesByPosition(result_discrepancy);
+     
+        return result_discrepancy;
+    }
+    // 
+    
+    private  static boolean        isRightType(int mutation_type,int types[]) 
+    {
+        for (int count = 0; count < types.length; count++)
+        {
+            if ( mutation_type == types[count] ) return true;
+        }
+        return false;
+    }
     
   /* 
      public static ArrayList sortDiscrepanciesByChangeTypeAndQuality(ArrayList discrepancies)

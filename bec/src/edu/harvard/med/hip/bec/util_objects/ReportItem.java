@@ -65,33 +65,36 @@ public class ReportItem {
         public String toString()
         {
             StringBuffer res = new StringBuffer();
-            res.append( i_cloneid  + "\t"+    i_refseq_cds_length     );    
+            res.append( i_cloneid  + "\t"+    i_refseq_cds_length    +"\t" );    
             if ( i_analisys_status  != -1)
                res.append( BaseSequence.getSequenceAnalyzedStatusAsString(i_analisys_status)+"\t");
             else
-                 res.append( format( i_analisys_status ) );
+                 res.append( format( i_analisys_status ) +"\t");
             res.append( i_clone_sequenceid   + "\t");
          
             if ( i_discr_id != -1 ) 
             {
                 res.append(   i_discr_id + "\t" );
+                res.append( Mutation.getMutationTypeAsString(i_discr_change_type) +"\t");
                 res.append(  i_discr_position   + "\t");  
                 res.append(   Mutation.getQualityAsString(i_discr_quality)  + "\t");
             }
             else
             {
-                res.append(   "N/A\tN/A\tN/A\t");   
+                res.append(   "N/A\tN/A\tN/A\tN/A\t");   
             }
-             if ( i_lqr_id != -1)
-             {
-                res.append(     i_lqr_id   + "\t");
-                res.append( i_lqr_cds_start   + "\t"+    i_lqr_cds_stop   + "\t");
-                res.append( i_lqr_sequence_start   + "\t"+  i_lqr_sequence_stop   + "\t");
-             }
-             else
-             {
-                  res.append(   "N/A\tN/A\tN/A\tN/A\tN/A\t");
-             }
+            String temp = null;
+            temp = ( i_lqr_id == -1)? "N/A" : ""+i_lqr_id ;
+            res.append(     temp   + "\t");
+            temp = ( i_lqr_cds_start == -1)? "N/A" : ""+i_lqr_cds_start ;
+            res.append(     temp   + "\t");
+             temp = ( i_lqr_cds_stop == -1)? "N/A" : ""+i_lqr_cds_stop ;
+            res.append(     temp   + "\t");
+            temp = ( i_lqr_sequence_start == -1)? "N/A" : ""+i_lqr_sequence_start ;
+            res.append(     temp   + "\t");
+            temp = ( i_lqr_sequence_stop == -1)? "N/A" : ""+i_lqr_sequence_stop ;
+            res.append(     temp   + "\t");
+            
             res.append( format(i_gap_id)   + "\t"+          format(i_contigid )  + "\t");
             res.append( format(i_gap_cds_start)   + "\t"+          format(i_gap_cds_stop )  + "\t");
             return res.toString();

@@ -31,6 +31,7 @@ import edu.harvard.med.hip.bec.form.*;
 import edu.harvard.med.hip.bec.user.*;
 import edu.harvard.med.hip.bec.util.*;
 import edu.harvard.med.hip.bec.Constants;
+import edu.harvard.med.hip.bec.UI_Constants;
 import edu.harvard.med.hip.bec.sampletracking.mapping.*;
 import edu.harvard.med.hip.bec.sampletracking.objects.*;
 import edu.harvard.med.hip.bec.util_objects.*;
@@ -576,14 +577,16 @@ if ( request.getParameter("plate_name") != null)((PrimerOrderRunner)runner).setP
                                     ((GapMapperRunner)runner).setQualityTrimmingFirstBase ( Integer.parseInt( (String)request.getParameter(PhredPhrap.QUALITY_TRIMMING_FIRST_BASE)));
                                     ((GapMapperRunner)runner).setIsUseLQReadsForAssembly( request.getParameter(PhredPhrap.LQREADS_USE_FOR_ASSEMBLY) != null );
                                     ((GapMapperRunner)runner).setIsDeleteLQReads( request.getParameter(PhredPhrap.LQREADS_DELETE) != null );
-           
-                              }
-                              
-                              if ( forwardName == Constants.PROCESS_FIND_GAPS)
-                              {
-                                  if ( request.getParameter("isRunLQR") != null )
-                                    ((GapMapperRunner)runner).setIsRunLQR(true);
-                              }
+                                     if ( request.getParameter("isRunLQR") != null )                 ((GapMapperRunner)runner).setIsRunLQR(true);
+                               }
+                                  
+                                if ( forwardName == Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE)
+                               {
+                                   ((GapMapperRunner)runner).setNumberOfBasesCoveredByForwardER( Integer.parseInt( (String)request.getParameter(UI_Constants.GAP_MAPPER_NUMBER_OF_BASES_COVERED_FORWARDER )));
+                                   ((GapMapperRunner)runner).setNumberOfBasesCoveredByReverseER( Integer.parseInt( (String)request.getParameter(UI_Constants.GAP_MAPPER_NUMBER_OF_BASES_COVERED_REVERSEER)));
+
+                                }
+                             
                               break;
                         } 
                         case Constants.PROCESS_PROCESS_OLIGO_PLATE:

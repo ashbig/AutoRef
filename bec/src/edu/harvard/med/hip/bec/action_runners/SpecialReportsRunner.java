@@ -612,9 +612,76 @@ public class SpecialReportsRunner extends ProcessRunner
      
      
      
+     /* format
+      *clone id
+      *ref sequence id
+      *cds length
+      *region type
+      *cds start
+      *cds stop
+      *sequence start
+      *sequence end
+      *sequence id
+      *
+      **/
      
-     
-    public static ArrayList getReportForStretchCollection(String clone_id,
+    public static ArrayList getReportForStretchCollection(int clone_id,
+            StretchCollection stretch_collection,
+            boolean isPrintTitle,
+            boolean isCDSCoordinatesAlfaNummericNomenculature,
+            boolean isShowSequenceCoordinates)throws Exception
+    {
+        ArrayList print_items = new ArrayList();
+        StringBuffer buf = new StringBuffer();
+        int refseq_cds_length = RefSequence.getCdsLength(stretch_collection.getRefSequenceId());
+        String temp = "N/A";
+        if ( isPrintTitle )
+        {
+            String title = "Clone ID\tRefSequence ID\tCDS Length\tRegion Type"
+            + "\tCDS Start\tCDS Stop\t";
+            
+            if ( isShowSequenceCoordinates)
+                title +="Sequence Start\tSequence Stop\t";
+            else
+                title +="Sequence ID";
+            print_items.add(title);
+        }
+        
+        ArrayList stretchs = Stretch.sortByPosition(stretch_collection.getStretches() );
+        Stretch stretch = null;
+        
+        for (int index = 0; index < stretch_collection.getStretches().size();index ++)
+        {
+            stretch = (Stretch)stretch_collection.getStretches().get(index);
+            buf = new StringBuffer();
+            buf.append(clone_id +"\t");
+            buf.append(stretch_collection.getRefSequenceId() +"\t");
+            buf.append(refseq_cds_length +"\t");
+            buf.append(stretch.getStretchTypeAsString( stretch.getType()) +"\t");
+            buf.append(stretch.getCdsStart() +"\t");
+            buf.append(stretch.getCdsStop() +"\t");
+            if ( isShowSequenceCoordinates)
+            {
+                 temp = ( stretch.getSequenceStart() == -1)? "N/A" : String.valueOf(stretch.getSequenceStart());
+                 buf.append(temp +"\t");
+                 temp = ( stretch.getSequenceStop() == -1)? "N/A" : String.valueOf(stretch.getSequenceStop());
+                 buf.append(temp +"\t");
+            }
+            else
+            {
+                 temp = ( stretch.getSequenceId() == -1)? "N/A" : String.valueOf(stretch.getSequenceId());
+                 buf.append(temp +"\t");
+            }
+            
+            print_items.add( buf.toString()+ Constants.LINE_SEPARATOR );
+          
+        }
+       return print_items;
+    }
+    
+    
+    /*
+     *public static ArrayList getReportForStretchCollection(String clone_id,
             StretchCollection stretch_collection,
             int number_of_bases_covered_by_forward_er ,
             int number_of_bases_covered_by_reverse_er,
@@ -708,71 +775,203 @@ public class SpecialReportsRunner extends ProcessRunner
         }
         return print_items;
     }
-    
+    */
     /* format 
-     * cloneid   cds_length   Analyzed    AssembledSeqId    DiskrId     DiskrType     DiscrPos   
-     *  DiskrQuality   LQR_ID   LQR_Cds_start   LQR_Cds_Stop    
-     *LQR_Sequence_start    LQR_Sequence_Stop   GapId   ContigId    Gap/Contig Cds Range
+     * Clone ID\tRefSequence ID\tCDS Length\tClone Sequence ID\tSequence Analysis Status\t"
+            +"Discrepancy ID\tDiscrepancy Type\tQuality\tCDS start\tSequence Start\tDiscrepancy Length\t";
+            if ( define_read_need )
+                title +="Forward Read Needed\tInternal Reads Needed\tReverse Read Needed\t"
      **/
-    public static ArrayList  getReportForStretchCollectionNewFormat(String clone_id,
-            StretchCollection stretch_collection,
-            boolean isDescriptionOfFirstRNAOnly,
-            boolean isCDSCoordinatesAlfaNummericNomenculature)throws Exception
+    public static ArrayList  getReportForDiscrepancies(
+            int clone_id,
+            int refsequence_id,
+            int discrepancy_quality,
+            AnalyzedScoredSequence sequence,
+            boolean isCDSCoordinatesAlfaNummericNomenculature,
+            boolean isFirstCycle,
+            boolean define_read_need,
+            int number_of_bases_covered_by_forward_er,
+            int	number_of_bases_covered_by_reverse_er)throws Exception
     {
         ArrayList print_items = new ArrayList();
-        ReportItem report_item = null;
+        String  s_isForwardReadNeeded = "No";
+        String  s_isInternalReadNeeded = "No";
+        String  s_isReverseReadNeeded = "No";
+        
+        int refseq_cds_length = RefSequence.getCdsLength( refsequence_id);
+        int sequence_id = sequence.getId();
+        String analysis_status = getCodeForSequenceAnalysisStatus(sequence.getStatus());
+        
+        //defgine title
+        String title = "";
+        if ( isFirstCycle)
+        {
+            title ="Clone ID\tRefSequence ID\tCDS Length\tClone Sequence ID\tSequence Analysis Status\t"
+            +"Discrepancy ID\tDiscrepancy Type\tQuality\tCDS start\tSequence Start\tDiscrepancy Length\t";
+            if ( define_read_need )
+                title +="Forward Read Needed\tInternal Reads Needed\tReverse Read Needed\t"; 
+            print_items.add(title);
+        }
        
-        StringBuffer buf = new StringBuffer();
-        int clone_id_int = Integer.parseInt( clone_id);
-        int refseq_cds_length = RefSequence.getCdsLength(stretch_collection.getRefSequenceId());
-        int refseq_id = stretch_collection.getRefSequenceId() ;
-        int analysis_status = -1;
-        ArrayList stretchs = Stretch.sortByPosition(stretch_collection.getStretches() );
-        Stretch stretch = null;
-        CloneSequence clone_sequence = null;
-        if ( stretch_collection.getType() == StretchCollection.TYPE_COLLECTION_OF_LQR )
+         ArrayList discrepancies_to_report = new ArrayList();
+        StringBuffer discrepancy_report= new StringBuffer();
+        Mutation rna_mutation = null;
+       
+        //collect discrepancies
+        int[] types = {Mutation.RNA, Mutation.LINKER_3P, Mutation.LINKER_5P};
+        try
         {
-                clone_sequence = CloneSequence.getOneByCloneId(Integer.parseInt( clone_id) );
-                clone_sequence.getStatus() ;
-        }
-        for (int index = 0; index < stretch_collection.getStretches().size();index ++)
-        {
-            stretch = (Stretch)stretch_collection.getStretches().get(index);
-
-            if ( stretch_collection.getType() == StretchCollection.TYPE_COLLECTION_OF_LQR )
+            discrepancies_to_report = Mutation.getDiscrepanciesByTypeQuality( sequence.getDiscrepancies(),discrepancy_quality, types);
+            discrepancies_to_report = Mutation.sortDiscrepanciesById(discrepancies_to_report);
+            if ( discrepancies_to_report != null && discrepancies_to_report.size() > 0)
             {
-                buf.append( stretch.getStretchTypeAsString( stretch.getType()) + " "+ (index + 1) + "\t");
-                if ( isCDSCoordinatesAlfaNummericNomenculature )
+                if ( define_read_need )
                 {
-                    buf.append( "Cds Start " + convertCDSCoordinatesAlfaNummericNomenculature( stretch.getCdsStart() , refseq_cds_length ) );
-                    buf.append("\tCds Stop " + convertCDSCoordinatesAlfaNummericNomenculature( stretch.getCdsStop() , refseq_cds_length ) );
+
+                   int[] isReadNeeded = defineNeedForReads(discrepancies_to_report,number_of_bases_covered_by_forward_er, refseq_cds_length, number_of_bases_covered_by_reverse_er);
+                      s_isForwardReadNeeded = getCodeReadNeed(isReadNeeded[0]);
+                      s_isInternalReadNeeded = getCodeReadNeed(isReadNeeded[1]);
+                      s_isReverseReadNeeded = getCodeReadNeed(isReadNeeded[2]);
                 }
-                else
+
+
+                for (int count = 0; count < discrepancies_to_report.size(); count++)
                 {
-                    buf.append( "Cds Start " + ( stretch.getCdsStart() ) );
-                    buf.append("\tCds Stop " + ( stretch.getCdsStop() ) );
-             
+                    rna_mutation= (Mutation)discrepancies_to_report.get(count);
+                    discrepancy_report.append(clone_id+"\t");
+                    discrepancy_report.append(refsequence_id+"\t");
+                    discrepancy_report.append(refseq_cds_length+"\t");
+                    discrepancy_report.append(sequence_id+"\t");
+                    discrepancy_report.append(analysis_status+"\t");
+                    discrepancy_report.append(rna_mutation.getId()+"\t");
+                    discrepancy_report.append(Mutation.getMutationTypeAsString(rna_mutation.getChangeType())+"\t");
+                    discrepancy_report.append(rna_mutation.getQualityAsString()+"\t");
+                    discrepancy_report.append(rna_mutation.getPosition()+"\t");
+                    discrepancy_report.append(rna_mutation.getExpPosition()+"\t");
+                    discrepancy_report.append(rna_mutation.getLength()+"\t");
+                    if ( define_read_need)
+                    {
+                        discrepancy_report.append(s_isForwardReadNeeded +"\t");
+                        discrepancy_report.append(s_isInternalReadNeeded +"\t");
+                        discrepancy_report.append(s_isReverseReadNeeded +"\t");
+                    }
+
+                    print_items.add(discrepancy_report.toString());
+                    discrepancy_report= new StringBuffer();
                 }
-                buf.append("\t Sequence Region "+stretch.getSequenceStart() +" - "+ stretch.getSequenceStop() );
-                //define discrepancies in the region
-           //   ArrayList lqr_discrepancies = clone_sequence.getDiscrepanciesInRegion( stretch.getCdsStart() , stretch.getCdsStop(), clone_sequence.getCdsStart() , refseq_cds_length);
-               ArrayList lqr_discrepancies = clone_sequence.getDiscrepanciesInRegion( stretch.getSequenceStart() , stretch.getSequenceStop(), clone_sequence.getCdsStart() , refseq_cds_length);
-          
-                if ( lqr_discrepancies != null || lqr_discrepancies.size() > 0 )
-              {
-// create new report item
-                  print_items.addAll(
-                        getReportItemsForDiscrepancies( lqr_discrepancies,
-                        clone_id_int,  refseq_cds_length,  analysis_status,
-                        clone_sequence.getId() ,  stretch )        );
-              }
             }
+
+            return print_items;
         }
-        return print_items;
+        catch(Exception e)
+        {
+            throw e;
+        }
     }
     
-      
+     private static String             getCodeForSequenceAnalysisStatus(int sequence_analysis_status)
+     {
+          switch (sequence_analysis_status)
+        {
+            case BaseSequence.CLONE_SEQUENCE_STATUS_ASSEMBLED: return "NotA"; 
+            case BaseSequence.CLONE_SEQUENCE_STATUS_ANALIZED_YES_DISCREPANCIES : return "ADY"; 
+            case BaseSequence.CLONE_SEQUENCE_STATUS_ANALIZED_NO_DISCREPANCIES: return "ADN";
+            case BaseSequence.CLONE_SEQUENCE_STATUS_NOMATCH :return "NM"; 
+            case BaseSequence.CLONE_SEQUENCE_STATUS_POLYMORPHISM_CLEARED :return "AP"; 
+            case BaseSequence.CLONE_SEQUENCE_STATUS_ANALYSIS_CONFIRMED: return "AF";
+            default: return "";
+        }
+     }
+     
+     
     
+     private static String          getCodeReadNeed(int value)
+     {
+        
+         if (value == -1) return "No";
+         if (value == 1) return "Yes";
+          return "Not defined";
+     }
+    
+     /*return values:
+      (value == -1)  "No";
+          (value == 1)  "Yes";
+          value = 0  "Not defined";
+      **/
+     private static int[] defineNeedForReads(ArrayList discrepancies_to_report,
+                        int number_of_bases_covered_by_forward_er, 
+                        int refseq_cds_length,
+                        int number_of_bases_covered_by_reverse_er)
+     {
+         int isFERneeded = 0;
+         int isRERneeded = 0;
+         int isInternalRneeded = 0;
+         Mutation mut = null;
+         try
+         {
+             for (int discr_count = 0; discr_count < discrepancies_to_report.size(); discr_count++)
+             {
+                 mut = (Mutation) discrepancies_to_report.get(discr_count);
+                 //check for boundary conditions
+                 
+                 // short sequence
+                 if (number_of_bases_covered_by_forward_er >= refseq_cds_length )
+                 {    isInternalRneeded = -1; isRERneeded = -1;}
+                
+                 else if ( (number_of_bases_covered_by_forward_er + number_of_bases_covered_by_reverse_er) >= refseq_cds_length )
+                 {
+                     isInternalRneeded = -1;
+                     number_of_bases_covered_by_reverse_er = refseq_cds_length - number_of_bases_covered_by_forward_er - 1;
+                 }
+                 
+               
+                
+                 // first mutation out of fer range
+                 if (isFERneeded == 0 && number_of_bases_covered_by_forward_er < mut.getPosition() && mut.getType() == Mutation.RNA )
+                 {  isFERneeded = -1;}
+          
+                 
+                 if (   isFERneeded==0 && (
+                     mut.getType() == Mutation.LINKER_5P ||
+                    ( mut.getPosition() <= number_of_bases_covered_by_forward_er && mut.getType() == Mutation.RNA)) )//forward read
+                 {
+                    isFERneeded = 1;
+                 }
+                 
+                  
+                 if ( isRERneeded == 0 && 
+                    ( mut.getType() == Mutation.LINKER_3P || 
+                        (mut.getPosition() >= (refseq_cds_length - number_of_bases_covered_by_reverse_er)
+                        && mut.getType() == Mutation.RNA)))
+                 {                        isRERneeded = 1;          }
+                 if ( isInternalRneeded== 0 && 
+                    (mut.getType() == Mutation.RNA && 
+                    ( mut.getPosition() > number_of_bases_covered_by_forward_er &&   
+                    mut.getPosition() < (refseq_cds_length - number_of_bases_covered_by_reverse_er)))) 
+                 {    isInternalRneeded = 1;}
+                 
+                 // exit if all flags set
+                 if ( isFERneeded != 0 && isRERneeded != 0 &&  isInternalRneeded !=0)
+                  {
+                      int[] result = {isFERneeded,isInternalRneeded,isRERneeded};
+                      return result;
+                  }
+                 
+             }
+             //if still not defined - set to not requered
+             isInternalRneeded = ( isInternalRneeded ==0 )? -1:isInternalRneeded;
+             isRERneeded = ( isRERneeded == 0)? -1: isRERneeded;
+             int[] result = {isFERneeded,isInternalRneeded,isRERneeded};
+             return result;
+         }
+         catch(Exception e)
+         {
+            int[] result = {isFERneeded,isInternalRneeded,isRERneeded};
+             return result;
+         }
+     
+     }
+           
     //---------------------------------
     
     private static ArrayList  getReportItemsForDiscrepancies(ArrayList lqr_discrepancies,
@@ -784,7 +983,8 @@ public class SpecialReportsRunner extends ProcessRunner
         ArrayList report_items = new ArrayList();
         for ( int d_count = 0; d_count < lqr_discrepancies.size(); d_count++)
           {
-            discr_description = (DiscrepancyDescription) lqr_discrepancies.get(d_count);
+              discr = (Mutation) lqr_discrepancies.get(d_count); 
+            /*discr_description = (DiscrepancyDescription) lqr_discrepancies.get(d_count);
             if ( discr_description.getDiscrepancyDefintionType() == DiscrepancyDescription.TYPE_AA)
             {
                 discr = (Mutation) discr_description.getRNACollection().get(0); 
@@ -792,22 +992,22 @@ public class SpecialReportsRunner extends ProcessRunner
             else if ( discr_description.getDiscrepancyDefintionType() != DiscrepancyDescription.TYPE_AA)
             {
                 discr = (Mutation)discr_description.getRNADefinition();
-             }
+             }*/
             report_item = new ReportItem();
             report_item.setCloneId  (clone_id );
             report_item.setRefSequenceCdsLength  ( refseq_cds_length );
-            report_item.setAnalysisStatus  (analysis_status);
+            report_item.setAnalysisStatus  ( analysis_status);
             report_item.setCloneSequenceId   ( clone_sequence_id );
             report_item.setDiscrId   ( discr.getId());
             report_item.setDiscrChangeType ( discr.getChangeType()); 
             report_item.setDiscrPosition  ( discr.getPosition() );
             report_item.setDiscrQuality  (discr.getQuality());
-            report_item.setLqrId  ( stretch .getId() );
+            report_item.setLqrId  ( stretch.getId() );
             report_item.setLqrCdsStart   ( stretch.getCdsStart());
             report_item.setLqrCdsStop  (stretch.getCdsStop());
-        //    report_item.setLqrSequenceStart  ( stretch.g);
-       //     report_item.setLqrSequenceStop  ();
-            report_items.add(report_item);
+            report_item.setLqrSequenceStart  ( stretch.getSequenceStart());
+            report_item.setLqrSequenceStop  (stretch.getSequenceStop());
+            report_items.add(report_item.toString());
           }
           return report_items;
     }

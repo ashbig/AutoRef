@@ -101,12 +101,11 @@ public class CloneSequence extends AnalyzedScoredSequence
     
     public static CloneSequence getOneByIsolateTrackingId(int is_id, String clone_sequence_analysis_status, String clone_sequence_type) throws BecDatabaseException
     {
-        String sql = "select sequenceid from assembledsequence where isolatetrackingid = "+is_id;
+        String sql = "select max(sequenceid) as sequenceid from assembledsequence where isolatetrackingid = "+is_id;
         if (clone_sequence_type != null)
                 sql += " and SEQUENCETYPE  in (    "+clone_sequence_type +")";
         if ( clone_sequence_analysis_status != null)
             sql +=" and ANALYSISSTATUS in ( "+clone_sequence_analysis_status +")";
-        sql += " order by submissiondate desc";
         ArrayList sequences = getByRule(sql );
         if (sequences.size() > 0)
             return (CloneSequence) sequences.get(0);
@@ -115,9 +114,8 @@ public class CloneSequence extends AnalyzedScoredSequence
       
     public static CloneSequence getOneByCloneId(int cloneid) throws BecDatabaseException
     {
-        String sql = "select sequenceid from assembledsequence where isolatetrackingid = "
+        String sql = "select max(sequenceid) as sequenceid from assembledsequence where isolatetrackingid = "
         +" (select isolatetrackingid from flexinfo where flexcloneid = "+cloneid +")";
-        sql += " order by submissiondate desc";
         ArrayList sequences = getByRule(sql );
         if (sequences.size() > 0)
             return (CloneSequence) sequences.get(0);
@@ -433,13 +431,7 @@ public class CloneSequence extends AnalyzedScoredSequence
     {
         try
         {
-             CloneSequence cl = new CloneSequence(37365);
-           
-            ArrayList discrepancies = cl.getDiscrepancies() ;
-            String discrepancy_report_html = Mutation.HTMLReport( discrepancies, Mutation.LINKER_5P, true);
-            discrepancy_report_html += Mutation.HTMLReport( discrepancies, Mutation.RNA, true);
-             discrepancy_report_html += Mutation.HTMLReport( discrepancies, Mutation.LINKER_3P, true);
-             
+             CloneSequence cl = CloneSequence. getOneByCloneId( 141687 );
         } catch (Exception e)
         {
             System.out.println(e);
