@@ -36,7 +36,7 @@ public class IsolateRanker
     private ArrayList        m_construct_ids = null;
     private EndReadsSpec      m_penalty_spec = null;
     private FullSeqSpec       m_cutoff_spec = null;
-    private DiscrepancyFinder       i_discrepancy_finder = null;//default:used by all functions
+   // private DiscrepancyFinder       i_discrepancy_finder = null;//default:used by all functions
      
     private ArrayList           m_error_messages = null;
     private ArrayList           m_finished_constructs = null;
