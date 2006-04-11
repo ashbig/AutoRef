@@ -234,6 +234,41 @@ public class UserManager extends TableManager {
         return items;
     }
     
+    public List queryShoppingCart(int userid) {
+        String sql = "select cloneid, collectionname, quantity from shoppingcartitem"+
+        " where userid="+userid;
+        ResultSet rs = null;
+        DatabaseTransaction t = null;
+        List items = new ArrayList();
+        try {
+            t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            while(rs.next()) {
+                int cloneid = rs.getInt(1);
+                String collection = rs.getString(2);
+                int quantity = rs.getInt(3);
+                ShoppingCartItem item = null;
+                if(cloneid > 0 && collection == null) {
+                    item = new ShoppingCartItem(userid, (new Integer(cloneid)).toString(), quantity, ShoppingCartItem.CLONE);
+                } else if(cloneid == 0 && collection != null) {
+                    item = new ShoppingCartItem(userid,  collection, quantity, ShoppingCartItem.COLLECTION);
+                }
+                if(item != null) {
+                    items.add(item);
+                } else {
+                    throw new Exception("Can not get shopping cart from database.");
+                }
+            }
+        } catch (Exception ex) {
+            handleError(ex, "Database error occured.");
+            return null;
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+        
+        return items;
+    }
+    
     public boolean addShoppingCart(int userid, List cart) {
         if(cart == null || cart.size() == 0)
             return true;
@@ -279,7 +314,7 @@ public class UserManager extends TableManager {
             handleError(ex, "Cannot delete from shoppingcartitem for user: "+userid);
             return false;
         }
-        
+       
         return true;
     }
     

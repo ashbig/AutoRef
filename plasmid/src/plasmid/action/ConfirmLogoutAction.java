@@ -44,7 +44,7 @@ public class ConfirmLogoutAction extends UserAction {
         ActionErrors errors = new ActionErrors();
         List cart = (List)request.getSession().getAttribute(Constants.CART);
         String confirm = ((LogoutForm)form).getConfirm();
-     
+     System.out.println("confirm: "+confirm);
         if(confirm.equals("Yes")) {
             User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
             DatabaseTransaction t = null;
@@ -75,6 +75,7 @@ public class ConfirmLogoutAction extends UserAction {
                 saveErrors(request, errors);
                 return mapping.findForward("error");
             }
+               
             if(!manager.addShoppingCart(user.getUserid(), cart)) {
                 DatabaseTransaction.rollback(conn);
                 DatabaseTransaction.closeConnection(conn);
@@ -86,6 +87,7 @@ public class ConfirmLogoutAction extends UserAction {
                 saveErrors(request, errors);
                 return mapping.findForward("error");
             }
+                
             DatabaseTransaction.commit(conn);
             DatabaseTransaction.closeConnection(conn);
         }

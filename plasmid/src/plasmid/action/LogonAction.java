@@ -99,7 +99,7 @@ public final class LogonAction extends Action {
          * otherwise, forward to confirm page to ask user whether they want to merge two shopping
          * carts.
          **/
-        List cart = manager.queryShoppingCartForClones(user.getUserid());
+        List cart = manager.queryShoppingCart(user.getUserid());
         DatabaseTransaction.closeConnection(conn);
         
         if(cart == null) {
