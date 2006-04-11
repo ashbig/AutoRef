@@ -145,7 +145,7 @@ public class RegistrationAction extends Action {
         } else {
             int indexLeft = pi.indexOf("(");
             int indexRight = pi.indexOf(")");
-            pname = pi.substring(0, indexLeft).trim();
+            pname = pi.substring(0, indexLeft);
             pemail= pi.substring(indexLeft+1, indexRight);
         }
         
