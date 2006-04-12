@@ -70,6 +70,11 @@ plates is the same as your input order.</p>
     <td width="20%" colspan="3" height="29" class="formlabel"><html:checkbox property="tube"/>Please check here if the destination containers are tubes</td>
   </tr>
   </logic:equal>
+  <logic:equal name="generateWorklistForm" property="processname" value="<%=Process.CULTURE%>">
+  <tr> 
+    <td width="20%" colspan="3" height="29" class="formlabel"><html:checkbox property="tube"/>Please check here if the source containers are tubes</td>
+  </tr>
+  </logic:equal>
   <tr> 
     <td width="20%">&nbsp;</td>
     <td colspan="2"> <html:submit styleClass="itemtext" value="Generate Worklist"/> </td>

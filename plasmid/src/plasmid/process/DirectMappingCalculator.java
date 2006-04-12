@@ -41,6 +41,7 @@ public class DirectMappingCalculator extends MappingCalculator {
         List l = new ArrayList();
         for(int i=0; i<src.getSize(); i++) {
             Sample s = src.getSample(i+1);
+            s.setContainerlabel(src.getLabel());
             s.setContainerType(src.getType());
             Sample sample = new Sample();
             sample.setContainerid(dest.getContainerid());

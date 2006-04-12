@@ -43,7 +43,9 @@ public class SelectProcessAction extends InternalUserAction{
         
         String processname = ((GenerateWorklistForm)form).getProcessname();
         ((GenerateWorklistForm)form).setVolumn(3);
-        ((GenerateWorklistForm)form).setTube(true);
+        
+        if(Process.GENERATE_GLYCEROL.equals(processname))
+            ((GenerateWorklistForm)form).setTube(true);
         
         List protocols = ProcessManager.getProtocols(processname);
         /**

@@ -73,8 +73,29 @@ public class WorklistInputAction extends InternalUserAction{
         }
         
         ContainerProcessManager manager = new ContainerProcessManager();
+        boolean b = false;
+        if(Process.CULTURE.equals(processname) && tube)
+            b = true;
+        
         try {
+            List newSrcLabels = null;
+            List mapList = new ArrayList();
+            if(b) {
+                newSrcLabels = srcLabels;
+                srcLabels = new ArrayList();
+                for(int i=0; i<newSrcLabels.size(); i++) {
+                    String label = (String)newSrcLabels.get(i);
+                    Map m = manager.readTubeMappingFile(ContainerProcessManager.TUBEMAPFILEPATH+label+".trx");
+                    
+                    if(m == null) {
+                        throw new Exception("Cannot read tube mapping file for container: "+label);
+                    }
+                    mapList.add(m);
+                    srcLabels.addAll(m.values());
+                }
+            }
             List srcContainers = manager.getContainers(srcLabels, true);
+            
             if(srcContainers == null) {
                 errors.add(ActionErrors.GLOBAL_ERROR,
                 new ActionError("error.general", "Cannot get containers from database."));
@@ -130,6 +151,19 @@ public class WorklistInputAction extends InternalUserAction{
                 return (new ActionForward(mapping.getInput()));
             }
             
+            if(b) {
+                List newSrcContainers = new ArrayList();
+                ContainerMapper mapper = new ContainerMapper();
+                for(int i=0; i<newSrcLabels.size(); i++) {
+                    String label = (String)newSrcLabels.get(i);
+                    Map m = (Map)mapList.get(i);
+                    Container c = mapper.convertToPlates(srcContainers, m);
+                    c.setLabel(label);
+                    newSrcContainers.add(c);
+                }
+                srcContainers = newSrcContainers;
+            }
+            
             MappingCalculator calculator = StaticMappingCalculatorFactory.generateMappingCalculator(StaticMappingCalculatorFactory.DIRECT_MAPPING, srcContainers, destContainers, Sample.getSampleType(processname));
             if(!calculator.isMappingValid()) {
                 errors.add(ActionErrors.GLOBAL_ERROR,
@@ -177,6 +211,10 @@ public class WorklistInputAction extends InternalUserAction{
             fileCol.add(new File(Constants.WORKLIST_FILE_PATH+fileWorklist));
             fileCol.add(new File(Constants.WORKLIST_FILE_PATH+fileWorklistRobot));
             Mailer.sendMessage(to,Constants.EMAIL_FROM,null,subject,text,fileCol);
+            
+            if(b) {
+                srcLabels = newSrcLabels;
+            }
             
             request.setAttribute("filenames", filenames);
             request.setAttribute("srcLabels", srcLabels);

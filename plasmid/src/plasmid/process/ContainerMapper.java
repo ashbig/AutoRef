@@ -110,6 +110,8 @@ public class ContainerMapper {
         }
         
         Container container = new Container();
+        container.setType(Container.MICRONIC96TUBEMP16);
+        container.setCapacity(Container.getCapacity(Container.MICRONIC96TUBEMP16));
         Set keys = mapping.keySet();
         Iterator iter = keys.iterator();
         while(iter.hasNext()) {

@@ -28,6 +28,7 @@ import plasmid.process.*;
 import plasmid.coreobject.*;
 import plasmid.util.Mailer;
 import plasmid.database.DatabaseManager.ProcessManager;
+import plasmid.coreobject.Process;
 
 /**
  *
@@ -85,7 +86,12 @@ public class GenerateContainersAction extends Action {
             List lineages = mapper.getWorklist();
             List samples = new ArrayList();
             List tubes = new ArrayList();
-            if(WorklistInfo.YES.equals(info.getTube())) {
+            
+            boolean b = false;
+            if(WorklistInfo.YES.equals(info.getTube()) && Process.GENERATE_GLYCEROL.equals(info.getProcessname())) 
+                b = true;
+            
+            if(b) {
                 for(int i=0; i<destContainers.size(); i++) {
                     Container c = (Container)destContainers.get(i);
                     String label = c.getLabel();
@@ -120,10 +126,6 @@ public class GenerateContainersAction extends Action {
             execution.setInputObjects(srcContainers);
             execution.setOutputObjects(destContainers);
             
-            boolean b = false;            
-            if(WorklistInfo.YES.equals(info.getTube())) {
-                b = true;
-            }
             if(!manager.persistData(destContainers,execution,info,b)) {
                 throw new Exception("Error occured while inserting into database.");
             }
