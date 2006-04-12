@@ -27,6 +27,7 @@ public class UserManager extends TableManager {
         " ponumber,institution,department,dateadded,piname,usergroup,password,isinternal,piemail)"+
         " values(?,?,?,?,?,?,?,?,sysdate,?,?,?,?,?)";
         PreparedStatement stmt = null;
+       
         try {
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, user.getUserid());
