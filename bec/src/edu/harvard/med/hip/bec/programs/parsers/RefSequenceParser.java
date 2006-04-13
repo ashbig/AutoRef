@@ -59,7 +59,8 @@ public class RefSequenceParser extends DefaultHandler
       private ArrayList             i_refsequences = null;
       private RefSequence           i_current_refsequence = null;
       private PublicInfoItem        i_current_public_info = null;
-      private int  i_current_status = -1;
+      private int                   i_current_status = -1;
+      private int                   i_previous_status = -1;
       
      public ArrayList getRefSequences(){ return i_refsequences; }
      public void startDocument()     {          i_refsequences = new ArrayList();      }
@@ -72,11 +73,13 @@ public class RefSequenceParser extends DefaultHandler
              if (localName.equalsIgnoreCase(REFSEQUENCE_START) )
             {
                 i_current_refsequence = new RefSequence();
+                i_current_refsequence.setText("");
                 i_refsequences.add(i_current_refsequence);
             }
             else  if (localName.equalsIgnoreCase(REFSEQUENCE_FEATURE_START) )
             {
               i_current_public_info = new PublicInfoItem();
+              
               i_current_refsequence.addPublicInfo( i_current_public_info);
                        
                if (attributes.getLength()> 0)
@@ -106,7 +109,8 @@ public class RefSequenceParser extends DefaultHandler
             else  if (localName.equalsIgnoreCase(REFSEQUENCE_CDS_STOP) )i_current_status = REFSEQUENCE_CDS_STOP_STATUS;
             else  if (localName.equalsIgnoreCase(REFSEQUENCE_SOURCE) )i_current_status = REFSEQUENCE_SOURCE_STATUS;
             else  if (localName.equalsIgnoreCase(REFSEQUENCE_CHROMOSOME) )i_current_status = REFSEQUENCE_CHROMOSOME_STATUS;
-            else  if (localName.equalsIgnoreCase(REFSEQUENCE_SEQUENCE) )i_current_status = REFSEQUENCE_SEQUENCE_STATUS;
+            else  if (localName.equalsIgnoreCase(REFSEQUENCE_SEQUENCE) )
+                i_current_status = REFSEQUENCE_SEQUENCE_STATUS;
 
            
             else  if (localName.equalsIgnoreCase(REFSEQUENCE_FEATURE_NAME_TYPE) )i_current_status = REFSEQUENCE_FEATURE_NAME_TYPE_STATUS;
@@ -114,6 +118,7 @@ public class RefSequenceParser extends DefaultHandler
             else  if (localName.equalsIgnoreCase(REFSEQUENCE_FEATURE_DESCRIPTION) )i_current_status = REFSEQUENCE_FEATURE_DESCRIPTION_STATUS;
             else  if (localName.equalsIgnoreCase(REFSEQUENCE_FEATURE_URL) )i_current_status = REFSEQUENCE_FEATURE_URL_STATUS;
              
+          
              //System.out.println(localName +" "+ i_current_status);
       }
 
@@ -143,7 +148,10 @@ public class RefSequenceParser extends DefaultHandler
              case REFSEQUENCE_CDS_STOP_STATUS: {i_current_refsequence.setCdsStop(Integer.parseInt(chData));break;}
              case REFSEQUENCE_SOURCE_STATUS: {i_current_refsequence.setCdnaSource(chData);break;}
              case   REFSEQUENCE_CHROMOSOME_STATUS: {i_current_refsequence.setChromosome(chData);break;}
-             case   REFSEQUENCE_SEQUENCE_STATUS: {i_current_refsequence.setText(chData); break;}
+             case   REFSEQUENCE_SEQUENCE_STATUS:
+             {
+                 i_current_refsequence.setText(i_current_refsequence.getText()+chData); 
+                 break;}
             
               case   REFSEQUENCE_FEATURE_NAME_TYPE_STATUS: {i_current_public_info.setName(chData); break;}
              case   REFSEQUENCE_FEATURE_NAME_VALUE_STATUS: {i_current_public_info.setValue(chData);break;}
@@ -165,7 +173,7 @@ public class RefSequenceParser extends DefaultHandler
         SAXParser parser = new SAXParser();
         parser.setContentHandler(SAXHandler);
         parser.setErrorHandler(SAXHandler);
-        parser.parse("C:\\bio\\fixed_refseq.xml");
+        parser.parse("C:\\bio\\fixed_refseq_length_test.xml");
         ArrayList v= SAXHandler.getRefSequences();
         java.sql.Connection conn = edu.harvard.med.hip.bec.database.DatabaseTransaction.getInstance().requestConnection();
         //for (int count = 0; count < v.size();count++)
