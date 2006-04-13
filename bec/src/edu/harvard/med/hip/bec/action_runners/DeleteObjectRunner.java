@@ -413,6 +413,8 @@ public class DeleteObjectRunner extends ProcessRunner
                   exc_items.add((String)sql_for_deletion.get(count));
             }
             conn.commit();
+            printReport(exc_items,   report_file_name, "Executed items");
+           
         }
         catch(Exception e)
         {
@@ -677,7 +679,7 @@ sql = "update  result set resultvalueid = null, resulttype = "+Result.RESULT_TYP
     
     private String          getPlatesAllActiveClones(String sql_items)throws Exception
     {
-        String sql ="select label as item from containerheader where label in ("+sql_items
+        String sql ="select Upper(label) as item from containerheader where Upper(label) in ("+sql_items
         +" ) and containerid not in (select containerid from sample where sampleid in "
         + "(select sampleid from isolatetracking where process_status  in ("
         +IsolateTrackingEngine.FINAL_STATUS_ACCEPTED+","+IsolateTrackingEngine.FINAL_STATUS_REJECTED+")))";
@@ -747,14 +749,14 @@ sql = "update  result set resultvalueid = null, resulttype = "+Result.RESULT_TYP
         try
         {// 3558           775       776       884       638      6947 
               input = new DeleteObjectRunner();
-            user = AccessManager.getInstance().getUser("htaycher123","htaycher");
+            user = AccessManager.getInstance().getUser("unix","unix");
             input.setUser(user);
            BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
         sysProps.verifyApplicationSettings();
        edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
     
-           input.setProcessType(Constants.PROCESS_CLEANUP_INTERMIDIATE_FILES_FROM_HARD_DRIVE);
-           input.setInputData( Constants.ITEM_TYPE_CLONEID, "111315 133676 -100 ");
+           input.setProcessType(Constants.PROCESS_DELETE_PLATE);
+           input.setInputData( Constants.ITEM_TYPE_PLATE_LABELS, "20051117_SEQ_RP112  ");
            input.run();
             
         }

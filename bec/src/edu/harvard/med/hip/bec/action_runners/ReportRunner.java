@@ -68,7 +68,7 @@ public class ReportRunner extends ProcessRunner
         private SpeciesIdHelper[] m_species_id_definitions = null;
 
         
-    public String       getTitle()     { return "Request for report generator.";     }
+    public String       getTitle()     { return "Request for general report.";     }
     
      public  void        setFields(
                     Object clone_id, //    Clone Id

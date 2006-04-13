@@ -317,7 +317,7 @@ public abstract class ProcessRunner implements Runnable
              //====================================================================
              if ( m_items_type == Constants.ITEM_TYPE_PLATE_LABELS)
              {
-                 System.out.println(m_process_type);
+              //   System.out.println(m_process_type);
                  if (m_process_type ==  Constants.PROCESS_RUN_END_READS_WRAPPER   //*run end reads wrapper
                 || m_process_type ==  Constants.PROCESS_RUN_ASSEMBLER_FOR_END_READS  //*run assembly wrapper
                 || m_process_type ==  Constants.PROCESS_DELETE_CLONE_READS  //

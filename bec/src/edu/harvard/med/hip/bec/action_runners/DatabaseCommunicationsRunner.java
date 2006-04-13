@@ -96,36 +96,7 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
                    case -Constants.PROCESS_SUBMIT_REFERENCE_SEQUENCES  :
                    {
   
-                        PreparedStatement pst_insert_temp_sequenceid = conn.prepareStatement("insert into temp_sequence_id (usersequenceid, appssequenceid) values(?,?)");
-                        PreparedStatement pst_check_userid= conn.prepareStatement("select usersequenceid from  temp_sequence_id where usersequenceid= ?");
-                
-                        RefSequenceParser SAXHandler = new RefSequenceParser();
-                        SAXParser parser = new SAXParser();
-                        parser.setContentHandler(SAXHandler);
-                        parser.setErrorHandler(SAXHandler);
-                        parser.parse(new org.xml.sax.InputSource(m_input_stream));
-                        ArrayList seq= SAXHandler.getRefSequences();
-                        
-                        int userid = -1;RefSequence refseq = null;
-                        for (int count = 0; count < seq.size();count++)
-                        {
-                            refseq = (RefSequence)seq.get(count);
-                            userid = refseq.getId();
-                            if ( ! isReferenceSequenceExists( userid , pst_check_userid) )
-                            {
-                                refseq.setId(-1);
-                                refseq.insert(conn);
-                                //insert intermidate record
-                                pst_insert_temp_sequenceid.setInt(1, userid);
-                                pst_insert_temp_sequenceid.setInt(2, refseq.getId());
-                                DatabaseTransaction.executeUpdate(pst_insert_temp_sequenceid);
-                            }
-                            else
-                            {
-                                m_error_messages.add("Reference Sequence with id: "+userid+" has not been uploaded. Please verify sequence id.");
-                            }
-                        }
-                        conn.commit();
+                        uploadReferenceSequences( conn);
                         break;
                    }
                    case -Constants.PROCESS_SUBMIT_CLONE_COLLECTION  : 
@@ -153,7 +124,58 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
     }
     
    //-------------------------------------------------------------------
-   private void uploadCloneSequences(Connection conn)
+   private synchronized void        uploadReferenceSequences(Connection conn)throws Exception
+   {
+        PreparedStatement pst_insert_temp_sequenceid = conn.prepareStatement("insert into temp_sequence_id (usersequenceid, appssequenceid) values(?,?)");
+        PreparedStatement pst_check_userid= conn.prepareStatement("select usersequenceid from  temp_sequence_id where usersequenceid= ?");
+
+        RefSequenceParser SAXHandler = new RefSequenceParser();
+        SAXParser parser = new SAXParser();
+        parser.setContentHandler(SAXHandler);
+        parser.setErrorHandler(SAXHandler);
+        parser.parse(new org.xml.sax.InputSource(m_input_stream));
+        ArrayList seq= SAXHandler.getRefSequences();
+
+        int userid = -1;RefSequence refseq = null;
+        for (int count = 0; count < seq.size();count++)
+        {
+            refseq = (RefSequence)seq.get(count);
+            userid = refseq.getId();
+            if ( ! isReferenceSequenceExists( userid , pst_check_userid) )
+            {
+                refseq.setId(-1);
+                //check for refseq species id and reassign it if it is not numeric
+                checkReferenceSequenceSpeciesId(userid, refseq);
+                refseq.insert(conn);
+                //insert intermidate record
+                pst_insert_temp_sequenceid.setInt(1, userid);
+                pst_insert_temp_sequenceid.setInt(2, refseq.getId());
+                DatabaseTransaction.executeUpdate(pst_insert_temp_sequenceid);
+            }
+            else
+            {
+                m_error_messages.add("Reference Sequence with id: "+userid+" has not been uploaded. The sequence with this id already exists. Please verify sequence id.");
+            }
+        }
+        conn.commit();
+    }
+   private synchronized void         checkReferenceSequenceSpeciesId(int userid, RefSequence refseq)throws Exception
+   {
+        int species_id = refseq.getSpecies();
+       if ( species_id == BecIDGenerator.BEC_OBJECT_ID_NOTSET)
+       {
+           // try to find refseq id from name
+           species_id = DatabaseToApplicationDataLoader.getSpeciesId( refseq.getSpeciesName());
+           refseq.setSpecies( species_id );
+       }
+       else
+       {
+           //check species id
+          if ( DatabaseToApplicationDataLoader.getSpeciesName(species_id )== null)
+              throw new BecUtilException("Wrong species id for reference sequence id " + userid);
+       }
+   }
+   private synchronized void uploadCloneSequences(Connection conn)
    {
        //parse FASTA file
        ArrayList sequences =  readSequencesFile();// array of basesequences
@@ -246,7 +268,7 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
            m_error_messages.add("Cannot parse FASTA file");
            return sequences;
        }
-       if ( sequences == null || sequences.size() < 0 ) return sequences;
+       if ( sequences == null || sequences.size() < 1 ) return null;
        // sort array of sequenses 
        Collections.sort(sequences, new Comparator() 
        {
@@ -336,7 +358,7 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
     
     
     //--------------------------------------
-   private void uploadCloneCollections(Connection conn)
+   private synchronized void uploadCloneCollections(Connection conn)
    {
         ArrayList clone_collection= null;
         CloneCollectionParser SAXHandler = new CloneCollectionParser();
@@ -356,18 +378,7 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
         }
                
         CloneCollection collection = null;
-        PreparedStatement pst_check_refsequenceid = null;
-        PreparedStatement pst_check_cloneid_duplicates = null;
-        try
-        {
-          //  pst_check_cloneid_duplicates = conn.prepareStatement("select distinct flexcloneid from flexinfo where flexcloneid in (?)");
-          //   pst_check_refsequenceid = conn.prepareStatement("select distinct usersequenceid from temp_sequence_id where usersequenceid in (?) order by usersequenceid");
-        }
-        catch(Exception e)
-        {
-            m_error_messages.add("Cannot create prepared statements to verify your data. Please contact development group");
-            return;
-        }
+    
        ArrayList error_messages = null;
         for (int count = 0; count < clone_collection.size();count++)
         {    
@@ -391,7 +402,7 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
         }
    }
    
-   private void                 uploadCloneCollection(Connection conn, CloneCollection collection)
+   private synchronized void                  uploadCloneCollection(Connection conn, CloneCollection collection)
    {
         int user_collection_id = collection.getId();
         Sample sample= null; 
@@ -400,7 +411,10 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
         Construct construct = null;
         Hashtable collection_construct_ids = new Hashtable();
         int current_constructid = -1;
-       try
+        
+        Hashtable ace_refsequence_ids = getHashOfRefsequenceIds(collection.getConstructs(), conn ,  collection.getName(),  collection.getId());
+        if (ace_refsequence_ids==null ) return;
+        try
        {
       //create container 
             Container container = new Container( -1  , collection.getType(),  collection.getName(),  -1);
@@ -414,7 +428,7 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
             for ( int construct_count = 0; construct_count < collection.getConstructs().size(); construct_count++ )
             {
                 cc_construct= (ConstructForCloneCollection ) collection.getConstructs().get(construct_count);
-                current_constructid = uploadContsruct( cc_construct, collection_construct_ids, conn);
+                current_constructid = uploadContsruct( cc_construct, collection_construct_ids, ace_refsequence_ids, conn);
                 for ( int sample_count = 0; sample_count < cc_construct.getSamples().size(); sample_count++ )
                 {
                      cc_sample= (SampleForCloneCollection) cc_construct.getSamples().get(sample_count);
@@ -424,16 +438,12 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
                     container.addSample(sample);
                 }
         }
-         //for ( int count = 0; count < container.getSamples().size(); count++)
-        // {
-        //     System.out.println( ((Sample)container.getSamples().get(count)).toString());
-        // }
                   
         container.insert(conn);
         createProcessHistoryRecord( conn,  collection,  container);
   
         //conn.rollback();
-         conn.commit();
+        conn.commit();
        }
        catch(Exception e)
        {
@@ -442,9 +452,38 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
        }
    }
 
-   
-   private int uploadContsruct(ConstructForCloneCollection cc_construct, 
-                Hashtable collection_construct_ids, Connection conn) throws Exception
+       private  synchronized Hashtable            getHashOfRefsequenceIds(ArrayList constructs, Connection conn, String collection_name, int collection_id)
+       {
+           Hashtable ace_refsequence_ids = new Hashtable();
+           ConstructForCloneCollection cc_construct = null;
+           StringBuffer ids = new StringBuffer();
+           for ( int construct_count = 0; construct_count < constructs.size(); construct_count++ )
+           {
+                cc_construct= (ConstructForCloneCollection ) constructs.get(construct_count);
+                ids.append( cc_construct.getRefSequenceId());
+                if ( construct_count != constructs.size() - 1) ids.append(",");
+           }
+            String sql =  "select  usersequenceid, APPSSEQUENCEID from temp_sequence_id where usersequenceid in ("+ids.toString()+") order by usersequenceid";
+            try
+            {
+               CachedRowSet rs =  DatabaseTransaction.executeQuery(sql, conn);
+                while( rs.next() )       
+                {
+                    ace_refsequence_ids.put(new Integer( rs.getInt("usersequenceid")), String.valueOf(rs.getInt("APPSSEQUENCEID")));
+                }
+                return ace_refsequence_ids;
+            }
+        catch(Exception e)
+        {
+            m_error_messages.add(" Clone collection (name "+ collection_name +" id "+ collection_id +
+                    " cannot be uploaded into ACE: cannot match reference sequences in ACE.");
+            return null; 
+        
+        }
+       }
+     
+   private synchronized int uploadContsruct(ConstructForCloneCollection cc_construct, 
+                Hashtable collection_construct_ids, Hashtable ace_refsequence_ids,Connection conn) throws Exception
    {
         FlexInfo flex_info = null;         IsolateTrackingEngine istr = null;
         Sample sample= null; 
@@ -466,7 +505,8 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
                         // create new construct 
                         construct = new Construct();
                         construct.setId(  BecIDGenerator.getID("constructid"));
-                        construct.setRefSeqId( cc_construct.getRefSequenceId() );
+                        int refseq_id = Integer.parseInt((String)ace_refsequence_ids.get(new Integer(cc_construct.getRefSequenceId() )));
+                        construct.setRefSeqId( refseq_id);
                         construct.setFormat(cc_construct.getFormat());
                         construct.setCloningStrategyId( cc_construct.getCloningStrategyId() );
                         construct.insert(conn);
@@ -479,7 +519,7 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
                 
    }
    
-   private Sample     createNotControlSample(SampleForCloneCollection cc_sample, 
+   private synchronized Sample     createNotControlSample(SampleForCloneCollection cc_sample, 
            ConstructForCloneCollection cc_construct,
             int user_collection_id,
             int current_constructid,
@@ -629,7 +669,7 @@ private boolean isCloneCollectionNameExists(CloneCollection collection, Connecti
              
             String sql =  ids.toString();
             sql = sql.substring(0, sql.length() - 1);
-            sql = "select  strategyid from cloningstrategy where strategyid in ("+sql+")";
+            sql = "select distinct strategyid from cloningstrategy where strategyid in ("+sql+")";
             CachedRowSet rs =  DatabaseTransaction.executeQuery(sql, conn);
             while( rs.next() )       
             {
@@ -702,14 +742,29 @@ private boolean isCloneCollectionNameExists(CloneCollection collection, Connecti
         String result = null;
         ConstructForCloneCollection construct = null;SampleForCloneCollection sample = null;
         StringBuffer ids = new StringBuffer();String sql = null;
+        Hashtable clone_ids_in_collection = new Hashtable();
+        int clone_id = -1;
        for (int count = 0; count < constructs.size(); count++)
        {
            construct = (ConstructForCloneCollection) constructs.get(count);
            for (int scount = 0; scount < construct.getSamples().size(); scount++)
            {
                 sample = (SampleForCloneCollection) construct.getSamples().get(scount);
-                ids.append( sample.getCloneId());
-                ids.append(",");
+                clone_id = sample.getCloneId();
+                 if ( clone_ids_in_collection.containsKey(new Integer(clone_id)))
+                 {
+                     m_error_messages.add(" Clone collection (name "+ collection.getName() +" id "+ collection.getId() +
+                    " cannot be uploaded into ACE: clone id duplication  in clone collection. Please verify your data");
+                        return true;
+                 }
+                 else
+                 {
+                         clone_ids_in_collection.put(new Integer(clone_id), new Integer(clone_id) );
+                 }
+            
+                
+                ids.append(clone_id );
+               ids.append(",");
            }
        }
         sql = ids.toString();
@@ -800,7 +855,7 @@ private boolean isCloneCollectionNameExists(CloneCollection collection, Connecti
        
    }
    //-------------------------
-   private boolean          isReferenceSequenceExists(  int userid , PreparedStatement pst_check_userid)
+   private synchronized boolean          isReferenceSequenceExists(  int userid , PreparedStatement pst_check_userid)
    {
        try
        {
@@ -815,6 +870,7 @@ private boolean isCloneCollectionNameExists(CloneCollection collection, Connecti
             return false;
        }
    }
+  
     /**
      * @param args the command line arguments
      */
@@ -824,17 +880,16 @@ private boolean isCloneCollectionNameExists(CloneCollection collection, Connecti
         try
         {
 
-            user = AccessManager.getInstance().getUser("htaycher123","me");
+            user = AccessManager.getInstance().getUser("unix","unix");
             BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
             sysProps.verifyApplicationSettings();
             DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
             DatabaseCommunicationsRunner runner = new DatabaseCommunicationsRunner();
             runner.setUser(user);
-            File f = new File("C:\\bec\\bec\\docs\\ApplicationSetup\\VectorFile_pDon221.xml");
+            File f = new File("C:\\bio\\plate_1.xml");
             InputStream input = new FileInputStream(f);
             runner.setInputStream(input);
-            runner.setProcessType( -Constants.PROCESS_ADD_NEW_VECTOR);
-            runner.run();
+            runner.setProcessType( -Constants.PROCESS_SUBMIT_CLONE_COLLECTION);            runner.run();
       
         }
         catch(Exception e){}

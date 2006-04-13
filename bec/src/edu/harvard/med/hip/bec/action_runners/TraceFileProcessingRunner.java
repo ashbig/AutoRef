@@ -43,13 +43,34 @@ public class TraceFileProcessingRunner extends ProcessRunner
     private String              OUTPUT_DIR = edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("TRACE_FILES_INPUT_PATH_DIR");
     private String              INPUT_DIR = edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("TRACE_FILES_TRANCFER_INPUT_DIR");
   
-    public void setReadDirection(String read_direction)    { m_read_direction = read_direction;}
-    public void setReadType(int read_type)    { m_read_type = read_type;    }//m_read_type= read_type;}
-    public void setFileExtension(String ext){ m_file_extension = ext;}
-    public void     setSequencingFacility(int v){m_sequencing_facility = v;}
-    public String getTitle()    { return "Request for trace files manipulation.";    }
-    public void     setFormatName(String v){  m_format_name = v; m_format = edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.getTraceFileFormat(m_format_name);}
-    public void     setTraceFileNameFormat( TraceFileNameFormat v){ m_format = v;}
+    public void             setReadDirection(String read_direction)    { m_read_direction = read_direction;}
+    public void             setReadType(int read_type)    { m_read_type = read_type;    }//m_read_type= read_type;}
+    public void             setFileExtension(String ext){ m_file_extension = ext;}
+    public void             setSequencingFacility(int v){m_sequencing_facility = v;}
+    public String           getTitle()   
+    {
+        switch (m_process_type)
+            {
+                case Constants.PROCESS_CREATE_FILE_FOR_TRACEFILES_TRANSFER:
+                {
+                    return "Request for trace files manipulation: Create renaming file.";
+                }
+                case Constants.PROCESS_INITIATE_TRACEFILES_TRANSFER:
+                {
+                         return "Request for trace files manipulation: Transfer trace files.";
+               
+                }
+                case Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRANSFER:
+                {
+                         return "Request for trace files manipulation: Create renaming file.";
+               
+                }
+                   default: return "";
+            }
+      
+    }
+    public void             setFormatName(String v){  m_format_name = v; m_format = edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.getTraceFileFormat(m_format_name);}
+    public void             setTraceFileNameFormat( TraceFileNameFormat v){ m_format = v;}
     
      
     public void setInputDirectory(String inputdir)
@@ -91,6 +112,7 @@ public class TraceFileProcessingRunner extends ProcessRunner
                 {
                     createRenamingFile();break;
                 }
+               
             }
         }
         catch(Exception e)
