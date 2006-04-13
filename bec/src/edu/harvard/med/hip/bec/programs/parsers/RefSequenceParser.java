@@ -114,7 +114,7 @@ public class RefSequenceParser extends DefaultHandler
             else  if (localName.equalsIgnoreCase(REFSEQUENCE_FEATURE_DESCRIPTION) )i_current_status = REFSEQUENCE_FEATURE_DESCRIPTION_STATUS;
             else  if (localName.equalsIgnoreCase(REFSEQUENCE_FEATURE_URL) )i_current_status = REFSEQUENCE_FEATURE_URL_STATUS;
              
-             System.out.println(localName +" "+ i_current_status);
+             //System.out.println(localName +" "+ i_current_status);
       }
 
      
@@ -126,7 +126,19 @@ public class RefSequenceParser extends DefaultHandler
           switch(i_current_status)
           {
              case  REFSEQUENCE_ID_STATUS: {i_current_refsequence.setId(Integer.parseInt(chData));break;}
-             case  REFSEQUENCE_SPECIES_STATUS: { i_current_refsequence.setSpecies(Integer.parseInt(chData));break;}
+             case  REFSEQUENCE_SPECIES_STATUS: 
+             { 
+                 try
+                 {
+                     int species_id = Integer.parseInt(chData);
+                     i_current_refsequence.setSpecies(species_id);
+                 }
+                 catch(Exception e)
+                 {
+                     i_current_refsequence.setSpeciesName(chData);
+                 }
+                 break;
+             }
              case REFSEQUENCE_CDS_START_STATUS: {i_current_refsequence.setCdsStart(Integer.parseInt(chData));break;}
              case REFSEQUENCE_CDS_STOP_STATUS: {i_current_refsequence.setCdsStop(Integer.parseInt(chData));break;}
              case REFSEQUENCE_SOURCE_STATUS: {i_current_refsequence.setCdnaSource(chData);break;}
@@ -153,7 +165,7 @@ public class RefSequenceParser extends DefaultHandler
         SAXParser parser = new SAXParser();
         parser.setContentHandler(SAXHandler);
         parser.setErrorHandler(SAXHandler);
-        parser.parse("C:\\BEC\\bec\\docs\\ApplicationSetup\\RefSeqFOrTest.xml");
+        parser.parse("C:\\bio\\fixed_refseq.xml");
         ArrayList v= SAXHandler.getRefSequences();
         java.sql.Connection conn = edu.harvard.med.hip.bec.database.DatabaseTransaction.getInstance().requestConnection();
         //for (int count = 0; count < v.size();count++)
