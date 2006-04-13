@@ -36,15 +36,16 @@ public class RefSequence extends BaseSequence
      // public static final int SPECIES_HOLDER = 10;
      // public static final int SPECIES_HOLDER = 11;
     */
-    private int m_species = -1;
-    private String m_dateadded= null;
+    private int         m_species_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
+    private String      i_species_name = null;
+    private String      m_dateadded= null;
    
-    private String m_currentAccession = null;
-    private String m_currentGi = null;
-    private String m_currentLocusLink = null;
-    private String m_currentDescription = null;
-    private String m_cdnasource = null;
-    private String m_chromosome = null;
+    private String      m_currentAccession = null;
+    private String      m_currentGi = null;
+    private String      m_currentLocusLink = null;
+    private String      m_currentDescription = null;
+    private String      m_cdnasource = null;
+    private String      m_chromosome = null;
     private ArrayList m_publicInfo = new ArrayList();
     
     private int    m_stop =-1;
@@ -78,6 +79,8 @@ public class RefSequence extends BaseSequence
             throw new BecDatabaseException(fde.getMessage());
         }
     }
+    
+     
     
     public RefSequence(int id, boolean isIncludePublicInfo) throws BecDatabaseException
     {
@@ -137,7 +140,7 @@ public class RefSequence extends BaseSequence
                 if ( generalinfo && first_round )
                 {
                     first_round = false;
-                    m_species = rs.getInt("GENUSSPECIES");
+                    m_species_id = rs.getInt("GENUSSPECIES");
                     m_dateadded = rs.getString("DATEADDED");
                     m_start = rs.getInt("CDSSTART");
                     m_stop = rs.getInt("CDSSTOP");
@@ -178,7 +181,7 @@ public class RefSequence extends BaseSequence
               sql = 	"insert into REFSEQUENCE "+
             " (SEQUENCEID ,GENUSSPECIES  ,CDSSTART  ,CDSSTOP  ,GCCONTENT  ,"+
             "CDNASOURCE  ,CHROMOSOME  ,DATEADDED )\n"+
-            "values ("+m_id+ ","+m_species + ","  +m_start+","+m_stop+"," 
+            "values ("+m_id+ ","+m_species_id + ","  +m_start+","+m_stop+"," 
             +m_gc_content+",\'"+m_cdnasource+"\',\'"+m_chromosome+"',";
               if (m_dateadded == null)
                   sql += "sysdate)";
@@ -232,7 +235,7 @@ public class RefSequence extends BaseSequence
      *
      * @return The species value.
      */
-    public int getSpecies()    {    return m_species;}
+    public int getSpecies()    {    return m_species_id;}
     
     public String getDateadded()    {    return m_dateadded;}
     public String getFastaHeader()    {    return new String(">"+ super.getId());}
@@ -242,17 +245,17 @@ public class RefSequence extends BaseSequence
     public int    getGCcontent(){ return m_gc_content;}
     public String getCdnaSource()    {    return m_cdnasource;}
     public String getChromosome()    {    return m_chromosome ;}
-    public String getCodingSequence()    {        return getText().substring(m_start-1,m_stop);
-    }
+    public String getCodingSequence()    {        return getText().substring(m_start-1,m_stop);    }
+    public String getSpeciesName()      { return i_species_name;}
     
-    
-    public void   setSpecies(int v)    {     m_species = v;}
+    public void     setSpecies(int v)    {     m_species_id = v;}
+    public void     setSpeciesName(String v){ i_species_name = v;}
     public void     setDateadded(String v)    {     m_dateadded= v;}
   
     public void     setPublicInfo(ArrayList v)    {     m_publicInfo= v;}
-    public void    setCdsStart(int v){  m_start = v;}
-    public void    setCdsStop(int v){  m_stop= v;}
-    public void    setGCcontent(int v){  m_gc_content= v;}
+    public void     setCdsStart(int v){  m_start = v;}
+    public void     setCdsStop(int v){  m_stop= v;}
+    public void     setGCcontent(int v){  m_gc_content= v;}
     public void     setCdnaSource(String s)    {     m_cdnasource = s;}
     public void     setChromosome(String s)    {     m_chromosome = s ;}
     
@@ -420,7 +423,7 @@ public class RefSequence extends BaseSequence
             while(rs.next())
             {
            
-                m_species = rs.getInt("GENUSSPECIES");
+                m_species_id = rs.getInt("GENUSSPECIES");
                 m_dateadded = rs.getString("DATEADDED");
                 m_start = rs.getInt("CDSSTART");
                 m_stop = rs.getInt("CDSSTOP");
