@@ -93,13 +93,13 @@ case Constants.STRETCH_COLLECTION_REPORT_ALL_INT:{ break;}
 case Constants.LQR_COLLECTION_REPORT_INT:{break;}
 case Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE:
 {
- additional_jsp_buffer.append(" <tr> <td colspan=2><b>Number of bases forvard end read to define if end reads repeat needed</b></td>");
+ additional_jsp_buffer.append(" <tr> <td colspan=2><b>Define end read region with low quality discrepancies to resolve by repeat end reads.</b></td>");
   
-additional_jsp_buffer.append(" <tr> <td>"+line_padding+"Number of bases covered by forvard end read:&nbsp;&nbsp; </td>");
+additional_jsp_buffer.append(" <tr> <td>"+line_padding+"Number of bases covered by forward end read:&nbsp;&nbsp; </td>");
 additional_jsp_buffer.append(" <td><input type = 'text' value ='250' name='"+UI_Constants.GAP_MAPPER_NUMBER_OF_BASES_COVERED_FORWARDER+"' >");
 
 additional_jsp_buffer.append("</td> </tr>");
-additional_jsp_buffer.append(" <tr> <td>"+line_padding+"Number of bass covered by reverse end read: &nbsp;&nbsp; </td>");
+additional_jsp_buffer.append(" <tr> <td>"+line_padding+"Number of bases covered by reverse end read: &nbsp;&nbsp; </td>");
 additional_jsp_buffer.append(" <td><input type = 'text' value = '250' name='"+UI_Constants.GAP_MAPPER_NUMBER_OF_BASES_COVERED_REVERSEER+"' ></td></tr>");
 
 additional_jsp = additional_jsp_buffer.toString();
