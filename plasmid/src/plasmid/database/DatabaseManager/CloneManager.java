@@ -387,7 +387,7 @@ public class CloneManager extends TableManager {
      * @return A map with cloneid as the key and Clone object as the value. Return null if
      *  error occured.
      */
-    public Map queryClonesByCloneid(List cloneids, boolean isInsert, boolean isSelection, boolean isWorkingStorage, List restrictions, List clonetypes, String species, String status) {
+    public Map queryClonesByCloneid(List cloneids, boolean isInsert, boolean isSelection, boolean isWorkingStorage, boolean isGrowth, List restrictions, List clonetypes, String species, String status) {
         String sq = "select clonename, clonetype, verified, vermethod,"+
         " domain, subdomain, restriction, comments, vectorid, vectorname,"+
         " clonemapfilename,status,specialtreatment,source,description,cloneid"+
@@ -410,7 +410,11 @@ public class CloneManager extends TableManager {
         if(status != null)
             sq += " and status='"+status+"'";
         
-        return performQueryClones(cloneids, isInsert, isSelection, isWorkingStorage, sq);
+        return performQueryClones(cloneids, isInsert, isSelection, isWorkingStorage, isGrowth, sq);
+    }
+        
+    public Map queryClonesByCloneid(List cloneids, boolean isInsert, boolean isSelection, boolean isWorkingStorage, List restrictions, List clonetypes, String species, String status) {
+        return queryClonesByCloneid(cloneids, isInsert, isSelection, isWorkingStorage, false, restrictions, clonetypes, species, status);
     }
     
     /**
@@ -671,7 +675,7 @@ public class CloneManager extends TableManager {
         return c;
     }
     
-    private Map performQueryClones(List cloneids, boolean isInsert, boolean isSelection, boolean isWorkingStorage, String sql) {
+    private Map performQueryClones(List cloneids, boolean isInsert, boolean isSelection, boolean isWorkingStorage, boolean isGrowth, String sql) {
         Map clones = new TreeMap();
         if(cloneids == null || cloneids.size() == 0)
             return clones;
@@ -679,11 +683,13 @@ public class CloneManager extends TableManager {
         String sql2 = getInsertSql();
         String sql3 = getSelectionSql();
         String sql4 = getStorageSql();
+        String sql5 = getGrowthSql();
         
         PreparedStatement stmt = null;
         PreparedStatement stmt2 = null;
         PreparedStatement stmt3 = null;
         PreparedStatement stmt4 = null;
+        PreparedStatement stmt5 = null;
         
         ResultSet rs = null;
         
@@ -696,6 +702,8 @@ public class CloneManager extends TableManager {
                 stmt3 = conn.prepareStatement(sql3);
             if(isWorkingStorage)
                 stmt4 = conn.prepareStatement(sql4);
+            if(isGrowth)
+                stmt5 = conn.prepareStatement(sql5);
             
             for(int i=0; i<cloneids.size(); i++) {
                 String cid = (String)cloneids.get(i);
@@ -739,6 +747,12 @@ public class CloneManager extends TableManager {
                         setStorage(stmt4, c);
                     }
                     
+                    if(isGrowth) {
+                        stmt5.setInt(1, cloneid);
+                        GrowthCondition g = getRecommendedGrowth(stmt5, cloneid);
+                        c.setRecommendedGrowthCondition(g);
+                    }
+                    
                     clones.put(cid, c);
                 } else {
                     clones.put(cid, null);
@@ -753,10 +767,15 @@ public class CloneManager extends TableManager {
             DatabaseTransaction.closeStatement(stmt2);
             DatabaseTransaction.closeStatement(stmt3);
             DatabaseTransaction.closeStatement(stmt4);
+            DatabaseTransaction.closeStatement(stmt5);
         }
         return clones;
     }
-    
+        
+    private Map performQueryClones(List cloneids, boolean isInsert, boolean isSelection, boolean isWorkingStorage, String sql) {
+        return performQueryClones(cloneids, isInsert, isSelection, isWorkingStorage, false, sql);
+    }
+
     public List performQueryClones(List clones, boolean isInsert, boolean isSelection, boolean isWorkingStorage) {
         List infos = new ArrayList();
         if(clones == null || clones.size() == 0)
@@ -829,6 +848,13 @@ public class CloneManager extends TableManager {
         return "select containerlabel, position, positionx, positiony from sample where cloneid=? and sampletype=? order by sampleid desc";
     }
     
+    private String getGrowthSql() {
+        String s = "select g.growthid, g.name, g.hosttype, g.antibioticselection, g.growthcondition, g.comments"+
+        " from growthcondition g, clonegrowth c where g.growthid=c.growthid"+
+        " and c.isrecommended='"+CloneGrowth.YES+"' and c.cloneid=?";
+        return s;
+    }
+    
     private List getInserts(PreparedStatement stmt, int cloneid) throws Exception {
         List inserts = new ArrayList();
         ResultSet rs2 = DatabaseTransaction.executeQuery(stmt);
@@ -883,7 +909,24 @@ public class CloneManager extends TableManager {
         }
         DatabaseTransaction.closeResultSet(rs4);
     }
-    
+     
+    private GrowthCondition getRecommendedGrowth(PreparedStatement stmt, int cloneid) throws Exception {
+        GrowthCondition g = null;
+        ResultSet rs = DatabaseTransaction.executeQuery(stmt);
+        while(rs.next()) {
+            int growthid = rs.getInt(1);
+            String name = rs.getString(2);
+            String hosttype = rs.getString(3);
+            String selection = rs.getString(4);
+            String growthcondition = rs.getString(5);
+            String comments = rs.getString(6);
+            g = new GrowthCondition(growthid, name, hosttype, selection, growthcondition,comments);
+        }
+        DatabaseTransaction.closeResultSet(rs);
+        
+        return g;
+    }
+     
     public List findRestrictedClones(List cloneidStrings, List restrictions) {
         String sql = "select clonename, restriction from clone where cloneid=?";
         PreparedStatement stmt = null;
