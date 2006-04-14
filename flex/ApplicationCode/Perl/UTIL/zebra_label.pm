@@ -42,9 +42,9 @@ my %kLISTS = (
    },
    _DEFAULTS_LINE   => {
       FONT       => 'AD',
-      BARHEIGHT  => '35',
+      BARHEIGHT  => '60',
       INTLINE    => 'Below',
-      FO_X       => '10',
+      FO_X       => '30',
       CHECKDIGIT => 'Y'
                   },
    _REQUIRED_LINE   => {
