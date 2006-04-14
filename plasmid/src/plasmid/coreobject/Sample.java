@@ -23,17 +23,17 @@ public class Sample {
     public static final String AGAR = "AGAR";
     public static final String TRANSFORMATION = "TRANSFORMATION";
     
-    private int sampleid;
-    private String type;
-    private String status;
-    private int cloneid;
-    private int position;
-    private String positionx;
-    private String positiony;
-    private int containerid;
-    private String containerlabel;
-    private String result;
-    private String containerType;
+    protected int sampleid;
+    protected String type;
+    protected String status;
+    protected int cloneid;
+    protected int position;
+    protected String positionx;
+    protected String positiony;
+    protected int containerid;
+    protected String containerlabel;
+    protected String result;
+    protected String containerType;
     
     /** Creates a new instance of Sample */
     public Sample() {

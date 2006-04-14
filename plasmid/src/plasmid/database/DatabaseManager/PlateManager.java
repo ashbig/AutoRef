@@ -12,6 +12,7 @@ import java.util.*;
 import plasmid.coreobject.*;
 import plasmid.database.*;
 import plasmid.Constants;
+import plasmid.query.coreobject.CloneInfo;
 
 /**
  *
@@ -163,7 +164,7 @@ public class PlateManager extends TableManager {
         }
         return true;
     }
-     
+    
     public boolean updateSamples(List samples) {
         if(samples == null || samples.size() == 0)
             return true;
@@ -313,6 +314,50 @@ public class PlateManager extends TableManager {
             DatabaseTransaction.closeStatement(stmt2);
         }
         return c;
+    }
+    
+    public List queryContainersWithCloneInfo(List labels) {
+        List containers = queryContainers(labels, true);
+        if(containers == null) {
+            handleError(null, "Error occured while query container information.");
+            return null;
+        }
+        
+        List cloneids = new ArrayList();
+        for(int i=0; i<containers.size(); i++) {
+            Container c = (Container)containers.get(i);
+            List samples = c.getSamples();
+            for(int j=0; j<samples.size(); j++) {
+                Sample s = (Sample)samples.get(j);
+                int cloneid = s.getCloneid();
+                if(cloneid > 0)
+                    cloneids.add((new Integer(cloneid)).toString());
+            }
+        }
+        
+        CloneManager m = new CloneManager(conn);
+        Map clones = m.queryClonesByCloneid(cloneids, true, true, false, true, null, null, null, null);
+        if(clones == null) {
+            handleError(null, "Error occured while query clone information.");
+            return null;
+        }
+        
+        for(int i=0; i<containers.size(); i++) {
+            Container c = (Container)containers.get(i);
+            List samples = c.getSamples();
+            for(int j=0; j<samples.size(); j++) {
+                Sample s = (Sample)samples.get(j);
+                int cloneid = s.getCloneid();
+                CloneInfo cinfo = null;
+                if(cloneid > 0) {
+                    cinfo = (CloneInfo)clones.get((new Integer(cloneid)).toString());
+                }
+                CloneSample cs = new CloneSample(s, cinfo);
+                c.setSample(cs);
+            }
+        }
+        
+        return containers;
     }
     
     public static void main(String args[]) {
