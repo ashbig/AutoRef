@@ -352,8 +352,9 @@ public class PlateManager extends TableManager {
                 if(cloneid > 0) {
                     cinfo = (CloneInfo)clones.get((new Integer(cloneid)).toString());
                 }
-                CloneSample cs = new CloneSample(s, cinfo);
-                c.setSample(cs);
+                //CloneSample cs = new CloneSample(s, cinfo);
+                //c.setSample(cs);
+                s.setClone(cinfo);
             }
         }
         

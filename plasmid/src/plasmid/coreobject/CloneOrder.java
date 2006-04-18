@@ -19,13 +19,15 @@ public class CloneOrder {
     public static final String INPROCESS = "In Process";
     public static final String SHIPPED = "Shipped";
     public static final String COMPLETE = "Complete";
+    public static final String CANCEL = "Cancelled";
     public static final String TBD = "To Be Determined";
     public static final String allstatus[] = {
         CloneOrder.PENDING, 
         CloneOrder.PENDING_MTA, 
         CloneOrder.INPROCESS, 
         CloneOrder.SHIPPED, 
-        CloneOrder.COMPLETE};
+        CloneOrder.COMPLETE,
+        CloneOrder.CANCEL};
     
     private int orderid;
     private String orderDate;

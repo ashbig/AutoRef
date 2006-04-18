@@ -38,6 +38,7 @@ public class CloneSample extends Sample {
     }
     
     public Clone getClone() {return clone;}
+    public String getName() {return clone.getName();}
     
     public void setClone(Clone c) {this.clone = c;}
 }

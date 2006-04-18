@@ -15,6 +15,7 @@ import plasmid.database.*;
 import plasmid.database.DatabaseManager.*;
 import plasmid.Constants;
 import plasmid.util.PlatePositionConvertor;
+import plasmid.util.CloneGrowthComparator;
 
 /**
  *
@@ -29,6 +30,63 @@ public class ContainerProcessManager {
     
     /** Creates a new instance of ContainerProcessManager */
     public ContainerProcessManager() {
+    }
+        
+    public List getContainersWithCloneInfo(List labels) {
+        if(labels == null)
+            return null;
+        
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            PlateManager manager = new PlateManager(conn);
+            List containers = manager.queryContainersWithCloneInfo(labels);
+            
+            return containers;
+        } catch (Exception ex) {
+            if(Constants.DEBUG) {
+                System.out.println("Cannot get database connection.");
+                System.out.println(ex);
+            }
+            return null;
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
+        }
+    }
+        
+    public List getGrowthConditions(List containers) {
+        List growths = new ArrayList();
+        
+        if(containers == null) 
+            return growths;
+        
+        List samples = new ArrayList();
+        for(int i=0; i<containers.size(); i++) {
+            Container container = (Container)containers.get(i);
+            List s = container.getSamples();
+            if(s != null) {
+                samples.addAll(s);
+            }
+        }
+        
+        Set clones = new TreeSet(new CloneGrowthComparator());
+        for(int i=0; i<samples.size(); i++) {
+            Sample sample = (Sample)samples.get(i);
+            Clone c = sample.getClone();
+            clones.add(c);
+        }
+        
+        Iterator iter = clones.iterator();
+        while(iter.hasNext()) {
+            Clone c = (Clone)iter.next();
+            GrowthCondition g = c.getRecommendedGrowthCondition();
+            growths.add(g);
+        }
+        
+        return growths;
     }
     
     public List getContainers(List labels, boolean isSampleRestore) {

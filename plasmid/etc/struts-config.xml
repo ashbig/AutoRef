@@ -98,6 +98,9 @@
     <form-bean      name="processShippingForm"
                     type="plasmid.form.ProcessShippingForm"/>
                     
+    <form-bean      name="viewContainersForm"
+                    type="plasmid.form.ViewContainersForm"/>
+                    
  </form-beans>
 
   <!-- ========== Global Forward Definitions ============================== -->
@@ -453,6 +456,15 @@
               input="/ViewCart.do">
       <forward  name="success"   path="/DisplayCart.jsp"/>
       <forward  name="success_empty"   path="/DisplayEmptyCart.jsp"/>
+    </action>
+    
+    <action    path="/ViewContainers"
+               type="plasmid.action.ViewContainersAction"
+               name="viewContainersForm"
+               scope="request"
+               validate="true"
+              input="/ViewContainers.jsp">
+      <forward  name="success"   path="/DisplayContainers.jsp"/>
     </action>
         
     <action    path="/ViewOrderClones"

@@ -35,6 +35,8 @@ public class Sample {
     protected String result;
     protected String containerType;
     
+    protected Clone clone;
+    
     /** Creates a new instance of Sample */
     public Sample() {
     }
@@ -112,4 +114,8 @@ public class Sample {
         }
         return true;
     }
+    
+    public Clone getClone() {return clone;}
+    
+    public void setClone(Clone c) {this.clone = c;}
 }
