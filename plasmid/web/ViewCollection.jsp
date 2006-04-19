@@ -58,6 +58,21 @@
 </table>
 </html:form>
 
+<p>
+<html:form action="SetDisplay.do">
+    <html:hidden property="pagesize"/>
+    <html:hidden property="page"/>
+    <input type="hidden" name="displayPage" value="indirect"/>
+    <input type="hidden" name="forward" value="collection"/>
+<table width="100%" border="0">
+    <tr>
+        <td width="70%">&nbsp;</td>
+        <td class="mainbodytexthead"><html:submit property="button" value="<%=Constants.DOWNLOAD%>"/></td>
+        <td align="right" class="mainbodytexthead"><a target="_blank" href="TermDefinition.jsp">Explanation of Terms</a></td>
+    </tr>
+</table>
+</html:form>
+
 <table width="100%" border="0">
   <tr>
     <td class="tableheader">&nbsp;</td>
@@ -141,6 +156,20 @@
     </tr>
   </logic:iterate>
 </table>
+
+<html:form action="SetDisplay.do">
+    <html:hidden property="pagesize"/>
+    <html:hidden property="page"/>
+    <input type="hidden" name="displayPage" value="indirect"/>
+    <input type="hidden" name="forward" value="collection"/>
+<table width="100%" border="0">
+    <tr>
+        <td width="70%">&nbsp;</td>
+        <td class="mainbodytexthead"><html:submit property="button" value="<%=Constants.DOWNLOAD%>"/></td>
+        <td align="right" class="mainbodytexthead"><a target="_blank" href="TermDefinition.jsp">Explanation of Terms</a></td>
+    </tr>
+</table>
+</html:form>
 
     </td>
   </tr>

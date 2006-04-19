@@ -186,8 +186,8 @@ public class WorklistInputAction extends InternalUserAction{
             List worklist = calculator.calculateMapping();
             WorklistGenerator generator = new WorklistGenerator(worklist);
             generator.printFullWorklist(Constants.WORKLIST_FILE_PATH+worklistname);
-            generator.printWorklist(Constants.WORKLIST_FILE_PATH+fileWorklist);
-            generator.printWorklistForRobot(Constants.WORKLIST_FILE_PATH+fileWorklistRobot, volumn, volumn, true);
+            generator.printWorklist(Constants.USER_WORKLIST_FILE_PATH+fileWorklist);
+            generator.printWorklistForRobot(Constants.USER_WORKLIST_FILE_PATH+fileWorklistRobot, volumn, volumn, true);
             
             List filenames = new ArrayList();
             filenames.add(fileWorklist);
@@ -208,8 +208,8 @@ public class WorklistInputAction extends InternalUserAction{
             String to = user.getEmail();
             String subject = "Worklist";
             String text = "The attached files are your worklists.";
-            fileCol.add(new File(Constants.WORKLIST_FILE_PATH+fileWorklist));
-            fileCol.add(new File(Constants.WORKLIST_FILE_PATH+fileWorklistRobot));
+            fileCol.add(new File(Constants.USER_WORKLIST_FILE_PATH+fileWorklist));
+            fileCol.add(new File(Constants.USER_WORKLIST_FILE_PATH+fileWorklistRobot));
             Mailer.sendMessage(to,Constants.EMAIL_FROM,null,subject,text,fileCol);
             
             if(b) {

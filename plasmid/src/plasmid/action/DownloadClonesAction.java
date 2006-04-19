@@ -114,7 +114,7 @@ public class DownloadClonesAction extends UserAction {
         }
         
         response.setContentType("application/x-msexcel");
-        response.setHeader("Content-Disposition", "attachment;filename=Clones.xls");
+        response.setHeader("Content-Disposition", "attachment;filename=Clones_"+orderid+".xls");
         PrintWriter out = response.getWriter();
         manager.writeCloneList(clones, out, isWorkingStorage);
         return null;

@@ -25,6 +25,7 @@
     <td width="83%" align="left" valign="top">
 	<jsp:include page="orderHistoryTitle.jsp" />
 
+<p class="text">Order ID: <bean:write name="orderid"/>
 <p>
 <table width="100%" border="0">
   <tr>
