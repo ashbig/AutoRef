@@ -27,6 +27,7 @@ import plasmid.coreobject.*;
 import plasmid.form.ViewContainersForm;
 import plasmid.util.StringConvertor;
 import plasmid.process.ContainerProcessManager;
+import plasmid.Constants;
 
 /**
  *
@@ -57,9 +58,10 @@ public class ViewContainersAction extends Action {
         // get the parameters specified by the customer
         ActionErrors errors = new ActionErrors();
         String labelString = ((ViewContainersForm)form).getLabelString();
+        String button = ((ViewContainersForm)form).getButton();
         
         StringConvertor sv = new StringConvertor();
-        List labels = sv.convertFromStringToList(labelString, " \t\n");
+        List labels = sv.convertFromStringToList(labelString, ", \t\n");
         
         if(labels == null || labels.size() == 0) {
             errors.add(ActionErrors.GLOBAL_ERROR,
@@ -85,6 +87,14 @@ public class ViewContainersAction extends Action {
             new ActionError("error.container.required"));
             saveErrors(request, errors);
             return (new ActionForward(mapping.getInput()));
+        }
+        
+        if(button != null && button.equals(Constants.BUTTON_DOWNLOAD_CONTAINERS)) {
+            response.setContentType("application/x-msexcel");
+            response.setHeader("Content-Disposition", "attachment;filename=Containers.xls");
+            PrintWriter out = response.getWriter();
+            manager.writeContainers(containers, out);
+            return null;
         }
         
         List growths = manager.getGrowthConditions(containers);

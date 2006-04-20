@@ -50,14 +50,4 @@
         </tr>
       </table></td>
   </tr>
-  <tr> 
-    <td height="45" valign="middle"> <table width="100%" border="0">
-        <tr> 
-          <td height="15" class="mainbodytext">Containers</td>
-        </tr>
-        <tr> 
-          <td height="15" class="lftsubtxt">- <a href="ViewContainers.jsp" class="leftsubnavtext">view containers</a></td>
-        </tr>
-      </table></td>
-  </tr>
 </table>

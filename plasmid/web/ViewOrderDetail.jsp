@@ -84,6 +84,14 @@
   <tr> 
     <td colspan="4" class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="shippedContainers"/></td>
   </tr>
+  <tr> 
+    <td colspan="4" class="text">
+        <html:form action="ViewContainers.do">
+            <input type="hidden" name="labelString" value="<bean:write name="<%=Constants.CLONEORDER%>" property="shippedContainers"/>">
+            <html:submit styleClass="text" value="View Containers"/>
+        </html:form>
+    </td>
+  </tr>
   <tr>
     <td colspan="4" align="center" class="text">
         <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">

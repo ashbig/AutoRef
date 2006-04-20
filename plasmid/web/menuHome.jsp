@@ -15,10 +15,13 @@
     <logic:present name="<%=Constants.USER_KEY%>" scope="session"> 
       <table width="100%" border="0">
         <tr> 
-          <td height="15"><a href="UpdateAccount.jsp" class="leftnavtext">Update Account</a></td>
+          <td height="15" valign="middle"><a href="UpdateAccount.jsp" class="leftnavtext">Update Account</a></td>
         </tr>
         <tr> 
           <td height="15" valign="middle"><a href="ViewOrderHistory.do" class="leftnavtext">View Orders</a></td>
+        </tr>
+        <tr> 
+          <td height="15" valign="middle"><a href="ViewContainers.jsp" class="leftnavtext">View Containers</a></td>
         </tr>
       </table>
     </logic:present>

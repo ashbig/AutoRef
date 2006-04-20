@@ -65,6 +65,7 @@ public class Constants {
     public static final String DOWNLOAD = "Download";
     
     public static final String BUTTON_CREATE_BIOBANK_WORKLIST = "Create BioTracy Worklist";
+    public static final String BUTTON_DOWNLOAD_CONTAINERS = "Download Container Information";
     
     /** Creates a new instance of Constants */
     public Constants() {

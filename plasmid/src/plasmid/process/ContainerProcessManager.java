@@ -31,7 +31,7 @@ public class ContainerProcessManager {
     /** Creates a new instance of ContainerProcessManager */
     public ContainerProcessManager() {
     }
-        
+    
     public List getContainersWithCloneInfo(List labels) {
         if(labels == null)
             return null;
@@ -56,11 +56,11 @@ public class ContainerProcessManager {
             DatabaseTransaction.closeConnection(conn);
         }
     }
-        
+    
     public List getGrowthConditions(List containers) {
         List growths = new ArrayList();
         
-        if(containers == null) 
+        if(containers == null)
             return growths;
         
         List samples = new ArrayList();
@@ -465,6 +465,39 @@ public class ContainerProcessManager {
             DatabaseTransaction.rollback(conn);
             DatabaseTransaction.closeConnection(conn);
             return false;
+        }
+    }
+    
+    public void writeContainers(List containers, PrintWriter out) {
+        out.println("Container\tWell\tType\tClone ID\tClone Type\tGene ID\tGene Symbol\tGene Name\tReference Sequence Genbank Accession\tReference Sequence GI\tMutation\tDiscrepancy\tInsert Format\tVector\tSelection Markers\tGrowth Condition");
+        
+        for(int i=0; i<containers.size(); i++) {
+            Container container = (Container)containers.get(i);
+            List samples = container.getSamples();
+            for(int j=0; j<samples.size(); j++) {
+                Sample s = (Sample)samples.get(j);
+                Clone c = s.getClone();
+                
+                out.print(container.getLabel()+"\t"+s.getWell()+"\t"+s.getType());
+                
+                if(Sample.EMPTY.equals(s.getType())) {
+                    out.println("\t\t\t\t\t\t\t\t\t\t\t\t\t");
+                } else {
+                    out.print("\t"+c.getCloneid()+"\t"+c.getType());
+                    
+                    if(Clone.NOINSERT.equals(c.getType())) {
+                        out.print("\t\t\t\t\t\t\t\t");
+                    } else {
+                        List inserts = c.getInserts();
+                        for(int n=0; n<inserts.size(); n++) {
+                            DnaInsert insert = (DnaInsert)inserts.get(n);
+                            out.print("\t"+insert.getGeneid()+"\t"+insert.getName()+"\t"+insert.getDescription()+"\t"+insert.getTargetgenbank()+"\t"+insert.getTargetseqid()+"\t"+insert.getHasmutation()+"\t"+insert.getHasdiscrepancy()+"\t"+insert.getFormat());
+                        }
+                    }
+                    
+                    out.println("\t"+c.getVectorname()+"\t"+c.getSelectionString()+"\t"+c.getRecommendedGrowthCondition().getName());
+                }
+            }
         }
     }
     

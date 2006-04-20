@@ -7,6 +7,7 @@
 <%@ page import="plasmid.coreobject.RefseqNameType" %> 
 <%@ page import="plasmid.coreobject.Clone" %> 
 <%@ page import="plasmid.coreobject.Sample" %> 
+<%@ page import="plasmid.Constants" %> 
 
 <html>
 <head>
@@ -44,6 +45,13 @@
   </tr> 
   </logic:iterate>
 </table>
+
+<p align="right">
+<html:form action="ViewContainers.do">
+<html:hidden property="labelString"/>
+<html:submit property="button" value="<%=Constants.BUTTON_DOWNLOAD_CONTAINERS%>"/>
+</html:form>
+</p>
 
 <logic:iterate name="containers" id="container">
 <p>
@@ -153,6 +161,13 @@
 
 </table>
 </logic:iterate>
+
+<p align="right">
+<html:form action="ViewContainers.do">
+<html:hidden property="labelString"/>
+<html:submit property="button" value="<%=Constants.BUTTON_DOWNLOAD_CONTAINERS%>"/>
+</html:form>
+</p>
 
       </td>
   </tr>

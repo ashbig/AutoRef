@@ -18,15 +18,18 @@ import org.apache.struts.action.ActionMapping;
  */
 public class ViewContainersForm extends ActionForm {
     private String labelString;
+    private String button;
     
     /** Creates a new instance of ViewContainersForm */
     public ViewContainersForm() {
     }
     
     public String getLabelString() {return labelString;}
+    public String getButton() {return button;}
     
     public void setLabelString(String s) {this.labelString = s;}
-        
+    public void setButton(String s) {this.button = s;}
+    
     /**
      * Validate the properties that have been set from this HTTP request,
      * and return an <code>ActionErrors</code> object that encapsulates any
@@ -45,5 +48,16 @@ public class ViewContainersForm extends ActionForm {
             errors.add("labelString", new ActionError("error.container.required"));
 
         return errors;
+    }
+    
+    /**
+     * Reset all properties to their default values.
+     *
+     * @param mapping The mapping used to select this instance
+     * @param request The servlet request we are processing
+     */
+    public void reset(ActionMapping mapping, HttpServletRequest request) {
+        labelString = null;
+        button = null;
     }
 }
