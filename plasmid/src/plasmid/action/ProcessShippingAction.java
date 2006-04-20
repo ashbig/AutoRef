@@ -52,7 +52,7 @@ public class ProcessShippingAction  extends InternalUserAction {
         ActionErrors errors = new ActionErrors();
         User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
         String orderid = ((ProcessShippingForm)form).getOrderid();
-       
+        
         OrderProcessManager manager = new OrderProcessManager();
         CloneOrder order = manager.getCloneOrder(user, Integer.parseInt(orderid));
         
@@ -76,8 +76,8 @@ public class ProcessShippingAction  extends InternalUserAction {
         
         List shippingMethods = DefTableManager.getVocabularies("shippingmethod", "method");
         request.setAttribute("shippingMethods", shippingMethods);
-        
         request.setAttribute(Constants.CLONEORDER, order);
+            
         return mapping.findForward("success");
     }
 }

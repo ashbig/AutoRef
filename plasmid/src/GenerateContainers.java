@@ -16,9 +16,9 @@ public class GenerateContainers {
     public static final String TECAN_LOG_FILE_PATH = "G:\\plasmid\\test\\tecan\\";
     //public static final String TECAN_LOG_FILE_PATH = "C:\\Gemini\\test\\";
     
-    //public static final String URL = "http://128.103.32.179/PLASMID/";
-    public static final String URL = "http://128.103.32.228/PLID/";
-    //public static final String URL = "http://128.103.32.228/PLASMID/";
+    public static final String URL = "http://128.103.32.179/PLASMID/"; //testing
+    //public static final String URL = "http://128.103.32.228/PLID/";
+    //public static final String URL = "http://128.103.32.228/PLASMID/"; //production
     
     private String worklistName;
     
@@ -78,19 +78,20 @@ public class GenerateContainers {
         InputStream output = url.openStream();    
         BufferedReader reader = new BufferedReader(new InputStreamReader(output));
         String line = null;
+        boolean rt = false;
         while((line = reader.readLine()) != null) {
             if(line.trim().equals("1"))
-                return true;
+                rt = true;
             else
-                return false;
+                rt = false;
         }
         reader.close();
         
-        return false;
+        return rt;
     }
     
     public static void main(String args[]) {
-        String logfile = "LOG018091.LOG";
+        String logfile = "LOG01809.LOG";
         
         System.out.println("Starting...");
         GenerateContainers g = new GenerateContainers();

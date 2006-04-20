@@ -173,12 +173,12 @@ public class CloneOrderManager extends TableManager {
      * @exception
      */
     public CloneOrder queryCloneOrder(User user, int orderid) throws Exception {
-        String sql = "select orderid,orderdate,orderstatus,ponumber,shippingto,billingto,"+
+        String sql = "select c.orderid,orderdate,orderstatus,c.ponumber,shippingto,billingto,"+
         " shippingaddress,billingaddress,numofclones,numofcollection,costforclones,"+
-        " costforcollection,costforshipping,totalprice,userid,shippingdate,whoshipped,"+
+        " costforcollection,costforshipping,totalprice,c.userid,shippingdate,whoshipped,"+
         " shippingmethod,shippingaccount,trackingnumber,receiveconfirmationdate,"+
-        " whoconfirmed,whoreceivedconfirmation,shippedcontainers"+
-        " from cloneorder where orderid="+orderid;
+        " whoconfirmed,whoreceivedconfirmation,shippedcontainers,u.email"+
+        " from cloneorder c, userprofile u where c.userid=u.userid and c.orderid="+orderid;
         
         if(user != null) {
             sql = sql + " and userid="+user.getUserid();
@@ -214,6 +214,7 @@ public class CloneOrderManager extends TableManager {
                 String whoconfirmed = rs.getString(22);
                 String whoreceivedconfirmation = rs.getString(23);
                 String shippedcontainers = rs.getString(24);
+                String email = rs.getString(25);
                 
                 order = new CloneOrder(orderid, date, st, ponumber,shippingto,billingto,shippingaddress,billingaddress, numofclones, numofcollection, costforclones, costforcollection,costforshipping, total, userid);
                 order.setShippingdate(shippingdate);
@@ -225,6 +226,7 @@ public class CloneOrderManager extends TableManager {
                 order.setWhoconfirmed(whoconfirmed);
                 order.setWhoreceivedconfirmation(whoreceivedconfirmation);
                 order.setShippedContainers(shippedcontainers);
+                order.setEmail(email);
             }
         } catch (Exception ex) {
             handleError(ex, "Cannot query cloneorder.");

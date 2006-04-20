@@ -28,6 +28,7 @@ import plasmid.coreobject.*;
 import plasmid.process.*;
 import plasmid.Constants;
 import plasmid.util.StringConvertor;
+import plasmid.util.Mailer;
 
 /**
  *
@@ -59,7 +60,7 @@ public class EnterShippingAction extends InternalUserAction {
         String shippingAccount = ((ProcessShippingForm)form).getShippingAccount();
         String trackingNumber = ((ProcessShippingForm)form).getTrackingNumber();
         double shippingCharge = ((ProcessShippingForm)form).getShippingCharge();
-        String labels = ((ProcessShippingForm)form).getContainers();     
+        String labels = ((ProcessShippingForm)form).getContainers();
         
         OrderProcessManager manager = new OrderProcessManager();
         CloneOrder order = manager.getCloneOrder(user, orderid);
@@ -119,7 +120,19 @@ public class EnterShippingAction extends InternalUserAction {
             return mapping.findForward("error");
         }
         
+        try {
+            String to = order.getEmail();
+            String subject = "order "+orderid;
+            String text = "Your order "+orderid+" has been shipped. Please log in your account for more information.";
+            Mailer.sendMessage(to,Constants.EMAIL_FROM,subject,text);
+        } catch (Exception ex) {
+            System.out.println(ex);
+            errors.add(ActionErrors.GLOBAL_ERROR,
+            new ActionError("error.general", "Email notification to user has been failed."));
+            saveErrors(request, errors);
+        }
+        
         ((ProcessShippingForm)form).resetValues();
         return mapping.findForward("success");
-    }
+    }   
 }

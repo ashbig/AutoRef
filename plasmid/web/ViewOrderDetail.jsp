@@ -28,6 +28,7 @@
 <logic:present name="ordermessage">
 <p class="text"><bean:write name="ordermessage"/></P>
 </logic:present>
+<html:errors/>
 
 <table width="100%" border="0">
   <tr> 
@@ -84,6 +85,7 @@
   <tr> 
     <td colspan="4" class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="shippedContainers"/></td>
   </tr>
+  <logic:present name="<%=Constants.CLONEORDER%>" property="shippedContainers">
   <tr> 
     <td colspan="4" class="text">
         <html:form action="ViewContainers.do">
@@ -92,6 +94,7 @@
         </html:form>
     </td>
   </tr>
+  </logic:present>
   <tr>
     <td colspan="4" align="center" class="text">
         <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
