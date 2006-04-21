@@ -25,6 +25,8 @@ public class ViewCartForm extends ActionForm {
     private List cloneCount;
     private List collectionCount;
     private String submitButton;
+    private String itemid;
+    private String type;
     
     /** Creates a new instance of ViewCartForm */
     public ViewCartForm() {
@@ -86,5 +88,21 @@ public class ViewCartForm extends ActionForm {
     
     public void setSubmitButton(String s) {
         this.submitButton = s;
+    }
+    
+    public String getItemid() {
+        return itemid;
+    }
+    
+    public void setItemid(String s) {
+        this.itemid = s;
+    }
+    
+    public String getType() {
+        return type;
+    }
+    
+    public void setType(String s) {
+        this.type = s;
     }
 }

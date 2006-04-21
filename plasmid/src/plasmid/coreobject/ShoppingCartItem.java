@@ -67,7 +67,8 @@ public class ShoppingCartItem {
         for(int i=0; i<cart.size(); i++) {
             ShoppingCartItem s = (ShoppingCartItem)cart.get(i);
             if(s.getItemid().equals(item.getItemid()) && s.getType().equals(item.getType())) {
-                s.setQuantity(s.getQuantity()+item.getQuantity());
+                //s.setQuantity(s.getQuantity()+item.getQuantity());
+                s.setQuantity(1);
                 cart.set(i, s);
                 return;
             }

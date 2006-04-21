@@ -195,17 +195,13 @@ public class OrderProcessManager {
         return n+m;
     }
     
-    public List updateShoppingCartForClones(List cloneids, List clones, List cloneCountList, List shoppingcartCopy) {
+    public List updateShoppingCartForClones(List clones, String cloneid, List shoppingcartCopy) {
         List newShoppingcart = new ArrayList();
-        
         try {
-            for(int i=0; i<cloneCountList.size(); i++) {
-                String count = (String)cloneCountList.get(i);
-                if(Integer.parseInt(count) > 0) {
-                    String cloneid = (String)cloneids.get(i);
-                    CloneInfo cloneInfo = (CloneInfo)clones.get(i);
-                    cloneInfo.setQuantity(Integer.parseInt(count));
-                    ShoppingCartItem s = new ShoppingCartItem(0, cloneid, Integer.parseInt(count), ShoppingCartItem.CLONE);
+            for(int i=0; i<clones.size(); i++) {
+                CloneInfo cloneInfo = (CloneInfo)clones.get(i);
+                if(cloneInfo.getCloneid() != Integer.parseInt(cloneid)) {
+                    ShoppingCartItem s = new ShoppingCartItem(0, (new Integer(cloneInfo.getCloneid())).toString(), 1, ShoppingCartItem.CLONE);
                     shoppingcartCopy.add(s);
                     newShoppingcart.add(cloneInfo);
                 }
@@ -220,17 +216,14 @@ public class OrderProcessManager {
         return newShoppingcart;
     }
     
-    public List updateShoppingCartForCollections(List collectionNames, List collections, List collectionCountList, List shoppingcartCopy) {
+    public List updateShoppingCartForCollections(List collections, String collectionName, List shoppingcartCopy) {
         List newShoppingcart = new ArrayList();
         
         try {
-            for(int i=0; i<collectionCountList.size(); i++) {
-                String count = (String)collectionCountList.get(i);
-                if(Integer.parseInt(count) > 0) {
-                    String collectionName = (String)collectionNames.get(i);
-                    CollectionInfo info = (CollectionInfo)collections.get(i);
-                    info.setQuantity(Integer.parseInt(count));
-                    ShoppingCartItem s = new ShoppingCartItem(0, collectionName, Integer.parseInt(count), ShoppingCartItem.COLLECTION);
+            for(int i=0; i<collections.size(); i++) {
+                CollectionInfo info = (CollectionInfo)collections.get(i);
+                if(!info.getName().equals(collectionName)) {
+                    ShoppingCartItem s = new ShoppingCartItem(0, info.getName(), 1, ShoppingCartItem.COLLECTION);
                     shoppingcartCopy.add(s);
                     newShoppingcart.add(info);
                 }

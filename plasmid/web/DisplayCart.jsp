@@ -7,6 +7,7 @@
 <%@ page import="java.util.Map" %> 
 <%@ page import="plasmid.Constants" %> 
 <%@ page import="plasmid.coreobject.Clone" %> 
+<%@ page import="plasmid.coreobject.ShoppingCartItem" %> 
 
 <html>
 <head>
@@ -25,7 +26,6 @@
     <td width="83%" align="left" valign="top">
 	<jsp:include page="viewShoppingCartTitle.jsp" />
 
-      <html:form action="UpdateCart.do">
 <p class="text">Clones:</p>
 <table width="100%" border="0">
   <tr>
@@ -40,7 +40,7 @@
     <td class="tableheader">Vector</td>
     <td class="tableheader">Selection Markers</td>
     <td class="tableheader">Use Restriction</td>
-    <td class="tableheader">Quantity</td>
+    <td class="tableheader">&nbsp;</td>
   </tr>
 
   <% int i=0;%>
@@ -72,7 +72,12 @@
     </logic:iterate>
     </td>
     <td><bean:write name="clone" property="restriction"/></td>
-    <td><html:text size="3" styleClass="tableinfo" property='<%="cloneCount["+(i-1)+"]"%>'/></td>
+    <td><html:form action="UpdateCart.do">
+        <input type="hidden" name="itemid" value="<bean:write name="clone" property="cloneid"/>">
+        <input type="hidden" name="type" value="<%=ShoppingCartItem.CLONE%>">
+        <html:submit property="submitButton" value="Remove"/>
+        </html:form>
+    </td>
   </tr>
   </logic:iterate>
 </table>
@@ -85,7 +90,7 @@
     <td class="tableheader">Use Restriction</td>
     <td class="tableheader">Price For Member</td>
     <td class="tableheader">Price For Non-Member</td>
-    <td class="tableheader">Quantity</td>
+    <td class="tableheader">&nbsp;</td>
   </tr>
 
   <% int j=0;%>
@@ -96,16 +101,21 @@
     <td><bean:write name="collection" property="restriction"/></td>
     <td><bean:write name="collection" property="memberprice"/></td>
     <td><bean:write name="collection" property="price"/></td>
-    <td><html:text size="3" styleClass="tableinfo" property='<%="collectionCount["+(j-1)+"]"%>'/></td>
+    <td><html:form action="UpdateCart.do">
+        <input type="hidden" name="itemid" value="<bean:write name="collection" property="name"/>">
+        <input type="hidden" name="type" value="<%=ShoppingCartItem.COLLECTION%>">
+        <html:submit property="submitButton" value="Remove"/>
+        </html:form>
+    </td>
   </tr>
   </logic:iterate>
 </table>
 
-    <html:submit property="submitButton" value="Update Cart"/>
-<logic:present name="<%=Constants.USER_KEY%>" scope="session">
-    <html:submit property="submitButton" value="Save Cart"/>
-</logic:present>
-    <html:submit property="submitButton" value="Check Out"/>
+    <html:form action="UpdateCart.do">
+        <logic:present name="<%=Constants.USER_KEY%>" scope="session">
+            <html:submit property="submitButton" value="Save Cart"/>
+        </logic:present>
+        <html:submit property="submitButton" value="Check Out"/>
     </html:form>
 
     </td>
