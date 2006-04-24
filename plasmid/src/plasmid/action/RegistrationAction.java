@@ -130,9 +130,9 @@ public class RegistrationAction extends Action {
                     return (new ActionForward(mapping.getInput()));
                 }
                 
-                pname = pilastname.toUpperCase()+", "+pifirstname;
-                pemail = piemail;
-                PI p = new PI(pname, pifirstname, pilastname, piinstitution, pidepartment,pemail);
+                pname = pilastname.trim().toUpperCase()+", "+pifirstname.trim();
+                pemail = piemail.trim();
+                PI p = new PI(pname, pifirstname.trim(), pilastname.trim(), piinstitution, pidepartment,pemail);
                 if(!manager.insertPI(p)) {
                     DatabaseTransaction.rollback(conn);
                     DatabaseTransaction.closeConnection(conn);
@@ -149,7 +149,7 @@ public class RegistrationAction extends Action {
             pemail= pi.substring(indexLeft+1, indexRight);
         }
         
-        User user = new User(id,firstname,lastname,email,phone,institution,department,null,pname,group,password,User.EXTERNAL,pemail);
+        User user = new User(id,firstname.trim(),lastname.trim(),email.trim(),phone,institution,department,null,pname,group,password,User.EXTERNAL,pemail);
         if(!manager.insertUser(user)) {
             DatabaseTransaction.rollback(conn);
             DatabaseTransaction.closeConnection(conn);
