@@ -66,7 +66,7 @@ public class UpdateCartAction extends Action {
         String itemid = ((ViewCartForm)form).getItemid();
         String type = ((ViewCartForm)form).getType();
         request.getSession().setAttribute(Constants.CART_STATUS, Constants.UPDATED);
-      
+        
         if(!("Save Cart".equals(ret)) && (shoppingcart == null || shoppingcart.size() == 0 )) {
             shoppingcart = new ArrayList();
             request.getSession().setAttribute(Constants.CART, shoppingcart);
@@ -86,20 +86,20 @@ public class UpdateCartAction extends Action {
                 request.getSession().setAttribute(Constants.CART, shoppingcart);
                 return (mapping.findForward("success_empty"));
             }
-           
+            
             List clones = m.getShoppingCartClones(cloneids, m.getClones());
             List collections = m.getShoppingCartCollections(collectionNames, m.getCollections());
-             
+            
             if(clones == null && !("Save Cart".equals(ret))) {
                 errors.add(ActionErrors.GLOBAL_ERROR,
                 new ActionError("error.database.error","Error occured while updating shopping cart."));
                 return (mapping.findForward("error"));
-            } 
+            }
             if(collections == null && !("Save Cart".equals(ret))) {
                 errors.add(ActionErrors.GLOBAL_ERROR,
                 new ActionError("error.database.error","Error occured while updating shopping cart."));
                 return (mapping.findForward("error"));
-            }             
+            }
             
             List newShoppingcartClones = new ArrayList();
             List newShoppingcartCollections = new ArrayList();
@@ -107,11 +107,14 @@ public class UpdateCartAction extends Action {
             if("Remove".equals(ret)) {
                 if(ShoppingCartItem.CLONE.equals(type)) {
                     newShoppingcartClones = m.updateShoppingCartForClones(clones, itemid, shoppingcartCopy);
-                    newShoppingcartCollections = m.updateShoppingCartForCollections(collections, null, shoppingcartCopy); 
+                    newShoppingcartCollections = m.updateShoppingCartForCollections(collections, null, shoppingcartCopy);
                 } else {
                     newShoppingcartClones = m.updateShoppingCartForClones(clones, "0", shoppingcartCopy);
                     newShoppingcartCollections = m.updateShoppingCartForCollections(collections, itemid, shoppingcartCopy);
                 }
+            } else {
+                newShoppingcartClones = m.updateShoppingCartForClones(clones, "0", shoppingcartCopy);
+                newShoppingcartCollections = m.updateShoppingCartForCollections(collections, null, shoppingcartCopy);
             }
             
             if(newShoppingcartClones == null && !("Save Cart".equals(ret))) {
