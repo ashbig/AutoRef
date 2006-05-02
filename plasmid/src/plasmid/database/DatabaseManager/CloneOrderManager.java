@@ -181,7 +181,7 @@ public class CloneOrderManager extends TableManager {
         " from cloneorder c, userprofile u where c.userid=u.userid and c.orderid="+orderid;
         
         if(user != null) {
-            sql = sql + " and userid="+user.getUserid();
+            sql = sql + " and u.userid="+user.getUserid();
         }
         
         DatabaseTransaction t = null;
