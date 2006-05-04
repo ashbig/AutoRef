@@ -1,3 +1,4 @@
+//Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
 /*
  * AgarTracking.java
  *
@@ -556,7 +557,7 @@ S1 = (RS1 * RL1 + ExpectedScore * (CDSLenght - RL1)) / CDSLenght;
           ArrayList construct_ids = new ArrayList();
        
           String sql = "select   distinct constructid  from isolatetracking iso,  sample s, containerheader c "
-        +"  where iso.sampleid=s.sampleid and s.containerid = c.containerid and label in ( "
+        +"  where iso.sampleid=s.sampleid and s.containerid = c.containerid and Upper(label) in ( "
          + plate_names + "  ) and constructid > 0 order by  constructid ";
         RowSet rs = null;
         int cur_construct_id = -1;
