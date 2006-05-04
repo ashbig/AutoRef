@@ -1,3 +1,4 @@
+//Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
 /*
  * EndReadsSpec.java
  *
@@ -446,7 +447,7 @@ public class EndReadsSpec extends Spec
                 }
                 else
                 { 
-                    m_params.remove("ER_MISS_H");m_params.remove("ER_C_L");
+                    m_params.remove("ER_MISS_H");m_params.remove("ER_MISS_L");
                 }
                 cleanup_parameters("ER_");
             //  
