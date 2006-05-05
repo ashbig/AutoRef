@@ -57,7 +57,10 @@ public class GetCollectionAction extends Action {
         // get the parameters specified by the customer
         ActionErrors errors = new ActionErrors();
         
-        String collectionName = ((ViewCollectionForm)form).getCollectionName();
+        String collectionName = ((RefseqSearchForm)form).getCollectionName();
+        
+        QueryProcessManager manager = new QueryProcessManager();
+        int numOfClones = manager.getClonenumInCollection(collectionName);
         
         User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
         List restrictions = new ArrayList();
@@ -65,16 +68,22 @@ public class GetCollectionAction extends Action {
         if(user != null) {
             List ress = UserManager.getUserRestrictions(user);
             restrictions.addAll(ress);
-        } 
+        }
         
         int pagesize = Constants.PAGESIZE;
         int page = 1;
-        request.setAttribute("displayPage", "indirect");        
+        request.setAttribute("displayPage", "indirect");
         request.setAttribute("pagesize", new Integer(pagesize));
         request.setAttribute("page",  new Integer(page));
         
-        QueryProcessManager manager = new QueryProcessManager();
-        CollectionInfo info = manager.getCollection(collectionName, CollectionInfo.DISTRIBUTION, restrictions, true);
+        CollectionInfo info = null;
+        if(numOfClones>Constants.DOWNLOADTHRESHOLD) {
+            info = manager.getCollection(collectionName, CollectionInfo.DISTRIBUTION, restrictions, false);
+            ((RefseqSearchForm)form).setIsDownload(Constants.BOOLEAN_ISDOWNLOAD_YES);
+        } else {
+            info = manager.getCollection(collectionName, CollectionInfo.DISTRIBUTION, restrictions, true);
+            ((RefseqSearchForm)form).setIsDownload(Constants.BOOLEAN_ISDOWNLOAD_NO);
+        }
         
         if(info == null) {
             if(Constants.DEBUG)
@@ -85,9 +94,10 @@ public class GetCollectionAction extends Action {
             return (mapping.findForward("error"));
         }
         
-        request.getSession().setAttribute(Constants.SINGLECOLLECTION, info);       
+        request.getSession().setAttribute(Constants.SINGLECOLLECTION, info);
         request.getSession().setAttribute("found", info.getClones());
-        return (mapping.findForward("success"));
+       
+        return (mapping.findForward("success"));        
     }
 }
 

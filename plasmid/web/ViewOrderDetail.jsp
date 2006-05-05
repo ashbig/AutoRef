@@ -54,7 +54,7 @@
 <p class="text">Shipping Information</P>
 <table width="100%" border="0">
   <tr> 
-    <td width="20%" class="formlabel">Shipping Methods:</td>
+    <td width="20%" class="formlabel">Shipping Method:</td>
     <td width="30%" class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="shippingmethod"/></td>
     <td width="20%" class="formlabel">Shipping Account:</td>
     <td width="30%" class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="shippingaccount"/></td>

@@ -23,7 +23,7 @@ import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 
 import plasmid.Constants;
-import plasmid.form.ViewCollectionForm;
+import plasmid.form.RefseqSearchForm;
 import plasmid.coreobject.*;
 import plasmid.process.OrderProcessManager;
 
@@ -55,10 +55,10 @@ public class AddCollectionToCartAction extends Action {
         // get the parameters specified by the customer
         ActionErrors errors = new ActionErrors();
         
-        String collectionName = ((ViewCollectionForm)form).getCollectionName();
-        int pagesize = ((ViewCollectionForm)form).getPagesize();
-        int page = ((ViewCollectionForm)form).getPage();
-        String displayPage = ((ViewCollectionForm)form).getDisplayPage();
+        String collectionName = ((RefseqSearchForm)form).getCollectionName();
+        int pagesize = ((RefseqSearchForm)form).getPagesize();
+        int page = ((RefseqSearchForm)form).getPage();
+        String displayPage = ((RefseqSearchForm)form).getDisplayPage();
         
         request.setAttribute("pagesize", new Integer(pagesize));
         request.setAttribute("page",  new Integer(page));

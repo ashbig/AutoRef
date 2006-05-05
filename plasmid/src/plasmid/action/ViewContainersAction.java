@@ -28,6 +28,7 @@ import plasmid.form.ViewContainersForm;
 import plasmid.util.StringConvertor;
 import plasmid.process.ContainerProcessManager;
 import plasmid.Constants;
+import plasmid.process.OrderProcessManager;
 
 /**
  *
@@ -54,6 +55,7 @@ public class ViewContainersAction extends Action {
     HttpServletRequest request,
     HttpServletResponse response)
     throws ServletException, IOException {
+        User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
         
         // get the parameters specified by the customer
         ActionErrors errors = new ActionErrors();
@@ -70,12 +72,22 @@ public class ViewContainersAction extends Action {
             return (new ActionForward(mapping.getInput()));
         }
         
-       // List newLabels = new ArrayList();
-       // newLabels.add((String)labels.get(0));
+        if(User.EXTERNAL.equals(user.getIsinternal())) {
+            OrderProcessManager m = new OrderProcessManager();
+            List orderedContainers = m.getAllOrderContainersForUser(user);
+            if(orderedContainers == null || orderedContainers.size()==0) {
+                errors.add(ActionErrors.GLOBAL_ERROR,
+                new ActionError("error.container.required"));
+                saveErrors(request, errors);
+                return (new ActionForward(mapping.getInput()));
+            }
+            labels.retainAll(orderedContainers);
+        }
+        
         ContainerProcessManager manager = new ContainerProcessManager();
         List containers = manager.getContainersWithCloneInfo(labels);
         
-        if(containers == null) {            
+        if(containers == null) {
             errors.add(ActionErrors.GLOBAL_ERROR,
             new ActionError("Cannot get containers from database."));
             saveErrors(request, errors);

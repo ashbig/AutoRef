@@ -900,4 +900,68 @@ public class OrderProcessManager {
         }
         f.close();
     }
+    
+    public List getAllOrderContainersForUser(User user) {
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        List containers = new ArrayList();
+        
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            CloneOrderManager manager = new CloneOrderManager(conn);            
+            List orders =manager.queryCloneOrders(user, null);
+            if(orders == null) {
+                throw new Exception("Error occured while querying database for orders.");
+            }
+            for(int i=0; i<orders.size(); i++) {
+                CloneOrder order = (CloneOrder)orders.get(i);
+                containers.addAll(order.getShippedContainersAsList());
+            }
+            return containers;
+        } catch(Exception ex) {
+            DatabaseTransaction.rollback(conn);
+            if(Constants.DEBUG) {
+                System.out.println(ex);
+            }
+            return null;
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
+        }
+    }
+    
+    public String formOrderText(CloneOrder order) {
+        StringBuffer sf = new StringBuffer();
+        sf.append("===========================================================\n");
+        sf.append("Order ID: "+order.getOrderid()+"\n");
+        sf.append("Order Date: "+order.getOrderDate()+"\n");
+        sf.append("Order Status: "+order.getStatus()+"\n");
+        sf.append("PO Number: "+order.getPonumber()+"\n\n");
+        
+        sf.append("Following are your ordered items:\n");
+        sf.append("Number of clones: "+order.getNumofclones()+"\t$"+order.getCostforclones()+"\n");
+        sf.append("Number of collections: "+order.getNumofcollection()+"\t$"+order.getCostforcollection()+"\n");
+        sf.append("Cost for shipping and handling:\t$"+order.getCostforshipping()+"\n");
+        sf.append("Total cost:\t$"+order.getPrice()+"\n\n");
+        
+        sf.append("Shipping To:\n");
+        sf.append(order.getShippingTo()+"\n");
+        sf.append(order.getShippingAddress()+"\n");
+        sf.append("\nBilling To:\n");
+        sf.append(order.getBillingTo()+"\n");
+        sf.append(order.getBillingAddress()+"\n\n");
+        
+        if(order.getShippingmethod() != null) 
+            sf.append("Shipping Method: "+order.getShippingmethod()+"\n");
+        if(order.getShippingaccount() != null)
+            sf.append("Shipping Account: "+order.getShippingaccount()+"\n");
+        if(order.getShippingdate() != null)
+            sf.append("Shipping Date: "+order.getShippingdate()+"\n");
+        if(order.getTrackingnumber() != null)
+            sf.append("Tracking Number: "+order.getTrackingnumber()+"\n");
+        if(order.getShippedContainers() != null)
+            sf.append("Containers Shipped: "+order.getShippedContainers()+"\n");
+        sf.append("===========================================================\n");
+        return sf.toString();
+    }
 }

@@ -66,6 +66,12 @@ public class Constants {
     
     public static final String BUTTON_CREATE_BIOBANK_WORKLIST = "Create BioTracy Worklist";
     public static final String BUTTON_DOWNLOAD_CONTAINERS = "Download Container Information";
+    public static final String BUTTON_CANCEL_ORDER = "Cancel";
+    
+    public static final int DOWNLOADTHRESHOLD = 1000;
+    
+    public static final String BOOLEAN_ISDOWNLOAD_YES = "yes";
+    public static final String BOOLEAN_ISDOWNLOAD_NO = "no";
     
     /** Creates a new instance of Constants */
     public Constants() {

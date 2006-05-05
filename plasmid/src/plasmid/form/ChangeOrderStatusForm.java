@@ -45,5 +45,5 @@ public class ChangeOrderStatusForm extends ActionForm {
             status.add(order.getStatus());
             orderid.add((new Integer(order.getOrderid())).toString());
         }
-    }
+    }    
 }

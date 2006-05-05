@@ -1,7 +1,7 @@
 /*
- * ViewOrderHistoryAction.java
+ * CancelOrderAction.java
  *
- * Created on June 8, 2005, 10:54 AM
+ * Created on May 2, 2006, 12:38 PM
  */
 
 package plasmid.action;
@@ -26,14 +26,13 @@ import org.apache.struts.util.MessageResources;
 import plasmid.Constants;
 import plasmid.coreobject.*;
 import plasmid.process.*;
-import plasmid.form.ViewOrderHistoryForm;
-import plasmid.form.ChangeOrderStatusForm;
+import plasmid.form.CancelOrderForm;
 
 /**
  *
  * @author  DZuo
  */
-public class ViewOrderHistoryAction extends UserAction {
+public class CancelOrderAction extends UserAction {
     
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
@@ -57,39 +56,25 @@ public class ViewOrderHistoryAction extends UserAction {
     throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
         User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
-        String status = ((ViewOrderHistoryForm)form).getStatus();
-        
-        if(CloneOrder.ALL.equals(status))
-            status = null;
+        int orderid = ((CancelOrderForm)form).getOrderid();
         
         OrderProcessManager manager = new OrderProcessManager();
-        List orders = manager.getAllOrders(user, status);
+        CloneOrder order = manager.getCloneOrder(user, orderid);
         
         response.setHeader("pragma", "No-Cache"); 
         response.setHeader("Expires", "-1");
         response.setHeader("Cache-Control","no-cache");
         response.setDateHeader("Expires",0);
         
-        if(orders == null) {
+        if(order == null) {
             errors.add(ActionErrors.GLOBAL_ERROR,
-            new ActionError("error.general", "Cannot get order history."));
+            new ActionError("error.general", "Cannot get order."));
             saveErrors(request,errors);
             return mapping.findForward("error");
         }
         
-        if(orders.size() == 0) {
-            return mapping.findForward("success_empty");
-        }
-        
-        ChangeOrderStatusForm f = new ChangeOrderStatusForm();
-        f.initiateLists(orders);
-        request.getSession().setAttribute("changeOrderStatusForm", f);
-        request.setAttribute(Constants.ORDERS, orders);
-        
-        if(User.INTERNAL.equals(user.getIsinternal())) {
-            return mapping.findForward("success");
-        } else {
-            return mapping.findForward("success_outside");
-        }
+        manager.updateOrderStatus(orderid, CloneOrder.CANCEL);
+        return mapping.findForward("success");
     }
 }
+

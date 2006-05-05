@@ -4,6 +4,8 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ page import="plasmid.Constants" %> 
+<%@ page import="plasmid.coreobject.User" %>
 
 <html>
 <head>
@@ -21,9 +23,43 @@
 	</td>
     <td width="83%" align="left" valign="top">
 	<jsp:include page="accountTitle.jsp" />
+
+<p>
+<table width="100%" border="0">
+  <tr> 
+    <td class="formlabel">First Name:</td>
+    <td class="text"><bean:write name="<%=Constants.USER_KEY%>" property="firstname"/></td>
+    <td class="formlabel">Last Name:</td>
+    <td class="text"><bean:write name="<%=Constants.USER_KEY%>" property="lastname"/></td>
+  </tr>
+  <tr> 
+    <td class="formlabel">Email:</td>
+    <td class="text"><bean:write name="<%=Constants.USER_KEY%>" property="email"/></td>
+    <td class="formlabel">Phone:</td>
+    <td class="text"><bean:write name="<%=Constants.USER_KEY%>" property="phone"/></td>
+  </tr>
+  <tr> 
+    <td class="formlabel">Institution:</td>
+    <td class="text"><bean:write name="<%=Constants.USER_KEY%>" property="institution"/></td>
+    <td class="formlabel">Department:</td>
+    <td class="text"><bean:write name="<%=Constants.USER_KEY%>" property="department"/></td>
+  </tr>
+  <tr> 
+    <td class="formlabel">PI Name:</td>
+    <td class="text"><bean:write name="<%=Constants.USER_KEY%>" property="piname"/></td>
+    <td class="formlabel">PI Email:</td>
+    <td class="text"><bean:write name="<%=Constants.USER_KEY%>" property="piemail"/></td>
+  </tr>
+  <tr> 
+    <td class="formlabel">Group:</td>
+    <td class="text"><bean:write name="<%=Constants.USER_KEY%>" property="group"/></td>
+  </tr>
+</table>
+
 <p>
         <li class="text"><a href="UpdateAccount.jsp">Update Account: </a>Change account information</li>
         <li class="text"><a href="ViewOrderHistory.do">View Orders: </a>View complete order list</li>
+        <li class="text"><a href="ViewContainers.jsp">View Containers: </a>View plasmid information by containers</li>
     </td>
   </tr>
 </table>

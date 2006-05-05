@@ -98,6 +98,10 @@ public class QueryProcessManager {
         return c;
     }
     
+    public int getClonenumInCollection(String name) {
+        return CollectionManager.getClonenumInCollection(name);
+    }
+    
     public List queryClonesByVector(User user, Set vectorids, String species, String status) {
         return queryClonesByVector(user,vectorids,species,status,true);
     }

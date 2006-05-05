@@ -30,6 +30,7 @@ import plasmid.coreobject.*;
 import plasmid.query.coreobject.CloneInfo;
 import plasmid.form.CheckoutForm;
 import plasmid.process.OrderProcessManager;
+import plasmid.util.Mailer;
 
 /**
  *
@@ -88,7 +89,7 @@ public class PlaceOrderAction extends UserAction {
         boolean saveInfo = ((CheckoutForm)form).getSaveInfo();
         
         String shippingAddress = "";
-        if(organization != null) 
+        if(organization != null)
             shippingAddress += organization+"\n";
         shippingAddress += addressline1+"\n";
         if(addressline2 != null)
@@ -99,7 +100,7 @@ public class PlaceOrderAction extends UserAction {
             shippingAddress = shippingAddress+"\n"+"Fax: "+fax;
         
         String billingAddress = "";
-        if(billingOrganization != null) 
+        if(billingOrganization != null)
             billingAddress += billingOrganization+"\n";
         billingAddress += billingaddressline1+"\n";
         if(billingaddressline2 != null)
@@ -118,7 +119,7 @@ public class PlaceOrderAction extends UserAction {
             addresses.add(a);
             addresses.add(b);
         }
- 
+        
         int numOfClones = ((CheckoutForm)form).getNumOfClones();
         int numOfCollections = ((CheckoutForm)form).getNumOfCollections();
         double costOfClones = ((CheckoutForm)form).getCostOfClones();
@@ -160,10 +161,35 @@ public class PlaceOrderAction extends UserAction {
         order.setOrderid(orderid);
         request.setAttribute(Constants.CLONEORDER, order);
         request.setAttribute("ordermessage", "You order has been placed successfully.");
-        request.getSession().removeAttribute(Constants.CART);        
+        request.getSession().removeAttribute(Constants.CART);
         request.getSession().setAttribute(Constants.CART_STATUS, Constants.SAVED);
         
         if(errors.empty()) {
+            String to = user.getEmail();
+            String subject = "order "+orderid;
+            String text = "Thank you for placing a clone request at PlasmID. "+
+            "Clones are sent as glycerol stocks (most U.S. orders) "+
+            "or as DNA spotted to paper (most overseas orders). "+
+            "The turn-around time is currently about five to seven business days. "+
+            "Large orders may take additional time.\n";
+            text += "\n"+manager.formOrderText(order);
+            text += "\n"+"Please sign in at PlasmID to view order status, "+
+            "track your shipment, download clone information, cancel a request, "+
+            "or view detailed information about the clones, "+
+            "including growth conditions for the clones.\n\n"+
+            "Thank you,\n"+
+            "The DF/HCC DNA Resource Core\n"+
+            "http://dnaseq.med.harvard.edu\n"+
+            "http://plasmid.hms.harvard.edu\n\n"+
+            "If you have further questions, please contact Stephanie Mohr.\n"+
+            "Email:  stephanie_mohr@hms.harvard.edu\n"+
+            "Phone: 617-324-4251\n";
+            
+            try {
+                Mailer.sendMessage(to,Constants.EMAIL_FROM,subject,text);
+            } catch (Exception ex) {
+                System.out.println(ex);
+            }
             return (mapping.findForward("success"));
         } else {
             saveErrors(request, errors);

@@ -101,6 +101,9 @@
     <form-bean      name="viewContainersForm"
                     type="plasmid.form.ViewContainersForm"/>
                     
+    <form-bean      name="cancelOrderForm"
+                    type="plasmid.form.CancelOrderForm"/>
+                    
  </form-beans>
 
   <!-- ========== Global Forward Definitions ============================== -->
@@ -120,7 +123,7 @@
     
     <action     path="/AddCollectionToCart"
                 type="plasmid.action.AddCollectionToCartAction"
-               name="viewCollectionForm"
+               name="refseqSearchForm"
               validate="false"
               input="/ViewCollection.jsp">
       <forward  name="success"  path="/ViewCollection.jsp"/>
@@ -132,6 +135,13 @@
               input="/AdvancedSearch.jsp">
       <forward  name="success"  path="/DisplayVectorSearchResults.jsp"/>
       <forward  name="empty"  path="/DisplayEmptySearchResults.jsp"/>
+    </action>
+    
+    <action     path="/CancelOrder"
+                type="plasmid.action.CancelOrderAction"
+               name="cancelOrderForm"
+              input="/OrderList.jsp">
+      <forward  name="success"  path="/ViewOrderHistory.do"/>
     </action>
     
     <action     path="/ChangeOrderStatus"
@@ -230,7 +240,7 @@
      
     <action    path="/GetCollection"
                type="plasmid.action.GetCollectionAction"
-               name="viewCollectionForm"
+               name="refseqSearchForm"
               validate="false"
               input="/GetCollectionList.do">
       <forward  name="success"   path="/ViewCollection.jsp"/>
@@ -493,6 +503,7 @@
                name="viewOrderHistoryForm"
               input="/ViewOrderHistory.do">
       <forward  name="success"   path="/OrderList.jsp"/>
+      <forward  name="success_outside"   path="/OrderListOutside.jsp"/>
       <forward  name="success_empty"   path="/OrderListEmpty.jsp"/>
     </action>
     

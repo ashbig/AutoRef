@@ -233,4 +233,27 @@ public class CollectionManager extends TableManager {
         
         return info;
     }
+    
+    public static int getClonenumInCollection(String name) {
+        String sql = "select count(cloneid) from clonecollection where name='"+name+"'";
+        DatabaseTransaction t = null;
+        ResultSet rs = null;
+        int count = 0;
+        try {
+            t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            if(rs.next()) {
+                count = rs.getInt(1);
+            }
+        } catch (Exception ex) {
+            if(Constants.DEBUG) {
+                System.out.println("Database error occured.");
+                System.out.println(ex);
+            }
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+        
+        return count;
+    }
 }

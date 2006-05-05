@@ -31,6 +31,7 @@ import plasmid.coreobject.*;
 import plasmid.util.*;
 import plasmid.query.handler.*;
 import plasmid.process.OrderProcessManager;
+import plasmid.process.QueryProcessManager;
 
 /**
  *
@@ -66,6 +67,8 @@ public class SetDisplayAction extends Action {
         String species = ((RefseqSearchForm)form).getSpecies();
         String refseqType = ((RefseqSearchForm)form).getRefseqType();
         String forward = ((RefseqSearchForm)form).getForward();
+        String collectionName = ((RefseqSearchForm)form).getCollectionName();
+        String isDownload = ((RefseqSearchForm)form).getIsDownload();
         
         request.setAttribute("pagesize", new Integer(pagesize));
         request.setAttribute("page",  new Integer(page));
@@ -111,6 +114,18 @@ public class SetDisplayAction extends Action {
             return (mapping.findForward("success"));
         }
         if(button != null && button.equals(Constants.DOWNLOAD)) {
+            if(clones == null && Constants.BOOLEAN_ISDOWNLOAD_YES.equals(isDownload)) {
+                QueryProcessManager manager = new QueryProcessManager();                
+                User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
+                List restrictions = new ArrayList();
+                restrictions.add(Clone.NO_RESTRICTION);
+                if(user != null) {
+                    List ress = UserManager.getUserRestrictions(user);
+                    restrictions.addAll(ress);
+                }
+                CollectionInfo info = manager.getCollection(collectionName, CollectionInfo.DISTRIBUTION, restrictions, true);
+                clones = info.getClones();
+            }
             response.setContentType("application/x-msexcel");
             response.setHeader("Content-Disposition", "attachment;filename=Clones.xls");
             PrintWriter out = response.getWriter();

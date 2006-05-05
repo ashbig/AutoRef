@@ -7,6 +7,7 @@
 package plasmid.coreobject;
 
 import java.util.*;
+import plasmid.util.StringConvertor;
 
 /**
  *
@@ -143,6 +144,12 @@ public class CloneOrder {
     
     public List getItems() {return items;}
     public void setItems(List l) {this.items = l;}
+    
+    public List getShippedContainersAsList() {
+        StringConvertor sv = new StringConvertor();
+        List labels = sv.convertFromStringToList(shippedContainers, ", \t\n");
+        return labels;
+    }
     
     public String getShipping() {
         if(this.shippingaccount == null || this.shippingaccount.length() == 0) {

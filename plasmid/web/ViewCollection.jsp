@@ -28,50 +28,54 @@
 <p>
 <table width="100%" border="0">
   <tr> 
-    <td width="10%" class="formlabel">Collection:</td>
-    <td width="40%" class="itemtext"><bean:write name="<%=Constants.SINGLECOLLECTION%>" property="name"/></td>
-    <td width="20%" class="formlabel">Price for member:</td>
-    <td width="30%" class="itemtext">$<bean:write name="<%=Constants.SINGLECOLLECTION%>" property="memberprice"/></td>
+    <td width="10%" valign="top" class="formlabel">Collection:</td>
+    <td width="40%" valign="top" class="itemtext"><bean:write name="<%=Constants.SINGLECOLLECTION%>" property="name"/></td>
+    <td width="20%" valign="top" class="formlabel">Price for member:</td>
+    <td width="30%" valign="top" class="itemtext">$<bean:write name="<%=Constants.SINGLECOLLECTION%>" property="memberprice"/></td>
   </tr>
   <tr> 
-    <td width="10%" class="formlabel">&nbsp;</td>
-    <td width="40%" class="itemtext">&nbsp;</td>
-    <td width="20%" class="formlabel">Price for non-member:</td>
-    <td width="30%" class="itemtext">$<bean:write name="<%=Constants.SINGLECOLLECTION%>" property="price"/></td>
+    <td width="10%" valign="top" class="formlabel">&nbsp;</td>
+    <td width="40%" valign="top" class="itemtext">&nbsp;</td>
+    <td width="20%" valign="top" class="formlabel">Price for non-member:</td>
+    <td width="30%" valign="top" class="itemtext">$<bean:write name="<%=Constants.SINGLECOLLECTION%>" property="price"/></td>
   </tr>
   <tr> 
-    <td colspan="4" class="formlabel"><bean:write name="<%=Constants.SINGLECOLLECTION%>" property="description"/></td>
+    <td colspan="4" valign="top" class="formlabel"><bean:write name="<%=Constants.SINGLECOLLECTION%>" property="description"/></td>
   </tr> 
 </table>
 
 <p>
-<html:form action="AddCollectionToCart.do">
-<html:hidden property="collectionName"/>
-<html:hidden property="pagesize"/>
-<html:hidden property="page"/>
-<input type="hidden" name="displayPage" value="indirect"/>
 <table width="100%" border="0">
-  <tr> 
-    <td width="20%" class="text">List of clones:</td>
-    <td width="80%"><input name="button" type="submit" class="text" value="Add Collection To Cart"/></td>
+  <tr>
+    <td align="right" class="text">
+        <html:form action="AddCollectionToCart.do">
+        <html:hidden property="collectionName"/>
+        <html:hidden property="pagesize"/>
+        <html:hidden property="page"/>
+        <input type="hidden" name="displayPage" value="indirect"/>
+        <input name="button" type="submit" class="text" value="Add Collection To Cart"/>
+        </html:form>
+    </td>
+    <td align="left" class="text">
+        <html:form action="SetDisplay.do">
+            <html:hidden property="pagesize"/>
+            <html:hidden property="page"/>
+            <input type="hidden" name="displayPage" value="indirect"/>
+            <input type="hidden" name="forward" value="collection"/>
+            <html:submit property="button" value="<%=Constants.DOWNLOAD%>"/>
+        </html:form>
+    </td>
   </tr>
 </table>
-</html:form>
 
+<logic:equal name="refseqSearchForm" property="isDownload" value="<%=Constants.BOOLEAN_ISDOWNLOAD_NO%>">
 <p>
-<html:form action="SetDisplay.do">
-    <html:hidden property="pagesize"/>
-    <html:hidden property="page"/>
-    <input type="hidden" name="displayPage" value="indirect"/>
-    <input type="hidden" name="forward" value="collection"/>
 <table width="100%" border="0">
     <tr>
-        <td width="70%">&nbsp;</td>
-        <td class="mainbodytexthead"><html:submit property="button" value="<%=Constants.DOWNLOAD%>"/></td>
+        <td class="mainbodytexthead" align="left">List of clones:</td>
         <td align="right" class="mainbodytexthead"><a target="_blank" href="TermDefinition.jsp">Explanation of Terms</a></td>
     </tr>
 </table>
-</html:form>
 
 <table width="100%" border="0">
   <tr>
@@ -170,6 +174,7 @@
     </tr>
 </table>
 </html:form>
+</logic:equal>
 
     </td>
   </tr>

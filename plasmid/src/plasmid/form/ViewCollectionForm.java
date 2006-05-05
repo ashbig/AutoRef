@@ -17,13 +17,22 @@ import org.apache.struts.action.ActionMapping;
  * @author  DZuo
  */
 public class ViewCollectionForm extends RefseqSearchForm {
-    private String collectionName = null;
     
     /** Creates a new instance of ViewCollectionForm */
     public ViewCollectionForm() {
+        super();
     }
         
-    public String getCollectionName() {return collectionName;}
     
-    public void setCollectionName(String s) {this.collectionName = s;}
+        
+    /**
+     * Reset all properties to their default values.
+     *
+     * @param mapping The mapping used to select this instance
+     * @param request The servlet request we are processing
+     */
+  //  public void reset(ActionMapping mapping, HttpServletRequest request) {
+    //    isDownload = null;
+   // }
+
 }

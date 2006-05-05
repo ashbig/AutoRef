@@ -32,27 +32,16 @@
         <p align="left" class="homepageText3">New in the Repository</p>
         <ul>
           <li> 
-            <div align="left">&gt;3900 <em>Y. pestis </em>ORFs (sequence-verified) 
+            <div align="left">New search tools and defined collections make it easier for you to find clones of interest
             </div>
           </li>
           <li> 
-            <div align="left">&gt;2300 Pseudomonas ORFs (sequence-verified)</div>
+            <div align="left">Human kinase and Breast Cancer-related ORF collections (request single clones or whole collection)
+</div>
           </li>
           <li> 
-            <div align="left">pPRIME vectors for shRNA (Elledge lab) </div>
-          </li>
-          <li> 
-            <div align="left">shRNAs vs. RB1, PTEN, EP400 (p400), CDKN1A (p21)</div>
-          </li>
-          <li> 
-            <div align="left">Yeast expression vectors with fluorescent tags</div>
-          </li>
-          <li> 
-            <div align="left">Viral genes and genomes (HPVs, BPV-1, SV40)</div>
-          </li>
-          <li> 
-            <div align="left">Plasmids from DF/HCC members S. Elledge, D. Livingston, 
-              J. Decaprio and P. Howley</div>
+            <div align="left">Sequence-verified ORF collections for microbes now include P. aeruginosa, Y. pestis, F. tularensis, and V. cholerae
+</div>
           </li>
         </ul>
       </blockquote>

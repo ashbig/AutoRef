@@ -49,6 +49,8 @@ public class RefseqSearchForm extends ActionForm {
     protected String button;
     protected String forward;
     protected String display;
+    protected String collectionName = null;
+    protected String isDownload = null;
     
     public String getSpecies() {return species;}
     public String getRefseqType() {return refseqType;}
@@ -76,6 +78,8 @@ public class RefseqSearchForm extends ActionForm {
     public String getButton() {return button;}
     public String getForward() {return forward;}
     public String getDisplay() {return display;}
+    public String getCollectionName() {return collectionName;}
+    public String getIsDownload() {return isDownload;}
     
     public void setSpecies(String s) {this.species = s;}
     public void setRefseqType(String s) {this.refseqType = s;}
@@ -103,6 +107,8 @@ public class RefseqSearchForm extends ActionForm {
     public void setButton(String s) {this.button = s;}
     public void setForward(String s) {this.forward = s;}
     public void setDisplay(String s) {this.display = s;}
+    public void setCollectionName(String s) {this.collectionName = s;}
+    public void setIsDownload(String s) {this.isDownload = s;}
     
     /**
      * Reset all properties to their default values.

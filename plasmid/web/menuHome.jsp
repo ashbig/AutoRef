@@ -7,12 +7,12 @@
   </tr>
 </table>
 <table width="97%" height="115" border="1" bordercolor="#0099FF">
+  <logic:present name="<%=Constants.USER_KEY%>" scope="session"> 
   <tr> 
-    <td height="25"><a href="Home.jsp" class="leftnavtext">Overview</a></td>
+    <td height="25"><a href="Account.jsp" class="leftnavtext">My Account</a></td>
   </tr>
   <tr> 
     <td height=45" valign="middle"> 
-    <logic:present name="<%=Constants.USER_KEY%>" scope="session"> 
       <table width="100%" border="0">
         <tr> 
           <td height="15" valign="middle"><a href="UpdateAccount.jsp" class="leftnavtext">Update Account</a></td>
@@ -24,8 +24,15 @@
           <td height="15" valign="middle"><a href="ViewContainers.jsp" class="leftnavtext">View Containers</a></td>
         </tr>
       </table>
-    </logic:present>
-    <logic:notPresent name="<%=Constants.USER_KEY%>" scope="session"> 
+    </td>
+  </tr>
+  </logic:present>
+  <logic:notPresent name="<%=Constants.USER_KEY%>" scope="session"> 
+  <tr> 
+    <td height="25"><a href="Home.jsp" class="leftnavtext">Home</a></td>
+  </tr>
+  <tr> 
+    <td height=45" valign="middle"> 
       <table width="100%" border="0">
         <tr> 
           <td height="15"><a href="Login.jsp" class="leftnavtext">Sign In</a></td>
@@ -37,7 +44,7 @@
           <td height="15"><a href="PrepareRegistration.do" class="leftnavtext">Registration</a></td>
         </tr>
       </table>
-    </logic:notPresent>
     </td>
   </tr>
+  </logic:notPresent>
 </table>
