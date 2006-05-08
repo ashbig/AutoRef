@@ -1,3 +1,4 @@
+//Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
 /*
  * FuzzySequence.java
  * represent result of Phred : sequence and base scores plus full sequence score
@@ -397,6 +398,7 @@ public class CloneSequence extends AnalyzedScoredSequence
             rs = t.executeQuery(sql);
             while(rs.next())
             {
+                if ( rs.getInt ("SEQUENCEID")  == 0) break;
                 seq = new CloneSequence( rs.getInt ("SEQUENCEID") );
                 sequences.add(seq);
             }
