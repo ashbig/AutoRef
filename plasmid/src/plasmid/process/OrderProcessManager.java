@@ -872,11 +872,12 @@ public class OrderProcessManager {
         }
     }
     
-    public void printBioTracyWorklist(List clones, String filename) throws Exception {
+    public void printBioTracyWorklist(List clones, String path, String filename) throws Exception {
         if(clones == null || filename == null)
             return;
         
-        OutputStreamWriter f = new FileWriter(filename);
+        OutputStreamWriter f = new FileWriter(path+filename);
+        f.write(filename+"\n\n\n");
         for(int i=0; i<clones.size(); i++) {
             CloneInfo clone = (CloneInfo)clones.get(i);
             String tube = clone.getPlate();

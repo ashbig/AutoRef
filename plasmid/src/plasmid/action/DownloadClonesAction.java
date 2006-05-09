@@ -86,17 +86,17 @@ public class DownloadClonesAction extends UserAction {
             List groups = manager.groupClonesByGrowth(clones);
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
             Date today = new Date();
-            String filename = Constants.BIOTRACY_WORKLIST_PATH+"order"+orderid+"_"+formatter.format(today);
+            String filename = "order"+orderid+"_"+formatter.format(today);
             List files = new ArrayList();
             try {
                 for(int i=0; i<groups.size(); i++) {
                     List group = (List)groups.get(i);
                     String worklistfilename = filename+"_"+(i+1)+".txt";
-                    manager.printBioTracyWorklist(group, worklistfilename);
+                    manager.printBioTracyWorklist(group, Constants.BIOTRACY_WORKLIST_PATH, worklistfilename);
                     files.add(worklistfilename);
                 }
                 String summaryfilename = filename+"_summary.xls";
-                manager.printBioTracySummary(groups, summaryfilename, filename);
+                manager.printBioTracySummary(groups, Constants.BIOTRACY_WORKLIST_PATH+summaryfilename, filename);
                 files.add(summaryfilename);
             } catch (Exception ex) {
                 if(Constants.DEBUG) {
