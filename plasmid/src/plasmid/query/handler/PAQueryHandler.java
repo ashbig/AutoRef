@@ -31,7 +31,7 @@ public class PAQueryHandler extends GeneQueryHandler {
     }  
     
     public void doQuery(List restrictions, List clonetypes, String species, int start, int end, String column, String status) throws Exception {
-        String sql = "select distinct cloneid from dnainsert where upper(geneid) = upper(?)";
+        String sql = "select distinct cloneid from cloneinsert where insertid in (select insertid from dnainsert where upper(geneid) = upper(?))";
         executeQuery(sql, restrictions, clonetypes, species, start, end, column, status);
     }
 }

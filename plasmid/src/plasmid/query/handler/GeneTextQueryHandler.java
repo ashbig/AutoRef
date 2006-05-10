@@ -31,8 +31,8 @@ public class GeneTextQueryHandler extends GeneQueryHandler {
     }
     
     public void doQuery(List restrictions, List clonetypes, String species, int start, int end, String column, String status) throws Exception {
-        String sql = "select distinct cloneid from dnainsert where upper(geneid) like upper(?)"+
-        " or upper(name) like upper(?) or upper(description) like upper(?)"+
+        String sql = "select distinct cloneid from cloneinsert where insertid in (select insertid from dnainsert where upper(geneid) like upper(?)"+
+        " or upper(name) like upper(?) or upper(description) like upper(?))"+
         " union (select distinct cloneid from clonegene where upper(geneid) like upper(?))"+
         " union (select distinct cloneid from clonegenbank where upper(accession) like upper(?))"+
         " union (select distinct cloneid from clonegi where upper(gi) like upper(?))"+
