@@ -195,7 +195,8 @@ public class SummaryTablePopulator {
     }
     
     public int populateClonesTable(List samples, int cloningStrategy, String cloneType, Connection conn) throws FlexDatabaseException, SQLException {
-        String sql = "insert into clones"+
+        String sql = "insert into clones(CLONEID,CLONENAME,"+
+        " CLONETYPE,MASTERCLONEID,SEQUENCEID,STRATEGYID,COMMENTS,STATUS,CONSTRUCTID)"+
         " select clonesid.nextval, null, ?, o.mastercloneid,"+
         " c.sequenceid, ?, null, 'UNSEQUENCED', c.constructid"+
         " from obtainedmasterclone o, constructdesign c, sample s"+
@@ -245,7 +246,8 @@ public class SummaryTablePopulator {
     }
     
     public int populateExpressionClones(List samples, int cloningStrategy, Connection conn) throws FlexDatabaseException, SQLException {
-        String sql = "insert into clones"+
+        String sql = "insert into clones (CLONEID,CLONENAME,"+
+        " CLONETYPE,MASTERCLONEID,SEQUENCEID,STRATEGYID,COMMENTS,STATUS,CONSTRUCTID)"+
         " select ?, null, ?, cl.mastercloneid,"+
         " c.sequenceid, ?, null, 'UNSEQUENCED', c.constructid"+
         " from constructdesign c, sample s, clones cl"+
@@ -561,9 +563,8 @@ public class SummaryTablePopulator {
     public static void main(String args[]) {
         //List containers = getContainers();
         List containers = new ArrayList();
-        containers.add(new Integer(15308));
-        containers.add(new Integer(15309));
-        containers.add(new Integer(15310));
+        containers.add(new Integer(17181));
+        containers.add(new Integer(17182));
 
         /**
         List samples = new ArrayList();
@@ -582,11 +583,13 @@ public class SummaryTablePopulator {
          */
         
         //change cloning strategy accordingly.
-        int cloningStrategyid = 4;
+        //int cloningStrategyid = 8;
+        int cloningStrategyid = 8;
         String cloneType = CloneInfo.MASTER_CLONE;
         
         SummaryTablePopulator populator = new SummaryTablePopulator();
         
+        //if(populator.populateExpressionClonesWithContainers(containers, cloningStrategyid)) {
         if(populator.populateObtainedMasterClonesWithContainers(containers, cloningStrategyid, cloneType))  {
         //if(populator.populateObtainedMasterClonesWithSamples(samples, cloningStrategyid, cloneType))  {
             populator.sendEmail(true, containers);
