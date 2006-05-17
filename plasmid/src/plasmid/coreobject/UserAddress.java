@@ -24,13 +24,16 @@ public class UserAddress {
     private String state;
     private String zipcode;
     private String country;
+    private String phone;
+    private String fax;
     
     /** Creates a new instance of UserAddress */
     public UserAddress() {
     }
     
     public UserAddress(int userid,String type,String organization,String addressline1,
-    String addressline2,String city, String state, String zipcode,String country,String name) {
+    String addressline2,String city, String state, String zipcode,String country,String name,
+    String phone, String fax) {
         this.userid = userid;
         this.type = type;
         this.organization = organization;
@@ -41,6 +44,8 @@ public class UserAddress {
         this.zipcode = zipcode;
         this.country = country;
         this.name = name;
+        this.phone = phone;
+        this.fax = fax;
     }
     
     public int getUserid() {return userid;}
@@ -53,6 +58,8 @@ public class UserAddress {
     public String getZipcode() {return zipcode;}
     public String getCountry() {return country;}
     public String getName() {return name;}
+    public String getPhone() {return phone;}
+    public String getFax() {return fax;}
     
     public void setUserid(int id) {this.userid = id;}
     public void setType(String s) {this.type = s;}
@@ -64,4 +71,6 @@ public class UserAddress {
     public void setZipcode(String s) {this.zipcode = s;}
     public void setCountry(String s) {this.country = s;}
     public void setName(String s) {this.name = s;}
+    public void setPhone(String s) {this.phone = s;}
+    public void setFax(String s) {this.fax = s;}
 }

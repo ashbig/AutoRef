@@ -910,7 +910,7 @@ public class OrderProcessManager {
         try {
             t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
-            CloneOrderManager manager = new CloneOrderManager(conn);            
+            CloneOrderManager manager = new CloneOrderManager(conn);
             List orders =manager.queryCloneOrders(user, null);
             if(orders == null) {
                 throw new Exception("Error occured while querying database for orders.");
@@ -952,7 +952,7 @@ public class OrderProcessManager {
         sf.append(order.getBillingTo()+"\n");
         sf.append(order.getBillingAddress()+"\n\n");
         
-        if(order.getShippingmethod() != null) 
+        if(order.getShippingmethod() != null)
             sf.append("Shipping Method: "+order.getShippingmethod()+"\n");
         if(order.getShippingaccount() != null)
             sf.append("Shipping Account: "+order.getShippingaccount()+"\n");
@@ -962,7 +962,84 @@ public class OrderProcessManager {
             sf.append("Tracking Number: "+order.getTrackingnumber()+"\n");
         if(order.getShippedContainers() != null)
             sf.append("Containers Shipped: "+order.getShippedContainers()+"\n");
-        sf.append("===========================================================\n");
+        sf.append("\n===========================================================\n");
         return sf.toString();
+    }
+    
+    public List getCloneOrders(String orderids, String orderDateFrom, String orderDateTo,
+    String shippingDateFrom, String shippingDateTo, String status, String lastnames,
+    String organization, String sort) {
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        StringConvertor sc = new StringConvertor();
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            CloneOrderManager manager = new CloneOrderManager(conn);
+            List orderidList = null;
+            if(orderids != null && orderids.trim().length()>0) {
+                orderidList = sc.convertFromStringToList(orderids.trim(), ",");
+            }
+            if(orderDateFrom != null && orderDateFrom.trim().length() == 0)
+                orderDateFrom = null;
+            if(orderDateTo != null && orderDateTo.trim().length() == 0)
+                orderDateTo = null;
+            if(shippingDateFrom != null && shippingDateFrom.trim().length() == 0)
+                shippingDateFrom = null;
+            if(shippingDateTo != null && shippingDateTo.trim().length() == 0)
+                shippingDateTo = null;
+            if(CloneOrder.ALL.equals(status)) {
+                status = null;
+            }
+            List lastnameList = null;
+            if(lastnames != null && lastnames.trim().length() > 0) {
+                lastnameList = sc.convertFromStringToCapList(lastnames.trim(), ",");
+            }
+            List groups = null;
+            boolean isMember = true;
+            if(!Constants.ALL.equals(organization)) {
+                groups = new ArrayList();
+                for(int i=0; i<User.MEMBER.length; i++) {
+                    groups.add(User.MEMBER[i]);
+                }
+                if(Constants.NONMEMBER.equals(organization))  {
+                    isMember = false;
+                }
+            }
+            String sortby = null;
+            if(Constants.SORTBY_ORDERDATE.equals(sort)) {
+                sortby = "orderdate";
+            } 
+            if(Constants.SORTBY_ORDERID.equals(sort)) {
+                sortby = "orderid";
+            }
+            if(Constants.SORTBY_SHIPDATE.equals(sort)) {
+                sortby = "shippingdate";
+            }
+            if(Constants.SORTBY_STATUS.equals(sort)) {
+                sortby = "orderstatus";
+            }
+            if(Constants.SORTBY_USERNAME.equals(sort)) {
+                sortby = "lastname";
+            }
+            List cloneorders = manager.queryCloneOrders(orderidList, orderDateFrom, orderDateTo, shippingDateFrom, shippingDateTo, status, lastnameList, groups, isMember, sortby);
+            return cloneorders;
+        } catch(Exception ex) {
+            DatabaseTransaction.rollback(conn);
+            if(Constants.DEBUG) {
+                System.out.println(ex);
+            }
+            return null;
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
+        }
+    }
+    
+    public void printInvoice(PrintWriter out, List orders) {
+        out.println("Name\t# Clones\t# Collections\tTotal Cost\tPO Number\tDate Shipped\tOrder #\tBilling Information");
+        for(int i=0; i<orders.size(); i++) {
+            CloneOrder order = (CloneOrder)orders.get(i);
+            out.println(order.getName()+"\t"+order.getNumofclones()+"\t"+order.getNumofcollection()+"\t$"+order.getPrice()+"\t"+order.getPonumber()+"\t"+order.getShippingdate()+"\t"+order.getOrderid()+"\tBill To: "+order.getBillingTo()+", "+order.getBillingAddress().replaceAll("\n", " "));
+        }
     }
 }

@@ -75,6 +75,28 @@ public class StringConvertor {
         
         return l;            
     }
+   
+    public List convertFromStringToCapList(String s, String delimiter) {
+        List l = new ArrayList();
+        
+        if(s == null)
+            return l;
+        
+        StringTokenizer tokenizer = new StringTokenizer(s, delimiter);
+        try {
+            while(tokenizer.hasMoreTokens()) {
+                String st = tokenizer.nextToken().trim();
+                if(st.length()>0)
+                    l.add(st.toUpperCase());
+            }
+        } catch (Exception ex) {
+            if(Constants.DEBUG) {
+                System.out.println(ex);
+            }
+        }
+        
+        return l;            
+    }
        
     public static String convertFromListToSqlString(List l) {
         if(l == null)

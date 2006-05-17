@@ -88,6 +88,8 @@ public class EnterAddressAction extends UserAction {
             ((CheckoutForm)form).setShippingto(shipping.getName());
             ((CheckoutForm)form).setOrganization(shipping.getOrganization());
             ((CheckoutForm)form).setZipcode(shipping.getZipcode());
+            ((CheckoutForm)form).setPhone(shipping.getPhone());
+            ((CheckoutForm)form).setFax(shipping.getFax());
         }
         if(billing != null) {
             ((CheckoutForm)form).setBillingaddressline1(billing.getAddressline1());
@@ -98,6 +100,8 @@ public class EnterAddressAction extends UserAction {
             ((CheckoutForm)form).setBillingto(billing.getName());
             ((CheckoutForm)form).setBillingorganization(billing.getOrganization());
             ((CheckoutForm)form).setBillingzipcode(billing.getZipcode());
+            ((CheckoutForm)form).setBillingphone(billing.getPhone());
+            ((CheckoutForm)form).setBillingfax(billing.getFax());
         }
 
         ((CheckoutForm)form).setPonumber(user.getPonumber());

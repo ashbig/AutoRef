@@ -22,6 +22,7 @@ import plasmid.coreobject.CloneOrder;
 public class ChangeOrderStatusForm extends ActionForm {
     private List status;
     private List orderid;
+    private String orderListButton;
     
     /** Creates a new instance of ChangeOrderStatusForm */
     public ChangeOrderStatusForm() {
@@ -29,12 +30,14 @@ public class ChangeOrderStatusForm extends ActionForm {
     
     public List getStatusList() {return status;}
     public List getOrderidList() {return orderid;}
+    public String getOrderListButton() {return orderListButton;}
     
     public String getStatus(int i) {return (String)status.get(i);}
     public int getOrderid(int i) {return Integer.parseInt((String)orderid.get(i));}
     
     public void setStatus(int i, String s) {this.status.set(i, s);}
     public void setOrderid(int i, String id) {this.orderid.set(i, id);}
+    public void setOrderListButton(String s) {this.orderListButton = s;}
     
     public void initiateLists(List orders) {
         status = new ArrayList();
@@ -46,4 +49,8 @@ public class ChangeOrderStatusForm extends ActionForm {
             orderid.add((new Integer(order.getOrderid())).toString());
         }
     }    
+        
+    public void reset(ActionMapping mapping, HttpServletRequest request) {
+        orderListButton = null;
+    } 
 }

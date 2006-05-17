@@ -106,7 +106,10 @@
   </logic:iterate>    
     
   <tr>
-    <td colspan="6"><html:submit styleClass="formlabel" value="Process Orders"/></td>
+    <td align="middle" colspan="6">
+        <html:submit property="orderListButton" styleClass="formlabel" value="Process Orders"/>&nbsp;&nbsp;
+        <html:submit property="orderListButton" styleClass="formlabel" value="<%=Constants.BUTTON_CREATE_INVOICE%>"/>
+    </td>
   </tr>
 </table>
 </html:form>

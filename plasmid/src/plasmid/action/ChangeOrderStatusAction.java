@@ -28,6 +28,7 @@ import plasmid.coreobject.User;
 import plasmid.coreobject.CloneOrder;
 import plasmid.form.ChangeOrderStatusForm;
 import plasmid.process.OrderProcessManager;
+import plasmid.util.StringConvertor;
 
 /**
  *
@@ -38,6 +39,20 @@ public class ChangeOrderStatusAction extends InternalUserAction {
         ActionErrors errors = new ActionErrors();
         List status = ((ChangeOrderStatusForm)form).getStatusList();
         List orderid = ((ChangeOrderStatusForm)form).getOrderidList();
+        String button = ((ChangeOrderStatusForm)form).getOrderListButton();
+        
+        OrderProcessManager manager = new OrderProcessManager();
+        
+        if(Constants.BUTTON_CREATE_INVOICE.equals(button)) {
+            StringConvertor sv = new StringConvertor();
+            List l = manager.getCloneOrders(sv.convertFromListToString(orderid), null, null, null, null, null, null, null, null);
+            response.setContentType("application/x-msexcel");
+            response.setHeader("Content-Disposition", "attachment;filename=Invoice.xls");
+            PrintWriter out = response.getWriter();
+            manager.printInvoice(out, l);
+            out.close();
+            return null;
+        }
         
         List orders = new ArrayList();
         for(int i=0; i<orderid.size(); i++) {
@@ -49,7 +64,6 @@ public class ChangeOrderStatusAction extends InternalUserAction {
             orders.add(order);
         }
         
-        OrderProcessManager manager = new OrderProcessManager();        
         if(!manager.updateAllOrderStatus(orders)) {
             errors.add(ActionErrors.GLOBAL_ERROR,
             new ActionError("error.order.process"));

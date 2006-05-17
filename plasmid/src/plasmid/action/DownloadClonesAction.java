@@ -117,6 +117,7 @@ public class DownloadClonesAction extends UserAction {
         response.setHeader("Content-Disposition", "attachment;filename=Clones_"+orderid+".xls");
         PrintWriter out = response.getWriter();
         manager.writeCloneList(clones, out, isWorkingStorage);
+        out.close();
         return null;
     }
 }

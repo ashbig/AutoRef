@@ -60,6 +60,9 @@
         <li class="text"><a href="UpdateAccount.jsp">Update Account: </a>Change account information</li>
         <li class="text"><a href="ViewOrderHistory.do">View Orders: </a>View complete order list</li>
         <li class="text"><a href="ViewContainers.jsp">View Containers: </a>View plasmid information by containers</li>
+        <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
+        <li class="text"><a href="SearchOrderInput.jsp">Search Orders: </a>Search clone orders by orderid, user last name, order date, shipping date, and organization</li>
+        </logic:equal>
     </td>
   </tr>
 </table>

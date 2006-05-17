@@ -67,12 +67,22 @@ public class Constants {
     public static final String BUTTON_CREATE_BIOBANK_WORKLIST = "Create BioTracy Worklist";
     public static final String BUTTON_DOWNLOAD_CONTAINERS = "Download Container Information";
     public static final String BUTTON_CANCEL_ORDER = "Cancel";
+    public static final String BUTTON_CREATE_INVOICE = "Create Invoice";
     
     public static final int DOWNLOADTHRESHOLD = 1000;
     
     public static final String BOOLEAN_ISDOWNLOAD_YES = "yes";
     public static final String BOOLEAN_ISDOWNLOAD_NO = "no";
     
+    public static final String MEMBER = "Member";
+    public static final String NONMEMBER = "Non member";
+    
+    public static final String SORTBY_ORDERID = "Order ID";
+    public static final String SORTBY_USERNAME = "User Last Name";
+    public static final String SORTBY_ORDERDATE = "Order Date";
+    public static final String SORTBY_SHIPDATE = "Shipping Date";
+    public static final String SORTBY_STATUS = "Order Status";
+        
     /** Creates a new instance of Constants */
     public Constants() {
     }

@@ -114,8 +114,8 @@ public class PlaceOrderAction extends UserAction {
         List addresses = null;
         if(saveInfo) {
             addresses = new ArrayList();
-            UserAddress a = new UserAddress(user.getUserid(),UserAddress.SHIPPING, organization, addressline1,addressline2, city, state, zipcode, country, shippingto);
-            UserAddress b = new UserAddress(user.getUserid(),UserAddress.BILLING, billingOrganization, billingaddressline1, billingaddressline2, billingcity, billingstate, billingzipcode, billingcountry, billingto);
+            UserAddress a = new UserAddress(user.getUserid(),UserAddress.SHIPPING, organization, addressline1,addressline2, city, state, zipcode, country, shippingto, phone, fax);
+            UserAddress b = new UserAddress(user.getUserid(),UserAddress.BILLING, billingOrganization, billingaddressline1, billingaddressline2, billingcity, billingstate, billingzipcode, billingcountry, billingto, billingphone, billingfax);
             addresses.add(a);
             addresses.add(b);
         }

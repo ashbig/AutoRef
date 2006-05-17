@@ -104,6 +104,9 @@
     <form-bean      name="cancelOrderForm"
                     type="plasmid.form.CancelOrderForm"/>
                     
+    <form-bean      name="searchOrderForm"
+                    type="plasmid.form.SearchOrderForm"/>
+                    
  </form-beans>
 
   <!-- ========== Global Forward Definitions ============================== -->
@@ -382,6 +385,15 @@
                scope="request"
               input="/SearchClone.jsp">
       <forward  name="success"   path="/DisplayResults.jsp"/>
+    </action>
+      
+    <action    path="/SearchOrderInput"
+               type="plasmid.action.SearchOrderInputAction"
+               name="searchOrderForm"
+               scope="request"
+              input="/SearchOrderInput.jsp">
+      <forward  name="success"   path="/OrderList.jsp"/>
+      <forward  name="success_empty"   path="/OrderListEmpty.jsp"/>
     </action>
       
     <action    path="/SelectProcess"

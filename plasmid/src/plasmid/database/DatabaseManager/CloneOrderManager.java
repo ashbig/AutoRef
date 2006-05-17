@@ -12,6 +12,7 @@ import java.util.*;
 import plasmid.coreobject.*;
 import plasmid.database.*;
 import plasmid.Constants;
+import plasmid.util.StringConvertor;
 
 /**
  *
@@ -133,7 +134,7 @@ public class CloneOrderManager extends TableManager {
             DatabaseTransaction.closeResultSet(rs);
         }
     }
-     
+    
     public List queryOrderCollections(int orderid, User user) {
         String sql = "select o.collectionname, o.quantity from orderclones o, cloneorder c"+
         " where o.orderid=c.orderid and o.cloneid is null and c.orderid="+orderid;
@@ -162,7 +163,7 @@ public class CloneOrderManager extends TableManager {
             DatabaseTransaction.closeResultSet(rs);
         }
     }
-     
+    
     /**
      * Query database to get the clone order by orderid and user.
      *
@@ -206,6 +207,8 @@ public class CloneOrderManager extends TableManager {
                 double total = rs.getDouble(14);
                 int userid = rs.getInt(15);
                 String shippingdate = rs.getString(16);
+                if(shippingdate == null)
+                    shippingdate = "";
                 String whoshipped = rs.getString(17);
                 String shippingmethod = rs.getString(18);
                 String shippingaccount = rs.getString(19);
@@ -294,6 +297,8 @@ public class CloneOrderManager extends TableManager {
                 String firstname = rs.getString(16);
                 String lastname = rs.getString(17);
                 String shippingdate = rs.getString(18);
+                if(shippingdate == null)
+                    shippingdate = "";
                 String whoshipped = rs.getString(19);
                 String shippingmethod = rs.getString(20);
                 String shippingaccount = rs.getString(21);
@@ -328,6 +333,113 @@ public class CloneOrderManager extends TableManager {
         } finally {
             DatabaseTransaction.closeResultSet(rs);
             DatabaseTransaction.closeStatement(stmt);
+        }
+    }
+    
+    public List queryCloneOrders(List orderids, String orderDateFrom, String orderDateTo,
+    String shippingDateFrom, String shippingDateTo, String status, List lastnames,
+    List groups, boolean isMember, String sort) {
+        String sql = "select c.orderid,c.orderdate,c.orderstatus,c.ponumber,c.shippingto,c.billingto,"+
+        " c.shippingaddress,c.billingaddress,c.numofclones,c.numofcollection,c.costforclones,"+
+        " c.costforcollection,c.costforshipping,c.totalprice,c.userid,u.firstname,u.lastname,"+
+        " c.shippingdate, c.whoshipped, c.shippingmethod,c.shippingaccount,c.trackingnumber,"+
+        " c.receiveconfirmationdate, c.whoconfirmed,c.whoreceivedconfirmation,u.email,c.shippedcontainers"+
+        " from cloneorder c, userprofile u where c.userid=u.userid";
+        
+        if(orderids != null) {
+            sql += " and c.orderid in ("+StringConvertor.convertFromListToSqlList(orderids)+")";
+        }
+        if(orderDateFrom != null) {
+            sql += " and c.orderDate>=To_DATE('"+orderDateFrom+"', 'MM/DD/YYYY')";
+        }
+        if(orderDateTo != null) {
+            sql += " and c.orderDate<=To_DATE('"+orderDateTo+"', 'MM/DD/YYYY')";
+        }
+        if(shippingDateFrom != null) {
+            sql += " and c.shippingdate>=To_DATE('"+shippingDateFrom+"', 'MM/DD/YYYY')";
+        }
+        if(shippingDateTo != null) {
+            sql += " and c.orderDate<=To_DATE('"+shippingDateTo+"', 'MM/DD/YYYY')";
+        }
+        if(status != null) {
+            sql = sql + " and c.orderstatus='"+status+"'";
+        }
+        if(lastnames != null) {
+            sql += " and upper(u.lastname) in ("+StringConvertor.convertFromListToSqlString(lastnames)+")";
+        }
+        if(groups != null) {
+            if(isMember) {
+                sql += " and u.usergroup in ("+StringConvertor.convertFromListToSqlString(groups)+")";
+            } else {
+                sql += " and u.usergroup not in ("+StringConvertor.convertFromListToSqlString(groups)+")";
+            }
+        }
+        if(sort != null) {
+            sql += " order by "+sort;
+        } else {
+            sql = sql + " order by c.orderid desc";
+        }
+        
+        DatabaseTransaction t = null;
+        ResultSet rs = null;
+        try {
+            t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            List orders = new ArrayList();
+            while(rs.next()) {
+                int orderid = rs.getInt(1);
+                String date = rs.getString(2);
+                String st = rs.getString(3);
+                String ponumber = rs.getString(4);
+                String shippingto = rs.getString(5);
+                String billingto = rs.getString(6);
+                String shippingaddress = rs.getString(7);
+                String billingaddress = rs.getString(8);
+                int numofclones = rs.getInt(9);
+                int numofcollection = rs.getInt(10);
+                double costforclones = rs.getDouble(11);
+                double costforcollection = rs.getDouble(12);
+                double costforshipping = rs.getDouble(13);
+                double total = rs.getDouble(14);
+                int userid = rs.getInt(15);
+                String firstname = rs.getString(16);
+                String lastname = rs.getString(17);
+                String shippingdate = rs.getString(18);
+                if(shippingdate == null)
+                    shippingdate = "";
+                String whoshipped = rs.getString(19);
+                String shippingmethod = rs.getString(20);
+                String shippingaccount = rs.getString(21);
+                String trackingnumber = rs.getString(22);
+                String receiveconfirmationdate = rs.getString(23);
+                String whoconfirmed = rs.getString(24);
+                String whoreceivedconfirmation = rs.getString(25);
+                String email = rs.getString(26);
+                String containers = rs.getString(27);
+                
+                CloneOrder order = new CloneOrder(orderid, date, st, ponumber,shippingto,billingto,shippingaddress,billingaddress, numofclones, numofcollection, costforclones, costforcollection,costforshipping, total, userid);
+                
+                order.setFirstname(firstname);
+                order.setLastname(lastname);
+                order.setShippingdate(shippingdate);
+                order.setWhoshipped(whoshipped);
+                order.setShippingmethod(shippingmethod);
+                order.setShippingaccount(shippingaccount);
+                order.setTrackingnumber(trackingnumber);
+                order.setReceiveconfirmationdate(receiveconfirmationdate);
+                order.setWhoconfirmed(whoconfirmed);
+                order.setWhoreceivedconfirmation(whoreceivedconfirmation);
+                order.setEmail(email);
+                order.setShippedContainers(containers);
+                orders.add(order);
+            }
+            return orders;
+        } catch (Exception ex) {
+            System.out.println(ex);
+            handleError(ex, "Cannot query cloneorder.");
+            return null;
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
         }
     }
     
@@ -377,7 +489,7 @@ public class CloneOrderManager extends TableManager {
         
         return true;
     }
-        
+    
     public boolean updateOrderWithShipping(CloneOrder order) {
         String sql = "update cloneorder set orderstatus=?,"+
         " shippingmethod=?,"+
