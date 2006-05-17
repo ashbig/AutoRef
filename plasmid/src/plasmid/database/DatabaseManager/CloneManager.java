@@ -254,6 +254,28 @@ public class CloneManager extends TableManager {
         return true;
     }
     
+    public boolean insertCloneInsertsWithoutInsertInfo(List inserts) {
+        if(inserts == null)
+            return true;
+        
+        String sql1 = "insert into cloneinsert (cloneid, insertid) values(?,?)";
+        try {
+            PreparedStatement stmt1 = conn.prepareStatement(sql1);
+            
+            for(int i=0; i<inserts.size(); i++) {
+                DnaInsert c = (DnaInsert)inserts.get(i);                
+                stmt1.setInt(1, c.getCloneid());
+                stmt1.setInt(2, c.getInsertid());
+                DatabaseTransaction.executeUpdate(stmt1);
+            }
+            DatabaseTransaction.closeStatement(stmt1);
+        } catch (Exception ex) {
+            handleError(ex, "Error occured while inserting into DNAINSERT table");
+            return false;
+        }
+        return true;
+    }
+    
     public boolean insertCloneAuthors(List authors) {
         if(authors == null)
             return true;

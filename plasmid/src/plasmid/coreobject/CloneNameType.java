@@ -11,6 +11,10 @@ package plasmid.coreobject;
  * @author  DZuo
  */
 public class CloneNameType {
+    public static final String HIP_CLONE_ID = "HIP Clone ID";        
+    public static final String HIP_MASTER_CLONE_ID = "HIP Master Clone ID";  
+    public static final String ORIGINAL_CLONE_ID = "Original Clone ID"; 
+    
     private String clonetype;
     private String nametype;
     private String use;

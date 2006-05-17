@@ -27,7 +27,9 @@ public class Clone implements Serializable {
     public static final String NOINSERT = "No insert";
     public static final String NO_RESTRICTION = "No restriction";
     public static final String NON_PROFIT = "Academic and non-profit labs";
+    public static final String HIP_ONLY = "HIP only";
     public static final String SPECIES_NOINSERT = "Ev";
+    public static final String SOURCE_HIP = "HIP";
     
     protected int cloneid;
     protected String name;
