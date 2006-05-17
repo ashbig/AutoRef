@@ -1,3 +1,6 @@
+
+<!--Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
+
 function validate_add_format(formElement)
 {
  

@@ -1,3 +1,5 @@
+<!--Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
+
 <%@page contentType="text/html"%>
 <%@ page language="java" %>
 <%@ page errorPage="ProcessError.do"%>
@@ -96,6 +98,8 @@
               <table border="0" cellpadding="0" cellspacing="0" width="98%"  align="center">
                 <tr> 
                   <td align="center"><img src="./jpg/bec_schema.jpg"  border="0"> 
+
+
                 </tr>
               </table></td>
           </tr>

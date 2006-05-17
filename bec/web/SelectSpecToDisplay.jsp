@@ -1,3 +1,5 @@
+<!--Copyright 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
+
 <%@ page language="java" %>
 <%@ page errorPage="ProcessError.do"%>
 <%@ page import="java.util.*" %>
@@ -70,7 +72,7 @@ int forwardName_int =  ((Integer) forwardName).intValue();
 	   specs = (ArrayList)request.getAttribute("comparespec"); 
 	      if ( specs != null && specs.size() > 0 )      {%>
 	   
-	   <tr> <td bgColor='<%= row_color[ row_counter % 2 ]%>' height='39' >End Reads Evaluation Specifications:</td>
+	   <tr> <td bgColor='<%= row_color[ row_counter % 2 ]%>' height='39' >Clone Ranking Specifications:</td>
 	    <td bgColor='<%= row_color[row_counter++ % 2]%>'><select name="er_specid"> 
 	   <option value="0"> Select specification 
 	   <%
@@ -84,7 +86,7 @@ int forwardName_int =  ((Integer) forwardName).intValue();
 	   <% specs = (ArrayList)request.getAttribute("bioevaluation");
 	    if ( specs != null && specs.size() > 0 )      {%>
 	    
-	   <tr> <td  bgColor='<%= row_color[row_counter % 2]%>'  height='39'>Biological Evaluation of Clones Specifications:</td>
+	   <tr> <td  bgColor='<%= row_color[row_counter % 2]%>'  height='39'>Clone Acceptance Criteria Specifications:</td>
 	   <td  bgColor='<%= row_color[row_counter++ % 2]%>' ><select name="be_specid"> 
 	   <option value="0"> Select specification 
 	   <% for (int spec_count = 0; spec_count < specs.size(); spec_count++)

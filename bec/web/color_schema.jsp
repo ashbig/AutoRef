@@ -1,3 +1,6 @@
+<!--Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
+
+
 <%@ page language="java" %>
 <%
 String[] clone_style_color={"#99FFFF", "#99CCFF", "#9999FF",

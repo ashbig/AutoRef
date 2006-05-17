@@ -1,3 +1,6 @@
+
+<!--Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
+
 <%@ page language="java" %>
 <%@ page import="edu.harvard.med.hip.bec.*" %>
 <%
