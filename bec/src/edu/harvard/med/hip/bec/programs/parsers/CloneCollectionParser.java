@@ -1,3 +1,4 @@
+//Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
 /*
  * CloneCOllectionParser.java
  *
@@ -20,6 +21,7 @@ import java.util.*;
  */
 public class CloneCollectionParser extends DefaultHandler
 {
+    private static final String CLONE_COLLECTIONS_START = "clone-collections";
    private static final String CLONE_COLLECTION_START = "clone-collection";
     private static final String CLONE_COLLECTION_USERID = "userid";
     private static final String CLONE_COLLECTION_NAME = "name";
@@ -60,9 +62,8 @@ public class CloneCollectionParser extends DefaultHandler
     private static final int SAMPLE_TYPE_STATUS = 12;
 
 
-   
-    
-      private CloneCollection             i_current_collection = null;
+     private StringBuffer          i_element_buffer = null;
+     private CloneCollection             i_current_collection = null;
       private SampleForCloneCollection    i_current_sample = null;
       private ConstructForCloneCollection i_current_construct = null;
       private ArrayList             i_collections = null;
@@ -79,13 +80,71 @@ public class CloneCollectionParser extends DefaultHandler
          {
              i_current_construct = null;
          }
+        else  if (localName.equalsIgnoreCase(CLONE_COLLECTION_USERID ))
+        {
+            i_current_collection.setId(Integer.parseInt( i_element_buffer.toString()));
+        }
+        else  if (localName.equalsIgnoreCase(CLONE_COLLECTION_NAME  ))
+        {
+             i_current_collection.setName( i_element_buffer.toString());
+        }
+        else  if (localName.equalsIgnoreCase(CLONE_COLLECTION_TYPE ) )
+        {
+            i_current_collection.setType(i_element_buffer.toString());
+        }
+
+        else  if (localName.equalsIgnoreCase(CONSTRUCT_FORMAT  ))
+        {
+           i_current_construct.setFormat(Integer.parseInt( i_element_buffer.toString())); 
+        }
+         
+        else  if (localName.equalsIgnoreCase(CONSTRUCT_CS_ID  ))
+        {
+            i_current_construct.setCloningStrategyId( Integer.parseInt( i_element_buffer.toString()));
+        }
+        else  if (localName.equalsIgnoreCase(CONSTRUCT_CS_NAME ) )
+        {
+            i_current_construct.setCloningStrategyName( i_element_buffer.toString());
+        }
+         
+        else  if (localName.equalsIgnoreCase(CONSTRUCT_REFSEQUENCEID) )       
+        {
+           i_current_construct.setRefSequenceId( Integer.parseInt( i_element_buffer.toString()));
+        }
+        else  if (localName.equalsIgnoreCase(CONSTRUCT_ID) ) 
+        {
+             i_current_construct.setId( Integer.parseInt( i_element_buffer.toString()));
+        }
+         
+        else  if (localName.equalsIgnoreCase(SAMPLE_ID ))
+        {
+          i_current_sample.setId(Integer.parseInt(  i_element_buffer.toString()));
+        }
+        else  if (localName.equalsIgnoreCase(SAMPLE_CLONEID) ) 
+        {
+            i_current_sample.setCloneId( Integer.parseInt( i_element_buffer.toString()));
+        }
+        else  if (localName.equalsIgnoreCase(SAMPLE_WELL ) )
+        {
+           i_current_sample.setWellName( i_element_buffer.toString());
+        }
+        else  if (localName.equalsIgnoreCase(SAMPLE_TYPE  ))
+        {
+            i_current_sample.setType( i_element_buffer.toString()); 
+        }
+   
+               
      }
 
     
      public void startElement(String uri, String localName, String rawName,
-                               Attributes attributes) 
+                               Attributes attributes) throws SAXException
       {
              String local_value = null;
+              i_element_buffer = new StringBuffer();
+         
+              if ( isWrongTag(localName))
+                  throw new SAXException("Wrong tag: "+localName);
              if (localName.equalsIgnoreCase(CLONE_COLLECTION_START) )
             {
                     i_current_collection = new CloneCollection();
@@ -96,6 +155,9 @@ public class CloneCollectionParser extends DefaultHandler
                         for (int ii = 0; ii < attributes.getLength(); ii++)
                         {
                             local_value= attributes.getValue(ii).trim();
+                            if ( isWrongTag(attributes.getQName(ii)))
+                                throw new SAXException("Wrong tag: "+attributes.getQName(ii));
+         
                             if (attributes.getQName(ii).equalsIgnoreCase(CLONE_COLLECTION_USERID) )
                                 i_current_collection.setId(Integer.parseInt( local_value) );
                             else  if (attributes.getQName(ii).equalsIgnoreCase(CLONE_COLLECTION_NAME) )
@@ -110,10 +172,7 @@ public class CloneCollectionParser extends DefaultHandler
                    }
             }
             
-            else  if (localName.equalsIgnoreCase(CLONE_COLLECTION_USERID )) i_current_status = CLONE_COLLECTION_USERID_STATUS;
-            else  if (localName.equalsIgnoreCase(CLONE_COLLECTION_NAME  )) i_current_status = CLONE_COLLECTION_NAME_STATUS;
-            else  if (localName.equalsIgnoreCase(CLONE_COLLECTION_TYPE ) ) i_current_status = CLONE_COLLECTION_TYPE_STATUS;
-            else  if (localName.equalsIgnoreCase(CONSTRUCT_START )) 
+              else  if (localName.equalsIgnoreCase(CONSTRUCT_START )) 
             {
                  i_current_construct = new ConstructForCloneCollection();
                  i_current_collection.addConstruct(i_current_construct);
@@ -122,6 +181,9 @@ public class CloneCollectionParser extends DefaultHandler
                         for (int ii = 0; ii < attributes.getLength(); ii++)
                         {
                             local_value= attributes.getValue(ii).trim();
+                            if ( isWrongTag(attributes.getQName(ii)))
+                                throw new SAXException("Wrong tag: "+attributes.getQName(ii));
+         
                             if (attributes.getQName(ii).equalsIgnoreCase(CONSTRUCT_FORMAT) )
                                 i_current_construct.setFormat(Integer.parseInt( local_value) );
                             else  if (attributes.getQName(ii).equalsIgnoreCase(CONSTRUCT_CS_ID) )
@@ -137,12 +199,21 @@ public class CloneCollectionParser extends DefaultHandler
                    }
                    else i_current_status = CONSTRUCT_START_STATUS;
             }
+              
+               else  if (localName.equalsIgnoreCase(CLONE_COLLECTION_USERID )) i_current_status = CLONE_COLLECTION_USERID_STATUS;
+            else  if (localName.equalsIgnoreCase(CLONE_COLLECTION_NAME  )) i_current_status = CLONE_COLLECTION_NAME_STATUS;
+            else  if (localName.equalsIgnoreCase(CLONE_COLLECTION_TYPE ) ) i_current_status = CLONE_COLLECTION_TYPE_STATUS;
+         
             else  if (localName.equalsIgnoreCase(CONSTRUCT_FORMAT  )) i_current_status = CONSTRUCT_FORMAT_STATUS;
             else  if (localName.equalsIgnoreCase(CONSTRUCT_CS_ID  )) i_current_status = CONSTRUCT_CS_ID_STATUS;
             else  if (localName.equalsIgnoreCase(CONSTRUCT_CS_NAME ) ) i_current_status = CONSTRUCT_CS_NAME_STATUS;
-            else  if (localName.equalsIgnoreCase(CONSTRUCT_REFSEQUENCEID) ) i_current_status = CONSTRUCT_REFSEQUENCEID_STATUS;
+            else  if (localName.equalsIgnoreCase(CONSTRUCT_REFSEQUENCEID) )                i_current_status = CONSTRUCT_REFSEQUENCEID_STATUS;
             else  if (localName.equalsIgnoreCase(CONSTRUCT_ID) ) i_current_status = CONSTRUCT_ID_STATUS;
-            
+             else  if (localName.equalsIgnoreCase(SAMPLE_ID )) i_current_status = SAMPLE_ID_STATUS;
+            else  if (localName.equalsIgnoreCase(SAMPLE_CLONEID) ) i_current_status = SAMPLE_CLONEID_STATUS;
+            else  if (localName.equalsIgnoreCase(SAMPLE_WELL ) )i_current_status = SAMPLE_WELL_STATUS;
+            else  if (localName.equalsIgnoreCase(SAMPLE_TYPE  )) i_current_status = SAMPLE_TYPE_STATUS;
+
             else  if (localName.equalsIgnoreCase(SAMPLE_START )) 
             {
                     i_current_sample = new SampleForCloneCollection();
@@ -153,6 +224,9 @@ public class CloneCollectionParser extends DefaultHandler
                         for (int ii = 0; ii < attributes.getLength(); ii++)
                         {
                             local_value = attributes.getValue(ii).trim();
+                            if ( isWrongTag(attributes.getQName(ii)))
+                                throw new SAXException("Wrong tag: "+attributes.getQName(ii));
+         
                             if (attributes.getQName(ii).equalsIgnoreCase(SAMPLE_ID) )
                                 i_current_sample.setId(Integer.parseInt(local_value ) );
                             else  if (attributes.getQName(ii).equalsIgnoreCase(SAMPLE_CLONEID) )
@@ -165,38 +239,42 @@ public class CloneCollectionParser extends DefaultHandler
                    }
                    else i_current_status = SAMPLE_START_STATUS;
             }
-            else  if (localName.equalsIgnoreCase(SAMPLE_ID )) i_current_status = SAMPLE_ID_STATUS;
-            else  if (localName.equalsIgnoreCase(SAMPLE_CLONEID) ) i_current_status = SAMPLE_CLONEID_STATUS;
-            else  if (localName.equalsIgnoreCase(SAMPLE_WELL ) )i_current_status = SAMPLE_WELL_STATUS;
-            else  if (localName.equalsIgnoreCase(SAMPLE_TYPE  )) i_current_status = SAMPLE_TYPE_STATUS;
-      }
+                 }
 
      
       public void characters(char characters[], int start, int length)
       {
           String chData = (new String(characters, start, length)).trim();
            if (chData == null || chData.length() < 1) return;
-         
-          switch(i_current_status)
-          {
-                  case CLONE_COLLECTION_USERID_STATUS:{ i_current_collection.setId(Integer.parseInt( chData)); break;}  
-                  case CLONE_COLLECTION_NAME_STATUS :{ i_current_collection.setName( chData); break;}  
-                  case CLONE_COLLECTION_TYPE_STATUS: {i_current_collection.setType(chData); break;}  
-                  
-                  case SAMPLE_ID_STATUS: {i_current_sample.setId(Integer.parseInt(  chData)); break;}  
-                  case SAMPLE_CLONEID_STATUS: {i_current_sample.setCloneId( Integer.parseInt( chData)); break;}  
-                  case SAMPLE_WELL_STATUS: {i_current_sample.setWellName( chData); break;}  
-                 case SAMPLE_TYPE_STATUS: {i_current_sample.setType( chData); break;}  
-                case CONSTRUCT_FORMAT_STATUS: {i_current_construct.setFormat(Integer.parseInt( chData)); break;}  
-                case CONSTRUCT_CS_ID_STATUS: {i_current_construct.setCloningStrategyId( Integer.parseInt( chData)); break;}  
-                case CONSTRUCT_CS_NAME_STATUS: {i_current_construct.setCloningStrategyName( chData); break;}  
-               case CONSTRUCT_REFSEQUENCEID_STATUS: {i_current_construct.setRefSequenceId( Integer.parseInt( chData)); break;}  
-               case CONSTRUCT_ID_STATUS: {i_current_construct.setId( Integer.parseInt( chData)); break;}  
-                    
-      }
+          if (i_element_buffer != null) 
+           {
+                i_element_buffer.append(chData); 
+           }
+          
   }
       
     
+      private boolean     isWrongTag(String localName)
+      {
+            if ( localName.equalsIgnoreCase(  CLONE_COLLECTION_START  )||
+            localName.equalsIgnoreCase(  CLONE_COLLECTION_USERID   )||
+            localName.equalsIgnoreCase(  CLONE_COLLECTION_NAME   )||
+            localName.equalsIgnoreCase(  CLONE_COLLECTION_TYPE   )||
+            localName.equalsIgnoreCase(  CONSTRUCT_START   )||
+            localName.equalsIgnoreCase(  CONSTRUCT_ID  )||
+            localName.equalsIgnoreCase(  CONSTRUCT_FORMAT  )||
+            localName.equalsIgnoreCase(  CONSTRUCT_CS_ID   )||
+            localName.equalsIgnoreCase(  CONSTRUCT_CS_NAME   )||
+            localName.equalsIgnoreCase(  CONSTRUCT_REFSEQUENCEID  )||
+            localName.equalsIgnoreCase(  SAMPLE_START  ) ||
+            localName.equalsIgnoreCase(  SAMPLE_ID )||
+            localName.equalsIgnoreCase(  SAMPLE_CLONEID )||
+            localName.equalsIgnoreCase(  SAMPLE_WELL  )||
+            localName.equalsIgnoreCase(  SAMPLE_TYPE  ) ||
+           localName.equalsIgnoreCase(   CLONE_COLLECTIONS_START))
+            return false;
+            return true;
+    }
   //    public ArrayList     getBioREFSEQUENCEs(){ return i_bioREFSEQUENCEs;}
 
    public static void main(String[] args)
@@ -208,13 +286,14 @@ public class CloneCollectionParser extends DefaultHandler
         SAXParser parser = new SAXParser();
         parser.setContentHandler(SAXHandler);
         parser.setErrorHandler(SAXHandler);
-        parser.parse("C:\\BEC\\bec\\docs\\ApplicationSetup\\CloneCollection.xml");
+        parser.parse("C:\\bio\\plate_1.xml");
         ArrayList v= SAXHandler.getCollections();
         System.out.println(v.size());
         
   }
   catch(Exception e){
-     e.printStackTrace(System.err);
+      System.out.println(e.getMessage());
+    // e.printStackTrace(System.err);
   }
    }
 

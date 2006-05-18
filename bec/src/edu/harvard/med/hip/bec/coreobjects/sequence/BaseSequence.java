@@ -1,3 +1,4 @@
+//Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
 /*
  * BaseSequence.java
  * represent base sequence which is coding sequence for  becsequence 
@@ -147,7 +148,6 @@ public  class BaseSequence
         }
         catch (Exception sqlE)
         {
-            //System.out.println(sqlE.getMessage());
             throw new BecDatabaseException(sqlE.getMessage()+"\nSQL: "+sql);
         } finally
         {
@@ -340,7 +340,6 @@ public  class BaseSequence
         try
         {
              ScoredSequence s = new ScoredSequence(45184);
-             System.out.println(s.getText());
         }
         catch(Exception e){}
         System.exit(0);

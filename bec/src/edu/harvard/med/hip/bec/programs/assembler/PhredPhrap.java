@@ -1,3 +1,4 @@
+//Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
        /*
  * Needle.java
  *
@@ -86,7 +87,7 @@ public class PhredPhrap
         }
         cmd += getQualityTrimmingParams();   
         cmd += getLQReadsTreatmentParameter();
-        System.out.println(cmd);
+       // System.out.println(cmd);
         try
         {
             Runtime r = Runtime.getRuntime();
@@ -118,7 +119,7 @@ public class PhredPhrap
                     }
                     catch(Exception e)
                     {
-                        throw new BecUtilException("Cannot run phredphrap");
+                        throw new BecUtilException("Cannot run phredphrap: "+ e.getMessage());
                     }
                 }
                 else
@@ -134,7 +135,7 @@ public class PhredPhrap
             if (p.exitValue() != 0)
             {
                // System.err.println("phredphrap call failed" + p.exitValue());
-                 throw new  BecUtilException("phredphrap call failed" + p.exitValue());
+                 throw new  BecUtilException("phredphrap call failed with return value: " + p.exitValue()+"Check phredPhrap documentation for return value.");
             }
         } catch (IOException e)
         {

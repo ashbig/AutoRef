@@ -1,3 +1,4 @@
+//Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
 /*
  * ReceiveOligo.java
  *
@@ -9,11 +10,7 @@ import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.action.*;
 
-/**
- *
- * @author  Wendy Mar
- * @version
- */
+
 public class ReceiveOrdersForm extends ActionForm
 {
     public final static String DELIMITER = "\t\n\r\f, ";

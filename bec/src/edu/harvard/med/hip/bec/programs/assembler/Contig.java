@@ -1,3 +1,4 @@
+//Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
 /*
  * CloneAssembly.java
  *
@@ -543,7 +544,7 @@ public class Contig
     {
         try{
             NeedleResult res = new NeedleResult();
-           String queryFile ="c:\\Document.txt";// "c:\\needleoutput\\needle10339_419.out";
+           String queryFile ="c:\\bio\\needle.txt";// "c:\\needleoutput\\needle10339_419.out";
             //  String queryFile = "c:\\needleATG.out";
              NeedleParser.parse(queryFile,res);
        char[] sequence_query_n = res.getQuery().toUpperCase().toCharArray();

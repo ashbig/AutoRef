@@ -1,9 +1,10 @@
+//Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
 /**
- * $Id: BecIDGenerator.java,v 1.2 2003-05-09 19:51:35 Elena Exp $
+ * $Id: BecIDGenerator.java,v 1.3 2006-05-18 15:43:35 Elena Exp $
  *
  * File     	: BecIDGenerator.java
  * Date     	: 04182001
- * Author	: Dongmei Zuo
+ * Author	: Elena Taycher
  */
 
 package edu.harvard.med.hip.bec.util;

@@ -1,3 +1,4 @@
+//Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
 package edu.harvard.med.hip.bec.user;
 
 import edu.harvard.med.hip.bec.Constants;
@@ -8,12 +9,9 @@ import java.util.*;
 /**
  * This class manages user login.
  * It verifies user authentification and manages user groups
- * @author Wendy Mar
+ * @author Elena Taycher
  *
- * Revision: 05-04-2001 by dzuo
- *           Modified authenticate method and tested.
- *           06-14-2001 by JMM
- *          Added group authorization
+ * 
  */
 
 public class AccessManager

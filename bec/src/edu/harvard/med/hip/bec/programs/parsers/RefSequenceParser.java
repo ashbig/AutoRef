@@ -1,3 +1,4 @@
+//Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
 /*
  * RefSequenceParser.java
  *
@@ -21,6 +22,7 @@ import java.util.*;
  */
 public class RefSequenceParser extends DefaultHandler
 {
+     private static final String COLLECTION_START = "sequence-info";
      private static final String REFSEQUENCE_START = "refsequence";
      private static final String REFSEQUENCE_ID = "refsequence-id";
      private static final String REFSEQUENCE_SPECIES = "refsequence-species";
@@ -54,7 +56,7 @@ public class RefSequenceParser extends DefaultHandler
     private static final int REFSEQUENCE_FEATURE_NAME_VALUE_STATUS = 10;
     private static final int REFSEQUENCE_FEATURE_DESCRIPTION_STATUS = 11;
     private static final int REFSEQUENCE_FEATURE_URL_STATUS = 12;
-       
+    private static final int REFSEQUENCE_NOT_PARSING_ELEMENT_STATUS = 13;   
     
       private ArrayList             i_refsequences = null;
       private RefSequence           i_current_refsequence = null;
@@ -62,15 +64,23 @@ public class RefSequenceParser extends DefaultHandler
       private int                   i_current_status = -1;
       private int                   i_previous_status = -1;
       
+      private StringBuffer          i_element_buffer = null;
+      
      public ArrayList getRefSequences(){ return i_refsequences; }
      public void startDocument()     {          i_refsequences = new ArrayList();      }
      
     
       public void startElement(String uri, String localName, String rawName,
-                               Attributes attributes) 
+                               Attributes attributes) throws SAXException
       {
           String local_value = null;
-             if (localName.equalsIgnoreCase(REFSEQUENCE_START) )
+          i_element_buffer = new StringBuffer();
+          
+           if ( isWrongTag(localName))
+           {
+               throw new SAXException("Wrong tag: "+localName);
+           }
+            if (localName.equalsIgnoreCase(REFSEQUENCE_START) )
             {
                 i_current_refsequence = new RefSequence();
                 i_current_refsequence.setText("");
@@ -87,6 +97,9 @@ public class RefSequenceParser extends DefaultHandler
                     for (int ii = 0; ii < attributes.getLength(); ii++)
                     {
                         local_value= attributes.getValue(ii).trim() ;
+                        if ( isWrongTag(attributes.getQName(ii)))
+                                throw new SAXException("Wrong tag: "+attributes.getQName(ii));
+         
                          if (attributes.getQName(ii).equalsIgnoreCase(REFSEQUENCE_FEATURE_NAME_TYPE) )
                             i_current_public_info.setName( local_value);
                         else  if (attributes.getQName(ii).equalsIgnoreCase(REFSEQUENCE_FEATURE_NAME_VALUE) )
@@ -102,32 +115,95 @@ public class RefSequenceParser extends DefaultHandler
                    i_current_status = REFSEQUENCE_FEATURE_START_STATUS;
                }
             }
+          
             
-            else  if (localName.equalsIgnoreCase(REFSEQUENCE_ID) )i_current_status = REFSEQUENCE_ID_STATUS;
+      /*      else  if (localName.equalsIgnoreCase(REFSEQUENCE_ID) )i_current_status = REFSEQUENCE_ID_STATUS;
             else  if (localName.equalsIgnoreCase(REFSEQUENCE_SPECIES) )i_current_status = REFSEQUENCE_SPECIES_STATUS;
             else  if (localName.equalsIgnoreCase(REFSEQUENCE_CDS_START) )i_current_status = REFSEQUENCE_CDS_START_STATUS;
             else  if (localName.equalsIgnoreCase(REFSEQUENCE_CDS_STOP) )i_current_status = REFSEQUENCE_CDS_STOP_STATUS;
             else  if (localName.equalsIgnoreCase(REFSEQUENCE_SOURCE) )i_current_status = REFSEQUENCE_SOURCE_STATUS;
             else  if (localName.equalsIgnoreCase(REFSEQUENCE_CHROMOSOME) )i_current_status = REFSEQUENCE_CHROMOSOME_STATUS;
-            else  if (localName.equalsIgnoreCase(REFSEQUENCE_SEQUENCE) )
-                i_current_status = REFSEQUENCE_SEQUENCE_STATUS;
-
-           
+            else  if (localName.equalsIgnoreCase(REFSEQUENCE_SEQUENCE) )                i_current_status = REFSEQUENCE_SEQUENCE_STATUS;
             else  if (localName.equalsIgnoreCase(REFSEQUENCE_FEATURE_NAME_TYPE) )i_current_status = REFSEQUENCE_FEATURE_NAME_TYPE_STATUS;
             else  if (localName.equalsIgnoreCase(REFSEQUENCE_FEATURE_NAME_VALUE) )i_current_status = REFSEQUENCE_FEATURE_NAME_VALUE_STATUS;
             else  if (localName.equalsIgnoreCase(REFSEQUENCE_FEATURE_DESCRIPTION) )i_current_status = REFSEQUENCE_FEATURE_DESCRIPTION_STATUS;
             else  if (localName.equalsIgnoreCase(REFSEQUENCE_FEATURE_URL) )i_current_status = REFSEQUENCE_FEATURE_URL_STATUS;
-             
-          
+            else i_current_status = REFSEQUENCE_NOT_PARSING_ELEMENT_STATUS; 
+       */   
              //System.out.println(localName +" "+ i_current_status);
       }
 
-     
+      public void endElement(String namespaceURI, String localName,
+                                String qualifiedName)
+      {
+          
+          
+            if (localName.equalsIgnoreCase(REFSEQUENCE_ID) )
+            {
+                i_current_refsequence.setId(Integer.parseInt(i_element_buffer.toString()));
+            }
+            else  if (localName.equalsIgnoreCase(REFSEQUENCE_SPECIES) )
+            {
+                 try
+                 {
+                     int species_id = Integer.parseInt(i_element_buffer.toString());
+                     i_current_refsequence.setSpecies(species_id);
+                 }
+                 catch(Exception e)
+                 {
+                     i_current_refsequence.setSpeciesName(i_element_buffer.toString());
+                 }
+            }
+            else  if (localName.equalsIgnoreCase(REFSEQUENCE_CDS_START) )
+            {
+                i_current_refsequence.setCdsStart(Integer.parseInt(i_element_buffer.toString()));
+            }
+            else  if (localName.equalsIgnoreCase(REFSEQUENCE_CDS_STOP) )
+            {
+                 i_current_refsequence.setCdsStop(Integer.parseInt(i_element_buffer.toString()));
+            }
+            else  if (localName.equalsIgnoreCase(REFSEQUENCE_SOURCE) )
+            {
+               i_current_refsequence.setCdnaSource(i_element_buffer.toString());
+            }
+             else  if (localName.equalsIgnoreCase(REFSEQUENCE_CHROMOSOME) ) 
+             {
+                 i_current_refsequence.setChromosome(i_element_buffer.toString());
+             }
+             else  if (localName.equalsIgnoreCase(REFSEQUENCE_SEQUENCE) )  
+             {           
+                 i_current_refsequence.setText(i_element_buffer.toString()); 
+             }
+            
+           else  if (localName.equalsIgnoreCase(REFSEQUENCE_FEATURE_NAME_TYPE) )
+           {
+               i_current_public_info.setName(i_element_buffer.toString());
+           }
+           else  if (localName.equalsIgnoreCase(REFSEQUENCE_FEATURE_NAME_VALUE) ) 
+           {
+               i_current_public_info.setValue(i_element_buffer.toString());
+           }
+             else  if (localName.equalsIgnoreCase(REFSEQUENCE_FEATURE_DESCRIPTION) )
+             {
+                 i_current_public_info.setDescription(i_element_buffer.toString()); 
+             }
+            else  if (localName.equalsIgnoreCase(REFSEQUENCE_FEATURE_URL) )
+            { 
+                i_current_public_info.setUrl(i_element_buffer.toString());
+            }
+                
+            i_element_buffer= null;
+      }
+      
       public void characters(char characters[], int start, int length)
       {
-          String chData = (new String(characters, start, length)).trim();
+           String chData = (new String(characters, start, length)).trim();
            if (chData == null || chData.length() < 1) return;
-         
+           if (i_element_buffer != null) 
+           {
+                i_element_buffer.append(chData); 
+           }
+/*
           switch(i_current_status)
           {
              case  REFSEQUENCE_ID_STATUS: {i_current_refsequence.setId(Integer.parseInt(chData));break;}
@@ -157,13 +233,31 @@ public class RefSequenceParser extends DefaultHandler
              case   REFSEQUENCE_FEATURE_NAME_VALUE_STATUS: {i_current_public_info.setValue(chData);break;}
              case   REFSEQUENCE_FEATURE_DESCRIPTION_STATUS: {i_current_public_info.setDescription(chData); break;}
              case   REFSEQUENCE_FEATURE_URL_STATUS: { i_current_public_info.setUrl(chData); break;}   }
-        
+        */
       }
 
       
     
   //    public ArrayList     getBioREFSEQUENCEs(){ return i_bioREFSEQUENCEs;}
-
+//-------------------------------
+      private boolean isWrongTag(String localName)
+      {
+          if ( localName.equalsIgnoreCase( REFSEQUENCE_START ) ||
+                 localName.equalsIgnoreCase( REFSEQUENCE_ID ) ||
+                 localName.equalsIgnoreCase( REFSEQUENCE_SPECIES ) ||
+                 localName.equalsIgnoreCase(REFSEQUENCE_CDS_START ) ||
+                 localName.equalsIgnoreCase( REFSEQUENCE_CDS_STOP ) ||
+                 localName.equalsIgnoreCase( REFSEQUENCE_SOURCE ) ||
+                  localName.equalsIgnoreCase( REFSEQUENCE_CHROMOSOME ) ||
+                 localName.equalsIgnoreCase( REFSEQUENCE_SEQUENCE) ||
+                localName.equalsIgnoreCase(  REFSEQUENCE_FEATURE_START ) ||
+               localName.equalsIgnoreCase( REFSEQUENCE_FEATURE_NAME_TYPE ) ||
+                localName.equalsIgnoreCase(  REFSEQUENCE_FEATURE_NAME_VALUE ) ||
+               localName.equalsIgnoreCase( REFSEQUENCE_FEATURE_DESCRIPTION ) ||
+               localName.equalsIgnoreCase( REFSEQUENCE_FEATURE_URL  ) ||
+              localName.equalsIgnoreCase( COLLECTION_START) )return false;
+          return true;
+      }
    public static void main(String[] args)
   {
      try{
@@ -176,15 +270,18 @@ public class RefSequenceParser extends DefaultHandler
         parser.parse("C:\\bio\\fixed_refseq_length_test.xml");
         ArrayList v= SAXHandler.getRefSequences();
         java.sql.Connection conn = edu.harvard.med.hip.bec.database.DatabaseTransaction.getInstance().requestConnection();
-        //for (int count = 0; count < v.size();count++)
-      //  {
-           
-      //  }
+        RefSequence ds = null;
+        for (int count = 0; count < v.size();count++)
+        {
+            ds = (RefSequence)v.get(count);
+            System.out.println( ds.getId()+" "+ (ds.getCdsStop()-ds.getCdsStart()) + " "+ds.getText().length());
+        }
         
         conn.commit();
   }
   catch(Exception e){
-     e.printStackTrace(System.err);
+      System.out.println(e.getMessage());
+     //e.printStackTrace(System.err);
   }
    }
 

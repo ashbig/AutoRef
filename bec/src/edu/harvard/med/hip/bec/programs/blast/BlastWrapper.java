@@ -1,3 +1,4 @@
+//Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
 /*
  * BlastWrapper.java
  *
@@ -18,101 +19,12 @@ import edu.harvard.med.hip.utility.*;
  */
 public class BlastWrapper
 {
-    /*public static final String HUMANDB_NAME="Homo sapiens";
-    public static final String YEASTDB_NAME="Saccharomyces cerevisiae";
-    public static final String PSEUDOMONASDB_NAME="Pseudomonas aeruginosa";
-    public static final String MGCDB_NAME="MGC";
-    public static final String YPDB_NAME="Yersinia Pastis";
-    public static final String FTDB_NAME="Francisella tularensis";
-    public static final String ClontechDB_NAME="Clontech";
-    public static final String NIDDKDB_NAME="NIDDK";
-   
-     
-     {
-        if (ApplicationHostDeclaration.IS_BIGHEAD)
-        {
-            HUMANDB="d:\\blast_db\\Human\\genes";
-            YEASTDB="d:\\blast_db\\Yeast\\genes";
-            PSEUDOMONASDB="d:\\blast_db\\Pseudomonas\\genes";
-            MGCDB="d:\\blast_db\\MGC\\genes";
-            YPDB="d:\\blast_db\\YP\\genes";
-            BLAST_PASS =  "D:\\bio_programs\\Blast\\";
-            FTDB="d:\\blast_db\\FT\\genes";
-            ClontechDB="d:\\blast_db\\Clontech\\genes";
-            NIDDKDB="d:\\blast_db\\NIDDKDB\\genes";
-        }
-            
-        else
-        {
-            BLAST_PASS =  "c:\\blastnew\\";
-             HUMANDB="c:\\blast_db\\Human\\genes";
-            YEASTDB="c:\\blast_db\\Yeast\\genes";
-            PSEUDOMONASDB="c:\\blast_db\\Pseudomonas\\genes";
-            MGCDB="c:\\blast_db\\MGC\\genes";
-            YPDB="c:\\blast_db\\YP\\genes";
-             FTDB="c:\\blast_db\\FT\\genes";
-            ClontechDB="c:\\blast_db\\Clontech\\genes";
-            NIDDKDB="c:\\blast_db\\NIDDKDB\\genes";
-        }
-    }
-     
-     
-      public static  String HUMANDB=null;
-    public static  String YEASTDB=null;
-    public static  String PSEUDOMONASDB=null;
-    public static  String MGCDB=null;
-    public static  String YPDB=null;
-    public static  String FTDB=null;
-    public static  String ClontechDB=null;
-    public static  String NIDDKDB=null;**/
     
    
 
     public static  String BLAST_PASS =  edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("BLAST_EXE_COMMON_PATH") + File.separator;
     
-    /*
-    public   static String getHumanDBLocation()
-    {  
-        BlastWrapper wr = new BlastWrapper();
-        return HUMANDB;
-    }
-     public   static String getFTDBLocation()
-    {  
-        BlastWrapper wr = new BlastWrapper();
-        return FTDB;
-    }
-      public   static String getClontechDBLocation()
-    {  
-        BlastWrapper wr = new BlastWrapper();
-        return ClontechDB;
-    }
-       public   static String getNIDDKDBLocation()
-    {  
-        BlastWrapper wr = new BlastWrapper();
-        return NIDDKDB;
-    }
-    public   static String getYeastDBLocation()
-    {
-        BlastWrapper wr = new BlastWrapper();
-        return YEASTDB;
-    }
-    public   static String getPseudomonasDBLocation()
-    {
-        BlastWrapper wr = new BlastWrapper();
-        return PSEUDOMONASDB;
-    }
-            
-    public   static String getMGCDBLocation()
-    {
-        BlastWrapper wr = new BlastWrapper();
-        return MGCDB;
-    }
-    public   static String getYPDBLocation()
-    {
-        BlastWrapper wr = new BlastWrapper();
-        return YPDB;
-    }
-        */
+   
      
     // define a set of constants;
     public static final String QUERY_TYPE_DNA = "DNA";
@@ -283,6 +195,7 @@ public class BlastWrapper
             throw new BecUtilException( BLAST_FAILED_NO_DB);
         }
         blastcmd = makeBlastCmd();
+        System.out.println(blastcmd);
         try
         {
             Runtime r = Runtime.getRuntime();
@@ -360,44 +273,44 @@ public class BlastWrapper
 
 	 public void setProgramName (String v){  m_program  = v;}
 		    //-d  DatabaseName String ( v){e.g. embl, swissprot....etc.) nr default is not a viable choice on enterprise
-		    public void setDB (String v){  m_db  = v;}
-		    //-i  Query filename Filename ( v){and path if necessary) stdin
-		    public void setInputFN (String v){  m_inputf  = v;}
-                
-                  //-j subject input file  
-                   public void setSubjectInputFN (String v){   m_subjectinputf = v;}
-		    //-e   Expectation value Real number 10.0
-		    public void setExpect ( double v){  m_exsp  = v;}
-		    //-m  Alignment view options integer between 0 and 9 0 see table 2 for more detail
-		    public void setFormat (int v){  m_format  = v;}
-		    //-o  BLAST report Output filename  Filename (){and path if necessary) stdout (){usually to screen) if you want your results saved public int geto a file, you must specify a filename
-		    public void setOutputFN (String v){  m_outputf  = v;}
-		    //-F  Filter query sequence T or F (){for true or false) T (){i.e. filtering is on) DUST is used with blastn, SEG with others
-		    public void setFilter (String v){  m_filter  = v;}
-		    //-G  Cost to open a gap public int geteger 0
-		    public void setOpenGap (int v){  m_opengap  = v;}
-		    //-E  Cost to extend a gap public int geteger 0
-		    public void setExtGap (int v){  m_extgap  = v;}
-		    //-X  X dropoff value for gapped alignment (){in bits) public int geteger 0
-		    public void setDropOff (int v){  m_dropgap  = v;}
-		    //-I  show GIs in deflines T or F (){for true or false) F GI  = v;} NI in EMBL. Tracks versions of an entry.
-		    public void setGI (String v){  m_gi = v;}
-		    //-q  Penalty for a nucleotide mismatch public int geteger -3 for use with blastn only
-		    public void setMismatchPen (int v){  m_nmismatch  = v;}
-		    //-r   Reward for a nucleotide match public int geteger 1 for use with blastn only
-		    public void setMatchP (int v){  m_nmatch  = v;}
-		    //-v  Number of one line descriptions public int geteger 500
-		    public void setDescriptionLines (int v){  m_descline  = v;}
-		    //-f  Threshold for extending hits public int geteger 0
-		    public void setThreshHits (int v){  m_hitext  = v;}
-		    //-b   Number of alignments to show  public int geteger 250
-		    public void setHitNumber (int v){  m_hitnumber  = v;}
-		    //-g  Perfom gapped alignment  T or F (){for True or False) T not available with tblastx
-		    public void setGappedAl (String v){  m_gapedal  = v;}
-		    public void setMatrix (String v){  m_matrix  = v;}
-		    //-W  Word size public int geteger 0 default values are used if 0 is chosen. Defaults are 11 for nucs and 3 for proteins**
-		    public void setWordSize (int v){  m_wordsize  = v;}
-		    public void setBestHits (int v){  m_numbesthits  = v;}
+        public void setDB (String v){  m_db  = v;}
+        //-i  Query filename Filename ( v){and path if necessary) stdin
+        public void setInputFN (String v){  m_inputf  = v;}
+
+      //-j subject input file  
+       public void setSubjectInputFN (String v){   m_subjectinputf = v;}
+        //-e   Expectation value Real number 10.0
+        public void setExpect ( double v){  m_exsp  = v;}
+        //-m  Alignment view options integer between 0 and 9 0 see table 2 for more detail
+        public void setFormat (int v){  m_format  = v;}
+        //-o  BLAST report Output filename  Filename (){and path if necessary) stdout (){usually to screen) if you want your results saved public int geto a file, you must specify a filename
+        public void setOutputFN (String v){  m_outputf  = v;}
+        //-F  Filter query sequence T or F (){for true or false) T (){i.e. filtering is on) DUST is used with blastn, SEG with others
+        public void setFilter (String v){  m_filter  = v;}
+        //-G  Cost to open a gap public int geteger 0
+            public void setOpenGap (int v){  m_opengap  = v;}
+            //-E  Cost to extend a gap public int geteger 0
+            public void setExtGap (int v){  m_extgap  = v;}
+            //-X  X dropoff value for gapped alignment (){in bits) public int geteger 0
+            public void setDropOff (int v){  m_dropgap  = v;}
+            //-I  show GIs in deflines T or F (){for true or false) F GI  = v;} NI in EMBL. Tracks versions of an entry.
+            public void setGI (String v){  m_gi = v;}
+            //-q  Penalty for a nucleotide mismatch public int geteger -3 for use with blastn only
+            public void setMismatchPen (int v){  m_nmismatch  = v;}
+            //-r   Reward for a nucleotide match public int geteger 1 for use with blastn only
+            public void setMatchP (int v){  m_nmatch  = v;}
+            //-v  Number of one line descriptions public int geteger 500
+            public void setDescriptionLines (int v){  m_descline  = v;}
+            //-f  Threshold for extending hits public int geteger 0
+            public void setThreshHits (int v){  m_hitext  = v;}
+            //-b   Number of alignments to show  public int geteger 250
+            public void setHitNumber (int v){  m_hitnumber  = v;}
+            //-g  Perfom gapped alignment  T or F (){for True or False) T not available with tblastx
+            public void setGappedAl (String v){  m_gapedal  = v;}
+            public void setMatrix (String v){  m_matrix  = v;}
+            //-W  Word size public int geteger 0 default values are used if 0 is chosen. Defaults are 11 for nucs and 3 for proteins**
+            public void setWordSize (int v){  m_wordsize  = v;}
+            public void setBestHits (int v){  m_numbesthits  = v;}
 	    public void setHTMLformat (String v){  m_htmlout  = v;}
             public void setBlastType(int v){ m_blast_type = v;}
 
@@ -424,12 +337,12 @@ public class BlastWrapper
 
 
   public static void main(String [] args)
+  {
+    try
     {
-        try
-        {
-            
-        }
-        catch(Exception e){}
+
+    }
+    catch(Exception e){}
   }
 
 }

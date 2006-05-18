@@ -1,3 +1,4 @@
+//Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
 package edu.harvard.med.hip.bec.user;
 
 import java.sql.*;
@@ -12,13 +13,9 @@ import edu.harvard.med.hip.bec.util.*;
 
 /**
  * This class represents users.
- * @author Wendy Mar
+ * @author Elena Taycher
  *
- * Revision:	05-03-2001 by dzuo
- *				Added the method to get the customer requests and tested.
- *              06-14-2001 by JMM: Added method to get the barcode for a user.
- *                                 Added toString method.
- */
+  */
 public class User
 {
     private String m_name = null;

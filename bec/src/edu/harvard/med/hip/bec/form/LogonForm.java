@@ -1,3 +1,4 @@
+//Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
 /*
  * File : LogonForm.java
  * Classes : LogonForm
@@ -6,14 +7,7 @@
  *
  * Form used when logging in.  Records the username and password.
  *
- * Author : Juan Munoz (jmunoz@3rdmill.com)
- *
- * See COPYRIGHT file for copyright information
- *
- *
- * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2003-03-14 21:22:54 $
+ 
  * $Author: Elena $
  *
  ******************************************************************************
@@ -52,7 +46,7 @@ import org.apache.struts.action.ActionMapping;
  * </ul>
  *
  * @author $Author: Elena $
- * @version $Revision: 1.1 $ $Date: 2003-03-14 21:22:54 $
+ * @version $Revision: 1.2 $ $Date: 2006-05-18 15:42:17 $
  */
 
 public final class LogonForm extends ActionForm {

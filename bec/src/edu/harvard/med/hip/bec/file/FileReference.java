@@ -1,3 +1,4 @@
+//Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
 /*
  * File : FileReference.java
  * Classes : FileReference
@@ -38,7 +39,7 @@ import edu.harvard.med.hip.bec.*;
  * create method or use one of the find methods.
  *
  * @author     $Author: Elena $
- * @version    $Revision: 1.2 $ $Date: 2003-06-09 20:16:37 $
+ * @version    $Revision: 1.3 $ $Date: 2006-05-18 15:41:50 $
  */
 
 public class FileReference
@@ -106,6 +107,7 @@ public class FileReference
             
         } catch (SQLException sqlE)
         {
+            System.out.println(sqlE.getMessage()+sql);
             throw new BecDatabaseException("Cannot insert filerefernce info "+sqlE);
         } finally
         {

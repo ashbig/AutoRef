@@ -1,3 +1,4 @@
+//Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
 /*
  * CloneCollection.java
  *
@@ -25,7 +26,7 @@ public class CloneCollection
     public CloneCollection() 
     {
         m_constructs = new ArrayList();
-        
+        m_samples = new ArrayList();
     }
     
     public int              getId  (){ return m_id ;}
@@ -68,7 +69,8 @@ public class CloneCollection
             sample = (SampleForCloneCollection)m_samples.get(count);
             sample.verify(error_messages);
         }
-        return ( error_messages.size() == 0);
+        
+         return ( error_messages.size() == 0);
         
     }
 }

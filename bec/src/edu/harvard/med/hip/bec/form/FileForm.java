@@ -1,3 +1,4 @@
+//Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
 /*
  * FileForm.java
  *
@@ -15,7 +16,7 @@ import org.apache.struts.action.*;
  * generic way for a container.
  *
  * @author  $Author: Elena $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public interface FileForm {
     

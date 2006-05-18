@@ -1,3 +1,4 @@
+//Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
 /*
  * File : BecServlet.java
  * Classes : BecServlet
@@ -7,15 +8,7 @@
  *    Insert description here.
  *
  *
- * Author : Juan Munoz (jmunoz@3rdmill.com)
- * 
- * See COPYRIGHT file for copyright information
- *
- *
- * The following information is used by CVS
- * $Revision: 1.3 $
- * $Date: 2005-11-14 16:10:30 $
- * $Author: Elena $
+
  *
  ******************************************************************************
  *
@@ -53,7 +46,7 @@ import edu.harvard.med.hip.bec.util.*;
  * Overides the ActionServlet to provide bec specific functionality
  *
  * @author     $Author: Elena $
- * @version    $Revision: 1.3 $ $Date: 2005-11-14 16:10:30 $
+ * @version    $Revision: 1.4 $ $Date: 2006-05-18 15:43:07 $
  */
 
 public class BecServlet extends ActionServlet {

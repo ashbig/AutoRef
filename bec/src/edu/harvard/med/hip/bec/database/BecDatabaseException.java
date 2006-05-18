@@ -1,3 +1,4 @@
+//Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
 /*
  * DatabaseException.java
  *
@@ -11,7 +12,7 @@ package edu.harvard.med.hip.bec.database;
  * This class builds the exception for a given error message.
  *
  * @author     $Author: Elena $
- * @version    $Revision: 1.1 $ $Date: 2003-03-14 21:19:01 $
+ * @version    $Revision: 1.2 $ $Date: 2006-05-18 15:41:24 $
  */
 public class BecDatabaseException extends Exception {
 

@@ -1,3 +1,4 @@
+//Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
 package edu.harvard.med.hip.bec.coreobjects.oligo;
 
 import  edu.harvard.med.hip.bec.util.*;

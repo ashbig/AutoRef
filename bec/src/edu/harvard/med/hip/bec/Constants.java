@@ -1,3 +1,4 @@
+//Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
 /*
  *
  *
@@ -259,7 +260,7 @@ public class Constants {
      public static final int         PROCESS_VERIFY_TRACE_FILE_FORMAT =105;
        public static final int         PROCESS_DELETE_TRACE_FILE_FORMAT =106;
       public static final int           PROCESS_CLEANUP_INTERMIDIATE_FILES_FROM_HARD_DRIVE =107;
-
+ 
     // max process 103
 
     //items for display 1-40

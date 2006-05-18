@@ -1,3 +1,4 @@
+//Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
 /*
  * FuzzySequence.java
  * represent result of Phred : sequence and base scores plus full sequence score
@@ -262,6 +263,8 @@ public class AnalyzedScoredSequence extends ScoredSequence
         return dicr_in_region;
     }
     
+    
+   
     //__________________________________________________________________________
     
     public static void main(String [] args)

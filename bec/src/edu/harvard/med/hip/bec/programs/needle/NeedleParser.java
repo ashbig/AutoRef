@@ -1,3 +1,4 @@
+//Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
 /*
  * Needle.java
  *
@@ -361,7 +362,7 @@ public class NeedleParser
      */
         
         String queryFile1 = "c:\\needleoutput\\needle138072_108926.out";
-         String queryFile = "c:\\bio\\new_needle.txt";
+         String queryFile = "c:\\bio\\needle_dump\\needle421_75.out";
       
         NeedleResult res = null;
         try

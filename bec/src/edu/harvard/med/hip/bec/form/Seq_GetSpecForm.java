@@ -1,3 +1,4 @@
+//Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
 /*
  * Seq_GetSpecForm.java
  *
@@ -18,14 +19,13 @@ public class Seq_GetSpecForm extends ActionForm
     
     public void setForwardName(int forwardName)
     {
-         
         m_forwardName = forwardName;
         
     }
     
     public int getForwardName()
     {
-        return m_forwardName;
+         return m_forwardName;
     }
     
 }

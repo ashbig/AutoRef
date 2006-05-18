@@ -1,3 +1,4 @@
+//Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
 /*
  * BioFormatsFile.java
  *
@@ -104,7 +105,7 @@ public class BioFormatsFile {
 
             BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
             sysProps.verifyApplicationSettings();
-            File f = new File("C:\\BEC\\submit_clone_sequence.txt");
+            File f = new File("C:\\Bio\\sequences.txt");
             InputStream input = new FileInputStream(f);
             ArrayList ar = BioFormatsFile.readFASTAFile(input) ;
            

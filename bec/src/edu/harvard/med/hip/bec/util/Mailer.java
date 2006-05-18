@@ -1,3 +1,4 @@
+//Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
 /*
  * File : Mailer.java
  * Classes : Mailer
@@ -10,8 +11,8 @@
  
  *
  * The following information is used by CVS
- * $Revision: 1.10 $
- * $Date: 2005-11-14 16:09:12 $
+ * $Revision: 1.11 $
+ * $Date: 2006-05-18 15:43:36 $
  * $Author: Elena $
  *
  ******************************************************************************
@@ -37,7 +38,7 @@ import edu.harvard.med.hip.bec.database.*;
  * Utility class to send simple messages.
  *
  * @author     $Author: Elena $
- * @version    $Revision: 1.10 $ $Date: 2005-11-14 16:09:12 $
+ * @version    $Revision: 1.11 $ $Date: 2006-05-18 15:43:36 $
  */
 
 public class Mailer

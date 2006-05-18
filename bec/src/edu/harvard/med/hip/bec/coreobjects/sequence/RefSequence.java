@@ -1,3 +1,4 @@
+//Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
 /*
  * TheoreticalSequence.java
  *
@@ -64,6 +65,7 @@ public class RefSequence extends BaseSequence
         super( t,THEORETICAL_SEQUENCE);
        // throw new BecDatabaseException("Constrator not allowed");
     }
+    
     
     public RefSequence(int id) throws BecDatabaseException
     {
@@ -630,12 +632,87 @@ public class RefSequence extends BaseSequence
             boolean isIncludePublicInfo = true;
             boolean sequencetext = true;
             boolean generalinfo = true;
-            RefSequence fl8 =  new RefSequence(24);
-            RefSequence fl =  new RefSequence(24 ,  true,   true, true);
-            RefSequence fl1 =  new RefSequence(24 ,  true,   false, true);
-            RefSequence fl2 =  new RefSequence(24 ,  true,   false, false);
-            RefSequence fl3 =  new RefSequence(24 ,  false,   false, false);
-           // fl.insert(t.requestConnection());
+            RefSequence fl8 =  new RefSequence(2); System.out.println(fl8.getId()+"	"+ fl8.getText().length()  +"	"+(fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(3); System.out.println(fl8.getId()+"	"+ ( fl8.getCdsStop()-fl8.getCdsStart() - fl8.getText().length() ));
+fl8 =  new RefSequence(5); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(7); System.out.println(fl8.getId()+"	"+ (-fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(8); System.out.println(fl8.getId()+"	"+ (-fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(9); System.out.println(fl8.getId()+"	"+ (-fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(10); System.out.println(fl8.getId()+"	"+ (-fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(11); System.out.println(fl8.getId()+"	"+ (-fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(12); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(13); System.out.println(fl8.getId()+"	"+ (-fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(14); System.out.println(fl8.getId()+"	"+ (-fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(15); System.out.println(fl8.getId()+"	"+ (-fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(16); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(17); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(19); System.out.println(fl8.getId()+"	"+ (-fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(20); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(20); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(20); System.out.println(fl8.getId()+"	"+(-fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(20); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(20); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(21); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(22); System.out.println(fl8.getId()+"	"+ (-fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(23); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(24); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(25); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(26); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(27); System.out.println(fl8.getId()+"	"+ (-fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(28); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(30); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(31); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(35); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(36); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(37); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(38); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(39); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(40); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(41); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(42); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(43); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(44); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(46); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(47); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(48); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(49); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(50); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(51); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(52); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(53); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(54); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(55); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(56); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(56); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(56); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(56); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(56); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(58); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(59); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(60); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(61); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(62); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(63); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(64); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(65); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(67); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(68); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(71); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(72); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(73); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(74); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(75); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(76); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(77); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(79); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(80); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(81); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(82); System.out.println(fl8.getId()+"	"+ (-fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(83); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(84); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(85); System.out.println(fl8.getId()+"	"+(- fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+fl8 =  new RefSequence(86); System.out.println(fl8.getId()+"	"+ (-fl8.getText().length()  +fl8.getCdsStop()-fl8.getCdsStart()));
+          // fl.insert(t.requestConnection());
             //t.requestConnection().commit();
           
             

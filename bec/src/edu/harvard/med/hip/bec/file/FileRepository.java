@@ -1,3 +1,4 @@
+//Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
 /*
  * File : FileRepository.java
  * Classes : FileRepository
@@ -6,15 +7,7 @@
  *
  *      Represents the file repository.
  *
- *
- * Author : Juan Munoz (jmunoz@3rdmill.com)
- *
- * See COPYRIGHT file for copyright information
- *
- *
- * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2003-03-14 21:19:50 $
+ 
  * $Author: Elena $
  *
  ******************************************************************************
@@ -47,7 +40,7 @@ import edu.harvard.med.hip.bec.util.*;
  *
  *
  * @author     $Author: Elena $
- * @version    $Revision: 1.1 $ $Date: 2003-03-14 21:19:50 $
+ * @version    $Revision: 1.2 $ $Date: 2006-05-18 15:41:50 $
  */
 
 public class FileRepository {

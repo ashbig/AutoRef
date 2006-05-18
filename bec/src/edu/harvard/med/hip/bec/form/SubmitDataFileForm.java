@@ -1,3 +1,4 @@
+//Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
 /*
  * SubmitDataFileForm.java
  *
@@ -33,7 +34,7 @@ public class SubmitDataFileForm extends Seq_GetSpecForm
       protected FormFile      m_file_4 = null;
    
    
-    public void         setFileName(FormFile requestFile)   {   System.out.println("in form");   m_file = requestFile;    }
+    public void         setFileName(FormFile requestFile)   {     m_file = requestFile;    }
     public FormFile     getFileName()                          {        return m_file;    }
    
     public void         setFileName_2(FormFile requestFile)   {      m_file_2 = requestFile;    }

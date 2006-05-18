@@ -1,3 +1,4 @@
+//Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
 /*
  * Sample.java
  *
@@ -9,7 +10,7 @@ package edu.harvard.med.hip.bec.programs.parsers.CloneCollectionElements;
 import edu.harvard.med.hip.bec.util.*;
 import java.math.BigDecimal;
 import java.util.*;
-
+import  edu.harvard.med.hip.bec.sampletracking.objects.Sample;
 /**
  *
  * @author  htaycher
@@ -47,14 +48,26 @@ public class SampleForCloneCollection
         String sampleid="";
         ArrayList local_error_messages = new ArrayList();
 	if ( m_id != BecIDGenerator.BEC_OBJECT_ID_NOTSET) sampleid = "for sampleid "+m_id;
-    	if ( m_type.equals("") ) local_error_messages.add("No sample type provided "+sampleid );
+    	if ( m_type.equals("") && !isAllowedSampleType() ) local_error_messages.add("No sample type provided "+sampleid );
         if ( m_clone_id == BecIDGenerator.BEC_OBJECT_ID_NOTSET) local_error_messages.add("No clone id provided "+sampleid );
         if( m_position_name.equals("") ) local_error_messages.add("No position provided "+sampleid );
+        //try to convert position name into number
+        if ( edu.harvard.med.hip.bec.sampletracking.objects.Container.convertPositionFrom_alphanumeric_to_int(m_position_name)< 0)
+             local_error_messages.add("Cannot convert alfa-numric position name into number for sample  "+sampleid );
         if ( local_error_messages.size() > 0)
         {
             error_messages.addAll(local_error_messages);
             return false;
         }
         return true;
+    }
+    
+    private boolean                 isAllowedSampleType()
+    {
+        if ( m_type.equals(Sample.CONTROL_NEGATIVE)
+        || m_type.equals(Sample.CONTROL_POSITIVE)
+        || m_type.equals(Sample.EMPTY)
+        || m_type.equals(Sample.ISOLATE)) return true;
+        return false;
     }
 }

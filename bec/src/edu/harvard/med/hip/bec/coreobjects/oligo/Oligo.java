@@ -1,3 +1,4 @@
+//Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
 /*
  * Oligo.java
  *
@@ -16,7 +17,7 @@ import java.util.*;
 
 /**
  * This class represents an oligo object.
- * $Id: Oligo.java,v 1.16 2006-02-01 14:07:57 Elena Exp $
+ * $Id: Oligo.java,v 1.17 2006-05-18 15:41:05 Elena Exp $
  * @@File:	Oligo.java
 
  */

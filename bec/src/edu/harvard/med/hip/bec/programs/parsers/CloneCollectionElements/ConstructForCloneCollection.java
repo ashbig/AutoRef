@@ -1,3 +1,4 @@
+//Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
 /*
  * Construct.java
  *
@@ -55,7 +56,9 @@ public class ConstructForCloneCollection
       if (  m_samples == null || m_samples.size() == 0 )local_error_messages.add("No samples  provided "+constructid );
     if (  m_refsequence_id == BecIDGenerator.BEC_OBJECT_ID_NOTSET  ) local_error_messages.add("No reference sequenceid provided "+constructid );
     if ( m_format ==  BecIDGenerator.BEC_OBJECT_ID_NOTSET ) local_error_messages.add("No format provided "+constructid );
-    if (  m_cloning_strategy_id == BecIDGenerator.BEC_OBJECT_ID_NOTSET ) local_error_messages.add("No cloning strategy provided "+constructid );
+    if ( !(m_format ==  Construct.FORMAT_CLOSE || m_format == Construct.FORMAT_OPEN) ) local_error_messages.add("Format for construct "+constructid +" has wrong value ("+m_format+")");
+    
+        if (  m_cloning_strategy_id == BecIDGenerator.BEC_OBJECT_ID_NOTSET ) local_error_messages.add("No cloning strategy provided "+constructid );
    
         if ( local_error_messages.size() > 0)
         {

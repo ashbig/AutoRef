@@ -1,11 +1,13 @@
+//Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
+
 /*
  * File : BecProperties.java
  * Classes : BecProperties
  *
  * 
  * The following information is used by CVS
- * $Revision: 1.11 $
- * $Date: 2006-03-22 20:57:24 $
+ * $Revision: 1.12 $
+ * $Date: 2006-05-18 15:43:35 $
  * $Author: Elena $
  *
  ******************************************************************************
@@ -24,14 +26,14 @@ import java.util.*;
  * Holds sytem level properties.
  *
  * @author     $Author: Elena $
- * @version    $Revision: 1.11 $ $Date: 2006-03-22 20:57:24 $
+ * @version    $Revision: 1.12 $ $Date: 2006-05-18 15:43:35 $
  */
 
 public class BecProperties
 {
     // The name of the properties file holding the system config info.
     public final static String[]  APPLICATION_SETTINGS =
-    {"SystemConfig.properties",
+    {
       "ApplicationHostSettings.properties"};
     public final static String PATH = "config/";
     // The properties
