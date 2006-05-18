@@ -1,3 +1,4 @@
+//Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
 /*
  * File : BecAction.java
  * Classes : BecAction
@@ -11,14 +12,7 @@
  *    <code>ActionForward</code> should be returned.
  *
  *
- * Author : Juan Munoz (jmunoz@3rdmill.com)
  *
- * See COPYRIGHT file for copyright information
- *
- *
- * The following information is used by CVS
- * $Revision: 1.5 $
- * $Date: 2006-01-30 19:15:34 $
  * $Author: Elena $
  *
  ******************************************************************************
@@ -60,7 +54,7 @@ import edu.harvard.med.hip.bec.user.*;
  *    be returned.
  *
  * @author     $Author: Elena $
- * @version    $Revision: 1.5 $ $Date: 2006-01-30 19:15:34 $
+ * @version    $Revision: 1.6 $ $Date: 2006-05-18 15:39:59 $
  */
 public abstract class BecAction extends org.apache.struts.action.Action {
     

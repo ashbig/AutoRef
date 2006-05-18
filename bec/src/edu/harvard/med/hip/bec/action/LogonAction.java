@@ -1,3 +1,4 @@
+//Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
 /*
  * File : LogonAction.java
  * Classes : LogonAction
@@ -6,14 +7,7 @@
  *
  *    Action used when a user logs on to the system.
  *
- * Author : Juan Munoz (jmunoz@3rdmill.com)
- *
- * See COPYRIGHT file for copyright information
- *
- *
- * The following information is used by CVS
- * $Revision: 1.7 $
- * $Date: 2006-01-25 16:44:47 $
+
  * $Author: Elena $
  *
  ******************************************************************************
@@ -65,7 +59,7 @@ import edu.harvard.med.hip.bec.Constants;
  * Implementation of <strong>Action</strong> that validates a user logon.
  *
  * @author $Author: Elena $
- * @version $Revision: 1.7 $ $Date: 2006-01-25 16:44:47 $
+ * @version $Revision: 1.8 $ $Date: 2006-05-18 15:40:00 $
  */
 
 public final class LogonAction extends Action

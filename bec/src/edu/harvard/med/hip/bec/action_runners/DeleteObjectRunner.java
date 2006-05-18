@@ -1,3 +1,4 @@
+//Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
 /*
  * DeleteObjectRunner.java
  *
@@ -755,8 +756,8 @@ sql = "update  result set resultvalueid = null, resulttype = "+Result.RESULT_TYP
         sysProps.verifyApplicationSettings();
        edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
     
-           input.setProcessType(Constants.PROCESS_DELETE_PLATE);
-           input.setInputData( Constants.ITEM_TYPE_PLATE_LABELS, "20051117_SEQ_RP112  ");
+           input.setProcessType(Constants.PROCESS_DELETE_CLONE_SEQUENCE);
+           input.setInputData( Constants.ITEM_TYPE_CLONEID, "13371  13498   13736   13739   13275");
            input.run();
             
         }

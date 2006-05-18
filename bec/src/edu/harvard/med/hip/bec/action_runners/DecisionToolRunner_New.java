@@ -1,3 +1,4 @@
+//Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
 /*
  * DecisionTool.java
  *
@@ -242,7 +243,6 @@ group_definition = new GroupDefinition("Not clone sample","DecisionTool_No_Clone
            boolean isProcessAsMissense = ( m_spec.getParameterByName("FS_C_PASS_H") == null ) ;
        
            conn = DatabaseTransaction.getInstance().requestConnection();
-           ((oracle.jdbc.driver.OracleConnection )conn).setDefaultRowPrefetch(10);
            createPreparedStatements (conn);
            
 //returns string array: 100 isolates in each
@@ -824,8 +824,8 @@ group_definition = new GroupDefinition("Not clone sample","DecisionTool_No_Clone
         ResultSet rs = null;
         try
         {
-            //DatabaseTransaction t = DatabaseTransaction.getInstance();
-            //rs = t.executeQuery(sql);
+           // DatabaseTransaction t = DatabaseTransaction.getInstance();
+           // rs = t.executeQuery(sql);
             Statement stmt = conn.createStatement ();
             ((oracle.jdbc.driver.OracleStatement)stmt).defineColumnType (1,Types.INTEGER);//ISOLATESTATUS, 
             ((oracle.jdbc.driver.OracleStatement)stmt).defineColumnType (2,Types.INTEGER);//assembly_status, 
@@ -845,7 +845,6 @@ group_definition = new GroupDefinition("Not clone sample","DecisionTool_No_Clone
             ((oracle.jdbc.driver.OracleStatement)stmt).defineColumnType (16,Types.INTEGER);//refsequenceid, 
             ((oracle.jdbc.driver.OracleStatement)stmt).defineColumnType (17,Types.INTEGER);// ISOLATETRACKINGID
             ((oracle.jdbc.driver.OracleStatement)stmt).defineColumnType (18,Types.INTEGER);// ISOLATETRACKINGID
-
 
             rs = stmt.executeQuery (sql);
 
@@ -1872,7 +1871,7 @@ private  String getNumberOfLQDiscrepancies( CloneDescription clone)
         try
         {
 System.out.println(System.currentTimeMillis());
-            user = AccessManager.getInstance().getUser("htaycher123","htaycher");
+            user = AccessManager.getInstance().getUser("unix","unix");
              BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
             sysProps.verifyApplicationSettings();
             DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
@@ -1880,7 +1879,7 @@ System.out.println(System.currentTimeMillis());
             runner = new DecisionToolRunner_New();
          //   runner.setInputData(Constants.ITEM_TYPE_CLONEID, "159321 159415 159237 159333 159423 159245 159435 159345 159349 159437 159441 159261 159353 159357 159445 159265 159269 159365 159273 159277 159369 159281 159285 159377 159289 159293 159385 159301 159397 159309 159401 159405 159317 159407 159411 172834 172842 172849 172857 172865 172869 172873 172881 172891 172893 172897 172926 172929 172940 172945 172949 172962 172966 172977 172981 172993 172997 173012 173013 173238 173249 173276 173419 173419 173437 173442 173470 173473 173477 173489 173607 173613 173619 173625 173630 173633 173642 173647 173649 173654 173662 173665 173669 173678 173682 173686 173689 ");
 
-     runner.setInputData(Constants.ITEM_TYPE_PLATE_LABELS, "ASA001213");
+     runner.setInputData(Constants.ITEM_TYPE_PLATE_LABELS, " JSA001473");
 
    // runner.setInputData(Constants.ITEM_TYPE_PROJECT_NAME, "A	 ");
       //runner.setInputData(Constants.ITEM_TYPE_PLATE_LABELS, "ASE001213"); 
@@ -1888,8 +1887,9 @@ System.out.println(System.currentTimeMillis());
             runner.setUser(user);
             runner.setNumberOfOutputFiles(Constants.OUTPUT_TYPE_ONE_FILE);
           //  runner.setSpecId(4);// for yp3
-                   runner.setSpecId(5);// for bec
+                   runner.setSpecId(2);// for bec
             runner.setUserComment(" test user comment");
+            runner.setProcessType(Constants.PROCESS_RUN_DECISION_TOOL_NEW);
             //runner.setNumberOfOutputFiles( );
              runner.setFields(
              "is_clone_final_status", 

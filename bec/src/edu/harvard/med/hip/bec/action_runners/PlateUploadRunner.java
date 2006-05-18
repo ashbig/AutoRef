@@ -1,3 +1,4 @@
+//Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
 /*
  * PlateUploaderRunner.java
  *
@@ -169,13 +170,13 @@ public class PlateUploadRunner extends ProcessRunner
             BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
         sysProps.verifyApplicationSettings();
        edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
-         runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
-                 runner.setInputData(Constants.ITEM_TYPE_PLATE_LABELS, "VcxXG002290-2.012-1 ");
-                    ((PlateUploadRunner)runner).setVectorId(9 );
+         runner.setUser( AccessManager.getInstance().getUser("htaycher123","me"));
+                 runner.setInputData(Constants.ITEM_TYPE_PLATE_LABELS, "BaxXG002473-1.012-1 ");
+                    ((PlateUploadRunner)runner).setVectorId(75 );
                      ((PlateUploadRunner)runner).setLinker3Id(74);
                      ((PlateUploadRunner)runner).setLinker5Id(73);
                      ((PlateUploadRunner)runner).setStartCodon("ATG");
-                     ((PlateUploadRunner)runner).setFusionStopCodon("TAA");
+                     ((PlateUploadRunner)runner).setFusionStopCodon("TTG");
                      ((PlateUploadRunner)runner).setClosedStopCodon("TAG");
                      ((PlateUploadRunner)runner).setPlateInfoType(PlateUploader.PLATE_NAMES);
                      runner.setProcessType(Constants.PROCESS_UPLOAD_PLATES);

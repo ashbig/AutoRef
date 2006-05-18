@@ -1,3 +1,4 @@
+//Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
 /*
  * AssemblyRunner.java
  *
@@ -655,9 +656,9 @@ public static void main(String args[])
         sysProps.verifyApplicationSettings();
         edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
 
-     User user = AccessManager.getInstance().getUser("htaycher123","htaycher");
+     User user = AccessManager.getInstance().getUser("htaycher123","me");
       runner = new AssemblyRunner();
-               runner.setInputData(Constants.ITEM_TYPE_CLONEID,"186641");  
+               runner.setInputData(Constants.ITEM_TYPE_CLONEID,"21102 21103");  
     runner.setUser(user);
             runner.setProcessType(Constants.PROCESS_RUN_ASSEMBLER_FOR_ALL_READS);
            ((AssemblyRunner)runner).setAssemblyMode(AssemblyRunner.FULL_SEQUENCE_ASSEMBLY);

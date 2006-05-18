@@ -1,3 +1,4 @@
+//Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
 /*
  * IsolateRankerRunner.java
  *
@@ -223,13 +224,13 @@ public class IsolateRankerRunner extends ProcessRunner
             edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
 
         ProcessRunner runner = new IsolateRankerRunner();
-        runner.setInputData(Constants.ITEM_TYPE_PLATE_LABELS, " ASA001215   ");
+        runner.setInputData(Constants.ITEM_TYPE_PLATE_LABELS, " 20051117_SEQ_RP112  ");
       //  runner.setContainerLabels(master_container_labels );
         runner.setProcessType( Constants.PROCESS_RUN_ISOLATE_RUNKER );
         Spec spec_f = Spec.getSpecById(91, Spec.FULL_SEQ_SPEC_INT);
-         ((IsolateRankerRunner)runner).setCutoffValuesSpec( (FullSeqSpec)Spec.getSpecById(91, Spec.FULL_SEQ_SPEC_INT));
+         ((IsolateRankerRunner)runner).setCutoffValuesSpec( (FullSeqSpec)Spec.getSpecById(2, Spec.FULL_SEQ_SPEC_INT));
         ((IsolateRankerRunner)runner).setPenaltyValuesSpec( (EndReadsSpec)Spec.getSpecById(1, Spec.END_READS_SPEC_INT));
-       runner.setUser(  AccessManager.getInstance().getUser("htaycher123","me"));
+       runner.setUser(  AccessManager.getInstance().getUser("unix","unix"));
         runner.run();
         }catch(Exception e){}
         System.exit(0);

@@ -1,3 +1,4 @@
+//Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
 /*
  * DatabaseCommunicationsRunner.java
  *
@@ -373,7 +374,7 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
         }
         catch(Exception e)
         {
-            m_error_messages.add("Cannot parse clone collection XML file. Please verify your data");
+            m_error_messages.add("Cannot parse clone collection XML file. Please verify your data. " + e.getMessage());
             return;
         }
                
@@ -491,7 +492,7 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
         Construct construct = null;
         int current_constructid = -1;
          // check if new construct in collection
-        if (collection_construct_ids.containsKey(new Integer(cc_construct.getId())))
+        if (collection_construct_ids != null && collection_construct_ids.containsKey(new Integer(cc_construct.getId())))
         {
            current_constructid = ((Integer) collection_construct_ids.get(new Integer(cc_construct.getId()))).intValue();
         }
@@ -625,7 +626,7 @@ private boolean isCloneCollectionNameExists(CloneCollection collection, Connecti
         try
         {
            // String sql =  "select  *  from containerheader where label ="+ collection.getName();
-            String sql =  "select  *  from containerheader where (Upper(label) like Upper('"+ collection.getName()+"')";
+            String sql =  "select  *  from containerheader where (Upper(label) like Upper('"+ collection.getName()+"'))";
 
             CachedRowSet rs =  DatabaseTransaction.executeQuery(sql, conn);
             if( rs.next() )       
@@ -633,9 +634,9 @@ private boolean isCloneCollectionNameExists(CloneCollection collection, Connecti
                   m_error_messages.add(" Clone collection (name "+ collection.getName() +" id "+ collection.getId() +
                     " cannot be uploaded into ACE: clone collection with this name already exists. Please verify your data");
          
-                   return false;
+                   return true;
             }
-            return true;
+            return false;
         }
         catch(Exception e)
         {
@@ -697,36 +698,34 @@ private boolean isCloneCollectionNameExists(CloneCollection collection, Connecti
    {
         ArrayList constructs = collection.getConstructs();
         ConstructForCloneCollection construct = null;
-        int[] refsequenceids = new int[constructs.size()];
+        ArrayList refsequenceids = new ArrayList();
         StringBuffer ids = new StringBuffer();
         try
         {
            for (int count = 0; count < constructs.size(); count++)
            {
                construct = (ConstructForCloneCollection) constructs.get(count);
-               refsequenceids[count] = construct.getRefSequenceId();
+               if (! refsequenceids.contains( new Integer( construct.getRefSequenceId())))
+               {
+                    refsequenceids.add( new Integer( construct.getRefSequenceId()));
+               }
                ids.append( construct.getRefSequenceId());
                if ( count != constructs.size() - 1) ids.append(",");
            }
-            Arrays.sort( refsequenceids);
+            
             String sql =  "select distinct usersequenceid from temp_sequence_id where usersequenceid in ("+ids.toString()+") order by usersequenceid";
             //pst_check_refsequenceid.setString(1, sql.toString());
             //CachedRowSet rs =  DatabaseTransaction.executeQuery(pst_check_refsequenceid);
-          CachedRowSet rs =  DatabaseTransaction.executeQuery(sql, conn);
+           CachedRowSet rs =  DatabaseTransaction.executeQuery(sql, conn);
           
-            int id = -1;int count = 0;
+            int id_counter =  0;
             
             while( rs.next() )       
             {
-                id = rs.getInt("usersequenceid");
-                if ( id != refsequenceids[count++]) 
-                {
-                     m_error_messages.add(" Clone collection (name "+ collection.getName() +" id "+ collection.getId() +
-                    " cannot be uploaded into ACE:  reference sequences do not exists in ACE. Please verify your data");
-                      return false;
-                }
-            }
-            if ( id == -1 ) return false;
+                id_counter++;
+             }
+          
+            if ( id_counter != refsequenceids.size()) return false;
             return true;
         }
         catch(Exception e)
@@ -886,10 +885,13 @@ private boolean isCloneCollectionNameExists(CloneCollection collection, Connecti
             DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
             DatabaseCommunicationsRunner runner = new DatabaseCommunicationsRunner();
             runner.setUser(user);
-            File f = new File("C:\\bio\\plate_1.xml");
+            File f = new File("C:\\bio\\clone_collection.xml");
+           //  File f = new File("C:\\bio\\fixed_refseq_1.xml");
+           //  runner.setProcessType( -Constants.PROCESS_SUBMIT_REFERENCE_SEQUENCES);
             InputStream input = new FileInputStream(f);
             runner.setInputStream(input);
-            runner.setProcessType( -Constants.PROCESS_SUBMIT_CLONE_COLLECTION);            runner.run();
+            runner.setProcessType( -Constants.PROCESS_SUBMIT_CLONE_COLLECTION);      
+            runner.run();
       
         }
         catch(Exception e){}

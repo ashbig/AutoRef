@@ -1,10 +1,11 @@
+//Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
 /*
  * File : ProcessErrorAction.java
  * Classes : ProcessErrorAction
  *
  * Description :
  *
- *  This Action is responsible for processing of errors in the FlexApplication.
+ *  This Action is responsible for processing of errors in the Application.
  *
  *  Whenever an exception is caught, controll should be forwarded to this
  *  action.
@@ -37,7 +38,7 @@ import org.apache.struts.action.*;
  * to this action to process the exception.
  *
  * @author     $Author: Elena $
- * @version    $Revision: 1.1 $ $Date: 2003-03-14 21:14:52 $
+ * @version    $Revision: 1.2 $ $Date: 2006-05-18 15:40:00 $
  */
 
 public class ProcessErrorAction extends Action

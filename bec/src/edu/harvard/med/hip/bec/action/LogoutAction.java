@@ -1,3 +1,4 @@
+//Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
 /*
  * File : LogoutAction.java
  * Classes : LogoutAction
@@ -6,15 +7,7 @@
  *
  * Action will log a user out.
  *
- *
- * Author : Juan Munoz (jmunoz@3rdmill.com)
- *
- * See COPYRIGHT file for copyright information
- *
- *
- * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2003-03-14 21:14:52 $
+ 
  * $Author: Elena $
  *
  ******************************************************************************
@@ -49,7 +42,7 @@ import org.apache.struts.action.*;
  *
  *
  * @author     $Author: Elena $
- * @version    $Revision: 1.1 $ $Date: 2003-03-14 21:14:52 $
+ * @version    $Revision: 1.2 $ $Date: 2006-05-18 15:40:00 $
  */
 
 public class LogoutAction extends BecAction
