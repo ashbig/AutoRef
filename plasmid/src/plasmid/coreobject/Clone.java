@@ -30,6 +30,9 @@ public class Clone implements Serializable {
     public static final String HIP_ONLY = "HIP only";
     public static final String SPECIES_NOINSERT = "Ev";
     public static final String SOURCE_HIP = "HIP";
+    public static final String VERIFIED_YES = "Y";
+    public static final String VERIFIED_NO = "N";
+    public static final String VERIFIED_UNKNOWN = "U";
     
     protected int cloneid;
     protected String name;

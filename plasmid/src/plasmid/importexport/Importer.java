@@ -42,7 +42,11 @@ public class Importer {
     //public static final String filepath = "G:\\plasmid\\human_plate_in_plasmid_200602\\"; 
     //public static final String filepath = "G:\\plasmid\\FT_2nd_batch\\"; 
     //public static final String filepath = "G:\\plasmid\\SHIV_HIPvector_IMPORT_MARCH2006\\";
-    public static final String filepath = "G:\\plasmid\\Kinase_dead_200603\\";
+    //public static final String filepath = "G:\\plasmid\\Kinase_dead_200603\\";
+    //public static final String filepath = "G:\\plasmid\\Yeast_batch3_2006_04\\";
+    //public static final String filepath = "G:\\plasmid\\YPTB_2006_04\\";
+    //public static final String filepath = "G:\\plasmid\\VC_batch2_2006_05\\";
+    public static final String filepath = "G:\\plasmid\\VC_batch2_2006_05_partial_plates\\";
    
     private List tables;
     private String error;
@@ -238,8 +242,58 @@ public class Importer {
         return true;
     }
     
+    public void updateDNAInsert() {
+        String sql= "select d.insertid, r.namevalue from dnainsert d, refseqname r where r.refid=d.refseqid and r.nametype='Protein GenBank Accession' and d.insertid>25413";
+        String sql2= "select d.insertid, r.namevalue from dnainsert d, refseqname r where r.refid=d.refseqid and r.nametype='Protein GI' and d.insertid>25413";
+        String sql3 = "update dnainsert set targetgenbank=? where insertid=?";
+        String sql4 = "update dnainsert set targetseqid=? where insertid=?";
+        
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        PreparedStatement stmt1 = null;
+        PreparedStatement stmt2 = null;
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            stmt1 = conn.prepareStatement(sql3);
+            stmt2 = conn.prepareStatement(sql4);
+            
+            ResultSet rs = t.executeQuery(sql);
+            while(rs.next()) {
+                int insertid = rs.getInt(1);
+                String id = rs.getString(2);
+                stmt1.setString(1, id);
+                stmt1.setInt(2, 1);
+                DatabaseTransaction.executeUpdate(stmt1);
+                System.out.println("update insert: "+insertid+"with "+id);
+            }
+            DatabaseTransaction.closeResultSet(rs);
+            
+            rs = t.executeQuery(sql2);
+            while(rs.next()) {
+                int insertid = rs.getInt(1);
+                String id = rs.getString(2);
+                stmt2.setString(1, id);
+                stmt2.setInt(2, 1);
+                DatabaseTransaction.executeUpdate(stmt2);
+                System.out.println("update insert: "+insertid+"with "+id);
+            }
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.commit(conn);
+        } catch (Exception ex) {
+            System.out.println(ex);
+            DatabaseTransaction.rollback(conn);
+        } finally {
+            DatabaseTransaction.closeStatement(stmt1);
+            DatabaseTransaction.closeStatement(stmt2);
+            DatabaseTransaction.closeConnection(conn);
+        }
+    }
+            
     public static void main(String args[]) {
         Importer imp = new Importer();
+      
+        /**
         if(!imp.readAllFiles()) {
             System.out.println(imp.getError());
             System.exit(0);
@@ -250,6 +304,8 @@ public class Importer {
             System.out.println(imp.getError());
             System.out.println("Import failed.");
         }
+         **/
+        imp.updateDNAInsert();
         System.exit(0);
     }
 }

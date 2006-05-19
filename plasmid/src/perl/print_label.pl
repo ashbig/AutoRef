@@ -7,9 +7,10 @@
 	
 # comment the first line and uncomment the second before deploy
 #use lib '/kotel/data/home/jmunoz/flex/ApplicationCode/Perl';
-use lib '/usr/local/jakarta-tomcat-4.0.6/webapps/PLASMID/WEB-INF/perl';
-use UTIL::zebra_label;
+#use lib '/usr/local/jakarta-tomcat-4.0.6/webapps/PLASMID/WEB-INF/perl';
 use strict;
+use lib 'F:\\Program Files\\Apache Tomcat 4.0\\webapps\\PLASMID\\WEB-INF\\perl';
+use UTIL::zebra_label;
 
 # the input parameters
 my ($barcode, $printer, $width, $height) = @ARGV;
@@ -25,8 +26,9 @@ if (defined($barcode) && length($barcode) );
 
 # set up printer
 if ( length ($printer) and 
-   ( $label->set_hash ( OPORT => "| lpr -P $printer") eq 1) ) {
-	$label->send_zebra_label;
+   ( $label->set_hash ( OPORT => "| lpr -S 128.103.32.156 -P $printer") eq 1) ) {
+	my $rt = $label->send_zebra_label;
+        print($rt);
 	$msg = "Label Printed";
 }
 
