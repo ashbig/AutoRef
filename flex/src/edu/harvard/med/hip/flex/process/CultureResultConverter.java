@@ -19,8 +19,8 @@ public class CultureResultConverter extends FileResultConverter {
     public static final int IGNORELINES = 3;
     public static final int ROW = 8;
     
-    public static final double GROW = 0.150;
-    public static final double NOGROW = 0.065;    
+    public static final double GROW = 0.110;
+    public static final double NOGROW = 0.055;    
     
     /** Creates a new instance of CultureResultConverter */
     public CultureResultConverter() {
