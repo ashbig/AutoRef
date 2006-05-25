@@ -237,7 +237,8 @@ public class GetResearcherAction extends ResearcherAction{
                 || workflowid == Workflow.TRANSFER_TO_EXP_pCITE_GST 
                 || workflowid == Workflow.TRANSFER_TO_EXP_pDEST17 
                 || workflowid == Workflow.TRANSFER_TO_EXP_pBY011
-                || workflowid == Workflow.TRANSFER_TO_EXP_pLDNT7_nFLAG) {
+                || workflowid == Workflow.TRANSFER_TO_EXP_pLDNT7_nFLAG
+                || workflowid == Workflow.TRANSFER_TO_EXP_pCITE_GST) {
                     List newContainerids = new ArrayList();
                     for(int i=0; i<newContainers.size(); i++) {
                         Container newContainer = (Container)newContainers.elementAt(i);

@@ -110,6 +110,9 @@ public class OneToOneContainerMapper implements ContainerMapper {
                 if(workflow.getId() == Workflow.TRANSFER_TO_EXP_pLDNT7_nFLAG) {
                     newBarcode = newBarcode+".017";
                 }
+                if(workflow.getId() == Workflow.TRANSFER_TO_EXP_pCITE_GST) {
+                    newBarcode = newBarcode+".020";
+                }
             } else if(Protocol.GENERATE_GLYCEROL_PLATES.equals(protocol.getProcessname()) &&
             (workflow.getId()==Workflow.TRANSFER_TO_EXP_JP1520 
             || workflow.getId()==Workflow.TRANSFER_TO_EXP_PLP_DS_3xFlag 
@@ -117,7 +120,8 @@ public class OneToOneContainerMapper implements ContainerMapper {
             || workflow.getId()==Workflow.TRANSFER_TO_EXP_pCITE_GST
             || workflow.getId()==Workflow.TRANSFER_TO_EXP_pDEST17
             || workflow.getId()==Workflow.TRANSFER_TO_EXP_pBY011
-            || workflow.getId()==Workflow.TRANSFER_TO_EXP_pLDNT7_nFLAG)) {
+            || workflow.getId()==Workflow.TRANSFER_TO_EXP_pLDNT7_nFLAG
+            || workflow.getId()==Workflow.TRANSFER_TO_EXP_pCITE_GST)) {
                 String labelPrefix = null;
                 if(project.getId()==Project.HUMAN) {
                     labelPrefix = "HsxXG";
