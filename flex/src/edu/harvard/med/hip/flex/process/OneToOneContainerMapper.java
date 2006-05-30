@@ -260,16 +260,21 @@ public class OneToOneContainerMapper implements ContainerMapper {
     }
     
     protected String getCultureSampleType(Container container, Sample s, Protocol newProtocol) throws FlexDatabaseException {
-        Protocol protocol = new Protocol(Protocol.ENTER_CULTURE_RESULTS);
+        Protocol protocol = new Protocol(Protocol.ENTER_CULTURE_FILE);
         String type = null;
         edu.harvard.med.hip.flex.process.Process p =
         edu.harvard.med.hip.flex.process.Process.findCompleteProcess(container, protocol);
-        
+
         if(p == null) {
-            return null;
+            protocol = new Protocol(Protocol.ENTER_CULTURE_RESULTS);
+            p = edu.harvard.med.hip.flex.process.Process.findCompleteProcess(container, protocol);
         }
         
+        if(p == null)
+            return null;
+        
         Result result = Result.findResult(s, p);
+        
         if(Result.GROW.equals(result.getValue())) {
             type = Sample.getType(newProtocol.getProcessname());
         } else {

@@ -85,7 +85,7 @@ public class SampleLineage {
                     " FROM (select * from samplelineage"+
                     " where sampleid_to<>sampleid_from) sl"+
                     " CONNECT BY PRIOR sl.sampleid_from = sl.sampleid_to"+
-                    " START WITH sl.sampleid_to = ?))";
+                    " START WITH sl.sampleid_to = ?)) order by r.resultid desc";
         
         DatabaseTransaction dt = null;
         Connection conn = null;

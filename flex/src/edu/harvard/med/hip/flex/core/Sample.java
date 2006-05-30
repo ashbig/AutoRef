@@ -1,5 +1,5 @@
 /**
- * $Id: Sample.java,v 1.11 2005-10-20 19:12:08 dzuo Exp $
+ * $Id: Sample.java,v 1.12 2006-05-30 17:58:09 dzuo Exp $
  *
  * File     	: Sample.java
  * Date     	: 04162001
@@ -294,7 +294,7 @@ public class Sample {
      */
     public static String getType(String processname) {
         String type = null;
-        System.out.println(processname);
+        
         if(Protocol.GENERATE_PCR_PLATES.equals(processname) || Protocol.GENERATE_STEP2_PCR_PLATES.equals(processname))
             return PCR;
         
