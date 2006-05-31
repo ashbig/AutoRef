@@ -110,7 +110,7 @@ public class OneToOneContainerMapper implements ContainerMapper {
                 if(workflow.getId() == Workflow.TRANSFER_TO_EXP_pLDNT7_nFLAG) {
                     newBarcode = newBarcode+".017";
                 }
-                if(workflow.getId() == Workflow.TRANSFER_TO_EXP_pCITE_GST) {
+                if(workflow.getId() == Workflow.TRANSFER_TO_EXP_pDEST_GST) {                                               
                     newBarcode = newBarcode+".020";
                 }
             } else if(Protocol.GENERATE_GLYCEROL_PLATES.equals(protocol.getProcessname()) &&
@@ -121,11 +121,11 @@ public class OneToOneContainerMapper implements ContainerMapper {
             || workflow.getId()==Workflow.TRANSFER_TO_EXP_pDEST17
             || workflow.getId()==Workflow.TRANSFER_TO_EXP_pBY011
             || workflow.getId()==Workflow.TRANSFER_TO_EXP_pLDNT7_nFLAG
-            || workflow.getId()==Workflow.TRANSFER_TO_EXP_pCITE_GST)) {
+            || workflow.getId()==Workflow.TRANSFER_TO_EXP_pDEST_GST)) {
                 String labelPrefix = null;
                 if(project.getId()==Project.HUMAN) {
                     labelPrefix = "HsxXG";
-                } else if(project.getId()==Project.YEAST) {
+                } else if(project.getId()==Project.YEAST || project.getId() == Project.YEAST_DBD) {
                     labelPrefix = "ScxXG";
                 } else if(project.getId()==Project.PSEUDOMONAS) {
                     labelPrefix = "PaxXG";
