@@ -22,6 +22,7 @@ public class CloneCollection
     private String          m_name = null;
    private ArrayList        m_constructs = null;
    private ArrayList        m_samples = null;
+   private int              m_project_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
     /** Creates a new instance of CloneCollection */
     public CloneCollection() 
     {
@@ -32,12 +33,14 @@ public class CloneCollection
     public int              getId  (){ return m_id ;}
     public String           getType  (){ return m_type ;}
     public String           getName  (){ return m_name ;}
+    public int              getProjectId(){ return m_project_id;}
     public ArrayList        getSamples(){ return m_samples;}
     public ArrayList        getConstructs(){ return m_constructs;}
     
     public void           setId  (int v){  m_id = v;}
     public void        setType  (String v){  m_type = v ;}
     public void         setName  (String v){ m_name = v;}
+    public void             setProjectId(int v){ m_project_id= v;}
     public void           addSample(SampleForCloneCollection sample)
     {
         if ( m_samples == null)m_samples = new ArrayList();
