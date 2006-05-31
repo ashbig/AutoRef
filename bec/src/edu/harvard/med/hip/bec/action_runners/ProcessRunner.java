@@ -143,13 +143,16 @@ public abstract class ProcessRunner implements Runnable
                 case  Constants.PROCESS_DELETE_TRACE_FILES :
                 case  Constants.PROCESS_MOVE_TRACE_FILES:
                     case  Constants.PROCESS_REANALYZE_CLONE_SEQUENCE:
-             case Constants.PROCESS_CLEANUP_INTERMIDIATE_FILES_FROM_HARD_DRIVE:
+                case Constants.PROCESS_CLEANUP_INTERMIDIATE_FILES_FROM_HARD_DRIVE:
+               case  Constants.PROCESS_SUBMIT_EREADS_AS_INTERNALS:
                 {((DeleteObjectRunner)this).run_process();  break; }
-                case Constants.PROCESS_CREATE_FILE_FOR_TRACEFILES_TRANSFER:
+                
+             case Constants.PROCESS_CREATE_FILE_FOR_TRACEFILES_TRANSFER:
                 case Constants.PROCESS_INITIATE_TRACEFILES_TRANSFER:
                 case Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRANSFER:
                      {((TraceFileProcessingRunner)this).run_process();  break; }
-                case Constants.PROCESS_RUN_DECISION_TOOL : //run decision tool
+                
+             case Constants.PROCESS_RUN_DECISION_TOOL : //run decision tool
                 {((DecisionToolRunner)this).run_process();  break; }
                 case Constants.PROCESS_RUN_DECISION_TOOL_NEW:
                 {((DecisionToolRunner_New)this).run_process();  break; }
@@ -206,7 +209,7 @@ public abstract class ProcessRunner implements Runnable
                  case Constants.PROCESS_RUN_DISCREPANCY_FINDER:  //*run discrepancy finder
                 case Constants.PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING  :  
                 case Constants.PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING  :  
-                
+               case Constants.PROCESS_SUBMIT_EREADS_AS_INTERNALS      :         
                     return ProcessRunner.PROCESS_TYPE_READ;
 
    
@@ -470,7 +473,9 @@ public abstract class ProcessRunner implements Runnable
               {
                   //update to plates
                   // get all plate names and change m_item_type & m_items
-                  m_items = Container.getPlateLabelsForProject(m_items.trim());
+                  //get project code from project name 
+                  int project_id = edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.getProjectIdByProjectName(m_items.trim());
+                  m_items = Container.getPlateLabelsForProject(String.valueOf(project_id));
                   item_increment = 5; 
                   m_items_type = Constants.ITEM_TYPE_PLATE_LABELS;
                   if ( m_items == null || m_items.trim().length()==0)

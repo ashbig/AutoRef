@@ -55,6 +55,12 @@ else if (forwardName!= null && forwardName instanceof Integer ) forwardName_int 
       <input   type="radio" name="forwardName" value="<%= Constants.PROCESS_RUN_END_READS_WRAPPER  %>" >
       Check quality and distribute end reads </td>
   </tr>
+  <tr class='evenRowColoredFontNotBold'> 
+    <td  height="25">&nbsp; 
+      <input   type="radio" name="forwardName" value="<%= Constants.PROCESS_SUBMIT_EREADS_AS_INTERNALS  %>" >
+      Submit low quality end reads as internal reads</td>
+  </tr>
+  
  <tr class='evenRowColoredFontNotBold'> 
     <td  height="25">&nbsp; 
       <input   type="radio" name="forwardName" value="<%= Constants.PROCESS_RUN_ASSEMBLER_FOR_END_READS  %>" >

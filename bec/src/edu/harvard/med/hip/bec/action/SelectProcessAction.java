@@ -171,6 +171,7 @@ public class SelectProcessAction extends BecAction
                 case Constants.PROCESS_SUBMIT_ASSEMBLED_SEQUENCE:
                 case  Constants.PROCESS_DELETE_TRACE_FILES :
                 case  Constants.PROCESS_MOVE_TRACE_FILES:
+                    case  Constants.PROCESS_SUBMIT_EREADS_AS_INTERNALS:
              
                 {
                      String file_description = "";
@@ -196,6 +197,14 @@ public class SelectProcessAction extends BecAction
                             file_title =  "Please select the file:";
                             break;
                         }
+                        case Constants.PROCESS_SUBMIT_EREADS_AS_INTERNALS  :
+                       {
+                         file_description = "This page allows you to upload low quality end read trace files as internal reads.  "
+                    +"Please submit error report file that was sent by ACE on execution of 'Check quality and distribute end reads'  action."
+                    +"Example of [<a href='"+ BecProperties.getInstance().getProperty("JSP_REDIRECTION")+"help/help_report_file_for_er.html'>report file</a>]";
+                            file_title = "Please select the file:";
+                            break;
+                       }
                     }
                     request.setAttribute(Constants.FILE_DESCRIPTION, file_description);
                     request.setAttribute(Constants.FILE_TITLE, file_title);
@@ -311,6 +320,7 @@ public class SelectProcessAction extends BecAction
                     request.setAttribute(Constants.ADDITIONAL_JSP, additional_jsp);
                     return (mapping.findForward("submit_data_file"));
                 }
+                
             
          /*   case   Constants.PROCESS_PUT_CLONES_ON_HOLD :
             {
@@ -349,7 +359,8 @@ public class SelectProcessAction extends BecAction
             case Constants.PROCESS_RUN_ISOLATE_RUNKER: return "Run Isolate Ranker";
             case Constants.PROCESS_SUBMIT_ASSEMBLED_SEQUENCE: return "Submit Sequence Data for Set of Clones";
            
-               
+                case Constants.PROCESS_SUBMIT_EREADS_AS_INTERNALS: return "Submit low quality end reads";    
+          
              case Constants.PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING  : return"Get order list for resequencing of internal reads";
             case Constants.PROCESS_RUN_END_READS_WRAPPER: return"Check Quality and Distribute End Reads";
             case Constants.PROCESS_RUN_ASSEMBLER_FOR_END_READS: return"Run Assembler for End Reads";
@@ -410,7 +421,8 @@ public class SelectProcessAction extends BecAction
             case Constants.PROCESS_SELECT_PLATES_FOR_END_READS: return "Home > Process > Read Manipulation > Request End Reads Sequencing";
              case Constants.PROCESS_RUN_ISOLATE_RUNKER: return "Home > Process > Evaluate Clones > Run Isolate Ranker";
             case Constants.PROCESS_SUBMIT_ASSEMBLED_SEQUENCE: return "Submit Sequence data for set of clones";
-           
+            case Constants.PROCESS_SUBMIT_EREADS_AS_INTERNALS: return "Home > Process > Read Manipulation > Submit low quality end reads";    
+          
              
               case Constants.PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING  : return"Get order list for resequencing of internal reads";
              case Constants.PROCESS_RUN_END_READS_WRAPPER: return"Home > Process > Read Manipulation  > Check Quality and Distribute End Reads";
@@ -454,7 +466,6 @@ public class SelectProcessAction extends BecAction
             case Constants.PROCESS_REANALYZE_CLONE_SEQUENCE:return"Home > Process > Delete data > Reanalyze Clone Sequence "; 
             case  Constants.PROCESS_GET_TRACE_FILE_NAMES :return"Home > Process > Delete data > Get Trace File Names";
               case Constants.PROCESS_CLEANUP_INTERMIDIATE_FILES_FROM_HARD_DRIVE: return "Home > Process > Delete data > Clean-up hard drive ";
-               
               
               default: return "";
           }

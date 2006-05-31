@@ -116,15 +116,19 @@ public class DatabaseToApplicationDataLoader
       
         ResultSet rs = null; 
         m_project_definition = new Hashtable();
-        
-        String sql = "SELECT PROJECTNAME , PROJECTCODE from PROJECTDEFINITION ";
+        ProjectDefinition pr_definition = null;
+        String sql = "SELECT PROJECTNAME , PROJECTCODE, PROJECTID, PROJECTdescription from PROJECTDEFINITION  ";
        
         try
         {
             rs = DatabaseTransaction.getInstance().executeQuery(sql);
             while ( rs.next())
             {
-                m_project_definition.put( rs.getString("PROJECTCODE"), rs.getString("PROJECTNAME"));
+                pr_definition = new ProjectDefinition( rs.getInt("PROJECTID") ,
+                                rs.getString("PROJECTCODE") ,
+                                rs.getString("PROJECTNAME") , 
+                                rs.getString("PROJECTdescription") );
+                m_project_definition.put(pr_definition.getName(),  pr_definition);
             }
         }
         catch(Exception e)
@@ -185,7 +189,22 @@ public class DatabaseToApplicationDataLoader
     public static Hashtable getProcessDefinitions(){ return m_process_definition;}
     
     public static Hashtable        getProjectDefinitions(){ return m_project_definition;}
-    public static void        addProject(String PROJECTNAME, String PROJECTCODE){ m_project_definition.put( PROJECTCODE,PROJECTNAME);}
+    public static void             addProject(ProjectDefinition pd){ m_project_definition.put( pd.getName(),pd);}
+    public static String           getProjectNameByProjectId(int project_id)
+    { 
+        ProjectDefinition pdef = null;
+        for ( Enumeration e = m_project_definition.elements(); e.hasMoreElements() ;)
+        {
+            pdef = (ProjectDefinition)  e.nextElement();
+            if ( pdef.getId() == project_id) return pdef.getName();
+        }
+        return  "";
+    }
+     public static int           getProjectIdByProjectName(String project_name)
+    { 
+        ProjectDefinition pdef =  (ProjectDefinition) m_project_definition.get(project_name);
+        return  pdef.getId();
+    }
           
     
     //----------------------------------------------------
@@ -220,6 +239,8 @@ public class DatabaseToApplicationDataLoader
         else 
             return  sd.getIdName();
     }
+     
+     /*
      public static String getProjectName( String project_code) 
     {
         String project_name = (String) m_project_definition.get( project_code );
@@ -240,7 +261,7 @@ public class DatabaseToApplicationDataLoader
         }
        return  "";
     }
-     
+     */
      
      
      // deprecated
@@ -280,15 +301,8 @@ public class DatabaseToApplicationDataLoader
            BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
         sysProps.verifyApplicationSettings();
       
-        TraceFileNameFormat format = null;   String    item_value =null;
-    DatabaseToApplicationDataLoader.loadTraceFileFormats();
-   for(Enumeration e=  DatabaseToApplicationDataLoader.getTraceFileFormats().elements(); e.hasMoreElements();)
-   {
-        format = (TraceFileNameFormat)e.nextElement();
-         item_value = "<a href="+ BecProperties.getInstance().getProperty("JSP_REDIRECTION") +"Seq_GetItem.do?forwardName="
-                    + Constants.PROCESS_DELETE_TRACE_FILE_FORMAT +"&ID="+ format.getId() +" onclick=\"return confirm('Are you sure you want to delete format "+ format.getFormatName() +"?');\">Delete </a>";
-                  
-   }
+        DatabaseToApplicationDataLoader.loadProjectDefinition();
+   
       }
 }
 

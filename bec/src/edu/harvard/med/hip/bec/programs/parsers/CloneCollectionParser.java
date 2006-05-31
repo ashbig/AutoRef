@@ -26,6 +26,7 @@ public class CloneCollectionParser extends DefaultHandler
     private static final String CLONE_COLLECTION_USERID = "userid";
     private static final String CLONE_COLLECTION_NAME = "name";
     private static final String CLONE_COLLECTION_TYPE = "type";
+   private static final String CLONE_COLLECTION_PROJECT_ID = "project_id";
    
     private static final String CONSTRUCT_START = "construct";
     private static final String CONSTRUCT_ID = "constructid";
@@ -46,6 +47,7 @@ public class CloneCollectionParser extends DefaultHandler
     private static final int CLONE_COLLECTION_USERID_STATUS = 1;
     private static final int CLONE_COLLECTION_NAME_STATUS = 2;
     private static final int CLONE_COLLECTION_TYPE_STATUS = 3;
+    private static final int CLONE_COLLECTION_PROJECT_ID_STATUS = 15;
     
     private static final int CONSTRUCT_START_STATUS = 4;
     private static final int CONSTRUCT_ID_STATUS = 14;
@@ -87,6 +89,10 @@ public class CloneCollectionParser extends DefaultHandler
         else  if (localName.equalsIgnoreCase(CLONE_COLLECTION_NAME  ))
         {
              i_current_collection.setName( i_element_buffer.toString());
+        }
+        else if (localName.equalsIgnoreCase(CLONE_COLLECTION_PROJECT_ID))
+        {
+            i_current_collection.setProjectId(Integer.parseInt( i_element_buffer.toString()));
         }
         else  if (localName.equalsIgnoreCase(CLONE_COLLECTION_TYPE ) )
         {
@@ -162,6 +168,8 @@ public class CloneCollectionParser extends DefaultHandler
                                 i_current_collection.setId(Integer.parseInt( local_value) );
                             else  if (attributes.getQName(ii).equalsIgnoreCase(CLONE_COLLECTION_NAME) )
                                 i_current_collection.setName( local_value);
+                            else if (attributes.getQName(ii).equalsIgnoreCase(CLONE_COLLECTION_PROJECT_ID) )
+                                i_current_collection.setProjectId(Integer.parseInt( local_value));
                             else  if (attributes.getQName(ii).equalsIgnoreCase(CLONE_COLLECTION_TYPE) )
                                 i_current_collection.setType( local_value);
                         }
@@ -203,7 +211,8 @@ public class CloneCollectionParser extends DefaultHandler
                else  if (localName.equalsIgnoreCase(CLONE_COLLECTION_USERID )) i_current_status = CLONE_COLLECTION_USERID_STATUS;
             else  if (localName.equalsIgnoreCase(CLONE_COLLECTION_NAME  )) i_current_status = CLONE_COLLECTION_NAME_STATUS;
             else  if (localName.equalsIgnoreCase(CLONE_COLLECTION_TYPE ) ) i_current_status = CLONE_COLLECTION_TYPE_STATUS;
-         
+            else  if (localName.equalsIgnoreCase(CLONE_COLLECTION_PROJECT_ID) ) i_current_status = CLONE_COLLECTION_TYPE_STATUS;
+              
             else  if (localName.equalsIgnoreCase(CONSTRUCT_FORMAT  )) i_current_status = CONSTRUCT_FORMAT_STATUS;
             else  if (localName.equalsIgnoreCase(CONSTRUCT_CS_ID  )) i_current_status = CONSTRUCT_CS_ID_STATUS;
             else  if (localName.equalsIgnoreCase(CONSTRUCT_CS_NAME ) ) i_current_status = CONSTRUCT_CS_NAME_STATUS;
@@ -259,6 +268,7 @@ public class CloneCollectionParser extends DefaultHandler
             if ( localName.equalsIgnoreCase(  CLONE_COLLECTION_START  )||
             localName.equalsIgnoreCase(  CLONE_COLLECTION_USERID   )||
             localName.equalsIgnoreCase(  CLONE_COLLECTION_NAME   )||
+            localName.equalsIgnoreCase(     CLONE_COLLECTION_PROJECT_ID )||
             localName.equalsIgnoreCase(  CLONE_COLLECTION_TYPE   )||
             localName.equalsIgnoreCase(  CONSTRUCT_START   )||
             localName.equalsIgnoreCase(  CONSTRUCT_ID  )||

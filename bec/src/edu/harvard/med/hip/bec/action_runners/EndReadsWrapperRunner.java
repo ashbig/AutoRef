@@ -101,6 +101,13 @@ public class EndReadsWrapperRunner extends ProcessRunner
                 m_error_messages.addAll( tfb.getErrorMesages());
 
                 tfb.setIsInnerReads(false);
+                
+                //parameters for read quality assesment
+               int   pass_score = Integer.parseInt( edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("PHRED_QUALITYDEF_SCORE_PASS") );
+               int         first_base =  Integer.parseInt(edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("PHRED_QUALITYDEF_FIRST_BASE") );
+               int          last_base =  Integer.parseInt(edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("PHRED_QUALITYDEF_LAST_BASE") ) ;
+               int         min_length = Integer.parseInt( edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("PHRED_QUALITYDEF_MIN_LENGTH"));
+                    
 
                 //action per set of plates
                   //convert item into array
@@ -112,7 +119,7 @@ public class EndReadsWrapperRunner extends ProcessRunner
                     tfb.setNameOfFilesToDistibute(expected_chromat_file_names);
                     ArrayList chromat_files_names = tfb.distributeEndReadsChromatFiles(m_inputTraceDir, m_outputBaseDir);
                     m_error_messages.addAll( tfb.getErrorMesages());
-                    runPhredandParseOutput( chromat_files_names,   conn);
+                    runPhredandParseOutput( chromat_files_names,   conn, pass_score, first_base, last_base, min_length);
                }
           }
         catch(Exception e)
@@ -193,7 +200,8 @@ public class EndReadsWrapperRunner extends ProcessRunner
         }
     
     }
-    private void runPhredandParseOutput(ArrayList file_names, Connection conn)
+    private void runPhredandParseOutput(ArrayList file_names, Connection conn,
+    int  pass_score, int first_base, int last_base, int min_length)
     {
 
         PhredWrapper prwrapper = new PhredWrapper();
@@ -208,7 +216,7 @@ public class EndReadsWrapperRunner extends ProcessRunner
             {
                 //create file structure and distribute trace file into chromat_dir
                 read = prwrapper.run(new File(traceFile_name) );
-                 if (read != null) processRead(read, conn);//reads.add(read);
+                 if (read != null) processRead(read, conn,  pass_score, first_base, last_base, min_length);//reads.add(read);
             }
             catch(Exception e)
             {
@@ -219,7 +227,8 @@ public class EndReadsWrapperRunner extends ProcessRunner
 
     }//processPipeline
 
-    private void processRead(Read read, Connection conn)
+    private void processRead(Read read, Connection conn,
+    int  pass_score, int first_base, int last_base, int min_length)
     {
         int[] istr_info = new int[2];int resultid =-1;
         FileReference filereference = null;
@@ -227,7 +236,7 @@ public class EndReadsWrapperRunner extends ProcessRunner
           {
            //   if ( ApplicationHostDeclaration.IS_BIGHEAD_FOR_EXPRESSION_EVALUATION ) // check for read quality
            //   {
-                if (! isSufficientQualityRead(read) )
+                if (! Read.isTraceFilePassQualityCheck(read,  pass_score, first_base, last_base, min_length) )
                 {
                     m_error_messages.add("Read " + read.getTraceFileName()+" was not submitted into ACE, because of read low quality");
                     File ft = new File(read.getTraceFileName());
@@ -282,7 +291,7 @@ public class EndReadsWrapperRunner extends ProcessRunner
     }
 
 
-
+/*
     private boolean isSufficientQualityRead(Read read)throws Exception
     {
         if (  read.getType() == Read.TYPE_ENDREAD_REVERSE_FAIL || read.getType() == Read.TYPE_ENDREAD_FORWARD_FAIL)
@@ -299,6 +308,9 @@ public class EndReadsWrapperRunner extends ProcessRunner
         if ( good_bases < 100  )      return false;
         return true;
     }
+ *
+ *
+ **/
      public static void main(String args[])
     {
 
@@ -307,14 +319,14 @@ public class EndReadsWrapperRunner extends ProcessRunner
         {
               BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
         sysProps.verifyApplicationSettings();
-        edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
-
-            user = AccessManager.getInstance().getUser("htaycher123","htaycher");
+       edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
+  
+            user = AccessManager.getInstance().getUser("htaycher123","me");
         
 
      
        ProcessRunner runner =  new EndReadsWrapperRunner();
-        runner.setInputData( edu.harvard.med.hip.bec.Constants.ITEM_TYPE_PLATE_LABELS, "JSA001714");
+        runner.setInputData( edu.harvard.med.hip.bec.Constants.ITEM_TYPE_PLATE_LABELS, "DGS002288-1");
          runner.setUser(user);
          runner.setProcessType(Constants.PROCESS_RUN_END_READS_WRAPPER);
         runner.run();

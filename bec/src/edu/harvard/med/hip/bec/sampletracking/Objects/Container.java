@@ -1,6 +1,6 @@
 //Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
 /**
- * $Id: Container.java,v 1.33 2006-05-18 15:42:59 Elena Exp $
+ * $Id: Container.java,v 1.34 2006-05-31 18:02:00 Elena Exp $
  *
  * File     	: Container.java
 
@@ -52,6 +52,7 @@ public class Container
     private ArrayList   m_samples = new ArrayList();
     private int         m_status = -1;
     private int         m_cloning_strategy_id =  BecIDGenerator.BEC_OBJECT_ID_NOTSET;
+    private int         m_project_id =  BecIDGenerator.BEC_OBJECT_ID_NOTSET;
     /**
      * Constructor.
      *
@@ -65,7 +66,7 @@ public class Container
         m_id = id;
         
   
-          String sql = "select  containerid,  containertype,  label, status "+
+          String sql = "select  containerid,  containertype,  label, status,project_id "+
             "from containerheader where containerid = "+id;
         CachedRowSet crs = null;
         try
@@ -87,6 +88,7 @@ public class Container
                 m_label = crs.getString("LABEL");
           //      m_threadid = crs.getInt("THREADID");
                 m_status = crs.getInt("STATUS");
+                m_project_id = crs.getInt("project_id");
             }
         } catch (NullPointerException ex)
         {
@@ -104,7 +106,7 @@ public class Container
     
     
     public Container(int id, String type, String label, 
-                    int status) throws BecDatabaseException
+                    int status, int project_id) throws BecDatabaseException
     {
         m_type = type;
         m_status = status;
@@ -113,6 +115,7 @@ public class Container
             m_id = BecIDGenerator.getID("containerid");
         else
             m_id = id;
+        m_project_id = project_id;
     }
     
     /**
@@ -129,7 +132,7 @@ public class Container
         
         ArrayList containerList = new ArrayList();
        
-        String sql = "select  containerid, containertype,  label, status "+
+        String sql = "select  containerid, containertype,  label, status , project_id"+
         "from containerheader where Upper(label) = '"+ label+"'";
         ResultSet rs = null;
         try
@@ -144,7 +147,8 @@ public class Container
                                     rs.getInt("CONTAINERID"), 
                                     rs.getString("containertype") , 
                                     rs.getString("label"), 
-                                        rs.getInt("status"));
+                                        rs.getInt("status"),
+                                        rs.getInt("project_id"));
              
                 curContainer.restoreSample();
                 containerList.add(curContainer);
@@ -210,7 +214,7 @@ public class Container
         
         ArrayList containerList = new ArrayList();
         
-        String sql = "select  containerid, containertype,  label, status from containerheader where Upper(label) = '"+ label+"'";
+        String sql = "select  containerid, containertype,  label, status, project_id from containerheader where Upper(label) = '"+ label+"'";
         ResultSet rs = null;
         Container container = null;
         try
@@ -224,7 +228,8 @@ public class Container
                                     rs.getInt("CONTAINERID"), 
                                     rs.getString("containertype") , 
                                     rs.getString("label"), 
-                                        rs.getInt("status"));
+                                        rs.getInt("status"),
+                                        rs.getInt("project_id"));
                 
             }
             return container;
@@ -313,6 +318,47 @@ public class Container
     }
     
      
+    public static ArrayList  findAllContainerLabelsByProject() throws    BecDatabaseException
+    {
+        //define isolatetracking id statuses for the process
+        String sql = null;
+     
+        sql = "select  label, project_id from containerheader order by project_id, label";
+        
+        ArrayList container_labels = new ArrayList();
+        ArrayList container_labels_per_project = null;
+        int projectid = 0;
+        String label = null;
+        ResultSet rs = null;
+        try
+        {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+        
+            while(rs.next())
+            {
+                if ( projectid != rs.getInt("project_id"))
+                {
+                    if ( container_labels_per_project!= null && container_labels_per_project.size() > 0)
+                        container_labels.add(container_labels_per_project);
+                    container_labels_per_project = new ArrayList();
+                    projectid = rs.getInt("project_id");
+                    container_labels_per_project.add( DatabaseToApplicationDataLoader.getProjectNameByProjectId(rs.getInt("project_id")));
+                }
+                container_labels_per_project.add(   rs.getString("label")  );
+            }
+            return container_labels;
+        } catch (Exception sqlE)
+        {
+            throw new BecDatabaseException("Error occured searching for containers for the process\nSQL: "+sqlE);
+        } finally
+        {
+            DatabaseTransaction.closeResultSet(rs);
+            
+        }
+       
+    }
+    
     public static ArrayList findAllContainerLabels() throws    BecDatabaseException
     {
         //define isolatetracking id statuses for the process
@@ -351,13 +397,13 @@ public class Container
     public String       getLabel()    {        return m_label;    }
     public String      getType()    {        return m_type;    }
     public ArrayList getSamples()    {        return m_samples;    } 
-    
+    public int          getProjectId(){ return m_project_id;}
 
     public void             addSample(Sample sample)    {        m_samples.add(sample);    }
     public void             setLabel(String label)    {        m_label = label;    }
     public void             setStatus(int status)    {        m_status = status;    }
     public void             setSamples(ArrayList arr)    {         m_samples = arr;  }
-   
+    public void             setProjectId(int v){ m_project_id = v;}
 
 
       
@@ -931,8 +977,8 @@ public class Container
     public void insert(Connection conn) throws BecDatabaseException
     {
         String sql = 	"insert into containerheader " +
-        "(containerid, containertype,  label, status) "+
-        "values ("+m_id+",'"+m_type+"','"+m_label+"',"+m_status+")";
+        "(containerid, containertype,  label, status, project_id) "+
+        "values ("+m_id+",'"+m_type+"','"+m_label+"',"+m_status+","+m_project_id+")";
         Sample s = null;
         DatabaseTransaction.executeUpdate(sql,conn);
          
@@ -1145,10 +1191,12 @@ public class Container
       
       //get all labels for the project by project code
       
-      public static String getPlateLabelsForProject(String project_code)
+      public static String getPlateLabelsForProject(String project_id)//project_code)
       {
           StringBuffer result = new StringBuffer();
-          String sql = "Select label from containerheader where label like '"+project_code +"%'";
+          String sql = "Select label from containerheader where project_id = "+project_id;
+          
+         // String sql = "Select label from containerheader where label like '"+project_code +"%'";
           CachedRowSet crs = null;
             try
             {
@@ -1247,9 +1295,9 @@ public class Container
         try
         {
               BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
-            sysProps.verifyApplicationSettings();
-        
-         ArrayList pr_history = Container.getProcessHistoryItems( "VCXXG002291-1.012-1");
+                sysProps.verifyApplicationSettings();
+            DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
+                ArrayList pr_history = Container.findAllContainerLabelsByProject( );
                // ArrayList pr_history = Container.getProcessHistoryItems( "BSA000768");          
         }
         catch(Exception e)

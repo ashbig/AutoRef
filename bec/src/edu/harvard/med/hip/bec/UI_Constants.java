@@ -17,4 +17,7 @@ public class UI_Constants
     public static final String GAP_MAPPER_NUMBER_OF_BASES_COVERED_FORWARDER = "GAP_MAPPER_NUMBER_OF_BASES_COVERED_FORWARDER";
     public static final String GAP_MAPPER_NUMBER_OF_BASES_COVERED_REVERSEER = "GAP_MAPPER_NUMBER_OF_BASES_COVERED_REVERSEER";
     
+    public static final String PROJECT_NAME = "PROJECT_NAME";
+    public static final String PROJECT_DESCRIPTION = "PROJECT_DESCRIPTION";
+    public static final String PROJECT_ID = "PROJECT_ID";
 }

@@ -79,7 +79,7 @@ public class RunProcessAction extends BecAction
                     int     linker3id = Integer.parseInt( (String) request.getParameter("3LINKERID"));//get from form
                     int     linker5id = Integer.parseInt( (String)request.getParameter("5LINKERID"));//get from form
                     int     put_plate_for_step = Integer.parseInt( (String) request.getParameter("nextstep")); //get from form
-                    
+                    int     project_id = Integer.parseInt((String) request.getParameter(UI_Constants.PROJECT_ID)); //get from form
                     //validate input
                     if (container_labels == null || container_labels.trim().equals("") )
                     {
@@ -101,6 +101,8 @@ public class RunProcessAction extends BecAction
                     ((PlateUploadRunner)runner).setClosedStopCodon(closed_stop_codon);
                     ((PlateUploadRunner)runner).setNextStep(put_plate_for_step);
                     ((PlateUploadRunner)runner).setPlateInfoType(PlateUploader.PLATE_NAMES);
+                    ((PlateUploadRunner)runner).setProjectId(project_id);
+                   
                     runner.setProcessType(forwardName);
                     runner.setUser(user);
                     t = new Thread(runner);                    t.start();

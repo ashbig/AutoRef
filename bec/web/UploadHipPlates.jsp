@@ -12,6 +12,7 @@
 <%@ page import="edu.harvard.med.hip.bec.coreobjects.spec.*" %>
 <%@ page import="edu.harvard.med.hip.bec.coreobjects.endreads.*" %>
 <%@ page import="edu.harvard.med.hip.bec.util.*" %>
+<%@ page import="edu.harvard.med.hip.bec.util_objects.*" %>
 <html>
 
 <head>
@@ -184,6 +185,26 @@ for (Enumeration e = BecProperties.getInstance().getStopClosedCodons().keys() ; 
       
       </div></td>
   </tr>
+  <tr><td colspan='2'> &nbsp; </td></tr>
+  <tr> 
+    <td  bgcolor="#e4e9f8"> <b>Project name:</b></td>
+    <TD bgcolor="#e4e9f8">
+        <SELECT NAME="<%= UI_Constants.PROJECT_ID%>">
+          <% 
+          	
+        ProjectDefinition pdef = null;
+        for ( Enumeration e = DatabaseToApplicationDataLoader.getProjectDefinitions().elements(); e.hasMoreElements() ;)
+        {
+            pdef = (ProjectDefinition)  e.nextElement();
+            %><option value = '<%= pdef.getId() %>' > <%= pdef.getName() %>
+
+        <%}  	
+         %>
+    	</SELECT>
+      
+      </div></td>
+  </tr>
+  
 </table>
 <p> 
 <p> 

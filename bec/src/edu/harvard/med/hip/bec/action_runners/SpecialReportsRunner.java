@@ -262,7 +262,7 @@ public class SpecialReportsRunner extends ProcessRunner
                  compare_result = trace_file_name_key.compareToIgnoreCase(phd_file_name_key);
                  if ( compare_result == 0)
                  {
-                     isGoodQualityTraceFile = isTraceFilePassQualityCheck( phdFiles[phd_files_count],  pass_score , first_base ,last_base ,min_length );
+                     isGoodQualityTraceFile = Read.isTraceFilePassQualityCheck( phdFiles[phd_files_count],  pass_score , first_base ,last_base ,min_length );
                       if ( isGoodQualityTraceFile )
                           print_items.add(cloneid + Constants.TAB_DELIMETER + traceFiles[trace_files_count].getAbsolutePath() + Constants.TAB_DELIMETER + "PASS");
                       else
@@ -303,7 +303,7 @@ public class SpecialReportsRunner extends ProcessRunner
           return print_items;
      }
      
-     
+     /*
      private boolean            isTraceFilePassQualityCheck( File trace_file_phd, 
                     int pass_score , int first_base ,int last_base ,
                     int min_length )
@@ -342,6 +342,7 @@ public class SpecialReportsRunner extends ProcessRunner
         }
         return false;
      }
+      **/
         
      
            

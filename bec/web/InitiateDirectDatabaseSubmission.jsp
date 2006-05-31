@@ -84,8 +84,8 @@ break;
     {
       //  page_html = view + Constants.PROCESS_VIEW_ALL_PROJECT_DEFINITION+ after_forward_id  + "View All available Project Definitions"+ after_view;
       
-            page_html += "<tr><td  bgColor='#b8c6ed'>Please enter project name:</td><td  bgColor='#b8c6ed'>  <input type='text' name='projectname' size='20' value=''></td></tr>";
-	 page_html += "<tr><td  bgColor='#e4e9f8' >Please enter the project code (first letter of plate label):</td><td bgColor='#e4e9f8' >  <input type='text' name='projectcode' size='20' value='' width='1'></td></tr>";
+            page_html += "<tr><td  bgColor='#b8c6ed'>Please enter project name:</td><td  bgColor='#b8c6ed'>  <input type='text' name='"+UI_Constants.PROJECT_NAME +"' size='20' value=''></td></tr>";
+	 page_html += "<tr><td  bgColor='#e4e9f8' >Please enter project description:</td><td bgColor='#e4e9f8' >  <textarea name='"+UI_Constants.PROJECT_DESCRIPTION +"' cols='20' rows='6'></textarea></td></tr>";
 	break;
     }
     case -Constants.PROCESS_ADD_NEW_CONNECTION_VECTOR_LINKER:
@@ -175,6 +175,8 @@ st.append("     [<a href='"+ redirection+"help/help_clone_sequence_xml_format.ht
 	
             break;
    }
+   
+   
    case -Constants.PROCESS_SUBMIT_CLONE_COLLECTION  : 
        {
           StringBuffer st = new StringBuffer();

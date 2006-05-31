@@ -332,8 +332,8 @@ public class DirectDatabaseCommunicationsAction extends BecAction
                 display_pagetitle = "Currently Available Project Definitions";
                 display_title.add("Project Identifier");
                 display_title.add("Project Name");
-                display_title.add("Project Code");
-                sql = "Select PROJECTID  as item_1, PROJECTNAME as item_2, PROJECTCODE  as item_3 from PROJECTDEFINITION order by PROJECTNAME";
+                display_title.add("Project Description");
+                sql = "Select PROJECTID  as item_1, PROJECTNAME as item_2, PROJECTdescription  as item_3 from PROJECTDEFINITION order by PROJECTNAME";
                 display_items = getDisplayItems(sql, display_title.size());
                 break;
             }
@@ -736,22 +736,30 @@ item_value = "<div align=center><a href=\'"+ BecProperties.getInstance().getProp
            }
            case -Constants.PROCESS_ADD_PROJECT_DEFINITION  : 
            {
-               String pr_code = (String) request.getParameter("projectcode");
-               String pr_name = ( String) request.getParameter("projectname") ;
-               
-               if( pr_code == null || pr_code.trim().length()< 1) throw new Exception ("Project code not set") ;
+              // String pr_code = (String) request.getParameter("projectcode");
+               String pr_name = ( String) request.getParameter(UI_Constants.PROJECT_NAME) ;
+               String pr_description = (String) request.getParameter(UI_Constants.PROJECT_DESCRIPTION);
+            //   if( pr_code == null || pr_code.trim().length()< 1) throw new Exception ("Project code not set") ;
+             // pr_code =  pr_code.trim(); pr_name =  pr_name.trim();
+                 
                if( pr_name == null || pr_name.trim().length()< 1) throw new Exception ("Project name not set") ;
-               pr_code =  pr_code.trim(); pr_name =  pr_name.trim();
-               if ( ! isProjectExist( pr_code, pr_name) )
+               pr_description = pr_description.trim();
+               if ( ! isProjectExist( pr_description, pr_name) )
                {
-                   sql = " insert into projectdefinition values (projectid.nextval, '"+pr_code+"','"+pr_name+"')";
+                   int project_id = BecIDGenerator.getID("projectid");
+                   //sql = " insert into projectdefinition values (projectid.nextval, '"+pr_code+"','"+pr_name+"')";
+                   sql = " insert into projectdefinition (projectid, projectcode, projectname,projectdescription) "
+                   +" values ("+project_id+", '','"+pr_name+"','"+pr_description+"')";
+                
                    DatabaseTransaction.executeUpdate(sql, conn);
-                   request.setAttribute(Constants.ADDITIONAL_JSP,"Added project definition: <P>Project name: "+ pr_name +"; <P>Project code: "+pr_code);
-                   DatabaseToApplicationDataLoader.addProject(pr_name, pr_code);
+                   request.setAttribute(Constants.ADDITIONAL_JSP,"Added project definition: <P>Project name: "+ pr_name +"; <P>Project description: "+pr_description);
+                   ProjectDefinition project_definition = new ProjectDefinition(  project_id ,"" ,pr_name , pr_description  );
+                   DatabaseToApplicationDataLoader.addProject(project_definition);
+               
                }
                else
                {
-                   request.setAttribute(Constants.ADDITIONAL_JSP,"Project already exists: <P>Project Name: "+ pr_name +"; <P>Project Code: "+pr_code);
+                   request.setAttribute(Constants.ADDITIONAL_JSP,"Project already exists: <P>Project Name: "+ pr_name +"; <P>Project Description: "+pr_description);
                }
                        break;
            }
@@ -854,9 +862,9 @@ item_value = "<div align=center><a href=\'"+ BecProperties.getInstance().getProp
          return isEntryExist( sql);   
     }
     
-     private boolean isProjectExist(String  project_code, String project_name) throws Exception
+     private boolean isProjectExist(String  project_description, String project_name) throws Exception
     {
-        String sql = "select * from projectdefinition where projectcode ='"+ project_code + "' or projectname ='"+ project_name + "'";
+        String sql = "select * from projectdefinition where projectdescription ='"+ project_description + "' or projectname ='"+ project_name + "'";
         return isEntryExist( sql);   
     }
     

@@ -48,7 +48,7 @@ public class PlateUploader
     private int         m_cloning_strategy_id = -1;
     private ArrayList m_error_messages = null;
     private ArrayList m_container_ids = null;
-    
+    private int         m_project_id =  BecIDGenerator.BEC_OBJECT_ID_NOTSET;
     private ArrayList m_messages_uploaded_plates = null;
     private ArrayList m_messages_failed_plates = null;
     /** Creates a new instance of PlateUploader */
@@ -66,7 +66,9 @@ public class PlateUploader
         m_container_ids = new ArrayList();
     }
     */
-   public PlateUploader(ArrayList plate_names, int mode, int cloning_strategy_id, int isltrstatus)
+   public PlateUploader(ArrayList plate_names, int mode, 
+   int cloning_strategy_id, int isltrstatus
+   ,int project_id)
     {
         m_plate_names = plate_names;
         m_array_type = mode;
@@ -74,6 +76,7 @@ public class PlateUploader
         m_cloning_strategy_id = cloning_strategy_id;
         m_error_messages = new ArrayList();
         m_container_ids = new ArrayList();
+        m_project_id=project_id;
          m_messages_uploaded_plates = new ArrayList();
          m_messages_failed_plates = new ArrayList();
     }
@@ -438,7 +441,7 @@ public class PlateUploader
         //create container in bec
         Container container = new Container( getId("containerid", bec_connection)  ,
                                             Container.TYPE_SEQUENCING_CONTAINER,
-                                            platename,  -1);
+                                            platename,  -1, m_project_id);
     
         //create samples and flex info and isolatetracking (optional)
         Hashtable bec_construct_ids = new Hashtable();
@@ -500,6 +503,7 @@ public class PlateUploader
             
             container.addSample(sample);
         }
+         container.setProjectId(m_project_id);
          container.insert(bec_connection);
         
          return container.getId();
@@ -768,7 +772,7 @@ public class PlateUploader
         try
         {
              conn = DatabaseTransaction.getInstance().requestConnection();
-         PlateUploader pb = new PlateUploader( plates, PLATE_NAMES, 3, IsolateTrackingEngine.PROCESS_STATUS_SUBMITTED_FOR_ER);
+         PlateUploader pb = new PlateUploader( plates, PLATE_NAMES, 3, IsolateTrackingEngine.PROCESS_STATUS_SUBMITTED_FOR_ER,1);
             pb.upload( conn);
     //     PlateUploader pb = new PlateUploader( plates, PLATE_NAMES, 1,  4, 5, IsolateTrackingEngine.PROCESS_STATUS_SUBMITTED_FOR_ER);
      //    pb.upload();

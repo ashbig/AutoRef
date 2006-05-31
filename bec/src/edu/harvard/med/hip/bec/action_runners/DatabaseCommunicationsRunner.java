@@ -418,7 +418,7 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
         try
        {
       //create container 
-            Container container = new Container( -1  , collection.getType(),  collection.getName(),  -1);
+            Container container = new Container( -1  , collection.getType(),  collection.getName(),  -1, collection.getProjectId());
             //enter control samples
             for ( int sample_count = 0; sample_count < collection.getSamples().size(); sample_count++ )
             {

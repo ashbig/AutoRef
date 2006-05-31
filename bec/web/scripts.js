@@ -76,16 +76,12 @@ return true;
 //------------------------------------------------
 function validate_add_project(formElement)
 {
-if( IsEmpty(formElement.projectname)) 
+if( IsEmpty(formElement.PROJECT_NAME)) 
 {
     alert("Projectt name cannot be empty");
     return false;
 }
-if( IsEmpty(formElement.projectcode)) 
-{
-    alert("Project code cannot be empty");
-    return false;
-}
+
 return true;
 }
 

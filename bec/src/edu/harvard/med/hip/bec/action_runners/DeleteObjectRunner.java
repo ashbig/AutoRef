@@ -54,6 +54,7 @@ public class DeleteObjectRunner extends ProcessRunner
             case Constants.PROCESS_MOVE_TRACE_FILES:return "Request for move trace file from clone directory into temporary directory ";
             case Constants.PROCESS_REANALYZE_CLONE_SEQUENCE: return "Request for reanalyze clone sequence ";
              case Constants.PROCESS_CLEANUP_INTERMIDIATE_FILES_FROM_HARD_DRIVE: return "Request for clean-up hard drive";                      
+             case Constants.PROCESS_SUBMIT_EREADS_AS_INTERNALS: return "Request for uploading low quality end reads.";
              default: return  "";
         }
      }
@@ -76,6 +77,11 @@ public class DeleteObjectRunner extends ProcessRunner
             {
                 report_file_name = Constants.getTemporaryFilesPath() + "MoveFilesReport"+System.currentTimeMillis()+".txt";
                 moveTraceFiles(report_file_name); 
+            }
+            else if (this.m_process_type == Constants.PROCESS_SUBMIT_EREADS_AS_INTERNALS)
+            {
+                report_file_name = Constants.getTemporaryFilesPath() + "UploadLowQualityEndReads"+System.currentTimeMillis()+".txt";
+                distributeLowQualityEndReads(report_file_name);
             }
             else
             {
@@ -369,6 +375,51 @@ public class DeleteObjectRunner extends ProcessRunner
             }
         }
     }
+    
+    private void            distributeLowQualityEndReads(String report_file_name) 
+    {
+        File file_to_move = null; File file_new = null;
+        ArrayList file_names_to_distribute = Algorithms.splitString(m_items);
+        ArrayList fileNames = new ArrayList();
+        String new_file_name = null;
+       String seqid = null; String cloneid = null;
+       EndReadsWrapperRunner erwr = new EndReadsWrapperRunner();
+        ArrayList file_name_items = null;
+        for (int file_count = 0; file_count < file_names_to_distribute.size(); file_count++)
+        {
+            file_to_move = new File((String) file_names_to_distribute.get(file_count) );
+            if ( file_to_move.exists() )
+            {
+                file_name_items = Algorithms.splitString(file_to_move.getName(), "_");
+                if ( file_name_items.size() <5 && file_name_items.size()>6) return ;
+                seqid = (String) file_name_items .get(2);
+                cloneid =  (String) file_name_items .get(3);
+                new_file_name =  erwr.getOuputBaseDir()+File.separator+seqid+File.separator+cloneid +File.separator+PhredWrapper.CHROMAT_DIR_NAME+ File.separator+"LQER"+file_to_move.getName();
+                file_new = new File(new_file_name);
+                try
+                {
+                    //check if sequence dir exists
+                    FileOperations.createDirectory(erwr.getOuputBaseDir()+File.separator+seqid+File.separator+cloneid +File.separator+PhredWrapper.CHROMAT_DIR_NAME, true);
+                    FileOperations.moveFile(file_to_move, file_new, true, true);
+                    fileNames.add("Uploading file: "+(String) file_to_move.getName());
+                }
+                catch(Exception e)
+                {
+                //file_to_move.delete();
+                    fileNames.add("Cannot move file: "+(String) file_to_move.getName());
+                }
+            }
+            else
+                fileNames.add("File "+(String) file_names_to_distribute.get(file_count) +" does not exists.");
+            if (fileNames.size() >= 200 || file_count == file_names_to_distribute.size() - 1)
+            {
+                printReport(fileNames,   report_file_name , "");
+                fileNames = new ArrayList();
+            }
+        }
+    }
+    
+    
     
     private void deleteItems(Connection conn, String sql_items, String report_file_name) throws Exception
     {
@@ -750,14 +801,20 @@ sql = "update  result set resultvalueid = null, resulttype = "+Result.RESULT_TYP
         try
         {// 3558           775       776       884       638      6947 
               input = new DeleteObjectRunner();
-            user = AccessManager.getInstance().getUser("unix","unix");
+            user = AccessManager.getInstance().getUser("htaycher123","me");
             input.setUser(user);
            BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
         sysProps.verifyApplicationSettings();
        edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
     
-           input.setProcessType(Constants.PROCESS_DELETE_CLONE_SEQUENCE);
-           input.setInputData( Constants.ITEM_TYPE_CLONEID, "13371  13498   13736   13739   13275");
+      InputStream inputstr = new FileInputStream("c:\\bio\\erlq_test.txt");
+       ArrayList items = edu.harvard.med.hip.bec.action.SubmitDataFileAction.getInputItems(inputstr,1);
+       String  item_ids = Algorithms.convertStringArrayToString(items, " ");
+         input.setInputData( Constants.ITEM_TYPE_PLATE_LABELS,item_ids);
+                   
+           input.setProcessType(Constants.PROCESS_SUBMIT_EREADS_AS_INTERNALS);
+         
+           
            input.run();
             
         }

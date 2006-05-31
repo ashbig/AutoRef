@@ -82,32 +82,34 @@ else
 {%>
 <table border="0" cellpadding="0" cellspacing="0" width="80%" >
 <%
-    project_code = DatabaseToApplicationDataLoader.getProjectCodeForLabel((String)labels.get(0));
-        
-     for (int index = 0; index < labels.size(); index ++)
+    ArrayList project_labels = null;   
+    for (int index = 0; index < labels.size(); index ++)
     {
-        cur_label = (String)labels.get(index);
-        if (index == 0) %><tr>
-        <%if ( cur_column == 6){cur_column =1;%></tr><tr><%}%>
-        <% if ( prev_label == null || ( prev_label != null &&  !cur_label.startsWith(project_code)))
+        project_labels = (ArrayList)labels.get(index);
+        for (int item_count = 0; item_count < project_labels.size(); item_count++)
         {
-            project_code = DatabaseToApplicationDataLoader.getProjectCodeForLabel(cur_label);
+             if ( item_count == 0 ){%>
+<tr><td><INPUT onclick='javascript:showhide(<%= "\"" + index + "\"" %>, this.checked);' type=checkbox CHECKED value=1 name=show> <%= project_labels.get(0) %>
+<DIV ID='<%= index %>' STYLE='position:relative;  clip:rect(0px 120px 120px 0px);'>
+<p><table border = 0>
    
-            { if ( index > 0 ){%>        
-            </table></DIV></tr><tr><%}}%>
-     <tr><td>&nbsp</td></tr>        <tr><td><INPUT onclick='javascript:showhide(<%= "\"" + cur_label.charAt(0) + "\"" %>, this.checked);' type=checkbox CHECKED value=1 name=show> <%= DatabaseToApplicationDataLoader.getProjectName(project_code)%>
-             <DIV ID='<%= cur_label.charAt(0) %>' STYLE='position:relative;  clip:rect(0px 120px 120px 0px);'>
-              <p><table border = 0>
-                <% cur_column=1;   }%>
-                
-                
-              <td><b> <%= cur_label %> </b></td>
-              <%  cur_column ++;prev_label = cur_label;}%>
-              </table></table> </table> <%}}%>
+                 
+              <%continue;
+                } if ( item_count % 5 == 0 )
+              {%>  </tr><tr>  <%}%>
+              <td><b> <%= (String)project_labels.get(item_count) %> </b></td>
+              <% if ( item_count == project_labels.size() -1 )
+              {%> </table></DIV></tr><tr>
+                    <tr><td>&nbsp</td></tr>    
+              <%}
+          }}%>
+        
+       
+       
 </table>
           
   
-
+<%}}%>
 
 <!-- InstanceEndEditable --></td>
         </tr>

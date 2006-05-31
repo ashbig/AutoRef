@@ -1,6 +1,8 @@
 <!--Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
 
 <%@ page import="edu.harvard.med.hip.bec.*" %>
+
+<%@ page import="edu.harvard.med.hip.bec.util_objects.*" %>
 <%@ page import="java.util.*" %>
 <link href="application_styles.css" rel="stylesheet" type="text/css">
 
@@ -130,13 +132,21 @@ if ( isProjectList && DatabaseToApplicationDataLoader.getProjectDefinitions() !=
  project_combo_text = "<select name='project_name' >";
 String project_code = null;
 
+ /*for( Enumeration e = DatabaseToApplicationDataLoader.getProjectDefinitions().keys(); e.hasMoreElements() ;)
+  {
+        //     System.out.println("a");
+          //  project_code = (String)  e.nextElement();
+          //  project_combo_text += "<option value = '"+project_code+"' >" + (String)DatabaseToApplicationDataLoader.getProjectDefinitions().get(project_code);
+             }
+ */
 
-for ( Enumeration e = DatabaseToApplicationDataLoader.getProjectDefinitions().keys(); e.hasMoreElements() ;)
-        {
-            project_code = (String)  e.nextElement();
-            project_combo_text += "<option value = '"+project_code+"' >" + (String)DatabaseToApplicationDataLoader.getProjectDefinitions().get(project_code);
-                 }
-
+ProjectDefinition pdef = null;
+for ( Enumeration e = DatabaseToApplicationDataLoader.getProjectDefinitions().elements(); e.hasMoreElements() ;)
+{
+            pdef = (ProjectDefinition)  e.nextElement();
+            project_combo_text += "<option value = '"+pdef.getName()+"' >" + pdef.getName();
+             
+}
 project_combo_text+="</select>";
 
 }   

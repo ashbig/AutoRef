@@ -548,8 +548,8 @@ public class TraceFileProcessingRunner extends ProcessRunner
         sysProps.verifyApplicationSettings();
       edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadTraceFileFormats();
       ProcessRunner runner =  new EndReadsWrapperRunner();
-        runner.setInputData( edu.harvard.med.hip.bec.Constants.ITEM_TYPE_PLATE_LABELS, "JSA001431");
-         runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
+        runner.setInputData( edu.harvard.med.hip.bec.Constants.ITEM_TYPE_PLATE_LABELS, "DGS002288-1");
+         runner.setUser( AccessManager.getInstance().getUser("htaycher123","me"));
     runner.setProcessType(Constants.PROCESS_RUN_END_READS_WRAPPER);
         runner.run();
 

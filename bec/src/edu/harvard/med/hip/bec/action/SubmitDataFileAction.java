@@ -104,18 +104,36 @@ public class SubmitDataFileAction extends BecAction
                     return (mapping.findForward("response"));
                 }
                 case  Constants.PROCESS_DELETE_TRACE_FILES :
+                case  Constants.PROCESS_SUBMIT_EREADS_AS_INTERNALS:
                 case  Constants.PROCESS_MOVE_TRACE_FILES:
                 {
+                    ArrayList items = null;
                     
                     switch(forwardName)
                     {
-                         case  Constants.PROCESS_GET_TRACE_FILE_NAMES :{title = "request for list of Trace Files' names"; break;}
-                         case  Constants.PROCESS_DELETE_TRACE_FILES :{title = "request for Trace Files deletion"; break;}
+                         case  Constants.PROCESS_SUBMIT_EREADS_AS_INTERNALS :
+                         {
+                             title = "request for upload of low quality end reads";
+                              items = getInputItems( input, 1);
+                             break;
+                         }
+                        
+                         case  Constants.PROCESS_GET_TRACE_FILE_NAMES :
+                         {
+                             title = "request for list of Trace Files' names"; 
+                             items = getInputItems( input);
+                             break;
+                         }
+                         case  Constants.PROCESS_DELETE_TRACE_FILES :
+                         {
+                             title = "request for Trace Files deletion";
+                             items = getInputItems( input);
+                             break;
+                         }
                     }
                     ProcessRunner runner = new DeleteObjectRunner();
                     runner.setProcessType(forwardName);
                               
-                    ArrayList items = getInputItems( input);
                     String  item_ids = Algorithms.convertStringArrayToString(items, " ");
                     runner.setInputData( Constants.ITEM_TYPE_PLATE_LABELS,item_ids);
                     runner.setUser(user);
@@ -140,7 +158,12 @@ public class SubmitDataFileAction extends BecAction
     
     
       ////////////////////
-     private ArrayList getInputItems(InputStream input) throws Exception
+      private ArrayList getInputItems(InputStream input) throws Exception
+      {
+          return getInputItems( input, 0);
+      }
+   
+     public static ArrayList getInputItems(InputStream input, int mode) throws Exception
      {
          BufferedReader reader = null;
          ArrayList items = new ArrayList();  String line = null;
@@ -149,7 +172,8 @@ public class SubmitDataFileAction extends BecAction
                 reader = new BufferedReader(new InputStreamReader(input));
                 while  ((line = reader.readLine()) != null)
                 {
-                    items.add(line.trim().toUpperCase() );
+                    if ( mode == 1) {line =  getReadName(line); if (line != null) items.add(line);}
+                    else { items.add(line.trim().toUpperCase() );}
                  }
                 return items;
          }
@@ -159,6 +183,18 @@ public class SubmitDataFileAction extends BecAction
          }
      }
     
+     
+     
+    
+      private static String getReadName(String line)
+      {
+         // Read C:\bio\plate_analysis\clone_samples\61330\219509\chromat_dir\1_B01_61330_219509_F0_1139519566846013.ab1 was not submitted into ACE, because of read low quality
+         ArrayList items = Algorithms.splitString(line);
+         if (items.size() > 2)
+             return BecProperties.getInstance().getProperty("TRACE_FILES_INPUT_PATH_DIR")+File.separator+(String)items.get(1);
+         else return null;
+      }
+     //------------------------------
      class RunDiscrepancyFinder implements Runnable
     {
         private InputStream     i_Input = null;

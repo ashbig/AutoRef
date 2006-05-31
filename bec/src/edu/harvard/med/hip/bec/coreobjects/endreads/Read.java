@@ -22,6 +22,7 @@ import edu.harvard.med.hip.bec.programs.phred.*;
 
 import java.util.*;
 import java.math.*;
+import java.io.*;
 /**
  *
  * @author  Administrator
@@ -578,7 +579,70 @@ public class Read
        return length;
     }
     
-  
+    
+    public static boolean              isTraceFilePassQualityCheck(Read read ,
+    int pass_score , int first_base ,int last_base , int min_length )throws Exception 
+    {
+        PhredScoredElement el = null;
+          ArrayList elements = new ArrayList();
+     
+        int[] scores = read.getScoresAsArray();
+        char[] bases = read.getSequence().getText().toCharArray();
+        if ( bases.length != scores.length) 
+            throw new BecUtilException ("Cannot define read quality. Read filename "+ read.getTraceFileName());
+        for (int count = 0; count < scores.length; count++)
+        {
+            el = new PhredScoredElement();
+            el.setChar( bases[count]);
+            el.setScore( scores[count]);
+            elements.add(el);
+        }
+        
+        
+	return  PhredScoredElement.isGoodQuality( elements,  first_base, 
+                                                 last_base,  pass_score,  min_length);
+    }
+      
+    
+    public static boolean            isTraceFilePassQualityCheck( File trace_file_phd, 
+                    int pass_score , int first_base ,int last_base ,
+                    int min_length ) throws BecUtilException
+     {
+        BufferedReader input = null;
+        boolean isInsideRead = false;
+        String line = null; 
+        boolean isBeforeDNAEnd = true; boolean isBeforeDNAStart = true;
+        ArrayList elements = new ArrayList();
+       PhredScoredElement element = null;
+       
+        try
+        {
+             input = new BufferedReader(new FileReader(trace_file_phd));
+             while ((line = input.readLine()) != null)
+            {
+                if ( !isInsideRead && line.indexOf("BEGIN_DNA" ) != -1)
+                {
+                    isInsideRead = true; continue;
+                }
+                if ( line.indexOf("END_DNA" ) != -1 )
+                    return  PhredScoredElement.isGoodQuality( elements,  first_base, 
+                                                 last_base,  pass_score,  min_length);
+                if ( isInsideRead )
+                {
+                   element = new PhredScoredElement(line) ;
+                   if (element == null) throw new Exception();
+                   elements.add(element);
+                }
+
+            }
+        }
+        catch(Exception e)
+        {
+            throw new BecUtilException("Cannot process file "+ trace_file_phd.getAbsolutePath());
+        }
+        return false;
+     }
+  //------------------------------------------------------
       public static void main(String args[])
     {
         Read r = null;

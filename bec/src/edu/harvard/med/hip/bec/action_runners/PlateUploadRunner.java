@@ -54,6 +54,7 @@ public class PlateUploadRunner extends ProcessRunner
     private String     m_start_codon = null;
     private String      m_fusion_stop_codon = null;
     private String      m_close_stop_codon = null;
+    private int         m_project_id = -1;
 
   //  public void         setContainerLabels(ArrayList v)    { m_master_container_labels = v;}
     public void         setVectorId(int vectorid )    { m_vector_id = vectorid;}
@@ -64,6 +65,7 @@ public class PlateUploadRunner extends ProcessRunner
      public  void        setStartCodon(String v){m_start_codon = v;}
     public  void        setFusionStopCodon(String v){m_fusion_stop_codon = v;}
     public  void        setClosedStopCodon(String v){m_close_stop_codon = v;}
+    public void         setProjectId(int v){ m_project_id = v;}
      public String          getTitle() {return "Request for plate information upload";    }
 
 
@@ -83,7 +85,7 @@ public class PlateUploadRunner extends ProcessRunner
             //request object
             int cloning_startegy_id ;
            //get clonningstategy, if it does not exist - create new
-         cloning_startegy_id = CloningStrategy.getCloningStrategyIdByVectorLinkerInfo( m_vector_id , m_linker3_id ,  m_linker5_id,m_start_codon ,m_fusion_stop_codon ,m_close_stop_codon );
+            cloning_startegy_id = CloningStrategy.getCloningStrategyIdByVectorLinkerInfo( m_vector_id , m_linker3_id ,  m_linker5_id,m_start_codon ,m_fusion_stop_codon ,m_close_stop_codon );
              if (cloning_startegy_id == BecIDGenerator.BEC_OBJECT_ID_NOTSET )
             {
                 CloningStrategy str = new CloningStrategy(BecIDGenerator.BEC_OBJECT_ID_NOTSET ,m_vector_id , m_linker3_id ,  m_linker5_id ,m_start_codon ,m_fusion_stop_codon ,m_close_stop_codon," ");
@@ -94,7 +96,7 @@ public class PlateUploadRunner extends ProcessRunner
 
 
               //upload plates
-            pb = new PlateUploader( master_container_labels, m_plate_info_type, cloning_startegy_id, m_isolate_status);
+            pb = new PlateUploader( master_container_labels, m_plate_info_type, cloning_startegy_id, m_isolate_status, m_project_id);
             pb.upload(conn);
             m_error_messages.addAll(pb.getErrors());
             //if at least one plate was uploaded create request
