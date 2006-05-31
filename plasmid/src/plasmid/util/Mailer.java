@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.4 $
- * $Date: 2006-05-19 17:56:49 $
+ * $Revision: 1.5 $
+ * $Date: 2006-05-31 18:10:40 $
  * $Author: dzuo $
  *
  ******************************************************************************
@@ -49,15 +49,16 @@ import javax.mail.internet.*;
  * Utility class to send simple messages.
  *
  * @author     $Author: dzuo $
- * @version    $Revision: 1.4 $ $Date: 2006-05-19 17:56:49 $
+ * @version    $Revision: 1.5 $ $Date: 2006-05-31 18:10:40 $
  */
 
-public class Mailer
-{
+public class Mailer {
     //public static final String FILEPATH = FlexProperties.getInstance().getProperty("tmp");
     //public final static String SMTP_HOST ="hms.harvard.edu";
     public final static String SMTP_HOST ="gate.med.harvard.edu";
     public static final String FROM = "hip_informatics@hms.harvard.edu";
+    public static final String USNAME = "hip_informatics";
+    public static final String PWD = "Password1";
     
     /**
      * Utility Method to send a message
@@ -71,27 +72,28 @@ public class Mailer
      */
     public static void sendMessage(String to, String from,
     String cc, String subject, String msgText, Collection fileCol)
-    throws MessagingException
-    {
+    throws MessagingException {
         Properties props = new Properties();
         props.put("mail.smtp.host",SMTP_HOST);
+        props.put("mail.smtp.auth", "true");
         Session session = Session.getDefaultInstance(props,null);
+        //session.setDebug(true);
         
-        
-        
-        try
-        {
+        try {
             // create a message
             MimeMessage msg = new MimeMessage(session);
             msg.setFrom(new InternetAddress(from));
-            InternetAddress[] address =
-            {new InternetAddress(to)};
-            if(cc != null)
-            {
-                InternetAddress[] ccAddresses =
-                {new InternetAddress(cc)};
-                msg.setRecipients(Message.RecipientType.CC, ccAddresses);
+            InternetAddress[] address = null;
+            if(cc != null) {
+                address = new InternetAddress[2];
+                address[0] = new InternetAddress(to);
+                address[1] = new InternetAddress(cc);
+                //msg.setRecipients(Message.RecipientType.CC, ccAddresses);
+            } else {
+                address = new InternetAddress[1];
+                address[0] = new InternetAddress(to);
             }
+            
             msg.setRecipients(Message.RecipientType.TO, address);
             msg.setSubject(subject);
             msg.setSentDate(new Date());
@@ -107,12 +109,10 @@ public class Mailer
             
             mp.addBodyPart(mbp);
             
-            if(fileCol !=null )
-            {
+            if(fileCol !=null ) {
                 // now attach all the files if there are any.
                 Iterator fileIter = fileCol.iterator();
-                while(fileIter.hasNext())
-                {
+                while(fileIter.hasNext()) {
                     BodyPart filePart = new MimeBodyPart();
                     File curFile = (File)fileIter.next();
                     DataSource source = new FileDataSource(curFile);
@@ -127,20 +127,23 @@ public class Mailer
             
             // add the multipart to the message
             msg.setContent(mp);
+            msg.saveChanges();
             
             // send the message
-            Transport.send(msg);
-        } catch(MessagingException mex)
-        {
+            //Transport.send(msg);
+            Transport trans = session.getTransport("smtp");
+            trans.connect(SMTP_HOST, USNAME, PWD);
+            trans.sendMessage(msg, address);
+            trans.close();
+        } catch(MessagingException mex) {
             mex.printStackTrace();
             Exception ex = null;
-            if((ex = mex.getNextException()) !=null)
-            {
+            if((ex = mex.getNextException()) !=null) {
                 ex.printStackTrace();
             }
         }
     }
-       
+    
     /**
      * Utility Method to send a message
      *
@@ -153,30 +156,35 @@ public class Mailer
      */
     public static void sendMessages(String to, String from,
     List ccs, String subject, String msgText, Collection fileCol)
-    throws MessagingException
-    {
+    throws MessagingException {
         Properties props = new Properties();
         props.put("mail.smtp.host",SMTP_HOST);
+        props.put("mail.smtp.auth", "true");
         Session session = Session.getDefaultInstance(props,null);
         
+        //session.setDebug(true);
         
         
-        try
-        {
+        try {
             // create a message
             MimeMessage msg = new MimeMessage(session);
             msg.setFrom(new InternetAddress(from));
-            InternetAddress[] address =
-            {new InternetAddress(to)};
-            if(ccs != null)
-            {
-                InternetAddress[] ccAddresses = new InternetAddress[ccs.size()];
+            InternetAddress[] address = null;
+            
+            if(ccs != null) {
+                address = new InternetAddress[ccs.size()+1];
+                address[0] = new InternetAddress(to);
                 for(int i=0; i<ccs.size(); i++) {
                     String cc = (String)ccs.get(i);
-                    ccAddresses[i] = new InternetAddress(cc);
+                    //ccAddresses[i] = new InternetAddress(cc);
+                    address[i+1] = new InternetAddress(cc);
                 }
-                msg.setRecipients(Message.RecipientType.CC, ccAddresses);
+                //msg.setRecipients(Message.RecipientType.CC, ccAddresses);
+            } else {
+                address = new InternetAddress[1];
+                address[0] = new InternetAddress(to);
             }
+            
             msg.setRecipients(Message.RecipientType.TO, address);
             msg.setSubject(subject);
             msg.setSentDate(new Date());
@@ -192,12 +200,10 @@ public class Mailer
             
             mp.addBodyPart(mbp);
             
-            if(fileCol !=null )
-            {
+            if(fileCol !=null ) {
                 // now attach all the files if there are any.
                 Iterator fileIter = fileCol.iterator();
-                while(fileIter.hasNext())
-                {
+                while(fileIter.hasNext()) {
                     BodyPart filePart = new MimeBodyPart();
                     File curFile = (File)fileIter.next();
                     DataSource source = new FileDataSource(curFile);
@@ -212,42 +218,47 @@ public class Mailer
             
             // add the multipart to the message
             msg.setContent(mp);
+            msg.saveChanges();
             
             // send the message
-            Transport.send(msg);
-        } catch(MessagingException mex)
-        {
+            //Transport.send(msg);
+            Transport trans = session.getTransport("smtp");
+            trans.connect(SMTP_HOST, USNAME, PWD);
+            trans.sendMessage(msg, address);
+            trans.close();
+        } catch(MessagingException mex) {
             mex.printStackTrace();
             Exception ex = null;
-            if((ex = mex.getNextException()) !=null)
-            {
+            if((ex = mex.getNextException()) !=null) {
                 ex.printStackTrace();
             }
         }
     }
-            
+    
     public static void sendMessageWithAttachedFile(String to, String from,
     String cc, String subject, String msgText, File fl)
-    throws MessagingException
-    {
+    throws MessagingException {
         Properties props = new Properties();
         props.put("mail.smtp.host",SMTP_HOST);
+        props.put("mail.smtp.auth", "true");
         Session session = Session.getDefaultInstance(props,null);
+        //session.setDebug(true);
         
         
         
-        try
-        {
+        try {
             // create a message
             MimeMessage msg = new MimeMessage(session);
             msg.setFrom(new InternetAddress(from));
-            InternetAddress[] address =
-            {new InternetAddress(to)};
-            if(cc != null)
-            {
-                InternetAddress[] ccAddresses =
-                {new InternetAddress(cc)};
-                msg.setRecipients(Message.RecipientType.CC, ccAddresses);
+            InternetAddress[] address = null;
+            if(cc != null) {
+                address = new InternetAddress[2];
+                address[0] = new InternetAddress(to);
+                address[1] = new InternetAddress(cc);
+                //msg.setRecipients(Message.RecipientType.CC, ccAddresses);
+            } else {
+                address = new InternetAddress[1];
+                address[0] = new InternetAddress(to);
             }
             msg.setRecipients(Message.RecipientType.TO, address);
             msg.setSubject(subject);
@@ -264,8 +275,7 @@ public class Mailer
             
             mp.addBodyPart(mbp);
             
-            if(fl !=null )
-            {
+            if(fl !=null ) {
                 // now attach  file if there are any.
                 
                 BodyPart filePart = new MimeBodyPart();
@@ -281,15 +291,18 @@ public class Mailer
             
             // add the multipart to the message
             msg.setContent(mp);
+            msg.saveChanges();
             
             // send the message
-            Transport.send(msg);
-        } catch(MessagingException mex)
-        {
+            //Transport.send(msg);
+            Transport trans = session.getTransport("smtp");
+            trans.connect(SMTP_HOST, USNAME, PWD);
+            trans.sendMessage(msg, address);
+            trans.close();
+        } catch(MessagingException mex) {
             mex.printStackTrace();
             Exception ex = null;
-            if((ex = mex.getNextException()) !=null)
-            {
+            if((ex = mex.getNextException()) !=null) {
                 ex.printStackTrace();
             }
         }
@@ -303,31 +316,37 @@ public class Mailer
      * @param msgText The text of the message.
      */
     public static void sendMessage(String to, String from, String subject,
-    String msgText) throws MessagingException
-    {
+    String msgText) throws MessagingException {
         Mailer.sendMessage(to,from,null,subject,msgText, null);
     }
     
-     public static void sendMessage(String to, String from, String cc, String subject,
-    String msgText) throws MessagingException
-    {
+    public static void sendMessage(String to, String from, String cc, String subject,
+    String msgText) throws MessagingException {
         Mailer.sendMessage(to,from,cc,subject,msgText, null);
     }
     
-
-    public static void main(String [] args) throws Exception
-    {
+    
+    public static void main(String [] args) throws Exception {
         
         Vector messages = new Vector();
         messages.add("lll\n");messages.add("lll\n");messages.add("lll\n");messages.add("lll\n");messages.add("lll\n");
-
-        Collection fileCol = new LinkedList();
-        fileCol.add(new File("/NETLOG.TXT"));
-        fileCol.add(new File("/j0272560(t).gif"));
-        Mailer.sendMessage("jmunoz@3rdmill.com","jmunoz@3rdmill.com",
-        "jmunoz@3rdmill.com","Test","Test of cc and file", fileCol);
         
-        Mailer.sendMessage("jmunoz@3rdmill.com","dongmei_zuo@hms.harvard.edu", "test","Testing 12 3");
+        Collection fileCol = new LinkedList();
+        fileCol.add(new File("G:\\plasmid\\Other\\MissingMasterClones.txt"));
+        fileCol.add(new File("G:\\plasmid\\Other\\ExpressionPlate.txt"));
+        
+        List ccs = new ArrayList();
+        ccs.add("elena_taycher@hms.harvard.edu");
+        ccs.add("dzuo@hms.harvard.edu");
+        //Mailer.sendMessage("dongmeizuo@hotmail.com", FROM, "test", "test");
+        try {
+            //Mailer.sendMessage("waaaybac@waaaybacks.com", FROM, "test", "test");
+            Mailer.sendMessage("dzuo@hms.harvard.edu", FROM, null, "test", "test");
+            //Mailer.sendMessage("jmunoz@3rdmill.com","dongmei_zuo@hms.harvard.edu", "test","Testing 12 3");
+            //Mailer.sendMessages("dzuo@hms.harvard.edu", FROM, ccs, "test", "test",fileCol);
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
     }
     
 } // End class Mailer
