@@ -501,7 +501,20 @@ public class Seq_GetItemAction extends BecAction
                 {
                   //  ArrayList labels = Container.findAllContainerLabels();
                     ArrayList labels = Container.findAllContainerLabelsByProject();
-                  
+                  //sort by project name
+                    
+                    //sort labels
+                    Collections.sort(labels, new Comparator()
+                    {
+                        public int compare(Object o1, Object o2)
+                        {
+                            String name1 = (String)((ArrayList) o1).get(0);
+                            String name2 = (String)((ArrayList) o2).get(0);
+                            return name1.compareTo( name2);
+                        }
+                        public boolean equals(java.lang.Object obj)               {      return false;  }
+                    } );
+                    
                     request.setAttribute("labels",labels);
                      request.setAttribute( Constants.ADDITIONAL_JSP, "<script language='JavaScript' src='"+edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") +"scripts.js'></script> ") ;
                     return (mapping.findForward("display_info"));
