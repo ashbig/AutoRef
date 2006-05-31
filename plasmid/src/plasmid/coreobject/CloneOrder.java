@@ -61,6 +61,9 @@ public class CloneOrder {
     private String lastname;
     private String email;
     
+    private String piname;
+    private String piemail;
+    
     private List items;
     
     /** Creates a new instance of CloneOrder */
@@ -113,6 +116,8 @@ public class CloneOrder {
     public String getWhoreceivedconfirmation() {return whoreceivedconfirmation;}
     public String getEmail() {return email;}
     public String getShippedContainers() {return shippedContainers;}
+    public String getPiname() {return piname;}
+    public String getPiemail() {return piemail;}
     
     public void setOrderid(int i) {this.orderid = i;}
     public void setOrderDate(String s) {this.orderDate = s;}
@@ -141,6 +146,8 @@ public class CloneOrder {
     public void setWhoreceivedconfirmation(String s) {this.whoreceivedconfirmation=s;}
     public void setEmail(String s) {this.email = s;}
     public void setShippedContainers(String s) {this.shippedContainers = s;}
+    public void setPiname(String s) {this.piname = s;}
+    public void setPiemail(String s) {this.piemail = s;}
     
     public List getItems() {return items;}
     public void setItems(List l) {this.items = l;}

@@ -19,26 +19,29 @@ import plasmid.database.*;
  * @author  DZuo
  */
 public class ExpressionCloneImporter {
-    private static final String flexurl = "jdbc:oracle:thin:@kotel:1532:wall";
-    private static final String flexusername = "flex_test";
-    private static final String flexpassword = "flex";
+    private static final String flexurl = "jdbc:oracle:thin:@kotel:1532:flex";
+    private static final String flexusername = "flex_production";
+    private static final String flexpassword = "3monkeys";
     private static final String plasmidurl = "jdbc:oracle:thin:@128.103.32.228:1521:plasmid";
-    private static final String plasmidusername = "plasmid_test";
+    private static final String plasmidusername = "plasmid_production";
     private static final String plasmidpassword = "plasmID";
     
-    public static final String VER_SEQ = "Transferred from a sequence verified vector";
-    public static final String VER_PCR = "Verified by PCR";
-    public static final String VER_FLORE = "Verified by DNA quantitation";
-    public static final String VER_PROTEIN = "Verified by protein expression";
-    public static final String VER_RES = "Verified by restriction digest";
-    public static final String VER_COLOTY = "Verified by transformation";
+    public static final String VER_SEQ = "Insert was fully sequenced in parent vector";
+    public static final String VER_PCR = "Verification by PCR";
+    public static final String VER_FLORE = "Verification by fluorescence detection in cells";
+    public static final String VER_PROTEIN = "Verification by protein expression";
+    public static final String VER_RES = "Verification by restriction enzyme digest";
     public static final String NOTDONE = "NOT DONE";
     public static final String PASS = "PASS";
     public static final String FAIL = "FAIL";
     
+    private List insertClones;
+    
     /** Creates a new instance of ExpressionCloneImporter */
     public ExpressionCloneImporter() {
     }
+    
+    public List getInsertClones() {return insertClones;}
     
     public List getFlexClones(String status, String vectorname) throws Exception {
         String sql = "select c.cloneid,clonename,mastercloneid,status,comments,"+
@@ -47,7 +50,9 @@ public class ExpressionCloneImporter {
         " cs.storagecontainerlabel, cs.storagecontainerposition"+
         " from clones c, cloningstrategy s, flexsequence f, clonevalidation v, clonestorage cs"+
         " where c.strategyid=s.strategyid and c.cloneid=v.cloneid(+)"+
-        " and c.sequenceid=f.sequenceid and c.cloneid=cs.cloneid";
+        " and c.sequenceid=f.sequenceid and c.cloneid=cs.cloneid"+
+        " and c.plasmid is null and c.strategyid in (24, 17, 15, 16, 20, 21, 13)"+
+        " and cs.storagetype='Working Storage'";
         
         if(status != null)
             sql += " and c.status='"+status+"'";
@@ -84,7 +89,7 @@ public class ExpressionCloneImporter {
         return 1;
     }
     
-    public void insertClones(List clones, Connection conn) throws Exception {
+    public List insertClones(List clones, Connection conn) throws Exception {
         String sql = "select distinct cloneid from clonename"+
         " where nametype='"+CloneNameType.HIP_MASTER_CLONE_ID+"'"+
         " and namevalue=?";
@@ -99,12 +104,15 @@ public class ExpressionCloneImporter {
         List plasmidClones = new ArrayList();
         List inserts = new ArrayList();
         List names = new ArrayList();
+        List clonesWithoutMastercloneid = new ArrayList();
+        insertClones = new ArrayList();
         
         int id = getMaxNumber("clone", "cloneid");
         if(id < 0) {
             throw new Exception("Cannot get cloneid from clone table.");
         }
         
+        System.out.println("Total clone: "+clones.size());
         for(int i=0; i<clones.size(); i++) {
             FlexClone c = (FlexClone)clones.get(i);
             int plasmidCloneid = 0;
@@ -115,9 +123,10 @@ public class ExpressionCloneImporter {
                 plasmidCloneid = rs.getInt(1);
             }
             if(plasmidCloneid == 0) {
-                clones.remove(c);
+                //clones.remove(c);
+                clonesWithoutMastercloneid.add(c);
+                System.out.println("Cannot get plasmid cloneid with master cloneid "+c.getMastercloneid());       
                 continue;
-                //throw new Exception("Cannot get plasmid cloneid with master cloneid "+c.getMastercloneid());
             }
             DatabaseTransactionNoPool.closeResultSet(rs);
             
@@ -136,35 +145,41 @@ public class ExpressionCloneImporter {
                 String restriction = c.getRestriction();
                 String colony = c.getColony();
                 
-                String isVer = Clone.VERIFIED_YES;
+                String isVer = Clone.VERIFIED_NO;
                 String vermethod = VER_SEQ;
                 if((pcr==null&&flore==null&protein==null&&restriction==null&&colony==null)
                 || (pcr.trim().length()==0&&flore.trim().length()==0&&protein.trim().length()==0&&restriction.trim().length()==0&&colony.trim().length()==0)
                 || (pcr.trim().equals(NOTDONE)&&flore.trim().equals(NOTDONE)&&protein.trim().equals(NOTDONE)&&restriction.trim().equals(NOTDONE)&&colony.trim().equals(NOTDONE))) {
                     isVer = Clone.VERIFIED_NO;
                 } else {
-                    if(pcr.trim().equals(PASS))
+                    if(pcr.trim().equals(PASS)) {
+                        isVer = Clone.VERIFIED_YES;
                         vermethod += "; "+VER_PCR;
+                    }
                     if(pcr.trim().equals(FAIL))
                         throw new Exception("Wrong clone validation status ("+pcr+") for cloneid "+c.getCloneid());
                     
-                    if(flore.trim().equals(PASS))
+                    if(flore.trim().equals(PASS)) {
+                        isVer = Clone.VERIFIED_YES;
                         vermethod += "; "+VER_FLORE;
+                    }
                     if(flore.trim().equals(FAIL))
                         throw new Exception("Wrong clone validation status ("+flore+") for cloneid "+c.getCloneid());
                     
-                    if(protein.trim().equals(PASS))
+                    if(protein.trim().equals(PASS)){
+                        isVer = Clone.VERIFIED_YES;
                         vermethod += "; "+VER_PROTEIN;
+                    }
                     if(protein.trim().equals(FAIL))
                         throw new Exception("Wrong clone validation status ("+protein+") for cloneid "+c.getCloneid());
                     
-                    if(restriction.trim().equals(PASS))
+                    if(restriction.trim().equals(PASS)){
+                        isVer = Clone.VERIFIED_YES;
                         vermethod += "; "+VER_RES;
+                    }
                     if(restriction.trim().equals(FAIL))
                         throw new Exception("Wrong clone validation status ("+restriction+") for cloneid "+c.getCloneid());
                     
-                    if(colony.trim().equals(PASS))
-                        vermethod += "; "+VER_COLOTY;
                     if(colony.trim().equals(FAIL))
                         throw new Exception("Wrong clone validation status ("+colony+") for cloneid "+c.getCloneid());
                 }
@@ -172,11 +187,18 @@ public class ExpressionCloneImporter {
                 plasmidClone = new Clone(id,null,Clone.CDNA,isVer,vermethod,domain,null,Clone.HIP_ONLY,comments,0,c.getVectorname(),null,Clone.AVAILABLE,null,Clone.SOURCE_HIP,null);
                 
                 VectorManager man = new VectorManager(conn);
-                int vectorid = man.getVectorid(c.getVectorname());
+                String vectorname = c.getVectorname();
+                if("pLP-DS 3xMyc".equals(vectorname))
+                    vectorname="pLP-DS3xMyc";
+                if("pLP-DS 3xFlag".equals(vectorname))
+                    vectorname="pLP-DS3xFlag";
+                if("pCITE-GST".equals(vectorname))
+                    vectorname="pANT7_cGST";
+                int vectorid = man.getVectorid(vectorname);
                 if(vectorid <= 0) {
-                    clones.remove(c);
-                    continue;
-                    // throw new Exception("Cannot get vectorid with vectorname="+c.getVectorname());
+                    //clones.remove(c);
+                    //continue;
+                    throw new Exception("Cannot get vectorid with vectorname="+c.getVectorname());
                 }
                 plasmidClone.setVectorid(vectorid);
                 
@@ -197,10 +219,7 @@ public class ExpressionCloneImporter {
                 if(tp == null) {
                     throw new Exception("Cannot find code for clonetype: "+plasmidClone.getType());
                 }
-                plasmidClone.setName(sp+tp+fmt.format(id));
-                
-                //set verification based on FlexClone status
-                
+                plasmidClone.setName(sp+tp+fmt.format(id));                
                 plasmidClones.add(plasmidClone);
                 
                 CloneName n1 = new CloneName(id, CloneNameType.HIP_CLONE_ID, (new Integer(c.getCloneid())).toString(), "http://kotel.harvard.edu:8080/FLEX/ViewClone.do?cloneid="+c.getCloneid()+"&isDisplay=1");
@@ -211,6 +230,7 @@ public class ExpressionCloneImporter {
                 names.add(n3);
                 
                 c.setPlasmidCloneid(id);
+                insertClones.add(c);
                 id++;
             } else {
                 throw new Exception("Cannot query clone with cloneid="+plasmidCloneid);
@@ -244,9 +264,11 @@ public class ExpressionCloneImporter {
         if(!m.insertCloneInsertsWithoutInsertInfo(inserts)) {
             throw new Exception("Error occured while inserting into CLONEINSERT table");
         }
+        return clonesWithoutMastercloneid;
     }
     
     public void updateFlexCloneStatus(List clones, Connection conn) throws Exception {
+        System.out.println("Total Clones: "+clones.size());
         String sql = "update clones set plasmid='Y' where cloneid=?";
         PreparedStatement stmt = conn.prepareStatement(sql);
         for(int i=0; i<clones.size(); i++) {
@@ -268,7 +290,18 @@ public class ExpressionCloneImporter {
         }
         out.close();
     }
-    
+      
+    public void writeClones(List clones, String filename) throws Exception {
+        OutputStreamWriter out = new FileWriter(filename);
+        out.write("FLEX Clone ID\tMaster Clone ID\n");
+        
+        for(int i=0; i<clones.size(); i++) {
+            FlexClone c = (FlexClone)clones.get(i);
+            out.write(c.getCloneid()+"\t"+c.getMastercloneid()+"\n");
+        }
+        out.close();
+    }
+       
     public int getMaxNumber(String table, String column) {
         String sql = "select max("+column+") from "+table;
         
@@ -291,6 +324,7 @@ public class ExpressionCloneImporter {
     
     public static void main(String args[]) throws Exception {
         String plateFileName = "G:\\plasmid\\Other\\ExpressionPlate.txt";
+        String cloneFileName = "G:\\plasmid\\Other\\MissingMasterClones.txt";
         String status = "SUCCESSFUL";
         String vectorname = null;
         
@@ -305,15 +339,18 @@ public class ExpressionCloneImporter {
             List clones = imp.getFlexClones(status, vectorname);
             System.out.println("Total clones: "+clones.size());
             System.out.println("Insert clones into PlasmID");
-            imp.insertClones(clones, conn);
+            List clonesWithoutMastercloneid = imp.insertClones(clones, conn);
             System.out.println("Insert clones into PlasmID successful.");
             System.out.println("Update FLEX clone status.");
-            imp.updateFlexCloneStatus(clones, flexconn);
+            List insertClones = imp.getInsertClones();
+            imp.updateFlexCloneStatus(insertClones, flexconn);
             System.out.println("Update FLEX clone status successful.");
             DatabaseTransactionNoPool.commit(conn);
             DatabaseTransactionNoPool.commit(flexconn);
             System.out.println("Write plate file.");
-            imp.writePlateFile(clones, plateFileName);
+            imp.writePlateFile(insertClones, plateFileName);
+            System.out.println("Write clones file.");
+            imp.writeClones(clonesWithoutMastercloneid, cloneFileName);
             System.exit(0);
         } catch (Exception ex) {
             System.out.println(ex);

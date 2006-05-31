@@ -1036,10 +1036,10 @@ public class OrderProcessManager {
     }
     
     public void printInvoice(PrintWriter out, List orders) {
-        out.println("Name\t# Clones\t# Collections\tTotal Cost\tPO Number\tDate Shipped\tOrder #\tBilling Information");
+        out.println("Name\t# Clones\t# Collections\tTotal Cost\tPO Number\tDate Shipped\tOrder #\tBilling Information\tPI Name\tPI Email");
         for(int i=0; i<orders.size(); i++) {
             CloneOrder order = (CloneOrder)orders.get(i);
-            out.println(order.getName()+"\t"+order.getNumofclones()+"\t"+order.getNumofcollection()+"\t$"+order.getPrice()+"\t"+order.getPonumber()+"\t"+order.getShippingdate()+"\t"+order.getOrderid()+"\tBill To: "+order.getBillingTo()+", "+order.getBillingAddress().replaceAll("\n", " "));
+            out.println(order.getName()+"\t"+order.getNumofclones()+"\t"+order.getNumofcollection()+"\t$"+order.getPrice()+"\t"+order.getPonumber()+"\t"+order.getShippingdate()+"\t"+order.getOrderid()+"\tBill To: "+order.getBillingTo()+", "+order.getBillingAddress().replaceAll("\n", " ")+"\t"+order.getPiname()+"\t"+order.getPiemail());
         }
     }
 }

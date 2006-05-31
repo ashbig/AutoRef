@@ -178,7 +178,7 @@ public class CloneOrderManager extends TableManager {
         " shippingaddress,billingaddress,numofclones,numofcollection,costforclones,"+
         " costforcollection,costforshipping,totalprice,c.userid,shippingdate,whoshipped,"+
         " shippingmethod,shippingaccount,trackingnumber,receiveconfirmationdate,"+
-        " whoconfirmed,whoreceivedconfirmation,shippedcontainers,u.email"+
+        " whoconfirmed,whoreceivedconfirmation,shippedcontainers,u.email,u.piname,u.piemail"+
         " from cloneorder c, userprofile u where c.userid=u.userid and c.orderid="+orderid;
         
         if(user != null) {
@@ -218,6 +218,8 @@ public class CloneOrderManager extends TableManager {
                 String whoreceivedconfirmation = rs.getString(23);
                 String shippedcontainers = rs.getString(24);
                 String email = rs.getString(25);
+                String piname = rs.getString(26);
+                String piemail = rs.getString(27);
                 
                 order = new CloneOrder(orderid, date, st, ponumber,shippingto,billingto,shippingaddress,billingaddress, numofclones, numofcollection, costforclones, costforcollection,costforshipping, total, userid);
                 order.setShippingdate(shippingdate);
@@ -230,6 +232,8 @@ public class CloneOrderManager extends TableManager {
                 order.setWhoreceivedconfirmation(whoreceivedconfirmation);
                 order.setShippedContainers(shippedcontainers);
                 order.setEmail(email);
+                order.setPiname(piname);
+                order.setPiemail(piemail);
             }
         } catch (Exception ex) {
             handleError(ex, "Cannot query cloneorder.");
@@ -252,7 +256,8 @@ public class CloneOrderManager extends TableManager {
         " c.shippingaddress,c.billingaddress,c.numofclones,c.numofcollection,c.costforclones,"+
         " c.costforcollection,c.costforshipping,c.totalprice,c.userid,u.firstname,u.lastname,"+
         " c.shippingdate, c.whoshipped, c.shippingmethod,c.shippingaccount,c.trackingnumber,"+
-        " c.receiveconfirmationdate, c.whoconfirmed,c.whoreceivedconfirmation,u.email,c.shippedcontainers"+
+        " c.receiveconfirmationdate, c.whoconfirmed,c.whoreceivedconfirmation,u.email,c.shippedcontainers,"+
+        " u.piname, u.piemail"+
         " from cloneorder c, userprofile u where c.userid=u.userid";
         
         if(user != null) {
@@ -308,6 +313,8 @@ public class CloneOrderManager extends TableManager {
                 String whoreceivedconfirmation = rs.getString(25);
                 String email = rs.getString(26);
                 String containers = rs.getString(27);
+                String piname = rs.getString(28);
+                String piemail = rs.getString(29);
                 
                 CloneOrder order = new CloneOrder(orderid, date, st, ponumber,shippingto,billingto,shippingaddress,billingaddress, numofclones, numofcollection, costforclones, costforcollection,costforshipping, total, userid);
                 
@@ -323,6 +330,9 @@ public class CloneOrderManager extends TableManager {
                 order.setWhoreceivedconfirmation(whoreceivedconfirmation);
                 order.setEmail(email);
                 order.setShippedContainers(containers);
+                order.setPiname(piname);
+                order.setPiemail(piemail);
+                
                 orders.add(order);
             }
             return orders;
@@ -343,7 +353,8 @@ public class CloneOrderManager extends TableManager {
         " c.shippingaddress,c.billingaddress,c.numofclones,c.numofcollection,c.costforclones,"+
         " c.costforcollection,c.costforshipping,c.totalprice,c.userid,u.firstname,u.lastname,"+
         " c.shippingdate, c.whoshipped, c.shippingmethod,c.shippingaccount,c.trackingnumber,"+
-        " c.receiveconfirmationdate, c.whoconfirmed,c.whoreceivedconfirmation,u.email,c.shippedcontainers"+
+        " c.receiveconfirmationdate, c.whoconfirmed,c.whoreceivedconfirmation,u.email,"+
+        " c.shippedcontainers, u.piname, u.piemail"+
         " from cloneorder c, userprofile u where c.userid=u.userid";
         
         if(orderids != null) {
@@ -416,6 +427,8 @@ public class CloneOrderManager extends TableManager {
                 String whoreceivedconfirmation = rs.getString(25);
                 String email = rs.getString(26);
                 String containers = rs.getString(27);
+                String piname = rs.getString(28);
+                String piemail = rs.getString(29);
                 
                 CloneOrder order = new CloneOrder(orderid, date, st, ponumber,shippingto,billingto,shippingaddress,billingaddress, numofclones, numofcollection, costforclones, costforcollection,costforshipping, total, userid);
                 
@@ -431,6 +444,8 @@ public class CloneOrderManager extends TableManager {
                 order.setWhoreceivedconfirmation(whoreceivedconfirmation);
                 order.setEmail(email);
                 order.setShippedContainers(containers);
+                order.setPiname(piname);
+                order.setPiemail(piemail);
                 orders.add(order);
             }
             return orders;

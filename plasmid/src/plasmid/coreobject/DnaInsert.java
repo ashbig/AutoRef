@@ -89,7 +89,17 @@ public class DnaInsert {
     
     public int getInsertid() {return insertid;}
     public int getOrder() {return order;}
-    public int getSize() {return size;}
+    public int getSize() {
+        if(size > 0)
+            return size;
+        else {
+            if(sequence != null) {
+                return sequence.trim().length();
+            } else {
+                return size;
+            }
+        }
+    }
     public String getSpecies() {return species;}
     public String getFormat() {return format;}
     public String getSource() {return source;}

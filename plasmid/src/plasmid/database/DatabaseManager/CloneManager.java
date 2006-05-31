@@ -80,7 +80,7 @@ public class CloneManager extends TableManager {
                 stmt.setInt(1, c.getCloneid());
                 stmt.setInt(2, c.getGrowthid());
                 stmt.setString(3, c.getIsrecommended());
-                
+                //System.out.println(c.getCloneid()+"\t"+c.getGrowthid());
                 DatabaseTransaction.executeUpdate(stmt);
             }
             DatabaseTransaction.closeStatement(stmt);
@@ -186,7 +186,7 @@ public class CloneManager extends TableManager {
                 stmt.setString(2, c.getType());
                 stmt.setString(3, c.getValue());
                 stmt.setString(4, c.getUrl());
-                
+                //System.out.println(c.getType()+"\t"+c.getValue());
                 DatabaseTransaction.executeUpdate(stmt);
             }
             DatabaseTransaction.closeStatement(stmt);
@@ -343,7 +343,7 @@ public class CloneManager extends TableManager {
                 stmt.setString(2, c.getType());
                 stmt.setString(3, c.getValue());
                 stmt.setString(4, c.getExtrainfo());
-                
+                //System.out.println(c.getCloneid());
                 DatabaseTransaction.executeUpdate(stmt);
             }
             DatabaseTransaction.closeStatement(stmt);
@@ -368,7 +368,7 @@ public class CloneManager extends TableManager {
                 CloneCollection c = (CloneCollection)collections.get(i);
                 stmt.setInt(1, c.getCloneid());
                 stmt.setString(2, c.getName());
-                
+                //System.out.println(c.getName());
                 DatabaseTransaction.executeUpdate(stmt);
             }
             DatabaseTransaction.closeStatement(stmt);
