@@ -19,17 +19,28 @@ public class WorklistGenerator {
     public static int NUMOFTIPS = 8;
     public static final String DELIM = "\t";
     private List worklist;
+    private boolean isPrintEmpty;
     
     /** Creates a new instance of WorklistGenerator */
     public WorklistGenerator() {
+        isPrintEmpty = true;
     }
     
     public WorklistGenerator(List worklist) {
         this.worklist = worklist;
+        isPrintEmpty = true;
+    }
+    
+    public WorklistGenerator(List worklist, boolean b) {
+        this.worklist = worklist;
+        isPrintEmpty = b;
     }
     
     public List getWorklist() {return worklist;}
+    public boolean getIsPrintEmpty() {return isPrintEmpty;}
+    
     public void setWorklist(List l) {this.worklist = l;}
+    public void setIsPrintEmpty(boolean b) {this.isPrintEmpty = b;}
     
     /**
      * public void generateWorklist(List containers, List labels) throws Exception {
@@ -95,8 +106,12 @@ public class WorklistGenerator {
             Sample from = w.getSampleFrom();
             Sample to = w.getSampleTo();
             
-            if(!Sample.EMPTY.equals(to.getType()))
-                f.write("\t"+from.getContainerlabel()+"\t"+from.getPosition()+"\t"+to.getContainerlabel()+"\t"+to.getPosition()+"\n");
+            if(!isPrintEmpty && Sample.EMPTY.equals(to.getType())) {
+                i++;
+                continue;
+            }
+            
+            f.write("\t"+from.getContainerlabel()+"\t"+from.getPosition()+"\t"+to.getContainerlabel()+"\t"+to.getPosition()+"\n");
             
         }
         f.close();
@@ -113,6 +128,12 @@ public class WorklistGenerator {
         while(i<size) {
             SampleLineage w = (SampleLineage)worklist.get(i);
             Sample from = w.getSampleFrom();
+            
+            if(!isPrintEmpty && Sample.EMPTY.equals(from.getType())) {
+                i++;
+                continue;
+            }
+            
             f.write("A;;"+from.getContainerlabel()+";"+from.getContainerType()+";"+from.getPosition()+";;"+avolumn+"\n");
             
             int numOfDispense = avolumn/dvolumn;

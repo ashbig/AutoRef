@@ -180,11 +180,15 @@ public class WorklistInputAction extends InternalUserAction{
                 return mapping.findForward("error");
             }
             
+            boolean isPrintEmpty = true;
+            if(Process.GENERATE_GLYCEROL.equals(processname) && tube)
+                isPrintEmpty = false;
+            
             String fileWorklist = Constants.WORKLIST+"_"+worklistid+".txt";
             String fileWorklistRobot = Constants.WORKLISTROBOT+"_"+worklistid+".gwl";
             String worklistname = Constants.FULLWORKLIST+"_"+worklistid+".txt";
             List worklist = calculator.calculateMapping();
-            WorklistGenerator generator = new WorklistGenerator(worklist);
+            WorklistGenerator generator = new WorklistGenerator(worklist, isPrintEmpty);
             generator.printFullWorklist(Constants.WORKLIST_FILE_PATH+worklistname);
             generator.printWorklist(Constants.USER_WORKLIST_FILE_PATH+fileWorklist);
             generator.printWorklistForRobot(Constants.USER_WORKLIST_FILE_PATH+fileWorklistRobot, volumn, volumn, true);
