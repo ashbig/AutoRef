@@ -682,23 +682,23 @@ public class OrderProcessManager {
     
     public void writeCloneList(List clones, PrintWriter out, boolean isWorkingStorage, boolean isQuantity) {
         if(isWorkingStorage) {
-            out.print("Clone ID\tClone Type\tGene ID\tGene Symbol\tGene Name\tReference Sequence Genbank Accession\tReference Sequence GI\tInsert Format\tVector\tSelection Markers\tMutation\tDiscrepancy");
+            out.print("Clone ID\tClone Type\tGene ID\tGene Symbol\tGene Name\tReference Sequence Genbank Accession\tReference Sequence GI\tInsert Format\tVector\tGrowth Condition\tSelection Markers\tMutation\tDiscrepancy");
             if(isQuantity) {
                 out.print("\tQuantity");
             }
             out.println("\tContainer\tWell\tPosition\tSpecial Treatment");
         } else {
             if(isQuantity) {
-                out.println("Clone ID\tClone Type\tGene ID\tGene Symbol\tGene Name\tReference Sequence Genbank Accession\tReference Sequence GI\tInsert Format\tVector\tSelection Markers\tMutation\tDiscrepancy\tQuantity");
+                out.println("Clone ID\tClone Type\tGene ID\tGene Symbol\tGene Name\tReference Sequence Genbank Accession\tReference Sequence GI\tInsert Format\tVector\tGrowth Condition\tSelection Markers\tMutation\tDiscrepancy\tQuantity");
             } else {
-                out.println("Clone ID\tClone Type\tGene ID\tGene Symbol\tGene Name\tReference Sequence Genbank Accession\tReference Sequence GI\tInsert Format\tVector\tSelection Markers\tMutation\tDiscrepancy");
+                out.println("Clone ID\tClone Type\tGene ID\tGene Symbol\tGene Name\tReference Sequence Genbank Accession\tReference Sequence GI\tInsert Format\tVector\tGrowth Condition\tSelection Markers\tMutation\tDiscrepancy");
             }
         }
         
         for(int i=0; i<clones.size(); i++) {
             CloneInfo c = (CloneInfo)clones.get(i);
             if(Clone.NOINSERT.equals(c.getType())) {
-                out.print(c.getName()+"\t"+c.getType()+"\t\t\t\t\t\t\t"+c.getVectorname()+"\t");
+                out.print(c.getName()+"\t"+c.getType()+"\t\t\t\t\t\t\t"+c.getVectorname()+"\t"+c.getRecommendedGrowthCondition().getName()+"\t");
                 
                 List selections = c.getSelections();
                 for(int n=0; n<selections.size(); n++) {
@@ -721,7 +721,7 @@ public class OrderProcessManager {
                 List inserts = c.getInserts();
                 for(int j=0; j<inserts.size(); j++) {
                     DnaInsert insert = (DnaInsert)inserts.get(j);
-                    out.print(c.getName()+"\t"+c.getType()+"\t"+insert.getGeneid()+"\t"+insert.getName()+"\t"+insert.getDescription()+"\t"+insert.getTargetgenbank()+"\t"+insert.getTargetseqid()+"\t"+insert.getFormat()+"\t"+c.getVectorname()+"\t");
+                    out.print(c.getName()+"\t"+c.getType()+"\t"+insert.getGeneid()+"\t"+insert.getName()+"\t"+insert.getDescription()+"\t"+insert.getTargetgenbank()+"\t"+insert.getTargetseqid()+"\t"+insert.getFormat()+"\t"+c.getVectorname()+"\t"+c.getRecommendedGrowthCondition().getName()+"\t");
                     
                     List selections = c.getSelections();
                     for(int n=0; n<selections.size(); n++) {
