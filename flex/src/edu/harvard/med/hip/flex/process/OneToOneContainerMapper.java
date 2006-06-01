@@ -275,7 +275,7 @@ public class OneToOneContainerMapper implements ContainerMapper {
         
         Result result = Result.findResult(s, p);
         
-        if(Result.GROW.equals(result.getValue())) {
+        if(Result.GROW.equals(result.getValue()) || Result.WEAKGROW.equals(result.getValue())) {
             type = Sample.getType(newProtocol.getProcessname());
         } else {
             type = Sample.EMPTY;
