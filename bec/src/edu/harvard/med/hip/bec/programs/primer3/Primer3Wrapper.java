@@ -448,7 +448,7 @@ public class Primer3Wrapper
               int result = process.waitFor();
               if (result != 0) 
               {
-                  throw new  BecUtilException("primer3 call failed" + result);
+                 return false;// throw new  BecUtilException("primer3 call failed" + result);
               }
               return true;
         } catch (IOException e)
