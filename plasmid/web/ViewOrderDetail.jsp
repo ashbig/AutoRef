@@ -45,9 +45,9 @@
   </tr>
   <tr> 
     <td class="formlabel">Email:</td>
-    <td class="text"><bean:write name="<%=Constants.USER_KEY%>" property="email"/></td>
+    <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="email"/></td>
     <td class="formlabel">Phone:</td>
-    <td class="text"><bean:write name="<%=Constants.USER_KEY%>" property="phone"/></td>
+    <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="phone"/></td>
   </tr>
 </table>
 

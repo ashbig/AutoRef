@@ -60,6 +60,7 @@ public class CloneOrder {
     private String firstname;
     private String lastname;
     private String email;
+    private String phone;
     
     private String piname;
     private String piemail;
@@ -118,6 +119,7 @@ public class CloneOrder {
     public String getShippedContainers() {return shippedContainers;}
     public String getPiname() {return piname;}
     public String getPiemail() {return piemail;}
+    public String getPhone() {return phone;}
     
     public void setOrderid(int i) {this.orderid = i;}
     public void setOrderDate(String s) {this.orderDate = s;}
@@ -148,6 +150,7 @@ public class CloneOrder {
     public void setShippedContainers(String s) {this.shippedContainers = s;}
     public void setPiname(String s) {this.piname = s;}
     public void setPiemail(String s) {this.piemail = s;}
+    public void setPhone(String s) {this.phone = s;}
     
     public List getItems() {return items;}
     public void setItems(List l) {this.items = l;}

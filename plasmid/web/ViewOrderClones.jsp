@@ -42,7 +42,6 @@
     <td class="tableheader">Vector</td>
     <td class="tableheader">Selection Markers</td>
     <td class="tableheader">Special MTA</td>
-    <td class="tableheader">Quantity</td>
   </tr>
 
   <% int i=0;%>
@@ -78,7 +77,6 @@
     </logic:iterate>
     </td>
     <td><bean:write name="clone" property="specialtreatment"/></td>
-    <td><bean:write name="clone" property="quantity"/></td>
     </tr>
   </logic:iterate>
 </table>
