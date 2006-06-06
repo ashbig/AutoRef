@@ -749,12 +749,14 @@ if ( request.getParameter("plate_name") != null)((PrimerOrderRunner)runner).setP
                     String  item_ids = (String) request.getParameter("items");
                     runner = new DecisionToolRunner_New();
                     //String items = item_ids.trim();
-                    String items = item_ids.toUpperCase().trim();
+                    String items = item_ids.trim();
                     int items_type =  Integer.parseInt(request.getParameter("item_type"));
                   
+                    if ( items_type != Constants.ITEM_TYPE_PROJECT_NAME)
+                        items.toUpperCase();
                     runner.setInputData(items_type,items);
                     runner.setUser(user);
-                         runner.setProcessType(forwardName);
+                    runner.setProcessType(forwardName);
                  
                     int bioeval_spec_id = Integer.parseInt( (String) request.getParameter(Spec.FULL_SEQ_SPEC));
                     ((DecisionToolRunner_New)runner).setSpecId(bioeval_spec_id);
