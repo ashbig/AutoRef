@@ -118,9 +118,9 @@ public class SubmitDataFileAction extends BecAction
                              break;
                          }
                         
-                         case  Constants.PROCESS_GET_TRACE_FILE_NAMES :
+                         case  Constants.PROCESS_MOVE_TRACE_FILES :
                          {
-                             title = "request for list of Trace Files' names"; 
+                             title = "request for Trace Files' move"; 
                              items = getInputItems( input);
                              break;
                          }
