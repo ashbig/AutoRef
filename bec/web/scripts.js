@@ -182,6 +182,12 @@ if( IsEmpty(formElement.plate_names))
     return false;
 }
 
+if ( formElement.PROJECT_ID.selectedIndex==0)
+{ 
+alert("Please select project name.");
+    return false;
+}
+
 
 return true;
 }

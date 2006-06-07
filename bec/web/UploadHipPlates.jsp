@@ -190,9 +190,9 @@ for (Enumeration e = BecProperties.getInstance().getStopClosedCodons().keys() ; 
     <td  bgcolor="#e4e9f8"> <b>Project name:</b></td>
     <TD bgcolor="#e4e9f8">
         <SELECT NAME="<%= UI_Constants.PROJECT_ID%>">
-          <% 
-          	
-        ProjectDefinition pdef = null;
+           
+          <option value = '-1' >Select project...	</option>
+        <%ProjectDefinition pdef = null;
         for ( Enumeration e = DatabaseToApplicationDataLoader.getProjectDefinitions().elements(); e.hasMoreElements() ;)
         {
             pdef = (ProjectDefinition)  e.nextElement();
