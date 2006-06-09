@@ -25,7 +25,7 @@ import org.apache.struts.util.MessageResources;
 import plasmid.database.DatabaseManager.DefTableManager;
 import plasmid.database.DatabaseManager.VectorManager;
 import plasmid.Constants;
-import plasmid.form.VectorSearchForm;
+import plasmid.form.*;
 
 /**
  *
@@ -64,6 +64,10 @@ public class GetVectorPropertyTypesAction extends Action {
         ((VectorSearchForm)form).resetLogicOperators(types.size());
         request.setAttribute("species", species);
         
+        ViewCartForm f = (ViewCartForm)request.getSession().getAttribute("viewCartForm");
+        if(f != null)
+            f.setIsBatch(null);
+        
         return (mapping.findForward("success"));
-    }     
+    }
 }

@@ -19,7 +19,8 @@ public class PlatePositionConvertor {
     public PlatePositionConvertor() {
     }
         
-    public static int convertWellFromA8_12toInt( String well) {
+    public static int convertWellFromA8_12toInt( String well) throws Exception {
+        well.trim();
         int position = -1;
         well = well.toLowerCase();
         int row = (int)well.charAt(0);
@@ -28,15 +29,23 @@ public class PlatePositionConvertor {
         int first_char_value = 0;
         int second_char_value = 0;
         int row_value = 0;
-        
+       
+        if(column>12)
+            throw new Exception("Well is not valid.");
         
         row_value = row - a_value + 1;
+        
+        if(row_value>8)
+            throw new Exception("Well is not valid.");
         
         return (column - 1) * 8 +  row_value ;
     }
     
     //convert well nomenculature from A10 to int
-    public static String convertWellFromInttoA8_12( int well) {
+    public static String convertWellFromInttoA8_12( int well) throws Exception {
+        if(well>96)
+            throw new Exception("Well is not valid.");
+        
         String position = null;
         
         int a_value = (int) 'A';

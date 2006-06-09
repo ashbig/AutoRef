@@ -72,7 +72,10 @@ public class ViewCartAction extends Action {
             List collections = manager.getCollections();
             List cloneids = manager.getCloneids();
             List collectionNames = manager.getCollectionNames();
-            List newShoppingcart = manager.getShoppingCartClones(cloneids, clones);
+            
+            String isbatch = ((ViewCartForm)form).getIsBatch();
+            List batchorders = (List)request.getSession().getAttribute(Constants.BATCH_ORDER_CLONES);
+            List newShoppingcart = manager.getShoppingCartClones(cloneids, clones, batchorders, isbatch);
             List newShoppingcartCollections = manager.getShoppingCartCollections(collectionNames, collections);
             
             if(newShoppingcart == null || newShoppingcartCollections == null) {

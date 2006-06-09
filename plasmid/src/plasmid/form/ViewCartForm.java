@@ -27,6 +27,7 @@ public class ViewCartForm extends ActionForm {
     private String submitButton;
     private String itemid;
     private String type;
+    private String isBatch;
     
     /** Creates a new instance of ViewCartForm */
     public ViewCartForm() {
@@ -105,4 +106,7 @@ public class ViewCartForm extends ActionForm {
     public void setType(String s) {
         this.type = s;
     }
+    
+    public String getIsBatch() {return isBatch;}
+    public void setIsBatch(String s) {this.isBatch = s;}
 }

@@ -36,5 +36,5 @@ public abstract class MappingCalculator {
     public void setDestSampleType(String s) {this.destSampleType = s;}
     
     abstract public boolean isMappingValid();
-    abstract public List calculateMapping();
+    abstract public List calculateMapping() throws Exception;
 }

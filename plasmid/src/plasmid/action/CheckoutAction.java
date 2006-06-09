@@ -62,6 +62,9 @@ public class CheckoutAction extends UserAction {
         User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
         List shoppingcart = (List)request.getSession().getAttribute(Constants.CART);
         // List clones = (List)request.getAttribute("cart");
+        String isBatch = (String)request.getAttribute("isbatch");
+        if(isBatch == null)
+            isBatch = "N";
         
         if(shoppingcart == null || shoppingcart.size() == 0) {
             shoppingcart = new ArrayList();
@@ -132,6 +135,7 @@ public class CheckoutAction extends UserAction {
         ((CheckoutForm)form).setNumOfCollections(collectionQuantity);
         ((CheckoutForm)form).setCostOfCollections(collectionPrice);
         ((CheckoutForm)form).setCostForShipping(0.0);
+        ((CheckoutForm)form).setIsBatch(isBatch);
            
         List shippingMethods = DefTableManager.getVocabularies("shippingmethod", "method");
         request.setAttribute("shippingMethods", shippingMethods);

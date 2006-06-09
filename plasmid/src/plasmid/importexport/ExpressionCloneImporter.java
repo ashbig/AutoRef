@@ -43,7 +43,7 @@ public class ExpressionCloneImporter {
     
     public List getInsertClones() {return insertClones;}
     
-    public List getFlexClones(String status, String vectorname) throws Exception {
+    public List getFlexClones(String status, String vectorname) throws Exception {        
         String sql = "select c.cloneid,clonename,mastercloneid,status,comments,"+
         " vectorname,genusspecies,v.PCRRESULT,v.FLORESCENCERESULT,"+
         " v.PROTEINRESULT,v.RESTRICTIONRESULT,v.COLONYRESULT,"+
@@ -51,7 +51,7 @@ public class ExpressionCloneImporter {
         " from clones c, cloningstrategy s, flexsequence f, clonevalidation v, clonestorage cs"+
         " where c.strategyid=s.strategyid and c.cloneid=v.cloneid(+)"+
         " and c.sequenceid=f.sequenceid and c.cloneid=cs.cloneid"+
-        " and c.plasmid is null and c.strategyid in (24, 17, 15, 16, 20, 21, 13)"+
+        " and c.plasmid is null and c.strategyid in (10, 18)"+
         " and cs.storagetype='Working Storage'";
         
         if(status != null)
@@ -188,12 +188,18 @@ public class ExpressionCloneImporter {
                 
                 VectorManager man = new VectorManager(conn);
                 String vectorname = c.getVectorname();
-                if("pLP-DS 3xMyc".equals(vectorname))
+                if("pLP-DS 3xMyc".equals(vectorname)) {
                     vectorname="pLP-DS3xMyc";
-                if("pLP-DS 3xFlag".equals(vectorname))
+                    plasmidClone.setVectorname(vectorname);
+                }
+                if("pLP-DS 3xFlag".equals(vectorname)) {
                     vectorname="pLP-DS3xFlag";
-                if("pCITE-GST".equals(vectorname))
+                    plasmidClone.setVectorname(vectorname);
+                }
+                if("pCITE-GST".equals(vectorname)) {
                     vectorname="pANT7_cGST";
+                    plasmidClone.setVectorname(vectorname);
+                }
                 int vectorid = man.getVectorid(vectorname);
                 if(vectorid <= 0) {
                     //clones.remove(c);
@@ -325,7 +331,7 @@ public class ExpressionCloneImporter {
     public static void main(String args[]) throws Exception {
         String plateFileName = "G:\\plasmid\\Other\\ExpressionPlate.txt";
         String cloneFileName = "G:\\plasmid\\Other\\MissingMasterClones.txt";
-        String status = "SUCCESSFUL";
+        String status = "SUCESSFUL";
         String vectorname = null;
         
         DatabaseTransactionNoPool t = new DatabaseTransactionNoPool(plasmidurl,plasmidusername,plasmidpassword);

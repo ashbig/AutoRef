@@ -12,6 +12,7 @@ import java.io.*;
 
 import plasmid.coreobject.*;
 import plasmid.query.coreobject.CloneInfo;
+import plasmid.query.handler.*;
 import plasmid.util.*;
 import plasmid.database.*;
 import plasmid.Constants;
@@ -24,6 +25,8 @@ import plasmid.database.DatabaseManager.*;
 public class OrderProcessManager {
     public static final String USA = "USA";
     public static final int PLATESIZE = 96;
+    public static final String BATCH_ORDER_FILE_DILIM = ",";
+    
     private List clones;
     private List collections;
     private List cloneids;
@@ -238,7 +241,7 @@ public class OrderProcessManager {
         return newShoppingcart;
     }
     
-    public List getShoppingCartClones(List cloneids, List clones) {
+    public List getShoppingCartClones(List cloneids, List clones, List batchorders, String isbatch) {
         DatabaseTransaction t = null;
         Connection conn = null;
         try {
@@ -254,6 +257,16 @@ public class OrderProcessManager {
                 int quantity = item.getQuantity();
                 CloneInfo cloneInfo = (CloneInfo)found.get(cloneid);
                 cloneInfo.setQuantity(quantity);
+                if("Y".equals(isbatch)) {
+                    for(int j=0; j<batchorders.size(); j++) {
+                        BatchOrder b = (BatchOrder)batchorders.get(j);
+                        if(b.getCloneid() == Integer.parseInt(cloneid)) {
+                            cloneInfo.setTargetPlate(b.getPlate());
+                            cloneInfo.setTargetWell(b.getWell());
+                            break;
+                        }
+                    }
+                }
                 newShoppingcart.add(cloneInfo);
             }
             
@@ -298,7 +311,7 @@ public class OrderProcessManager {
         }
     }
     
-    public List getOrderClones(int orderid, User user, boolean isWorkingStorage) {
+    public List getOrderClones(int orderid, User user, boolean isWorkingStorage, String isBatch) {
         DatabaseTransaction t = null;
         Connection conn = null;
         try {
@@ -307,9 +320,15 @@ public class OrderProcessManager {
             CloneOrderManager m = new CloneOrderManager(conn);
             List clones = null;
             if(User.INTERNAL.equals(user.getIsinternal())) {
-                clones = m.queryOrderClones(orderid, null);
+                if("Y".equals(isBatch))
+                    clones = m.queryBatchOrderClones(orderid, null);
+                else
+                    clones = m.queryOrderClones(orderid, null);
             } else {
-                clones = m.queryOrderClones(orderid, user);
+                if("Y".equals(isBatch))
+                    clones = m.queryBatchOrderClones(orderid, user);
+                else 
+                    clones = m.queryOrderClones(orderid, user);
             }
             
             if(clones == null) {
@@ -335,6 +354,8 @@ public class OrderProcessManager {
                 String cloneid = ((new Integer(item.getCloneid())).toString());
                 CloneInfo cloneInfo = (CloneInfo)found.get(cloneid);
                 cloneInfo.setQuantity(quantity);
+                cloneInfo.setTargetPlate(item.getPlate());
+                cloneInfo.setTargetWell(item.getWell());
                 orderClones.add(cloneInfo);
             }
             
@@ -523,8 +544,13 @@ public class OrderProcessManager {
             }
             
             CloneOrderManager m = new CloneOrderManager(conn);
-            int orderid = m.addCloneOrder(order, user);
-            if(orderid < 0) {
+            int orderid = 0;
+            if(order.getIsBatch().equals("Y"))
+                orderid = m.addBatchCloneOrder(order, user);
+            else {
+                orderid = m.addCloneOrder(order, user);
+            }
+            if(orderid <= 0) {
                 DatabaseTransaction.rollback(conn);
                 if(Constants.DEBUG) {
                     System.out.println(m.getErrorMessage());
@@ -745,9 +771,36 @@ public class OrderProcessManager {
         }
     }
     
+    public List groupClonesByTargetPlate(List clones) {
+        List groups = new ArrayList();
+        Collections.sort(clones, new CloneInfoTargetPlateWellComparator());
+        
+        String lastPlate = null;
+        String currentPlate = null;
+        List l = null;
+        for(int i=0; i<clones.size(); i++) {
+            CloneInfo c = (CloneInfo)clones.get(i);
+            currentPlate = c.getTargetPlate();
+            if(currentPlate.equals(lastPlate)) {
+                l.add(c);
+            } else {
+                if(lastPlate != null) {
+                    groups.add(l);
+                }
+                l = new ArrayList();
+                l.add(c);
+                lastPlate = currentPlate;
+            }
+        }
+        groups.add(l);
+        
+        return groups;
+    }
+    
     public List groupClonesByGrowth(List clones) {
         List groups = new ArrayList();
         Collections.sort(clones, new CloneGrowthComparator());
+        
         int lastid = 0;
         int currentid = 0;
         List l = null;
@@ -872,7 +925,7 @@ public class OrderProcessManager {
         }
     }
     
-    public void printBioTracyWorklist(List clones, String path, String filename) throws Exception {
+    public void printBioTracyWorklist(List clones, String path, String filename, String isBatch) throws Exception {
         if(clones == null || filename == null)
             return;
         
@@ -881,7 +934,14 @@ public class OrderProcessManager {
         for(int i=0; i<clones.size(); i++) {
             CloneInfo clone = (CloneInfo)clones.get(i);
             String tube = clone.getPlate();
-            f.write(tube+"\n");
+            f.write(tube);
+            if("Y".equals(isBatch)) {
+                String well = clone.getTargetWell();
+                if(well == null)
+                    throw new Exception("Cannot get valid well for clone: "+clone.getName());
+                f.write(","+well);
+            }
+            f.write("\n");
         }
         f.close();
     }
@@ -1009,7 +1069,7 @@ public class OrderProcessManager {
             String sortby = null;
             if(Constants.SORTBY_ORDERDATE.equals(sort)) {
                 sortby = "orderdate";
-            } 
+            }
             if(Constants.SORTBY_ORDERID.equals(sort)) {
                 sortby = "orderid";
             }
@@ -1040,6 +1100,126 @@ public class OrderProcessManager {
         for(int i=0; i<orders.size(); i++) {
             CloneOrder order = (CloneOrder)orders.get(i);
             out.println(order.getName()+"\t"+order.getNumofclones()+"\t"+order.getNumofcollection()+"\t$"+order.getPrice()+"\t"+order.getPonumber()+"\t"+order.getShippingdate()+"\t"+order.getOrderid()+"\tBill To: "+order.getBillingTo()+", "+order.getBillingAddress().replaceAll("\n", " ")+"\t"+order.getPiname()+"\t"+order.getPiemail());
+        }
+    }
+    
+    public List parseBatchOrderFile(InputStream input) throws Exception {
+        BufferedReader in = new BufferedReader(new InputStreamReader(input));
+        String line = null;
+        List clones = new ArrayList();
+        
+        while((line = in.readLine()) != null) {
+            StringTokenizer st = new StringTokenizer(line, BATCH_ORDER_FILE_DILIM);
+            
+            String cloneid = st.nextToken();
+            if(cloneid == null || cloneid.trim().length() <= 0)
+                continue;
+            
+            String plate = st.nextToken();
+            if(plate == null || plate.trim().length()<=0)
+                throw new Exception("Invalid plate for clone: "+cloneid);
+            
+            String well = st.nextToken();
+            if(well == null || well.trim().length()<=0)
+                throw new Exception("Invalid well for clone: "+cloneid);
+            
+            try {
+                PlatePositionConvertor.convertWellFromA8_12toInt(well.trim());
+            } catch (Exception ex) {
+                throw new Exception("Invalid well for clone: "+cloneid);
+            }
+            
+            BatchOrder clone = new BatchOrder(0, 0, plate.trim(), well.trim(), cloneid.trim());
+            clones.add(clone);
+        }
+        in.close();
+        
+        return clones;
+    }
+    
+    public List checkDuplicateClonesAndWells(List clones) {
+        List l = new ArrayList();
+        List duplicateClones = new ArrayList();
+        
+        for(int i=0; i<clones.size(); i++) {
+            BatchOrder clone = (BatchOrder)clones.get(i);
+            if(clone.cloneExist(l) || clone.plateWellExist(l)) {
+                duplicateClones.add(clone);
+            }
+            l.add(clone);
+        }
+        return duplicateClones;
+    }
+    
+    public List getCloneidFromBatchOrder(List clones) {
+        List ids = new ArrayList();
+        
+        for(int i=0; i<clones.size(); i++) {
+            BatchOrder c = (BatchOrder)clones.get(i);
+            String id = c.getOriginalCloneid();
+            ids.add(id);
+        }
+        
+        return ids;
+    }
+    
+    public Map queryBatchOrderClones(String cloneType, List clones, List restrictions, List noFoundClones) throws Exception {
+        String type = null;
+        
+        if(Constants.BATCH_ORDER_PLASMIDID.equals(cloneType)) {
+            type = Constants.CLONE_SEARCH_PLASMIDCLONEID;
+        } else {
+            type = Constants.CLONE_SEARCH_OTHERCLONEID;
+        }
+        
+        List cloneids = getCloneidFromBatchOrder(clones);
+        GeneQueryHandler handler = StaticQueryHandlerFactory.makeGeneQueryHandler(type, cloneids);
+        
+        if(handler == null) {
+            throw new Exception("Wrong clone ID type.");
+        }
+        
+        handler.doQuery(restrictions, null, null, -1, -1, null, Clone.AVAILABLE, true);
+        Map founds = handler.getFound();
+        noFoundClones.addAll(handler.getNofound());
+        
+        return founds;
+    }
+    
+    public List processBatchOrderClones(List clones, Map foundClones, List shoppingcart) throws Exception {
+        List l = new ArrayList();
+        
+        for(int i=0; i<clones.size(); i++) {
+            BatchOrder b = (BatchOrder)clones.get(i);
+            List found = (ArrayList)foundClones.get(b.getOriginalCloneid());
+            
+            if(found == null) {
+                throw new Exception("Cannot find clone with cloneid: "+b.getOriginalCloneid());
+            }
+            
+            Clone c = (Clone)found.get(0);
+            b.setCloneid(c.getCloneid());
+            CloneInfo cinfo = new CloneInfo(b.getOriginalCloneid(), c);
+            cinfo.setTargetPlate(b.getPlate());
+            cinfo.setTargetWell(b.getWell());
+            l.add(cinfo);
+            
+            ShoppingCartItem item = new ShoppingCartItem(0, (new Integer(c.getCloneid())).toString(), 1, ShoppingCartItem.CLONE);
+            ShoppingCartItem.addToCart(shoppingcart, item);
+        }
+        
+        return l;
+    }
+    
+    public void removeCloneFromBatchOrder(List clones, String cloneid) {
+        if(clones == null)
+            return;
+        
+        for(int i=0; i<clones.size(); i++) {
+            BatchOrder b = (BatchOrder)clones.get(i);
+            if(b.getCloneid()==Integer.parseInt(cloneid)) {
+                clones.remove(i);
+            }
         }
     }
 }

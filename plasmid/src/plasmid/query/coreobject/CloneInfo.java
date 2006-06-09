@@ -20,6 +20,8 @@ public class CloneInfo extends Clone implements Serializable{
     protected String well;
     protected int position;
     protected boolean isAddedToCart;
+    protected String targetPlate;
+    protected String targetWell;
     
     public CloneInfo(int cloneid, String name, String type, String verified,
     String vermethod, String domain, String subdomain, String restriction, 
@@ -38,6 +40,7 @@ public class CloneInfo extends Clone implements Serializable{
         super.setNames(c.getNames());
         super.setPublications(c.getPublications());
         super.setSelections(c.getSelections());
+        super.setRecommendedGrowthCondition(c.getRecommendedGrowthCondition());
     }
     
     public CloneInfo(Clone c) {
@@ -49,6 +52,7 @@ public class CloneInfo extends Clone implements Serializable{
         super.setNames(c.getNames());
         super.setPublications(c.getPublications());
         super.setSelections(c.getSelections());
+        super.setRecommendedGrowthCondition(c.getRecommendedGrowthCondition());
     }
         
     public String getTerm() {return term;}
@@ -57,6 +61,8 @@ public class CloneInfo extends Clone implements Serializable{
     public String getWell() {return well;}
     public int getPosition() {return position;}
     public boolean getIsAddedToCart() {return isAddedToCart;}
+    public String getTargetPlate() {return targetPlate;}
+    public String getTargetWell() {return targetWell;}
     
     public void setTerm(String term) {this.term = term;}
     public void setQuantity(int i) {this.quantity = i;}
@@ -65,6 +71,8 @@ public class CloneInfo extends Clone implements Serializable{
     public void setWell(String x, String y) {this.well = x+y;}
     public void setPosition(int i) {this.position = i;}
     public void setIsAddedToCart(boolean b) {this.isAddedToCart = b;}    
+    public void setTargetPlate(String s) {this.targetPlate = s;}
+    public void setTargetWell(String s) {this.targetWell = s;}
     
     private void writeObject(java.io.ObjectOutputStream out)
      throws IOException {

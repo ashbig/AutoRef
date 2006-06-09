@@ -21,6 +21,7 @@ public class DownloadClonesForm extends ActionForm {
     private String type;
     private String collectionName;
     private String button;
+    private String isBatch;
     
     /** Creates a new instance of DownloadClonesForm */
     public DownloadClonesForm() {
@@ -30,9 +31,11 @@ public class DownloadClonesForm extends ActionForm {
     public String getType() {return type;}
     public String getCollectionName() {return collectionName;}
     public String getButton() {return button;}
+    public String getIsBatch() {return isBatch;}
     
     public void setOrderid(int id) {this.orderid = id;}
     public void setType(String s) {this.type = s;}
     public void setCollectionName(String s) {this.collectionName = s;}
     public void setButton(String s) {this.button = s;}
+    public void setIsBatch(String s) {this.isBatch = s;}
 }

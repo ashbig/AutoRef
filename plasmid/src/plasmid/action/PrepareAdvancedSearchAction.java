@@ -23,7 +23,7 @@ import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 
 import plasmid.database.DatabaseManager.DefTableManager;
-import plasmid.form.AdvancedSearchForm;
+import plasmid.form.*;
 import plasmid.Constants;
 
 /**
@@ -45,15 +45,19 @@ public class PrepareAdvancedSearchAction extends PlasmidAction {
      *
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet exception occurs
-     */    
+     */
     public ActionForward plasmidPerform(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-       
+        
         ActionErrors errors = new ActionErrors();
         List species = DefTableManager.getVocabularies("species", "genusspecies");
-        species.add(0, Constants.ALL); 
+        species.add(0, Constants.ALL);
         
         ((AdvancedSearchForm)form).resetParams();
         request.setAttribute("species", species);
+        
+        ViewCartForm f = (ViewCartForm)request.getSession().getAttribute("viewCartForm");
+        if(f != null)
+            f.setIsBatch(null);
         
         return (mapping.findForward("success"));
     }

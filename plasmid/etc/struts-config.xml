@@ -107,6 +107,9 @@
     <form-bean      name="searchOrderForm"
                     type="plasmid.form.SearchOrderForm"/>
                     
+    <form-bean      name="batchOrderForm"
+                    type="plasmid.form.BatchOrderForm"/>
+                    
  </form-beans>
 
   <!-- ========== Global Forward Definitions ============================== -->
@@ -138,6 +141,14 @@
               input="/AdvancedSearch.jsp">
       <forward  name="success"  path="/DisplayVectorSearchResults.jsp"/>
       <forward  name="empty"  path="/DisplayEmptySearchResults.jsp"/>
+    </action>
+    
+    <action     path="/BatchOrder"
+                type="plasmid.action.BatchOrderAction"
+               name="batchOrderForm"
+               scope="request"
+              input="/BatchOrder.jsp">
+      <forward  name="success"  path="/DisplayCart.jsp"/>
     </action>
     
     <action     path="/CancelOrder"

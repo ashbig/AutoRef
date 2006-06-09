@@ -420,7 +420,7 @@ public class CloneManager extends TableManager {
         " domain, subdomain, restriction, comments, vectorid, vectorname,"+
         " clonemapfilename,status,specialtreatment,source,description,cloneid"+
         " from clone where cloneid =?";
-        
+       
         if(clonetypes != null) {
             String s = StringConvertor.convertFromListToSqlString(clonetypes);
             sq = sq+" and clonetype in ("+s+")";
@@ -442,7 +442,7 @@ public class CloneManager extends TableManager {
     }
         
     public Map queryClonesByCloneid(List cloneids, boolean isInsert, boolean isSelection, boolean isWorkingStorage, List restrictions, List clonetypes, String species, String status) {
-        return queryClonesByCloneid(cloneids, isInsert, isSelection, isWorkingStorage, false, restrictions, clonetypes, species, status);
+        return queryClonesByCloneid(cloneids, isInsert, isSelection, isWorkingStorage, true, restrictions, clonetypes, species, status);
     }
     
     /**

@@ -65,7 +65,9 @@ public class UpdateCartAction extends Action {
         String ret = ((ViewCartForm)form).getSubmitButton();
         String itemid = ((ViewCartForm)form).getItemid();
         String type = ((ViewCartForm)form).getType();
+        String isBatch = ((ViewCartForm)form).getIsBatch();
         request.getSession().setAttribute(Constants.CART_STATUS, Constants.UPDATED);
+        List batchOrderClones = (List)request.getSession().getAttribute(Constants.BATCH_ORDER_CLONES);
         
         if(!("Save Cart".equals(ret)) && (shoppingcart == null || shoppingcart.size() == 0 )) {
             shoppingcart = new ArrayList();
@@ -87,7 +89,7 @@ public class UpdateCartAction extends Action {
                 return (mapping.findForward("success_empty"));
             }
             
-            List clones = m.getShoppingCartClones(cloneids, m.getClones());
+            List clones = m.getShoppingCartClones(cloneids, m.getClones(), batchOrderClones, isBatch);
             List collections = m.getShoppingCartCollections(collectionNames, m.getCollections());
             
             if(clones == null && !("Save Cart".equals(ret))) {
@@ -111,6 +113,11 @@ public class UpdateCartAction extends Action {
                 } else {
                     newShoppingcartClones = m.updateShoppingCartForClones(clones, "0", shoppingcartCopy);
                     newShoppingcartCollections = m.updateShoppingCartForCollections(collections, itemid, shoppingcartCopy);
+                }
+                
+                if("Y".equals(isBatch)) {
+                    m.removeCloneFromBatchOrder(batchOrderClones, itemid);
+                    request.getSession().setAttribute(Constants.BATCH_ORDER_CLONES, batchOrderClones);
                 }
             } else {
                 newShoppingcartClones = m.updateShoppingCartForClones(clones, "0", shoppingcartCopy);
@@ -138,6 +145,7 @@ public class UpdateCartAction extends Action {
                 request.getSession().setAttribute(Constants.CART, shoppingcartCopy);
             }
             if("Check Out".equals(ret)) {
+                request.setAttribute("isbatch",  isBatch);
                 return (mapping.findForward("success_checkout"));
             }
             if("Save Cart".equals(ret)) {

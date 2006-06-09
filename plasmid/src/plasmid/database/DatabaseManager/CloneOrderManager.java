@@ -40,8 +40,8 @@ public class CloneOrderManager extends TableManager {
         " (orderdate,orderstatus,ponumber,shippingto,billingto,"+
         " shippingaddress,billingaddress,numofclones,numofcollection,"+
         " costforclones,costforcollection,costforshipping,totalprice,userid,orderid,"+
-        " shippingmethod,shippingaccount,trackingnumber)"+
-        " values(sysdate,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        " shippingmethod,shippingaccount,trackingnumber,isbatch)"+
+        " values(sysdate,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         
         String sql2 = "insert into orderclones(orderid,cloneid,collectionname,quantity)"+
         " values(?,?,?,?)";
@@ -67,6 +67,7 @@ public class CloneOrderManager extends TableManager {
             stmt.setString(15, order.getShippingmethod());
             stmt.setString(16, order.getShippingaccount());
             stmt.setString(17, order.getTrackingnumber());
+            stmt.setString(18, order.getIsBatch());
             DatabaseTransaction.executeUpdate(stmt);
             
             stmt2 = conn.prepareStatement(sql2);
@@ -99,16 +100,46 @@ public class CloneOrderManager extends TableManager {
         return orderid;
     }
     
-    /**
-     * Query database to get all the clones for a given order id.
-     *
-     * @param orderid
-     * @param user User object.
-     * @return A list of OrderClones object. Will return null if error occured.
-     */
+    public int addBatchCloneOrder(CloneOrder order, User user) {
+        int orderid = addCloneOrder(order, user);
+        
+        if(orderid < 0)
+            return -1;
+        
+        String sql = "insert into batchorder(orderid,cloneid,plate,well)"+
+        " values(?,?,?,?)";
+        
+        PreparedStatement stmt = null;
+        try {
+            stmt = conn.prepareStatement(sql);
+            List items = order.getBatches();
+            if(items == null) {
+                handleError(null, "order batches is null value.");
+                return -1;
+            }
+            for(int i=0; i<items.size(); i++) {
+                BatchOrder item = (BatchOrder)items.get(i);
+                stmt.setInt(1,  orderid);
+                stmt.setInt(2, item.getCloneid());
+                stmt.setString(3, item.getPlate());
+                stmt.setString(4, item.getWell());
+                DatabaseTransaction.executeUpdate(stmt);
+            }
+        } catch (Exception ex) {
+            handleError(ex, "Cannot insert cloneorder.");
+            return -1;
+        } finally {
+            DatabaseTransaction.closeStatement(stmt);
+        }
+        
+        return orderid;
+    }
+    
     public List queryOrderClones(int orderid, User user) {
-        String sql = "select o.cloneid, o.quantity from orderclones o, cloneorder c"+
-        " where o.orderid=c.orderid and o.collectionname is null and c.orderid="+orderid;
+        String sql = "select o.cloneid, o.quantity"+
+        " from orderclones o, cloneorder c"+
+        " where o.orderid=c.orderid and "+
+        " o.collectionname is null and c.orderid="+orderid;
         
         if(user != null) {
             sql = sql + " and c.userid="+user.getUserid();
@@ -124,6 +155,50 @@ public class CloneOrderManager extends TableManager {
                 int cloneid = rs.getInt(1);
                 int quantity = rs.getInt(2);
                 OrderClones clone = new OrderClones(orderid,cloneid, null, quantity);
+                clones.add(clone);
+            }
+            return clones;
+        } catch (Exception ex) {
+            handleError(ex, "Cannot query orderclones.");
+            return null;
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+    }
+            
+    /**
+     * Query database to get all the clones for a given order id.
+     *
+     * @param orderid
+     * @param user User object.
+     * @return A list of OrderClones object. Will return null if error occured.
+     */
+    public List queryBatchOrderClones(int orderid, User user) {
+        String sql = "select o.cloneid, o.quantity, b.plate, b.well"+
+        " from orderclones o, cloneorder c, batchorder b"+
+        " where o.orderid=c.orderid and o.cloneid=b.cloneid(+) and "+
+        " c.orderid=b.orderid and o.collectionname is null and c.orderid="+orderid;
+        
+        if(user != null) {
+            sql = sql + " and c.userid="+user.getUserid();
+        }
+        
+        DatabaseTransaction t = null;
+        ResultSet rs = null;
+        List clones = new ArrayList();
+        try {
+            t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            while(rs.next()) {
+                int cloneid = rs.getInt(1);
+                int quantity = rs.getInt(2);
+                String plate = rs.getString(3);
+                String well = rs.getString(4);
+                OrderClones clone = new OrderClones(orderid,cloneid, null, quantity);
+                if(plate != null)
+                    clone.setPlate(plate);
+                if(well != null)
+                    clone.setWell(well);
                 clones.add(clone);
             }
             return clones;
@@ -178,7 +253,8 @@ public class CloneOrderManager extends TableManager {
         " shippingaddress,billingaddress,numofclones,numofcollection,costforclones,"+
         " costforcollection,costforshipping,totalprice,c.userid,shippingdate,whoshipped,"+
         " shippingmethod,shippingaccount,trackingnumber,receiveconfirmationdate,"+
-        " whoconfirmed,whoreceivedconfirmation,shippedcontainers,u.email,u.piname,u.piemail,u.phone"+
+        " whoconfirmed,whoreceivedconfirmation,shippedcontainers,u.email,u.piname,"+
+        " u.piemail,u.phone,c.isbatch"+
         " from cloneorder c, userprofile u where c.userid=u.userid and c.orderid="+orderid;
         
         if(user != null) {
@@ -221,6 +297,7 @@ public class CloneOrderManager extends TableManager {
                 String piname = rs.getString(26);
                 String piemail = rs.getString(27);
                 String phone = rs.getString(28);
+                String isbatch = rs.getString(29);
                 
                 order = new CloneOrder(orderid, date, st, ponumber,shippingto,billingto,shippingaddress,billingaddress, numofclones, numofcollection, costforclones, costforcollection,costforshipping, total, userid);
                 order.setShippingdate(shippingdate);
@@ -236,6 +313,8 @@ public class CloneOrderManager extends TableManager {
                 order.setPiname(piname);
                 order.setPiemail(piemail);
                 order.setPhone(phone);
+                if(isbatch != null)
+                    order.setIsBatch(isbatch);
             }
         } catch (Exception ex) {
             handleError(ex, "Cannot query cloneorder.");
@@ -259,7 +338,7 @@ public class CloneOrderManager extends TableManager {
         " c.costforcollection,c.costforshipping,c.totalprice,c.userid,u.firstname,u.lastname,"+
         " c.shippingdate, c.whoshipped, c.shippingmethod,c.shippingaccount,c.trackingnumber,"+
         " c.receiveconfirmationdate, c.whoconfirmed,c.whoreceivedconfirmation,u.email,c.shippedcontainers,"+
-        " u.piname, u.piemail, u.phone"+
+        " u.piname, u.piemail, u.phone, c.isbatch"+
         " from cloneorder c, userprofile u where c.userid=u.userid";
         
         if(user != null) {
@@ -318,6 +397,7 @@ public class CloneOrderManager extends TableManager {
                 String piname = rs.getString(28);
                 String piemail = rs.getString(29);
                 String phone = rs.getString(30);
+                String isbatch = rs.getString(31);
                 
                 CloneOrder order = new CloneOrder(orderid, date, st, ponumber,shippingto,billingto,shippingaddress,billingaddress, numofclones, numofcollection, costforclones, costforcollection,costforshipping, total, userid);
                 
@@ -336,6 +416,8 @@ public class CloneOrderManager extends TableManager {
                 order.setPiname(piname);
                 order.setPiemail(piemail);
                 order.setPhone(phone);
+                if(isbatch != null)
+                    order.setIsBatch(isbatch);
                 
                 orders.add(order);
             }
@@ -358,7 +440,7 @@ public class CloneOrderManager extends TableManager {
         " c.costforcollection,c.costforshipping,c.totalprice,c.userid,u.firstname,u.lastname,"+
         " c.shippingdate, c.whoshipped, c.shippingmethod,c.shippingaccount,c.trackingnumber,"+
         " c.receiveconfirmationdate, c.whoconfirmed,c.whoreceivedconfirmation,u.email,"+
-        " c.shippedcontainers, u.piname, u.piemail, u.phone"+
+        " c.shippedcontainers, u.piname, u.piemail, u.phone, c.isbatch"+
         " from cloneorder c, userprofile u where c.userid=u.userid";
         
         if(orderids != null) {
@@ -434,6 +516,7 @@ public class CloneOrderManager extends TableManager {
                 String piname = rs.getString(28);
                 String piemail = rs.getString(29);
                 String phone = rs.getString(30);
+                String isbatch = rs.getString(31);
                 
                 CloneOrder order = new CloneOrder(orderid, date, st, ponumber,shippingto,billingto,shippingaddress,billingaddress, numofclones, numofcollection, costforclones, costforcollection,costforshipping, total, userid);
                 
@@ -452,6 +535,8 @@ public class CloneOrderManager extends TableManager {
                 order.setPiname(piname);
                 order.setPiemail(piemail);
                 order.setPhone(phone);
+                if(isbatch != null)
+                    order.setIsBatch(isbatch);
                 orders.add(order);
             }
             return orders;

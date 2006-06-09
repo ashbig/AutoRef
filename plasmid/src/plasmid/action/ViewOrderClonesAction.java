@@ -27,6 +27,7 @@ import plasmid.coreobject.*;
 import plasmid.process.*;
 import plasmid.form.ViewOrderClonesForm;
 import plasmid.Constants;
+import plasmid.util.CloneInfoTargetPlateWellComparator;
 
 /**
  *
@@ -57,12 +58,13 @@ public class ViewOrderClonesAction extends UserAction {
         int orderid = ((ViewOrderClonesForm)form).getOrderid();
         String type = ((ViewOrderClonesForm)form).getType();
         String collectionName = ((ViewOrderClonesForm)form).getCollectionName();
+        String isBatch = ((ViewOrderClonesForm)form).getIsBatch();
         
         OrderProcessManager manager = new OrderProcessManager();
         List clones = null;
         
         if(Constants.ORDER_CLONE.equals(type)) {
-            clones = manager.getOrderClones(orderid, user, false);
+            clones = manager.getOrderClones(orderid, user, false, isBatch);
         }
         if(Constants.ORDER_COLLECTION.equals(type)) {
             clones = manager.getOrderClonesForCollection(collectionName, user, false);
@@ -77,10 +79,14 @@ public class ViewOrderClonesAction extends UserAction {
             return (mapping.findForward("error"));
         }
         
+        if(isBatch.equals("Y"))
+            Collections.sort(clones, new CloneInfoTargetPlateWellComparator());
+            
         request.setAttribute("orderid", new Integer(orderid));
         request.setAttribute("type", type);
         request.setAttribute("collectionName", collectionName);
         request.setAttribute("orderClones", clones);
+        request.setAttribute("isBatch", isBatch);
         return mapping.findForward("success");
     }
 }

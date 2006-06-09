@@ -6,7 +6,8 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ page import="java.util.Map" %> 
 <%@ page import="plasmid.Constants" %> 
-<%@ page import="plasmid.coreobject.Clone" %> 
+<%@ page import="plasmid.coreobject.*" %> 
+<%@ page import="plasmid.query.coreobject.CloneInfo" %> 
 <%@ page import="plasmid.coreobject.ShoppingCartItem" %> 
 
 <html>
@@ -40,6 +41,12 @@
     <td class="tableheader">Vector</td>
     <td class="tableheader">Selection Markers</td>
     <td class="tableheader">Use Restriction</td>
+    <logic:present name="viewCartForm" property="isBatch">
+    <logic:equal name="viewCartForm" property="isBatch" value="Y">
+    <td class="tableheader">Target Plate</td>
+    <td class="tableheader">Target Well</td>
+    </logic:equal>
+    </logic:present>
     <td class="tableheader">&nbsp;</td>
   </tr>
 
@@ -72,6 +79,12 @@
     </logic:iterate>
     </td>
     <td><bean:write name="clone" property="restriction"/></td>
+    <logic:present name="viewCartForm" property="isBatch">
+    <logic:equal name="viewCartForm" property="isBatch" value="Y">
+    <td><bean:write name="clone" property="targetPlate"/></td>
+    <td><bean:write name="clone" property="targetWell"/></td>
+    </logic:equal>
+    </logic:present>
     <td><html:form action="UpdateCart.do">
         <input type="hidden" name="itemid" value="<bean:write name="clone" property="cloneid"/>">
         <input type="hidden" name="type" value="<%=ShoppingCartItem.CLONE%>">
@@ -82,6 +95,7 @@
   </logic:iterate>
 </table>
 
+<logic:present name="collectioncart">
 <p class="text">Collections:</p>
 <table width="100%" border="0">
   <tr>
@@ -110,10 +124,13 @@
   </tr>
   </logic:iterate>
 </table>
+</logic:present>
 
     <html:form action="UpdateCart.do">
         <logic:present name="<%=Constants.USER_KEY%>" scope="session">
+        <logic:notPresent name="viewCartForm" property="isBatch">
             <html:submit property="submitButton" value="Save Cart"/>
+        </logic:notPresent>
         </logic:present>
         <html:submit property="submitButton" value="Check Out"/>
     </html:form>

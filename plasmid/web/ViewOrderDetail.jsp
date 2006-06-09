@@ -140,7 +140,7 @@
   </tr>
    <tr> 
     <td class="tablebody">Number of clones:</td>
-    <td class="tablebody"><a href="ViewOrderClones.do?type=<%=Constants.ORDER_CLONE%>&orderid=<bean:write name="<%=Constants.CLONEORDER%>" property="orderid"/>"><bean:write name="<%=Constants.CLONEORDER%>" property="numofclones"/></a></td>
+    <td class="tablebody"><a href="ViewOrderClones.do?type=<%=Constants.ORDER_CLONE%>&orderid=<bean:write name="<%=Constants.CLONEORDER%>" property="orderid"/>&isBatch=<bean:write name="<%=Constants.CLONEORDER%>" property="isBatch"/>"><bean:write name="<%=Constants.CLONEORDER%>" property="numofclones"/></a></td>
     <td align="right" class="tablebody">$<bean:write name="<%=Constants.CLONEORDER%>" property="costforclones"/></td>
   </tr> 
    <tr> 

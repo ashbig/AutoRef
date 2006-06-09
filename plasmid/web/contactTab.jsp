@@ -7,9 +7,9 @@
                 <td width="16%" align="center" bgcolor="#6699CC"><strong><a href="Home.jsp" STYLE="text-decoration:none"><font>Home</font></a></strong></td>
                 <td width="28%" align="center" bgcolor="#6699CC"><a href="Submission.jsp" STYLE="text-decoration:none"><font><strong>Plasmid 
                   Submission </strong></font></a></td>
-                <td width="35%" align="center" bgcolor="#6699CC"><a href="OrderOverview.jsp" STYLE="text-decoration:none"><font>
-                    <strong>Plasmid Search & Order </strong></font></a></td>
-                <td width="21%" align="center" bgcolor="#6699CC"><font color="#CCCCCC"><strong>Contact 
+                <td width="28%" align="center" bgcolor="#6699CC"><a href="OrderOverview.jsp" STYLE="text-decoration:none"><font>
+                    <strong>Plasmid Request </strong></font></a></td>
+                <td width="28%" align="center" bgcolor="#6699CC"><font color="#CCCCCC"><strong>Contact 
                   Us </strong></font></td>
               </tr>
             </table></td>

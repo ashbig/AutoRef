@@ -24,8 +24,7 @@ import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 
 import plasmid.Constants;
-import plasmid.form.CloneSearchForm;
-import plasmid.form.RefseqSearchForm;
+import plasmid.form.*;
 import plasmid.coreobject.*;
 import plasmid.util.StringConvertor;
 import plasmid.database.DatabaseManager.UserManager;
@@ -36,7 +35,7 @@ import plasmid.query.handler.*;
  * @author  DZuo
  */
 public class SearchCloneAction extends Action {
-
+    
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
      * response (or forward to another web component that will create it).
@@ -56,20 +55,24 @@ public class SearchCloneAction extends Action {
     ActionForm form,
     HttpServletRequest request,
     HttpServletResponse response)
-    throws ServletException, IOException { 
+    throws ServletException, IOException {
         
         // get the parameters specified by the customer
         ActionErrors errors = new ActionErrors();
         String searchType = ((CloneSearchForm)form).getSearchType();
         String searchString = ((CloneSearchForm)form).getSearchString();
-    
+        
+        ViewCartForm f1 = (ViewCartForm)request.getSession().getAttribute("viewCartForm");
+        if(f1 != null)
+            f1.setIsBatch(null);
+        
         RefseqSearchForm f = new RefseqSearchForm();
         f.setPage(1);
         f.setPagesize(Constants.PAGESIZE);
-        f.setDisplayPage("indirect");            
+        f.setDisplayPage("indirect");
         f.setDisplay("symbol");
         request.getSession().setAttribute("refseqSearchForm", f);
-            
+        
         User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
         List restrictions = new ArrayList();
         restrictions.add(Clone.NO_RESTRICTION);
@@ -101,7 +104,7 @@ public class SearchCloneAction extends Action {
             handler.doQuery(restrictions, null, null, -1, -1, null, Clone.AVAILABLE);
             List founds = handler.convertFoundToCloneinfo();
             List nofounds = handler.getNofound();
-            totalFoundCloneCount = handler.getFoundCloneCount();            
+            totalFoundCloneCount = handler.getFoundCloneCount();
             int numOfNoFounds = nofounds.size();
             request.getSession().setAttribute("numOfFound", new Integer(totalFoundCloneCount));
             request.getSession().setAttribute("numOfNoFounds", new Integer(numOfNoFounds));
@@ -116,5 +119,5 @@ public class SearchCloneAction extends Action {
             saveErrors(request, errors);
             return (mapping.findForward("error"));
         }
-    }       
+    }
 }

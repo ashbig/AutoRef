@@ -50,6 +50,7 @@ public class CheckoutForm extends ActionForm {
     private String billingphone;
     private String fax;
     private String billingfax;
+    private String isBatch = "N";
     
     /** Creates a new instance of CheckoutForm */
     public CheckoutForm() {
@@ -88,6 +89,7 @@ public class CheckoutForm extends ActionForm {
     public String getBillingphone() {return billingphone;}
     public String getFax() {return fax;}
     public String getBillingfax() {return billingfax;}
+    public String getIsBatch() {return isBatch;}
     
     // public void setUsername(String s) {this.username = s;}
     // public void setEmail(String s) {this.email = s;}
@@ -122,6 +124,7 @@ public class CheckoutForm extends ActionForm {
     public void setBillingphone(String s) {this.billingphone = s;}
     public void setFax(String s) {this.fax = s;}
     public void setBillingfax(String s) {this.billingfax = s;}
+    public void setIsBatch(String s) {this.isBatch = s;}
     
     /**
      * Reset all properties to their default values.

@@ -82,6 +82,10 @@ public class Constants {
     public static final String SORTBY_ORDERDATE = "Order Date";
     public static final String SORTBY_SHIPDATE = "Shipping Date";
     public static final String SORTBY_STATUS = "Order Status";
+    
+    public static final String BATCH_ORDER_PLASMIDID = "PlasmID Clone ID";
+    public static final String BATCH_ORDER_FLEXID = "FLEXGene Clone ID";   
+    public static final String BATCH_ORDER_CLONES = "Batch Order Clones";
         
     /** Creates a new instance of Constants */
     public Constants() {

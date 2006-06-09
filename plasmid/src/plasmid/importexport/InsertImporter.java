@@ -124,6 +124,10 @@ public class InsertImporter {
                     }
                 }
             }
+            if(c.getSize()<=0) {
+                if(seq.getSequence() != null && seq.getSequence().length()>0) 
+                    c.setSize(seq.getSequence().length());
+            }
             inserts.add(c);
             dnaseqs.add(seq);
             id++;

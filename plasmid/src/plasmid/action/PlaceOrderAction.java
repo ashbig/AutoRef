@@ -63,6 +63,7 @@ public class PlaceOrderAction extends UserAction {
         User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
         List items = (List)request.getSession().getAttribute(Constants.CART);
         
+        String isBatch = ((CheckoutForm)form).getIsBatch();
         String ponumber = ((CheckoutForm)form).getPonumber();
         String shippingto = ((CheckoutForm)form).getShippingto();
         String billingto = ((CheckoutForm)form).getBillingto();
@@ -145,6 +146,20 @@ public class PlaceOrderAction extends UserAction {
             clones.add(clone);
         }
         order.setItems(clones);
+        
+        if(isBatch.equals("Y")) {
+            List batchOrderClones = (List)request.getSession().getAttribute(Constants.BATCH_ORDER_CLONES);
+            
+            if(batchOrderClones == null) {
+                errors.add(ActionErrors.GLOBAL_ERROR,
+                new ActionError("error.database.error","Error occured while getting orders from session."));
+                saveErrors(request, errors);
+                return (mapping.findForward("error"));
+            }
+            
+            order.setIsBatch("Y");
+            order.setBatches(batchOrderClones);
+        }
         
         user.setPonumber(ponumber);
         OrderProcessManager manager = new OrderProcessManager();

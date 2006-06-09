@@ -25,7 +25,7 @@ import org.apache.struts.util.MessageResources;
 import plasmid.database.*;
 import plasmid.database.DatabaseManager.*;
 import plasmid.Constants;
-import plasmid.form.RefseqSearchForm;
+import plasmid.form.*;
 
 /**
  *
@@ -70,6 +70,10 @@ public class GetDataForRefseqSearchAction extends Action {
                 errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.database.error", "Cannot get reference sequence type from database"));
                 return (mapping.findForward("error"));
             }  */
+            ViewCartForm f = (ViewCartForm)request.getSession().getAttribute("viewCartForm");
+            if(f != null)
+                f.setIsBatch(null);
+            
             request.setAttribute("allSpecies", species);
             //request.setAttribute("refseqTypes", refseqTypes);
             ((RefseqSearchForm)form).resetValues();

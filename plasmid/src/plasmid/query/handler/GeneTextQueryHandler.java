@@ -39,4 +39,8 @@ public class GeneTextQueryHandler extends GeneQueryHandler {
         " union (select distinct cloneid from clonesymbol where upper(symbol) like upper(?))";
         executeQuery(sql, restrictions, clonetypes, species, start, end, column, status, 7, true);
      }    
+    
+    public void doQuery(List restrictions, List clonetypes, String species, int start, int end, String column, String status, boolean isGrowth) throws Exception {
+    }
+    
 }

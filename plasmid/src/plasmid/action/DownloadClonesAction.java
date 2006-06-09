@@ -63,11 +63,12 @@ public class DownloadClonesAction extends UserAction {
         String type = ((DownloadClonesForm)form).getType();
         String collectionName = ((DownloadClonesForm)form).getCollectionName();
         String button = ((DownloadClonesForm)form).getButton();
+        String isBatch = ((DownloadClonesForm)form).getIsBatch();
         
         OrderProcessManager manager = new OrderProcessManager();
         List clones = null;
         if(Constants.ORDER_CLONE.equals(type)) {
-            clones = manager.getOrderClones(orderid, user, isWorkingStorage);
+            clones = manager.getOrderClones(orderid, user, isWorkingStorage, isBatch);
         }
         if(Constants.ORDER_COLLECTION.equals(type)) {
             clones = manager.getOrderClonesForCollection(collectionName, user, isWorkingStorage);
@@ -83,7 +84,12 @@ public class DownloadClonesAction extends UserAction {
         }
         
         if(Constants.BUTTON_CREATE_BIOBANK_WORKLIST.equals(button) && User.INTERNAL.equals(user.getIsinternal())) {
-            List groups = manager.groupClonesByGrowth(clones);
+            List groups = null;
+            if("Y".equals(isBatch)) 
+                groups = manager.groupClonesByTargetPlate(clones);
+            else
+                groups = manager.groupClonesByGrowth(clones);
+            
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
             Date today = new Date();
             String filename = "order"+orderid+"_"+formatter.format(today);
@@ -92,7 +98,7 @@ public class DownloadClonesAction extends UserAction {
                 for(int i=0; i<groups.size(); i++) {
                     List group = (List)groups.get(i);
                     String worklistfilename = filename+"_"+(i+1)+".txt";
-                    manager.printBioTracyWorklist(group, Constants.BIOTRACY_WORKLIST_PATH, worklistfilename);
+                    manager.printBioTracyWorklist(group, Constants.BIOTRACY_WORKLIST_PATH, worklistfilename, isBatch);
                     files.add(worklistfilename);
                 }
                 String summaryfilename = filename+"_summary.xls";

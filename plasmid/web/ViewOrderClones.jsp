@@ -42,6 +42,12 @@
     <td class="tableheader">Vector</td>
     <td class="tableheader">Selection Markers</td>
     <td class="tableheader">Special MTA</td>
+    <logic:present name="isBatch">
+    <logic:equal name="isBatch" value="Y">
+    <td class="tableheader">Target Plate</td>
+    <td class="tableheader">Target Well</td>
+    </logic:equal>
+    </logic:present>
   </tr>
 
   <% int i=0;%>
@@ -77,6 +83,12 @@
     </logic:iterate>
     </td>
     <td><bean:write name="clone" property="specialtreatment"/></td>
+    <logic:present name="isBatch">
+    <logic:equal name="isBatch" value="Y">
+    <td><bean:write name="clone" property="targetPlate"/></td>
+    <td><bean:write name="clone" property="targetWell"/></td>
+    </logic:equal>
+    </logic:present>
     </tr>
   </logic:iterate>
 </table>
@@ -85,6 +97,7 @@
 <input type="hidden" name="type" value="<bean:write name="type"/>">
 <input type="hidden" name="orderid" value="<bean:write name="orderid"/>">
 <input type="hidden" name="collectionName" value="<bean:write name="collectionName"/>">
+<input type="hidden" name="isBatch" value="<bean:write name="isBatch"/>">
 <table width="100%" border="0">
   <tr>
     <td width="50%">&nbsp;</td>

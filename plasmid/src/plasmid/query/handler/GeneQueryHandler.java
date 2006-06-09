@@ -92,7 +92,10 @@ public abstract class GeneQueryHandler {
     public abstract void doQuery(List restrictions, List clonetypes, String species, String status) throws Exception;
     
     public abstract void doQuery(List restrictions, List clonetypes, String species, int start, int end, String column, String status) throws Exception;
-       
+           
+    public void doQuery(List restrictions, List clonetypes, String species, int start, int end, String column, String status, boolean isGrowth) throws Exception {
+    }
+ 
     public void doQuery(List restrictions, List clonetypes, String species, int start, int end, String column, String status, String clonetable) throws Exception {
     }
     
@@ -111,11 +114,15 @@ public abstract class GeneQueryHandler {
     protected void executeQuery(String sql, List restrictions, List clonetypes, String species, int start, int end, String sortColumn, String status) throws Exception {
         executeQuery(sql, restrictions, clonetypes, species, start, end, sortColumn, status, 1, false);
     }
-    
+     
     protected void executeQuery(String sql, List restrictions, List clonetypes, String species, int start, int end, String sortColumn, String status, int num, boolean isLike) throws Exception {
+        executeQuery(sql,restrictions,clonetypes,species,start,end,sortColumn,status,num,isLike,true);
+    }
+   
+    protected void executeQuery(String sql, List restrictions, List clonetypes, String species, int start, int end, String sortColumn, String status, int num, boolean isLike, boolean isGrowth) throws Exception {
         if(terms == null || terms.size() == 0)
             return;
-        
+       
         foundCloneCount = 0;
         nofound.addAll(terms);
         DatabaseTransaction t = DatabaseTransaction.getInstance();
@@ -153,7 +160,7 @@ public abstract class GeneQueryHandler {
         DatabaseTransaction.closeStatement(stmt);
         
         CloneManager manager = new CloneManager(conn);
-        Map foundClones = manager.queryClonesByCloneid(new ArrayList(cloneids), true, true, false,restrictions,clonetypes,species,status);        
+        Map foundClones = manager.queryClonesByCloneid(new ArrayList(cloneids), true, true, false, isGrowth, restrictions,clonetypes,species,status);        
         DatabaseTransaction.closeConnection(conn);
         
         /**

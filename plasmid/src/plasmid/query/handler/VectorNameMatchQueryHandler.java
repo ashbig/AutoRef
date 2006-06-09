@@ -51,4 +51,8 @@ public class VectorNameMatchQueryHandler extends GeneQueryHandler {
         " where upper(vsynonym) = upper(?))";
         executeQuery(sql, restrictions, clonetypes, species, start, end, column, status, 4, false);
     }  
+    
+    public void doQuery(List restrictions, List clonetypes, String species, int start, int end, String column, String status, boolean isGrowth) throws Exception {
+    }
+    
 }

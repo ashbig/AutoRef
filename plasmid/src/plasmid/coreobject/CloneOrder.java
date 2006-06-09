@@ -30,42 +30,44 @@ public class CloneOrder {
         CloneOrder.COMPLETE,
         CloneOrder.CANCEL};
     
-    private int orderid;
-    private String orderDate;
-    private String status;
-    private String ponumber;
-    private String shippingTo;
-    private String billingTo;
-    private String shippingAddress;
-    private String billingAddress;
-    private double price;
-    private int userid;
-    private int numofclones;
-    private int numofcollection;
-    private double costforclones;
-    private double costforcollection;
-    private double costforshipping;
+    protected int orderid;
+    protected String orderDate;
+    protected String status;
+    protected String ponumber;
+    protected String shippingTo;
+    protected String billingTo;
+    protected String shippingAddress;
+    protected String billingAddress;
+    protected double price;
+    protected int userid;
+    protected int numofclones;
+    protected int numofcollection;
+    protected double costforclones;
+    protected double costforcollection;
+    protected double costforshipping;
     
-    private String shippingdate;
-    private String whoshipped;
-    private String shippingmethod;
-    private String shippingaccount;
-    private String trackingnumber;
-    private String receiveconfirmationdate;
-    private String whoconfirmed;
-    private String whoreceivedconfirmation;
+    protected String shippingdate;
+    protected String whoshipped;
+    protected String shippingmethod;
+    protected String shippingaccount;
+    protected String trackingnumber;
+    protected String receiveconfirmationdate;
+    protected String whoconfirmed;
+    protected String whoreceivedconfirmation;
     
-    private String shippedContainers;
+    protected String shippedContainers;
     
-    private String firstname;
-    private String lastname;
-    private String email;
-    private String phone;
+    protected String firstname;
+    protected String lastname;
+    protected String email;
+    protected String phone;
     
-    private String piname;
-    private String piemail;
+    protected String piname;
+    protected String piemail;
+    protected String isBatch;
     
-    private List items;
+    protected List items;
+    protected List batches;
     
     /** Creates a new instance of CloneOrder */
     public CloneOrder() {
@@ -89,6 +91,7 @@ public class CloneOrder {
         this.costforshipping = costforshipping;
         this.price = price;
         this.userid = userid;
+        this.isBatch = "N";
     }
     
     public int getOrderid() {return orderid;}
@@ -120,6 +123,7 @@ public class CloneOrder {
     public String getPiname() {return piname;}
     public String getPiemail() {return piemail;}
     public String getPhone() {return phone;}
+    public String getIsBatch() {return isBatch;}
     
     public void setOrderid(int i) {this.orderid = i;}
     public void setOrderDate(String s) {this.orderDate = s;}
@@ -151,9 +155,13 @@ public class CloneOrder {
     public void setPiname(String s) {this.piname = s;}
     public void setPiemail(String s) {this.piemail = s;}
     public void setPhone(String s) {this.phone = s;}
+    public void setIsBatch(String s) {this.isBatch = s;}
     
     public List getItems() {return items;}
     public void setItems(List l) {this.items = l;}
+    
+    public List getBatches() {return batches;}
+    public void setBatches(List l) {this.batches = l;}
     
     public List getShippedContainersAsList() {
         StringConvertor sv = new StringConvertor();

@@ -78,7 +78,7 @@ public class Sample {
     public void setResult(String s) {this.result = s;}
     public void setContainerType(String s) {this.containerType = s;}
     
-    public void setPositions(int p) {
+    public void setPositions(int p) throws Exception {
         String st = PlatePositionConvertor.convertWellFromInttoA8_12(p);
         String positionX = st.substring(0, 1);
         String positionY = st.substring(1);

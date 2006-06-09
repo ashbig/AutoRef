@@ -35,7 +35,7 @@
       <ul>
         <li class="homeMainText">&gt; 500 sequence verified human kinase ORFs 
           from HIP</li>
-        <li class="homeMainText">&gt; 6,000 sequence verified human clones from 
+        <li class="homeMainText">&gt; 7,600 sequence verified human clones from 
           HIP </li>
         <li class="homeMainText"> full-length cDNA clones, shRNAs, genomic fragments</li>
       </ul></td>
@@ -50,7 +50,7 @@
       <ul>
         <li class="homeMainText">genome-scale, sequence-verified ORF collection 
           from HIP</li>
-        <li class="homeMainText">&gt;5,000 clones</li>
+        <li class="homeMainText">&gt;6,600 clones</li>
         <li class="homeMainText">~1700 in expression vectors</li>
         <li class="homeMainText">fluorescence-tagged expression vectors</li>
       </ul></td>
@@ -75,7 +75,7 @@
       <ul>
         <li class="homeMainText">genome-scale, sequence-verified ORF collection 
           from HIP</li>
-        <li class="homeMainText">&gt;2,000 clones</li>
+        <li class="homeMainText">&gt;2,300 clones</li>
       </ul></td>
   </tr>
   <tr align="left" valign="top" bordercolor="#000000"> 
@@ -89,7 +89,7 @@
       <ul>
         <li class="homeMainText">genome-scale, sequence-verified ORF collection 
           from HIP</li>
-        <li class="homeMainText">&gt;2,000 clones</li>
+        <li class="homeMainText">&gt;3,400 clones</li>
       </ul></td>
   </tr>
   <tr align="left" valign="top" bordercolor="#000000"> 
@@ -102,8 +102,7 @@
       <ul>
         <li class="homeMainText">genome-scale, sequence-verified ORF collection 
           from HIP</li>
-        <li class="homeMainText">~900 full-length ORFs</li>
-        <li class="homeMainText">~500 partial ORFs</li>
+        <li class="homeMainText">&gt;1,400 full-length ORFs</li>
       </ul></td>
   </tr>
   <tr align="left" valign="top" bordercolor="#000000"> 

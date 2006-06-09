@@ -24,7 +24,7 @@ public class DirectMappingCalculator extends MappingCalculator {
         super(src, dest, sType);
     }
     
-    public List calculateMapping() {
+    public List calculateMapping() throws Exception {
         List mappingList = new ArrayList();
         
         for(int i=0; i<srcContainers.size(); i++) {
@@ -37,7 +37,7 @@ public class DirectMappingCalculator extends MappingCalculator {
         return mappingList;
     }
     
-    public List calculateMappingForOneContainer(Container src, Container dest) {
+    public List calculateMappingForOneContainer(Container src, Container dest) throws Exception {
         List l = new ArrayList();
         for(int i=0; i<src.getSize(); i++) {
             Sample s = src.getSample(i+1);

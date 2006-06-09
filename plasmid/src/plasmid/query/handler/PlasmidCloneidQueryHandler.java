@@ -31,7 +31,11 @@ public class PlasmidCloneidQueryHandler extends GeneQueryHandler {
     }
     
     public void doQuery(List restrictions, List clonetypes, String species, int start, int end, String column, String status) throws Exception {
+        doQuery(restrictions,clonetypes,species,start,end,column,status,false);
+    }
+    
+    public void doQuery(List restrictions, List clonetypes, String species, int start, int end, String column, String status, boolean isGrowth) throws Exception {
         String sql = "select cloneid from clone where upper(clonename) = upper(?)";
-        executeQuery(sql, restrictions, clonetypes, species, start, end, column, status);
+        executeQuery(sql, restrictions, clonetypes, species, start, end, column, status, 1, false, isGrowth);
     }   
 }

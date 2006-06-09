@@ -46,7 +46,11 @@ public class Importer {
     //public static final String filepath = "G:\\plasmid\\Yeast_batch3_2006_04\\";
     //public static final String filepath = "G:\\plasmid\\YPTB_2006_04\\";
     //public static final String filepath = "G:\\plasmid\\VC_batch2_2006_05\\";
-    public static final String filepath = "G:\\plasmid\\VC_batch2_2006_05_partial_plates\\";
+    //public static final String filepath = "G:\\plasmid\\VC_batch2_2006_05_partial_plates\\";
+    //public static final String filepath = "G:\\plasmid\\KAMIL EXPORT SET\\";
+    //public static final String filepath = "G:\\plasmid\\Master_CloneID_Update\\";
+    //public static final String filepath = "G:\\plasmid\\Expression_1\\";
+    public static final String filepath = "G:\\plasmid\\Expression_2\\";
    
     private List tables;
     private String error;
@@ -293,7 +297,6 @@ public class Importer {
     public static void main(String args[]) {
         Importer imp = new Importer();
       
-        /**
         if(!imp.readAllFiles()) {
             System.out.println(imp.getError());
             System.exit(0);
@@ -304,8 +307,8 @@ public class Importer {
             System.out.println(imp.getError());
             System.out.println("Import failed.");
         }
-         **/
-        imp.updateDNAInsert();
+         
+        //imp.updateDNAInsert();
         System.exit(0);
     }
 }

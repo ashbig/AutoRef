@@ -112,13 +112,13 @@ are not allowed to be shipped outside of USA.</p>
   <tr> 
     <td class="formlabel">*Phone:</td>
     <td><html:text styleClass="text" property="phone"/></td>
-    <td class="formlabel">Phone:</td>
+    <td class="formlabel">*Phone:</td>
     <td><html:text styleClass="text" property="billingphone"/></td>
   </tr>
   <tr> 
     <td class="formlabel">Fax:</td>
     <td><html:text styleClass="text" property="fax"/></td>
-    <td class="formlabel">Fax:</td>
+    <td class="formlabel">*Fax:</td>
     <td><html:text styleClass="text" property="billingfax"/></td>
   </tr>
 </table>

@@ -15,6 +15,8 @@ public class OrderClones {
     private int cloneid;
     private String collectionname;
     private int quantity;
+    private String plate;
+    private String well;
     
     /** Creates a new instance of OrderClones */
     public OrderClones() {
@@ -31,9 +33,13 @@ public class OrderClones {
     public int getCloneid() {return cloneid;}
     public String getCollectionname() {return collectionname;}
     public int getQuantity() {return quantity;}
+    public String getPlate() {return plate;}
+    public String getWell() {return well;}
     
     public void setOrderid(int id) {this.orderid = id;}
     public void setCloneid(int id) {this.cloneid = id;}
     public void setCollectionname(String s) {this.collectionname = s;}
     public void setQuantity(int i) {this.quantity = i;}
+    public void setPlate(String s) {this.plate = s;}
+    public void setWell(String s) {this.well = s;}
 }

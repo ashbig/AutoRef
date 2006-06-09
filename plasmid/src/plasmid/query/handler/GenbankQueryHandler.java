@@ -99,4 +99,8 @@ public class GenbankQueryHandler extends GeneQueryHandler {
         }
         System.exit(0);
     }     
+    
+    public void doQuery(List restrictions, List clonetypes, String species, int start, int end, String column, String status, boolean isGrowth) throws Exception {
+    }
+    
 }
