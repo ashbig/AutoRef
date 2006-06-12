@@ -396,6 +396,7 @@ public class CloneManager extends TableManager {
                 stmt.setString(3, c.getValue());
                 stmt.setString(4, c.getExtrainfo());
                 
+                //System.out.println(c.getType()+"\t"+c.getValue());
                 DatabaseTransaction.executeUpdate(stmt);
             }
             DatabaseTransaction.closeStatement(stmt);

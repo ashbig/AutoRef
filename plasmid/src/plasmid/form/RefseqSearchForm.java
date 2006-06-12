@@ -51,6 +51,7 @@ public class RefseqSearchForm extends ActionForm {
     protected String display;
     protected String collectionName = null;
     protected String isDownload = null;
+    protected int numOfClones;
     
     public String getSpecies() {return species;}
     public String getRefseqType() {return refseqType;}
@@ -80,6 +81,7 @@ public class RefseqSearchForm extends ActionForm {
     public String getDisplay() {return display;}
     public String getCollectionName() {return collectionName;}
     public String getIsDownload() {return isDownload;}
+    public int getNumOfClones() {return numOfClones;}
     
     public void setSpecies(String s) {this.species = s;}
     public void setRefseqType(String s) {this.refseqType = s;}
@@ -109,6 +111,7 @@ public class RefseqSearchForm extends ActionForm {
     public void setDisplay(String s) {this.display = s;}
     public void setCollectionName(String s) {this.collectionName = s;}
     public void setIsDownload(String s) {this.isDownload = s;}
+    public void setNumOfClone(int i) {this.numOfClones = i;}
     
     /**
      * Reset all properties to their default values.
@@ -136,6 +139,7 @@ public class RefseqSearchForm extends ActionForm {
         pagesize = Constants.PAGESIZE;
         displayPage = "indirect";
         display = "symbol";
+        numOfClones = 0;
     }
     
     public void resetBooleanValues() {

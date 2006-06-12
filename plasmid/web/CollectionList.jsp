@@ -24,9 +24,16 @@
 	<jsp:include page="collectionListTitle.jsp" />
 
 <p class="text">List of plamid collections available to you. (Please note, you 
-  may see more collections available after you sign in.)</p>
-
+  may see more collections available after you sign in.)
+</p>
+<p class="text">
+Click on a specific collection below in order to:
+ <ol>
+    <li class="text">view a list of clones in a particular collection (small collections); or 
+    <li class="text">download an Excel spreadsheet that lists clones in the collection (large collections).
+  </ol>
 <ul>
+</p>
 <logic:iterate name="<%=Constants.COLLECTION%>" id="collection">
   <li><a class="itemtext" href="GetCollection.do?collectionName=<bean:write name="collection" property="name"/>"><bean:write name="collection" property="name"/></a></li>
 </logic:iterate>

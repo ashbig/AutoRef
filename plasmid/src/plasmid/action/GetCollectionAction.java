@@ -85,6 +85,8 @@ public class GetCollectionAction extends Action {
             ((RefseqSearchForm)form).setIsDownload(Constants.BOOLEAN_ISDOWNLOAD_NO);
         }
         
+        ((RefseqSearchForm)form).setNumOfClone(numOfClones);
+        
         if(info == null) {
             if(Constants.DEBUG)
                 System.out.println("Cannot get collection with name: "+collectionName);
@@ -96,8 +98,8 @@ public class GetCollectionAction extends Action {
         
         request.getSession().setAttribute(Constants.SINGLECOLLECTION, info);
         request.getSession().setAttribute("found", info.getClones());
-       
-        return (mapping.findForward("success"));        
+        
+        return (mapping.findForward("success"));
     }
 }
 

@@ -152,6 +152,8 @@ public class DnaInsert {
             return RefseqNameType.FBID;
         if(CE.equals(species))
             return RefseqNameType.WBGENEID;
+        if(FT.equals(species))
+            return RefseqNameType.FTNUMBER;
         if(RefseqNameType.GENEID != null)
             return RefseqNameType.GENEID;
         return "";

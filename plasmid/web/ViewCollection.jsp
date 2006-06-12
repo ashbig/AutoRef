@@ -44,6 +44,24 @@
   </tr> 
 </table>
 
+<p class="text">
+Total number of clones in the collection: <bean:write name="refseqSearchForm" property="numOfClones"/>
+</P>
+
+<logic:equal name="refseqSearchForm" property="isDownload" value="<%=Constants.BOOLEAN_ISDOWNLOAD_NO%>">
+<p class="text">
+To request the entire collection, click "Add Collection To Cart".<br>
+To request individual clones from the collection, view the list and click "add to cart" (far right-hand side of the table) to add individual clones to your cart.
+</p>
+</logic:equal>
+
+<logic:notEqual name="refseqSearchForm" property="isDownload" value="<%=Constants.BOOLEAN_ISDOWNLOAD_NO%>">
+<p class="text">
+To request the entire collection, click "Add Collection To Cart.".<br>
+To request individual clones from the collection, download the Excel file, find the clones of interest, copy the Clone IDs and use them in a "search by clone identifier" search at PlasmID.  You can then click to add individual clones to your cart (far right-hand side of the table).
+</p>
+</logic:notEqual>
+
 <p>
 <table width="100%" border="0">
   <tr>

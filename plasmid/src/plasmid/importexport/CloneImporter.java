@@ -288,8 +288,8 @@ public class CloneImporter {
                 //System.out.println(columnName);
                 //System.out.println(columnInfo);
                 if("cloneid".equalsIgnoreCase(columnName)) {
-                    //c.setCloneid(((Integer)idmap.get(columnInfo)).intValue());
-                    c.setCloneid(Integer.parseInt(columnInfo));
+                    c.setCloneid(((Integer)idmap.get(columnInfo)).intValue());
+                    //c.setCloneid(Integer.parseInt(columnInfo));
                 }
                 if("nametype".equalsIgnoreCase(columnName)) {
                     c.setType(columnInfo);

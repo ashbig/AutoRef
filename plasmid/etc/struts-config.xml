@@ -503,6 +503,7 @@
     <action    path="/ViewOrderClones"
                type="plasmid.action.ViewOrderClonesAction"
                name="viewOrderClonesForm"
+               scope="request"
               input="/ViewOrderClones.do">
       <forward  name="success"   path="/ViewOrderClones.jsp"/>
     </action>
@@ -510,6 +511,7 @@
     <action    path="/ViewOrderCollections"
                type="plasmid.action.ViewOrderCollectionsAction"
                name="viewOrderClonesForm"
+               scope="request"
               input="/ViewOrderClones.do">
       <forward  name="success"   path="/ViewOrderCollections.jsp"/>
     </action>
