@@ -26,6 +26,7 @@ import plasmid.coreobject.*;
 import plasmid.Constants;
 import plasmid.database.DatabaseManager.*;
 import plasmid.process.QueryProcessManager;
+import plasmid.form.*;
 
 /**
  *
@@ -55,6 +56,10 @@ public class GetCollectionListAction extends PlasmidAction {
         
         // get the parameters specified by the customer
         ActionErrors errors = new ActionErrors();
+        
+        ViewCartForm f = (ViewCartForm)request.getSession().getAttribute("viewCartForm");
+        if(f != null)
+            f.setIsBatch(null);
         
         User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
         List restrictions = new ArrayList();

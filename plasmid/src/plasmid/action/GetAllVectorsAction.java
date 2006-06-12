@@ -26,6 +26,7 @@ import plasmid.Constants;
 import plasmid.coreobject.*;
 import plasmid.database.DatabaseManager.*;
 import plasmid.process.QueryProcessManager;
+import plasmid.form.*;
 
 /**
  *
@@ -56,6 +57,10 @@ public class GetAllVectorsAction extends PlasmidAction {
         // get the parameters specified by the customer
         ActionErrors errors = new ActionErrors();
         User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
+        
+        ViewCartForm f = (ViewCartForm)request.getSession().getAttribute("viewCartForm");
+        if(f != null)
+            f.setIsBatch(null);
         
         List clonetypes = new ArrayList();
         clonetypes.add(Clone.NOINSERT);

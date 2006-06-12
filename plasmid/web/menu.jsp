@@ -50,4 +50,11 @@
         </tr>
       </table></td>
   </tr>
+  <tr> 
+    <td height="45" valign="middle"> <table width="100%" border="0">
+        <tr> 
+          <td height="15" class="lftsubtxt">- <a href="BatchOrder.jsp" class="leftsubnavtext">arrange plasmids in specific orders</a></td>
+        </tr>
+      </table></td>
+  </tr>
 </table>
