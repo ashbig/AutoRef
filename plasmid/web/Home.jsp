@@ -51,7 +51,9 @@
   <tr>
     <td width="50%" align="left" valign="top"><span class="alert">Please register 
       and sign in.<br>
-      Sign-in status affects what you can view and request.</span></td>
+      Sign-in status affects what you can view and request.<br><br></span>
+    <span class="text">Click <a href="cloning_strategies.html" target="_blank">here</a> to view the cloning methods used for the plasmids in the repository
+    </span></td>
     <td height="75"><html:form action="Logon.do"><table bgcolor="#CCCCCC" width="350" border="0">
   <tr> 
     <td width="12%" valign="baseline" class="formlabel">Email:</td>
