@@ -146,6 +146,7 @@ public class PlaceOrderAction extends UserAction {
             clones.add(clone);
         }
         order.setItems(clones);
+        order.setIsBatch("N");
         
         if(isBatch.equals("Y")) {
             List batchOrderClones = (List)request.getSession().getAttribute(Constants.BATCH_ORDER_CLONES);

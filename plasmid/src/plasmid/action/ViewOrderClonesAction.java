@@ -59,7 +59,6 @@ public class ViewOrderClonesAction extends UserAction {
         String type = ((ViewOrderClonesForm)form).getType();
         String collectionName = ((ViewOrderClonesForm)form).getCollectionName();
         String isBatch = ((ViewOrderClonesForm)form).getIsBatch();
-        
         OrderProcessManager manager = new OrderProcessManager();
         List clones = null;
         
@@ -69,7 +68,7 @@ public class ViewOrderClonesAction extends UserAction {
         if(Constants.ORDER_COLLECTION.equals(type)) {
             clones = manager.getOrderClonesForCollection(collectionName, user, false);
         }
-        
+       
         if(clones == null) {
             if(Constants.DEBUG)
                 System.out.println("Cannot get order clones from database.");
@@ -79,9 +78,11 @@ public class ViewOrderClonesAction extends UserAction {
             return (mapping.findForward("error"));
         }
         
-        if(isBatch.equals("Y"))
+        if("Y".equals(isBatch))
             Collections.sort(clones, new CloneInfoTargetPlateWellComparator());
-            
+        else
+            isBatch = "N";
+        
         request.setAttribute("orderid", new Integer(orderid));
         request.setAttribute("type", type);
         request.setAttribute("collectionName", collectionName);
