@@ -49,6 +49,12 @@
     <td class="formlabel">Phone:</td>
     <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="phone"/></td>
   </tr>
+  <tr> 
+    <td class="formlabel">PI Name:</td>
+    <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="piname"/></td>
+    <td class="formlabel">PI Email:</td>
+    <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="piemail"/></td>
+  </tr>
 </table>
 
 <p class="text">Shipping Information</P>

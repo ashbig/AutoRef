@@ -18,6 +18,9 @@
         <tr> 
           <td height="15" class="lftsubtxt"><a href="GetResultTypes.do" class="leftsubnavtext">Enter Results</a></td>
         </tr>
+        <tr> 
+          <td height="15" class="lftsubtxt"><a href="FindClones.jsp" class="leftsubnavtext">Find Clones</a></td>
+        </tr>
       </table></td>
   </tr>
 </table>

@@ -1109,6 +1109,62 @@ public class CloneManager extends TableManager {
         return totalCount;
     }
     
+    public Map queryCloneSamples(List clones) {
+        if(clones == null)
+            return null;
+        
+        String sql = "select sampletype, position, containerlabel, result, sampleid,"+
+        " cloneid, containerid, positionx, positiony"+
+        " from sample where cloneid in (select cloneid from clone where clonename=?)";
+    
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        Map m = new HashMap();
+        String currentClone = null;
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            stmt = conn.prepareStatement(sql);
+            ResultSet rs = null;
+            
+            for(int i=0; i<clones.size(); i++) {
+                String clone = (String)clones.get(i);
+                currentClone = clone;
+                stmt.setString(1, clone);
+                rs = DatabaseTransaction.executeQuery(stmt);
+                List samples = new ArrayList();
+                while(rs.next()) {
+                    String type = rs.getString(1);
+                    int position = rs.getInt(2);
+                    String label = rs.getString(3);
+                    String result = rs.getString(4);
+                    int sampleid = rs.getInt(5);
+                    int cloneid = rs.getInt(6);
+                    int containerid = rs.getInt(7);
+                    String x = rs.getString(8);
+                    String y = rs.getString(9);
+                    Sample s = new Sample(sampleid,type,null,cloneid,position,x,y,containerid, label);
+                    s.setResult(result);
+                    samples.add(s);
+                }
+                m.put(clone, samples);
+            }
+            DatabaseTransaction.closeResultSet(rs);
+        } catch (Exception ex) {
+            if(Constants.DEBUG) {
+                System.out.println("Error occured while query sample by clone "+currentClone);
+                System.out.println(ex);
+            }
+            return null;
+        } finally {
+            DatabaseTransaction.closeStatement(stmt);
+            DatabaseTransaction.closeConnection(conn);
+        }
+        
+        return m;
+    }
+    
     public static void main(String args[]) {
         DatabaseTransaction dt = null;
         Connection conn = null;

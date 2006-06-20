@@ -110,6 +110,9 @@
     <form-bean      name="batchOrderForm"
                     type="plasmid.form.BatchOrderForm"/>
                     
+    <form-bean      name="findClonesForm"
+                    type="plasmid.form.FindClonesForm"/>
+                    
  </form-beans>
 
   <!-- ========== Global Forward Definitions ============================== -->
@@ -214,6 +217,14 @@
                name="processShippingForm"
               input="/EnterShipping.jsp">
       <forward  name="success"  path="/ViewOrderDetail.jsp"/>
+    </action>
+         
+    <action    path="/FindClones"
+               type="plasmid.action.FindClonesAction"
+               name="findClonesForm"
+              scope="request"
+              input="/FindClones.jsp">
+      <forward  name="success"   path="/DisplayCloneStorage.jsp"/>
     </action>
          
     <action    path="/FindPassword"
