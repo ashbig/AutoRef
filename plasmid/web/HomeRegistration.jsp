@@ -82,7 +82,7 @@
       above list, please enter your PI information here:</td>
     <td width="78%" align="left" valign="baseline"> <table width="100%" border="0" bordercolor="#000000">
         <tr> 
-          <td width="25%" class="formlabel"> *Fist Name:</td>
+          <td width="25%" class="formlabel"> *First Name:</td>
           <td width="75%">
              <html:text property="pifirstname" size="30" styleClass="text"/>
           </td>
