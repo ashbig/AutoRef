@@ -28,7 +28,7 @@
       <html:form action="FindClones.do">
 <table width="100%" border="0">
   <tr> 
-    <td class="formlabel">Please enter all the PlasmID Clone IDs: (separate each ID by white space)</td>
+    <td class="formlabel">Please enter all the PlasmID Clone IDs: (e.g. HsCD00000196, separate each ID with white space)</td>
   </tr>
   <tr> 
     <td>
