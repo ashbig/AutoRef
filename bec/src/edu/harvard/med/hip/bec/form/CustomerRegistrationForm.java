@@ -510,6 +510,8 @@ public class CustomerRegistrationForm extends ActionForm {
          **/
         if ((email == null) || (email.length() < 1) || (email.indexOf("@") ==-1))
             errors.add("email", new ActionError("error.email.required"));
+        if ((email == null) || (email.length() < 1) || (email.indexOf("@") ==-1) || (email.indexOf("chert@chert.chert") != -1 ))
+            errors.add("email", new ActionError("error.email.required.verification"));
         if ((organization == null) || (organization.length() < 1))
             errors.add("organization", new ActionError("error.organization.required"));
         if ((user_id == null) || (user_id.length() < 1))
