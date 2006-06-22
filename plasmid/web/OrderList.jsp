@@ -32,7 +32,7 @@
   <tr>
     <td width="14%" class="formlabel">Choose order status:</td>
     <td width="13%">
-        <html:select styleClass="formlabel" property="status">
+        <html:select styleClass="itemtext" property="status">
             <html:option value="<%=CloneOrder.ALL%>"/>
             <html:option value="<%=CloneOrder.PENDING%>"/>
             <html:option value="<%=CloneOrder.PENDING_MTA%>"/>
@@ -42,7 +42,7 @@
         </html:select>
     </td>
     <td width="73%">
-        <html:submit value="Display" styleClass="formlabel"/>
+        <html:submit value="Display" styleClass="itemtext"/>
     </td>
   </tr>
 </table>
@@ -69,7 +69,7 @@
     <td class="tableinfo"><bean:write name="order" property="orderDate"/></td>
     <logic:equal name="order" property="beforeInprocess" value="-1">
     <td class="tableinfo">
-        <select styleClass="formlabel" name='<%="status["+(i)+"]"%>' value="<bean:write name="order" property="status"/>">
+        <select styleClass="itemtext" name='<%="status["+(i)+"]"%>' value="<bean:write name="order" property="status"/>">
             <logic:equal name="order" property="status" value="<%=CloneOrder.PENDING%>">
             <option value="<%=CloneOrder.PENDING%>" selected/><%=CloneOrder.PENDING%>
             </logic:equal>
@@ -107,8 +107,8 @@
     
   <tr>
     <td align="middle" colspan="6">
-        <html:submit property="orderListButton" styleClass="formlabel" value="Process Orders"/>&nbsp;&nbsp;
-        <html:submit property="orderListButton" styleClass="formlabel" value="<%=Constants.BUTTON_CREATE_INVOICE%>"/>
+        <html:submit property="orderListButton" styleClass="itemtext" value="Process Orders"/>&nbsp;&nbsp;
+        <html:submit property="orderListButton" styleClass="itemtext" value="<%=Constants.BUTTON_CREATE_INVOICE%>"/>
     </td>
   </tr>
 </table>

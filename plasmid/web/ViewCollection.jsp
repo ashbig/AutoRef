@@ -40,6 +40,9 @@
     <td width="30%" valign="top" class="itemtext">$<bean:write name="<%=Constants.SINGLECOLLECTION%>" property="price"/></td>
   </tr>
   <tr> 
+    <td colspan="4" valign="top" class="formlabel">Description:</td>
+  </tr> 
+  <tr> 
     <td colspan="4" valign="top" class="formlabel"><bean:write name="<%=Constants.SINGLECOLLECTION%>" property="description"/></td>
   </tr> 
 </table>

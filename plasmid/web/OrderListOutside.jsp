@@ -50,7 +50,7 @@
     <logic:equal name="order" property="beforeInprocess" value="-1">
         <html:form action="CancelOrder.do">
         <html:hidden name="order" property="orderid"/>
-        <td class="tableinfo"><html:submit styleClass="formlabel" value="<%=Constants.BUTTON_CANCEL_ORDER%>"/></td>
+        <td class="tableinfo"><html:submit styleClass="itemtext" value="<%=Constants.BUTTON_CANCEL_ORDER%>"/></td>
         </html:form>
     </logic:equal>    
     <logic:notEqual name="order" property="beforeInprocess" value="-1">
