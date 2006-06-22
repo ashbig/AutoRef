@@ -14,7 +14,7 @@
 </head>
 
 <body>
-<p>Vector: <bean:write name="vector" property="name"/></p>
+<p class="text">Vector: <bean:write name="vector" property="name"/></p>
 <table width="700" border="0">
   <tr> 
     <td width="15%" class="mainbodytexthead"> Name:</td>
@@ -59,7 +59,7 @@
 </table>
 
 <logic:present name="vector" property="vectorfeatures">
-<p>Features:</p>
+<p class="text">Features:</p>
 <table width="700" border="0">
   <tr>
     <td width="110" class="tablebody">Type</td>
@@ -81,7 +81,7 @@
 </logic:present>
 
 <logic:present name="vector" property="authors">
-<p>Authors:</p>
+<p class="text">Authors:</p>
 <table width="700" border="0">
   <tr> 
     <td width="137" class="tablebody">Author Name</td>
@@ -99,7 +99,7 @@
 </logic:present>
 
 <logic:present name="vector" property="publications">
-<p>Publications:</p>
+<p class="text">Publications:</p>
 <table width="700" border="0">
   <tr>
     <td width="11%" class="tablebody">PMID</td>
@@ -115,7 +115,7 @@
 </logic:present>
 
 <logic:present name="vector" property="vectorparents">
-<p>Parent Vector:</p>
+<p class="text">Parent Vector:</p>
 <table width="700" border="0">
   <tr> 
     <td width="28%" class="tablebody">Name</td>

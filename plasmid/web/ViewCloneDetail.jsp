@@ -14,7 +14,7 @@
 </head>
 
 <body>
-<p>Clone: <bean:write name="clone" property="name"/></p>
+<p class="text">Clone: <bean:write name="clone" property="name"/></p>
 <table width="700" border="0">
   <tr> 
     <td width="15%" class="tablebody">Clone ID:</td>
@@ -55,7 +55,7 @@
 </table>
 
 <logic:present name="clone" property="names">
-<p>Related Identifiers:</p>
+<p class="text">Related Identifiers:</p>
 <table width="700" border="0">
 <logic:iterate id="clonename" name="clone" property="names">
   <tr>
@@ -75,7 +75,7 @@
 </logic:present>
 
 <logic:present name="clone" property="properties">
-<p>Property:</p>
+<p class="text">Property:</p>
 <table width="700" border="0">
 <logic:iterate id="p" name="clone" property="properties">
   <tr>
@@ -88,7 +88,7 @@
 </logic:present>
 
 <logic:present name="clone" property="inserts">
-<p>Insert Information:</p>
+<p class="text">Insert Information:</p>
 <table width="700" border="0">
   <tr> 
     <td width="5%" class="tablebody">Insert</td>
@@ -143,7 +143,7 @@
 </logic:iterate>
 </table>
 
-<p>Insert Sequence:</p>
+<p class="text">Insert Sequence:</p>
 <logic:iterate id="insert" name="clone" property="inserts">
 <p>Insert: <bean:write name="insert" property="order"/></p>
 <p><pre><bean:write name="insert" property="fastaSequence"/></pre></P>
@@ -152,7 +152,7 @@
 
 <logic:iterate id="insert" name="clone" property="inserts">
 <logic:present name="insert" property="properties">
-<p>Insert Property: Insert <bean:write name="insert" property="order"/></p>
+<p class="text">Insert Property: Insert <bean:write name="insert" property="order"/></p>
 <table width="700" border="0">
   <tr> 
     <td class="tablebody">Type</td>
@@ -172,7 +172,7 @@
 </logic:present>
 
 <logic:present name="clone" property="vector">
-<p>Vector Information:</p>
+<p class="text">Vector Information:</p>
 <table width="700" border="0">
   <tr> 
     <td width="15%" class="tablebody">Vector Name:</td>
@@ -210,7 +210,7 @@
 </logic:present>
 
 <logic:present name="clone" property="hosts">
-<p>Host Information:</p>
+<p class="text">Host Information:</p>
 <table width="700" border="0">
   <tr>
     <td width="31%" class="tablebody">Host Strain</td>
@@ -228,7 +228,7 @@
 </logic:present>
 
 <logic:present name="clone" property="selections">
-<p>Antibiotic Selections:</p>
+<p class="text">Antibiotic Selections:</p>
 <table width="700" border="0">
   <tr>
     <td width="24%" class="tablebody">Host Type</td>
@@ -244,7 +244,7 @@
 </logic:present>
 
 <logic:present name="clone" property="recommendedGrowthCondition">
-<p>Recommended Growth Condition:</p>
+<p class="text">Recommended Growth Condition:</p>
 <table width="700" border="0">
   <tr>
     <td width="12%" class="tablebody">Host Type</td>
@@ -262,7 +262,7 @@
 </logic:present>
 
 <logic:present name="clone" property="authors">
-<p>Authors:</p>
+<p class="text">Authors:</p>
 <table width="700" border="0">
   <tr>
     <td class="tablebody">Author Name</td>
@@ -277,7 +277,7 @@
 </table>
 </logic:present>
 <logic:present name="clone" property="publications">
-<p>Publications:</p>
+<p class="text">Publications:</p>
 <table width="700" border="0">
   <tr>
     <td width="11%" class="tablebody">PMID</td>
