@@ -238,7 +238,8 @@ public class EndReadsWrapperRunner extends ProcessRunner
            //   {
                 if (! Read.isTraceFilePassQualityCheck(read,  pass_score, first_base, last_base, min_length) )
                 {
-                    m_error_messages.add("Read " + read.getTraceFileName()+" was not submitted into ACE, because of read low quality");
+                    String read_name = read.getTraceFileName().substring( read.getTraceFileName().lastIndexOf(File.separator)+1);
+                    m_error_messages.add("Read " + read_name+" was not submitted into ACE, because of read low quality");
                     File ft = new File(read.getTraceFileName());
                     ft.delete();
                     return;
