@@ -202,7 +202,7 @@
                type="plasmid.action.DownloadClonesAction"
                name="downloadClonesForm"
               input="/ViewOrderClones.jsp">
-      <forward  name="success"  path="/CreateBiobankWorklistSuccess.jsp"/>>
+      <forward  name="success"  path="/CreateBiobankWorklistSuccess.jsp"/>
     </action>
     
     <action     path="/EnterAddress"

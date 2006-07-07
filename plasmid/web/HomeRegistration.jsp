@@ -73,7 +73,7 @@
     <td width="78%" align="left" valign="baseline"> 
         <html:select property="piname" styleClass="text">
             <html:option value=""/>
-            <html:options collection="pis" property="nameEmail"/>
+            <html:options collection="pis" property="nameInstitution"/>
         </html:select>
     </td>
   </tr>

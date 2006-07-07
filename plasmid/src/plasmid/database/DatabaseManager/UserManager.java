@@ -180,7 +180,7 @@ public class UserManager extends TableManager {
      * @return A list of PI objects. Return null if error occured.
      */
     public static List getAllPis() {
-        String sql = "select name,firstname,lastname,institution,department,email from pi order by lastname";
+        String sql = "select name,firstname,lastname,institution,department,email from pi order by name";
         DatabaseTransaction t = null;
         List pis = new ArrayList();
         ResultSet rs = null;

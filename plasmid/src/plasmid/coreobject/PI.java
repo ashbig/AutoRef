@@ -48,4 +48,8 @@ public class PI {
     public String getNameEmail() {
         return name+" ("+email+")";
     }
+    
+    public String getNameInstitution() {
+        return name+" ("+institution+")";
+    }
 }
