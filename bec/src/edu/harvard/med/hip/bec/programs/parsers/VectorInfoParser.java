@@ -20,6 +20,7 @@ import java.util.*;
  */
 public class VectorInfoParser extends DefaultHandler
 {
+    private static final String VECTOR_INFO = "vector-info";
      private static final String VECTOR_START = "vector";
      private static final String VECTOR_NAME = "vector-name";
      private static final String VECTOR_SOURCE = "vector-source";
@@ -49,13 +50,19 @@ public class VectorInfoParser extends DefaultHandler
       private BioVector i_current_vector = null;
       private BioVectorFeature i_current_vector_feature = null;
       private int  i_current_status = -1;
-      
+       private StringBuffer          i_element_buffer = null;
      
      public void startDocument(){ i_biovectors = new ArrayList();}
 
       public void startElement(String uri, String localName, String rawName,
-                               Attributes attributes)
+                               Attributes attributes) throws SAXException
       {
+          i_element_buffer = new StringBuffer();
+          
+        if ( isWrongTag(localName))
+       {
+           throw new SAXException("Wrong tag: "+localName);
+       }
         if (localName.equalsIgnoreCase(VECTOR_START) )
         {
             i_current_vector = new BioVector();
@@ -66,7 +73,8 @@ public class VectorInfoParser extends DefaultHandler
             i_current_vector_feature = new BioVectorFeature();
             i_current_vector.addFeature(i_current_vector_feature);
         }
-        else  if (localName.equalsIgnoreCase(VECTOR_SOURCE) )i_current_status = VECTOR_SOURCE_STATUS;
+          
+       /* else  if (localName.equalsIgnoreCase(VECTOR_SOURCE) )i_current_status = VECTOR_SOURCE_STATUS;
         else  if (localName.equalsIgnoreCase(VECTOR_TYPE ) )i_current_status =VECTOR_TYPE_STATUS;
         else  if (localName.equalsIgnoreCase(VECTOR_FILENAME ) )i_current_status=VECTOR_FILENAME_STATUS;
         else  if (localName.equalsIgnoreCase(VECTOR_FILEPATH ) )i_current_status=VECTOR_FILEPATH_STATUS;
@@ -74,14 +82,20 @@ public class VectorInfoParser extends DefaultHandler
         else  if (localName.equalsIgnoreCase(VECTOR_FEATURE_DESCRIPTION ) )i_current_status=VECTOR_FEATURE_DESCRIPTION_STATUS;
         else  if (localName.equalsIgnoreCase(VECTOR_FEATURE_TYPE ) )i_current_status=VECTOR_FEATURE_TYPE_STATUS;
         else  if (localName.equalsIgnoreCase(VECTOR_NAME)) i_current_status= VECTOR_NAME_STATUS;
-        
+        */
       }
 
      
       public void characters(char characters[], int start, int length)
       {
-          String chData = (new String(characters, start, length)).trim();
+           String chData = (new String(characters, start, length)).trim();
            if (chData == null || chData.length() < 1) return;
+           if (i_element_buffer != null) 
+           {
+                i_element_buffer.append(chData); 
+           }
+         
+          /*if (chData == null || chData.length() < 1) return;
          
           switch(i_current_status)
           {
@@ -95,32 +109,75 @@ public class VectorInfoParser extends DefaultHandler
             case VECTOR_FEATURE_DESCRIPTION_STATUS : { i_current_vector_feature.setDescription(chData); break;}
             case VECTOR_FEATURE_TYPE_STATUS :{   i_current_vector_feature.setType( Integer.parseInt( chData)); break;}
           }
-        
+        */
       }
 
-      
+      public void endElement(String namespaceURI, String localName,
+                                String qualifiedName)
+      {
+          if (i_element_buffer == null) return;
+         if (localName.equalsIgnoreCase( VECTOR_NAME))
+          { i_current_vector.setName(i_element_buffer.toString());}
+         else if (localName.equalsIgnoreCase(VECTOR_SOURCE ))
+          { i_current_vector.setSource(i_element_buffer.toString());}
+         else if (localName.equalsIgnoreCase(VECTOR_TYPE))
+          {  i_current_vector.setType( Integer.parseInt( i_element_buffer.toString())); }
+         else if (localName.equalsIgnoreCase(VECTOR_FILENAME))
+         { i_current_vector.setFileName(i_element_buffer.toString()); }
+         else if (localName.equalsIgnoreCase( VECTOR_FILEPATH ))
+         { i_current_vector.setFilePath(i_element_buffer.toString()); }
+          
+         else if (localName.equalsIgnoreCase(VECTOR_FEATURE_NAME ))
+            { i_current_vector_feature.setName(i_element_buffer.toString()); }
+          else if (localName.equalsIgnoreCase(VECTOR_FEATURE_DESCRIPTION ))
+ { i_current_vector_feature.setDescription(i_element_buffer.toString()); }
+          else if (localName.equalsIgnoreCase(VECTOR_FEATURE_TYPE ))
+              {   i_current_vector_feature.setType( Integer.parseInt( i_element_buffer.toString())); }
+        
+           i_element_buffer= null;
+      }
+
+      private boolean isWrongTag(String localName)
+      {
+          
+          if ( localName.equalsIgnoreCase( VECTOR_START ) ||
+                     localName.equalsIgnoreCase( VECTOR_NAME ) ||
+                     localName.equalsIgnoreCase( VECTOR_SOURCE ) ||
+                     localName.equalsIgnoreCase(VECTOR_TYPE ) ||
+                     localName.equalsIgnoreCase( VECTOR_FILENAME ) ||
+                     localName.equalsIgnoreCase( VECTOR_FILEPATH ) ||
+                      localName.equalsIgnoreCase( VECTOR_FEATURE_START ) ||
+                     localName.equalsIgnoreCase( VECTOR_FEATURE_NAME) ||
+                    localName.equalsIgnoreCase(  VECTOR_FEATURE_DESCRIPTION ) ||
+                    localName.equalsIgnoreCase(  VECTOR_INFO)||
+                   localName.equalsIgnoreCase( VECTOR_FEATURE_TYPE )) 
+              return false;
+          return true;
+      }
     
       public ArrayList     getBioVectors(){ return i_biovectors;}
 
    public static void main(String[] args)
   {
      try{
-         File f = new File("C:\\BEC\\bec\\docs\\VectorInfo.xml");
-         f.exists();
+            edu.harvard.med.hip.bec.util.BecProperties sysProps =  edu.harvard.med.hip.bec.util.BecProperties.getInstance( edu.harvard.med.hip.bec.util.BecProperties.PATH);
+            sysProps.verifyApplicationSettings();
+         File f = new File(sysProps.getInstance().getProperty("TEMPORARY_FILES_FILE_PATH")+File.separator+"VectorInfo.xml");
         VectorInfoParser SAXHandler = new VectorInfoParser();
         SAXParser parser = new SAXParser();
         parser.setContentHandler(SAXHandler);
         parser.setErrorHandler(SAXHandler);
-        InputStream m_input_stream = new FileInputStream("C:\\BEC\\bec\\docs\\VectorInfo.xml");
+        InputStream m_input_stream = new FileInputStream(f);
         parser.parse(new org.xml.sax.InputSource(m_input_stream));
                        
         ArrayList v= SAXHandler.getBioVectors();
-        java.sql.Connection conn = edu.harvard.med.hip.bec.database.DatabaseTransaction.getInstance().requestConnection();
+    //    java.sql.Connection conn = edu.harvard.med.hip.bec.database.DatabaseTransaction.getInstance().requestConnection();
         for (int count = 0; count < v.size();count++)
         {
-            ((BioVector)v.get(count)).insert(conn);
+            System.out.println( ((BioVector)v.get(count)).getName());
+            //((BioVector)v.get(count)).insert(conn);
         }
-        conn.commit();
+         System.out.println();
   }
   catch(Exception e){
      e.printStackTrace(System.err);
