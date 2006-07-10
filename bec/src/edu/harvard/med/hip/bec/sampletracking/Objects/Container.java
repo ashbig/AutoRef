@@ -1,6 +1,6 @@
 //Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
 /**
- * $Id: Container.java,v 1.34 2006-05-31 18:02:00 Elena Exp $
+ * $Id: Container.java,v 1.35 2006-07-10 13:55:53 Elena Exp $
  *
  * File     	: Container.java
 
@@ -347,7 +347,10 @@ public class Container
                 }
                 container_labels_per_project.add(   rs.getString("label")  );
             }
-            return container_labels;
+            if ( container_labels_per_project!= null && container_labels_per_project.size() > 0)
+                    container_labels.add(container_labels_per_project);
+                  
+        return container_labels;
         } catch (Exception sqlE)
         {
             throw new BecDatabaseException("Error occured searching for containers for the process\nSQL: "+sqlE);
