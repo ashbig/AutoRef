@@ -101,7 +101,7 @@ public class SearchCloneAction extends Action {
         }
         
         try {
-            handler.doQuery(restrictions, null, null, -1, -1, null, Clone.AVAILABLE);
+            handler.doQuery(restrictions, null, null, -1, -1, null, Clone.AVAILABLE, true);
             List founds = handler.convertFoundToCloneinfo();
             List nofounds = handler.getNofound();
             totalFoundCloneCount = handler.getFoundCloneCount();
