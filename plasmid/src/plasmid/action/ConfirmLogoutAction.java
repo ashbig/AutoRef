@@ -44,7 +44,7 @@ public class ConfirmLogoutAction extends UserAction {
         ActionErrors errors = new ActionErrors();
         List cart = (List)request.getSession().getAttribute(Constants.CART);
         String confirm = ((LogoutForm)form).getConfirm();
-     System.out.println("confirm: "+confirm);
+        
         if(confirm.equals("Yes")) {
             User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
             DatabaseTransaction t = null;
@@ -52,7 +52,34 @@ public class ConfirmLogoutAction extends UserAction {
             try {
                 t = DatabaseTransaction.getInstance();
                 conn = t.requestConnection();
+                
+                UserManager manager = new UserManager(conn);
+                if(!manager.removeShoppingCart(user.getUserid())) {
+                    DatabaseTransaction.rollback(conn);
+                    if(Constants.DEBUG) {
+                        System.out.println("Cannot remove shopping cart from user: "+user.getUserid());
+                    }
+                    errors.add(ActionErrors.GLOBAL_ERROR,
+                    new ActionError("error.database"));
+                    saveErrors(request, errors);
+                    return mapping.findForward("error");
+                }
+                
+                if(!manager.addShoppingCart(user.getUserid(), cart)) {
+                    DatabaseTransaction.rollback(conn);
+                    if(Constants.DEBUG) {
+                        System.out.println("Cannot add shopping cart to user: "+user.getUserid());
+                    }
+                    errors.add(ActionErrors.GLOBAL_ERROR,
+                    new ActionError("error.database"));
+                    saveErrors(request, errors);
+                    return mapping.findForward("error");
+                }
+                
+                DatabaseTransaction.commit(conn);
             } catch (Exception ex) {
+                DatabaseTransaction.rollback(conn);
+                
                 if(Constants.DEBUG) {
                     System.out.println(ex);
                 }
@@ -61,39 +88,13 @@ public class ConfirmLogoutAction extends UserAction {
                 new ActionError("error.database"));
                 saveErrors(request, errors);
                 return mapping.findForward("error");
-            }
-            
-            UserManager manager = new UserManager(conn);
-            if(!manager.removeShoppingCart(user.getUserid())) {
-                DatabaseTransaction.rollback(conn);
+            } finally {
                 DatabaseTransaction.closeConnection(conn);
-                if(Constants.DEBUG) {
-                    System.out.println("Cannot remove shopping cart from user: "+user.getUserid());
-                }
-                errors.add(ActionErrors.GLOBAL_ERROR,
-                new ActionError("error.database"));
-                saveErrors(request, errors);
-                return mapping.findForward("error");
             }
-               
-            if(!manager.addShoppingCart(user.getUserid(), cart)) {
-                DatabaseTransaction.rollback(conn);
-                DatabaseTransaction.closeConnection(conn);
-                if(Constants.DEBUG) {
-                    System.out.println("Cannot add shopping cart to user: "+user.getUserid());
-                }
-                errors.add(ActionErrors.GLOBAL_ERROR,
-                new ActionError("error.database"));
-                saveErrors(request, errors);
-                return mapping.findForward("error");
-            }
-                
-            DatabaseTransaction.commit(conn);
-            DatabaseTransaction.closeConnection(conn);
         }
         
         request.getSession().invalidate();
-        return mapping.findForward("success");        
+        return mapping.findForward("success");
     }
     
 } // End class LogoutAction

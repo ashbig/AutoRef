@@ -365,6 +365,7 @@ public class ContainerProcessManager {
                 System.out.println("Cannot get database connection.");
                 System.out.println(ex);
             }
+            DatabaseTransaction.closeConnection(conn);
             return false;
         }
         
@@ -449,6 +450,7 @@ public class ContainerProcessManager {
                 System.out.println("Cannot get database connection.");
                 System.out.println(ex);
             }
+            DatabaseTransaction.closeConnection(conn);
             return false;
         }
         

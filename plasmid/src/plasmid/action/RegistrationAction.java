@@ -88,7 +88,7 @@ public class RegistrationAction extends Action {
             
             errors.add(ActionErrors.GLOBAL_ERROR,
             new ActionError("error.database"));
-            saveErrors(request, errors);            
+            saveErrors(request, errors);
             DatabaseTransaction.closeConnection(conn);
             return mapping.findForward("error");
         }
@@ -146,7 +146,16 @@ public class RegistrationAction extends Action {
             int indexLeft = pi.indexOf("(");
             int indexRight = pi.indexOf(")");
             pname = pi.substring(0, indexLeft-1);
-            pemail= pi.substring(indexLeft+1, indexRight);
+            PI newpi = UserManager.findPI(pname);
+            if(newpi == null) {
+                DatabaseTransaction.rollback(conn);
+                DatabaseTransaction.closeConnection(conn);
+                errors.add(ActionErrors.GLOBAL_ERROR,
+                new ActionError(manager.getErrorMessage()));
+                saveErrors(request, errors);
+                return mapping.findForward("error");
+            }
+            pemail = newpi.getEmail();
         }
         
         User user = new User(id,firstname.trim(),lastname.trim(),email.trim(),phone,institution,department,null,pname,group,password,User.EXTERNAL,pemail);

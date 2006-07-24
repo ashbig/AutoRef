@@ -54,8 +54,8 @@ public abstract class GeneQueryHandler {
     protected List terms;
     protected Map foundCounts;
     protected int foundCloneCount;
-   // protected int noFoundTotal;
-   // protected List totalFoundCloneids;
+    // protected int noFoundTotal;
+    // protected List totalFoundCloneids;
     
     /** Creates a new instance of GeneQueryHandler */
     public GeneQueryHandler() {
@@ -75,7 +75,7 @@ public abstract class GeneQueryHandler {
     public List getTerms() {return terms;}
     public Map getFoundCounts() {return foundCounts;}
     public int getFoundCloneCount() {return foundCloneCount;}
-   // public int getNoFoundTotal() {return noFoundTotal;}
+    // public int getNoFoundTotal() {return noFoundTotal;}
     public Map getTotalFoundCloneids() {return totalFoundCloneids;}
     
     public int getNumOfClones(String term) {
@@ -92,10 +92,10 @@ public abstract class GeneQueryHandler {
     public abstract void doQuery(List restrictions, List clonetypes, String species, String status) throws Exception;
     
     public abstract void doQuery(List restrictions, List clonetypes, String species, int start, int end, String column, String status) throws Exception;
-           
+    
     public void doQuery(List restrictions, List clonetypes, String species, int start, int end, String column, String status, boolean isGrowth) throws Exception {
     }
- 
+    
     public void doQuery(List restrictions, List clonetypes, String species, int start, int end, String column, String status, String clonetable) throws Exception {
     }
     
@@ -110,59 +110,66 @@ public abstract class GeneQueryHandler {
     protected void executeQuery(String sql) throws Exception {
         executeQuery(sql, null, null, null, null);
     }
-        
+    
     protected void executeQuery(String sql, List restrictions, List clonetypes, String species, int start, int end, String sortColumn, String status) throws Exception {
         executeQuery(sql, restrictions, clonetypes, species, start, end, sortColumn, status, 1, false);
     }
-     
+    
     protected void executeQuery(String sql, List restrictions, List clonetypes, String species, int start, int end, String sortColumn, String status, int num, boolean isLike) throws Exception {
         executeQuery(sql,restrictions,clonetypes,species,start,end,sortColumn,status,num,isLike,true);
     }
-   
+    
     protected void executeQuery(String sql, List restrictions, List clonetypes, String species, int start, int end, String sortColumn, String status, int num, boolean isLike, boolean isGrowth) throws Exception {
         if(terms == null || terms.size() == 0)
             return;
-       
+        
         foundCloneCount = 0;
         nofound.addAll(terms);
         DatabaseTransaction t = DatabaseTransaction.getInstance();
-        Connection conn = t.requestConnection();
-        PreparedStatement stmt = conn.prepareStatement(sql);
-        ResultSet rs = null;
-        Set cloneids = new TreeSet();
-        int n = 0;
-        for(int i=0; i<terms.size(); i++) {
-            String term = (String)terms.get(i);
-            if(isLike)
-                term = "%"+term+"%";
-            for(int m=0; m<num; m++) {
-                stmt.setString(m+1, term);
-            }
-            rs = DatabaseTransaction.executeQuery(stmt);
-            List clones = new ArrayList();
-            List totalClones = new ArrayList();
-            while(rs.next()) {
-                String cloneid = new Integer(rs.getInt(1)).toString();
-                if((n>=start && n<end) || (start==-1 && end==-1)) {
-                    clones.add(cloneid);
-                    cloneids.add(cloneid);
+        Connection conn = null;
+        Map foundClones = null;
+        
+        try {
+            conn = t.requestConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = null;
+            Set cloneids = new TreeSet();
+            int n = 0;
+            for(int i=0; i<terms.size(); i++) {
+                String term = (String)terms.get(i);
+                if(isLike)
+                    term = "%"+term+"%";
+                for(int m=0; m<num; m++) {
+                    stmt.setString(m+1, term);
                 }
-                totalClones.add(cloneid);
-                n++;
+                rs = DatabaseTransaction.executeQuery(stmt);
+                List clones = new ArrayList();
+                List totalClones = new ArrayList();
+                while(rs.next()) {
+                    String cloneid = new Integer(rs.getInt(1)).toString();
+                    if((n>=start && n<end) || (start==-1 && end==-1)) {
+                        clones.add(cloneid);
+                        cloneids.add(cloneid);
+                    }
+                    totalClones.add(cloneid);
+                    n++;
+                }
+                if(clones.size() > 0)
+                    found.put(term, clones);
+                
+                if(totalClones.size() > 0)
+                    totalFoundCloneids.put(term, totalClones);
             }
-            if(clones.size() > 0) 
-                found.put(term, clones);
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
             
-            if(totalClones.size() > 0)
-                totalFoundCloneids.put(term, totalClones);
+            CloneManager manager = new CloneManager(conn);
+            foundClones = manager.queryClonesByCloneid(new ArrayList(cloneids), true, true, false, isGrowth, restrictions,clonetypes,species,status);
+        } catch (Exception ex) {
+            throw ex;
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
         }
-        DatabaseTransaction.closeResultSet(rs);
-        DatabaseTransaction.closeStatement(stmt);
-        
-        CloneManager manager = new CloneManager(conn);
-        Map foundClones = manager.queryClonesByCloneid(new ArrayList(cloneids), true, true, false, isGrowth, restrictions,clonetypes,species,status);        
-        DatabaseTransaction.closeConnection(conn);
-        
         /**
          * Set ks = foundClones.keySet();
          * Iterator it = ks.iterator();
@@ -188,7 +195,7 @@ public abstract class GeneQueryHandler {
                 newFound.put(k, newClones);
                 foundCounts.put(k, new Integer(newClones.size()));
                 foundCloneCount += newClones.size();
-            } 
+            }
         }
         
         found = newFound;
@@ -292,7 +299,7 @@ public abstract class GeneQueryHandler {
     
     public int queryTotalFoundCloneCounts(List restrictions, List clonetypes, String species, String status) {
         String sql = "select count(*) from clone where cloneid=?";
-
+        
         if(clonetypes != null) {
             String s = StringConvertor.convertFromListToSqlString(clonetypes);
             sql = sql+" and clonetype in ("+s+")";
@@ -309,7 +316,7 @@ public abstract class GeneQueryHandler {
         
         if(status != null)
             sql += " and status='"+status+"'";
-         
-        return CloneManager.queryCloneCounts(totalFoundCloneids, nofound, sql);            
+        
+        return CloneManager.queryCloneCounts(totalFoundCloneids, nofound, sql);
     }
 }

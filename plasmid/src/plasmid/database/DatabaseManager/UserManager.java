@@ -131,7 +131,39 @@ public class UserManager extends TableManager {
         }
         return rt;
     }
-    
+        
+    public static PI findPI(String piname) {
+        String sql = "select * from pi where upper(name)=upper(?)";
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        PI rt = null;
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, piname);
+            rs = DatabaseTransaction.executeQuery(stmt);
+            if(rs.next()) {
+                String email = rs.getString(2);
+                String first = rs.getString(3);
+                String lastName = rs.getString(4);
+                String institution = rs.getString(5);
+                String dept = rs.getString(6);
+                rt = new PI(piname,first,lastName,institution,dept,email);
+            }
+        } catch (Exception ex) {
+            System.out.println(ex);
+            DatabaseTransaction.closeConnection(conn);
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+            DatabaseTransaction.closeConnection(conn);
+        }
+        return rt;
+    }
+        
     public User authenticate(String email, String password) {
         String sql = "select userid,firstname,lastname,email,phone,"+
         " ponumber,institution,department,dateadded,datemod,modifier,"+

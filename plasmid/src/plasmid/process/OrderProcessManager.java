@@ -327,7 +327,7 @@ public class OrderProcessManager {
             } else {
                 if("Y".equals(isBatch))
                     clones = m.queryBatchOrderClones(orderid, user);
-                else 
+                else
                     clones = m.queryOrderClones(orderid, user);
             }
             
@@ -519,10 +519,18 @@ public class OrderProcessManager {
     
     protected List processUserAddress(User user) throws Exception {
         DatabaseTransaction t = DatabaseTransaction.getInstance();
-        Connection conn = t.requestConnection();
-        UserManager manager = new UserManager(conn);
-        List addresses = manager.getUserAddresses(user.getUserid());
-        DatabaseTransaction.closeConnection(conn);
+        Connection conn = null;
+        List addresses = null;
+        
+        try {
+            conn = t.requestConnection();
+            UserManager manager = new UserManager(conn);
+            addresses = manager.getUserAddresses(user.getUserid());
+        } catch (Exception ex) {
+            throw ex;
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
+        }
         return addresses;
     }
     
@@ -625,28 +633,28 @@ public class OrderProcessManager {
         
         DatabaseTransaction t = null;
         Connection conn = null;
+        List orders = null;
         
         try {
             t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
+            
+            CloneOrderManager manager = new CloneOrderManager(conn);
+            
+            if(user.INTERNAL.equals(user.getIsinternal())) {
+                orders = manager.queryCloneOrders(null, status);
+            } else {
+                orders = manager.queryCloneOrders(user, status);
+            }
         } catch (Exception ex) {
             if(Constants.DEBUG) {
                 System.out.println("Cannot get database connection.");
                 System.out.println(ex);
             }
             return null;
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
         }
-        
-        CloneOrderManager manager = new CloneOrderManager(conn);
-        List orders = null;
-        
-        if(user.INTERNAL.equals(user.getIsinternal())) {
-            orders = manager.queryCloneOrders(null, status);
-        } else {
-            orders = manager.queryCloneOrders(user, status);
-        }
-        
-        DatabaseTransaction.closeConnection(conn);
         return orders;
     }
     
@@ -660,45 +668,29 @@ public class OrderProcessManager {
         
         DatabaseTransaction t = null;
         Connection conn = null;
+        CloneOrderManager manager = null;
+        CloneOrder order = null;
         
         try {
             t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
+            
+            manager = new CloneOrderManager(conn);
+            if(user.INTERNAL.equals(user.getIsinternal())) {
+                order = manager.queryCloneOrder(null, orderid);
+            } else {
+                order = manager.queryCloneOrder(user, orderid);
+            }
         } catch (Exception ex) {
             if(Constants.DEBUG) {
-                System.out.println("Cannot get database connection.");
+                System.out.println(manager.getErrorMessage());
                 System.out.println(ex);
             }
+            DatabaseTransaction.closeConnection(conn);
             return null;
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
         }
-        
-        CloneOrderManager manager = new CloneOrderManager(conn);
-        CloneOrder order = null;
-        if(user.INTERNAL.equals(user.getIsinternal())) {
-            try {
-                order = manager.queryCloneOrder(null, orderid);
-            } catch (Exception ex) {
-                if(Constants.DEBUG) {
-                    System.out.println(manager.getErrorMessage());
-                    System.out.println(ex);
-                }
-                DatabaseTransaction.closeConnection(conn);
-                return null;
-            }
-        } else {
-            try {
-                order = manager.queryCloneOrder(user, orderid);
-            } catch (Exception ex) {
-                if(Constants.DEBUG) {
-                    System.out.println(manager.getErrorMessage());
-                    System.out.println(ex);
-                }
-                DatabaseTransaction.closeConnection(conn);
-                return null;
-            }
-        }
-        
-        DatabaseTransaction.closeConnection(conn);
         return order;
     }
     

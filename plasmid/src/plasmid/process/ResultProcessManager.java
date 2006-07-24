@@ -70,6 +70,7 @@ public class ResultProcessManager {
                 System.out.println("Cannot get database connection.");
                 System.out.println(ex);
             }
+            DatabaseTransaction.closeConnection(conn);
             return false;
         }
         
