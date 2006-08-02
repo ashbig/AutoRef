@@ -295,7 +295,7 @@ public class AssemblyRunner extends ProcessRunner
                //taken as assembled sequence if pass checks, create psevdo assembly object  
            if (clone_assembly == null  &&  m_assembly_mode == END_READS_ASSEMBLY && refsequence.getText().length() < MAXIMUM_READ_LENGTH )
            {
-               clone_assembly = getAssemblyFromRead(clone_definition, refsequence.getText().length() + MINIMUM_LINKER_COVERAGE);
+               clone_assembly = getAssemblyFromRead(clone_definition, refsequence.getText().length() + 2 * MINIMUM_LINKER_COVERAGE);
            }
            if (clone_assembly == null )//&& m_assembly_mode == END_READS_ASSEMBLY )
            {
@@ -593,7 +593,7 @@ public class AssemblyRunner extends ProcessRunner
      
      
      
-     private CloneAssembly getAssemblyFromRead(CloneDescription clone_definition, int refsequence_length)
+     private CloneAssembly getAssemblyFromRead(CloneDescription clone_definition, int min_read_length)
      {
          
          ArrayList reads = null;
@@ -603,7 +603,20 @@ public class AssemblyRunner extends ProcessRunner
          {
              reads = Read.getReadByIsolateTrackingId(clone_definition.getIsolateTrackingId( ));
              if ( reads.size() > 1)return null;
-             read = (Read)reads.get(0);
+             //get longest read
+             Collections.sort(reads, new Comparator()
+                {
+                    public int compare(Object o1, Object o2)
+                    {
+                        int read_length_1 = ((Read) o1).getTrimEnd() - ((Read) o1).getTrimStart();
+                        int read_length_2 = ((Read) o2).getTrimEnd() - ((Read) o2).getTrimStart();
+                        return read_length_2 - read_length_1;
+                    }
+                    public boolean equals(java.lang.Object obj)    {      return false;  }
+                } );
+                read = (Read)reads.get(0);
+             if (read == null) return null;
+             if ( (read.getTrimEnd() - read.getTrimStart()) <= min_read_length) return null;
              //if read reverse get compliment
              //get trimmed read
              
@@ -652,6 +665,8 @@ public static void main(String args[])
        CloneAssembly clone_assembly =null;
     try
     {
+        
+        /*
             BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
         sysProps.verifyApplicationSettings();
         edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
@@ -677,6 +692,20 @@ public static void main(String args[])
          runner.setUser(user);
         runner.run();
       **/
+        
+        ArrayList reads = new ArrayList();
+        reads.add ("10");reads.add ("100");reads.add ("20");
+        Collections.sort(reads, new Comparator()
+                {
+                    public int compare(Object o1, Object o2)
+                    {
+                        int read_length_1 = Integer.parseInt( (String)o1);
+                        int read_length_2 = Integer.parseInt( (String)o2);;
+                        return read_length_2 - read_length_1;
+                    }
+                    public boolean equals(java.lang.Object obj)    {      return false;  }
+                } );
+                System.out.println(String.valueOf(reads.get(0)));
     }catch(Exception e){}
     System.exit(0);
 }
