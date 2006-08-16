@@ -4,6 +4,8 @@
 <%@ page import="plasmid.coreobject.RefseqNameType" %> 
 <%@ page import="plasmid.form.RefseqSearchForm" %> 
 <%@ page import="plasmid.coreobject.Clone" %> 
+<%@ page import="plasmid.coreobject.User" %> 
+<%@ page import="plasmid.process.OrderProcessManager" %> 
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -82,7 +84,7 @@
   <tr>
     <td class="tableheader">&nbsp;</td>
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=searchterm">Search Term</a></td>
-    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=cloneid">Clone ID</a></td>
+    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=cloneid">PlasmID ID</a></td>
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=clonetype">Clone Type</a></td>
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=geneid">Species Specific ID</a></td>
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=genesymbol">Gene Symbol</td>
@@ -94,6 +96,7 @@
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=vectorname">Vector</a></td>
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=selection">Selection Markers</a></td>
     <td class="tableheader">Special MTA</td>
+    <td class="tableheader">Distribution</td>
     <td class="tableheader">&nbsp;</td>
   </tr>
 
@@ -158,6 +161,13 @@
     </logic:iterate>
     </td>
     <td><bean:write name="clone" property="specialtreatment"/></td>
+    <td><bean:write name="clone" property="restriction"/></td>
+
+    <%  
+        User user = (User)request.getSession().getAttribute(Constants.USER_KEY);        
+        boolean b = OrderProcessManager.isRestricted((Clone)clone,user);   
+        if(b) {
+    %>
     <html:form action="SetDisplay.do">
         <input type="hidden" name="displayPage" value="indirect"/>
         <input type="hidden" name="cloneid" value="<bean:write name="clone" property="cloneid"/>"/>
@@ -172,6 +182,13 @@
         </td>
     </logic:notEqual>
     </html:form>
+    <% 
+        } else {
+    %>        
+        <TD valign="center">&nbsp;</td>
+    <% 
+        } 
+    %>  
     </tr>
   </logic:iterate>
   </logic:equal>
@@ -228,6 +245,13 @@
     </logic:iterate>
     </td>
     <td><bean:write name="clone" property="specialtreatment"/></td>
+    <td><bean:write name="clone" property="restriction"/></td>    
+    
+    <%  
+        User user = (User)request.getSession().getAttribute(Constants.USER_KEY);        
+        boolean b = OrderProcessManager.isRestricted((Clone)clone,user);   
+        if(b) {
+    %>
     <html:form action="SetDisplay.do">
     <input type="hidden" name="displayPage" value="direct"/>
     <input type="hidden" name="cloneid" value="<bean:write name="clone" property="cloneid"/>"/>
@@ -242,6 +266,13 @@
         </td>
     </logic:notEqual>
     </html:form>
+    <% 
+        } else {
+    %>        
+        <TD valign="center">&nbsp;</td>
+    <% 
+        } 
+    %>  
     </tr>
   </logic:iterate>
   </logic:equal>
