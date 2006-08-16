@@ -310,7 +310,8 @@ public class AssemblyRunner extends ProcessRunner
            {
                clone_assembly.sortContigsByLength();
                int result = -1000;
-               for ( int count = 0; count < clone_assembly.getContigs().size(); count++)
+             //  for ( int count = 0; count < clone_assembly.getContigs().size(); count++)
+               if ( clone_assembly.getContigs().size()>0 )
                {
                    //check coverage
                    Contig contig = (Contig) clone_assembly.getContigs().get(0);
@@ -339,18 +340,19 @@ public class AssemblyRunner extends ProcessRunner
                             conn.commit();
                             return;
                     }
-                    if ( clone_assembly.getContigs().size() != 1 && count == clone_assembly.getContigs().size()-1 )
+                    if ( clone_assembly.getContigs().size() > 1 )
                     {
                         IsolateTrackingEngine.updateStatus(isolate_status_fail, clone_definition.getIsolateTrackingId(),  conn );
                         IsolateTrackingEngine.updateAssemblyStatus(
                                     IsolateTrackingEngine.ASSEMBLY_STATUS_N_CONTIGS,
                                     clone_definition.getIsolateTrackingId(),  conn);
+                        return;
                     }
                }
                
             
-                IsolateTrackingEngine.updateStatus(isolate_status_pass,clone_definition.getIsolateTrackingId(),  conn );
-                IsolateTrackingEngine.updateAssemblyStatus( result,clone_definition.getIsolateTrackingId(),  conn);
+               // IsolateTrackingEngine.updateStatus(isolate_status_pass,clone_definition.getIsolateTrackingId(),  conn );
+               // IsolateTrackingEngine.updateAssemblyStatus( result,clone_definition.getIsolateTrackingId(),  conn);
             }
             conn.commit();
      }  
