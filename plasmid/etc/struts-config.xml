@@ -171,7 +171,7 @@
     <action     path="/Checkout"
                 type="plasmid.action.CheckoutAction"
                name="checkoutForm"
-              input="/UpdateCart.do">
+              input="/DisplayCart.jsp">
       <forward  name="success"  path="/ChooseShipping.jsp"/>
     </action>
       

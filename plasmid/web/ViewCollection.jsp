@@ -45,6 +45,12 @@
   <tr> 
     <td colspan="4" valign="top" class="formlabel"><bean:write name="<%=Constants.SINGLECOLLECTION%>" property="description"/></td>
   </tr> 
+  <tr> 
+    </tr>
+  <tr> 
+    <td colspan="2" valign="top" class="formlabel">Use Restriction</td>
+    <td colspan="2" valign="top" class="itemtext"><bean:write name="<%=Constants.SINGLECOLLECTION%>" property="restriction"/></td>
+  </tr>
 </table>
 
 <p class="text">

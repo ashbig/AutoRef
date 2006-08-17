@@ -974,8 +974,10 @@ public class CloneManager extends TableManager {
                     boolean match = false;
                     for(int k=0; k<restrictions.size(); k++) {
                         String res = (String)restrictions.get(k);
-                        if(restriction.equals(res))
+                        if(restriction.equals(res)) {
                             match = true;
+                            break;
+                        }
                     }
                     
                     if(!match) {

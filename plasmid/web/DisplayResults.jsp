@@ -96,7 +96,7 @@
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=vectorname">Vector</a></td>
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=selection">Selection Markers</a></td>
     <td class="tableheader">Special MTA</td>
-    <td class="tableheader">Distribution</td>
+    <td class="tableheader">Use Restriction</td>
     <td class="tableheader">&nbsp;</td>
   </tr>
 
@@ -162,12 +162,6 @@
     </td>
     <td><bean:write name="clone" property="specialtreatment"/></td>
     <td><bean:write name="clone" property="restriction"/></td>
-
-    <%  
-        User user = (User)request.getSession().getAttribute(Constants.USER_KEY);        
-        boolean b = OrderProcessManager.isRestricted((Clone)clone,user);   
-        if(b) {
-    %>
     <html:form action="SetDisplay.do">
         <input type="hidden" name="displayPage" value="indirect"/>
         <input type="hidden" name="cloneid" value="<bean:write name="clone" property="cloneid"/>"/>
@@ -182,13 +176,6 @@
         </td>
     </logic:notEqual>
     </html:form>
-    <% 
-        } else {
-    %>        
-        <TD valign="center">&nbsp;</td>
-    <% 
-        } 
-    %>  
     </tr>
   </logic:iterate>
   </logic:equal>
@@ -246,12 +233,6 @@
     </td>
     <td><bean:write name="clone" property="specialtreatment"/></td>
     <td><bean:write name="clone" property="restriction"/></td>    
-    
-    <%  
-        User user = (User)request.getSession().getAttribute(Constants.USER_KEY);        
-        boolean b = OrderProcessManager.isRestricted((Clone)clone,user);   
-        if(b) {
-    %>
     <html:form action="SetDisplay.do">
     <input type="hidden" name="displayPage" value="direct"/>
     <input type="hidden" name="cloneid" value="<bean:write name="clone" property="cloneid"/>"/>
@@ -266,13 +247,6 @@
         </td>
     </logic:notEqual>
     </html:form>
-    <% 
-        } else {
-    %>        
-        <TD valign="center">&nbsp;</td>
-    <% 
-        } 
-    %>  
     </tr>
   </logic:iterate>
   </logic:equal>

@@ -76,6 +76,7 @@ public class SearchCloneAction extends Action {
         User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
         List restrictions = new ArrayList();
         restrictions.add(Clone.NO_RESTRICTION);
+        restrictions.add(Clone.NON_PROFIT);
         if(user != null) {
             List ress = UserManager.getUserRestrictions(user);
             restrictions.addAll(ress);

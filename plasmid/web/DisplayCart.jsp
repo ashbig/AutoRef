@@ -27,6 +27,7 @@
     <td width="83%" align="left" valign="top">
 	<jsp:include page="viewShoppingCartTitle.jsp" />
 
+<html:errors/>
 <p class="text">Clones:</p>
 <table width="100%" border="0">
   <tr>

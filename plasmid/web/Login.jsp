@@ -30,9 +30,10 @@
 <table width="100%" border="0">
   <tr> 
     <td width="12%" valign="baseline" class="formlabel">Email:</td>
-    <td colspan="2">
+    <td>
         <html:text property="email" styleClass="text" size="30"/>
     </td>
+    <td valign="baseline" width="60%" class="text"><a href="PrepareRegistration.do">Create New Account</a></td>
   </tr>
   <tr> 
     <td valign="baseline" class="formlabel">Password:</td>

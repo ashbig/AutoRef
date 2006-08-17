@@ -113,6 +113,7 @@ public class BatchOrderAction extends UserAction {
         
         List restrictions = new ArrayList();
         restrictions.add(Clone.NO_RESTRICTION);
+        restrictions.add(Clone.NON_PROFIT);
         if(user != null) {
             List ress = UserManager.getUserRestrictions(user);
             restrictions.addAll(ress);

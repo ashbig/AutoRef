@@ -37,6 +37,7 @@ Many other vectors are represented in the repository
     <td class="tableheader"><a href="SetVectorDisplay.do?sortby=vectorname">Vector Name</a></td>
     <td class="tableheader">Description</td>
     <td class="tableheader">Special MTA</td>
+    <td class="tableheader">Use Restriction</td>
     <td class="tableheader">&nbsp;</td>
   </tr>
 
@@ -49,6 +50,7 @@ Many other vectors are represented in the repository
     <td><a target="_blank" href="GetVectorDetail.do?vectorid=<bean:write name="clone" property="vectorid"/>"><bean:write name="clone" property="vectorname"/></a></td>
     <td><bean:write name="clone" property="description"/></td>
     <td><bean:write name="clone" property="specialtreatment"/></td>
+    <td><bean:write name="clone" property="restriction"/></td>
     <html:form action="SetVectorDisplay.do">
     <input type="hidden" name="cloneid" value="<bean:write name="clone" property="cloneid"/>"/>
     <logic:equal name="clone" property="isAddedToCart" value="true">

@@ -109,6 +109,7 @@ public class QueryProcessManager {
     public List queryClonesByVector(User user, Set vectors, String species, String status, boolean vectorid) {
         List restrictions = new ArrayList();
         restrictions.add(Clone.NO_RESTRICTION);
+        restrictions.add(Clone.NON_PROFIT);
         if(user != null) {
             List ress = UserManager.getUserRestrictions(user);
             restrictions.addAll(ress);

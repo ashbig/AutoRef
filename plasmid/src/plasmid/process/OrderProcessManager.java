@@ -66,6 +66,14 @@ public class OrderProcessManager {
             }
         }
         
+        List collectionNames = new ArrayList();
+        for(int i=0; i<items.size(); i++) {
+            ShoppingCartItem s = (ShoppingCartItem)items.get(i);
+            if(s.getType().equals(ShoppingCartItem.COLLECTION)) {
+                collectionNames.add(s.getItemid());
+            }
+        }
+        
         List restrictions = UserManager.getUserRestrictions(user);
         if(restrictions == null) {
             restrictions = new ArrayList();
@@ -75,11 +83,16 @@ public class OrderProcessManager {
         DatabaseTransaction t = null;
         Connection conn = null;
         List restrictedClones = null;
+        List restrictedCollections = null;
         try {
             t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
             CloneManager manager = new CloneManager(conn);
             restrictedClones = manager.findRestrictedClones(cloneids, restrictions);
+            CollectionManager m2 = new CollectionManager(conn);
+            restrictedCollections = m2.findRestrictedCollections(collectionNames, restrictions);
+            if(restrictedCollections != null)
+                restrictedClones.addAll(restrictedCollections);
         } catch (Exception ex) {
             if(Constants.DEBUG) {
                 System.out.println(ex);
@@ -1213,5 +1226,23 @@ public class OrderProcessManager {
                 clones.remove(i);
             }
         }
+    }
+    
+    public static boolean isRestricted(Clone clone, User user) {
+        List restrictions = new ArrayList();
+        restrictions.add(Clone.NO_RESTRICTION);       
+        if(user != null) {
+            List ress = UserManager.getUserRestrictions(user);    
+            restrictions.addAll(ress);        
+        }
+        String restriction = ((CloneInfo)clone).getRestriction();
+        
+        for(int i=0; i<restrictions.size(); i++) {
+            String res = (String)restrictions.get(i);
+            if(restriction.trim().equals(res.trim())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

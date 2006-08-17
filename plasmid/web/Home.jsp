@@ -49,28 +49,35 @@
     </td>
   </tr>
   <tr>
-    <td width="50%" align="left" valign="top"><span class="alert">Please register 
+    <td width="50%" align="left" valign="top"><span class="alert">&nbsp;<!--Please register 
       and sign in.<br>
-      Sign-in status affects what you can view and request.<br><br></span>
+      Sign-in status affects what you can view and request.<br><br>--></span>
     <span class="text">Click <a href="cloning_strategies.htm" target="_blank">here</a> to view the cloning methods used for the plasmids in the repository
     </span></td>
-    <td height="75"><html:form action="Logon.do"><table bgcolor="#CCCCCC" width="350" border="0">
-  <tr> 
-    <td width="12%" valign="baseline" class="formlabel">Email:</td>
-    <td width="28%">
-        <html:text property="email" styleClass="text" size="30"/>
-    </td>    
-    <td valign="baseline" class="text"><html:submit styleClass="text" value="Login"/></td>
-  </tr>
-  <tr> 
-    <td width="12%" valign="baseline" class="formlabel">Password:</td>
-    <td width="28%">
-        <html:password property="password" styleClass="text" size="30" maxlength="20"/>        
+    <td height="75">
+    <p class="homepageLink">
+    PlasmID is a central repository for plasmid clone collection and distribution.<br>
+    To view the collection, please go to "Plasmid Request". <br>
+    Registration is not required to view the collection.
+    </p>
+        <!--<html:form action="Logon.do"><table bgcolor="#CCCCCC" width="350" border="0">
+        <tr> 
+            <td width="12%" valign="baseline" class="formlabel">Email:</td>
+            <td width="28%">
+                <html:text property="email" styleClass="text" size="30"/>
+            </td>    
+            <td valign="baseline" class="text"><html:submit styleClass="text" value="Login"/></td>
+        </tr>
+        <tr> 
+            <td width="12%" valign="baseline" class="formlabel">Password:</td>
+            <td width="28%">
+                <html:password property="password" styleClass="text" size="30" maxlength="20"/>        
+            </td>
+            <td valign="baseline" class="text"><a href="FindPassword.jsp">Find Password</a></td>
+        </tr>
+        </table>
+        </html:form>-->
     </td>
-    <td valign="baseline" class="text"><a href="FindPassword.jsp">Find Password</a></td>
-  </tr>
-</table>
-      </html:form></td>
   </tr>
 </table>
 <table width="100%" border="0" cellspacing="1" cellpadding="4">

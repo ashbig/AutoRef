@@ -256,4 +256,46 @@ public class CollectionManager extends TableManager {
         
         return count;
     }
+        
+    public List findRestrictedCollections(List collections, List restrictions) {
+        String sql = "select restriction from collection where name=?";
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        List restrictedCollections = new ArrayList();
+        try {
+            stmt = conn.prepareStatement(sql);
+            for(int i=0; i<collections.size(); i++) {
+                String name = (String)collections.get(i);
+                stmt.setString(1, name);
+                rs = DatabaseTransaction.executeQuery(stmt);
+                if(rs.next()) {
+                    String restriction = rs.getString(1);
+                    
+                    boolean match = false;
+                    for(int k=0; k<restrictions.size(); k++) {
+                        String res = (String)restrictions.get(k);
+                        if(restriction.equals(res)) {
+                            match = true;
+                            break;
+                        }
+                    }
+                    
+                    if(!match) {
+                        restrictedCollections.add(name);
+                    }
+                } else {
+                    handleError(null, "Cannot find collection for name: "+name);
+                    return null;
+                }
+            }
+        } catch (Exception ex) {
+            handleError(ex, "Database error occured.");
+            return null;
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+        }
+        
+        return restrictedCollections;
+    }
 }

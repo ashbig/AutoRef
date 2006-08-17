@@ -29,6 +29,7 @@ import plasmid.Constants;
 import plasmid.coreobject.*;
 import plasmid.query.coreobject.CloneInfo;
 import plasmid.form.CheckoutForm;
+import plasmid.form.ViewCartForm;
 import plasmid.process.OrderProcessManager;
 
 /**
@@ -85,7 +86,7 @@ public class CheckoutAction extends UserAction {
         }
         
         if(restrictedClones.size()>0) {
-            String error = "<br>The following clones are restricted and cannot be distributed to you based on your group:<br>";
+            String error = "<br>The following clones/collections are restricted and cannot be distributed to you based on your group:<br>";
             for(int i=0; i<restrictedClones.size(); i++) {
                 String id = (String)restrictedClones.get(i);
                 error += id+"<br>";
