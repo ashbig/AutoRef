@@ -53,6 +53,7 @@ public class FastaFileGenerator {
     public static final String VERIFIEDHUMANDB=BLAST_BASE_DIR+BLAST_DB_DIR+"Sequence_Verified_Human/genes";
     public static final String ALLDB=BLAST_BASE_DIR+BLAST_DB_DIR+"BlastDB/genes";
     public static final String VCDB=BLAST_BASE_DIR+BLAST_DB_DIR+"VC/genes";
+    public static final String BADB=BLAST_BASE_DIR+BLAST_DB_DIR+"BA/genes";
         
     public static final String LOGFILE=BLAST_BASE_DIR+BLAST_DB_DIR+"Log/blastdb.log";
     public static final String SEQUENCEIDFILE=BLAST_BASE_DIR+BLAST_DB_DIR+"Log/sequenceid.txt";
@@ -63,6 +64,7 @@ public class FastaFileGenerator {
     public static final String YP = "'Yersinia pestis'";
     public static final String FT = "'Francisella tularensis'";
     public static final String VC = "'Vibrio cholerae'";
+    public static final String BA = "'Bacillus anthracis'";
     
     public static final String SPECIES = "Species";
     public static final String MGCPROJECT = "MGC Project";
@@ -209,6 +211,14 @@ public class FastaFileGenerator {
         int maxid17 = generateFile(log, VCDB, VC, lastSequence, SPECIES);
         if(maxid17 == -1) {
             logAndMail(log, "Error occured when generate Vibrio cholerae database file.");
+            return;
+        }
+                      
+        // Generate FASTA file for all BA genes.
+        log.logging("Generate Bacillus anthracis database");
+        int maxid18 = generateFile(log, BADB, BA, lastSequence, SPECIES);
+        if(maxid18 == -1) {
+            logAndMail(log, "Error occured when generate Bacillus anthracis database file.");
             return;
         }
         
