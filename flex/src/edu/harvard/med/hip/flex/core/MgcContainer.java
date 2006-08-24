@@ -1,11 +1,22 @@
 /**
- * $Id: MgcContainer.java,v 1.2 2003-05-28 16:50:15 dzuo Exp $
+ * $Id: MgcContainer.java,v 1.3 2006-08-24 18:10:25 Elena Exp $
  *
  * File     	: MgcContainer.java
  * Date     	: 04162001
  * Author	: Helen Taycher
  *
  * Revision	:
+ *
+ *SQLWKS> desc mgccontainer
+Column Name                    Null?    Type
+------------------------------ -------- ----
+MGCCONTAINERID                 NOT NULL NUMBER(10)
+ORICONTAINER                   NOT NULL VARCHAR2(50)
+FILENAME                                VARCHAR2(50)
+GLYCEROLCONTAINERID                     NUMBER(10)
+CULTURECONTAINERID                      NUMBER(10)
+MARKER                         NOT NULL VARCHAR2(50)
+DNACONTAINERID                          NUMBER(10)
  */
 
 
@@ -512,13 +523,13 @@ public class MgcContainer extends Container {
         String sql =  "select s.sampleid as sampleid, s.sampletype as type,  "+
         " s.containerposition as position, s.status_gb as status_gb, "+
         " ms.mgcid as mgcid, ms.imageid as imageid, ms.vector as vector,"+
-        "ms.orgcol as acol ,  ms.orgrow as arow, ms.sequenceid as seqid, "+
+        "ms.orgcol as acol ,  ms.orgrow as arow, ms.sequenceid as seqid, ms.orientation as orientation,"+
         "ms.status as status  from sample  s, mgcclone  ms "+
         "where s.sampleid = ms.mgccloneid and s.containerid=" + this.id + " order by s.CONTAINERPOSITION "
         
         ;
         
-        
+        MgcSample s = null;
         DatabaseTransaction t = null;
         CachedRowSet crs = null;
         try {
@@ -534,13 +545,17 @@ public class MgcContainer extends Container {
                 int imageid = crs.getInt("IMAGEID");
                 String vector = crs.getString("VECTOR");
                 int seqId = crs.getInt("SEQID");
-                int col = crs.getInt("ACOL");
+                int column = crs.getInt("ACOL");
                 String row = crs.getString("AROW");
                 String status = crs.getString("STATUS");
-                
-                MgcSample s = new MgcSample(sampleid,  position, this.id,
+                int orientation = crs.getInt("ORIENTATION");
+                /* s = new MgcSample(sampleid,  position, this.id,
                 mgcid, imageid, vector,
-                row, col, seqId, status);
+                row, column, seqId, status);*/
+               s = new MgcSample(sampleid,  position, this.id,
+                mgcid, imageid, vector,
+                row, column, seqId, status, orientation);
+                
                 int cdslength = -1;
                 this.addSample(s);
             }
@@ -668,10 +683,18 @@ public class MgcContainer extends Container {
     }
     
     
-    public String toString() {
-        return "";
-    }
-    
+    public String toString() 
+    {
+            StringBuffer str = new StringBuffer();
+            str.append("Container "+this.getOriginalContainer() + " Marker " + m_marker +"\n");
+            MgcSample sample = null;
+            for (int mcount =0; mcount < this.getSamples().size(); mcount++)
+            {
+                sample = (MgcSample)this.getSamples().get(mcount);
+                str.append(sample.toString() +"\n");
+            }
+            return str.toString();
+     }
     
     
     /************************TESTING*************************

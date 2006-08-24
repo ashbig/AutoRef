@@ -1,11 +1,25 @@
 /**
- * $Id: MgcSample.java,v 1.2 2005-03-01 16:38:52 Elena Exp $
+ * $Id: MgcSample.java,v 1.3 2006-08-24 18:10:25 Elena Exp $
  *
  * File     	: MgcClone.java
  * Date     	: 05052002
  * Author	: Helen Taycher
  *
  * Revision	:
+ *
+ *SQLWKS> desc mgcclone
+Column Name                    Null?    Type
+------------------------------ -------- ----
+MGCCLONEID                     NOT NULL NUMBER(10)
+MGCID                          NOT NULL NUMBER(20)
+IMAGEID                        NOT NULL NUMBER(20)
+VECTOR                         NOT NULL VARCHAR2(50)
+ORGROW                                  VARCHAR2(10)
+ORGCOL                                  NUMBER(10)
+STATUS                         NOT NULL VARCHAR2(20)
+SEQUENCEID                              NUMBER(10)
+
+
 */
 package edu.harvard.med.hip.flex.core;
 
@@ -26,15 +40,29 @@ public class MgcSample extends Sample{
     public final static String STATUS_NO_GROW = "NO GROW";
      public final static String STATUS_NO_SEQUENCE = "NO SEQUENCE";
       public final static String STATUS_BAD_SEQUENCE = "BAD SEQUENCE";
-    private int m_MgcId;
-    private int m_ImageId;
-    private String m_Vector;
+    
+      
+
+    public final static int ORIENTATION_NOTKNOWN = -1;
+    public final static int ORIENTATION_FORWARD = 0;
+    public final static int ORIENTATION_REVERSE = 1;
+   
+    public final static String ORIENTATION_NOTKNOWN_STR = "Not known";
+    public final static String ORIENTATION_FORWARD_STR = "Forward";
+    public final static String ORIENTATION_REVERSE_STR = "Reverse";
+     
+      
+    private int m_MgcId = -1;
+    private int m_ImageId = -1;
+    private String m_Vector = null;
     private int m_SequenceId = -1;
-    private String m_Row;
-    private int m_Column;
+    private String m_Row = null;
+    private int m_Column = -1;
+    private int     m_orientation = ORIENTATION_NOTKNOWN;
     
-    private String m_Status;    
+    private String m_Status = null;    
     
+    private int     i_gi = -1;
     
     /**
      * Constructor.
@@ -61,6 +89,14 @@ public class MgcSample extends Sample{
         m_ImageId = imageId;
         m_Status = clone_status;
     }
+     public MgcSample(int id,  int position, int containerid, 
+                    int mgcId, int imageId, String vector, String row, int column,
+                    int seqId, String clone_status, int orientation) 
+    {
+        this( id,   position,  containerid, mgcId,  imageId,  vector,  row,  column,
+                     seqId,  clone_status);
+        m_orientation = orientation;
+    }
     
     /**
      * Constructor.
@@ -84,59 +120,46 @@ public class MgcSample extends Sample{
                     String clone_status) throws FlexDatabaseException
     {
         super( id,  Sample.ISOLATE,  -1,  containerid, -1,-1,  Sample.GOOD) ;
-        int a_value = (int) 'a';
-        int first_char_value = 0;
-        int second_char_value = 0;
-        int row_value = 0;
         m_MgcId = mgcId;
         m_ImageId = imageId;
         m_Vector = vector;
         m_Row = row;
         m_Column = column;
         m_Status = clone_status;
-        
-        
-        first_char_value = (int)row.charAt(0) - a_value + 1;
-        if ( row.length() > 1) 
-        {
-            second_char_value = (int)row.charAt(1) - a_value + 1;
-            row_value = first_char_value * 27 + second_char_value;
-        }
-        else
-        {
-            row_value = first_char_value;
-        }
-        this.position = (column - 1) * 8 +  row_value ;
+        this.position = getPosition(row, column ) ;
   
+    }
+    
+    
+    public MgcSample(int id,  int containerid,  
+                    int mgcId, int imageId, String vector, String row, int column,
+                    String clone_status, int orientation) throws FlexDatabaseException
+    {
+         this( id,   containerid,  
+                     mgcId,  imageId,  vector,  row,  column, clone_status);
+         m_orientation = orientation;
+    }
+    public MgcSample(int id,  int containerid,  
+                    int mgcId, int imageId, String vector, String row, int column,
+                    String clone_status, int orientation, int gi) throws FlexDatabaseException
+    {
+         this( id,   containerid,  
+                     mgcId,  imageId,  vector,  row,  column, clone_status, orientation);
+         i_gi = gi;
     }
     public MgcSample(int id,  int containerid,  
                      int imageId, String vector, String row, int column,
                     String clone_status) throws FlexDatabaseException
     {
         super( id,  Sample.ISOLATE,  -1,  containerid, -1,-1,  Sample.GOOD) ;
-        int a_value = (int) 'a';
-        int first_char_value = 0;
-        int second_char_value = 0;
-        int row_value = 0;
-      //  m_MgcId = mgcId;
+         //  m_MgcId = mgcId;
         m_ImageId = imageId;
         m_Vector = vector;
         m_Row = row;
         m_Column = column;
         m_Status = clone_status;
-        
-        
-        first_char_value = (int)row.charAt(0) - a_value + 1;
-        if ( row.length() > 1) 
-        {
-            second_char_value = (int)row.charAt(1) - a_value + 1;
-            row_value = first_char_value * 27 + second_char_value;
-        }
-        else
-        {
-            row_value = first_char_value;
-        }
-        this.position = (column - 1) * 8 +  row_value ;
+       
+        this.position = getPosition(row, column );
   
     }
     
@@ -174,6 +197,7 @@ public class MgcSample extends Sample{
                 m_Column = crs.getInt("ORGCOL");
                 m_Status = crs.getString("STATUS");
                 m_SequenceId = crs.getInt("SEQUENCEID");
+                m_orientation = crs.getInt("ORIENTATION");
             }
         } catch (NullPointerException ex) {
             throw new FlexCoreException("Error occured while initializing mgc clone with id: "+id+"\n"+ex.getMessage());
@@ -186,15 +210,7 @@ public class MgcSample extends Sample{
         }
     }
     
-    public String toString() 
-    {
-        return "Mgc clone: MgcId - " + Integer.toString(m_MgcId) +
-                ", ImageId - " + Integer.toString(m_ImageId) + 
-                " Vector - " + m_Vector +
-                " Row - " + m_Row +
-               " Col - " + m_Column +
-               " Id - " + this.id + " type - " + this.type;
-    }
+    
     
     
     /**
@@ -221,17 +237,14 @@ public class MgcSample extends Sample{
             sql = "insert into containercell (containerid, position, sampleid) " +
             "values(" + containerid + ","+position+","+id+")";
             stmt.executeUpdate(sql);
-            sql = "insert into mgcclone (mgccloneid, mgcid, imageid, vector, orgrow, orgcol, sequenceid, status) ";
-            if (m_SequenceId > 0)
-            {
-            valuesql = "values ("+ id + "," + m_MgcId +","+ m_ImageId +",'"+ m_Vector + "','"+ m_Row+"',"+ m_Column + "," +
-                                    m_SequenceId + ",'" + m_Status + "')" ;
-            }
-            else
-            {
-                valuesql = "values ("+ id + "," + m_MgcId +","+ m_ImageId +",'"+ m_Vector + "','"+ m_Row+"',"+ m_Column + ",null,'" + m_Status + "')" ;
-            }
-            stmt.executeUpdate(sql + valuesql);                         
+            
+            String sequenceid = ( m_SequenceId > 0 ) ? String.valueOf(m_SequenceId) : null;
+            // I do not know why sequenceid should be null in db
+            sql = "insert into mgcclone (mgccloneid, mgcid, imageid, vector, orgrow, orgcol, "
+            + " sequenceid, status, orientation)  values ("+ id + "," + m_MgcId +","+ m_ImageId +
+            ",'"+ m_Vector + "','"+ m_Row+"',"+ m_Column + "," + sequenceid + ",'" + m_Status + "',"+ m_orientation +")" ;
+           
+            stmt.executeUpdate(sql );                         
         } catch (SQLException sqlE) {
             throw new FlexDatabaseException(sqlE+"\nSQL: "+sql);
             
@@ -297,6 +310,13 @@ public class MgcSample extends Sample{
         "where mgccloneid= " + this.id ;
         dt.executeUpdate(sql, conn);
       
+    }
+    
+    public String       toString()
+    {
+        return "MGC ID "+ m_MgcId +" IMAGE ID " + m_ImageId +" Vector " + m_Vector+
+   " Sequence ID "+ m_SequenceId +" Row "+ m_Row +" Column "+  m_Column +
+   " Orientation "+ m_orientation + " Status "+ m_Status +" GI "+  i_gi ;
     }
     /**
      * Gets the sequence for mgc_sample.
@@ -386,6 +406,11 @@ public class MgcSample extends Sample{
      */
     public void setColumn(int column) { m_Column = column;   }
     
+    public int      getOrientation() { return m_orientation;    }    
+    public void     setOrientation(int v) {  m_orientation = v;    }    
+    
+    public int      getGI(){ return i_gi;}
+   
      //******************************************************//
     //			Testing				//
     //******************************************************//
