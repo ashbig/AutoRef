@@ -1,5 +1,5 @@
 /**
- * $Id: GenbankGeneFinder.java,v 1.15 2005-02-17 16:08:34 dzuo Exp $
+ * $Id: GenbankGeneFinder.java,v 1.16 2006-08-24 18:11:36 Elena Exp $
  *
  * File     	: GenbankGeneFinder.java
  * Date     	: 05052001
@@ -184,6 +184,11 @@ public class GenbankGeneFinder {
             h.put("species", organism);
             h.put("start", new Integer(start));
             h.put("stop", new Integer(stop));
+            /*for new format of ncbi delete <a... html
+            //ORIGIN      
+<a name="sequence_64652955"></a>  */
+            if ( sequencetext.indexOf(">") != -1)
+                sequencetext = sequencetext.substring(sequencetext.lastIndexOf(">") + 1);
             h.put("sequencetext", sequencetext);
             if (! locus_link_id.equals("")) h.put("locus_link", locus_link_id);
             if (! gene_name.equals("")) h.put("gene_name", gene_name);

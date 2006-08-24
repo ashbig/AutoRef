@@ -34,7 +34,7 @@ The e-mail notification will be sent to you upon completion.
 <table>
 <tr>
     <td class="prompt">Please select the mgc clone distribution file:</td>
-    <td><html:file property="mgcCloneFile" /></td>
+    <td>direct submission deactivated. Please contact FLEX development team for MGC list submission <!--<html:file property="mgcCloneFile" /> --> </td>
     <td>[<a href="ViewMgcSampleFile.jsp">sample file</a>]</td>
 </tr>
 
@@ -42,7 +42,7 @@ The e-mail notification will be sent to you upon completion.
 
 </table>
 <P><P>
-<html:submit/>
+<!--<html:submit/>-->
 </html:form>
 
 
