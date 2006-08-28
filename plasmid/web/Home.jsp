@@ -32,15 +32,15 @@
         <p align="left" class="homepageText3">New in the Repository</p>
         <ul>
           <li> 
-            <div align="left">New search tools and defined collections make it easier for you to find clones of interest
+            <div align="left">More than 6,000 sequence-verified human open reading frame (ORF) clones added
             </div>
           </li>
           <li> 
-            <div align="left">Human kinase and Breast Cancer-related ORF collections (request single clones or whole collection)
+            <div align="left">Plasmids useful for adding epitope tags via CpoI-based directional cloning
 </div>
           </li>
           <li> 
-            <div align="left">Sequence-verified ORF collections for microbes now include P. aeruginosa, Y. pestis, F. tularensis, and V. cholerae
+            <div align="left">Microbial ORF collections include more than 300 recently-added V. cholerae clones
 </div>
           </li>
         </ul>
