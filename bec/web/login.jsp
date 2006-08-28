@@ -95,9 +95,9 @@
           </tr>
           <tr> 
             <td height="438"  valign="center"  bgcolor="#EBEFFA" > 
-              <table border="0" cellpadding="0" cellspacing="0" width="98%"  align="center">
+              <table border="0" cellpadding="0" cellspacing="0" width="100%"  align="center">
                 <tr> 
-                  <td align="center"><img src="./jpg/bec_schema.jpg"  border="0"> 
+                  <td align="center"><img src="./jpg/welcome_page.jpg"  border="0" > 
 
 
                 </tr>

@@ -66,7 +66,7 @@ import java.util.*;
             case Constants.PROCESS_FIND_GAPS:
                 return "Request for 'run gap mapper',";
             case Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE:
-                return "Request for 'find low quality regions in clone sequences'.";
+                return "Request for 'find low confidence regions in clone sequences'.";
             default:
                 return "";
         }
