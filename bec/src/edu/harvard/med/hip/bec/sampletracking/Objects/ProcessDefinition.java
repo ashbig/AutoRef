@@ -1,6 +1,6 @@
 //Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
 /**
- * $Id: ProcessDefinition.java,v 1.19 2006-05-18 15:42:59 Elena Exp $
+ * $Id: ProcessDefinition.java,v 1.20 2006-08-28 14:29:05 Elena Exp $
  *
  * File     	: Process.java
  * Date     	: 04162001
@@ -41,7 +41,7 @@ public class ProcessDefinition
     public static final     String    RUN_OLIGO_PLATE_USED_FOR_SEQUENCING = "Oligo plate used for sequencing";
     public static final     String    RUN_DISCREPANCY_FINDER = "Run discrepancy finder";
     
-    public static final     String    RUN_GAP_MAPPER_FOR_LOWQUALITY_SEQUENCE = "Run Gap Mapper to identify Low Quality Regions";
+    public static final     String    RUN_GAP_MAPPER_FOR_LOWQUALITY_SEQUENCE = "Run Gap Mapper to identify Low Confidence Regions";
     public static final     String    RUN_GAP_MAPPER = "Run Gap Mapper";
     
     public static final     String    RUN_UPDATE_FINAL_CLONE_STATUS = "Update final clone status";

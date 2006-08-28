@@ -753,7 +753,7 @@ if ( request.getParameter("plate_name") != null)((PrimerOrderRunner)runner).setP
                     int items_type =  Integer.parseInt(request.getParameter("item_type"));
                   
                     if ( items_type != Constants.ITEM_TYPE_PROJECT_NAME)
-                        items.toUpperCase();
+                    { items =    items.toUpperCase();}
                     runner.setInputData(items_type,items);
                     runner.setUser(user);
                     runner.setProcessType(forwardName);
@@ -845,7 +845,7 @@ if ( request.getParameter("plate_name") != null)((PrimerOrderRunner)runner).setP
                 case Constants.STRETCH_COLLECTION_REPORT_INT:return "View Latest Contig Collection";
                 
                  case Constants.STRETCH_COLLECTION_REPORT_ALL_INT:return "View All Contig Collections";
-                case Constants.LQR_COLLECTION_REPORT_INT: return   "View Low Quality Regions for clone sequences";
+                case Constants.LQR_COLLECTION_REPORT_INT: return   "View Low Confidence Regions for clone sequences";
                 
                  case -Constants.PROCESS_APPROVE_INTERNAL_PRIMERS : return "Request for Approve Internal Primers " ;
                 case Constants.PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING  : return "Request for Order List for resequencing of Internal Reads";
@@ -857,7 +857,7 @@ if ( request.getParameter("plate_name") != null)((PrimerOrderRunner)runner).setP
                 case Constants.PROCESS_RUNPOLYMORPHISM_FINDER:return "Request for Run Polymorphism Finder";
                 case Constants.PROCESS_RUN_DISCREPANCY_FINDER:return "Request for Run Discrepancy Finder";
                 case Constants.PROCESS_FIND_GAPS: return "Request for Run Gap Mapper ";
-                case Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE: return"Request for Find Low Quality Regions in Clone Sequences";
+                case Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE: return"Request for Find Low Confidence  Regions in Clone Sequences";
                 case Constants.PROCESS_PROCESS_OLIGO_PLATE:return "Request for Track Oligo Plate";
                 case  Constants.PROCESS_SET_CLONE_FINAL_STATUS: return "Request for Set Clone Status";
                 case Constants.PROCESS_SHOW_CLONE_HISTORY: return "Clone History";
@@ -907,7 +907,7 @@ case Constants.PROCESS_RUN_ASSEMBLER_FOR_ALL_READS:return "Home > Process > Clon
 case Constants.PROCESS_RUNPOLYMORPHISM_FINDER:return "Home > Process > Clone Evaluation > Run Polymorphism Finder";
 case Constants.PROCESS_RUN_DISCREPANCY_FINDER:return "Home > Process > Clone Evaluation > Run Discrepancy Finder";
 case Constants.PROCESS_FIND_GAPS: return "Home > Process > Clone Evaluation > Run Gap Mapper ";
-case Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE: return"Home > Process > Clone Evaluation > Find Low Quality Regions in Clone Sequences";
+case Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE: return"Home > Process > Clone Evaluation > Find Low Confidence  Regions in Clone Sequences";
 case Constants.PROCESS_PROCESS_OLIGO_PLATE:return "Home > Process > Clone Evaluation > Track Oligo Plate";
 case  Constants.PROCESS_SET_CLONE_FINAL_STATUS: return "Home > Process > Evaluate Clones > Set Clone Status";
                 
@@ -917,7 +917,7 @@ case Constants.PROCESS_VIEW_OLIGO_ORDER_BY_CLONEID: return "Home > Process > Vie
 case Constants.PROCESS_VIEW_INTERNAL_PRIMERS: return "Home > Process > View Results > View Internal Primers";
 case Constants.STRETCH_COLLECTION_REPORT_INT:return "Home > Process > View Results > View Latest Contig Collection";
 case Constants.STRETCH_COLLECTION_REPORT_ALL_INT:return "Home > Process > View Results > View All Contig Collections";
-case Constants.LQR_COLLECTION_REPORT_INT: return   "Home > Process > View Results > View Low Quality Regions for Clone Sequences";
+case Constants.LQR_COLLECTION_REPORT_INT: return   "Home > Process > View Results > View Low Confidence  Regions for Clone Sequences";
 
 case Constants.PROCESS_RUN_DECISION_TOOL : return "Home > Reports > Quick Decision Tool" ;
 case Constants.PROCESS_CREATE_REPORT: return "Home > Reports > General Report";

@@ -252,15 +252,15 @@ additional_jsp_buffer.append("<input type='text' width=20 value=50 name='minDist
 additional_jsp_buffer.append("<tr><td ><input type='radio' name='typeLQRCoverage' value='"+ PrimerDesignerRunner.LQR_COVERAGE_TYPE_NONE + "' checked>");
 additional_jsp_buffer.append("Cover gaps</td></tr>");
 additional_jsp_buffer.append("<tr><td ><input type='radio' name='typeLQRCoverage' value='"+  PrimerDesignerRunner.LQR_COVERAGE_TYPE_ANY_LQR +"'>");
-additional_jsp_buffer.append("Cover gaps and all low quality regions</td></tr>");
+additional_jsp_buffer.append("Cover gaps and all low confidence regions</td></tr>");
 additional_jsp_buffer.append("<tr><td ><input type='radio' name='typeLQRCoverage' value='"+ PrimerDesignerRunner.LQR_COVERAGE_TYPE_LQR_WITH_DISCREPANCY +"'>");
-additional_jsp_buffer.append("Cover gaps and all low quality regions containing discrepancies</td></tr>");
+additional_jsp_buffer.append("Cover gaps and all low xonfidence regions containing discrepancies</td></tr>");
 
 additional_jsp_buffer.append("<tr><td><input type='radio' name='typeLQRCoverage' value='"+ PrimerDesignerRunner.LQR_COVERAGE_TYPE_LQR_DISCREPANCY_REGIONS+"' >");
-additional_jsp_buffer.append("Cover gaps and regions containing discrepancies inside a low quality region</td></tr>");
+additional_jsp_buffer.append("Cover gaps and regions containing discrepancies inside a low confidence region</td></tr>");
 
 additional_jsp_buffer.append("<tr><td><input type='radio' name='typeLQRCoverage' value='"+ PrimerDesignerRunner.LQR_COVERAGE_TYPE_LQR_WITH_DISCREPANCY_LQDISCREPANCIES+"' >");
-additional_jsp_buffer.append("Cover gaps, low quality regions containing discreapcnies and any low quality discrepancy outside low quality regions</td></tr>");
+additional_jsp_buffer.append("Cover gaps, low confidence regions containing discreapcnies and any low quality discrepancy outside low confidence regions</td></tr>");
 
 
 

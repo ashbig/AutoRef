@@ -104,7 +104,7 @@ onBlur="checkNumeric(this,1,50,'','','');"></td>
   </tr>
 <TR><TD COlspan=2>&nbsp</TD></TR>
 <tr> 
-    <td bgColor="#b8c6ed"><b><font color="#000080">Minimum distance between sequence stretches needed to treat them separately (Gap Mappere, Low Quality Finder):</font></b> </td>
+    <td bgColor="#b8c6ed"><b><font color="#000080">Minimum distance between sequence stretches needed to treat them separately (Gap Mappere, Low Confidence Finder):</font></b> </td>
     <td bgColor="#b8c6ed"><input name="SW_MIN_DISTANCE_BTW_CONTIGS" type="text" 
     id="SW_MIN_DISTANCE_BTW_CONTIGS"     value="<%= SlidingWindowTrimmingSpec.MIN_DISTANCE_BETWEEN_CONTIGS %>"  
 onBlur="checkNumeric(this,1,1000,'','','');"></td>

@@ -64,7 +64,7 @@
   </tr>
   <tr class='evenRowColoredFontNotBold'> 
     <td   height="25"  >&nbsp; <input type="radio" name="forwardName" value=<%= Constants.LQR_COLLECTION_REPORT_INT%>>
-      View low quality regions for clone sequences 
+      View low confidence regions for clone sequences 
       <P></td>
   </tr>
  

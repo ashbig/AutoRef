@@ -121,7 +121,7 @@
         <li>Use &quot;Primer Dsigner&quot; to <a href="#primer_ds">Design primers</a> 
           to cover gaps in sequence coverage and repeate steps 6, 12.</li>
         <li>Ask for a list of clones with low quality discrepancis run <a name="back_lqr">&nbsp;</a><a href="#lqr">Low 
-          Quality Regions Finder</a>, design primers to cover low quality regions 
+          Quality Regions Finder</a>, design primers to cover low confidence regions 
           and repeat steps 6, 12 and 17.</li>
         <li>AT ANY TIME - run &quot;Discrepancy finder&quot; to annotate clone 
           sequences .<br>
@@ -221,7 +221,7 @@ User input information for the module - list of plates which trace files should 
 </h3>
  <p></p> <a href="#back_er_failed_report">Back</a>
   
-   <h3><strong><a name="lqr">Low Quality Regions Finder</a> </strong> </h3>
+   <h3><strong><a name="lqr">Low Confidence Regions Finder</a> </strong> </h3>
  
  
   <p><a href="#back_lqr">Back</a>

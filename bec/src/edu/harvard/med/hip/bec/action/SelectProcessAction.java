@@ -373,7 +373,7 @@ public class SelectProcessAction extends BecAction
             case Constants.PROCESS_APPROVE_INTERNAL_PRIMERS:return"Approve Internal Primers";
             case Constants.PROCESS_ORDER_INTERNAL_PRIMERS:  return"Order Internal Primers";
             case Constants.PROCESS_RUN_ASSEMBLER_FOR_ALL_READS:  return"Assemble Clone Sequences";  
-             case  Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE: return "Run Low Quality Regions Finder in Clone Sequences";
+             case  Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE: return "Run Low Confidence  Regions Finder in Clone Sequences";
             case  Constants.PROCESS_FIND_GAPS:return"Run Gap Mapper";
             case Constants.PROCESS_RUN_DISCREPANCY_FINDER_STANDALONE:return "Run Discrepancy Finder";
             
@@ -383,7 +383,7 @@ public class SelectProcessAction extends BecAction
              case Constants.PROCESS_VIEW_OLIGO_PLATE:return "View Oligo Plate";
            case Constants.STRETCH_COLLECTION_REPORT_INT: return"View Latest Contig Collection";
             case Constants.STRETCH_COLLECTION_REPORT_ALL_INT:   return"View All Contig Collections";
-            case Constants.LQR_COLLECTION_REPORT_INT:  return"View Low Quality Regions for Clone Sequences";
+            case Constants.LQR_COLLECTION_REPORT_INT:  return"View Low Confidence  Regions for Clone Sequences";
             case Constants.PROCESS_VIEW_INTERNAL_PRIMERS:     return"View Internal Primers";
            
         
@@ -436,7 +436,7 @@ public class SelectProcessAction extends BecAction
             case Constants.PROCESS_APPROVE_INTERNAL_PRIMERS:return"Home > Process >  Internal Primer Design and Order  > Approve Internal Primers";
             case Constants.PROCESS_ORDER_INTERNAL_PRIMERS:  return"Home > Process >  Internal Primer Design and Order  > Order Internal Primers";
             case Constants.PROCESS_RUN_ASSEMBLER_FOR_ALL_READS:  return"Home > Process > Read Manipulation > Assemble Clone Sequences";  
-             case  Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE: return "Home > Process > Evaluate Clones > Run Low Quality Regions Finder in Clone Sequences";
+             case  Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE: return "Home > Process > Evaluate Clones > Run Low Confidence  Regions Finder in Clone Sequences";
             case  Constants.PROCESS_FIND_GAPS:return"Home > Process > Evaluate Clones > Run Gap Mapper";
              case Constants.PROCESS_RUN_DISCREPANCY_FINDER_STANDALONE:return "Home > Process > Evaluate Clones > Run Discrepancy Finder";
            
@@ -444,7 +444,7 @@ public class SelectProcessAction extends BecAction
             case Constants.PROCESS_VIEW_OLIGO_PLATE:return "Home > Process > View Process Results > View Oligo Plate";
               case Constants.STRETCH_COLLECTION_REPORT_INT: return"Home > Process > View Process Results > View Lastest Contigs Collection";
             case Constants.STRETCH_COLLECTION_REPORT_ALL_INT:   return"Home > Process > View Process Results > View All Contig Collections";
-            case Constants.LQR_COLLECTION_REPORT_INT:  return"Home > Process > View Process Results > View Low Quality Regions for Clone Sequences";
+            case Constants.LQR_COLLECTION_REPORT_INT:  return"Home > Process > View Process Results > View Low Confidence  Regions for Clone Sequences";
            case Constants.PROCESS_VIEW_INTERNAL_PRIMERS:     return"Home > Process > View Process Results > View Internal Primers";
            case Constants.PROCESS_VIEW_OLIGO_ORDER_BY_CLONEID:return"Home > Process > View Process Results > View Oligo Order(s) for Clone(s)";
            
