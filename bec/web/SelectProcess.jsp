@@ -135,7 +135,7 @@ else if (forwardName!= null && forwardName instanceof Integer ) forwardName_int 
 <tr class='evenRowColoredFontNotBold'> 
     <td   height="25"  >&nbsp; 
       <input   type="radio" name="forwardName" value="<%= Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE  %>" >
-      Find low quality regions in clone sequences (settings required) </td>
+      Find low confidence regions in clone sequences (settings required) </td>
   </tr>
   
   <tr class='evenRowColoredFontNotBold'> 
