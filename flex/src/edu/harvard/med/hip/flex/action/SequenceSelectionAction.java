@@ -117,9 +117,9 @@ public class SequenceSelectionAction extends FlexAction {
                                     homologs.put(gi, h);
                                 }
                                 
-                                Enumeration enum = analyzer.getHomolog().elements();
-                                while(enum.hasMoreElements()) {
-                                    FlexSequence seq = (FlexSequence)enum.nextElement();
+                                Enumeration enu = analyzer.getHomolog().elements();
+                                while(enu.hasMoreElements()) {
+                                    FlexSequence seq = (FlexSequence)enu.nextElement();
                                     sequences.put(seq.getGi(), seq);
                                 }
                             } else {

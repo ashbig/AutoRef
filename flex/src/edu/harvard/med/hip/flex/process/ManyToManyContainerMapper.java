@@ -70,9 +70,9 @@ public class ManyToManyContainerMapper extends OneToOneContainerMapper {
         String newBarcode = null;
         Container newContainer = null;
         rearrayMappingList = new ArrayList();
-        Enumeration enum = containers.elements();
-        while (enum.hasMoreElements()) {
-            Container container = (Container)enum.nextElement();
+        Enumeration enu = containers.elements();
+        while (enu.hasMoreElements()) {
+            Container container = (Container)enu.nextElement();
             sourceContainerLabels.add(container.getLabel());
             getSamples(container);
             Vector oldSamples = container.getSamples();

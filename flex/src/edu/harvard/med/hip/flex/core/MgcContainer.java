@@ -1,5 +1,5 @@
 /**
- * $Id: MgcContainer.java,v 1.3 2006-08-24 18:10:25 Elena Exp $
+ * $Id: MgcContainer.java,v 1.4 2006-08-31 19:25:49 dzuo Exp $
  *
  * File     	: MgcContainer.java
  * Date     	: 04162001
@@ -215,10 +215,10 @@ public class MgcContainer extends Container {
             "values ("+ this.id + ",'" +m_FileName+ "','"+ m_OriginalContainerName + "','" + m_marker + "', " + m_glycerolContainerid+ ", " + m_culture_Containerid+","+m_dnaContainerid+")";
             DatabaseTransaction.executeUpdate(sql1,conn);
             //foreach sample, insert record into containercell and sample table
-            Enumeration enum = samples.elements();
+            Enumeration enu = samples.elements();
             
-            while (enum.hasMoreElements()) {
-                MgcSample s = (MgcSample)enum.nextElement();
+            while (enu.hasMoreElements()) {
+                MgcSample s = (MgcSample)enu.nextElement();
                 s.containerid = this.id;
                 s.insert(conn);
                 

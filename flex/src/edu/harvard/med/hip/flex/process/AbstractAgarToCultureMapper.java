@@ -67,10 +67,10 @@ public abstract class AbstractAgarToCultureMapper extends OneToOneContainerMappe
             Container newContainer = new Container(newContainerType, null, newBarcode, f1.getThreadid());
             
             int index = 0;
-            Enumeration enum = containers.elements();
+            Enumeration enu = containers.elements();
             boolean addNewContainer = false;
-            while(enum.hasMoreElements()) {
-                Container c = (Container)enum.nextElement();
+            while(enu.hasMoreElements()) {
+                Container c = (Container)enu.nextElement();
                 c.restoreSample();
                 
                 //addNewContainer = true;
@@ -146,7 +146,17 @@ public abstract class AbstractAgarToCultureMapper extends OneToOneContainerMappe
         String type [] = new String[colonynum];
         edu.harvard.med.hip.flex.process.Process p =
         edu.harvard.med.hip.flex.process.Process.findCompleteProcess(container, protocol);
-        Result result = Result.findResult(s, p);
+        Result result = null;
+        try {
+            result = Result.findResult(s, p);
+        } catch (NullPointerException ex) {}
+        
+        if(result == null) {
+            for(int i=0; i<colonynum; i++) {
+                type[i] = Sample.getType(newProtocol.getProcessname());
+            }
+            return type;
+        }
         
         try {
             int colony = Integer.parseInt(result.getValue());

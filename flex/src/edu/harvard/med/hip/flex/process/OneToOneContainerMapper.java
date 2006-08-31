@@ -74,9 +74,9 @@ public class OneToOneContainerMapper implements ContainerMapper {
         
         String projectCode = getProjectCode(project, workflow);
         
-        Enumeration enum = containers.elements();
-        while (enum.hasMoreElements()) {
-            Container container = (Container)enum.nextElement();
+        Enumeration enu = containers.elements();
+        while (enu.hasMoreElements()) {
+            Container container = (Container)enu.nextElement();
             String newBarcode = null;
             
             //For diluting oligo plate, we need to get the new label in a different way.

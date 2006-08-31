@@ -1,5 +1,5 @@
 /**
- * $Id: Request.java,v 1.8 2001-08-17 20:37:48 dzuo Exp $
+ * $Id: Request.java,v 1.9 2006-08-31 19:26:54 dzuo Exp $
  *
  * File     	: Request.java
  * Date     	: 05032001
@@ -233,9 +233,9 @@ public class Request {
         DatabaseTransaction.executeUpdate(sql, conn);
         
         // Insert the sequence record.
-        Enumeration enum = sequences.elements();
-        while(enum.hasMoreElements()) {
-            FlexSequence sequence = (FlexSequence)enum.nextElement();
+        Enumeration enu = sequences.elements();
+        while(enu.hasMoreElements()) {
+            FlexSequence sequence = (FlexSequence)enu.nextElement();
             if(FlexSequence.NEW.equals(sequence.getFlexstatus()))
                 sequence.insert(conn);
             
@@ -254,9 +254,9 @@ public class Request {
             return false;
         }
         
-        Enumeration enum = sequences.elements();
-        while(enum.hasMoreElements()) {
-            FlexSequence seq = (FlexSequence)enum.nextElement();
+        Enumeration enu = sequences.elements();
+        while(enu.hasMoreElements()) {
+            FlexSequence seq = (FlexSequence)enu.nextElement();
             if(seq.getId() == sequence.getId()) {
                 return true;
             }

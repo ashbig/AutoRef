@@ -1,5 +1,5 @@
 /**
- * $Id: GenbankGeneFinder.java,v 1.16 2006-08-24 18:11:36 Elena Exp $
+ * $Id: GenbankGeneFinder.java,v 1.17 2006-08-31 19:27:44 dzuo Exp $
  *
  * File     	: GenbankGeneFinder.java
  * Date     	: 05052001
@@ -206,9 +206,9 @@ public class GenbankGeneFinder {
         GenbankGeneFinder finder = new GenbankGeneFinder();
         try{
             Vector v = finder.search("NM_001011658");
-            Enumeration enum = v.elements();
-            while(enum.hasMoreElements()) {
-                GenbankSequence sequence = (GenbankSequence)enum.nextElement();
+            Enumeration enu = v.elements();
+            while(enu.hasMoreElements()) {
+                GenbankSequence sequence = (GenbankSequence)enu.nextElement();
                 System.out.println("Accession: "+sequence.getAccession());
                 System.out.println("GI: "+sequence.getGi());
                 System.out.println("Description: "+sequence.getDescription());

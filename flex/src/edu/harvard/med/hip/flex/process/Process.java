@@ -1,5 +1,5 @@
 /**
- * $Id: Process.java,v 1.30 2001-08-21 15:36:29 dzuo Exp $
+ * $Id: Process.java,v 1.31 2006-08-31 19:26:54 dzuo Exp $
  *
  * File     	: Process.java
  * Date     	: 04162001
@@ -430,9 +430,9 @@ public class Process {
         if(sampleLineageSet == null)
             return;
         
-        Enumeration enum = sampleLineageSet.elements();
-        while(enum.hasMoreElements()) {
-            SampleLineage s = (SampleLineage)enum.nextElement();
+        Enumeration enu = sampleLineageSet.elements();
+        while(enu.hasMoreElements()) {
+            SampleLineage s = (SampleLineage)enu.nextElement();
             addSampleLineage(s);
         }
     }
@@ -477,15 +477,15 @@ public class Process {
             return;
         }
         
-        Enumeration enum = processObjects.elements();
-        while(enum.hasMoreElements()) {
-            ProcessObject pobject = (ProcessObject)enum.nextElement();
+        Enumeration enu = processObjects.elements();
+        while(enu.hasMoreElements()) {
+            ProcessObject pobject = (ProcessObject)enu.nextElement();
             pobject.insert(c);
         }
         
-        enum = sampleLineageSet.elements();
-        while(enum.hasMoreElements()) {
-            SampleLineage slineage = (SampleLineage)enum.nextElement();
+        enu = sampleLineageSet.elements();
+        while(enu.hasMoreElements()) {
+            SampleLineage slineage = (SampleLineage)enu.nextElement();
             slineage.insert(c);
         }
     }
@@ -576,17 +576,17 @@ public class Process {
             }
             
             Vector slset = p.getSampleLineageSet();
-            Enumeration enum = slset.elements();
-            while(enum.hasMoreElements()) {
-                SampleLineage sl = (SampleLineage)enum.nextElement();
+            Enumeration enu = slset.elements();
+            while(enu.hasMoreElements()) {
+                SampleLineage sl = (SampleLineage)enu.nextElement();
                 System.out.println("Sample id from:\t"+sl.getFrom());
                 System.out.println("Sample id to:\t"+sl.getTo());
             }
             
             Vector pobjects = p.getProcessObjects();
-            enum = pobjects.elements();
-            while(enum.hasMoreElements()) {
-                ProcessObject pobject = (ProcessObject)enum.nextElement();
+            enu = pobjects.elements();
+            while(enu.hasMoreElements()) {
+                ProcessObject pobject = (ProcessObject)enu.nextElement();
                 System.out.println("Object id:\t"+pobject.getId());
                 System.out.println("Object io:\t"+pobject.getIotype());
             }

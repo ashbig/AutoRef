@@ -44,9 +44,9 @@ public abstract class AbstractAgarContainerMapper extends OneToOneContainerMappe
         Vector newContainers = new Vector();
         String projectCode = getProjectCode(project, workflow);
         
-        Enumeration enum = containers.elements();
-        while (enum.hasMoreElements()) {
-            Container container = (Container)enum.nextElement(); 
+        Enumeration enu = containers.elements();
+        while (enu.hasMoreElements()) {
+            Container container = (Container)enu.nextElement(); 
             container.restoreSample();
             String processCodes[] = getProcessCodes();
             int samplesLeft = container.getSamples().size();

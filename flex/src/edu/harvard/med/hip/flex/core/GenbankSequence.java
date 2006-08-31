@@ -1,5 +1,5 @@
 /**
- * $Id: GenbankSequence.java,v 1.1 2003-03-07 17:44:51 dzuo Exp $
+ * $Id: GenbankSequence.java,v 1.2 2006-08-31 19:25:49 dzuo Exp $
  *
  * File     : GenbankSequence.java 
  * Date     : 05022001
@@ -106,9 +106,9 @@ public class GenbankSequence {
 			
 			FlexSequence flexSeq = sequence.toFlexSequence();
 			Vector publicInfo = flexSeq.getPublicInfo();
-			Enumeration enum = publicInfo.elements();
-			while(enum.hasMoreElements()) {
-				Hashtable h = (Hashtable)enum.nextElement();
+			Enumeration enu = publicInfo.elements();
+			while(enu.hasMoreElements()) {
+				Hashtable h = (Hashtable)enu.nextElement();
 				System.out.println("NAMETYPE:\t"+h.get("NAMETYPE"));
 				System.out.println("NAMEVALUE:\t"+h.get("NAMEVALUE"));
 				System.out.println("DESCRIPTION:\t"+h.get("DESCRIPTION"));

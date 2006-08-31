@@ -43,12 +43,12 @@ public class MasterToExpressionContainerMapper {
         Container newContainer = new ExpressionCloneContainer(containertype, l, label, threadid);
         
         Vector oldSamples = c.getSamples();
-        Enumeration enum = oldSamples.elements();
+        Enumeration enu = oldSamples.elements();
         String type = null;
         sampleLineageSet = new Vector();
         
-        while(enum.hasMoreElements()) {
-            CloneSample s = (CloneSample)enum.nextElement();
+        while(enu.hasMoreElements()) {
+            CloneSample s = (CloneSample)enu.nextElement();
             if(Sample.CONTROL_POSITIVE.equals(s.getType())) {
                 type = Sample.CONTROL_POSITIVE;
             } else if(Sample.CONTROL_NEGATIVE.equals(s.getType())) {

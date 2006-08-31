@@ -1,5 +1,5 @@
 /**
- * $Id: FlexSequence.java,v 1.7 2004-06-01 18:23:38 dzuo Exp $
+ * $Id: FlexSequence.java,v 1.8 2006-08-31 19:25:49 dzuo Exp $
  *
  * File     : FlexSequence.java
  * Date     : 05022001
@@ -111,9 +111,9 @@ public class FlexSequence extends CDNASequence {
         this.publicInfo = publicInfo;
         this.requestingUserSet = new HashSet();
         String namevalue=null;
-        Enumeration enum = publicInfo.elements();
-        while(enum.hasMoreElements()) {
-            Hashtable h = (Hashtable)enum.nextElement();
+        Enumeration enu = publicInfo.elements();
+        while(enu.hasMoreElements()) {
+            Hashtable h = (Hashtable)enu.nextElement();
             if(((String)h.get(NAMETYPE)).equals(GI)) {
                 namevalue = (String)h.get(NAMEVALUE);
                 break;
@@ -374,9 +374,9 @@ public class FlexSequence extends CDNASequence {
             return currentAccession;
         
         String namevalue=null;
-        Enumeration enum = publicInfo.elements();
-        while(enum.hasMoreElements()) {
-            Hashtable h = (Hashtable)enum.nextElement();
+        Enumeration enu = publicInfo.elements();
+        while(enu.hasMoreElements()) {
+            Hashtable h = (Hashtable)enu.nextElement();
             if(((String)h.get(NAMETYPE)).equals(GENBANK_ACCESSION)) {
                 namevalue = (String)h.get(NAMEVALUE);
                 break;
@@ -405,9 +405,9 @@ public class FlexSequence extends CDNASequence {
             return currentGi;
         
         String namevalue=null;
-        Enumeration enum = publicInfo.elements();
-        while(enum.hasMoreElements()) {
-            Hashtable h = (Hashtable)enum.nextElement();
+        Enumeration enu = publicInfo.elements();
+        while(enu.hasMoreElements()) {
+            Hashtable h = (Hashtable)enu.nextElement();
             if(((String)h.get(NAMETYPE)).equals(GI)) {
                 namevalue = (String)h.get(NAMEVALUE);
                 break;
@@ -425,9 +425,9 @@ public class FlexSequence extends CDNASequence {
             return currentLocusLink;
         
         String namevalue=null;
-        Enumeration enum = publicInfo.elements();
-        while(enum.hasMoreElements()) {
-            Hashtable h = (Hashtable)enum.nextElement();
+        Enumeration enu = publicInfo.elements();
+        while(enu.hasMoreElements()) {
+            Hashtable h = (Hashtable)enu.nextElement();
             if(((String)h.get(NAMETYPE)).equals(LOCUS_ID)) {
                 namevalue = (String)h.get(NAMEVALUE);
                 break;
@@ -443,9 +443,9 @@ public class FlexSequence extends CDNASequence {
     public String getGiString() {
         String namevalue=null;
         
-        Enumeration enum = publicInfo.elements();
-        while(enum.hasMoreElements()) {
-            Hashtable h = (Hashtable)enum.nextElement();
+        Enumeration enu = publicInfo.elements();
+        while(enu.hasMoreElements()) {
+            Hashtable h = (Hashtable)enu.nextElement();
             if(((String)h.get(NAMETYPE)).equals(GI)) {
                 if(namevalue == null) {
                     namevalue = (String)h.get(NAMEVALUE);
@@ -466,9 +466,9 @@ public class FlexSequence extends CDNASequence {
     public String getGenesymbolString() {
         String namevalue = null;
         
-        Enumeration enum = publicInfo.elements();
-        while(enum.hasMoreElements()) {
-            Hashtable h = (Hashtable)enum.nextElement();
+        Enumeration enu = publicInfo.elements();
+        while(enu.hasMoreElements()) {
+            Hashtable h = (Hashtable)enu.nextElement();
             if(((String)h.get(NAMETYPE)).equals(GENE_SYMBOL)) {
                 if(namevalue == null) {
                     namevalue = (String)h.get(NAMEVALUE);
@@ -488,9 +488,9 @@ public class FlexSequence extends CDNASequence {
      */
     public String getPanumber() {
         String namevalue=null;
-        Enumeration enum = publicInfo.elements();
-        while(enum.hasMoreElements()) {
-            Hashtable h = (Hashtable)enum.nextElement();
+        Enumeration enu = publicInfo.elements();
+        while(enu.hasMoreElements()) {
+            Hashtable h = (Hashtable)enu.nextElement();
             if(((String)h.get(NAMETYPE)).equals(PANUMBER)) {
                 namevalue = (String)h.get(NAMEVALUE);
                 break;
@@ -506,9 +506,9 @@ public class FlexSequence extends CDNASequence {
      */
     public String getInfoValue(String info_type) {
         String namevalue="";
-        Enumeration enum = publicInfo.elements();
-        while(enum.hasMoreElements()) {
-            Hashtable h = (Hashtable)enum.nextElement();
+        Enumeration enu = publicInfo.elements();
+        while(enu.hasMoreElements()) {
+            Hashtable h = (Hashtable)enu.nextElement();
             if(((String)h.get(NAMETYPE)).equals(info_type)) {
                 namevalue = (String)h.get(NAMEVALUE);
                 break;
@@ -527,9 +527,9 @@ public class FlexSequence extends CDNASequence {
             return currentDescription;
         
         String description = null;
-        Enumeration enum = publicInfo.elements();
-        while(enum.hasMoreElements()) {
-            Hashtable h = (Hashtable)enum.nextElement();
+        Enumeration enu = publicInfo.elements();
+        while(enu.hasMoreElements()) {
+            Hashtable h = (Hashtable)enu.nextElement();
             
             if(((String)h.get(NAMETYPE)).equals(GENBANK_ACCESSION)) {
                 description = (String)h.get(DESCRIPTION);
@@ -742,9 +742,9 @@ public class FlexSequence extends CDNASequence {
         try {
             stmt = conn.prepareStatement(sql);
             
-            Enumeration enum = info.elements();
-            while(enum.hasMoreElements()) {
-                Hashtable h = (Hashtable)enum.nextElement();
+            Enumeration enu = info.elements();
+            while(enu.hasMoreElements()) {
+                Hashtable h = (Hashtable)enu.nextElement();
                 
                 stmt.setInt(1, id);
                 stmt.setString(2, (String)h.get(NAMETYPE));
@@ -826,9 +826,9 @@ public class FlexSequence extends CDNASequence {
         String nameType = (String)info.get(NAMETYPE);
         String nameValue = (String)info.get(NAMEVALUE);
         
-        Enumeration enum = publicInfo.elements();
-        while(enum.hasMoreElements()) {
-            Hashtable h = (Hashtable)enum.nextElement();
+        Enumeration enu = publicInfo.elements();
+        while(enu.hasMoreElements()) {
+            Hashtable h = (Hashtable)enu.nextElement();
             if(nameType.equals(h.get(NAMETYPE)) && nameValue.equals(h.get(NAMEVALUE))) {
                 return true;
             }
@@ -983,9 +983,9 @@ public class FlexSequence extends CDNASequence {
             System.out.println("CDS stop:\t"+seq.getCdsstop());
             System.out.println("CDS length:\t"+seq.getCdslength());
             Vector info = seq.getPublicInfo();
-            Enumeration enum = info.elements();
-            while(enum.hasMoreElements()) {
-                System.out.println(enum.nextElement());
+            Enumeration enu = info.elements();
+            while(enu.hasMoreElements()) {
+                System.out.println(enu.nextElement());
             }
             System.out.println();
             
@@ -1008,9 +1008,9 @@ public class FlexSequence extends CDNASequence {
             System.out.println("CDS stop:\t"+seq.getCdsstop());
             System.out.println("CDS length:\t"+seq.getCdslength());
             info = seq.getPublicInfo();
-            enum = info.elements();
-            while(enum.hasMoreElements()) {
-                System.out.println(enum.nextElement());
+            enu = info.elements();
+            while(enu.hasMoreElements()) {
+                System.out.println(enu.nextElement());
             }
             System.out.println();
             
@@ -1057,9 +1057,9 @@ public class FlexSequence extends CDNASequence {
             System.out.println("CDS stop:\t"+seq1.getCdsstop());
             System.out.println("CDS length:\t"+seq1.getCdslength());
             info = seq1.getPublicInfo();
-            enum = info.elements();
-            while(enum.hasMoreElements()) {
-                System.out.println(enum.nextElement());
+            enu = info.elements();
+            while(enu.hasMoreElements()) {
+                System.out.println(enu.nextElement());
             }
             System.out.println();
             
@@ -1077,9 +1077,9 @@ public class FlexSequence extends CDNASequence {
             System.out.println("CDS stop:\t"+seq3.getCdsstop());
             System.out.println("CDS length:\t"+seq3.getCdslength());
             Vector info3 = seq3.getPublicInfo();
-            enum = info3.elements();
-            while(enum.hasMoreElements()) {
-                System.out.println(enum.nextElement());
+            enu = info3.elements();
+            while(enu.hasMoreElements()) {
+                System.out.println(enu.nextElement());
             }
             
             seq1 = new FlexSequence(1);
@@ -1095,9 +1095,9 @@ public class FlexSequence extends CDNASequence {
             System.out.println("CDS length:\t"+seq1.getCdslength());
             System.out.println("Description:\t"+seq1.getDescription());
             info = seq1.getPublicInfo();
-            enum = info.elements();
-            while(enum.hasMoreElements()) {
-                System.out.println(enum.nextElement());
+            enu = info.elements();
+            while(enu.hasMoreElements()) {
+                System.out.println(enu.nextElement());
             }
             System.out.println();
             

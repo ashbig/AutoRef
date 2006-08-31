@@ -38,11 +38,11 @@ public class NonInterleavedColonyPicking extends GridPlateToCultureMapper {
         String newContainerType = getContainerType(protocol.getProcessname());
         String projectCode = getProjectCode(project, workflow);
         
-        Enumeration enum = containers.elements();
+        Enumeration enu = containers.elements();
         int subThreadIndex = 1;
         int threadid = -1;
-        while(enum.hasMoreElements()) {
-            Container c = (Container)enum.nextElement();
+        while(enu.hasMoreElements()) {
+            Container c = (Container)enu.nextElement();
             c.restoreSample();
             
             //If next plate has different threadid from the previouse plate,

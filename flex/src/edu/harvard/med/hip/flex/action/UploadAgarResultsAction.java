@@ -131,11 +131,11 @@ public class UploadAgarResultsAction extends ResearcherAction {
             return new ActionForward(mapping.getInput());
         }
         
-        Enumeration enum = info.keys();
+        Enumeration enu = info.keys();
         Vector processedContainers = new Vector();
         
-        while(enum.hasMoreElements()) {
-            String barcode = (String)enum.nextElement();
+        while(enu.hasMoreElements()) {
+            String barcode = (String)enu.nextElement();
             
             // validate barcode.
             QueueItem queueItem = getValidPlate(queueItems, barcode);

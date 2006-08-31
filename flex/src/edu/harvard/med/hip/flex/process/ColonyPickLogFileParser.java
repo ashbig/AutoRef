@@ -190,9 +190,9 @@ public class ColonyPickLogFileParser {
         
         if(parser.parseFile()) {
             Hashtable info = parser.getColonyInfo();
-            Enumeration enum = info.keys();
-            while(enum.hasMoreElements()) {
-                String barcode = (String)enum.nextElement();
+            Enumeration enu = info.keys();
+            while(enu.hasMoreElements()) {
+                String barcode = (String)enu.nextElement();
                 Vector plateInfo = (Vector)info.get(barcode);
                 System.out.println("Plate: "+barcode);
                 

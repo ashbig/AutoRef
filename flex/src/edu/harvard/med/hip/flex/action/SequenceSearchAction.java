@@ -66,9 +66,9 @@ public class SequenceSearchAction extends FlexAction {
             GenbankGeneFinder finder = new GenbankGeneFinder();
             Vector returnedSequences = finder.search(searchString);
             Vector sequences = new Vector();
-            Enumeration enum = returnedSequences.elements();
-            while(enum.hasMoreElements()) {
-                GenbankSequence sequence = (GenbankSequence)enum.nextElement();
+            Enumeration enu = returnedSequences.elements();
+            while(enu.hasMoreElements()) {
+                GenbankSequence sequence = (GenbankSequence)enu.nextElement();
                 String accession = sequence.getAccession();
                 String gi = sequence.getGi();
                 String desc = sequence.getDescription();

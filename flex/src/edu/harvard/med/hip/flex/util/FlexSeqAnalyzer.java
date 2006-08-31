@@ -1,5 +1,5 @@
 /*
- * $Id: FlexSeqAnalyzer.java,v 1.37 2004-01-29 18:16:46 dzuo Exp $
+ * $Id: FlexSeqAnalyzer.java,v 1.38 2006-08-31 19:27:44 dzuo Exp $
  *
  * File     : FlexSeqAnalyzer.java
  * Date     : 05102001
@@ -325,9 +325,9 @@ public class FlexSeqAnalyzer {
             
             String sequencetext = sequence.getSequencetext();
             
-            Enumeration enum = v.elements();
-            while(enum.hasMoreElements()) {
-                int id = ((Integer)enum.nextElement()).intValue();
+            Enumeration enu = v.elements();
+            while(enu.hasMoreElements()) {
+                int id = ((Integer)enu.nextElement()).intValue();
                 stmt.setInt(1, id);
                 
                 boolean isSame = true;

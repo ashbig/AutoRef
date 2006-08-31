@@ -266,11 +266,11 @@ public class Workflow {
      * @return The next protocol.
      */
     public Vector getNextProtocol(Protocol protocol) {
-        Enumeration enum = flow.elements();
+        Enumeration enu = flow.elements();
         
-        while(enum.hasMoreElements()) {
+        while(enu.hasMoreElements()) {
             
-            FlowRecord r = (FlowRecord)enum.nextElement();
+            FlowRecord r = (FlowRecord)enu.nextElement();
             if(r.isEqual(protocol)) {
                 return r.getNext();
             }
@@ -287,10 +287,10 @@ public class Workflow {
      * @return The next protocol.
      */
     public Vector getPreviousProtocol(Protocol protocol) {
-        Enumeration enum = flow.elements();
+        Enumeration enu = flow.elements();
         FlowRecord prev = null;
-        while(enum.hasMoreElements()) {
-            FlowRecord r = (FlowRecord)enum.nextElement();
+        while(enu.hasMoreElements()) {
+            FlowRecord r = (FlowRecord)enu.nextElement();
             if( prev != null && prev.isEqual(protocol)) {
                 return prev.getNext();
             }

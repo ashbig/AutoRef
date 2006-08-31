@@ -60,9 +60,9 @@ public class GenericRearrayer {
         
         //sort by number of samples on the container in descending order
         LinkedList sortedSamples = new LinkedList();
-        Enumeration enum = containers.keys();
-        while(enum.hasMoreElements()) {
-            String k = (String)enum.nextElement();
+        Enumeration enu = containers.keys();
+        while(enu.hasMoreElements()) {
+            String k = (String)enu.nextElement();
             ArrayList allSamples = (ArrayList)containers.get(k);
             Collections.sort(allSamples, new SourceWellComparator());
             
@@ -113,9 +113,9 @@ public class GenericRearrayer {
         }
         
         ArrayList results = new ArrayList();
-        Enumeration enum = containers.keys();
-        while(enum.hasMoreElements()) {
-            String k = (String)enum.nextElement();
+        Enumeration enu = containers.keys();
+        while(enu.hasMoreElements()) {
+            String k = (String)enu.nextElement();
             ArrayList s = (ArrayList)containers.get(k);
             Collections.sort(s, new DestWellComparator());
             

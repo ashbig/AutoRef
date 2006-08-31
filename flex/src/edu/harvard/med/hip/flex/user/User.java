@@ -300,9 +300,9 @@ public class User {
                 System.out.println(request.getUsername());
                 System.out.println(request.getDate());
                 Vector sequences = request.getSequences();
-                Enumeration enum = sequences.elements();
-                while(enum.hasMoreElements()) {
-                    FlexSequence sequence = (FlexSequence)enum.nextElement();
+                Enumeration enu = sequences.elements();
+                while(enu.hasMoreElements()) {
+                    FlexSequence sequence = (FlexSequence)enu.nextElement();
                     System.out.println(sequence.getId());
                 }
             }

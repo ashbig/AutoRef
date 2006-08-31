@@ -181,9 +181,9 @@ public class RequestImporter {
     private SequenceImporterLogger found(Vector loggers, String id) {
         SequenceImporterLogger ret = null;
         
-        Enumeration enum = loggers.elements();
-        while(enum.hasMoreElements()) {
-            SequenceImporterLogger logger = (SequenceImporterLogger)enum.nextElement();
+        Enumeration enu = loggers.elements();
+        while(enu.hasMoreElements()) {
+            SequenceImporterLogger logger = (SequenceImporterLogger)enu.nextElement();
             if(id.equals(logger.getSequenceid())) {
                 ret = logger;
                 break;
@@ -224,9 +224,9 @@ public class RequestImporter {
             
             if(importer.performImport(sequenceInput, nameInput, conn)) {
                 Vector results = importer.getResults();
-                Enumeration enum = results.elements();
-                while(enum.hasMoreElements()) {
-                    SequenceImporterLogger logger = (SequenceImporterLogger)enum.nextElement();
+                Enumeration enu = results.elements();
+                while(enu.hasMoreElements()) {
+                    SequenceImporterLogger logger = (SequenceImporterLogger)enu.nextElement();
                     System.out.println("Import Sequence: "+logger.getSequenceid()+"\t"+logger.getFlexid()+"\t"+logger.getSuccessful()+"\t"+logger.getMessage());
                 }
                 

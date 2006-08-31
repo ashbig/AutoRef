@@ -289,9 +289,9 @@ public class RearrayManager {
         if(isOneFile) {
             ArrayList currentSamples = null;
             
-            Enumeration enum = allRearrayedSamples.keys();
-            while(enum.hasMoreElements()) {
-                String k = (String)enum.nextElement();
+            Enumeration enu = allRearrayedSamples.keys();
+            while(enu.hasMoreElements()) {
+                String k = (String)enu.nextElement();
                 ArrayList allSamples = (ArrayList)allRearrayedSamples.get(k);
                 if(allSamples.size() != 0) {
                     currentSamples = getSamples(allSamples);
@@ -299,9 +299,9 @@ public class RearrayManager {
                 }
             }
         } else {
-            Enumeration enum = allRearrayedSamples.keys();
-            while(enum.hasMoreElements()) {
-                String k = (String)enum.nextElement();
+            Enumeration enu = allRearrayedSamples.keys();
+            while(enu.hasMoreElements()) {
+                String k = (String)enu.nextElement();
                 ArrayList allSamples = (ArrayList)allRearrayedSamples.get(k);
                 if(allSamples.size() != 0) {
                     for(int i=0; i<allSamples.size(); i++) {

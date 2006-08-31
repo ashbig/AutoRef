@@ -71,9 +71,9 @@ public class SequenceImporter {
             }
             
             LinkedList l = new LinkedList();
-            Enumeration enum = sequences.keys();
-            while(enum.hasMoreElements()) {
-                String k = (String)enum.nextElement();
+            Enumeration enu = sequences.keys();
+            while(enu.hasMoreElements()) {
+                String k = (String)enu.nextElement();
                 FlexSequence seq = (FlexSequence)sequences.get(k);
                 try {
                     seq.insert(conn);
@@ -279,9 +279,9 @@ public class SequenceImporter {
             if(importer.performImport(sequenceInput, nameInput, conn)) {
                 DatabaseTransaction.commit(conn);
                 Vector results = importer.getResults();
-                Enumeration enum = results.elements();
-                while(enum.hasMoreElements()) {
-                    SequenceImporterLogger logger = (SequenceImporterLogger)enum.nextElement();
+                Enumeration enu = results.elements();
+                while(enu.hasMoreElements()) {
+                    SequenceImporterLogger logger = (SequenceImporterLogger)enu.nextElement();
                     if(logger.getSuccessful()) {
                         System.out.println("Import sequence "+logger.getSequenceid()+": successful");
                     } else {

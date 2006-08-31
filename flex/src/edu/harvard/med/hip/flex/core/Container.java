@@ -1,5 +1,5 @@
 /**
- * $Id: Container.java,v 1.7 2005-12-05 19:52:34 dzuo Exp $
+ * $Id: Container.java,v 1.8 2006-08-31 19:25:48 dzuo Exp $
  *
  * File     	: Container.java
  * Date     	: 04162001
@@ -560,9 +560,9 @@ public class Container {
         DatabaseTransaction.executeUpdate(sql,conn);
         
         //foreach sample, insert record into containercell and sample table
-        Enumeration enum = samples.elements();
-        while (enum.hasMoreElements()) {
-            Sample s = (Sample)enum.nextElement();
+        Enumeration enu = samples.elements();
+        while (enu.hasMoreElements()) {
+            Sample s = (Sample)enu.nextElement();
             s.insert(conn);
         }
     }

@@ -42,9 +42,9 @@ public class NonInterleavedOneColonyPicking extends NonInterleavedColonyPicking 
         String newBarcode = projectCode+protocol.getProcesscode()+threadid+leftString+"-1";
         Container newContainer = new Container(newContainerType, null, newBarcode, container.getThreadid());
         int index = 1;
-        Enumeration enum = containers.elements();
-        while(enum.hasMoreElements()) {
-            Container c = (Container)enum.nextElement();
+        Enumeration enu = containers.elements();
+        while(enu.hasMoreElements()) {
+            Container c = (Container)enu.nextElement();
             c.restoreSample();
             mappingSamples(c, newContainer, protocol, index, 0);
             index = 49;
