@@ -16,14 +16,14 @@ public class Container {
     public static final String PLATE_96 = "96 Well Plate";
     public static final String TUBE = "Tube";
     public static final String TUBE_96 = "Tube 96 Well";
-    public static final String COSTAR_FLT = "Costar flt bttm/MP16-24";
-    public static final String COSTAR_RD = "Costar rd bttm/MP16-24";
-    public static final String GREINER = "GreinerVbttmPPonMP16";
-    public static final String PCR_ON_MP16 = "PCR on MP16 landscape";
-    public static final String RESERVOIR_MP16 = "Reservoir on MP16";
-    public static final String RESERVOIR_PYR = "Reservoir Pyr bttm";
-    public static final String RK_RIPLATE_DW = "RK riplate dw/MP16-24";
-    public static final String MICRONIC96TUBEMP16 = "Micronic96TubeMP16";
+    public static final String COSTAR_FLT = "Costar96flatb on 30mmNest/MP16";
+    public static final String COSTAR_RD = "Costar96ub on 30mmNest/MP16";
+    public static final String GREINER = "Greiner96ub on 30mmNest/MP16";
+    public static final String PCR_ON_MP16 = "PCR96 on 30mmNest/MP16";
+    public static final String RESERVOIR_MP16 = "Reservoir/MP16";
+    //public static final String RESERVOIR_PYR = "Reservoir Pyr bttm";
+    public static final String RK_RIPLATE_DW = "RK96dw/MP16";
+    public static final String MICRONIC96TUBEMP16 = "Micronic96Tubes on 30mmNest/MP16";
     
     public static final String EMPTY = "EMPTY";
     public static final String FILLED = "FILLED";
