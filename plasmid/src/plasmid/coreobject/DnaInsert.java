@@ -30,6 +30,8 @@ public class DnaInsert {
     public static final String DM = "Drosophila melanogaster";                          
     public static final String CE = "Caenorhabditis elegans";                            
     public static final String XL = "Xenopus laevis";
+    public static final String YPS = "Yersinia pseudotuberculosis";
+    public static final String VC1 = "Vibrio cholerae (unspecified strain)";
 
     private int insertid;
     private int order;

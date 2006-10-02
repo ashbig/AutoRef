@@ -1013,7 +1013,11 @@ public class CloneManager extends TableManager {
                 if(rs.next()) {
                     String clonename = rs.getString(1);
                     String species = rs.getString(2);
-                    if(species.equals(DnaInsert.YP) || species.equals(DnaInsert.VC) || species.equals(DnaInsert.FT)) {
+                    if(species.equals(DnaInsert.YP) 
+                    || species.equals(DnaInsert.VC) 
+                    || species.equals(DnaInsert.FT) 
+                    || species.equals(DnaInsert.YPS)
+                    || species.equals(DnaInsert.VC1)) {
                         restrictedClones.add(clonename);
                     }
                 } else {
