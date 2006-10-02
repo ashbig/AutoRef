@@ -33,37 +33,37 @@
   <tr class="formlabel"> 
     <td width="22%" align="left" valign="baseline">*First Name:</td>
     <td width="78%" align="left" valign="baseline"> 
-        <html:text property="firstname" size="30" styleClass="text"/>
+        <html:text maxlength="50" property="firstname" size="30" styleClass="text"/>
     </td>
   </tr>
   <tr class="formlabel"> 
     <td width="22%" align="left" valign="baseline">*Last Name:</td>
     <td width="78%" align="left" valign="baseline"> 
-        <html:text property="lastname" size="30" styleClass="text"/>
+        <html:text maxlength="50" property="lastname" size="30" styleClass="text"/>
     </td>
   </tr>
   <tr class="formlabel"> 
     <td width="22%" align="left" valign="baseline">*Email:</td>
     <td width="78%" align="left" valign="baseline"> 
-        <html:text property="email" size="40" styleClass="text"/>
+        <html:text maxlength="50" property="email" size="40" styleClass="text"/>
     </td>
   </tr>
   <tr class="formlabel"> 
     <td width="22%" align="left" valign="baseline">*Phone:</td>
     <td width="78%" align="left" valign="baseline"> 
-        <html:text property="phone" size="40" styleClass="text"/>
+        <html:text maxlength="50" property="phone" size="40" styleClass="text"/>
     </td>
   </tr>
   <tr class="formlabel"> 
     <td width="22%" align="left" valign="baseline">Institution:</td>
     <td width="78%" align="left" valign="baseline"> 
-        <html:text property="institution" size="50" styleClass="text"/>
+        <html:text maxlength="250" property="institution" size="50" styleClass="text"/>
     </td>
   </tr>
   <tr class="formlabel"> 
     <td width="22%" align="left" valign="baseline">Department:</td>
     <td width="78%" align="left" valign="baseline"> 
-        <html:text property="department" size="50" styleClass="text"/>
+        <html:text maxlength="50" property="department" size="50" styleClass="text"/>
     </td>
   </tr>
   <tr class="formlabel"> 
@@ -84,31 +84,31 @@
         <tr> 
           <td width="25%" class="formlabel"> *First Name:</td>
           <td width="75%">
-             <html:text property="pifirstname" size="30" styleClass="text"/>
+             <html:text maxlength="50" property="pifirstname" size="30" styleClass="text"/>
           </td>
         </tr>
         <tr> 
           <td class="formlabel"> *Last Name:</td>
           <td>
-             <html:text property="pilastname" size="30" styleClass="text"/>
+             <html:text maxlength="50" property="pilastname" size="30" styleClass="text"/>
           </td>
         </tr>
         <tr> 
           <td class="formlabel"> *Email:</td>
           <td>
-             <html:text property="piemail" size="30" styleClass="text"/>
+             <html:text maxlength="50" property="piemail" size="30" styleClass="text"/>
           </td>
         </tr>
         <tr> 
           <td class="formlabel">*Institution:</td>
           <td>
-             <html:text property="piinstitution" size="50" styleClass="text"/>
+             <html:text maxlength="250" property="piinstitution" size="50" styleClass="text"/>
           </td>
         </tr>
         <tr> 
           <td class="formlabel">*Department:</td>
           <td>
-             <html:text property="pidepartment" size="50" styleClass="text"/>
+             <html:text maxlength="50" property="pidepartment" size="50" styleClass="text"/>
           </td>
         </tr>
       </table></td>
@@ -131,14 +131,14 @@
   <tr class="formlabel"> 
     <td width="22%" align="left" valign="baseline">*Please enter a password:</td>
     <td width="78%" align="left" valign="baseline"> 
-        <html:password property="password" size="30" styleClass="text"/>
+        <html:password maxlength="50" property="password" size="30" styleClass="text"/>
     </td>
   </tr>
   <tr class="formlabel"> 
     <td width="22%" align="left" valign="baseline">*Please enter the password 
       again</td>
     <td width="78%" align="left" valign="baseline"> 
-        <html:password property="password2" size="30" styleClass="text"/>
+        <html:password maxlength="50" property="password2" size="30" styleClass="text"/>
     </td>
   </tr>
   <tr class="formlabel"> 

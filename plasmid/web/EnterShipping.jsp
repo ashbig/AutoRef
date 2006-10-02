@@ -57,7 +57,7 @@
         </html:select>
     </td>
     <td width="20%" class="formlabel">Shipping Account:</td>
-    <td width="30%" class="text"><html:text property="shippingAccount"/></td>
+    <td width="30%" class="text"><html:text maxlength="50" property="shippingAccount"/></td>
   </tr>
   <tr> 
     <td class="formlabel">Shipping Date:</td>

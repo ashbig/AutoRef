@@ -42,7 +42,7 @@
     <td width="40%" class="text"><bean:write name="date"/></td>
     <td width="12%" class="formlabel">*PO Number:</td>
     <td width="36%" class="text">
-        <html:text property="ponumber" size="40"/>
+        <html:text maxlength="50" property="ponumber" size="40"/>
     </td>
   </tr>
 </table>
