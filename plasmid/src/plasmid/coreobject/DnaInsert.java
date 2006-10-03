@@ -148,7 +148,7 @@ public class DnaInsert {
             return RefseqNameType.PA;
         if(LM.equals(species) || YP.equals(species))
             return RefseqNameType.GENBANK;
-        if(VC.equals(species))
+        if(VC.equals(species) || VC1.equals(species))
             return RefseqNameType.VCNUMBER;
         if(DM.equals(species))
             return RefseqNameType.FBID;
