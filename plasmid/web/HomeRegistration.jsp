@@ -108,7 +108,7 @@
         <tr> 
           <td class="formlabel">*Department:</td>
           <td>
-             <html:text maxlength="50" property="pidepartment" size="50" styleClass="text"/>
+             <html:text maxlength="100" property="pidepartment" size="50" styleClass="text"/>
           </td>
         </tr>
       </table></td>
