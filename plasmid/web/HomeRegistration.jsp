@@ -63,7 +63,7 @@
   <tr class="formlabel"> 
     <td width="22%" align="left" valign="baseline">Department:</td>
     <td width="78%" align="left" valign="baseline"> 
-        <html:text maxlength="50" property="department" size="50" styleClass="text"/>
+        <html:text maxlength="100" property="department" size="50" styleClass="text"/>
     </td>
   </tr>
   <tr class="formlabel"> 
