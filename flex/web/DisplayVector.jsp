@@ -68,7 +68,7 @@
 
     <p>
     <b>Vector Map:</b> &nbsp;&nbsp;&nbsp;
-           <a href="http://kotel.med.harvard.edu/FLEXRepository/<bean:write name="vector" property="pathFile"/>">
+           <a href="/FLEXRepository/<bean:write name="vector" property="pathFile"/>">
                 <bean:write name="vector" property="file"/>
             </a>
 </body>
