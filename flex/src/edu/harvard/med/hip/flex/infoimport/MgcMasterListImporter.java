@@ -38,6 +38,12 @@ START with 197 INCREMENT by 1
  *
  *IMAGE_ID(0)	COLLECTION_NAME(1)	PLATE(2)	ROW_POS(3)	COL_POS(4)	LIBR_NAME(5)	VECTOR_NAME(6)
 
+ *
+ *submission on 10/06
+ *format _3
+*IMAGEID - CLONE_ID    COLLECTION_NAME PLATE   ROW_POS COL_POS LIBR_NAME   (CDNA_LIBR_ID)    SPECIES (TISSUE_TYPE) VECTOR_NAME INSERT_DIGEST   GB_ACCNUM   |GB_GI|
+duplicate row for each clone - one BC acessesion number, second different accessesion number
+ *sequence look up should be by BC GI or by imageid
  */
 
 package edu.harvard.med.hip.flex.infoimport;
@@ -61,6 +67,7 @@ public class MgcMasterListImporter
     public static final int     FORMAT_0 = 0;
     public static final int     FORMAT_1 = 1;
      public static final int     FORMAT_2 = 2;
+     public static final int    FORMAT_3 = 3;
      
      
       public static final int     ORIENTATION_FORWARD = 1;
@@ -80,7 +87,7 @@ public class MgcMasterListImporter
     private Vector errors_to_print = null;
     
     //change for your submission file
-    private   static   final  int     SUBMISSION_FORMAT = FORMAT_2;
+    private   static   final  int     SUBMISSION_FORMAT = FORMAT_3;
     private   static   final int      WELLS_ON_PLATE = 96;
     /** Creates a new instance of MgcMasterListImporter */
     public MgcMasterListImporter(String username)
@@ -147,6 +154,8 @@ public class MgcMasterListImporter
           //       printContainers(mgc_containers);
                     readSeqences(container, sequenceCol, report_file_name) ;
                     System.out.println("mgc master list read sequences finished");
+                 // System.out.println(container.toString());
+                    
                     uploadToDatabase(conn, container, sequenceCol, report_file_name) ;
                 }
                 catch(Exception e)
@@ -288,14 +297,14 @@ public class MgcMasterListImporter
             sample = (MgcSample) container.getSamples().get(count);
             switch(SUBMISSION_FORMAT)
             {
-                //image id
+                //mgcid id
                 case FORMAT_0: 
                 { 
                     id = (Integer)sequenceid_cloneid.get( new Integer(sample.getMgcId()));
                     break;
                 }
-                  //mgsid
-                case FORMAT_1: case FORMAT_2:
+                  //imageid
+                case FORMAT_1: case FORMAT_2:case FORMAT_3:
                 {
                     id = (Integer)sequenceid_cloneid.get( new Integer(sample.getImageId()));
                     break;
@@ -344,24 +353,24 @@ public class MgcMasterListImporter
             sample = (MgcSample) container.getSamples().get(count);
             switch(SUBMISSION_FORMAT)
             {
-                //image id
-                case FORMAT_0: { ids.append( sample.getMgcId() ); break;}
-                  //mgsid
-                case FORMAT_1: case FORMAT_2: {ids.append( sample.getImageId() ) ;break;}
+                //mgc id
+                case FORMAT_0:{ ids.append( sample.getMgcId() ); break;}
+                  //image
+                case FORMAT_1: case FORMAT_2:  case FORMAT_3: {ids.append( sample.getImageId() ) ;break;}
                 default: return null;
             }
             if ( count != container.getSamples().size()-1) ids.append(",");
         }
         switch(SUBMISSION_FORMAT)
         {
-            //image id
+            //mgc id
             case FORMAT_0: 
             {
                 return "select   mgcid as id, sequenceid from mgcclone  where "
                 + "mgcid in (" + ids +") order by mgcid";
             }
-             //mgsid
-            case FORMAT_1: case FORMAT_2:
+             //image id
+            case FORMAT_1: case FORMAT_2:case FORMAT_3:
             {
                 return "select  imageid as id,  sequenceid from mgcclone  where "
                 + " imageid in (" + ids +") order by imageid";
@@ -772,8 +781,12 @@ public class MgcMasterListImporter
                 
                 writeToFile("Get from import file mgc clone\t "+clone.toString() + "\n", report_file_name);
                cont.addSample(clone);
-                        }
+            }
+            
             input.close();
+            // for format 3 only drop duplicated samples. this format submits 
+            // 2 records per clone - on with BC GI, another with non BC GI
+            checkForSampleRecordDuplicates(containers, SUBMISSION_FORMAT);
             return containers;
         }catch (Exception ex)
         {    try
@@ -790,9 +803,8 @@ public class MgcMasterListImporter
      {
          switch(format)
          {
-             case FORMAT_0: return info[9]+info[10];
-             case FORMAT_1: return info[1] + info[2];
-             case FORMAT_2: return info[9]+info[10];
+             case FORMAT_0: case FORMAT_2:return info[9]+info[10];
+             case FORMAT_1: case FORMAT_3:return info[1] + info[2];
              default: return null;
          }
      }
@@ -801,9 +813,9 @@ public class MgcMasterListImporter
      {
          switch(format)
          {
-             case FORMAT_0: return info[9];
-             case FORMAT_1: return info[1] ;
-             case FORMAT_2: return info[9];
+             case FORMAT_0:case FORMAT_2:  return info[9];
+             case FORMAT_1: case FORMAT_3: return info[1] ;
+             
              default: return null;
          }
      }
@@ -813,18 +825,86 @@ public class MgcMasterListImporter
      //Accession[0]	CDS start[1]	CDS stop[2]	gi[3]	Gene[4]	IMAGE[5]
      library ID[6]	orientation[7]	vector[8]	Collection[9]	Plate[10]
       Row[11]	Column[12]
+      
+      format 3
+      *0	image_ID
+1	COLLECTION_NAME
+2	PLATE
+3	ROW_POS
+4	COL_POS
+5	LIBR_NAME
+6	CDNA_LIBR_ID
+7	SPECIES
+8	TISSUE_TYPE
+9	VECTOR_NAME
+10	INSERT_DIGEST
+11	GB_ACCNUM
+12	GB_GI
+
       **/
 
      private MgcSample getMGCSampleFormatDependent(String[] info, int format) throws FlexDatabaseException
      {
+         MgcSample sample = null;
          switch(format)
          {
              case FORMAT_0: return   new MgcSample( -1,  -1,  Integer.parseInt(info [1]), Integer.parseInt(info[0]), info[8], info[11], Integer.parseInt(info[12]), MgcSample.STATUS_AVAILABLE);
              case FORMAT_1: return new MgcSample( -1,  -1,Integer.parseInt(info[0]),info[6], info[3], Integer.parseInt(info[4]),MgcSample.STATUS_AVAILABLE);
              
              case FORMAT_2: return new MgcSample( -1, -1,  -1, Integer.parseInt(info[5]), info[8], info[11], Integer.parseInt(info[12]), MgcSample.STATUS_AVAILABLE, getOrientation(info[7]), Integer.parseInt(info[3]));
+             case FORMAT_3: 
+             {
+                 sample =  new MgcSample(-1,  -1,-1, Integer.parseInt(info[0]), info[9], info[3], Integer.parseInt(info[4]),     MgcSample.STATUS_AVAILABLE, MgcSample.ORIENTATION_NOTKNOWN, Integer.parseInt(info[12]));
+                 sample.setGenbank(info[11]);
+                 return sample;
+             }
+          
              default: return null;
          }
+     }
+     
+     private ArrayList           checkForSampleRecordDuplicates(ArrayList containers, int format)
+     {
+         if (format != FORMAT_3) return containers;
+         ArrayList cleaned_samples = new ArrayList();
+         boolean is_BC_found = false;
+         MgcContainer container = null;
+          int current_position = -1;
+          MgcSample current_sample = null;
+         MgcSample bc_sample = null;
+           for (int container_count = 0; container_count < containers.size(); container_count++)
+         {
+             container = (MgcContainer) containers.get(container_count); 
+             container.sortSamplesByPositionGI();
+             current_position = -1;
+                   
+             cleaned_samples = new ArrayList();
+             for ( int sample_count = 0; sample_count < container.getSamples().size(); sample_count ++)
+                 {
+                     current_sample = (MgcSample) container.getSamples().get(sample_count);
+                     if (is_BC_found && current_position == current_sample.getPosition())
+                         continue;
+                    
+                     if (current_position != current_sample.getPosition())
+                     {
+                         if ( !is_BC_found && current_position != -1)
+                             cleaned_samples.add(container.getSamples().get(sample_count - 1));
+                         is_BC_found = false;
+                         current_position = current_sample.getPosition();
+
+                     }
+                     if (current_position == current_sample.getPosition() && current_sample.getGenbank().startsWith("BC"))
+                     {
+                         cleaned_samples.add(current_sample);
+                         is_BC_found = true;
+                     }
+                  }
+            
+             container.getSamples().clear();
+             container.getSamples().addAll(cleaned_samples);
+            
+         }
+         return containers;
      }
      private int            getOrientation(String orientation)
      {
@@ -1012,7 +1092,6 @@ public class MgcMasterListImporter
             for (int sample_count = 0; sample_count < sampl.size() ; sample_count++)//sample count
             {
                 sample = (MgcSample)sampl.get(sample_count);
-                
                 if (sample.getSequenceId() == -1)
                 {
                     
@@ -1047,7 +1126,7 @@ public class MgcMasterListImporter
                             errors_to_print.add("Can not find sequence for MGC : " + current_key);
                             continue;
                         }
-                        if ( SUBMISSION_FORMAT == FORMAT_1 || SUBMISSION_FORMAT == FORMAT_2)
+                        if ( SUBMISSION_FORMAT == FORMAT_1 || SUBMISSION_FORMAT == FORMAT_2 || SUBMISSION_FORMAT == FORMAT_3)
                         {
                            String mgc_id = fs.getInfoValue(FlexSequence.MGC_ID) ;
                            if ( mgc_id != null && mgc_id.trim().length()>0)
@@ -1061,8 +1140,11 @@ public class MgcMasterListImporter
                         
                     }catch(Exception e)
                     { 
+                         System.out.println (container.getLabel() +" "+sample.getPosition())     ;        
+   
                         errors_to_print.add("Can not find sequence for MGC : " + current_key + "\n");
-                        throw new FlexCoreException("Cannot find sequences");
+                        continue;//throw new FlexCoreException("Cannot find sequences");
+                       
                     }
                     
                 }
@@ -1131,7 +1213,6 @@ public class MgcMasterListImporter
                     }
                     
                 }//end loop clone
-                System.out.println(cont.toString());
                 cont.insert(conn);
                 writeToFile("Insert into db mgc container\t"+cont.getLabel() + "_"+cont.getId() +"\n", report_file_name);
                 DatabaseTransaction.commit(conn);
@@ -1355,7 +1436,7 @@ public class MgcMasterListImporter
     public static void main(String args[])
     {
         
-        String file = "E:\\HTaycher\\MGC\\NewDev8-06\\IRCM_real.txt";
+        String file = "E:\\HTaycher\\MGC\\Submissions\\IRAT_98-133.txt";
         InputStream input;
         
         try
