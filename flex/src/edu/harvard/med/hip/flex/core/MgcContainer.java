@@ -1,5 +1,5 @@
 /**
- * $Id: MgcContainer.java,v 1.4 2006-08-31 19:25:49 dzuo Exp $
+ * $Id: MgcContainer.java,v 1.5 2006-11-01 20:29:21 Elena Exp $
  *
  * File     	: MgcContainer.java
  * Date     	: 04162001
@@ -696,6 +696,25 @@ public class MgcContainer extends Container {
             return str.toString();
      }
     
+    
+    public void sortSamplesByPositionGI()
+    {
+        Collections.sort( this.getSamples(), new Comparator()
+        {
+            public int compare(Object sample_1o, Object sample_2o)
+            {
+                MgcSample sample_1 = (MgcSample) sample_1o;
+                MgcSample sample_2 = (MgcSample ) sample_2o;
+                int res =  sample_1.getPosition() - sample_2.getPosition();
+                if (res == 0)//same position
+                   return    sample_1.getGenbank().compareToIgnoreCase(sample_2.getGenbank());
+                else
+                   return res;
+                
+            }
+        });
+       
+    }
     
     /************************TESTING*************************
      *1890*/
