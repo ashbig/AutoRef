@@ -1,5 +1,5 @@
 /**
- * $Id: MgcSample.java,v 1.3 2006-08-24 18:10:25 Elena Exp $
+ * $Id: MgcSample.java,v 1.4 2006-11-01 20:28:04 Elena Exp $
  *
  * File     	: MgcClone.java
  * Date     	: 05052002
@@ -316,7 +316,9 @@ public class MgcSample extends Sample{
     {
         return "MGC ID "+ m_MgcId +" IMAGE ID " + m_ImageId +" Vector " + m_Vector+
    " Sequence ID "+ m_SequenceId +" Row "+ m_Row +" Column "+  m_Column +
-   " Orientation "+ m_orientation + " Status "+ m_Status +" GI "+  i_gi ;
+   " Orientation "+ m_orientation + " Status "+ m_Status +" GI "+  i_gi 
+   + " GAccession " + this.getGenbank();
+        
     }
     /**
      * Gets the sequence for mgc_sample.
