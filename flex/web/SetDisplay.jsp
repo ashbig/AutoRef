@@ -4,6 +4,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ page import="edu.harvard.med.hip.flex.form.EnterResultForm" %>
 
 <html>
 <head>
@@ -21,10 +22,6 @@
     <tr>
         <td class="prompt">Plate:</td>
         <td><bean:write name="newPlate" /></td>        
-        <html:form action="/PrintLabel.do">
-        <input type="hidden" name="label" value="<bean:write name="newPlate"/>"/>
-        <td><html:submit value="Print Barcode"/></td>
-        </html:form>
     </tr>
 </table>
 
@@ -33,7 +30,6 @@
 <html:hidden property="nextForward"/>
 
 <table>
-
     <tr>
         <td colspan=2 class="prompt">Check the attributes to be displayed on next page:   </td>     
     </tr>
@@ -71,6 +67,15 @@
 
 </table>
 </html:form>
+
+<table>
+    <tr>     
+        <html:form action="/PrintLabel.do">
+        <input type="hidden" name="label" value="<bean:write name="newPlate"/>"/>
+        <td><html:submit value="Print Barcode"/></td>
+        </html:form>
+    </tr>
+</table>
 
 </body>
 </html>
