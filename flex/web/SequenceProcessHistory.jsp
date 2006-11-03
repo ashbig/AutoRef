@@ -25,14 +25,13 @@
     <h2><bean:message key="flex.name"/> : Clone Process History</h2>
     <hr>
     <html:errors/>
+
     <p>
- <logic:present name="<%=Constants.FLEX_SEQUENCE_KEY%>"/>
         <bean:define name="<%=Constants.FLEX_SEQUENCE_KEY%>" id="sequence"/>    
         Process history shown for sequence
         <flex:linkFlexSequence sequenceName="sequence">
             <bean:write name="sequence" property="id"/>
         </flex:linkFlexSequence>
-    </logic:present>
 
     </p>
     <br>
