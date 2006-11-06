@@ -32,15 +32,15 @@
         <p align="left" class="homepageText3">New in the Repository</p>
         <ul>
           <li> 
-            <div align="left">More than 6,000 sequence-verified human open reading frame (ORF) clones added
+            <div align="left">Retroviral, adenoviral, AAV and lentiviral expression vectors and helpers from J. Lee (HGTI/HMS)
             </div>
           </li>
           <li> 
-            <div align="left">Plasmids useful for adding epitope tags via CpoI-based directional cloning
+            <div align="left">Vectors for transposon-mediated gene disruption in bacteria and mycobacteria from J. Mekalanos (HMS)
 </div>
           </li>
           <li> 
-            <div align="left">Microbial ORF collections include more than 300 recently-added V. cholerae clones
+            <div align="left">Sequence-verified ORFs for human, yeast, P. aeruginosa, Y. pestis, F. tularensis and V. cholerae (HIP/HMS)
 </div>
           </li>
         </ul>
