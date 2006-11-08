@@ -42,19 +42,24 @@ public class GenbankParser {
         int cdscount = 0;
         String inputLine;
         boolean breakSeq = false;
+        boolean definitionStop = false;
         while ((inputLine = in.readLine()) != null) {
             //System.out.println(inputLine);
-            //DEFINITION  Mus musculus RIKEN cDNA 0610009K11 gene (0610009K11Rik), mRNA.
-            if(inputLine.trim().indexOf("DEFINITION") != -1 && definition.equals("")) {
-                definition = inputLine.trim().substring(inputLine.indexOf("DEFINITION")+10).trim();
-            }
             //ACCESSION   NM_026689
             if(inputLine.trim().indexOf("ACCESSION") != -1 && accession.equals("")) {
+                definitionStop = true;
                 StringTokenizer tokens = new StringTokenizer(inputLine);
                 if(tokens.hasMoreTokens()) {
                     String ignore = tokens.nextToken();
                     accession = tokens.nextToken();
                 }
+            }
+            //DEFINITION  Mus musculus RIKEN cDNA 0610009K11 gene (0610009K11Rik), mRNA.
+            if(!definitionStop) {
+                if(inputLine.trim().indexOf("DEFINITION") != -1)
+                    definition = inputLine.trim().substring(inputLine.indexOf("DEFINITION")+10).trim();
+                else
+                    definition += " "+ inputLine.trim();
             }
             //VERSION     NM_026689.3  GI:40548428
             if(inputLine.indexOf("VERSION") != -1 && accessionVersion.equals("") ) {
@@ -128,6 +133,7 @@ public class GenbankParser {
             if(inputLine.indexOf("//") == 0 && breakSeq) {
                 isSeqStart = false;
                 breakSeq = false;
+                sequencetext = sequencetext.substring(sequencetext.indexOf("</a>")+4);
                 break;
             }
             
