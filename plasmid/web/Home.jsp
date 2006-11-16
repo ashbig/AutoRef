@@ -29,7 +29,7 @@
     <td width="50%" height="275"> 
  	 <!-- Begin "New in the Repository" Blockquote -->
 	 <blockquote> 
-        <p align="left" class="homepageText3">New in the Repository</p>
+        <p align="left" class="homepageText3">What's New?</p>
         <ul>
           <li> 
             <div align="left">Retroviral, adenoviral, AAV and lentiviral expression vectors and helpers from J. Lee (HGTI/HMS)
@@ -41,6 +41,10 @@
           </li>
           <li> 
             <div align="left">Sequence-verified ORFs for human, yeast, P. aeruginosa, Y. pestis, F. tularensis and V. cholerae (HIP/HMS)
+</div>
+          </li>
+          <li> 
+            <div align="left">Harvard Institute of Proteomics named site of the Protein Structure Initiative Materials Repository (PSI-MR), funded by NIGMS/NIH (RFA-GM-06-003) for storage and distribution of more than 50,000 plasmid clones for protein expression
 </div>
           </li>
         </ul>
