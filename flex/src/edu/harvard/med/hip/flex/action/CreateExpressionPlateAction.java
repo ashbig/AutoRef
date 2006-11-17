@@ -202,7 +202,6 @@ public class CreateExpressionPlateAction extends ResearcherAction {
         resultForm.setNextForward("createPlate");
         resultForm.setResearcherObject(r);
         request.getSession().setAttribute("enterResultForm", resultForm);
-        
         return (mapping.findForward("success"));
     }
     

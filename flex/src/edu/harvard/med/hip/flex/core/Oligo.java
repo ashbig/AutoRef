@@ -6,7 +6,7 @@ import edu.harvard.med.hip.flex.workflow.*;
 
 /**
  * This class represents an oligo object.
- * $Id: Oligo.java,v 1.15 2006-03-17 17:09:08 dzuo Exp $
+ * $Id: Oligo.java,v 1.16 2006-11-17 21:17:59 dzuo Exp $
  * @File:	Oligo.java
  * @Date:	4/30/01
  * @author:	Wendy Mar
@@ -152,7 +152,8 @@ public class Oligo {
             }
         } else if(workflowid == Workflow.HIP_INGA) {
             tagSequence = INGA_5p + sequence;
-        } else if(workflowid == Workflow.GATEWAY_WITH_EGEL || workflowid == Workflow.GATEWAY_WITH_INFUSION) {
+        } else if(workflowid == Workflow.GATEWAY_WITH_EGEL || workflowid == Workflow.GATEWAY_WITH_INFUSION
+                ||workflowid == Workflow.GATEWAY_LONG_PRIMER_WITH_EGEL) {
             //if(projectId == Project.Yersinia_pseudotuberculosis || projectId == Project.Bacillus_anthracis) {
                 tagSequence = GATEWAY_YP_5p + sequence;
            // } else {
@@ -211,7 +212,8 @@ public class Oligo {
             }
         } else if(workflowid == Workflow.HIP_INGA) {
             tagSequence = INGA_3p_CLOSE + sequence;
-        } else if(workflowid == Workflow.GATEWAY_WITH_EGEL || workflowid == Workflow.GATEWAY_WITH_INFUSION) {
+        } else if(workflowid == Workflow.GATEWAY_WITH_EGEL || workflowid == Workflow.GATEWAY_WITH_INFUSION
+                ||workflowid == Workflow.GATEWAY_LONG_PRIMER_WITH_EGEL) {
             tagSequence = GATEWAY_YP_3p + sequence;
         } else {
             tagSequence = CLONETECH_3p_CLOSE + sequence;
@@ -258,7 +260,8 @@ public class Oligo {
             }
         } else if(workflowid == Workflow.HIP_INGA) {
             tagSequence = INGA_3p_FUSION + sequence;
-        } else if (workflowid == Workflow.GATEWAY_WITH_EGEL || workflowid == Workflow.GATEWAY_WITH_INFUSION) {
+        } else if (workflowid == Workflow.GATEWAY_WITH_EGEL || workflowid == Workflow.GATEWAY_WITH_INFUSION
+                || workflowid == Workflow.GATEWAY_LONG_PRIMER_WITH_EGEL) {
             tagSequence = GATEWAY_YP_3p_FUSION + sequence;
         } else {
             tagSequence = CLONETECH_3p_FUSION + sequence;

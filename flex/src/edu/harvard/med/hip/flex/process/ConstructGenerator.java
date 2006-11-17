@@ -149,7 +149,7 @@ public class ConstructGenerator
         
         // insert design constructs protocl process execution
         // insertProcessExecution();
-        NNPrimerCalculator pc = StaticPrimerCalculatorFactory.makePrimerCalculator(project);
+        NNPrimerCalculator pc = StaticPrimerCalculatorFactory.makePrimerCalculator(project, workflow);
         ListIterator iter = seqList.listIterator();
         
         while (iter.hasNext())
@@ -228,7 +228,7 @@ public class ConstructGenerator
         
         // insert design constructs protocl process execution
         // insertProcessExecution();
-        NNPrimerCalculator pc = StaticPrimerCalculatorFactory.makePrimerCalculator(project);
+        NNPrimerCalculator pc = StaticPrimerCalculatorFactory.makePrimerCalculator(project, workflow);
         ListIterator iter = seqList.listIterator();
         
         while (iter.hasNext())
@@ -298,7 +298,7 @@ public class ConstructGenerator
         
         // insert design constructs protocl process execution
         // insertProcessExecution();
-        NNPrimerCalculator pc = StaticPrimerCalculatorFactory.makePrimerCalculator(project);
+        NNPrimerCalculator pc = StaticPrimerCalculatorFactory.makePrimerCalculator(project, workflow);
         ListIterator iter = seqList.listIterator();
         
         while (iter.hasNext())
