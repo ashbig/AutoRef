@@ -253,7 +253,7 @@ public class PolymorphismFinderRunner extends ProcessRunner
      {
         String sql = " select i.isolatetrackingid as isolatetrackingid, sequenceid "
         +" from assembledsequence a, isolatetracking i "
-        + " where a.isolatetrackingid(+)=f.isolatetrackingid ";
+        + " where a.isolatetrackingid(+)=i.isolatetrackingid ";
          if ( this.isWriteProcess() ==  ProcessRunner.PROCESS_TYPE_WRITE)
           {
               sql += " and i.process_status = "+IsolateTrackingEngine.FINAL_STATUS_INPROCESS;
