@@ -196,7 +196,8 @@ public class CloningStrategy {
         
         if(workflowid == Workflow.STANDARD_WORKFLOW || workflowid == Workflow.PSEUDOMONAS_WORKFLOW
         || workflowid == Workflow.MGC_GATEWAY_WORKFLOW || workflowid == Workflow.GATEWAY_WORKFLOW
-        || workflowid == Workflow.MGC_GATEWAY_CLOSED || workflowid == Workflow.GATEWAY_WITH_EGEL) {
+        || workflowid == Workflow.MGC_GATEWAY_CLOSED || workflowid == Workflow.GATEWAY_WITH_EGEL
+        || workflowid == Workflow.GATEWAY_LONG_PRIMER_WITH_EGEL) {
             //if(projectid == Project.HUMAN || projectid == Project.BREASTCANCER || projectid == Project.KINASE) 
             //    return HUMAN_GATEWAY;
            // if(projectid == Project.PSEUDOMONAS)
