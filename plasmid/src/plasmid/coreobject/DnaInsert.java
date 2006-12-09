@@ -32,6 +32,7 @@ public class DnaInsert {
     public static final String XL = "Xenopus laevis";
     public static final String YPS = "Yersinia pseudotuberculosis";
     public static final String VC1 = "Vibrio cholerae (unspecified strain)";
+    public static final String BA = "Bacillus anthracis str. Ames";
 
     private int insertid;
     private int order;
@@ -156,6 +157,8 @@ public class DnaInsert {
             return RefseqNameType.WBGENEID;
         if(FT.equals(species))
             return RefseqNameType.FTNUMBER;
+        if(BA.equals(species)) 
+            return RefseqNameType.BANUMBER;
         if(RefseqNameType.GENEID != null)
             return RefseqNameType.GENEID;
         return "";
