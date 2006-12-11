@@ -90,7 +90,7 @@ public class EnterOligoPlatesAction extends ResearcherAction {
         boolean isOnlyClosed = false;
         boolean isOnlyOpen = false;
         if ( projectid == Project.YEAST || workflowid == Workflow.CONVERT_FUSION_TO_CLOSE || projectid == Project.YP || projectid == Project.FT || workflowid == Workflow.MGC_GATEWAY_CLOSED || projectid == Project.Yersinia_pseudotuberculosis || projectid == Project.YEAST_DBD)    isOnlyClosed = true;
-        if (projectid == Project.PSEUDOMONAS || projectid == Project.KINASE || workflowid == Workflow.CONVERT_CLOSE_TO_FUSION || projectid == Project.VC || projectid == Project.KINASE_MUT || projectid == Project.Bacillus_anthracis || projectid == Project.NIDDK) isOnlyOpen = true;
+        if (projectid == Project.PSEUDOMONAS || projectid == Project.KINASE || workflowid == Workflow.CONVERT_CLOSE_TO_FUSION || projectid == Project.VC || projectid == Project.KINASE_MUT || projectid == Project.Bacillus_anthracis || projectid == Project.NIDDK || workflowid == Workflow.MGC_GATEWAY_INFUSION_FUSION) isOnlyOpen = true;
         
         try {
             
@@ -124,7 +124,12 @@ public class EnterOligoPlatesAction extends ResearcherAction {
             }
             
             String templatePlate = null;
-            if((workflowid == Workflow.MGC_GATEWAY_WORKFLOW || workflowid == Workflow.MGC_CREATOR_WORKFLOW || workflowid == Workflow.DNA_TEMPLATE_CREATOR || workflowid == Workflow.MGC_GATEWAY_CLOSED || workflowid == Workflow.HIP_INGA)
+            if((workflowid == Workflow.MGC_GATEWAY_WORKFLOW 
+            || workflowid == Workflow.MGC_CREATOR_WORKFLOW 
+            || workflowid == Workflow.DNA_TEMPLATE_CREATOR 
+            || workflowid == Workflow.MGC_GATEWAY_CLOSED 
+            || workflowid == Workflow.HIP_INGA
+            || workflowid == Workflow.MGC_GATEWAY_INFUSION_FUSION)
             && Protocol.GENERATE_PCR_PLATES.equals(protocol.getProcessname())) {
                 templatePlate = ((CreatePCRPlateForm)form).getTemplatePlate();
                 
@@ -163,7 +168,8 @@ public class EnterOligoPlatesAction extends ResearcherAction {
             || workflowid == Workflow.MGC_GATEWAY_WORKFLOW
             || workflowid == Workflow.DNA_TEMPLATE_CREATOR
             || workflowid == Workflow.MGC_GATEWAY_CLOSED
-            || workflowid == Workflow.HIP_INGA) {
+            || workflowid == Workflow.HIP_INGA
+            || workflowid == Workflow.MGC_GATEWAY_INFUSION_FUSION) {
                 try {
                     mgc = ps.getMgcContainer();
                 } catch (Exception ex) {
@@ -263,7 +269,8 @@ public class EnterOligoPlatesAction extends ResearcherAction {
                 || workflowid == Workflow.MGC_CREATOR_WORKFLOW
                 || workflowid == Workflow.DNA_TEMPLATE_CREATOR
                 || workflowid == Workflow.MGC_GATEWAY_CLOSED
-                || workflowid == Workflow.HIP_INGA) {
+                || workflowid == Workflow.HIP_INGA
+                || workflowid == Workflow.MGC_GATEWAY_INFUSION_FUSION) {
                     request.setAttribute("templateid", new Integer(template.getId()));
                 }
                 return (mapping.findForward("success_oligo_dilute"));

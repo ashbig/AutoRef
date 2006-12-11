@@ -10,6 +10,7 @@ import java.util.*;
 import java.sql.*;
 import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.core.Container;
+import edu.harvard.med.hip.flex.core.FlexSequence;
 
 /**
  *
@@ -22,10 +23,11 @@ public class UpdateClonename {
     }
     
     public void updateName(List cloneids) throws Exception {
-        String sql = "select cd.constructtype"+
-        " from clones c, obtainedmasterclone o, constructdesign cd"+
+        String sql = "select cd.constructtype, f.genusspecies"+
+        " from clones c, obtainedmasterclone o, constructdesign cd, flexsequence f"+
         " where c.mastercloneid=o.mastercloneid"+
         " and o.constructid=cd.constructid"+
+        " and cd.sequenceid=f.sequenceid"+
         " and c.cloneid=?";
         String sql2 = "update clones set clonename=? where cloneid=?";
         
@@ -52,9 +54,14 @@ public class UpdateClonename {
                 rs = DatabaseTransaction.executeQuery(stmt);
                 if(rs.next()) {
                     String constructtype = rs.getString(1);
+                    String species = rs.getString(2);
                     String name = null;
                     if("FUSION".equals(constructtype)) {
-                        name="FLH"+fmt.format(cloneid)+".01F";
+                        if(species.equals(FlexSequence.HUMAN)) {
+                            name="FLH"+fmt.format(cloneid)+".01L";
+                        } else {
+                            name="FLH"+fmt.format(cloneid)+".01F";
+                        }
                     } else if("CLOSED".equals(constructtype)) {
                         name="FLH"+fmt.format(cloneid)+".01X";
                     } else {
@@ -87,7 +94,6 @@ public class UpdateClonename {
         " from sample s1, sample s2, samplelineage sl"+
         " where s1.sampleid=sl.sampleid_from"+
         " and sl.sampleid_to=s2.sampleid"+
-        " and s2.sampletype='ISOLATE'"+
         " and s2.containerid in "+containerids;
         DatabaseTransaction t = null;
         Connection conn = null;
@@ -106,9 +112,12 @@ public class UpdateClonename {
                 
                 System.out.println(cloneid+"\t"+sampleid);
                 
-                stmt.setInt(1, cloneid);
-                stmt.setInt(2, sampleid);
-                DatabaseTransaction.executeUpdate(stmt);
+                if(cloneid>0) {
+                    System.out.println("update sample "+sampleid+" with clone "+cloneid);
+                    stmt.setInt(1, cloneid);
+                    stmt.setInt(2, sampleid);
+                    DatabaseTransaction.executeUpdate(stmt);
+                }
             }
             DatabaseTransaction.commit(conn);
         } catch (Exception ex) {
@@ -187,9 +196,9 @@ public class UpdateClonename {
         String sql = "select sampleid from sample where containerid="+containerid;
         String sql2 = "select sampleid_from from samplelineage where sampleid_to=?";
         String sql3 = "select cloneid from sample where sampleid in"+
-                    " (select sampleid_to from samplelineage where sampleid_from=?"+
-                    " and sampleid_to<>? and sampleid_from<>sampleid_to)"+
-                    " order by cloneid desc";
+        " (select sampleid_to from samplelineage where sampleid_from=?"+
+        " and sampleid_to<>? and sampleid_from<>sampleid_to)"+
+        " order by cloneid desc";
         String sqlupdate = "update sample set cloneid=? where sampleid=?";
         
         DatabaseTransaction t = null;
@@ -209,7 +218,7 @@ public class UpdateClonename {
             rs = t.executeQuery(sql);
             
             while(rs.next()) {
-                int sampleidSeq = rs.getInt(1);               
+                int sampleidSeq = rs.getInt(1);
                 //System.out.println("sampleidSeq:"+sampleidSeq);
                 
                 stmt2.setInt(1, sampleidSeq);
@@ -257,10 +266,10 @@ public class UpdateClonename {
     public List readClones() {
         
         String sql = "select s.cloneid, s.storagesampleid"+
-                    " from clonestorage s, clones c"+
-                    " where s.cloneid=c.cloneid"+
-                    " and c.status='SEQUENCE VERIFIED'"+
-                    " and c.clonename is null";
+        " from clonestorage s, clones c"+
+        " where s.cloneid=c.cloneid"+
+        " and c.status='SEQUENCE VERIFIED'"+
+        " and c.clonename is null";
          /*
         String sql = "select s.cloneid, s.storagesampleid"+
         " from clonestorage s, sample p"+
@@ -291,12 +300,12 @@ public class UpdateClonename {
     
     public void correctConstructid() {
         String sqlQuery="select s.sampleid, s.constructid"+
-                        " from sample s, obtainedmasterclone o"+
-                        " where s.sampleid=o.sampleid"+
-                        " and s.constructid<>o.constructid";
+        " from sample s, obtainedmasterclone o"+
+        " where s.sampleid=o.sampleid"+
+        " and s.constructid<>o.constructid";
         String sqlUpdate="update obtainedmasterclone"+
-                        " set constructid=?"+
-                        " where sampleid=?";
+        " set constructid=?"+
+        " where sampleid=?";
         DatabaseTransaction t = null;
         Connection conn = null;
         PreparedStatement stmtUpdate = null;
@@ -328,12 +337,12 @@ public class UpdateClonename {
     
     public void correctConstructidForClones() {
         String sqlQuery="select o.mastercloneid, o.constructid"+
-                        " from obtainedmasterclone o, clones c"+
-                        " where o.mastercloneid=c.mastercloneid"+
-                        " and o.constructid<>c.constructid";
+        " from obtainedmasterclone o, clones c"+
+        " where o.mastercloneid=c.mastercloneid"+
+        " and o.constructid<>c.constructid";
         String sqlUpdate="update clones"+
-                        " set constructid=?"+
-                        " where mastercloneid=?";
+        " set constructid=?"+
+        " where mastercloneid=?";
         DatabaseTransaction t = null;
         Connection conn = null;
         PreparedStatement stmtUpdate = null;
@@ -360,7 +369,7 @@ public class UpdateClonename {
             DatabaseTransaction.closeResultSet(rs);
             DatabaseTransaction.closeStatement(stmtUpdate);
             DatabaseTransaction.closeConnection(conn);
-        }        
+        }
     }
     
     public class Clone {
@@ -377,54 +386,59 @@ public class UpdateClonename {
     }
     
     public static void main(String args[]) throws Exception {
+        //String status = "SEQUENCE VERIFIED";
+        String status = "SUCCESSFUL";
         
-          DatabaseTransaction t = DatabaseTransaction.getInstance();
-          
-          String sql = "select c.cloneid from clones c"+
-          " where c.clonename is null"+
-          " and c.status='SEQUENCE VERIFIED'";
-          ResultSet rs = t.executeQuery(sql);
-          List clones = new ArrayList();
-          while(rs.next()) {
-          int cloneid = rs.getInt(1);
-          clones.add(new Integer(cloneid));
-          }
-         
-          UpdateClonename u = new UpdateClonename();
-          u.updateName(clones);
-           
-         /**
+        DatabaseTransaction t = DatabaseTransaction.getInstance();
+        
+        String sql = "select c.cloneid from clones c"+
+        " where c.clonename is null"+
+        " and c.status='"+status+"'";
+        ResultSet rs = t.executeQuery(sql);
+        List clones = new ArrayList();
+        while(rs.next()) {
+            int cloneid = rs.getInt(1);
+            clones.add(new Integer(cloneid));
+        }
+        
         UpdateClonename u = new UpdateClonename();
-        /**       List clones = u.readClones();
+        u.updateName(clones);
+        
+        /**
+         * UpdateClonename u = new UpdateClonename();
+         * /**       List clones = u.readClones();
          * if(clones == null) {
          * System.out.println("Error");
          * System.exit(0);
          * }
          * System.out.println(clones.size());
          * u.updateCloneid(clones);
-  
-        //u.updateDestCloneid("(7275,7276)");
-
-        try {
-            u.updateRearrayPlateCloneid(8450);
-        } catch (Exception ex) {
-            System.out.println(ex);
-        }
-        //u.correctConstructid();
-        //u.correctConstructidForClones();
-          */
-       /**  
+         *
+         * //u.updateDestCloneid("(7275,7276)");
+         *
+         * try {
+         * u.updateRearrayPlateCloneid(8450);
+         * } catch (Exception ex) {
+         * System.out.println(ex);
+         * }
+         * //u.correctConstructid();
+         * //u.correctConstructidForClones();
+         */
+        /*
           try {
               List containers = new ArrayList();
               containers.add(new Container(8218));
               containers.add(new Container(8223));
-              
+        
               UpdateClonename uc = new UpdateClonename();
               uc.updateAllRearrayPlateCloneid(containers);
           } catch (Exception ex) {
               System.out.println(ex);
           }
-     */
+         */
+        //UpdateClonename uc = new UpdateClonename();
+        //String containerids = "( 17015 ,17016 )";
+        //uc.updateDestCloneid(containerids);
     }
     
 }

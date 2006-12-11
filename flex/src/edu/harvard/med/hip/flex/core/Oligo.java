@@ -6,7 +6,7 @@ import edu.harvard.med.hip.flex.workflow.*;
 
 /**
  * This class represents an oligo object.
- * $Id: Oligo.java,v 1.16 2006-11-17 21:17:59 dzuo Exp $
+ * $Id: Oligo.java,v 1.17 2006-12-11 17:58:21 dzuo Exp $
  * @File:	Oligo.java
  * @Date:	4/30/01
  * @author:	Wendy Mar
@@ -140,7 +140,8 @@ public class Oligo {
             tagSequence = CLONETECH_5p + sequence;
         } else if(workflowid == Workflow.PSEUDOMONAS_WORKFLOW) {
             tagSequence = PSEUDOMONAS_5p + sequence;
-        } else if(workflowid == Workflow.MGC_GATEWAY_WORKFLOW || workflowid == Workflow.STANDARD_WORKFLOW) {
+        } else if(workflowid == Workflow.MGC_GATEWAY_WORKFLOW || workflowid == Workflow.STANDARD_WORKFLOW
+                || workflowid == Workflow.MGC_GATEWAY_INFUSION_FUSION) {
             tagSequence = GATEWAYTAG_5p + sequence;
         } else if(workflowid == Workflow.GATEWAY_WORKFLOW || workflowid == Workflow.MGC_GATEWAY_CLOSED) {
             if(projectId == Project.YP || projectId == Project.YEAST || projectId == Project.FT || projectId == Project.AVENTIS) {
@@ -200,7 +201,8 @@ public class Oligo {
             tagSequence = CLONETECH_3p_CLOSE + sequence;
         } else if(workflowid == Workflow.PSEUDOMONAS_WORKFLOW) {
             tagSequence = GATEWAYTAG_3p_CLOSE_PA + sequence;
-        } else if (workflowid == Workflow.MGC_GATEWAY_WORKFLOW || workflowid == Workflow.STANDARD_WORKFLOW) {
+        } else if (workflowid == Workflow.MGC_GATEWAY_WORKFLOW || workflowid == Workflow.STANDARD_WORKFLOW
+            || workflowid == Workflow.MGC_GATEWAY_INFUSION_FUSION) {
             tagSequence = GATEWAYTAG_3p_CLOSE + sequence;
         } else if(workflowid == Workflow.GATEWAY_WORKFLOW || workflowid == Workflow.MGC_GATEWAY_CLOSED) {
             if(projectId == Project.YP || projectId == Project.YEAST || projectId == Project.FT || projectId == Project.AVENTIS) {
@@ -250,7 +252,8 @@ public class Oligo {
             tagSequence = CLONETECH_3p_FUSION + sequence;
         } else if(workflowid == Workflow.PSEUDOMONAS_WORKFLOW) {
             tagSequence = PSEUDOMONAS_3p_FUSION + sequence;
-        } else if(workflowid == Workflow.MGC_GATEWAY_WORKFLOW || workflowid == Workflow.STANDARD_WORKFLOW) {
+        } else if(workflowid == Workflow.MGC_GATEWAY_WORKFLOW || workflowid == Workflow.STANDARD_WORKFLOW
+                || workflowid == Workflow.MGC_GATEWAY_INFUSION_FUSION) {
             tagSequence = GATEWAYTAG_3p_FUSION + sequence;
         } else if(workflowid == Workflow.GATEWAY_WORKFLOW) {
             if(projectId == Project.VC) {

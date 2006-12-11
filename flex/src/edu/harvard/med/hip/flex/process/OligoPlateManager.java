@@ -165,7 +165,8 @@ public class OligoPlateManager {
     protected void setOpenClose(Project project, Workflow workflow) {
         if(project.getId() == Project.PSEUDOMONAS || project.getId() == Project.KINASE 
         || project.getId() == Project.VC || project.getId() == Project.KINASE_MUT 
-        || project.getId() == Project.Bacillus_anthracis || project.getId() == Project.NIDDK) {
+        || project.getId() == Project.Bacillus_anthracis || project.getId() == Project.NIDDK
+        || workflow.getId() == Workflow.MGC_GATEWAY_INFUSION_FUSION) {
             setIsOpenOnly(true);
             setIsSetOpenClose(true);
         } else if(project.getId() == Project.YEAST

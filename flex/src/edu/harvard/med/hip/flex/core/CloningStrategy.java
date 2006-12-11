@@ -206,7 +206,7 @@ public class CloningStrategy {
                 return YP_GATEWAY;
         }
         
-        if(workflowid == Workflow.GATEWAY_WITH_INFUSION) {
+        if(workflowid == Workflow.GATEWAY_WITH_INFUSION || workflowid == Workflow.MGC_GATEWAY_INFUSION_FUSION) {
            // return GATEWAY_PGW;
             return GATEWAY_PGW_2;
         }
