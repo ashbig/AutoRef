@@ -341,7 +341,7 @@ public class EnterOligoPlatesAction extends ResearcherAction {
             Container template = ps.getMgcContainer();
             
             if(template != null && templatePlate != null) {
-                if(projectid == Project.KINASE) {
+                if(projectid == Project.KINASE || workflowid == Workflow.MGC_GATEWAY_INFUSION_FUSION) {
                     if(fivep.isSame(fivepPlate) && threepOpen.isSame(threepOpenPlate)
                     && template.isSame(templatePlate)) {
                         found = item;
