@@ -6,8 +6,8 @@
  *
  * 
  * The following information is used by CVS
- * $Revision: 1.13 $
- * $Date: 2006-12-12 19:04:50 $
+ * $Revision: 1.14 $
+ * $Date: 2006-12-12 19:16:56 $
  * $Author: Elena $
  *
  ******************************************************************************
@@ -28,7 +28,7 @@ import sun.jdbc.rowset.*;
  * Holds sytem level properties.
  *
  * @author     $Author: Elena $
- * @version    $Revision: 1.13 $ $Date: 2006-12-12 19:04:50 $
+ * @version    $Revision: 1.14 $ $Date: 2006-12-12 19:16:56 $
  */
 
 public class BecProperties
@@ -152,8 +152,8 @@ public class BecProperties
                         m_Error_messages.add("FLEX coonection properties are not set");
                 try
                 {
-                    edu.harvard.med.hip.bec.database.DatabaseTransaction db = 
-                        edu.harvard.med.hip.bec.database.DatabaseTransaction.getInstance
+                    edu.harvard.med.hip.bec.database.DatabaseTransactionLocal db = 
+                        edu.harvard.med.hip.bec.database.DatabaseTransactionLocal.getInstance
                             ( BecProperties.getInstance().getProperty("FLEX_URL") , 
                             BecProperties.getInstance().getProperty("FLEX_USERNAME"), 
                             BecProperties.getInstance().getProperty("FLEX_PASSWORD"));

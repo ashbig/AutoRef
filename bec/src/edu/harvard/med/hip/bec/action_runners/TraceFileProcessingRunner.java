@@ -433,7 +433,7 @@ public class TraceFileProcessingRunner extends ProcessRunner
              {
                  if (BecProperties.getInstance().isInternalHipVersion()  )
                  {
-                  conn = DatabaseTransaction.getInstance
+                  conn = DatabaseTransactionLocal.getInstance
                     ( BecProperties.getInstance().getProperty("FLEX_URL") , 
                     BecProperties.getInstance().getProperty("FLEX_USERNAME"), 
                     BecProperties.getInstance().getProperty("FLEX_PASSWORD")).requestConnection();

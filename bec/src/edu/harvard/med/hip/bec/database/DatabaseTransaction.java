@@ -20,8 +20,8 @@
    *
    *
    * The following information is used by CVS
-   * $Revision: 1.5 $
-   * $Date: 2003-10-09 18:20:20 $
+   * $Revision: 1.6 $
+   * $Date: 2006-12-12 19:12:41 $
    * $Author: Elena $
    *
    ******************************************************************************
@@ -62,34 +62,43 @@ import sun.jdbc.rowset.*;
  * DatabaseTransaction is implemented as a singleton.
  *
  * @author     $Author: Elena $
- * @version    $Revision: 1.5 $ $Date: 2003-10-09 18:20:20 $
+ * @version    $Revision: 1.6 $ $Date: 2006-12-12 19:12:41 $
  */
+
+
 public class DatabaseTransaction
 {
-    
-    
-    
-    
+
+
+
+
     // singleton instance.
     private static DatabaseTransaction instance = null;
-    
+
     // the datasource to get the pooled connections from
     private static DataSource ds = null;
-    
+
     // Private constructor method. Autocommit is set to false.
     protected DatabaseTransaction(DataSource ds)
     {
-        
+
         this.ds = ds;
     } // end constructor
-    
-    
+
+    public DatabaseTransaction(String url, String username, String password)
+	{
+		this.url = url;
+		this.username = username;
+		this.password = password;
+	}
+
+
     public static void init(DataSource ds)
     {
-        
+
         instance = new DatabaseTransaction(ds);
     }
-    
+
     /**
      * This class is implemented as a Singleton.
      * Returns a <code>DatabaseTransaction</code> object.
@@ -102,14 +111,14 @@ public class DatabaseTransaction
         if (instance == null)
         {
             throw new BecDatabaseException("Pool not initialized.");
-            
-            
+
+
         }
-        
+
         return instance;
-        
+
     } // end getInstance()
-    
+
     /**
      * Executes a sql statement and returns a Row set object with the results
      * from the query.
@@ -123,10 +132,10 @@ public class DatabaseTransaction
      *
      * @throws FlexDatabaseException
      */
-    
+
     public static CachedRowSet executeQuery(String sql, Connection conn) throws BecDatabaseException
     {
-    
+
         CachedRowSet crs = null;
         Statement stmt = null;
         ResultSet rs = null;
@@ -134,18 +143,18 @@ public class DatabaseTransaction
         {
             crs = new CachedRowSet();
             stmt = conn.createStatement();
-            
+
             rs = stmt.executeQuery(sql);
             crs.populate(rs);
-            
-            
+
+
         } catch (SQLException e)
         {
-            
+
             throw new BecDatabaseException(e.getMessage()+"\nSQL: "+sql);
         } finally
         {
-            
+
             // release database resources
             closeResultSet(rs);
             closeStatement(stmt);
@@ -153,7 +162,7 @@ public class DatabaseTransaction
         }
         return crs;
     } //end executeSQL
-    
+
     /**
      * Requests a Connection from the pool.
      *
@@ -177,29 +186,29 @@ public class DatabaseTransaction
         {
             DatabaseTransaction.closeConnection(conn);
             throw new BecDatabaseException("Cannot get Connection.\n"+sqlE.getMessage());
-            
+
         }
-        
+
     } // end requestConnection()
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     /**
      * Requests a Connection from the pool with autocommit turned off.
      *
@@ -212,13 +221,13 @@ public class DatabaseTransaction
      */
     public Connection requestConnection() throws BecDatabaseException
     {
-        
-        
+
+
         return requestConnection(false);
-        
+
     } // end requestConnection()
-    
-    
+
+
     /**
      * Executes an update, insert or delete.  The return value is the number
      * of rows affected.
@@ -230,17 +239,17 @@ public class DatabaseTransaction
     {
         try
         {
-            
-            
+
+
             return ps.executeUpdate();
         } catch(SQLException sqlE)
         {
-            
+
             throw new BecDatabaseException(sqlE.getMessage()+"\nSQL: "+ps);
         }
     } // end executeUpdate()
-    
-    
+
+
     /**
      * executes an update, insert or delete with the given query string and
      * database connection.  Returns the number of rows affected
@@ -253,28 +262,28 @@ public class DatabaseTransaction
     public static int executeUpdate(String sql, Connection conn)
     throws BecDatabaseException
     {
-        
+
         int retVal = 0;
         Statement stmt = null;
         try
         {
-            
+
             stmt = conn.createStatement();
             retVal = stmt.executeUpdate(sql);
         } catch (Exception e)
         {
-            
+
             throw new BecDatabaseException(e.getMessage()+"\nSQL: "+sql);
         } finally
         {
-            
+
             closeStatement(stmt);
         }
         return retVal;
-        
+
     } // end executeUpdate()
-    
-    
+
+
     /**
      * Executes a sql statement and returns a Row set object with the results
      * from the query.
@@ -290,30 +299,30 @@ public class DatabaseTransaction
      */
     public CachedRowSet executeQuery(String sql) throws BecDatabaseException
     {
-        
+
         Connection conn = null;
         CachedRowSet crs = null;
         Statement stmt = null;
         ResultSet rs = null;
         try
         {
-            
-            
+
+
             conn = requestConnection();
             crs = new CachedRowSet();
             stmt = conn.createStatement();
-            
+
             rs = stmt.executeQuery(sql);
             crs.populate(rs);
-            
-            
+
+
         } catch (SQLException e)
         {
-            
+
             throw new BecDatabaseException(e.getMessage()+"\nSQL: "+sql);
         } finally
         {
-            
+
             // release database resources
             closeResultSet(rs);
             closeStatement(stmt);
@@ -321,9 +330,9 @@ public class DatabaseTransaction
         }
         return crs;
     } //end executeSQL
-    
-    
-    
+
+
+
     /**
      * This method executes the requested prepared statement.
      *
@@ -336,31 +345,31 @@ public class DatabaseTransaction
     public static CachedRowSet executeQuery(PreparedStatement stmt)
     throws BecDatabaseException
     {
-        
+
         CachedRowSet crs = null;
         ResultSet results = null;
         try
         {
-            
+
             crs = new CachedRowSet();
             results = stmt.executeQuery();
             crs.populate(results);
-            
-            
-            
+
+
+
         } catch (SQLException e)
         {
-            
+
             throw new BecDatabaseException(e.getMessage()+"\nSQL: "+stmt);
         } finally
         {
-            
+
             closeResultSet(results);
         }
         return crs;
     } // end executeQuery()
-    
-    
+
+
     /**
      * Set the parameters for the <code>PreparedStatement</code> object.
      *
@@ -373,46 +382,46 @@ public class DatabaseTransaction
     public static void setupPreparedStatement(PreparedStatement stmt,
     Hashtable h) throws BecDatabaseException
     {
-        
+
         String type = (String)h.get("type");
         int index = ((Integer)h.get("index")).intValue();
         Object value = h.get("value");
-        
+
         try
         {
             if(type.equals("double"))
             {
-                
-                
+
+
                 stmt.setDouble(index, ((Double)value).doubleValue());
             } else if(type.equals("int"))
             {
-                
+
                 stmt.setInt(index, ((Integer)value).intValue());
             } else if (type.equals("boolean"))
             {
-                
+
                 stmt.setBoolean(index, ((Boolean)value).booleanValue());
             } else if (type.equals("string"))
             {
-                
+
                 stmt.setString(index, (String)value);
             } else if (type.equals("date"))
             {
-                
+
                 stmt.setDate(index, (java.sql.Date.valueOf((String)value)));
             } else
             {
-                
+
                 throw new BecDatabaseException("No such parameter defined.");
             }
         } catch (SQLException e)
         {
-            
+
             throw new BecDatabaseException(e.getMessage());
         }
     }
-    
+
     /**
      * Closes the given <code>Statement</code> ignoring all exceptions.
      *
@@ -422,18 +431,18 @@ public class DatabaseTransaction
     {
         try
         {
-            
-            
+
+
             conn.close();
-            
+
         } catch(Throwable t)
         {
-            
+
             t.printStackTrace();
         }
     }
-    
-    
+
+
     /**
      * Closes a statment ignoring all exceptions.
      *
@@ -443,14 +452,14 @@ public class DatabaseTransaction
     {
         try
         {
-            
-            
+
+
             stmt.close();
         } catch(Throwable t)
         {}
-        
+
     }
-    
+
     /**
      * Closes a <code>ResultSet</code> ignoring all exceptions.
      *
@@ -460,14 +469,14 @@ public class DatabaseTransaction
     {
         try
         {
-            
-            
+
+
             rs.close();
         } catch(Throwable t)
         {}
-        
+
     }
-    
+
     /**
      * Commits a connection ignoring all exceptions.
      *
@@ -477,15 +486,15 @@ public class DatabaseTransaction
     {
         try
         {
-            
-            
+
+
             conn.commit();
         } catch(Throwable t)
         {}
-        
+
     }
-    
-    
+
+
     /**
      * Rolls back a connection ignoring all exceptions.
      *
@@ -495,14 +504,14 @@ public class DatabaseTransaction
     {
         try
         {
-            
-            
+
+
             conn.rollback();
         } catch(Throwable t)
         {}
-        
+
     }
-    
+
     /**
      * Makes a string ready for oracle by replacing the ' with ''.
      *
@@ -515,38 +524,38 @@ public class DatabaseTransaction
      */
     public static String prepareString(String string)
     {
-        
+
         StringBuffer stringBuff = new StringBuffer(string);
         int quoteIndex = 0;
         int curIndex = 0;
-        
+
         quoteIndex = string.indexOf("'");
         while (quoteIndex !=-1)
         {
-            
+
             int offset = quoteIndex + curIndex++;
             stringBuff.insert(offset, "'");
             quoteIndex = string.indexOf("'",quoteIndex+1);
         }
         return stringBuff.toString();
     }
-    
+
     public static void main(String args[]) throws BecDatabaseException, SQLException
     {
-        
+
         ResultSet rs = null;
-        
+
         DatabaseTransaction dt = null;
         Connection conn1 = null;
         Connection conn2 = null;
         PreparedStatement ps1 = null;
         PreparedStatement ps2 = null;
-        
-        
-        
+
+
+
         // test execute sql
-        
-        
+
+
         dt = DatabaseTransaction.getInstance();
         for (int i = 0 ; i < 300 ; i++)
         {
@@ -555,23 +564,23 @@ public class DatabaseTransaction
                 String sql1 = "select * from userprofile where username='jmunoz'";
                 String sql2 = "select * from userprofile where username='jmunoz'";
                 System.out.println("i: " + i);
-           
+
                 //new edu.harvard.med.hip.flex.process.Researcher(100);
                 conn1 = dt.requestConnection();
-                
-                
+
+
                 ps1 = conn1.prepareStatement(sql1);
                 DatabaseTransaction.executeQuery(ps1);
-                
+
                 conn2 = dt.requestConnection();
                 ps2 = conn2.prepareStatement(sql2);
                 DatabaseTransaction.executeQuery(ps2);
-                
-                
+
+
             } catch(Exception fde)
             {
                 fde.printStackTrace();
-            } 
+            }
             finally
             {
                 DatabaseTransaction.closeResultSet(rs);
@@ -579,23 +588,23 @@ public class DatabaseTransaction
                 DatabaseTransaction.closeConnection(conn1);
                 DatabaseTransaction.closeStatement(ps1);
                 DatabaseTransaction.closeConnection(conn2);
-                
+
             }
         }
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+
+
+
+
+
+
+
+
+
+
+
+
         System.out.println("End of Main");
         System.exit(0);
     } // end main()
-    
+
 }

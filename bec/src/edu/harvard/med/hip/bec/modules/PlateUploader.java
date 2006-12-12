@@ -94,7 +94,10 @@ public class PlateUploader
          Connection  bec_connection = conn;
         try
         {
-             flex_connection = DatabaseTransactionLocal.getInstance(DatabaseTransactionLocal.FLEX_url , DatabaseTransactionLocal.FLEX_username, DatabaseTransactionLocal.FLEX_password).requestConnection();
+             flex_connection = DatabaseTransactionLocal.getInstance(
+                    BecProperties.getInstance().getProperty("FLEX_URL") , 
+                    BecProperties.getInstance().getProperty("FLEX_USERNAME"), 
+                    BecProperties.getInstance().getProperty("FLEX_PASSWORD")).requestConnection();
             // bec_connection = DatabaseTransaction.getInstance().requestConnection();
         }
         catch(Exception e)
