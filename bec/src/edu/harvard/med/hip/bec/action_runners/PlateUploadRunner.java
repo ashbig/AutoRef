@@ -173,7 +173,7 @@ public class PlateUploadRunner extends ProcessRunner
         sysProps.verifyApplicationSettings();
        edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
          runner.setUser( AccessManager.getInstance().getUser("htaycher123","me"));
-                 runner.setInputData(Constants.ITEM_TYPE_PLATE_LABELS, "BaxXG002473-1.012-1 ");
+                 runner.setInputData(Constants.ITEM_TYPE_PLATE_LABELS, "BaxXG002930-2.012-1 ");
                     ((PlateUploadRunner)runner).setVectorId(75 );
                      ((PlateUploadRunner)runner).setLinker3Id(74);
                      ((PlateUploadRunner)runner).setLinker5Id(73);
