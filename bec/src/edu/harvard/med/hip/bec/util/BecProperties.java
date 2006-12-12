@@ -6,8 +6,8 @@
  *
  * 
  * The following information is used by CVS
- * $Revision: 1.12 $
- * $Date: 2006-05-18 15:43:35 $
+ * $Revision: 1.13 $
+ * $Date: 2006-12-12 19:04:50 $
  * $Author: Elena $
  *
  ******************************************************************************
@@ -21,12 +21,14 @@ package edu.harvard.med.hip.bec.util;
 
 import java.io.*;
 import java.util.*;
-
+import javax.naming.*;
+import javax.sql.*;
+import sun.jdbc.rowset.*;
 /**
  * Holds sytem level properties.
  *
  * @author     $Author: Elena $
- * @version    $Revision: 1.12 $ $Date: 2006-05-18 15:43:35 $
+ * @version    $Revision: 1.13 $ $Date: 2006-12-12 19:04:50 $
  */
 
 public class BecProperties
@@ -99,6 +101,7 @@ public class BecProperties
             if ( value == null || !isFileExsist(value) )m_Error_messages.add("Path for needele output temporary files is not set properly");
             value =m_properties.getProperty("MOVE_TRACE_FILES_BASE_DIR");// =/f/trace_files_root/trace_files_temporary_removed/
             if ( value == null || !isFileExsist(value) )m_Error_messages.add("Path for trace files moved from common tree is not set properly");
+            
             value =m_properties.getProperty("NEEDLE_OUTPUT_PATH");//=/c/needleoutput/     
             if ( value == null || !isFileExsist(value) )m_Error_messages.add("Path for needle output files is not set properly");
             value =m_properties.getProperty("TRACE_FILES_OUTPUT_PATH_ROOT");//=/f/trace_files_root/
@@ -140,7 +143,32 @@ public class BecProperties
             if ( value == null || value.indexOf("@") == -1 ) m_Error_messages.add("Problem with ACE e-mail address");
             else m_ace_email_address = (String) value;
             
-            
+            //verify settings for FLEX connection for HIP version
+            if ( m_isHipInternalVersion )
+            {
+                 if ( m_properties.getProperty("FLEX_URL") == null || 
+                        m_properties.getProperty("FLEX_USERNAME")== null || 
+                        m_properties.getProperty("FLEX_PASSWORD") == null )
+                        m_Error_messages.add("FLEX coonection properties are not set");
+                try
+                {
+                    edu.harvard.med.hip.bec.database.DatabaseTransaction db = 
+                        edu.harvard.med.hip.bec.database.DatabaseTransaction.getInstance
+                            ( BecProperties.getInstance().getProperty("FLEX_URL") , 
+                            BecProperties.getInstance().getProperty("FLEX_USERNAME"), 
+                            BecProperties.getInstance().getProperty("FLEX_PASSWORD"));
+                     java.sql.Connection conn =db.requestConnection();
+                  
+                    conn.close();
+                } 
+                catch(Exception fde)
+                {
+                    m_Error_messages.add("Cannot establish connection to FLEX. Check settings.");
+                }
+                
+            }        
+                    
+                    
             m_blastable_db = new Hashtable();
             m_vector_libraries = new Hashtable();
             m_polymorffinder_blastable_db = new Hashtable();

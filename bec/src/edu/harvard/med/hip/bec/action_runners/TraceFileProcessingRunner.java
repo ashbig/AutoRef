@@ -433,7 +433,10 @@ public class TraceFileProcessingRunner extends ProcessRunner
              {
                  if (BecProperties.getInstance().isInternalHipVersion()  )
                  {
-                  conn = DatabaseTransactionLocal.getInstance(DatabaseTransactionLocal.FLEX_url , DatabaseTransactionLocal.FLEX_username, DatabaseTransactionLocal.FLEX_password).requestConnection();
+                  conn = DatabaseTransaction.getInstance
+                    ( BecProperties.getInstance().getProperty("FLEX_URL") , 
+                    BecProperties.getInstance().getProperty("FLEX_USERNAME"), 
+                    BecProperties.getInstance().getProperty("FLEX_PASSWORD")).requestConnection();
                   sql="select label, sequenceid as flexsequenceid, cloneid as flexcloneid,containerposition as position, "
                   +" sampletype, s.containerid as containerid from constructdesign d, sample s, containerheader c "
                   +" where label in ("+label+") and c.containerid=s.containerid and s.constructid=d.constructid(+)";
