@@ -51,9 +51,9 @@ public class CloningStrategy
         m_linker3_id = linker3id;
         m_linker5_id = linker5id;
         m_name=name;
-        m_start_codon = start_codon;
-        m_fusion_stop_codon =fusion_stop_codon;
-        m_closed_stop_codon = closed_stop_codon;
+        m_start_codon = ( start_codon != null) ? start_codon : "";
+        m_fusion_stop_codon = ( fusion_stop_codon != null) ? fusion_stop_codon : "";
+        m_closed_stop_codon = ( closed_stop_codon != null) ? closed_stop_codon : "";
     }
     
     public int  getId(){ return  m_id ;}
