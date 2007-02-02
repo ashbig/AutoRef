@@ -117,7 +117,10 @@ public class InsertImporter {
                     c.setRegion(columnInfo);
                 }
                 if("refseqid".equalsIgnoreCase(columnName)) {
-                    Integer refseqid = (Integer)refseqidmap.get(columnInfo);
+                    Integer refseqid = null;
+                    
+                    if(columnInfo != null)
+                        refseqid = (Integer)refseqidmap.get(columnInfo);
                     
                     if(refseqid != null) {
                         c.setRefseqid(((Integer)refseqid).intValue());
