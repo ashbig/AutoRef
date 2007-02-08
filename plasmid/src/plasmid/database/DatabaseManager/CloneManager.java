@@ -1017,7 +1017,8 @@ public class CloneManager extends TableManager {
                     || species.equals(DnaInsert.VC) 
                     || species.equals(DnaInsert.FT) 
                     || species.equals(DnaInsert.YPS)
-                    || species.equals(DnaInsert.VC1)) {
+                    || species.equals(DnaInsert.VC1)
+                    || species.equals(DnaInsert.BA)) {
                         restrictedClones.add(clonename);
                     }
                 } else {

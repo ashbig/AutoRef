@@ -44,6 +44,8 @@ public class CollectionManager extends TableManager {
             }
         }
         
+        sql += " order by name";
+        
         List infos = new ArrayList();
         DatabaseTransaction t = null;
         ResultSet rs = null;

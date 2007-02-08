@@ -3,6 +3,5 @@
 <attributes version="1.0">
     <fileobject name="CloneInfo.java">
         <attr name="class_dependency_java.io.Serializable" stringvalue="CloneInfo"/>
-        <attr name="class_dependency_plasmid.coreobject.Clone" stringvalue="CloneInfo"/>
     </fileobject>
 </attributes>

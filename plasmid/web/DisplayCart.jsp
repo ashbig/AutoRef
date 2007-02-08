@@ -114,8 +114,8 @@
     <td><%=++j%></td>
     <td><a target="_blank" class="itemtext" href="GetCollection.do?collectionName=<bean:write name="collection" property="name"/>"><bean:write name="collection" property="name"/></a></td>
     <td><bean:write name="collection" property="restriction"/></td>
-    <td><bean:write name="collection" property="memberprice"/></td>
-    <td><bean:write name="collection" property="price"/></td>
+    <td><bean:write name="collection" property="displayMemberPrice"/></td>
+    <td><bean:write name="collection" property="displayPrice"/></td>
     <td><html:form action="UpdateCart.do">
         <input type="hidden" name="itemid" value="<bean:write name="collection" property="name"/>">
         <input type="hidden" name="type" value="<%=ShoppingCartItem.COLLECTION%>">

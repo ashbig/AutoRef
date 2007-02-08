@@ -260,7 +260,7 @@ public class VectorImporter {
             for(int i=0; i<columns.size(); i++) {
                 String columnName = (String)columns.get(i);
                 String columnInfo = (String)row.get(i);
-                System.out.println(columnName+"\t"+columnInfo);
+                //System.out.println(columnName+"\t"+columnInfo);
                 if("vectorname".equalsIgnoreCase(columnName)) {
                     v.setVectorid(((Integer)idmap.get(columnInfo)).intValue());
                 }

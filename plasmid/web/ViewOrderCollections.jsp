@@ -41,8 +41,8 @@
     <td><%=++j%></td>
     <td><a class="itemtext" href="ViewOrderClones.do?type=<%=Constants.ORDER_COLLECTION%>&orderid=<bean:write name="orderid"/>&collectionName=<bean:write name="collection" property="name"/>"><bean:write name="collection" property="name"/></a></td>
     <td><bean:write name="collection" property="restriction"/></td>
-    <td><bean:write name="collection" property="memberprice"/></td>
-    <td><bean:write name="collection" property="price"/></td>
+    <td><bean:write name="collection" property="displayMemberPrice"/></td>
+    <td><bean:write name="collection" property="displayPrice"/></td>
     <td><bean:write name="collection" property="quantity"/></td>
   </tr>
   </logic:iterate>

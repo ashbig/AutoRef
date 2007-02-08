@@ -25,7 +25,7 @@ public class CloneGeneBuilder {
     
     public void buildDnainsertWithGene(Connection conn, int lastInsertid) throws Exception {
         String sqlUpdate = "update dnainsert set geneid=?,name=?,description=? where insertid=? and geneid is null";
-        String sql = "select distinct d.insertid, g.geneid, g.genesymbol, g.genename"+
+ /**       String sql = "select distinct d.insertid, g.geneid, g.genesymbol, g.genename"+
         " from dnainsert d, referencesequence r, refseqname n,"+
         " sequencerecord s, gene g"+
         " where d.refseqid=r.refseqid"+
@@ -34,6 +34,17 @@ public class CloneGeneBuilder {
         " and n.namevalue=s.accession"+
         " and s.geneid=g.geneid"+
         " and d.insertid>"+lastInsertid;
+  **/        
+        String sql = "select distinct d.insertid, g.geneid, g.genesymbol, g.genename"+
+        " from dnainsert d, referencesequence r, refseqname n,"+
+        " sequencerecord s, gene g"+
+        " where d.refseqid=r.refseqid"+
+        " and r.refseqid=n.refid"+
+        " and n.nametype='"+RefseqNameType.GENBANK+"'"+
+        " and n.namevalue=s.accession"+
+        " and s.geneid=g.geneid"+
+        " and d.insertid in (select insertid from dnainsert_tmp)";
+  
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         PreparedStatement stmt = conn.prepareStatement(sqlUpdate);
         ResultSet rs = t.executeQuery(sql);
@@ -59,7 +70,9 @@ public class CloneGeneBuilder {
     }
     
     public void buildDnainsertWithRefseqSymbol(Connection conn, int lastInsertid) throws Exception {
-        String sql = "select insertid from dnainsert where geneid is null and insertid>"+lastInsertid;
+        //String sql = "select insertid from dnainsert where geneid is null and insertid>"+lastInsertid;
+         
+        String sql = "select insertid from dnainsert where geneid is null and insertid in (select insertid from dnainsert_tmp)";
         String sql2 = "select r.name"+
         " from dnainsert d, referencesequence r"+
         " where d.refseqid=r.refseqid"+
@@ -112,7 +125,8 @@ public class CloneGeneBuilder {
     }
     
     public void buildDnainsertWithRefseq(Connection conn, int lastInsertid) throws Exception {
-        String sql = "select insertid from dnainsert where geneid is null";
+        //String sql = "select insertid from dnainsert where geneid is null";
+        String sql = "select insertid from dnainsert where geneid is null and insertid in (select insertid from dnainsert_tmp)";
         if(lastInsertid > 0)
             sql += " and insertid>"+lastInsertid;
         String sql2 = "select r.name, r.description"+
@@ -155,7 +169,52 @@ public class CloneGeneBuilder {
         DatabaseTransaction.closeStatement(stmt2);
         DatabaseTransaction.closeStatement(stmt3);
     }
-    
+      
+    public void buildDnainsertWithTargetGenbank(Connection conn, int lastInsertid) throws Exception {
+       /** String sql = "select insertid from dnainsert where geneid is null";
+        if(lastInsertid > 0)
+            sql += " and insertid>"+lastInsertid;
+        **/
+        String sql = "select insertid from dnainsert_tmp";
+        String sql2 = "select g.geneid, g.genesymbol, g.genename"+
+        " from dnainsert d, gene g, sequencerecord r"+
+        " where d.targetgenbank=r.accession"+
+        " and r.geneid=g.geneid"+
+        " and d.insertid=?";
+        
+        String sql3 = "update dnainsert set geneid=?, name=?,description=? where insertid=?";
+        
+        DatabaseTransaction t = DatabaseTransaction.getInstance();
+        PreparedStatement stmt2 = conn.prepareStatement(sql2);
+        PreparedStatement stmt3 = conn.prepareStatement(sql3);
+        ResultSet rs = t.executeQuery(sql);
+        ResultSet rs2 = null;
+        while(rs.next()) {
+            int insertid = rs.getInt(1);
+            stmt2.setInt(1, insertid);
+            rs2 = DatabaseTransaction.executeQuery(stmt2);
+            if(rs2.next()) {
+                String geneid = rs2.getString(1);
+                String name = rs2.getString(2);
+                String description = rs2.getString(3);
+                
+                if("null".equals(geneid)) geneid=null;
+                if("null".equals(name)) name = null;
+                if("null".equals(description)) description = null;
+                
+                stmt3.setString(1, geneid);
+                stmt3.setString(2, name);
+                stmt3.setString(3, description);
+                stmt3.setInt(4, insertid);
+                DatabaseTransaction.executeUpdate(stmt3);
+            }
+            DatabaseTransaction.closeResultSet(rs2);
+        }
+        DatabaseTransaction.closeResultSet(rs);
+        DatabaseTransaction.closeStatement(stmt2);
+        DatabaseTransaction.closeStatement(stmt3);
+    }
+      
     public void buildCloneGenbank(Connection conn, int lastCloneid) throws Exception {
         String sql = "insert into clonegenbank(cloneid, accession)"+
         " select distinct c.cloneid, s.accession"+
@@ -344,14 +403,16 @@ public class CloneGeneBuilder {
         try {
             t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
-          /**
-            System.out.println("Building DNAINSERT with genes");
-            builder.buildDnainsertWithGene(conn, lastInsertid);
-            builder.buildDnainsertWithRefseqSymbol(conn, lastInsertid);
-            System.out.println("Building DNAINSERT with reference sequences");
-            builder.buildDnainsertWithRefseq(conn, lastInsertid);
-            DatabaseTransaction.commit(conn);
-         */
+         
+            //System.out.println("Building DNAINSERT with genes");
+            //builder.buildDnainsertWithGene(conn, lastInsertid);
+            //builder.buildDnainsertWithRefseqSymbol(conn, lastInsertid);
+            //System.out.println("Building DNAINSERT with reference sequences");
+            //builder.buildDnainsertWithRefseq(conn, lastInsertid);
+            //System.out.println("Building DNAINSERT with Target genbank");
+            //builder.buildDnainsertWithTargetGenbank(conn, lastInsertid);
+            //DatabaseTransaction.commit(conn);
+        
             //System.out.println("Truncate tables");
             //builder.truncateTables(conn);
             System.out.println("Building CLONEGENBANK");

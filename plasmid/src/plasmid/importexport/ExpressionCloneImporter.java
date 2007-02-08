@@ -19,9 +19,15 @@ import plasmid.database.*;
  * @author  DZuo
  */
 public class ExpressionCloneImporter {
-    private static final String flexurl = "jdbc:oracle:thin:@kotel:1532:flex";
-    private static final String flexusername = "flex_production";
-    private static final String flexpassword = "3monkeys";
+   /**
+    private static final String flexurl = "jdbc:oracle:thin:@127.0.0.1:2483:devoradb";
+    private static final String flexusername = "devflex";
+    private static final String flexpassword = "9hyHeorkOiv";
+   */
+    private static final String flexurl = "jdbc:oracle:thin:@127.0.0.1:2483:oradb";
+    private static final String flexusername = "flex";
+    private static final String flexpassword = "Peaxudedfief7";
+  
     private static final String plasmidurl = "jdbc:oracle:thin:@128.103.32.228:1521:plasmid";
     private static final String plasmidusername = "plasmid_production";
     private static final String plasmidpassword = "plasmID";
@@ -51,7 +57,7 @@ public class ExpressionCloneImporter {
         " from clones c, cloningstrategy s, flexsequence f, clonevalidation v, clonestorage cs"+
         " where c.strategyid=s.strategyid and c.cloneid=v.cloneid(+)"+
         " and c.sequenceid=f.sequenceid and c.cloneid=cs.cloneid"+
-        " and c.plasmid is null and c.strategyid in (10, 18)"+
+        " and c.plasmid='M' and c.strategyid in (17)"+
         " and cs.storagetype='Working Storage'";
         
         if(status != null)
@@ -331,7 +337,7 @@ public class ExpressionCloneImporter {
     public static void main(String args[]) throws Exception {
         String plateFileName = "G:\\plasmid\\Other\\ExpressionPlate.txt";
         String cloneFileName = "G:\\plasmid\\Other\\MissingMasterClones.txt";
-        String status = "SUCESSFUL";
+        String status = "SUCCESSFUL";
         String vectorname = null;
         
         DatabaseTransactionNoPool t = new DatabaseTransactionNoPool(plasmidurl,plasmidusername,plasmidpassword);

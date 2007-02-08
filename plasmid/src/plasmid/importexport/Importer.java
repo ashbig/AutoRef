@@ -49,8 +49,30 @@ public class Importer {
     //public static final String filepath = "G:\\plasmid\\VC_batch2_2006_05_partial_plates\\";
     //public static final String filepath = "G:\\plasmid\\KAMIL EXPORT SET\\";
     //public static final String filepath = "G:\\plasmid\\Master_CloneID_Update\\";
-    //public static final String filepath = "G:\\plasmid\\Expression_1\\";
-    public static final String filepath = "G:\\plasmid\\Expression_2\\";
+    //public static final String filepath = "G:\\plasmid\\Expression_1\\"; cloneid>25967
+    //public static final String filepath = "G:\\plasmid\\Expression_2\\"; cloneid<=39217
+    //public static final String filepath = "G:\\plasmid\\FT_3rd_batch\\";
+    //public static final String filepath = "G:\\plasmid\\Aventis_2006_08\\fusion\\";
+    //public static final String filepath = "G:\\plasmid\\Aventis_2006_08\\closed\\";
+    //public static final String filepath = "G:\\plasmid\\TRC_import\\import1\\";
+    //public static final String filepath = "G:\\plasmid\\TRC_import\\import2\\";
+    //public static final String filepath = "G:\\plasmid\\TRC_import\\import3\\";
+    //public static final String filepath = "G:\\plasmid\\TRC_import\\import4\\";
+    //public static final String filepath = "G:\\plasmid\\TRC_import\\import5\\";
+    //public static final String filepath = "G:\\plasmid\\TRC_import\\import6\\";
+    //public static final String filepath = "G:\\plasmid\\VC_batch3_2006_08\\";
+    //public static final String filepath = "G:\\plasmid\\Expression_VC_2006_08_plate\\";
+    //public static final String filepath = "G:\\plasmid\\HGTI\\";
+    //public static final String filepath = "G:\\plasmid\\MDLH2 import set\\";
+    //public static final String filepath = "G:\\plasmid\\GAP_GEF\\";
+    //public static final String filepath = "G:\\plasmid\\Expression_VC_2006_11_14_plate\\";
+    //public static final String filepath = "G:\\plasmid\\FT_expression_11_16_2006_plate\\";
+    //public static final String filepath = "G:\\plasmid\\bryanvought_nov_2006\\";
+    //public static final String filepath = "G:\\plasmid\\BA_2006_12\\";
+    //public static final String filepath = "G:\\plasmid\\Yeast_2006_12\\";
+    //public static final String filepath = "G:\\plasmid\\BA2_2007_02\\";
+    //public static final String filepath = "G:\\plasmid\\Velkov_2007_01\\";
+    public static final String filepath = "G:\\plasmid\\ORFome_2007_02\\";
    
     private List tables;
     private String error;

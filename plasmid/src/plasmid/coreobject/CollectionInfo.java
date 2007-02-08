@@ -14,6 +14,7 @@ import java.util.*;
  */
 public class CollectionInfo {
     public static final String DISTRIBUTION = "Distribution";
+    public static final String DISPLAYPRICE = " upon request";
     
     private String name;
     private String description;
@@ -69,4 +70,20 @@ public class CollectionInfo {
     
     public List getClones() {return clones;}
     public void setClones(List l) {this.clones = l;}
+    
+    public String getDisplayPrice() {
+        String s = ""+price;
+        if(price<0) 
+            s = DISPLAYPRICE;
+        
+        return s;
+    }
+    
+    public String getDisplayMemberPrice() {
+        String s = ""+memberprice;
+        if(memberprice<0) 
+            s = DISPLAYPRICE;
+        
+        return s;
+    }
 }

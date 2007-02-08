@@ -31,13 +31,13 @@
     <td width="10%" valign="top" class="formlabel">Collection:</td>
     <td width="40%" valign="top" class="itemtext"><bean:write name="<%=Constants.SINGLECOLLECTION%>" property="name"/></td>
     <td width="20%" valign="top" class="formlabel">Price for member:</td>
-    <td width="30%" valign="top" class="itemtext">$<bean:write name="<%=Constants.SINGLECOLLECTION%>" property="memberprice"/></td>
+    <td width="30%" valign="top" class="itemtext">$<bean:write name="<%=Constants.SINGLECOLLECTION%>" property="displayMemberPrice"/></td>
   </tr>
   <tr> 
     <td width="10%" valign="top" class="formlabel">&nbsp;</td>
     <td width="40%" valign="top" class="itemtext">&nbsp;</td>
     <td width="20%" valign="top" class="formlabel">Price for non-member:</td>
-    <td width="30%" valign="top" class="itemtext">$<bean:write name="<%=Constants.SINGLECOLLECTION%>" property="price"/></td>
+    <td width="30%" valign="top" class="itemtext">$<bean:write name="<%=Constants.SINGLECOLLECTION%>" property="displayPrice"/></td>
   </tr>
   <tr> 
     <td colspan="4" valign="top" class="formlabel">Description:</td>
