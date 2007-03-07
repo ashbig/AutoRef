@@ -90,6 +90,7 @@
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=genesymbol">Gene Symbol</td>
     <td class="tableheader">Gene Name</td>
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=targetseq">Reference Sequence</a></td>
+    <td class="tableheader">Keywords</td>
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=insertmutation">Mutation</a></td>
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=insertdiscrepancy">Discrepancy</a></td>
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=insertformat">Insert Format</a></td>
@@ -152,6 +153,7 @@
     <td><bean:write name="insert" property="name"/></td>
     <td><bean:write name="insert" property="description"/></td>
     <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=nucleotide&val=<bean:write name="insert" property="targetseqid"/>"><bean:write name="insert" property="targetgenbank"/></a></td>
+    <td><bean:write name="insert" property="annotation"/></td>
     <td><bean:write name="insert" property="hasmutation"/></td>
     <td><bean:write name="insert" property="hasdiscrepancy"/></td>
     <td><bean:write name="insert" property="format"/></td>
@@ -232,6 +234,7 @@
     <td><bean:write name="insert" property="name"/></td>
     <td><bean:write name="insert" property="description"/></td>
     <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=nucleotide&val=<bean:write name="insert" property="targetseqid"/>"><bean:write name="insert" property="targetgenbank"/></a></td>
+    <td><bean:write name="insert" property="annotation"/></td>    
     <td><bean:write name="insert" property="hasmutation"/></td>
     <td><bean:write name="insert" property="hasdiscrepancy"/></td>    
     <td><bean:write name="insert" property="format"/></td>

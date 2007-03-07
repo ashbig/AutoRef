@@ -101,7 +101,8 @@
     <td width="7%" class="tablebody">Species Specific ID</td>
     <td width="8%" class="tablebody">Gene Symbol</td>
     <td width="26%" class="tablebody">Gene Name</td>
-    <td width="12%" class="tablebody">Target Genbank</td>
+    <td width="6%" class="tablebody">Target Genbank</td>
+    <td width="6%" class="tablebody">Keyword</td>
   </tr>
 <logic:iterate id="insert" name="clone" property="inserts">
   <tr> 
@@ -142,6 +143,7 @@
     <td class="tableinfo"><bean:write name="insert" property="name"/></td>
     <td class="tableinfo"><bean:write name="insert" property="description"/></td>
     <td class="tableinfo"><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=nucleotide&val=<bean:write name="insert" property="targetseqid"/>"><bean:write name="insert" property="targetgenbank"/></a></td>
+    <td class="tableinfo"><bean:write name="insert" property="annotation"/></td>
   </tr>
 </logic:iterate>
 </table>

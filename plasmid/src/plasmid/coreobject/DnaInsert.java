@@ -51,6 +51,7 @@ public class DnaInsert {
     private String region;
     private int refseqid;
     private List properties;
+    private String annotation;
     
     private String sequence;
     
@@ -118,6 +119,7 @@ public class DnaInsert {
     public List getProperties() {return properties;}
     public String getSequence() {return sequence;}
     public String getRegion() {return region;}
+    public String getAnnotation() {return annotation;}
     
     public void setInsertid(int id) {this.insertid = id;}
     public void setOrder(int order) {this.order = order;}
@@ -137,6 +139,7 @@ public class DnaInsert {
     public void setProperties(List s) {this.properties = s;}
     public void setSequence(String s) {this.sequence = s;}
     public void setRegion(String s) {this.region = s;}
+    public void setAnnotation(String s) {this.annotation = s;}
     
     public String getFastaSequence() {
         return Dnasequence.convertToFasta(sequence);

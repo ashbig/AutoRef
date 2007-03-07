@@ -471,7 +471,9 @@ public class CloneManager extends TableManager {
         String sql = "select clonename, clonetype, verified, vermethod,"+
         " domain, subdomain, restriction, comments, vectorid, vectorname, clonemapfilename, status,specialtreatment,source,description"+
         " from clone where cloneid="+cloneid;
-        String sql2 = "select d.insertid, d.insertorder, d.sizeinbp, d.species, d.format, d.source,d.geneid,d.name,d.description,d.targetseqid,d.targetgenbank,d.hasdiscrepancy,d.hasmutation,d.refseqid,d.region"+
+        String sql2 = "select d.insertid, d.insertorder, d.sizeinbp, d.species, d.format,"+
+        " d.source,d.geneid,d.name,d.description,d.targetseqid,d.targetgenbank,"+
+        " d.hasdiscrepancy,d.hasmutation,d.refseqid,d.region,d.annotation"+
         " from dnainsert d, cloneinsert cd, clone c"+
         " where c.cloneid=cd.cloneid and cd.insertid=d.insertid and c.cloneid="+cloneid;
         String sql3 = "select hosttype, marker from cloneselection where cloneid="+cloneid;
@@ -540,7 +542,9 @@ public class CloneManager extends TableManager {
                     String hasmutation = rs2.getString(13);
                     int refseqid = rs2.getInt(14);
                     String region = rs2.getString(15);
+                    String annotation = rs2.getString(16);
                     DnaInsert insert = new DnaInsert(insertid,insertorder, size, species, format, source, cloneid,geneid,name,description,targetseqid,targetgenbank,hasdiscrepancy,hasmutation,region,refseqid);
+                    insert.setAnnotation(annotation);
                     
                     PreparedStatement stmt1 = conn.prepareStatement(sql12);
                     stmt1.setInt(1, insertid);
@@ -864,7 +868,9 @@ public class CloneManager extends TableManager {
     }
     
     private String getInsertSql() {
-        return "select d.insertid, d.insertorder, d.sizeinbp, d.species, d.format, d.source,d.geneid,d.name,d.description,d.targetseqid,d.targetgenbank,d.hasdiscrepancy,d.hasmutation,d.refseqid,d.region"+
+        return "select d.insertid, d.insertorder, d.sizeinbp, d.species, d.format,"+
+        " d.source,d.geneid,d.name,d.description,d.targetseqid,d.targetgenbank,"+
+        " d.hasdiscrepancy,d.hasmutation,d.refseqid,d.region,d.annotation"+
         " from dnainsert d, cloneinsert cd, clone c"+
         " where d.insertid=cd.insertid and c.cloneid=cd.cloneid and c.cloneid=?";
     }
@@ -903,7 +909,9 @@ public class CloneManager extends TableManager {
             String hasmutation = rs2.getString(13);
             int refseqid = rs2.getInt(14);
             String region = rs2.getString(15);
+            String annotation = rs2.getString(16);
             DnaInsert insert = new DnaInsert(insertid,insertorder, size, species, format, source, cloneid,geneid,name,description,targetseqid,targetgenbank,hasdiscrepancy,hasmutation,region,refseqid);
+            insert.setAnnotation(annotation);
             inserts.add(insert);
         }
         DatabaseTransaction.closeResultSet(rs2);
