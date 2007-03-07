@@ -55,6 +55,12 @@
     <td class="formlabel">PI Email:</td>
     <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="piemail"/></td>
   </tr>
+  <tr> 
+    <td class="formlabel">User Group:</td>
+    <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="usergroup"/></td>
+    <td class="formlabel"></td>
+    <td class="text"></td>
+  </tr>
 </table>
 
 <p class="text">Shipping Information</P>

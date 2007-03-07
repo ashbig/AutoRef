@@ -107,7 +107,7 @@
   </tr>
   <logic:iterate name="vector" property="publications" id="publication">
   <tr>
-    <td class="tableinfo"><bean:write name="publication" property="pmid"/></td>
+    <td class="tableinfo"><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Search&db=pubmed&term=<bean:write name="publication" property="pmid"/>"><bean:write name="publication" property="pmid"/></a></td>
     <td class="tableinfo"><bean:write name="publication" property="title"/></td>
   </tr>
   </logic:iterate>
