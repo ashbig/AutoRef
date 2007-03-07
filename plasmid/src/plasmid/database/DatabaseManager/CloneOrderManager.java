@@ -254,7 +254,7 @@ public class CloneOrderManager extends TableManager {
         " costforcollection,costforshipping,totalprice,c.userid,shippingdate,whoshipped,"+
         " shippingmethod,shippingaccount,trackingnumber,receiveconfirmationdate,"+
         " whoconfirmed,whoreceivedconfirmation,shippedcontainers,u.email,u.piname,"+
-        " u.piemail,u.phone,c.isbatch"+
+        " u.piemail,u.phone,c.isbatch,u.usergroup"+
         " from cloneorder c, userprofile u where c.userid=u.userid and c.orderid="+orderid;
         
         if(user != null) {
@@ -298,6 +298,7 @@ public class CloneOrderManager extends TableManager {
                 String piemail = rs.getString(27);
                 String phone = rs.getString(28);
                 String isbatch = rs.getString(29);
+                String usergroup = rs.getString(30);
                 
                 order = new CloneOrder(orderid, date, st, ponumber,shippingto,billingto,shippingaddress,billingaddress, numofclones, numofcollection, costforclones, costforcollection,costforshipping, total, userid);
                 order.setShippingdate(shippingdate);
@@ -313,6 +314,7 @@ public class CloneOrderManager extends TableManager {
                 order.setPiname(piname);
                 order.setPiemail(piemail);
                 order.setPhone(phone);
+                order.setUsergroup(usergroup);
                 if(isbatch != null)
                     order.setIsBatch(isbatch);
             }

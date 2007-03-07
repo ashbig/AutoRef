@@ -61,6 +61,7 @@ public class CloneOrder {
     protected String lastname;
     protected String email;
     protected String phone;
+    protected String usergroup;
     
     protected String piname;
     protected String piemail;
@@ -124,6 +125,7 @@ public class CloneOrder {
     public String getPiemail() {return piemail;}
     public String getPhone() {return phone;}
     public String getIsBatch() {return isBatch;}
+    public String getUsergroup() {return usergroup;}
     
     public void setOrderid(int i) {this.orderid = i;}
     public void setOrderDate(String s) {this.orderDate = s;}
@@ -156,6 +158,7 @@ public class CloneOrder {
     public void setPiemail(String s) {this.piemail = s;}
     public void setPhone(String s) {this.phone = s;}
     public void setIsBatch(String s) {this.isBatch = s;}
+    public void setUsergroup(String s) {this.usergroup = s;}
     
     public List getItems() {return items;}
     public void setItems(List l) {this.items = l;}
