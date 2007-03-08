@@ -973,7 +973,7 @@ public class DiscrepancyDescription
                {
                    result_discr[3] += (String)discrepancy_reports_3_linker.get(count);
                }
-               return result;
+               return result_discr;
            }
            return null;
        }
