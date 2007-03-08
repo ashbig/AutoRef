@@ -958,6 +958,23 @@ public class DiscrepancyDescription
                discrepancy_reports_5_linker.addAll(discrepancy_reports_3_linker);
                return discrepancy_reports_5_linker;
            }
+           else if ( type instanceof String[])
+           {
+               String[] result_discr = {"","",""};
+               for ( int count = 0 ; count < discrepancy_reports_5_linker.size(); count++)
+               {
+                   result_discr[0] += (String)discrepancy_reports_5_linker.get(count);
+               }
+               for ( int count = 0 ; count < discrepancy_reports_cds.size(); count++)
+               {
+                   result_discr[1] += (String)discrepancy_reports_cds.get(count);
+               }
+               for ( int count = 0 ; count < discrepancy_reports_3_linker.size(); count++)
+               {
+                   result_discr[3] += (String)discrepancy_reports_3_linker.get(count);
+               }
+               return result;
+           }
            return null;
        }
        
