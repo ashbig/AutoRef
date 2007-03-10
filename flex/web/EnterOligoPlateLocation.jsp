@@ -34,12 +34,12 @@
                     <%= id %>
                 </td>
                 <td>
-                    <html:select property="locations">
-                    <html:option value="FREEZER">FREEZER</html:option>
-                    <html:option value="REFRIGERATOR">REFRIGERATOR</html:option>
-                    <html:option value="WORKBENCH">WORKBENCH</html:option>
-                    <html:option value="UNAVAILABLE">UNAVAILABLE</html:option>
-                    </html:select>
+                    <select name="locations">
+                    <option value="FREEZER">FREEZER</option>
+                    <option value="REFRIGERATOR">REFRIGERATOR<option>
+                    <option value="WORKBENCH">WORKBENCH<option>
+                    <option value="UNAVAILABLE">UNAVAILABLE<option>
+                    </select>
                 </td>
            </tr>
 
