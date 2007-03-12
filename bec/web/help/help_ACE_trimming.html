@@ -1,0 +1,32 @@
+<strong><font color="#0099CC"><div align='center'>ACE trimming for the scored sequence</div></font></strong> 
+
+<p><strong><font color="#0099CC">When executed:</font></strong> </p>
+<p>ACE trims scored sequence for quality: 
+<ul><li>1. Quality check for end reads (low   quality always rejected by application); </li>
+  <li>2. Sequence assembly: when qualty trimming   is requested (user request, rerunable); </li>
+ <li> 3. Trace files quality report ( no action   taken); </li>
+  <li>4. Gap mapper & Low confidence finder Algorithms applied for trimming: </li>
+  </ul>
+  
+<p>&nbsp;</p>
+<p><strong>End reads quality check: </strong>
+<ul><li>high quality read length, as defined by phred alt   trimming (see Phred documentation), should be over 120 bases;
+</li><li>it should be   over 100 bases of good quality (phred score >= 20) in the first 300 bases of   read.
+</li></ul>  
+<p>All parameters for this algorithms are hardcoded in ACE. </p>
+<p><strong>Sequence assembly:</strong> 
+<ul> <li>trace is first checked to pass quality criteria (see   algorithm for trace files quality report);</li>
+   <li>if trace pass quality check, it 
+  is trimmed by applying Phred alt trim algorithm. </li>
+ </ul> 
+  
+  <strong> Trace files quality report: </strong>
+  
+
+  <ul><li>trace should have at least N bases long; </li>
+  average score for all bases between 
+ <li> base X and base Y should be over than score Z, Ambiquous bases are excluded.</li> </ul>
+  
+<p>Parameters N, X, Y, and Z are defined on application level in ApplicationSettings.property 
+  file. </p>
+<p><strong>Gap Mapper & Loq quality regions finder </strong></p> </p> </p> </p>

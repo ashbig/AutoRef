@@ -15,6 +15,8 @@
 <tr><td > <a href = "<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>help/help_ACEConfigurationFile.html"  > How to configure ACE </td></tr>
 
 <tr><td align='center'><hr><h3>ACE user help</h3> </td></td>
+<tr><td > <a href = "<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>help/help_ACE_overview.jsp"  >ACE overview</td></tr>
+
 <tr><td > <a href = "<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>help/help_generalhelp.jsp"  >User general help</td></tr>
 <tr><td > <a href = "<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>help/help_ReportRunner.html"  > Report runner</td></tr>
 <tr><td > <a href = "<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>help/help_TraceFilesNamingFormats.html"  >How to creat trace file names' format</td></tr>

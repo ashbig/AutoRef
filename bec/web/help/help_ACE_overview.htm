@@ -1,0 +1,252 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>Untitled Document</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</head>
+
+<body>
+<h1 ><font color="#0099CC">ACE Overview </font></h1>
+<hr>
+<h3> <strong>ACE Overview</strong></h3>
+<p><strong>Automated Clone Evaluation (ACE) </strong>system is a comprehensive, 
+  multi-platform and multi-user, web-based sequence verification software system. 
+  It automates all steps of sequence verification process: primer design, sequence 
+  contig assembly, identification and annotation of differences between the clone 
+  and reference sequences, gap mapping, polymorphism detection, and assignment 
+  of final clone quality based on user defined criteria. Whenever possible, ACE 
+  utilizes well-established algorithms and third-party programs(Phred/Phrap, BLAST, 
+  <em>needle</em>, Primer3) to perform specific tasks. ACE provides an integrated 
+  environment that relieves the user from routine process management tasks, such 
+  as bookkeeping of all project- and clone-related information, re-entering of 
+  parameters and criteria, and history tracking. </p>
+<p>ACE is structured for maximum flexibility to support different approaches to 
+  clone validation and sequencing management. Users do not need to follow a single 
+  path in clone sequence verifica-tion, but rather can invoke each module individually. 
+  A typical workflow used in our laboratory is shown in <a href="image/final_Fig1_GeneralWorkflow.jpg" target="_blank">Figure 
+  1</a>. A project begins with end read sequencing of one or more clonal isolates 
+  per target. End reads are acquired, assigned to their corre-sponding clone (<em><strong>End 
+  Read Processor</strong></em>), and then processed by the assembler to determine 
+  if end reads alone are sufficient to yield a complete contig assembly (<em><strong>Assembly 
+  Wrapper</strong></em>). Whether or not the assembly yielded a single contig 
+  covering the full-length CDS, clone contig(s) are analyzed to detect differences 
+  or &#8220;discrepan-cies&#8221; compared with the reference/target sequence 
+  (<strong><em>Discrepancy Finder</em></strong>). For clones based on cDNA produced 
+  from tissue, ACE can compare any discrepancies with one or more sequence data-bases, 
+  such as GenBank, to determine if they correspond to natu-rally occurring polymorphisms 
+  (<strong><em>Polymorphism Finder</em></strong>). During the final decision process, 
+  users can optionally configure the soft-ware to avoid penalizing clones for 
+  discrepancies that represent polymorphisms (<em><strong>Decision Tool</strong></em>). 
+  <br>
+  If more than one isolate exists for a given clone, an optional module (<em><strong>Isolate 
+  Ranker</strong></em>) can rank isolates based on user-defined preferences specified 
+  in the form of penalties associated with dif-ferent types of discrepancies. 
+  <br>
+  Clones that failed to assemble into a single contig covering the CDS can be 
+  processed to find the remaining gaps in sequence cov-erage (<em><strong>Gap 
+  Mapper</strong></em>). In addition, clones with discrepancies based on low confidence 
+  sequence can be processed to delineate these low confidence regions (<strong><em>Low 
+  Confidence Regions Finder</em></strong>). Subse-quently, clones with low confidence 
+  regions or gaps in sequence coverage can be processed to define appropriate 
+  internal sequenc-ing primers to cover those regions (<em><strong>Primer Designer</strong></em>). 
+  <br>
+  At any stage during the clone verification process, a set of clones can be processed 
+  by the Decision Tool in order to determine how far each clone has progressed 
+  in the analysis pipeline and its accep-tance/rejection status. </p>
+<p>&nbsp;</p>
+<h3>Core Modules Description</h3>
+<p><strong><em><font color="#6699CC">1. Clone Sequencing Support</font></em></strong></p>
+<p> <strong><em>Trace File Distributor.</em></strong> Clone validation projects 
+  often include sequence reads from similar genes (e.g., paralogs, multiple isolates 
+  of the same gene, etc.). It is essential that reads from closely related clones 
+  do not end up in one another&#8217;s analysis. The ACE package creates a hierarchical 
+  directory structure and stores all files related to a single clone in a directory 
+  specific to that clone. Within this directory, ACE creates a number of subdirectories 
+  that hold trace files, consensus sequences, contigs, etc. as required by the 
+  Phred/Phrap package. Distribution of trace files is accomplished by parsing 
+  information encoded in the filename for each trace file that indicates which 
+  gene and clone it belongs to. Sequencing facilities often encode their own read 
+  identification information (such as plate and well identifiers, read direction 
+  and/or the primer name) into trace file names and this information can be used 
+  to link a read to its original sample. However, because different facilities 
+  utilize vastly different conventions, a mechanism must exist to rename files 
+  into a format compatible with the ACE parser. Users employ the Trace File Distributor 
+  to describe the specific naming format for trace files in a format that ACE 
+  can use to process these files automati-cally. This defines a set of rules to 
+  extract plate name, well ID and read direction (<a href="image/final_Fig6_TraceFilesManagment.jpg" target="_blank">Figure 
+  2</a>).<a href="help_TraceFilesNamingFormats.html" target="_blank"> More detail 
+  about how to creat new Trace File Format.</a></p>
+<p><strong><em>End Read Processor.</em></strong> End reads are treated slightly 
+  differently from internal reads because some users employ them to select the 
+  best candidate from multiple isolates for a clone. We have found that poor quality 
+  end reads will lead to the rejection of about 25-35% of good clones based on 
+  discrepancies that turn out to be sequencing errors. To avoid this problem, 
+  the End Read Processor invokes the Phred base caller to determine whether a 
+  read meets minimum quality requirements. A read must be longer than the user-defined 
+  minimum length (default = 250 nt) and the average confidence score for all non-ambiguous 
+  bases between the first and last base (default: first base = 50, last base =700) 
+  must be above the user-defined minimum confidence score (default = 25). End 
+  reads that fail to meet these criteria are disregarded in the computa-tion for 
+  ranking isolates, but the files remain in the system and can be optionally added 
+  later as internal reads for inclusion in the clone sequence assembly. Some users 
+  can choose to submit all available reads as internal and build contig collection 
+  (see <em><strong>Gap Mapper</strong></em>) for the clone.<br>
+</p>
+<p><em><strong>Assembly Wrapper.</strong></em> This tool automates contig assembly 
+  by calling the Phred/Phrap package for each clone on a user-submitted list. 
+  Our experience has demonstrated that some fraction of clones will fail to assemble 
+  despite the availability of adequate sequence coverage. By adjusting a variety 
+  of settings involving trimming, many of them can be encouraged to assemble.<br>
+  Vector trimming during contig assembly is performed using Cross_match. In some 
+  cases, trimming is essential for contig assembly, whereas in others, it prevents 
+  assembly. For example, a high degree of similarity between gene sequence and 
+  sequences in the vector library causes Phred/Phrap to mask valid (i.e. gene) 
+  sequence when vector trimming is applied blindly. This problem can be partially 
+  alleviated by removing irrelevant vector sequences from the vector library. 
+  Moreover, editing vector sequences down to about 300 bp of insert-flanking sequence 
+  further improves success. The modified trimming strategy works in most cases 
+  but occasionally it is necessary to turn off vector trimming altogether to get 
+  assembly for particular clones.<br>
+  In addition to vector trimming, ACE enables quality trimming of sequencing reads 
+  during the assembly process because we found that aggressive quality- and/or 
+  read length-based trimming of independent reads helps to improve contig assembly. 
+  When prompted, ACE trims all reads prior to assembly by removing bases prior 
+  to base 50 and after base 900 (user-adjustable values). Reads with a low average 
+  confidence score or below a minimum length can also be excluded. </p>
+<p><em><strong>Internal Primer Designer.</strong></em> This suit of modules allows 
+  users to: (a) design gene-specific sequencing primers; (b) select specific primer(s) 
+  for placement on a vendor order; (c) view all primers (both designed and ordered) 
+  and their design specifications, and (d) track and manage primer plates and 
+  individual primers. <br>
+  The Primer Designer can be used a priori to design gene-specific primers for 
+  a complete primer walk or, more efficiently, to design only those primers needed 
+  to complete coverage (i.e., fill in gaps) or to re-sequence regions of low confidence 
+  (see Gap Mapper and Low Confidence Regions Finder). The module based its work 
+  on user specification that must be created prior to Primer Designer invocation 
+  and defines: (1) type of desired coverage (single forward, single reverse, double 
+  coverage, etc.); (2) primer sequence related parameters (Tm, window size, GC 
+  content, etc.); (3) sequence processing parameters (length of reliable part 
+  of sequencing reads). The module breaks the sequence into fragments according 
+  to user specification which are provided to Primer3 for primer prediction. Fragment 
+  size takes into account the expected distance between the primer and reliable 
+  sequence, expected high quality read length, and the Primer3 window size. The 
+  Primer Design module then collates the output of Primer3. <br>
+</p>
+<p><strong><em><font color="#6699CC">2. Contig Analysis</font></em></strong></p>
+<p><strong><em>Discrepancy Finder.</em></strong> This module detects mismatches 
+  between the clone contig(s) and reference sequence, creating a list of discrepancy 
+  descriptions for each clone. <br>
+  To do this, the Discrepancy Finder builds a global alignment between the clone&#8217;s 
+  contig(s) and its reference nucleotide sequence using the <em>needle</em> program 
+  from EMBOSS package. Mismatches between sequences are identified via base-by-base 
+  comparison and a discrepancy object is created for each, except that contiguous 
+  mismatches (e.g., a multiple base-pair deletion in one region) are grouped together 
+  to form a single discrepancy object. <br>
+  A discrepancy in ACE refers to any mismatch between the clone and its target 
+  sequence described on both the <a href="image/table_DiscrepancyTypes.htm">nucleotide 
+  and polypeptide levels</a>. ACE assigns confidence status (low or high) to any 
+  discrepancy. Low-confidence status is asigned to discrepancy if the Phred confidence 
+  score of at least one base used to define the discrepancy or one out of four 
+  bases on either side of the discrepancy is below the a user-defined threshold. 
+</p>
+<p><strong><em>Polymorphism Finder. </em></strong>This module determines if discrepancies 
+  are attributable to natural sequence variations of the gene, which is particularly 
+  relevant for human genes cloned using different tissue samples from those used 
+  to make the reference sequences. The process requires two steps: (1) a relatively 
+  short sequence segment comprising the discrepancy and its flanking sequence 
+  is compared using NCBI BLAST to data from all user-selected GenBank databases 
+  to find an identical match; (2) each 100% hit is verified by comparing the entire 
+  clone target sequence with the hit sequence to ask if it came from the same 
+  gene using Pairwise BLAST. A match provides good evidence that the observed 
+  sequence variation occurs naturally, but the absence of a match is inconclusive. 
+  Lenth of flanking sequence attached to the discrepancy and list of GenBank databases 
+  to search for the match are stored as user defined specification for Polymorphism 
+  Finder and can be reused. The Polymorphism Finder stores the NCBI GI number 
+  for each verified hit as part of the discrepancy description. As this operation 
+  requires sending numerous BLAST queries against large databases, its implementation 
+  requires a local copy of the appropriate GenBank database(s) installed on a 
+  dedicated high-performance computer or cluster. </p>
+<p>&nbsp;</p>
+<h3><strong><font color="#6699CC">3. Clone evaluation</font></strong></h3>
+<p><br>
+  <strong><em>Isolate Ranker.</em></strong> Some cloning workflows produce several 
+  isolates for the same gene with the expectation that at least one of these isolates 
+  will be of acceptable quality. Isolate Ranker selects the best isolate to carry 
+  forward by comparing isolates based on partial or full sequencing data, by applying 
+  user defined penalties for different discrepancy types. For each combination 
+  &lt;discrepancy type, confidence&gt;, the user specifies two values: maximum 
+  permitted number of such discrepancies and the penalty per discrepancy combination. 
+  Isolates that exceed the maximum permitted number of mutations of at least one 
+  type are rejected. For each remaining isolate, the overall score is computed 
+  by normalizing the sum of the penalties over the number of bases covered. These 
+  scores determine the rank order among the surviving isolates of the same gene 
+  and are displayed as a color coded virtual plate map, so that users can quickly 
+  pick follow-up clones and determine if there are any systematic problems with 
+  cloning or sequencing (e.g., clones in the same position repeatedly fail might 
+  suggesting a robot error or problematic sequencing capillary). </p>
+<p><br>
+  <strong><em>Decision Tool.</em></strong> This tool sorts clones into a finished-and-accepted 
+  group, a rejected group, and a set of groups slated for further processing. 
+  Fundamentally, the Decision Tool accomplishes this by comparing each clone&#8217;s 
+  discrepancies list to a user-defined list of acceptance criteria, which define 
+  how many discrepancies of each type are permitted. Users can set thresholds 
+  to: (1) automatically accept clones that meet some high level criteria and (2) 
+  automatically reject clones that fail to meet some minimal criteria. Moreover, 
+  users can set independent thresholds for high and low confidence discrepancies. 
+  Any clones not accepted nor rejected remain incomplete until additional processing 
+  has been performed. Users may wish to apply alternate acceptance criteria to 
+  the same set of clones for different experimental purposes. User specifications 
+  for acceptance criteria are stored as named sets in the software and can be 
+  invoked and applied to any collection of clones. </p>
+<p><br>
+  <strong><font color="#6699CC"> 4. Finishing tools</font></strong></p>
+<p> <strong><em>Gap Mapper.</em></strong> This module finds gaps in sequence coverage 
+  that arise when reads are too short or fail outright. The module uses the assembler 
+  to align clone trace files with the reference sequence, which is included as 
+  a &#8220;pseudo-read&#8221; with the same preset confidence score used for every 
+  base in its sequence (arbitrarily set at 19). This ensures complete assembly 
+  without forcing the contig to be identical to the target sequence. The assembler 
+  output is parsed to determine the alignment of each sequence read relative to 
+  the reference sequence. Using this positional information, a two-dimensional 
+  matrix is created wherein each position is described by base and confidence 
+  score (<a href="image/final_Fig7_GapMapper.jpg">Figure 3</a>). At each position 
+  along the matrix (which is numbered according to the reference sequence), a 
+  consensus base is determined for the clone by assessing all of the bases at 
+  that position and their confidence scores using a na&iuml;ve Bayesian calculation 
+  (REF). The reference sequence and assembled contig are disregarded at this step, 
+  so the computed confidence scores reflect the actual clone sequence. The resulting 
+  contigs are optionally trimmed at both ends to remove bases with low confidence 
+  scores (using the sliding window algorithm described below). This ensures that 
+  the predicted new sequence primers will generate sequence that covers these 
+  junction sequences. Once the contigs are assembled, trimmed and mapped to the 
+  reference sequence, the gaps are defined as stretches of reference sequence 
+  not covered by contigs. Gap and contig information is stored in the database 
+  and used to assess clone status and quality, and can be passed to Primer Designer 
+  to design primers for clone finishing.<br>
+</p>
+<p><strong><em>Low Confidence Regions Finder.</em></strong> We have found that 
+  clones demonstrate an unusually high number of discrepancies in regions where 
+  sequence confidence is low. Even in cases where the discrepancy itself has a 
+  high confidence score, it may be surrounded by low confidence segments that 
+  call into question the sequence quality of the entire region. The Low Confidence 
+  Regions Finder was designed to identify low confidence regions (LCRs) in contigs 
+  by applying a &#8216;sliding window&#8217; algorithm. The user specification 
+  for the module defines: (a) <em>W</em>-the width of the window; (b) <em>m</em> 
+  - cut-off Phred score for low-confidence bases and <em>N</em> - maximum allowable 
+  number of low-confidence bases. An LCR is defined as a region in which a window 
+  of <em>W</em> consecutive bases contains at least <em>N</em> low-confidence 
+  bases. LCRs located close to each other are joined. <br>
+  <br>
+</p>
+<p><br>
+</p>
+
+</p>
+<p>&nbsp;</p>
+<p><br>
+</p>
+<p>&nbsp;</p>
+<p><br>
+</p>
+</body>
+</html>
