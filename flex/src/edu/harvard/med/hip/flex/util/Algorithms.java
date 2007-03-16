@@ -227,8 +227,8 @@ public class Algorithms {
     
     
     public static void main(String args[]) {
-        String inputFile = "C:\\Documents and Settings\\dzuo\\My Documents\\work\\production\\vcholera\\wellin.txt";
-        String outputFile = "C:\\Documents and Settings\\dzuo\\My Documents\\work\\production\\vcholera\\wellout.txt";
+        String inputFile = "C:\\Documents and Settings\\dzuo\\My Documents\\work\\production\\ORFclone\\pos_in.txt";
+        String outputFile = "C:\\Documents and Settings\\dzuo\\My Documents\\work\\production\\vcholera\\pos_out.txt";
         String line;
         
         try {
@@ -238,12 +238,12 @@ public class Algorithms {
             //String ignore = in.readLine();
             
             while((line = in.readLine()) != null) {
-                /**
+                
                 String s = Algorithms.cleanWhiteSpaces(line);
                 int num = Algorithms.convertWellFromA8_12toInt(s);
                 output.println(line+"\t"+num);
-                */
                 
+               /* 
                 int num = Integer.parseInt(line);
                 String s = Algorithms.convertWellFromInttoA8_12(num);
                 String positionX = s.substring(0, 1);
@@ -255,6 +255,7 @@ public class Algorithms {
                 fmt.setGroupingUsed(false);
                 String well = positionX+fmt.format(y);
                 output.println(line+"\t"+well+"\t"+positionX+"\t"+y);
+                **/
             }
             in.close();
             output.close();

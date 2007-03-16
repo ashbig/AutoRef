@@ -49,6 +49,51 @@ public class SequenceImporter {
         results = new Vector();
     }
     
+    public void setSequences(Hashtable seqs) {this.sequences = seqs;}
+    public void setPublicInfo(Hashtable info) {this.publicInfo = info;}
+    
+    public boolean performImport(Connection conn) {
+        Workflow workflow = null;
+        Protocol p = null;
+        
+        try {
+            workflow = new Workflow(Workflow.COMMON_WORKFLOW);
+            p = new Protocol(Protocol.APPROVE_SEQUENCES);
+        } catch (FlexDatabaseException ex) {
+            System.out.println(ex);
+            return false;
+        }
+        
+        LinkedList l = new LinkedList();
+        Enumeration enu = sequences.keys();
+        while(enu.hasMoreElements()) {
+            String k = (String)enu.nextElement();
+            FlexSequence seq = (FlexSequence)sequences.get(k);
+            try {
+                seq.insert(conn);
+                QueueItem item = new QueueItem(seq, p, project, workflow);
+                l.addLast(item);
+                SequenceImporterLogger logger = new SequenceImporterLogger(k, seq.getId(), true, null);
+                results.addElement(logger);
+                successCount++;
+            } catch (FlexDatabaseException ex) {
+                //                    SequenceImporterLogger logger = new SequenceImporterLogger(k, seq.getId(), false, "Cannot insert sequence into database");
+                SequenceImporterLogger logger = new SequenceImporterLogger(k, seq.getId(), false, ex.getMessage());
+                results.addElement(logger);
+                failCount++;
+            }
+        }
+        
+        try {
+            SequenceProcessQueue queue = new SequenceProcessQueue();
+            queue.addQueueItems(l, conn);
+        } catch (FlexDatabaseException ex) {
+            return false;
+        }
+        
+        return true;
+    }
+    
     /**
      * Import the sequences into the database.
      *
@@ -59,45 +104,7 @@ public class SequenceImporter {
      */
     public boolean performImport(InputStream sequenceInput, InputStream nameInput, Connection conn) {
         if(readPublicInfo(nameInput) && readSequences(sequenceInput)) {
-            Workflow workflow = null;
-            Protocol p = null;
-            
-            try {
-                workflow = new Workflow(Workflow.COMMON_WORKFLOW);
-                p = new Protocol(Protocol.APPROVE_SEQUENCES);
-            } catch (FlexDatabaseException ex) {
-                System.out.println(ex);
-                return false;
-            }
-            
-            LinkedList l = new LinkedList();
-            Enumeration enu = sequences.keys();
-            while(enu.hasMoreElements()) {
-                String k = (String)enu.nextElement();
-                FlexSequence seq = (FlexSequence)sequences.get(k);
-                try {
-                    seq.insert(conn);
-                    QueueItem item = new QueueItem(seq, p, project, workflow);
-                    l.addLast(item);
-                    SequenceImporterLogger logger = new SequenceImporterLogger(k, seq.getId(), true, null);
-                    results.addElement(logger);
-                    successCount++;
-                } catch (FlexDatabaseException ex) {
-//                    SequenceImporterLogger logger = new SequenceImporterLogger(k, seq.getId(), false, "Cannot insert sequence into database");
-                    SequenceImporterLogger logger = new SequenceImporterLogger(k, seq.getId(), false, ex.getMessage());
-                    results.addElement(logger);
-                    failCount++;
-                }
-            }
-            
-            try {
-                SequenceProcessQueue queue = new SequenceProcessQueue();
-                queue.addQueueItems(l, conn);
-            } catch (FlexDatabaseException ex) {
-                return false;
-            }
-            
-            return true;
+            return performImport(conn);
         } else {
             return false;
         }
@@ -121,7 +128,7 @@ public class SequenceImporter {
         try {
             while((line = in.readLine()) != null) {
                 StringTokenizer st = new StringTokenizer(line, DILIM);
-                String [] info = new String[5];                
+                String [] info = new String[5];
                 int i = 0;
                 Hashtable name = new Hashtable();
                 
@@ -171,8 +178,7 @@ public class SequenceImporter {
         String line = null;
         
         try {
-            while((line = in.readLine()) != null) 
-            {
+            while((line = in.readLine()) != null) {
                 totalCount++;
                 
                 StringTokenizer st = new StringTokenizer(line, DILIM);
@@ -185,7 +191,7 @@ public class SequenceImporter {
                         
                         if(DEFAULT.equals(info[i].trim()))
                             info[i] = "";
-                        i++;                       
+                        i++;
                     }
                     
                     Vector names = (Vector)publicInfo.get(info[0]);

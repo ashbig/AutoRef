@@ -34,7 +34,8 @@ public class CloningStrategy {
     public static final int GATEWAY_EXPRESSION_pBY011 = 12;
     public static final int CREATOR_EXPRESSION_pLDNT7_nFLAG = 22;
     public static final int GATEWAY_EXPRESSION_pDEST_GST = 25;
-    
+    public static final int GATEWAY_EXPRESSION_pENTR223_pCITE_GST = 29;
+ 
     protected int id;
     protected String name;
     protected CloneVector clonevector;
@@ -224,6 +225,9 @@ public class CloningStrategy {
         }
         
         if(workflowid == Workflow.TRANSFER_TO_EXP_pCITE_GST) {
+            if(projectid == Project.ORFEOME_pENTR223)
+                return GATEWAY_EXPRESSION_pENTR223_pCITE_GST;
+            
             return GATEWAY_pCITE_GST;
         }
         

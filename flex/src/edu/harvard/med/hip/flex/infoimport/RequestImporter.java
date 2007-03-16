@@ -41,6 +41,8 @@ public class RequestImporter {
         results = new Vector();
     }
     
+    public void setRequests(Hashtable r) {this.requests = r;}
+    
     /**
      * Import the requests into the database.
      *
@@ -58,6 +60,10 @@ public class RequestImporter {
             return false;
         }
         
+        return performImport(conn);
+    }
+    
+    public boolean performImport(Connection conn) {
         Enumeration users = requests.keys();
         while(users.hasMoreElements()) {
             String user = (String)users.nextElement();

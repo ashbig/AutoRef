@@ -38,6 +38,7 @@ public class Project {
     public final static int Bacillus_anthracis = 18;
     public final static int Yersinia_pseudotuberculosis = 19;
     public final static int YEAST_DBD = 20;
+    public final static int ORFEOME_pENTR223 = 21;
     
     public final static String HUMANSTRING = "Human";
     public final static String YEASTSTRING = "Yeast";
