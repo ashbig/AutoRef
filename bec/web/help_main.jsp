@@ -24,7 +24,7 @@
         <tr> 
           <td  rowspan="3" align='left' valign="top" width="160"  bgcolor='#1145A6'>
 		  <jsp:include page="page_left_menu.jsp" /></td>
-          <td  valign="top"> <jsp:include page="page_location.jsp" />
+          <td   ="top"> <jsp:include page="page_location.jsp" />
            </td>
         </tr>
         <tr> 
@@ -36,21 +36,26 @@
           <% String jsp_redirection = edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") ;%>
            <table border="0" cellpadding="0" cellspacing="0" width="90%" align='center' >
 
-<tr><td align='center'><h3>ACE set-up (for application administrator only)</h3> </td></td>
-<tr><td > <a href = "<%= jsp_redirection %>help/help_installation.jsp"  target="_blank"> How to set-up ACE</td></tr>
-<tr><td > <a href = "<%= jsp_redirection %>help/help_ACEConfigurationFile.html" target="_blank" > How to configure ACE </td></tr>
+<tr><td align='center'><h3>ACE Installation (for application administrator only)</h3> </td></td>
+<tr><td > <a href = "<%= jsp_redirection %>help/help_installation.jsp"  target="_blank"> ACE installation instructions</td></tr>
+<tr><td > <a href = "<%= jsp_redirection %>help/help_ACEConfigurationFile.html" target="_blank" > ACE configuration </td></tr>
 
 <tr><td align='center'><hr><h3>ACE user help</h3> </td></td>
-<tr><td > <a href = "<%= jsp_redirection %>help/help_generalhelp.jsp"  target="_blank">User general help</td></tr>
-<tr><td > <a href = "<%= jsp_redirection %>help/help_ReportRunner.html"  target="_blank"> Report runner</td></tr>
-<tr><td > <a href = "<%= jsp_redirection %>help/help_TraceFilesNamingFormats.html"  target="_blank">How to creat trace file names' format</td></tr>
+<tr><td > <a href = "<%= jsp_redirection %>help/help_ACE_overview.htm"  target="_blank">ACE overview</td></tr>
 
-<tr><td > <b>File formats for data submission</b></td></tr>
+<tr><td > <a href = "<%= jsp_redirection %>help/help_generalhelp.jsp"  target="_blank">User general help</td></tr>
+<tr><td > &nbsp</td></tr><tr><td><P></p><b>Module help</b></td></tr>
+
+
+<tr><td > <a href = "<%= jsp_redirection %>help/help_ReportRunner.html"  target="_blank"> Report runner</td></tr>
+<tr><td > <a href = "<%= jsp_redirection %>help/help_TraceFilesNamingFormats.html"  target="_blank">How to create trace file names' format</td></tr>
+
+<tr><td > &nbsp</td></tr><tr><td><P></p><b>File format for data submission</b></td></tr>
 
 <tr><td > <a href = "<%= jsp_redirection %>help/help_reference_sequence_xml_format.html" target="_blank" >Reference sequence submission XML format</td></tr>
 <tr><td > <a href = "<%= jsp_redirection%>help/help_vector_xml_format.html"  target="_blank">Vector submission XML format</td></tr>
-<tr><td > <a href = "<%= jsp_redirection %>help/help_clone_sequence_xml_format.html"  target="_blank">Clone sequence submission XML format</td></tr>
-<tr><td > <a href = "<%= jsp_redirection %>help/help_clonecollection_xml_format.html"  target="_blank">Clone collection(plate) submission XML format</td></tr>
+<tr><td > <a href = "<%= jsp_redirection %>help/help_clonecollection_xml_format.html"  target="_blank">Clone collection (plate) submission XML format</td></tr>
+<tr><td > <a href = "<%= jsp_redirection %>help/help_clone_sequence_xml_format.html"  target="_blank">Clone sequence submission FASTA format</td></tr>
 
 </table>
 

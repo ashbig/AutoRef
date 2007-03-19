@@ -9,45 +9,45 @@
       <p>&nbsp;</p></td>
   </tr>
   <tr> 
-    <td width="48%"><p>&nbsp;</p>
+    <td width="48%" valign="top"><p>&nbsp;</p>
       <p>ACE_CC_EMAIL_ADDRESS</p></td>
-    <td width="52%">ACE administrator e-mail address (optional)</td>
+    <td width="52%" valign="top">ACE administrator e-mail address (optional)</td>
   </tr>
   <tr> 
-    <td>ACE_FROM_EMAIL_ADDRESS</td>
-    <td>ACE application e-mail address</td>
+    <td valign="top">ACE_FROM_EMAIL_ADDRESS</td>
+    <td valign="top">ACE application e-mail address</td>
   </tr>
   <tr> 
-    <td>JSP_REDIRECTION </td>
-    <td>/ACE/ - location of ACE application</td>
+    <td  valign="top">JSP_REDIRECTION </td>
+    <td  valign="top">/ACE/ - location of ACE application</td>
   </tr>
   <tr> 
-    <td>mail.smtp.host</td>
-    <td>Location of SMTP host that is used for sending e-mails</td>
+    <td  valign="top">mail.smtp.host</td>
+    <td  valign="top">Location of SMTP host that is used for sending e-mails</td>
   </tr>
   <tr> 
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
+    <td valign="top">&nbsp;</td>
+    <td valign="top">&nbsp;</td>
   </tr>
   <tr> 
-    <td>CODON_START_1 ... <em>N</em></td>
-    <td>Value of start codon(s)</td>
+    <td valign="top">CODON_START_1 ... <em>N</em></td>
+    <td valign="top">Value of start codon(s)</td>
   </tr>
   <tr> 
-    <td>CODON_START_1...<em>N</em>_NAME</td>
-    <td>User freindly value of start codon(s)</td>
+    <td valign="top">CODON_START_1...<em>N</em>_NAME</td>
+    <td valign="top">User freindly value of start codon(s)</td>
   </tr>
   <tr> 
-    <td>CODON_STOP_CLOSED_1...<em>N</em></td>
-    <td>Value of stop closed format codon(s)</td>
+    <td valign="top">CODON_STOP_CLOSED_1...<em>N</em></td>
+    <td valign="top">Value of stop closed format codon(s)</td>
   </tr>
   <tr> 
-    <td>CODON_STOP_CLOSED_1...<em>N</em>_NAME</td>
-    <td>User friendly value of stop closed format codon(s)</td>
+    <td valign="top">CODON_STOP_CLOSED_1...<em>N</em>_NAME</td>
+    <td valign="top">User friendly value of stop closed format codon(s)</td>
   </tr>
   <tr> 
-    <td>CODON_STOP_OPEN_1...<em>N</em></td>
-    <td>Value of stop fusion format codon(s)</td>
+    <td valign="top">CODON_STOP_OPEN_1...<em>N</em></td>
+    <td valign="top">Value of stop fusion format codon(s)</td>
   </tr>
   <tr> 
     <td>CODON_STOP_OPEN_1...<em>N</em>_NAME</td>
@@ -59,8 +59,8 @@
   </tr>
   <tr> 
     <td>BLAST_DBASES_PATH</td>
-    <td>Path to user blastable databases. These databases are used for verification 
-      'No Match' samples'</td>
+    <td>Storage for blastable databses created by user. These databases are used 
+      by 'Mismatched Clones' report (see user guide).</td>
   </tr>
   <tr> 
     <td>BLAST_OUTPUT</td>
@@ -147,13 +147,14 @@
     <td>&nbsp;</td>
   </tr>
   <tr> 
-    <td>TEMPORARY_FILES_FILE_PATH </td>
-    <td>Path to user /tmp/ directory. ACE writes a lot of files to this directory, 
-      scheduled cron job to clean-up /tmp/ directory should be set.</td>
+    <td valign="top">TEMPORARY_FILES_FILE_PATH </td>
+    <td>Stores all temporary files created by ACE; the directory should be emptied 
+      periodically (see Clean up cron jobs).</td>
   </tr>
   <tr> 
     <td>TRACE_FILES_INPUT_PATH_DIR</td>
-    <td></td>
+    <td>The initial trace files storage. This directory can reside on any computer, 
+      however, server running ACE should be able to see the directory. </td>
   </tr>
   <tr> 
     <td>TRACE_FILES_OUTPUT_PATH_ROOT</td>
@@ -174,15 +175,14 @@
   </tr>
   <tr> 
     <td>NEEDLE_OUTPUT_PATH</td>
-    <td>Path to the directory for needle input/output files created during contig 
-      analysis. All *.in files from this directory should be deleted by clean-up 
-      cron job</td>
+    <td>Directory for <em>needle</em> alignments. All *.in files from this directory 
+      should be deleted by clean-up cron job</td>
   </tr>
   <tr> 
     <td>NEEDLE_OUTPUT_TMP_PATH </td>
-    <td>Path to the directory for needle input/output files created during clone 
-      sequence verification. All files from this directory should be deleted by 
-      clean-up cron job. The variable can be set to /tmp/.</td>
+    <td>Output directory for temporary needle alignments; the directory should 
+      be cleaned up periodically. Optionally, these files can be directed into 
+      temp directory</td>
   </tr>
   <tr> 
     <td>&nbsp;</td>
@@ -218,8 +218,9 @@
   </tr>
   <tr> 
     <td>POLYORPHISM_FINDER_DATA_DIRECTORY</td>
-    <td>Path to the directory where all temparary files related to Polymorphism 
-      Finder run are stored. </td>
+    <td>Input/output files for Polymorphism Finder will be stored here. You need 
+      this directory only if you are going to use Polymorphism Finder. Set value 
+      to /usr/tmp if you are not going to use Polymorphism Finder. </td>
   </tr>
   <tr> 
     <td>PF_DB_1...<em>N</em></td>

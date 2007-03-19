@@ -1,0 +1,59 @@
+<!--Copyright 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
+<%@page contentType="text/html"%>
+
+<%@ page import="edu.harvard.med.hip.bec.*" %>
+<html>
+<head><title>JSP Page</title>
+<style>
+<!--
+ li.MsoNormal
+	{mso-style-parent:"";
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	margin-left:0in; margin-right:0in; margin-top:0in}
+-->
+</style>
+    
+</head>
+<body>
+
+
+<table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
+    <tr>
+        
+    <td > <h1><font color="#0099CC" > XML format for plate upload</font></h1>
+      <hr>    <p>    </td>
+    </tr>
+</table>
+
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="80%">
+    <tr>      <td width="100%"><html:errors/></td>    </tr>
+  </table>
+  </center>
+</div>
+
+
+<table width="74%" border="0" cellpadding="2" cellspacing="2" align="center">
+  <tr> 
+    <td> 
+      <h2 ><font color="#0099CC">Reference sequence file</font></h2>
+      <p >Reference sequence file describs target sequences for clones. sequence 
+        element contains: sequence id, sequence, species, CDS start, CDS stop, 
+        cDNA source, chromosome and sequence properties (terms in bold are required). 
+        The sequence id is the unique identifier for each sequence and will be 
+        used as 'user reference sequence id'. Each sequence can be described by 
+        features. The feature element description contains: feature name type 
+        ('GenBank Accession'), feature name value (the GenBank accession number 
+        for 'GenBank Accession' name type), feature url and description. The annotation 
+        type field must use valid annotation types from the database. Please define 
+        all annotation types prior to reference sequence submission.</p>
+      <p >&nbsp;</p>
+      <p ><h2 ><font color="#0099CC">Plate mapping file</font></h2>
+      
+    </td>
+  </tr></table>
+</body>
+</html>

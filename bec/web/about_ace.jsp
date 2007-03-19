@@ -35,55 +35,36 @@
                    
 <div align="center">
   <center>
-  <table border="0" cellpadding="0" cellspacing="0" width="90%">
-    
-    <tr>
-      <td width="100%" colspan="2">
-        <p><span style="font-family: Times New Roman; mso-fareast-font-family: Times New Roman; mso-ansi-language: EN-US; mso-fareast-language: EN-US; mso-bidi-language: AR-SA"><span style="mso-spacerun: yes; font-family: Times New Roman; mso-fareast-font-family: Times New Roman; mso-ansi-language: EN-US; mso-fareast-language: EN-US; mso-bidi-language: AR-SA">&nbsp;</span></span></p>
-          <p align="left"><a><font size="3" color="#000080">With ACE, users can perform            the following steps:</font></a></p>
-        </tr>
-            <tr>
-              <td width="7%" bgColor="#b8c6ed">
-                <p align="center">1</p>
-              </td>
-                <td width="93%" bgColor="#b8c6ed"><font color="#000080" size="3">Transfer
-                  plate inforamation from FLEX into ACE</font></td>
-            </tr>
-            <tr>
-              <td width="7%" bgColor="#e4e9f8">
-                <p align="center">2</p>
-              </td>
-                <td width="93%" bgColor="#e4e9f8"><font color="#000080">Manipulate end reads and rank isolates.</font></td>
-            </tr>
-            <tr>
-              <td width="7%" bgColor="#b8c6ed">
-                <p align="center">3</p>
-              </td>
-                <td width="93%" bgColor="#b8c6ed"><font color="#000080">Design internal primers</font></td>
-            </tr>
-            <tr>
-              <td width="7%" bgColor="#e4e9f8">
-                <p align="center">4</p>
-              </td>
-                <td width="93%" bgColor="#e4e9f8"><font color="#000080">Evaluate clones</font></td>
-            </tr>
-            <tr>
-              <td width="7%" bgColor="#b8c6ed">
-                <p align="center">5</p>
-              </td>
-                <td width="93%" bgColor="#b8c6ed"><font color="#000080">View alignments and quality reports</font></td>
-            </tr>
-            <tr>
-              <td width="7%" bgColor="#e4e9f8">
-                <p align="center">6</p>
-              </td>
-                <td width="93%" bgColor="#e4e9f8"><font color="#000080">Delete wrong data</font></td>
-            </tr>
-          <tr><td colspan=2><P>
-          <p><font color="#000000"><span style="mso-spacerun: yes; font-family: Times New Roman; mso-fareast-font-family: Times New Roman; mso-ansi-language: EN-US; mso-fareast-language: EN-US; mso-bidi-language: AR-SA">If
-            you have a question, please contact <a href="mailto:<%= BecProperties.getInstance().getACEEmailAddress() %>">ACE
-            informatics team</a>.</span></font></td>    </tr>
-  </table><br><br>
+                <table border="0" cellpadding="0" cellspacing="0" width="90%">
+                  <tr> 
+                    <td width="193%"> <p><span style="font-family: Times New Roman; mso-fareast-font-family: Times New Roman; mso-ansi-language: EN-US; mso-fareast-language: EN-US; mso-bidi-language: AR-SA"><span style="mso-spacerun: yes; font-family: Times New Roman; mso-fareast-font-family: Times New Roman; mso-ansi-language: EN-US; mso-fareast-language: EN-US; mso-bidi-language: AR-SA"><strong>&nbsp;Automated 
+                        Clone Evaluation (ACE) </strong>system is a comprehensive, 
+                        multi-platform, web-based plasmid sequence verification 
+                        software package. ACE automates all steps of the sequence 
+                        verification process: primer design, sequence contig assembly, 
+                        identification and annotation of discrepancies between 
+                        the clone and reference sequences, gap mapping, polymorphism 
+                        detection, and assignment of final clone quality based 
+                        on user defined criteria. </span></span></p>
+                      <p>The software dramatically reduced the amount of time 
+                        and labor required to evaluate clone sequences and decreased 
+                        the number of missed sequence discrepancies, which commonly 
+                        occur during manual evaluation. ACE maintains a relational 
+                        database to store information about clones at various 
+                        completion stages, project processing parameters and acceptance 
+                        criteria. ACE also helps to reduce the number of sequencing 
+                        reads needed to achieve adequate coverage for making decisions 
+                        on clones.</p>
+                      <p><br>
+                      </p></tr>
+                  <tr> 
+                    <td><P> 
+                      <p><font color="#000000"><span style="mso-spacerun: yes; font-family: Times New Roman; mso-fareast-font-family: Times New Roman; mso-ansi-language: EN-US; mso-fareast-language: EN-US; mso-bidi-language: AR-SA">If 
+                        you have a question, please contact <a href="mailto:<%= BecProperties.getInstance().getACEEmailAddress() %>">ACE 
+                        informatics team</a>.</span></font></td>
+                  </tr>
+                </table>
+                <br><br>
   </center>
 </div>
             <!-- InstanceEndEditable --></td>

@@ -14,174 +14,190 @@
     <tr>
       <td width="100%"><html:errors/></td>
     </tr>
-	
+
   </table>
-  
+
     <p>&nbsp;</p>
   </center>
 </div>
 <p></p>
 <table width="74%" border="0" cellpadding="2" cellspacing="2" align="center">
-  <tr> 
-    <td><div align="center"><font color="#0099CC"><strong>Trace Files' Naming 
-        Format</strong></font></div></td>
-  </tr>
-  <tr> 
-    <td><p>&nbsp;</p>
-      <p><font color="#0099CC"><strong>Introduction</strong></font></p>
-      <p>ACE stores trace files in hierarchical directory structure where all 
-        files for one clone are distributed into a single directory to insure 
-        that multiple nearly identical reads in a set that come from different 
-        clones was not included in one contig assembly. The only information about 
-        what clone trace files belongs to is contained in trace file name. This 
-        information must be parsed and captured in order to distribute reads appropriately. 
-        The problem is that most sequencing centers have their own naming formats 
-        for the reads. Moreover, they frequently change the formats. To insure 
-        that any ttrace files can be submitted into ACE, we have developed utility 
-        that allows user to describe new each format in terms that allow application 
-        to parse trace files names.</p></td>
-  </tr>
-  <tr> 
-    <td><p><font color="#0099CC"><strong>How trace files' name formats defined</strong></font> 
-      <p>To be recognizable by ACE trace file name MUST include information about 
-        plate label and position of the clone on the plate. For end reads only, 
-        information about direction of the read (sence / unsence) MUST be included 
-        as well. 
-      <br>
-        There two ways to describe how to extract information about the particular 
-        item (plate label, position, direction). <em><strong>First: </strong></em>to 
-        define start position and length of the item description. For example, 
-        position description in file name is from posiotn 4 to position 6 (three 
-        leters or digits).<em><strong> Second:</strong></em> to define separator 
-        that allows to devide file name into several column and give number of 
-        the column. Moreover, user can define that in column N only M first letters/digits 
-        describe the item.
-    </td>
-  </tr>
-  <tr> 
-    <td><p><font color="#0099CC"><strong>How to find what trace files' names formats 
-        exist</strong></font> 
-      <p>1. On the Configure System menu, click ACE Configuration, and then select 
-        Add Trace File Name Format. <br>
-        2. All existing ACE trace files' names formtas will be listed below table 
-        that allows user to create new format.</td>
-  </tr>
-  <tr> 
-    <td><p><font color="#0099CC"><strong>How to create new format</strong></font> 
-      <p>1. On the Configure System menu, click ACE Configuration, and then select 
-        Add Trace File Name Format. <br>
-        2. Give new format user freindly name.<br>
-        3. Define in what direction trace file name should be read by ACE.<br>
-        4. Define how plate label information should be extracted from file name 
-        by ACE.<br>
-        5. Define how position information should be extracted from file name 
-        by ACE.<br>
-        For end reads only<br>
-        6. Define how direction of the read is annotated.<br>
-        7. Define how direction information should be extracted from file name 
-        by ACE.
-      <p><strong><font size="+1"><em>Note: </em></font></strong>Do not change 
-        value of the field that are not involved in format definition. <br>
-      
-    </td>
-  </tr>
-  <tr> 
-    <td><p><font color="#0099CC"><strong>Examples</strong></font></p>
-      <table border="0" cellpadding="1" cellspacing="1" align=center>
-        <tr> 
-          <td bgColor='#b8c6ed' align='center' nonwrap><font size="2"> Format 
-            Name </font></td>
-          <td bgColor='#b8c6ed' align='center' nonwrap><font size="2"> File name 
-            reading direction </font></td>
-          <td bgColor='#b8c6ed' align='center' nonwrap><font size="2"> Plate Label 
-            Separator </font></td>
-          <td bgColor='#b8c6ed' align='center' nonwrap><font size="2"> Plate Label 
-            Column </font></td>
-          <td bgColor='#b8c6ed' align='center' nonwrap><font size="2"> Plate Label 
-            Start </font></td>
-          <td bgColor='#b8c6ed' align='center' nonwrap><font size="2"> Plate Label 
-            Length </font></td>
-          <td bgColor='#b8c6ed' align='center' nonwrap><font size="2"> Position 
-            Separator </font></td>
-          <td bgColor='#b8c6ed' align='center' nonwrap><font size="2"> Position 
-            Column </font></td>
-          <td bgColor='#b8c6ed' align='center' nonwrap><font size="2"> Position 
-            Start </font></td>
-          <td bgColor='#b8c6ed' align='center' nonwrap><font size="2"> Position 
-            Length </font></td>
-          <td bgColor='#b8c6ed' align='center' nonwrap><font size="2"> Direction 
-            Forward </font></td>
-          <td bgColor='#b8c6ed' align='center' nonwrap><font size="2"> Direction 
-            Reverse </font></td>
-          <td bgColor='#b8c6ed' align='center' nonwrap><font size="2"> Direction 
-            Separator </font></td>
-          <td bgColor='#b8c6ed' align='center' nonwrap><font size="2"> Direction 
-            Column </font></td>
-          <td bgColor='#b8c6ed' align='center' nonwrap><font size="2"> Direction 
-            Length </font></td>
-          <td bgColor='#b8c6ed' align='center' nonwrap><font size="2"> Direction 
-            Start </font></td>
-        </tr>
-        <tr> 
-          <td  bgColor='#e4e9f8'  nonwrap><font size="2"> DFHCC (-) core </font></td>
-          <td  bgColor='#e4e9f8'  nonwrap><font size="2"> Left to right </font></td>
-          <td  bgColor='#e4e9f8'  nonwrap><font size="2"> _ </font></td>
-          <td  bgColor='#e4e9f8'  nonwrap><font size="2"> 3 </font></td>
-          <td  bgColor='#e4e9f8'  nonwrap><font size="2"> Not set </font></td>
-          <td  bgColor='#e4e9f8'  nonwrap><font size="2"> 11 </font></td>
-          <td  bgColor='#e4e9f8'  nonwrap><font size="2"> - </font></td>
-          <td  bgColor='#e4e9f8'  nonwrap><font size="2"> 3 </font></td>
-          <td  bgColor='#e4e9f8'  nonwrap><font size="2"> Not set </font></td>
-          <td  bgColor='#e4e9f8'  nonwrap><font size="2"> Not set </font></td>
-          <td  bgColor='#e4e9f8'  nonwrap><font size="2"> F </font></td>
-          <td  bgColor='#e4e9f8'  nonwrap><font size="2"> R </font></td>
-          <td  bgColor='#e4e9f8'  nonwrap><font size="2"> - </font></td>
-          <td  bgColor='#e4e9f8'  nonwrap><font size="2"> 4 </font></td>
-          <td  bgColor='#e4e9f8'  nonwrap><font size="2"> 1 </font></td>
-          <td  bgColor='#e4e9f8'  nonwrap><font size="2"> Not set </font></td>
-        </tr>
-        <tr> 
-          <td  bgColor='#e4e9f8'  nonwrap><font size="2"> Willson </font></td>
-          <td  bgColor='#e4e9f8'  nonwrap><font size="2"> Left to right </font></td>
-          <td  bgColor='#e4e9f8'  nonwrap><font size="2"> - </font></td>
-          <td  bgColor='#e4e9f8'  nonwrap><font size="2"> 1 </font></td>
-          <td  bgColor='#e4e9f8'  nonwrap><font size="2"> Not set </font></td>
-          <td  bgColor='#e4e9f8'  nonwrap><font size="2"> Not set </font></td>
-          <td  bgColor='#e4e9f8'  nonwrap><font size="2"> - </font></td>
-          <td  bgColor='#e4e9f8'  nonwrap><font size="2"> 2 </font></td>
-          <td  bgColor='#e4e9f8'  nonwrap><font size="2"> Not set </font></td>
-          <td  bgColor='#e4e9f8'  nonwrap><font size="2"> 3 </font></td>
-          <td  bgColor='#e4e9f8'  nonwrap><font size="2"> F </font></td>
-          <td  bgColor='#e4e9f8'  nonwrap><font size="2"> R </font></td>
-          <td  bgColor='#e4e9f8'  nonwrap><font size="2"> Not set </font></td>
-          <td  bgColor='#e4e9f8'  nonwrap><font size="2"> Not set </font></td>
-          <td  bgColor='#e4e9f8'  nonwrap><font size="2"> Not set </font></td>
-          <td  bgColor='#e4e9f8'  nonwrap><font size="2"> Not set </font></td>
-        </tr>
-      </table>
-      <blockquote> 
-     
-        <table width="90%" border="0">
-          <tr>
-            <td width="25%"><strong>Format</strong><em><font color="#663399"> DFHCC(-) core</font></em></td>
-            <td width="75%"><strong>File name: </strong><em>222_H01_KSG002233-2-H05-F0.ab1</em>, 
-              where 'KSG002233-2' - is plate name, H05 - position, F - direction 
-              of the read</td>
-          </tr>
-          <tr>
-            <td><strong>Format <em><font color="#663399">Willson</font></em></strong></td>
-            <td><strong> File name: </strong><em>KSG002233-H05_I.ab1</em>, where 
-              'KSG002233' - is plate name, H05 - position</td>
-          </tr>
-        </table>
-        <p><em><strong><font color="#663399"></font></strong></em></p>
-      </blockquote>
-      <p>&nbsp; </p></td>
+  <tr>
+    <td><div align="center"><font color="#0099CC"><strong>Trace Files' Distributiion
+        in ACE</strong></font></div></td>
   </tr>
   <tr>
-    <td>&nbsp;</td>
+    <td><p>&nbsp;</p>
+      <p><font color="#0099CC"><strong>Introduction</strong></font></p>
+      <p>Clone validation projects often include sequence reads from different
+        clones representing similar genes (e.g., paralogs, multiple isolates of
+        the same gene, etc.). It is essential that reads from closely related
+        clones do not end up in one another&#8217;s analysis. The ACE package
+        creates a hierarchical directory structure and stores all files related
+        to a single clone in a directory specific to that clone, as required by
+        the Phred/Phrap package.</p>
+      <p>The Trace File Distributor parses identifier information encoded in the
+        filename for each trace file, embedded there by the sequencing facility,
+        that indicates which clone it belongs to. However, because different facilities
+        utilize different naming conventions, the Trace File Distributor stores
+        each facility&#8217;s format and uses it to convert the filename into
+        a format that ACE can use to process these files automatically. </p></td>
   </tr>
-</table>
+  <tr>
+    <td><p>&nbsp;
+    <p><font color="#0099CC"><strong>How trace files' name formats defined</strong></font>
+      <p>To be recognizable by ACE trace file name MUST include information about 
+        plate label and well of the clone on the plate <a href="image/image_Fig2.htm" target="_blank">(Figure 
+        1</a>). For end reads only, information about direction of the read (forward 
+        / reverse) MUST be included as well. <br>
+        There are two ways to describe ACE how to extract information about the
+        particular item (plate label, well, direction). <em><strong>First: </strong></em>
+        define start position and length of the each item. For example, well description
+        in file name is from posiotn 4 to position 6 (three leters or digits).<em><strong>
+        Second:</strong></em> to define a separator that allows to devide file
+        name into several column and give number of the column. Moreover, user
+        can define that in column <em>N</em> letter /digits from <em>a</em> to
+        <em>b</em> describe the item.
+    </td>
+  </tr>
+  <tr>
+    <td><p>&nbsp;
+      <p><font color="#0099CC"><strong>How to find what trace files' name formats
+        exist</strong></font>
+      <p> From drop down menu on the left select : '<em>Trace Files &gt; Create 
+        name format'</em>. All existing ACE trace files' name formtas will be 
+        listed below table that allows user to create new format.</td>
+  </tr>
+  <tr>
+    <td><p>&nbsp;
+      <p><font color="#0099CC"><strong>How to create new format</strong></font>
+      <UL>
+        <li>From drop down menu on the left select : '<em>Trace Files &gt; Create 
+          name format</em>'. </li>
+        <li> Enter 'example trace file name' with extension (all trace files processed
+          by ACE must have an extension visible by OS). </li>
+        <li> Give new format a name (format name must be unique. Consalt table
+          for exsisting format names). </li>
+        <li> Define in what direction trace file name should be read by ACE (from
+          'left to right' or from 'right to left').</li>
+        <li> Define how plate label information should be extracted from file
+          name by ACE.</li>
+        <li> Define how position information should be extracted from file name
+          by ACE.<br>
+          <strong>For end reads only</strong></li>
+        <li> Define how direction of the read is annotated.</li>
+        <li> Define how direction information should be extracted from file name
+          by ACE. </li>
+        <li>Click 'Verify new format' button. ACE will try to parce example file
+          name based on format description and gives you plate label, well and
+          read direction. If this items have been extracted properly from read
+          name click 'Submit' button, otherwise go back and change format definition.</li>
+      </UL>
+      <p><strong><font size="+1"><em>Note: </em></font></strong>Do not change
+        value of the fields that are not involved in format definition. <br>
 
-</body>
+    </td>
+  </tr>
+  <tr>
+    <td><p>&nbsp;</p>
+    <p><font color="#0099CC"><strong>Examples</strong></font></p>
+    <blockquote>&nbsp; </blockquote>
+      </td>
+  </tr>
+  <tr>
+    <td> <table border="0" cellpadding="1" cellspacing="1" width="90%" align=center>
+        <tr> 
+          <td height="48" align='center' bgcolor='#b8c6ed' nonwrap><font size="2"> 
+            Format Name </font></td>
+          <td bgcolor='#b8c6ed' align='center' nonwrap><font size="2"> File name 
+            reading direction </font></td>
+          <td bgcolor='#b8c6ed' align='center' nonwrap><font size="2"> Plate Label 
+            Separator </font></td>
+          <td bgcolor='#b8c6ed' align='center' nonwrap><font size="2"> Plate Label 
+            Column </font></td>
+          <td bgcolor='#b8c6ed' align='center' nonwrap><font size="2"> Plate Label 
+            Start </font></td>
+          <td bgcolor='#b8c6ed' align='center' nonwrap><font size="2"> Plate Label 
+            Length </font></td>
+          <td bgcolor='#b8c6ed' align='center' nonwrap><font size="2"> Well Separator 
+            </font></td>
+          <td bgcolor='#b8c6ed' align='center' nonwrap><font size="2"> Well Column 
+            </font></td>
+          <td bgcolor='#b8c6ed' align='center' nonwrap><font size="2"> Well Start 
+            </font></td>
+          <td bgcolor='#b8c6ed' align='center' nonwrap><font size="2"> Well Length 
+            </font></td>
+          <td bgcolor='#b8c6ed' align='center' nonwrap><font size="2"> Direction 
+            Forward </font></td>
+          <td bgcolor='#b8c6ed' align='center' nonwrap><font size="2"> Direction 
+            Reverse </font></td>
+          <td bgcolor='#b8c6ed' align='center' nonwrap><font size="2"> Direction 
+            Separator </font></td>
+          <td bgcolor='#b8c6ed' align='center' nonwrap><font size="2"> Direction 
+            Column </font></td>
+          <td bgcolor='#b8c6ed' align='center' nonwrap><font size="2"> Direction 
+            Length </font></td>
+          <td bgcolor='#b8c6ed' align='center' nonwrap><font size="2"> Direction 
+            Start </font></td>
+          <td bgcolor='#b8c6ed' align='center' nonwrap><font size="2"> Example 
+            file name </font></td>
+          <td bgcolor='#b8c6ed' align='center' nonwrap><font size="2"> Delete 
+            Format </font></td>
+        </tr>
+        <tr> 
+          <td  bgcolor='#e4e9f8'  nonwrap><font size="2"> HMBCT </font></td>
+          <td  bgcolor='#e4e9f8'  nonwrap><font size="2"> Left to Right </font></td>
+          <td  bgcolor='#e4e9f8'  nonwrap><font size="2"> _ </font></td>
+          <td  bgcolor='#e4e9f8'  nonwrap><font size="2"> 2</font></td>
+          <td  bgcolor='#e4e9f8'  nonwrap><font size="2"> 1</font></td>
+          <td  bgcolor='#e4e9f8'  nonwrap><font size="2"> 2</font></td>
+          <td  bgcolor='#e4e9f8'  nonwrap><font size="2"> _ </font></td>
+          <td  bgcolor='#e4e9f8'  nonwrap><font size="2"> 2</font></td>
+          <td  bgcolor='#e4e9f8'  nonwrap><font size="2"> 3</font></td>
+          <td  bgcolor='#e4e9f8'  nonwrap><font size="2"> 3</font></td>
+          <td  bgcolor='#e4e9f8'  nonwrap><font size="2"> s</font></td>
+          <td  bgcolor='#e4e9f8'  nonwrap><font size="2"> r</font></td>
+          <td  bgcolor='#e4e9f8'  nonwrap><font size="2"> _ </font></td>
+          <td  bgcolor='#e4e9f8'  nonwrap><font size="2"> 2</font></td>
+          <td  bgcolor='#e4e9f8'  nonwrap><font size="2"> 1</font></td>
+          <td  bgcolor='#e4e9f8'  nonwrap><font size="2"> 6</font></td>
+          <td  bgcolor='#e4e9f8'  nonwrap><font color="#0000FF">Example</font></td>
+          <td  bgcolor='#e4e9f8'  nonwrap><font color="#0000FF">Delete</font></td>
+        </tr>
+        <tr> 
+          <td  bgcolor='#e4e9f8'  nonwrap><font size="2"> VXG-short </font></td>
+          <td  bgcolor='#e4e9f8'  nonwrap><font size="2"> Left to Right </font></td>
+          <td  bgcolor='#e4e9f8'  nonwrap><font size="2"> _ </font></td>
+          <td  bgcolor='#e4e9f8'  nonwrap><font size="2"> 3 </font></td>
+          <td  bgcolor='#e4e9f8'  nonwrap><font size="2"> 1 </font></td>
+          <td  bgcolor='#e4e9f8'  nonwrap><font size="2"> 11 </font></td>
+          <td  bgcolor='#e4e9f8'  nonwrap><font size="2"> - </font></td>
+          <td  bgcolor='#e4e9f8'  nonwrap><font size="2"> 2 </font></td>
+          <td  bgcolor='#e4e9f8'  nonwrap><font size="2"> Not Set </font></td>
+          <td  bgcolor='#e4e9f8'  nonwrap><font size="2"> Not Set </font></td>
+          <td  bgcolor='#e4e9f8'  nonwrap><font size="2"> F </font></td>
+          <td  bgcolor='#e4e9f8'  nonwrap><font size="2"> R </font></td>
+          <td  bgcolor='#e4e9f8'  nonwrap><font size="2"> - </font></td>
+          <td  bgcolor='#e4e9f8'  nonwrap><font size="2"> 3 </font></td>
+          <td  bgcolor='#e4e9f8'  nonwrap><font size="2"> 1 </font></td>
+          <td  bgcolor='#e4e9f8'  nonwrap><font size="2"> 1 </font></td>
+          <td  bgcolor='#e4e9f8'  nonwrap> <font color="#0000FF">Example</font></td>
+          <td  bgcolor='#e4e9f8'  nonwrap><font color="#0000FF">Delete</font></td>
+        </tr>
+      </table>
+      <p>&nbsp;</p>
+    <table width="90%" border="0">
+      <tr>
+        <td width="25%"><strong>Format</strong><em><font color="#663399"> <font size="2">HMBCT</font></font></em></td>
+        <td width="75%"><strong>File name: </strong>bk_64h11s2.scf , where '64'
+          - is plate name, H11 - position, s - direction of the read (forward)</td>
+      </tr>
+      <tr>
+        <td><strong>Format <em><font color="#663399"><font size="2">VXG-short </font></font></em></strong></td>
+        <td><strong> File name: </strong>1119_D02_VcxXG002291-D02-F_010.ab1 ,
+          where 'VcxXG002291' - is plate name, D02 - well (second D02), F - read
+          direction </td>
+      </tr>
+    </table>
+    <p>&nbsp;</p></table></body>
 </html>
