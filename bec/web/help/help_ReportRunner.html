@@ -45,8 +45,8 @@
     <td width="77%" > <div align="center"><strong><em>Description </em></strong></div>
       <div align="center"></div></td>
   </tr>
-  <td colspan="2" bgColor="#e4e9f8" ><font color="000080"><strong>&nbsp;&nbsp;Infomation 
-    type: Clone Information:</strong></font></td>
+    <td colspan="2" bgColor="#e4e9f8" ><font color="000080"><strong>&nbsp;&nbsp;Information 
+      type: Clone Information:</strong></font></td>
   </tr>
   <tr> 
     <td> Clone ID</td>
@@ -59,7 +59,7 @@
   </tr>
   <tr> 
     <td>Sample ID</td>
-    <td >ACE sample Id</td>
+    <td >ACE sample ID</td>
   </tr>
   <tr> 
     <td>Plate label</td>
@@ -71,7 +71,7 @@
   </tr>
   <tr> 
     <td> Sample well</td>
-    <td>Position on the plate ( 1 - 96 )</td>
+    <td>Position on plate ( 1 - 96 )</td>
   </tr>
   <tr> 
     <td> Clone score</td>
@@ -80,23 +80,23 @@
   <tr> 
     <td>Clone rank</td>
     <td>Clone Rank, defines whether clone (a) match expected ORF; (b) acceptable 
-      based on user criteria; (c) clone quality compare to the other clones originated 
-      from the same isolate.</td>
+      based on user criteria; (c) clone quality compare with other clones originated 
+      from the same isolate</td>
   </tr>
   <tr> 
     <td colspan="2">&nbsp; </td>
   </tr>
   <tr> 
-    <td colspan="3" bgColor="#e4e9f8"> <div align="left"><font color="000080"><strong>&nbsp;&nbsp;Infomation 
+    <td colspan="3" bgColor="#e4e9f8"> <div align="left"><font color="000080"><strong>&nbsp;&nbsp;Information 
         type: Clone raw data information</strong></font></div></td>
   </tr>
   <tr> 
     <td>Directory name </td>
-    <td>Name of clone trace files directory.</td>
+    <td>Name of clone trace file directory.</td>
   </tr>
   <tr> 
-    <td>End reads length( high quality region) </td>
-    <td>Length of the high confidence region for forward and reverse end reads</td>
+    <td>End read length ( high quality region) </td>
+    <td valign="top">Length of the high confidence region for forward and reverse end reads</td>
   </tr>
   <tr> 
     <td>Status of clone sequence assembly </td>
@@ -107,12 +107,12 @@
     <td colspan="2">&nbsp;</td>
   </tr>
   <tr> 
-    <td colspan="3" bgColor="#e4e9f8"><font color="000080"><strong>Infomation 
+    <td colspan="3" bgColor="#e4e9f8"><font color="000080"><strong>Information 
       type: Reference Sequence Information</strong></font></td>
   </tr>
   <tr> 
     <td>Sequence ID </td>
-    <td>ACE/Flex sequence Id, both values specified</td>
+    <td>ACE/Flex sequence ID, both values specified</td>
   </tr>
   <tr> 
     <td>CDS start</td>
@@ -131,21 +131,20 @@
     <td>GC content of gene sequence</td>
   </tr>
   <tr> 
-    <td>Sequence Text </td>
-    <td>Gene sequence (text) as was defined in FLEX on reference sequence upload 
-    </td>
+    <td valign="top">Sequence Text </td>
+    <td valign="top">Gene sequence (text) as was defined on reference sequence upload </td>
   </tr>
   <tr> 
-    <td> CDS</td>
-    <td>Gene CDS (text) as was defined in FLEX on reference sequence upload</td>
+    <td valign="top"> CDS</td>
+    <td valign="top">Gene CDS </td>
   </tr>
   <tr> 
     <td>GI Number</td>
-    <td>GI as was stored in FLEX on reference sequence upload</td>
+    <td>GI for reference sequence </td>
   </tr>
   <tr> 
     <td>Gene Symbol</td>
-    <td>Gene symbol, as was stored in FLEX on reference sequence upload</td>
+    <td>Gene symbol for reference sequence </td>
   </tr>
   <tr> 
     <td>Species specific ID</td>
@@ -160,35 +159,37 @@
       type: Clone Sequence Information</strong></font></td>
   </tr>
   <tr> 
-    <td>Clone sequence ID</td>
+    <td valign="top">Clone sequence ID</td>
     <td>Clone sequence ID, if clone does not have fully assembled sequence ID 
       equals to 0.</td>
   </tr>
   <tr> 
-    <td>Status of clone sequence analysis</td>
-    <td>&nbsp;</td>
+    <td valign="top">Status of clone sequence analysis</td>
+    <td valign="top">Status of sequence analysis. Available values: 'Obtained' - sequence was 
+      submitted, but not analyzed; 'Analyzed, discrepancies found' or 'Analyzed, 
+      no discrepancies found' - sequence was analysed by Discrepancy Finder</td>
   </tr>
   <tr> 
     <td>Clone sequence CDS start</td>
-    <td>Clone sequence CDS start</td>
+    <td valign="top">Clone sequence CDS start</td>
   </tr>
   <tr> 
     <td>Clone sequence CDS stop</td>
-    <td>Clone sequence CDS stop</td>
+    <td valign="top">Clone sequence CDS stop</td>
   </tr>
   <tr> 
     <td>Clone sequence</td>
     <td>Clone sequence text</td>
   </tr>
   <tr> 
-    <td>High quality discrepancies (separated by type)</td>
+    <td valign="top">High quality discrepancies (separated by type)</td>
     <td>Summary for all high confidence discrepancies identified for assembled 
-      sequence. If sequence was submitted without Phred quality scores ALL discrepancies 
-      assigned 'NOT KNOW' confidence status and treated as high confidence discrepancies.</td>
+      sequence. If sequence was submitted without Phred quality scores all discrepancies 
+      assigned 'UN KNOWN' confidence status and treated as high confidence discrepancies.</td>
   </tr>
   <tr> 
     <td>Low quality discrepancies (separated by type)</td>
-    <td>Summary for all low confidence discrepancies identified for assembled 
+    <td valign="top">Summary for all low confidence discrepancies identified for assembled 
       sequence</td>
   </tr>
 </table>

@@ -38,27 +38,21 @@ width="80%">
 <table width="74%" border="0" cellpadding="2"
 cellspacing="2" align="center">
   <tr> 
-    <td> <p class="MsoNormal"><strong><em>Automated
-Clone Evaluation (ACE)</em></strong> 
+    <td> <p class="MsoNormal"><strong><em>Automated Clone Evaluation (ACE)</em></strong> 
         system is a software suite designed to address the main goals of sequence 
-        verification process for projects of any
-scale: (1) determine the sequence 
+        verification process for projects of any scale: (1) determine the sequence 
         of each clone accurately; (2) identify if and where that sequence varies 
         from the intended target sequence; (3) evaluate and annotate the polypeptide 
         consequences of any variations; and (4) determine if these observed differences 
-        are acceptable based on user defined criteria.
-ACE was designed allows 
+        are acceptable based on user defined criteria. ACE was designed allows 
         to eliminating bad clones as early as possible in the validation process, 
         and minimize the need to produce additional sequencing primers.</p>
-      <p class="MsoNormal"><strong><em>Note:
-</em></strong>ACE GUI consists of 
-        the main window and left hand drop-down menu.
-Main window displays forms 
+      <p class="MsoNormal"><strong><em>Note: </em></strong>ACE GUI consists of 
+        the main window and left hand drop-down menu. Main window displays forms 
         according to user selectiong from the left-hand menu. Throughout this 
         tutorial the notation like 'Process &gt; Read Manipulation' means that 
         user expands 'Process' menu and selects 'Read manipulation' item.</p>
-      <h2 ><font color="#0099CC">ACE
-tutorial</font></h2>
+      <h2 ><font color="#0099CC">ACE tutorial</font></h2>
       <ul>
         <li><a href="#where_to_start">Where to start?</a></li>
         <li><a href="#ace_configuration">System settings</a></li>
@@ -67,18 +61,18 @@ tutorial</font></h2>
         <li><a href="#primers">Primers design and management</a></li>
         <li><a href="#trace_upload">Trace files upload</a></li>
         <li><a href="#data_processing">Sequencing data processing and clone evaluation.</a></li>
-        <li><a href="#delete_data">Data
-clean-up</a></li>
+        <li><a href="#delete_data">Data clean-up</a></li>
         <li><a href="#report_data">Reports</a></li>
         <li><a href="#view_data">Real time views</a></li>
       </ul></p>
-      <h3><a name="where_to_start">Where to start?</a></h3>
-      <p>Before uploading plates and trace files  into ACE all steps on the 'Cloning 
+      <h3><a name="where_to_start">Where to start</a></h3>
+      <p>Before uploading plates and trace files into ACE all steps on the 'Cloning 
         project settings' menu should be performed (see next section). </p>
       <h3><a name="ace_configuration">System settings.</a></h3>
-	  All definitions created in this section are shared among all users of ACE and 
-      all projects. The main window for every kind of settings provides the form 
-      to define new item and summary table of all existing items of this kind. 
+      All definitions created in this section are shared among all users of ACE 
+      and all projects. The main window for every kind of settings provides the 
+      form to define new item and summary table of all existing items of this 
+      kind. 
       <ul>
         <li>ACE project is a logical container for all related plates. One common 
           project can be created and used for all plates submitted into ACE. To 
@@ -97,15 +91,13 @@ clean-up</a></li>
         <li>To introduce <strong>new vector</strong> definitions into ACE select 
           '<em>Cloning Project Settings &gt; Vector Information</em>' and submit 
           <a href="help_vector_xml_format.html"
-target="_blank">XML file</a> with vector(s) description. 
-          Each vector is described by name, source, type (1 for destination vector, 
-          0 for master vector), filename, filepath. In addition a vector may have 
-          a set of features. Feature description
-contains: feature name ('recombination 
-          site'), feature property (1 for added, 0 for remain, -1 for lost when 
-          insert is integrated), feature description.</li>
-        <li>To introduce <strong>new sequencing (none
-gene-specific) primer</strong> 
+target="_blank">XML file</a> with vector(s) description. Each vector is described 
+          by name, source, type (1 for destination vector, 0 for master vector), 
+          filename, filepath. In addition a vector may have a set of features. 
+          Feature description contains: feature name ('recombination site'), feature 
+          property (1 for added, 0 for remain, -1 for lost when insert is integrated), 
+          feature description.</li>
+        <li>To introduce <strong>new sequencing (none gene-specific) primer</strong> 
           to ACE select '<em>Cloning Project Settings &gt; Sequencing Primer</em>' 
           and provide primer name, sequence (if sequence is unknown enter 'NN'), 
           Tm and primer type.</li>
@@ -113,33 +105,81 @@ gene-specific) primer</strong>
           by your sequencing facility. To specify this relationship between vector 
           and primers use <em>'Cloning Project Settings &gt; Link Vector with 
           Sequencing Primer'</em>. Several primers can be used for the same vector.</li>
-        <li>Linker is a part of  vector sequence up-stream or down-stream of the insert 
-           that is important for clone function and thus, user wishes 
-          to be sequence verify. To define a linker use '<em>Cloning Project Settings 
+        <li>Linker is a part of vector sequence up-stream or down-stream of the 
+          insert that is important for clone function and thus, user wishes to 
+          be sequence verify. To define a linker use '<em>Cloning Project Settings 
           &gt; Add Linker</em>'.</li>
         <li>Cloning strategy in ACE is a collection of the following parameters: 
-          sequencing vector, 5' and 3' linkers, start and stop codons. Application administrator defines start and stop 
-          codon possible values in <a
+          sequencing vector, 5' and 3' linkers, start and stop codons. Application 
+          administrator defines start and stop codon possible values in <a
 href="help_ACEConfigurationFile.html"
-target="_blank">ACE 
-          Configuration file</a>. To create new cloning strategy use '<em>Cloning 
-          Project Settings &gt; Add Cloning Strategy</em>'. </li>
+target="_blank">ACE Configuration file</a>. To create new cloning strategy use 
+          '<em>Cloning Project Settings &gt; Add Cloning Strategy</em>'. </li>
       </ul>
-      <h3><a name="create_spec">How to create module setting.</a></h3>
-      <h3><a name="upload_plates">Plate
-upload.</a></h3>
+      <h3><a name="create_spec">Analysis setting</a></h3>
+      <p>Particular processing modules imbeded into ACE require analysis specifications 
+        (spec) to be predefined. All analysis specifications are shared among 
+        all users of ACE and all projects. The main window that allow to create 
+        new spec of any kind (see 'Page' column in the following table) provides 
+        the form to define name and set of parameters for new spec, and links 
+        to description of all specifications of the same type created by (a) current 
+        user of ACE; (b) all ACE users. Consult following table for types of analysis 
+        specification and their use. Click specification name for details.</p>
+      <div align="center"></div>
+      <table  border="1">
+        <tr bgcolor="#0033FF"> 
+          <td><div align="center"><strong><font color="#FFFFFF">Specification 
+              Name</font></strong></div></td>
+          <td><div align="center"><strong><font color="#FFFFFF">Page</font></strong></div></td>
+          <td><div align="center"><strong><font color="#FFFFFF">Module</font></strong></div></td>
+        </tr>
+        <tr> 
+          <td valign="top">Clone Ranking</td>
+          <td valign="top">Analysis Settings &gt; Clone Ranking </td>
+          <td valign="top">Isolate Ranker</td>
+          </tr>
+        <tr> 
+          <td valign="top"><a href="specs/help_acceptance_spec.htm" target="_blank">Clone Acceptance 
+            Criteria </a></td>
+          <td valign="top">Analysis Settings &gt; Clone Acceptance Criteria </td>
+          <td valign="top"><dl>
+              <dt>Decision Tool</dt>
+              <dt>Quick Decision Tool</dt>
+              <dt>Isolate Ranker</dt>
+            </dl></td>
+         </tr>
+        <tr> 
+          <td valign="top">Set of Parameter for Primer Design </td>
+          <td valign="top">Analysis Settings &gt; Primer Designer </td>
+          <td valign="top">Primer Designer</td>
+         </tr>
+        <tr> 
+          <td valign="top">Set of Parameter for Polymorphism Detection </td>
+          <td valign="top">Analysis Settings &gt; Polymorphism Detection</td>
+          <td valign="top">Polymorphism Finder</td>
+        </tr>
+        <tr> 
+          <td valign="top">Set of Parameter for Sequence Trimming </td>
+          <td valign="top">Analysis Settings &gt; Sequence Trimming </td>
+          <td valign="top"><dl>
+              <dt>Gap MapperLow Confidence Regions Finder </dt>
+            </dl></td>
+        </tr>
+      </table>
+      <font color="#FFFFFF">&nbsp;</font><font color="#FFFFFF">&nbsp;</font></div> 
+      <h3><a name="upload_plates">Plate upload</a></h3>
       <p>User Goal: Upload plate mapping information and target sequence(s) description 
         into ACE.</p>
-      <p><em><strong>For non-HIP
-users:</strong></em></p>
+      <p><em><strong>For non-HIP users:</strong></em></p>
       <ul>
-        <li>Select cloning strategy for plates (see 'System settings' section if you need create new cloning strategy).</li>
+        <li>Select cloning strategy for plates (see 'System settings' section 
+          if you need create new cloning strategy).</li>
         <li><a
 href="help_XML_files_format_description.htm"
-target="_blank"	>Prepare 
-          XML files for submission</a>.</li>
+target="_blank"	>Prepare XML files for submission</a>.</li>
         <li>Select <em>'Process &gt; Upload plates information &gt; Upload reference 
-          sequence information from file'</em> and upload XML file with reference sequence information.</li>
+          sequence information from file'</em> and upload XML file with reference 
+          sequence information.</li>
         <li>Select <em>'Process &gt; Upload plates information&gt; Upload clone 
           collection from file' </em> and upload XML file with plate mapping information.</li>
       </ul>
@@ -150,40 +190,81 @@ target="_blank"	>Prepare
           for sequencing. </li>
         <li>Select <em>'Process &gt; Upload plates information'</em>. 
           <ul>
-            <li>Submit plate labels (case sensitive)
-(<em>Note: </em>only plates cloned using the same 
-              cloning strategy can be uploaded together). </li>
-            <li>Choose from next step in plate processing (available selection: 'Run 
-              end reads' and 'Run clone
-evaluation').</li>
-            <li>Choose Start Codon (available
-selection: ATG; Natural - as submitted 
+            <li>Submit plate labels (case sensitive) (<em>Note: </em>only plates 
+              cloned using the same cloning strategy can be uploaded together). 
+            </li>
+            <li>Choose from next step in plate processing (available selection: 
+              'Run end reads' and 'Run clone evaluation').</li>
+            <li>Choose Start Codon (available selection: ATG; Natural - as submitted 
               from GenBank for reference sequence. If your clones have been normalized 
-              with start codon other than 'ATG' please contact informatics 
-              team).</li>
-            <li>Choose Fusion Stop Codon (available
-selection: GGA; TTG. If your 
+              with start codon other than 'ATG' please contact informatics team).</li>
+            <li>Choose Fusion Stop Codon (available selection: GGA; TTG. If your 
               clones have been normalized with different fusion codon please contact 
               informatics team).</li>
-            <li>Choose Closed Stop Codon (available
-selection: TGA; TAA; TAG; 
+            <li>Choose Closed Stop Codon (available selection: TGA; TAA; TAG; 
               Natural).</li>
-            <li>Choose cloning vector. If your vector is not available goto <em>'Cloning project settings > Add vector</em>.
+            <li>Choose cloning vector. If your vector is not available goto <em>'Cloning 
+              project settings > Add vector</em>. 
             <li>Choose 5' upstream and 3' downstream linkers.</li>
           </ul>
         </li>
       </ul>
-      <p>Uppon finishing the upload ACE sends   
-e-mail report to the user.</p>
+      <p>Uppon finishing the upload ACE sends e-mail report to the user.</p>
       <p><a href="#upload_plates">Back</a> </p>
-      <h3><a name="primers">Primers design and managment.</a></h3>
-      <h3><a name="trace_upload">Trace files upload.</a></h3>
+      <h3><a name="primers">Primers design and managment</a></h3>
+      <p>This set of modules allows users to: (a) design gene-specific sequencing 
+        primers; (b) select specific primer(s) for vendor order; (c) order primers; 
+        (d) track primer plates;</p>
+      <ul>
+        <li>To <strong>order gene-specific primers</strong> use '<em>Process &gt; 
+          Internal Primer Design and Order &gt; Run Primer Designer</em>', specify 
+          how to extract clone information. User can submit (a) plate labels - 
+          primers will be designed for all clones from these plates; (b) clone 
+          IDs; (c) ACE reference sequence IDs; (d) user reference sequence IDs*. 
+          Next choose specification for Primer3 and define what region of target 
+          sequence primer should be covered. Select '<em>Design primers for Reference 
+          Sequence</em>' option if you would like to design primers for a complete 
+          primer walk. Select '<em>Design primers for Stretch Collection</em>' 
+          to design primers needed to complete coverage (i.e., fill in gaps or 
+          cover low confidence discrepancies). Stretch collection is a result 
+          of Gap Mapper or Low Confidens Regions Finder run for the particular 
+          clone. ACE extracts last stretch collection defined for the clone. 
+          <p>Primer Designer can be run in try mode, in this case information 
+            about designed primers is sent to user in <a href="reports/primer_design.htm">tab 
+            delimited text file</a>, however, no information is stored in database 
+            and, hence, cannot be used for vendor primer order.<br>
+            *<strong><em>Note:</em></strong> Options (c) and (d) should not be 
+            used in conjunction with '<em>Design primers for Stretch Collection</em>' 
+            mode. </li>
+        <li>Designed primers must be approved by user to be included into vendor 
+          order. To <strong>approve primers</strong> select '<em>Process &gt; 
+          Internal Primer Design and Order &gt; Approve Internal Primers</em>', 
+          specify clone IDs and select what kind of primers (designed for reference 
+          sequence or for stretch collection) </li> should be displayed. </li>
+        <li>To <strong>place primers order</strong> use <em>'Process &gt; Internal 
+          Primer Design and Order &gt; Order Internal Primers'</em>, specify clone 
+          IDs, choose type of approved primers that should be included in the 
+          order. Available options are (a) only primers designed for stretch collections; 
+          (b) only primers designed for reference sequence; (c) primers designed 
+          for stretch collections and reference sequence. ACE pools out all primers 
+          aproved for the specified clones according to the user selection and 
+          starts to put them in 96-well plate format. User has an option to specify 
+          wells where first and last primers will be placed on the plate allowing 
+          to preserve empty wells for controls if desired. ACE allows user to 
+          create an order file in format required by vendor ( <a href="reports/sample1_order_oligo.html">sample_order_file1</a>, 
+          <a href="reports/sample2_order_oligo.html">sample_order_file_2</a>).</li>
+        <li>To store your <strong>information</strong> regarding when <strong>primer 
+          plates</strong> were ordered or used for sequencing select '<em>Process 
+          &gt; Internal Primer Design and Order &gt; Track Oligo Plate</em>' choose 
+          plate status and enter comments.<br>
+        </li>
+      </ul>
+      <h3><a name="trace_upload">Trace files upload</a></h3>
       <li>Copy trace files into directory specified in <a href="help_ACEConfigurationFile.html" target="_blank">ACE 
         configuration file</a> (TRACE_FILES_TRANCFER_INPUT_DIR). </li>
-      <li>Create mapping file which is tab delimited text file with one record per plate.
-      Each record should contain two fields:
-<p>&lt;sequencing facility plate 
-        label>Tab< HIP plate label>.</li>
+      <li>Create mapping file which is tab delimited text file with one record 
+        per plate. Each record should contain two fields: 
+        <p>&lt;sequencing facility plate label>Tab< HIP plate label>.</li>
       <li>In ACE go to <em>'Trace Files -&gt; Create Renaming File'</em>. Select 
         mapping file, <a
 href="help_TraceFilesNamingFormats.html"
@@ -251,47 +332,44 @@ onClick="window.open(href, 'GeneralReport', 'width=800,height=400,scrollbars=yes
       should be distributed. 
       <p>ACE will send user e-mail after action will be performed. </p>
       <p>**********************************</p>
-      <h3><a name="delete_data">Data clean up.</a></h3>
+      <h3><a name="delete_data">Data clean up</a></h3>
       <p>ACE allows removal of trace files and clone information from the database. 
-        This is useful in cases when: (a) wrong plates have been submitted into ACE; 
-        (b) errors occurred in clones mapping on the plate; (c) plates have been mislabeled; 
-        (d) incorrect data from sequencing facilities, etc.</p>
+        This is useful in cases when: (a) wrong plates have been submitted into 
+        ACE; (b) errors occurred in clones mapping on the plate; (c) plates have 
+        been mislabeled; (d) incorrect data from sequencing facilities, etc.</p>
       <ul>
         <li>To <strong>delete plate</strong> select '<em>Process &gt; Delete Data 
           &gt; Delete plate</em>' and submit plate label (case insensitive).</li>
         <li>To <strong>delete clone forward and reverse end reads</strong> select 
           '<em>Process &gt; Delete data &gt; Clone forward and reverse end reads 
           from database</em>' and submit plate label (case insensitive) or clone 
-          IDs. This action deletes records for the reads from the database, however,
+          IDs. This action deletes records for the reads from the database, however, 
           trace files for these end reads stored on the hard drive are not affected.</li>
-        <li>To <strong>delete forward end reads</strong> only select '<em>Process &gt; 
-          Delete data &gt; Delete clone forward end reads from database</em>' 
-          and submit plate label (case insensitive) or clone IDs. This action deletes 
-          records for the forward reads from the database, however,
-          trace files for these forward end reads stored on the 
-          hard drive are not affected.</li>
+        <li>To <strong>delete forward end reads</strong> only select '<em>Process 
+          &gt; Delete data &gt; Delete clone forward end reads from database</em>' 
+          and submit plate label (case insensitive) or clone IDs. This action 
+          deletes records for the forward reads from the database, however, trace 
+          files for these forward end reads stored on the hard drive are not affected.</li>
         <li>To <strong>delete clone reverse end reads </strong> select <em>'Process 
           &gt; Delete data &gt; Delete clone reverse end reads from database</em>' 
-          and submit plate label (case insensitive) or clone IDs. This action deletes 
-          records for the reverse reads from the database, however,
-          trace files for these reverse end reads stored on the 
-          hard drive are not affected.</li>
+          and submit plate label (case insensitive) or clone IDs. This action 
+          deletes records for the reverse reads from the database, however, trace 
+          files for these reverse end reads stored on the hard drive are not affected.</li>
         <li>To <strong>delete clone sequence</strong> select '<em>Process &gt; 
           Delete data &gt; Delete clone sequence from database</em>' and submit 
           clone IDs or clone sequence IDs (run General Report to get clone sequence 
           ID).</li>
-        <li>To <strong>delete trace files</strong> from the hard drive, first, select 
-          '<em>Process &gt; Delete data &gt; Get trace file names</em>'. ACE will send 
-          e-mail with attached file that contains trace file names for the submitted clone IDs.
-          Save this file. Next select '<em>Process 
+        <li>To <strong>delete trace files</strong> from the hard drive, first, 
+          select '<em>Process &gt; Delete data &gt; Get trace file names</em>'. 
+          ACE will send e-mail with attached file that contains trace file names 
+          for the submitted clone IDs. Save this file. Next select '<em>Process 
           &gt; Delete data &gt; Delete trace files from hard drive (no recovery 
           possible)</em>' and submit saved file. ACE will permanently delete traces 
           from the hard drive.</li>
         <li>To <strong>remove trace files</strong> to the storage directory first 
           get file with trace file name from ACE (see above). Next select <em>'Process 
           &gt; Delete data &gt; Move trace file from clone directory into temporary 
-          directory (allows trace files
-recovery)</em>' - traces will be moved 
+          directory (allows trace files recovery)</em>' - traces will be moved 
           to the storage directory. </li>
         <li>To <strong>delete intermidiate files</strong> created during clone 
           sequence assembly by PhredPhrap from hard drive select '<em>Process 
@@ -299,7 +377,7 @@ recovery)</em>' - traces will be moved
         </li>
       </ul>
       <p><a href="#delete_data">Back</a> </p>
-      <h3><a name="report_data">Reports.</a></h3>
+      <h3><a name="report_data">Reports</a></h3>
       ACE sends reports by e-mail as attached tab delimited files. 
       <ul>
         <li>'Quick Decision Tool' report is a simplified version of Decision Tool 
@@ -330,70 +408,64 @@ target="_blank"> requested information</a> for the specified set of clones. To
           be longer than the user-defined minimum length; (b) the average confidence 
           score for all non-ambiguous bases between the first and last base must 
           be above the minimum confidence score. The value of these thresholds 
-          are defined in <a href="help_ACEConfigurationFile.html" target="_blank">ACE configuration 
-          file</a>. There is no limit on the number of processed clones.</li>
+          are defined in <a href="help_ACEConfigurationFile.html" target="_blank">ACE 
+          configuration file</a>. There is no limit on the number of processed 
+          clones.</li>
       </ul>
-     
       <p>&nbsp;</p>
       <p><a href="#report_data">Back</a> </p>
-      <h3><a name="view_data">Real time
-views.</a></h3>
+      <h3><a name="view_data">Real time views</a></h3>
       <ul>
         <li><strong><a
-href="image/image_Fig4.htm">Comprehensive plate viewer</a></strong> 
-          gives access to complete information about plate clones. Select 'View 
-          &gt; Plate Results', enter plate label (case insensitive), check 'Show 
-          Isolate Ranker Output' option. </li>
+href="image/image_Fig4.htm">Comprehensive plate viewer</a></strong> gives access 
+          to complete information about plate clones. Select 'View &gt; Plate 
+          Results', enter plate label (case insensitive), check 'Show Isolate 
+          Ranker Output' option. </li>
         <li>To view<strong> plate history</strong> select '<em>View &gt; Plate 
           history</em>' and enter plate label (case insensitive);</li>
         <li>To view <strong>plate description</strong> select '<em>View &gt; Plate 
-          Description</em>' and enter plate label (case insensitive). The view displays 
-          (1) plate label; (2) plate unique ID; (3) plate type (96 well plate); 
-          (4) link to cloning strategy description;
-(5) for each well: (a) well 
-          number; (b) sample type - Isolate, Control, Empty; (c) clone ID; (d) 
-          clone final status; (e) description of the last process run on clone 
-          data; (f) link to reference sequence description; (g) link to clone 
-          sequence description if available. </li>
+          Description</em>' and enter plate label (case insensitive). The view 
+          displays (1) plate label; (2) plate unique ID; (3) plate type (96 well 
+          plate); (4) link to cloning strategy description; (5) for each well: 
+          (a) well number; (b) sample type - Isolate, Control, Empty; (c) clone 
+          ID; (d) clone final status; (e) description of the last process run 
+          on clone data; (f) link to reference sequence description; (g) link 
+          to clone sequence description if available. </li>
         <li>To view <strong>clone processing history </strong>select '<em>View 
           &gt; Clone History</em>' and enter clone IDs;</li>
         <li>To view <strong>all plates uploaded into ACE</strong> select '<em>View 
-          &gt; Plates</em>'. Plates are grouped by project name (alphabetical order). 
-          Click on the check box located before project name to hide all plates related 
-          to the project.</li>
-        <li>To veiw <strong>all analysis specifications </strong> 
-          stored in ACE select 'View &gt; Process Configurations'. <strong><em>Note: 
-          </em></strong>you can view only one specification at a time. </li>
-        <li>To view complete information about <strong>vectors</strong> uploaded into 
-          ACE select '<em>View &gt; Vectors</em>'.
-</li>
-        <li>To view complete information about <strong>linkers</strong> uploaded into 
-          ACE select '<em>View &gt; Linker</em>'.
-</li>
+          &gt; Plates</em>'. Plates are grouped by project name (alphabetical 
+          order). Click on the check box located before project name to hide all 
+          plates related to the project.</li>
+        <li>To veiw <strong>all analysis specifications </strong> stored in ACE 
+          select 'View &gt; Process Configurations'. <strong><em>Note: </em></strong>you 
+          can view only one specification at a time. </li>
+        <li>To view complete information about <strong>vectors</strong> uploaded 
+          into ACE select '<em>View &gt; Vectors</em>'. </li>
+        <li>To view complete information about <strong>linkers</strong> uploaded 
+          into ACE select '<em>View &gt; Linker</em>'. </li>
         <li>To examine <strong>quality of the uploaded end reads</strong> select 
           '<em>Process &gt; View Process Results &gt; View available end reads</em>'. 
-          The resulting view displays (1) plate label;
-(2) plate unique ID; (3) 
+          The resulting view displays (1) plate label; (2) plate unique ID; (3) 
           plate type (96 well plate); (4) link to cloning strategy information; 
           (5) for each well: (a) well number; (b) sample type - Isolate, Control, 
           Empty; (c) quality status of forward end read (Pass / Fail); (d) quality 
           status of reverse end read. The view helps to detect systematic problems 
           with submitted end reads, for example, cases when all forward or reverse 
           reads failed.</li>
-        <li> To view  <strong>primers designed for clone(s)</strong> select '<em>Process 
+        <li> To view <strong>primers designed for clone(s)</strong> select '<em>Process 
           &gt; View Process Results &gt; View Internal Primers</em> ', submit 
-          clone IDs and indicate type of primers:
-primers designed for reference 
+          clone IDs and indicate type of primers: primers designed for reference 
           sequence or primers designed for stretch collection (see description 
           of GapMapper module for details). <a href="screen_shots/report_view_primers.html"
-target="_blank">Sample 
-          report</a>.</li>
+target="_blank">Sample report</a>.</li>
         <li> To view <strong>all primers ordered for the clone</strong> select 
           '<em>Process &gt; View Process Results &gt; View Oligo Order(s) for 
           Clone(s)</em>'. <a target="_blank"
 href="screen_shots/report_ordered_primers.html">Sample report</a>.</li>
         <li> To view <strong>ordered oligo plates</strong> select '<em>Process 
-          &gt; View Process Results &gt; View Oligo Plate</em>'. Sample report.</li>
+          &gt; View Process Results &gt; View Oligo Plate</em>'. <a target="_blank" href="screen_shots/report_oligo_plate.html">Sample 
+          report.</a></li>
         <li> To view <strong>all contig collections</strong> created by Gap Mapper 
           for the clone select '<em>Process &gt; View Process Results &gt; View 
           all contig collections </em>'. Multiple contig collections are created 
@@ -401,11 +473,13 @@ href="screen_shots/report_ordered_primers.html">Sample report</a>.</li>
           or with additional trace files.</li>
         <li> To view <strong>last contig collection </strong>designed for the 
           clone by Gap Mapper select <em>Process &gt; View Process Results &gt; 
-          View latest contig collection</em>. </li>
+          View latest contig collection</em>. <a href="screen_shots/report_view_contigs.html" target="_blank">Sample 
+          report.</a> </li>
         <li> To view set of <strong>low confidence regions</strong> for the clone 
           created by Low Confidence Finder select <em>Process &gt; View Process 
           Results &gt; View low confidence regions for clone sequences' </em> 
-          and specify clone IDs. Sample report. </li>
+          and specify clone IDs. <a href="screen_shots/report_view-lqr.html">Sample 
+          report.</a> </li>
       </ul>
       <p><a href="#view_data">Back</a> </p>
       <h3>&nbsp;</h3>
