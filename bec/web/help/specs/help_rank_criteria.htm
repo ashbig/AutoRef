@@ -1,0 +1,199 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<LINK REL=StyleSheet HREF="application_styles.css" TYPE="text/css" MEDIA=screen>
+</head>
+
+<body>
+<h2><font color="#0099CC" > Clone Ranking Specification</font><br>
+</h2>
+<p>For cloning workflows that produce several isolates for the same gene with 
+  the expectation that at least one of these isolates will be of acceptable quality, 
+  it is essential to selects the best isolate to carry forward as soon as at least 
+  some sequencing data are available. Isolate Ranker ranks isolates based on overall 
+  isolate score which is computed by normalizing the sum of the penalties over 
+  the number of bases covered. </p>
+<p>Main form to create new Clone Ranking Specification accessible through '<em>Analysis 
+  Settings &gt; Clone Ranking</em>' <br>
+  <br>
+</p>
+
+
+
+
+<table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
+
+<tr><td colspan =2><div align="right"><b> <font color="#0000FF"><u>View Mine &nbsp;&nbsp; View All </u>
+        </font> </b> </div>
+      </P></P></td></tr>
+<TR><td colspan="2">
+
+<P>&nbsp; 
+      <P><font  size="4"><b>Set Name</b></font> 
+        <input type="text" name="SET_NAME" size="40" value="">
+     <font color="#FF0000">   - unique specification name </font>
+<P>
+</td></tr>
+
+  <tr> 
+    <td colspan=2 ><p><b>Penalties for discrepancy in the insert region</b> </p> 
+     <input type='radio' name='isMissense' value='1' checked>Process conservative & non-conservative substitutions together (System will use the penalty values for missense substitutions; system will ignore values for conservative and non-conservative substitutions)
+ <P><input type='radio' name='isMissense' value='0'>Process conservative & non-conservative substitutions separately (System will use the penalty values for  conservative & non-conservative substitutions; system will ignore values for missense substitutions)
+      <table width="90%" border="0" align="center">
+        <tr class='headerRow'> 
+	 <td ><div align="right">Base Confidence</div></td>
+          <td><div align="center">High </div></td>
+          <td ><div align="center">Low </div></td>
+        </tr>
+        <tr class=evenRowColoredFont>
+          <td width="44%"  >Silent substitution</td>
+          <td width="16%" ><div align="center">        <input name="ER_S_H" type="input" id="ER_S_H" value="3" size="10" >            </div></td>
+          <td width="14%" ><div align="center">               <input name="ER_S_L" type="input" id="ER_S_L" value="1" size="10" >            </div></td>
+        </tr>
+	<tr class=oddRowColoredFont> 
+		  
+          <td >Missense substitution</td>
+          <td ><div align="center">               <input name="ER_MISS_H" type="input" id="ER_MISS_H" value="20" size="10" >            </div></td>
+          <td ><div align="center">               <input name="ER_MISS_L" type="input" id="ER_MISS_L" value="10" size="10" >            </div></td>
+        </tr>
+    
+        <tr class=evenRowColoredFont> 
+	     <td >Conservative substitution</td>
+          <td ><div align="center">               <input name="ER_C_H" type="input" id="ER_C_H" value="20" size="10" >            </div></td>
+          <td ><div align="center">               <input name="ER_C_L" type="input" id="ER_C_L" value="10" size="10" >            </div></td>
+        </tr>
+        <tr class=oddRowColoredFont> 
+                <td >Non-conservative substitution</td>
+            <td ><div align="center">               <input name="ER_NC_H" type="input" id="ER_NC_H" value="50" size="10" >            </div></td>
+            <td ><div align="center">               <input name="ER_NC_L" type="input" id="ER_NC_L" value="30" size="10" >            </div></td>
+        </tr>
+        <tr class=evenRowColoredFont >  
+          <td >Frameshift</td>
+          <td ><div align="center">               <input name="ER_FR_H" type="input" id="ER_FR_H" value="1000" size="10" >            </div></td>
+          <td ><div align="center">               <input name="ER_FR_L" type="input" id="ER_FR_L" value="1000" size="10" >            </div></td>
+        </tr>
+        <tr class=oddRowColoredFont >
+          <td >In-frame deletion</td>
+          <td ><div align="center">               <input name="ER_IDEL_H" type="input" value="1000" size="10" >            </div></td>
+          <td ><div align="center">               <input name="ER_IDEL_L" type="input" value="1000" size="10" >            </div></td>
+        </tr>
+         <tr class=evenRowColoredFont >
+          <td >In-frame insertion</td>
+          <td ><div align="center">               <input name="ER_IINS_H" type="input" value="1000" size="10" >            </div></td>
+          <td><div align="center">               <input name="ER_IINS_L" type="input" value="1000" size="10" >            </div></td>
+        </tr>
+        <tr class=oddRowColoredFont>  
+            <td >Truncation</font></strong></td>
+          <td ><div align="center">               <input name="ER_TRANC_H" type="input" value="1000" size="10" >
+            </div></td>
+          <td ><div align="center">               <input name="ER_TRANC_L" type="input" id="ER_TRANC_L" value="1000" size="10" >
+            </div></td>
+        </tr>
+        <tr class=evenRowColoredFont>  
+          <td >No translation (e.g., no ATG)</td>
+          <td ><div align="center">               <input name="ER_NOTRANSLATION_H" type="input" id="ER_NOTRANSLATION_H" value="1000" size="10" >            </div></td>
+          <td ><div align="center">               <input name="ER_NOTRANSLATION_L" type="input" id="ER_NOTRANSLATION_L" value="1000" size="10" >            </div></td>
+        </tr>
+        <tr class=oddRowColoredFont >
+            <td ><font color="#000080">Post-elongation (e.g., no stop codon)</font></td>
+          <td ><div align="center">               <input name="ER_PLONG_H" type="input" id="ER_PLONG_H" value="1000" size="10" >            </div></td>
+          <td ><div align="center">               <input name="ER_PLONG_L" type="input" id="ER_PLONG_L" value="1000" size="10" >            </div></td>
+        </tr>
+      </table></td>
+  </tr>
+  <tr><td colspan="2">&nbsp; </td></tr><td colspan=2 ><p><b>Penalties for discrepancies in the linker region</b> </p> 
+     
+      <table width="90%" border="0" align="center">
+        <tr class='headerRow'> 
+          <td ><div align="right">Base Confidence</div></td>
+          <td ><div align="center">High </div></td>
+          <td ><div align="center">Low </div></td>
+        </tr>
+        <tr class='oddRow'> 
+          <td width="44%" >5' substitution</td>
+          <td width="16%" ><div align="center">     <input name="ER_5S_H" type="input" id="ER_5S_H" value="3" size="10" >            </div></td>
+          <td width="14%"><div align="center">               <input name="ER_5S_L" type="input" id="ER_5S_L" value="1" size="10" >            </div></td>
+        </tr>
+        <tr class='oddRow'> 
+          <td >5' deletion/insertion</font></strong></td>
+          <td ><div align="center">               <input name="ER_5DI_H" type="input" id="ER_5DI_H" value="1000" size="10" >            </div></td>
+          <td ><div align="center">               <input name="ER_5DI_L" type="input" id="ER_5DI_L" value="500" size="10" >            </div></td>
+        </tr>
+        <tr class='evenRow'> 
+          <td >3' substitution</font></strong></td>
+          <td ><div align="center">              <input name="ER_3S_H" type="input" id="ER_3S_H" value="50" size="10" >            </div></td>
+          <td ><div align="center">               <input name="ER_3S_L" type="input" id="ER_3S_L" value="30" size="10" >            </div></td>
+        </tr>
+        <tr class='evenRow'> 
+          <td >3' deletion/insertion</font></strong></td>
+          <td ><div align="center">               <input name="ER_3DI_H" type="input" id="ER_3DI_H" value="1000" size="10" >            </div></td>
+       	<td ><div align="center">               <input name="ER_3DI_L" type="input" id="ER_3DI_L" value="500" size="10" >            </div></td>
+      </table></td>
+  </tr>
+<tr><td colspan="2">&nbsp; </td></tr>  <tr><td colspan="2">
+      <p><b>Penalties for discrepancies introduced by ambiguous bases
+</b> <P><input type="checkbox" name="show" value="1" checked >
+		Show </p>
+      <p></p>
+	  
+   
+     <table width="90%" border="0" align="center">
+          <tr class='headerRow'> 
+            <td ><div align="right">Base Confidence</div></td>
+            <td ><div align="center">High </div></td>
+            <td ><div align="center">Low  </div></td>
+          </tr>
+          <tr class=evenRowColoredFont> 
+            <td width="44%" >Start              codon substitution</td>
+            <td width="16%" ><div align="center">                 <input name="ER_NSTART_PASS_H" type="input" id="ER_NSTART_PASS_H" value="0" size="10" >              </div></td>
+            <td width="14%"><div align="center">                 <input name="ER_NSTART_PASS_L" type="input" id="ER_NSTART_PASS_L" value="0" size="10" >              </div></td>
+          </tr>
+          <tr  class=evenRowColoredFont> 
+            <td >Stop codon               substitution</b></td>
+            <td ><div align="center">                 <input name="ER_NSTOP_PASS_H" type="input" id="ER_NSTOP_PASS_H" value="0" size="10" >              </div></td>
+            <td ><div align="center">                 <input name="ER_NSTOP_PASS_L" type="input" id="ER_NSTOP_PASS_L" value="0" size="10" >              </div></td>
+          </tr>
+          <tr  class=evenRowColoredFont> 
+            <td >Substituttion               cds region </font></strong></td>
+            <td ><div align="center">                 <input name="ER_NCDS_PASS_H" type="input" id="ER_NCDS_PASS_H" value="0" size="10"  >              </div></td>
+            <td ><div align="center">                 <input name="ER_NCDS_PASS_L" type="input" id="ER_NCDS_PASS_L" value="0" size="10" >              </div></td>
+          </tr>
+          <tr  class=evenRowColoredFont> 
+            <td >Frameshift insertion</font></strong></td>
+            <td ><div align="center">                 <input name="ER_NFRAME_PASS_H" type="input" id="ER_NFRAME_PASS_H" value="0" size="10" >              </div></td>
+            <td ><div align="center">                 <input name="ER_NFRAME_PASS_L" type="input" id="ER_NFRAME_PASS_L" value="0" size="10" >              </div></td>
+          </tr>
+          <tr  class=evenRowColoredFont> 
+            <td >Inframe insertion</font></strong></td>
+            <td ><div align="center">                 <input name="ER_NINFRAME_PASS_H" type="input" id="ER_NINFRAME_PASS_H" value="0" size="10" >              </div></td>
+            <td ><div align="center">                 <input name="ER_NINFRAME_PASS_L" type="input" id="ER_NINFRAME_PASS_L" value="0" size="10" >              </div></td>
+          </tr>
+          <tr  class=oddRowColoredFont> 
+            <td >Substitution in 5'               linker region</font></strong></td>
+            <td ><div align="center">                 <input name="ER_N5SUB_PASS_H" type="input" id="ER_N5SUB_PASS_H" value="0" size="10" >              </div></td>
+            <td ><div align="center"><input name="ER_N5SUB_PASS_L" type="input" id="ER_N5SUB_PASS_L" value="0" size="10" >              </div></td>
+          </tr>
+          <tr class=oddRowColoredFont> 
+            <td >Insertion in 5' linker               region </font></strong></td>
+            <td ><div align="center">                 <input name="ER_N5INS_PASS_H" type="input" id="ER_N5INS_PASS_H" value="0" size="10" >              </div></td>
+            <td ><div align="center">                 <input name="ER_N5INS_PASS_L" type="input" id="ER_N5INS_PASS_L" value="0" size="10" >              </div></td>
+          </tr>
+          <tr  class=evenRowColoredFont> 
+            <td >Substitution in 3'               linker region</td>
+            <td ><div align="center">                 <input name="ER_N3SUB_PASS_H" type="input" id="ER_N3SUB_PASS_H" value="0" size="10" >              </div></td>
+            <td ><div align="center">                 <input name="ER_N3SUB_PASS_L" type="input" id="ER_N3SUB_PASS_L" value="0" size="10" >              </div></td>
+          </tr>
+          <tr  class=evenRowColoredFont> 
+            <td >Insertion in 3' linker               region </font></strong></td>
+            <td ><div align="center">                 <input name="ER_N3INS_PASS_H" type="input" id="ER_N3INS_PASS_H" value="0" size="10" >              </div></td>
+            <td ><div align="center">                 <input name="ER_N3INS_PASS_L" type="input" id="ER_N3INS_PASS_L" value="0" size="10" >              </div></td>
+          </tr>
+        </table>
+      </div>
+		</td>
+  </tr>
+</table>
+
+
+</body>
+</html>

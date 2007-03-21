@@ -1,0 +1,165 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<LINK REL=StyleSheet HREF="application_styles.css" TYPE="text/css" MEDIA=screen>
+</head>
+
+<body>
+<h2><font color="#0099CC" >Parameter Settings for Sequencing Primer Design</font></h2>
+<p>For primer design ACE use Primer3 - freely distributed software developed by 
+  the Whitehead Institute for Biomedical Research. Primer3 is specifically designed 
+  to pick primers for PCR reactions and has no built-in algorithm for primer walking. 
+  We developed Primer3 wrapper that automates primer design for full-length cDNA 
+  sequencing of multiple clones. Specification for Primer Designer includes (1) 
+  sequence related parameters used by Primer3 (e.g., Tm, GC content - see parameter 
+  description below the entry form); (2) sequence processing parameters (e.g., 
+  length of reliable part of sequencing reads); (3) type of desired coverage (e.g., 
+  single forward, single reverse, double coverage). Sequence processing parameters 
+  define quality of exspected reads and whether universal primers are used for 
+  end reads, and how many bases of ORF region these reads are exspected to cover. 
+  <strong><em>Note</em></strong>: use Primer Designer specification with parameters 
+  <strong>'Distance between 5p Universal Primer and START codon</strong>' and 
+  <strong>'Distance between 3p Universal Primer and STOP codon</strong>' set to 
+  0 when design primers for stretch collection. <br>
+</p>
+
+<p>Main form to create new Primer Design Specification accessible through '<em>Analysis 
+  Settings &gt; Primer Designer</em>' </p>
+  
+         Home > Analysis Settings > Primer Designer  
+        
+
+
+<table width ='90%' border=0 align='center'><tr >
+<td >
+<h2 style='font: bold, 14px, Times New Roman ;text-align: left; color: #008000;white-space: nowrap; '>
+Create New Set of Parameter for Primer Design </h2></td></tr><tr><td valign='top'>    
+<hr ></td></tr> </table>
+
+		
+
+
+
+
+<table border="0" cellpadding="0" cellspacing="0" width="90%" align=center>
+  <tr> 
+    <td colspan=2><div align="right"><font color="#0000FF"> <b> <u>View Mine &nbsp;&nbsp; 
+        View All </u></b> <u>&nbsp;&nbsp;<b>Delete</b></u></font> </div>
+      </td>
+  </tr>
+  <tr> 
+    <td colspan="2"> <b>Set Name</b> <input type="text" name="SET_NAME" size="53" value="">
+      <em><font color="#FF0000">- unique specification name </font></em> 
+      <p> </td>
+  </tr>
+  <tr class='headerRow'>     <td height="42" colspan="2">Primer Design Parameters</td>  </tr>
+  <tr> 
+    <td colspan="2"> 
+    <table width="100%">
+        <tr class=evenRowColoredFont > 
+          <td width="25%" >Primer             Length (bp)</td>
+          <td width="25%" >Min:             <input type="text" name="P_primer_min" size="10" value="18" ></td>
+          <td width="25%" >Optimal:<input type="text" name="p_primer_opt" size="10" value="21" ></td>
+          <td width="25%" >Max:   <input type="text" name="p_primer_max" size="10" value="27" >            </td>
+        </tr>
+        <tr class=oddRowColoredFont > 
+          <td width="25%" >Primer             Tm (C)</td>
+          <td width="25%" >Min: <input type="text" name="p_primer_tm_min" size="10" value="57" >            </td>
+          <td width="25%" >Optimal: <input type="text" name="p_primer_tm_opt" size="10" value="60" >            </td>
+          <td width="25%" >Max: <input type="text" name="p_primer_tm_max" size="10" value="63" >            </td>
+        </tr>
+        <tr class=evenRowColoredFont > 
+          <td width="25%" >Primer             GC%</td>
+          <td width="25%">Min: <input type="text" name="p_primer_gc_min" size="10" value="30">         </td>
+          <td width="25%" >Optimal: <input type="text" name="p_primer_gc_opt" size="10" value="50">            </td>
+          <td width="25%" >Max: <input type="text" name="p_primer_gc_max" size="10" value="70">         </td>
+        </tr>
+      </table></td>
+  </tr>
+  
+  <tr><td colspan="2">&nbsp;</td></tr>
+  <tr class='headerRow'>     <td height="42" colspan="2" >Sequencing       Parameters</td>  </tr>
+  <tr class=evenRowColoredFont> 
+    <td colspan=2  > 
+      <input type=checkbox name="universal_primer_5p" id="universal_primer_5p" value="-1">
+     Check      here if NO 5p Universal Primer is used 
+      (<font size =2>The most upstream forward PCR primer is used when No 
+        5p Universal Primer is checked)</font></td></tr>
+   <tr class=evenRowColoredFont> 
+    <td colspan=2> 
+      <input type=checkbox name=universal_primer_3p value="-1" >
+    Check         here if NO 3p Universal Primer is used 
+     </td>
+  </tr>
+  <tr  class=oddRowColoredFont  > 
+    <td height="35">Distance       between 5p Universal Primer and START codon 
+      <font size="2">(For a left primer, primer start position is the position       of the leftmost base)</font></td>
+    <td > 
+        <input type="text" name="p_upstream_distance_view"  onchange='onChangeValue(this, this.value)' size="20" value="100" id="p_upstream_distance_view" >
+      bases</td>
+  </tr>
+  <tr  class=evenRowColoredFont ='30'> 
+    <td width="57%"  height="35">Distance       between 3p Universal Primer and STOP codon 
+    <font size="2">(For       a right primer, primer start position is the position of the rightmost base)</font></td>
+    <td > 
+        <input type="text" name="p_downstream_distance_view" size="20" value="100" id="p_downstream_distance_view" onchange='onChangeValue(this, this.value)' >
+      bases</td>
+  </tr>
+  <tr  class=oddRowColoredFont> 
+    <td height="35" >Estimated       high quality read length (ERL)</td>
+    <td  >         <input type="text" name="p_single_read_length" size="20" value="400" >        bases</td>
+  </tr>
+  <tr  class=evenRowColoredFont> 
+    <td height="35">Window       size for testing primers</td>
+    <td >         <input type="text" name="p_buffer_window_len" size="20" value="50" >      bases</td>
+  </tr>
+<tr  class=oddRowColoredFont> 
+    <td height="35">Distance between sequencing primer and start of high quality read length</td>
+    <td ><input type="text" name="P_EST_SEQ" size="20" value="50" >       bases</td>
+  </tr>
+  <tr class=evenRowColoredFont> 
+    <td >Number of strands to sequence</td>
+    <td  height="3" align="center" valign="bottom"  bgcolor="#e4e9f8"> 
+      <p align="left"> 
+        <input type="radio" value="1" name="p_number_of_strands" checked>
+        Single Strand (Coding strand, forward primers only)
+      <p align="left"> 
+        <input type="radio" name="p_number_of_strands" value="3" >
+        Single Strand (Compliment to coding strand, reverse primers only)</p>
+      <p align="left"> 
+        <input type="radio" name="p_number_of_strands" value="2" >
+        Both Strands (Both forward and reverse primers until meet in middle)
+     <p align="left"> 
+        <input type="radio" name="p_number_of_strands" value="4" >
+      Both Strands (Both forward and reverse primers, double coverage)</td>
+  </tr>
+
+
+
+  <tr><td colspan=3 height='2'>&nbsp;</td></tr>
+  <tr> 
+    <td colspan="3" height="1" align="center" valign="bottom"><div align="left">
+        <p><strong>Primer Length</strong><br>
+          Minimum, Optimum, and Maximum lengths (in bases) of a primer oligo. 
+          Primer3 will not pick primers shorter than Min or longer than Max, and 
+          with default arguments will attempt to pick primers close with size 
+          close to Opt. Min cannot be smaller than 1. Max cannot be larger than 
+          36. (This limit is governed by maximum oligo size for which melting-temperature 
+          calculations are valid.) Min cannot be greater than Max. <br>
+          <strong>Primer Tm </strong><br>
+          Minimum, Optimum, and Maximum melting temperatures (Celsius) for a primer 
+          oligo. Primer3 will not pick oligos with temperatures smaller than Min 
+          or larger than Max, and with default conditions will try to pick primers 
+          with melting temperatures close to Opt. <br>
+          Primer3 uses the oligo melting temperature formula given in Rychlik, 
+          Spencer and Rhoads, Nucleic Acids Research, vol 18, num 21, pp 6409-6412 
+          and Breslauer, Frank, Bloeker and Marky, Proc. Natl. Acad. Sci. USA, 
+          vol 83, pp 3746-3750. <br><strong>Primer GC%</strong> Minimum, Optimum, and Maximum percentage 
+          of Gs and Cs in any primer. <br>
+        </p>
+      </div>
+      <p></p> </p> </table>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+</body>
+</html>

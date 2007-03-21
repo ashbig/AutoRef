@@ -1,0 +1,152 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>Untitled Document</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</head>
+
+<body>
+
+
+
+<h2><font color="#0099CC" >Sequence Trimming Specification</font><br>
+</h2>
+<p> Contigs calculated by Gap Mapper and Low Confidence Region Finder are trimmed 
+  on 5' and 3' ends to exclude low quality end sequences to ensure that complete 
+  coverage will be achived by primers designed based on these contigs information. 
+  Low quality base trimming procedure incorporates a sliding window algorithm 
+  to scan the sequence for low quality regions. The process requires the following 
+  parameters: 
+<UL>
+  <li><b><font color="#000080">Phred base score defining high quality sequence</font></b> 
+    - high quality score cut-off for each base;</li>
+  <li><b><font color="#000080">Sliding window size for low-quality trimming</font></b> 
+    - sliding window size, which specifies the number<br>
+    of DNA bases of the sliding window;</li>
+  <li><b><font color="#000080">Max number of low-quality bases allowed</font></b> 
+    - Maximum number of low quality bases per window,<br>
+    above which a window is considered to be a low quality region and is trimmed;<br>
+
+    </li>
+</UL>
+<p>Sequence Trimming Specification guids Gap Mapper and Low Confidence Region 
+  Finder treatment of closely located low confidence regions on clone contig and 
+  short contigs surounded by two gaps to make primers placement more efficient. 
+  For example, short contig (length &lt; <b>'Minimum contig length'</b> parameter) 
+  will be droped, two 'gaps' that surround contig and short contig itself will 
+  be collapsed into one long 'gap'. This long 'gap' will became a subject for 
+  primer coverage (see Figure below).</p>
+<p><center>
+<IMG SRC="ShortContigDrop1_raster.jpg" BORDER="0">
+</center>
+</p>
+<p>The same rule applies to two low confidence regions located close to each other: 
+  if distance between them is less than '<b>Minimum distance 
+  between sequence stretches</font></b>' they will be collapsed into one low confidence 
+  region - subject for primers coverage.</p>
+<p>&nbsp;</p>
+<p>Main form to create new Sequence Trimming Specification accessible through 
+  '<em>Analysis Settings > Sequence Trimming'</em> </p>
+<p>&nbsp; 
+<table width ='90%' border=0 align='center'><tr >
+<td >
+<h2 style='font: bold, 14px, Times New Roman ;text-align: left; color: #008000;white-space: nowrap; '>
+Create New Set of Parameter for Sequence Trimming </h2></td></tr><tr><td valign='top'>    
+<hr ></td></tr> </table>
+</td>
+        </tr>
+     
+       
+
+
+<table border="0" cellpadding="2" cellspacing="2" width="90%" align=center>
+  <tr> 
+    <td colspan =2><div align="right"><font color="#0000FF"><b> <u>View Mine &nbsp;&nbsp; View All </u></b> 
+        </font> </div>
+     
+   
+      
+      </td>
+  </tr>
+  <tr> 
+    <td colspan="2"> <p> <font  size="4"> <b>Set Name</b></font> 
+        <input type="text" name="SET_NAME" size="53" value="">
+    <font color="#FF0000">   - unique specification name </font>   <p> </td>
+  </tr>
+
+ <tr> 
+    <td bgColor="#e4e9f8" width="70%"><b><font color="#000080">Phred base score defining high quality sequence:</font></b> </td>
+    <td bgColor="#e4e9f8"><input name="SW_Q_CUTT_OFF" type="text"  value=25  ></td>
+  </tr>
+<tr><td colspan='2'>&nbsp;</TD></TR>
+  <tr> 
+    <td bgColor="#b8c6ed"><b><font color="#000080">Sliding window size for low-quality trimming:</font></b> </td>
+    <td bgColor="#b8c6ed"><input name="SW_Q_WINDOW_SIZE" type="text" id="SW_Q_WINDOW_SIZE"
+    value="25" width="50" >nt</td>
+  </tr>
+<tr> 
+    <td bgColor="#e4e9f8"><b><font color="#000080">Max number of low-quality bases allowed:</font></b> </td>
+    <td bgColor="#e4e9f8"><input name="SW_Q_NUMBER_LOW_QUALITY_BASES" type="text" id="SW_Q_NUMBER_LOW_QUALITY_BASES"
+    value="3" width="50" 
+   ></td>
+  </tr>
+<tr> 
+    <td bgColor="#b8c6ed"><b><font color="#000080">Max number of consecutive low-quality bases allowed (not implemented):</font></b> </td>
+    <td bgColor="#b8c6ed"><input name="SW_Q_N_LOW_QUALITY_BASES_CONQ" type="text" 
+    id="SW_Q_N_LOW_QUALITY_BASES_CONQ"
+    value="2" width="50" 
+></td>
+  </tr>
+
+<tr> 
+    <td bgColor="#e4e9f8"><b><font color="#000080">Sliding window size for ambiguous base trimming (not implemented yet):</font></b> </td>
+    <td bgColor="#e4e9f8"><input name="SW_A_WINDOW_SIZE" type="text" 
+    id="SW_A_WINDOW_SIZE"     value="25" width="50" 
+></td>
+  </tr>
+<tr> 
+    <td bgColor="#b8c6ed"><b><font color="#000080">Max number of ambiguous bases allowed (not implemented yet):</font></b> </td>
+    <td bgColor="#b8c6ed"><input name="SW_A_NUMBER_BASES" type="text" 
+    id="SW_A_NUMBER_BASES"     value="3" width="50" 
+onBlur="checkNumeric(this,1,50,'','','');"></td>
+  </tr>
+<tr> 
+    <td bgColor="#e4e9f8"><b><font color="#000080">Max number of consecutive ambiguous bases allowed (not implemented yet):</font></b> </td>
+    <td bgColor="#e4e9f8"><input name="SW_A_N_LOW_QUALITY_BASES_CONQ" type="text" 
+    id="SW_A_N_LOW_QUALITY_BASES_CONQ"     value="2"  
+></td>
+  </tr>
+<TR><TD COlspan=2>&nbsp;</TD></TR>
+<tr> 
+    <td bgColor="#b8c6ed"><b><font color="#000080">Minimum distance between sequence stretches needed to treat them separately (Gap Mappere, Low Confidence Finder):</font></b> </td>
+    <td bgColor="#b8c6ed"><input name="SW_MIN_DISTANCE_BTW_CONTIGS" type="text" 
+    id="SW_MIN_DISTANCE_BTW_CONTIGS"     value="50"  
+></td>
+  </tr>
+<tr> 
+    <td bgColor="#e4e9f8"><b><font color="#000080">Minimum contig length ( used by GAP Mapper only) :</font></b> </td>
+    <td bgColor="#e4e9f8"><input name="SW_MIN_CONTIG_LENGTH" type="text" 
+    id="SW_MIN_CONTIG_LENGTH"     value="50"  
+></td>
+  </tr>
+<TR><TD COlspan=2>&nbsp;</TD></TR>
+<tr> 
+    <td bgColor="#b8c6ed"><b><font color="#000080">Sequence Trimming Type:</font></b> </td>
+    <td bgColor="#b8c6ed"> <select name='SW_TRIM_TYPE' id='SW_TRIM_TYPE' >
+        <option value='4' selected>Moving Window with extension for no 
+        <option value='0'>No Trimming 
+        <option value='2'>Moving Window </select></td>
+</tr>
+   
+  
+</table>
+
+
+
+
+</p>
+</body>
+</html>
+
+</body>
+</html>
