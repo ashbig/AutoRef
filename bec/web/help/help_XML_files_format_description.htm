@@ -19,6 +19,7 @@
 <!--
 .ElementHeader {
 	background-color: #3399FF;
+	font-weight: bold;
 }
 -->
 </style>
@@ -64,27 +65,182 @@
         steps on the '<em>Cloning project settings</em>' menu (see ACE tutorial) 
         MUST be performed before XML file can be written, because some items, 
         like species, should be defined and get their ACE unique IDs before they 
-        can be referenced in XML.</p>
+        can be referenced in XML. <a href="ref.xml" target="_blank">Example of Reference sequence 
+        description XML file</a>.</p>
       <h2 >Elements</h2>
+	  <h3>Sequence-info</h3>
+      <table width="100%" class="ElementTable" >
+        <tr> 
+          <td class="ElementHeader">Element</td>
+          <td class="ElementDetail" colspan="5">sequence-info</td>
+        </tr>
+        <tr> 
+          <td class="ElementHeader">Description</td>
+          <td colspan="5" class="ElementDetail">Root element, container for all 
+            reference sequences</td>
+        </tr>
+        <tr> 
+          <td rowspan="2" class="ElementHeader">Attributes</td>
+          <td class="ElementHeader">Name</td>
+          <td class="ElementHeader">Type</td>
+          <td class="ElementHeader">Optional/ Required</td>
+          <td class="ElementHeader">Default Value</td>
+          <td class="ElementHeader">Description</td>
+        </tr>
+        <tr> 
+          <td colspan="5" class="AttributeDetail">none</td>
+        </tr>
+        <tr> 
+          <td class="ElementHeader">Contents</td>
+          <td colspan="5" class="ElementDetail">refsequence*</td>
+        </tr>
+      </table>
+      
+	  <h3>Refsequence</h3>
+      <table width="100%" class="ElementTable" >
+        <tr> 
+          <td class="ElementHeader">Element</td>
+          <td class="ElementDetail">refsequence</td>
+        </tr>
+        <tr> 
+          <td class="ElementHeader">Description</td>
+          <td class="ElementDetail">represent one target (reference) sequence</td>
+        </tr>
+        <tr> 
+          <td class="ElementHeader">Contents</td>
+          <td class="ElementDetail">refsequence-id, refsequence-species, refsequence-cds-start, 
+            refsequence-cds-stop, refsequence-cDNAsource, refsequence-chromosome, 
+            refsequence-sequence, refsequence-feature*</td>
+        </tr>
+      </table>
+      <h3>Refsequence-id</h3>
+      <table width="100%" class="ElementTable" >
+        <tr> 
+          <td class="ElementHeader">Element</td>
+          <td class="ElementDetail">refsequence-id</td>
+        </tr>
+        <tr> 
+          <td class="ElementHeader">Description</td>
+          <td class="ElementDetail">user unique ID for target sequence, data type: 
+            integer</td>
+        </tr>
+        <tr> 
+          <td class="ElementHeader">Contents</td>
+          <td class="ElementDetail">none</td>
+        </tr>
+      </table>
+      <h3>Refsequence-species</h3>
+      <table width="100%" class="ElementTable" >
+        <tr> 
+          <td class="ElementHeader">Element</td>
+          <td class="ElementDetail">refsequence-species</td>
+        </tr>
+        <tr> 
+          <td class="ElementHeader">Description</td>
+          <td class="ElementDetail">unique species ID, Species definition MUST 
+            be submitted into ACE, see <em>'<a href="help_generalhelp.jsp#ace_configuration" target="_blank">System 
+            Settings</a> </em>' for details</td>
+        </tr>
+        <tr> 
+          <td class="ElementHeader">Contents</td>
+          <td class="ElementDetail">none</td>
+        </tr>
+      </table>
+      <h3>Refsequence-sequence</h3>
+      <table width="100%" class="ElementTable" >
+        <tr> 
+          <td class="ElementHeader">Element</td>
+          <td class="ElementDetail">refsequence-sequence</td>
+        </tr>
+        <tr> 
+          <td class="ElementHeader">Description</td>
+          <td class="ElementDetail">reference sequence text downloaded from GenBank 
+            or other source</td>
+        </tr>
+        <tr> 
+          <td class="ElementHeader">Contents</td>
+          <td class="ElementDetail">none</td>
+        </tr>
+      </table>
+      <h3>Refsequence-cds-start</h3>
+      <table width="100%" class="ElementTable" >
+        <tr> 
+          <td class="ElementHeader">Element</td>
+          <td class="ElementDetail">refsequence-cds-start</td>
+        </tr>
+        <tr> 
+          <td class="ElementHeader">Description</td>
+          <td class="ElementDetail">CDS start on reference sequence text, 1 based</td>
+        </tr>
+        <tr> 
+          <td class="ElementHeader">Contents</td>
+          <td class="ElementDetail">none</td>
+        </tr>
+      </table>
+      <h3>Refsequence-cds-stop</h3>
+      <table width="100%" class="ElementTable" >
+        <tr> 
+          <td class="ElementHeader">Element</td>
+          <td class="ElementDetail">refsequence-cds-start</td>
+        </tr>
+        <tr> 
+          <td class="ElementHeader">Description</td>
+          <td class="ElementDetail">CDS stop on reference sequence text, 1 based</td>
+        </tr>
+        <tr> 
+          <td class="ElementHeader">Contents</td>
+          <td class="ElementDetail">none</td>
+        </tr>
+      </table>
+      <h3>Refsequence-cDNAsource</h3>
+      <table width="100%" class="ElementTable" >
+        <tr> 
+          <td class="ElementHeader">Element</td>
+          <td class="ElementDetail">refsequence-cDNAsource</td>
+        </tr>
+        <tr> 
+          <td class="ElementHeader">Description</td>
+          <td class="ElementDetail">reference sequence source</td>
+        </tr>
+        <tr> 
+          <td class="ElementHeader">Contents</td>
+          <td class="ElementDetail">none</td>
+        </tr>
+      </table>
+      <h3>Refsequence-chromosom</h3>
+      <table width="100%" class="ElementTable" >
+        <tr> 
+          <td class="ElementHeader">Element</td>
+          <td class="ElementDetail">refsequence-chromosom</td>
+        </tr>
+        <tr> 
+          <td class="ElementHeader">Description</td>
+          <td class="ElementDetail">chromosom of target sequence</td>
+        </tr>
+        <tr> 
+          <td class="ElementHeader">Contents</td>
+          <td class="ElementDetail">none</td>
+        </tr>
+      </table>
       <h3>Refsequence-feature</h3>
       <table width="100%" class="ElementTable" >
         <tr> 
-          <th class="ElementHeader">Element</th>
+          <td class="ElementHeader">Element</td>
           <td class="ElementDetail" colspan="5">refsequence-feature</td>
         </tr>
         <tr> 
-          <th class="ElementHeader">Description</th>
+          <td class="ElementHeader">Description</td>
           <td colspan="5" class="ElementDetail">represent one annotation to reference 
             sequence</td>
         </tr>
         <tr> 
-          <th rowspan="5" class="ElementHeader">Attributes</th>
-          <th class="ElementHeader">Name</th>
-          <th class="ElementHeader">Type</th>
-          <th class="ElementHeader"><p>Optional/</p>
-            <p>Required</p></th>
-          <th class="ElementHeader">Default Value</th>
-          <th class="ElementHeader">Description</th>
+          <td rowspan="5" class="ElementHeader">Attributes</td>
+          <td class="ElementHeader">Name</td>
+          <td class="ElementHeader">Type</td>
+          <td class="ElementHeader"><p>Optional/</p>
+            <p>Required</p></td>
+          <td class="ElementHeader">Default Value</td>
+          <td class="ElementHeader">Description</td>
         </tr>
         <tr> 
           <td class="AttributeDetail">name_type</td>
@@ -117,7 +273,7 @@
           <td class="AttributeDetail">Annotation description</td>
         </tr>
         <tr> 
-          <th class="ElementHeader">Contents</th>
+          <td class="ElementHeader">Contents</td>
           <td colspan="5" class="ElementDetail">none</td>
         </tr>
       </table>
@@ -127,25 +283,54 @@
         steps on the 'Cloning project settings' menu (see ACE tutorial) MUST be 
         performed before XML file can be written, because some items, like cloning 
         strategy, should be defined and get their ACE unique IDs before they will 
-        be referenced in XML. Example of Plate mapping XML file.</p>
+        be referenced in XML. <a href="container.xml" target="_blank">Example of Plate mapping 
+        XML file</a>.</p>
       <h2 >Elements</h2>
+      <h3>Clone collections</h3>
+      <table width="100%" class="ElementTable" >
+        <tr> 
+          <td width="16%" class="ElementHeader">Element</td>
+          <td class="ElementDetail" colspan="5">clone-collections</td>
+        </tr>
+        <tr> 
+          <td class="ElementHeader">Description</td>
+          <td colspan="5" class="ElementDetail">Root element, definition of sequencing 
+            plate collection</td>
+        </tr>
+        <tr> 
+          <td rowspan="2" class="ElementHeader">Attributes</td>
+          <td width="11%" class="ElementHeader">Name</td>
+          <td width="7%" class="ElementHeader">Type</td>
+          <td width="17%" class="ElementHeader">Optional/ Required</td>
+          <td width="17%" class="ElementHeader">Default Value</td>
+          <td width="32%" class="ElementHeader">Description</td>
+        </tr>
+        <tr> 
+          <td colspan="5" class="AttributeDetail"><div align="center">none</div></td>
+        </tr>
+        <tr> 
+          <td class="ElementHeader">Contents</td>
+          <td colspan="5" class="ElementDetail">clone-collection*</td>
+        </tr>
+      </table>
+    
       <h3>Clone collection</h3>
       <table width="100%" class="ElementTable" >
         <tr> 
-          <th width="16%" class="ElementHeader">Element</th>
+          <td width="16%" class="ElementHeader">Element</td>
           <td class="ElementDetail" colspan="5">clone-collection</td>
         </tr>
         <tr> 
-          <th class="ElementHeader">Description</th>
+          <td class="ElementHeader">Description</td>
           <td colspan="5" class="ElementDetail">Definition of sequencing plate</td>
         </tr>
         <tr> 
-          <th rowspan="5" class="ElementHeader">Attributes</th>
-          <th width="11%" class="ElementHeader">Name</th>
-          <th width="7%" class="ElementHeader">Type</th>
-          <th width="17%" class="ElementHeader">Optional/ Required</th>
-          <th width="17%" class="ElementHeader">Default Value</th>
-          <th width="32%" class="ElementHeader">Description</th>
+          <td rowspan="5" class="ElementHeader">Attributes</td>
+          <td width="11%" class="ElementHeader">Name</td>
+          <td width="7%" class="ElementHeader">Type</td>
+          <td width="17%" class="ElementHeader">Optional/ Required</td>
+          <td width="17%" class="ElementHeader">Default Value</td>
+          <td width="32%" class="ElementHeader">Description</td>
         </tr>
         <tr> 
           <td class="AttributeDetail">userid</td>
@@ -178,29 +363,29 @@
             Settings</a> </em>' for details</td>
         </tr>
         <tr> 
-          <th class="ElementHeader">Contents</th>
+          <td class="ElementHeader">Contents</td>
           <td colspan="5" class="ElementDetail">sample, construct</td>
         </tr>
       </table>
       <h3>Construct</h3>
       <table width="100%" class="ElementTable" >
         <tr> 
-          <th width="14%" class="ElementHeader">Element</th>
+          <td width="14%" class="ElementHeader">Element</td>
           <td class="ElementDetail" colspan="5">construct</td>
         </tr>
         <tr> 
-          <th class="ElementHeader">Description</th>
+          <td class="ElementHeader">Description</td>
           <td colspan="5" class="ElementDetail">container for all isolate originated 
             from the same clone</td>
         </tr>
         <tr> 
-          <th rowspan="5" class="ElementHeader">Attributes</th>
-          <th width="23%" class="ElementHeader">Name</th>
-          <th width="6%" class="ElementHeader">Type</th>
-          <th width="11%" class="ElementHeader">Optional/ 
-            Required</p></th>
-          <th width="11%" class="ElementHeader">Default Value</th>
-          <th width="35%" class="ElementHeader">Description</th>
+          <td rowspan="5" class="ElementHeader">Attributes</td>
+          <td width="23%" class="ElementHeader">Name</td>
+          <td width="6%" class="ElementHeader">Type</td>
+          <td width="11%" class="ElementHeader">Optional/ 
+            Required</p></td>
+          <td width="11%" class="ElementHeader">Default Value</td>
+          <td width="35%" class="ElementHeader">Description</td>
         </tr>
         <tr> 
           <td class="AttributeDetail">format</td>
@@ -234,7 +419,7 @@
           <td class="AttributeDetail">Construct unique identifier</td>
         </tr>
         <tr> 
-          <th class="ElementHeader">Contents</th>
+          <td class="ElementHeader">Contents</td>
           <td colspan="5" class="ElementDetail">sample*</td>
         </tr>
       </table>
@@ -247,22 +432,22 @@
       <h3 >Sample</h3>
       <table width="100%" class="ElementTable" >
         <tr> 
-          <th class="ElementHeader">Element</th>
+          <td class="ElementHeader">Element</td>
           <td class="ElementDetail" colspan="5">sample</td>
         </tr>
         <tr> 
-          <th class="ElementHeader">Description</th>
+          <td class="ElementHeader">Description</td>
           <td colspan="5" class="ElementDetail">represent one phisical sample 
             on sequencing plate, clone ID is substance identifier. </td>
         </tr>
         <tr> 
-          <th rowspan="5" class="ElementHeader">Attributes</th>
-          <th class="ElementHeader">Name</th>
-          <th class="ElementHeader">Type</th>
-          <th class="ElementHeader"><p>Optional/</p>
-            <p>Required</p></th>
-          <th class="ElementHeader">Default Value</th>
-          <th class="ElementHeader">Description</th>
+          <td rowspan="5" class="ElementHeader">Attributes</td>
+          <td class="ElementHeader">Name</td>
+          <td class="ElementHeader">Type</td>
+          <td class="ElementHeader"><p>Optional/</p>
+            <p>Required</p></td>
+          <td class="ElementHeader">Default Value</td>
+          <td class="ElementHeader">Description</td>
         </tr>
         <tr> 
           <td class="AttributeDetail">sampleid</td>
@@ -294,7 +479,7 @@
           <td class="AttributeDetail">Sample type: see below for possible values</td>
         </tr>
         <tr> 
-          <th class="ElementHeader">Contents</th>
+          <td class="ElementHeader">Contents</td>
           <td colspan="5" class="ElementDetail">empty</td>
         </tr>
       </table>

@@ -1,0 +1,286 @@
+<?xml version='1.0' encoding='ISO-8859-1'?><!DOCTYPE web-app   
+  PUBLIC '-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN' 'http://java.sun.com/dtd/web-app_2_3.dtd'>
+<clone-collections>
+
+<clone-collection  userid='1' name='HSG003225' project_id='1'>
+ <construct constructid='27421' format= '0' cloningstrategyid='5' refsequenceid= '28407'>
+<sample sampleid='1709695' cloneid='16619' well='A02'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27423' format= '0' cloningstrategyid='5' refsequenceid= '25444'>
+<sample sampleid='1709703' cloneid='16627' well='A03'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27425' format= '0' cloningstrategyid='5' refsequenceid= '26903'>
+<sample sampleid='1709711' cloneid='16635' well='A04'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27427' format= '0' cloningstrategyid='5' refsequenceid= '28254'>
+<sample sampleid='1709719' cloneid='16641' well='A05'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27429' format= '0' cloningstrategyid='5' refsequenceid= '27289'>
+<sample sampleid='1709727' cloneid='16649' well='A06'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27431' format= '0' cloningstrategyid='5' refsequenceid= '26509'>
+<sample sampleid='1709735' cloneid='16657' well='A07'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27433' format= '0' cloningstrategyid='5' refsequenceid= '28301'>
+<sample sampleid='1709743' cloneid='16665' well='A08'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27435' format= '0' cloningstrategyid='5' refsequenceid= '28835'>
+<sample sampleid='1709751' cloneid='16673' well='A09'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27437' format= '0' cloningstrategyid='5' refsequenceid= '25225'>
+<sample sampleid='1709758' cloneid='16681' well='A10'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27439' format= '0' cloningstrategyid='5' refsequenceid= '27294'>
+<sample sampleid='1709766' cloneid='16689' well='A11'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27441' format= '0' cloningstrategyid='5' refsequenceid= '25255'>
+<sample sampleid='1709774' cloneid='16697' well='A12'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27443' format= '0' cloningstrategyid='5' refsequenceid= '28243'>
+<sample sampleid='1709688' cloneid='16705' well='B01'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27445' format= '0' cloningstrategyid='5' refsequenceid= '28868'>
+<sample sampleid='1709696' cloneid='16713' well='B02'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27447' format= '0' cloningstrategyid='5' refsequenceid= '28352'>
+<sample sampleid='1709704' cloneid='16721' well='B03'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27449' format= '0' cloningstrategyid='5' refsequenceid= '25396'>
+<sample sampleid='1709712' cloneid='16727' well='B04'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27451' format= '0' cloningstrategyid='5' refsequenceid= '26523'>
+<sample sampleid='1709720' cloneid='16729' well='B05'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27453' format= '0' cloningstrategyid='5' refsequenceid= '26895'>
+<sample sampleid='1709728' cloneid='16736' well='B06'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27455' format= '0' cloningstrategyid='5' refsequenceid= '25753'>
+<sample sampleid='1709736' cloneid='16740' well='B07'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27457' format= '0' cloningstrategyid='5' refsequenceid= '28278'>
+<sample sampleid='1709744' cloneid='16747' well='B08'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27461' format= '0' cloningstrategyid='5' refsequenceid= '27288'>
+<sample sampleid='1709759' cloneid='16757' well='B10'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27463' format= '0' cloningstrategyid='5' refsequenceid= '26900'>
+<sample sampleid='1709767' cloneid='16765' well='B11'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27465' format= '0' cloningstrategyid='5' refsequenceid= '26882'>
+<sample sampleid='1709775' cloneid='16773' well='B12'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27467' format= '0' cloningstrategyid='5' refsequenceid= '26482'>
+<sample sampleid='1709689' cloneid='16781' well='C01'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27469' format= '0' cloningstrategyid='5' refsequenceid= '28819'>
+<sample sampleid='1709697' cloneid='16788' well='C02'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27471' format= '0' cloningstrategyid='5' refsequenceid= '25277'>
+<sample sampleid='1709705' cloneid='16790' well='C03'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27473' format= '0' cloningstrategyid='5' refsequenceid= '28842'>
+<sample sampleid='1709713' cloneid='16798' well='C04'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27475' format= '0' cloningstrategyid='5' refsequenceid= '25734'>
+<sample sampleid='1709721' cloneid='16805' well='C05'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27477' format= '0' cloningstrategyid='5' refsequenceid= '27343'>
+<sample sampleid='1709729' cloneid='16813' well='C06'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27479' format= '0' cloningstrategyid='5' refsequenceid= '28289'>
+<sample sampleid='1709737' cloneid='16821' well='C07'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27481' format= '0' cloningstrategyid='5' refsequenceid= '25273'>
+<sample sampleid='1709745' cloneid='16828' well='C08'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27483' format= '0' cloningstrategyid='5' refsequenceid= '25267'>
+<sample sampleid='1709752' cloneid='16836' well='C09'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27485' format= '0' cloningstrategyid='5' refsequenceid= '25451'>
+<sample sampleid='1709760' cloneid='16844' well='C10'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27487' format= '0' cloningstrategyid='5' refsequenceid= '26893'>
+<sample sampleid='1709768' cloneid='16852' well='C11'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27489' format= '0' cloningstrategyid='5' refsequenceid= '26473'>
+<sample sampleid='1709776' cloneid='16860' well='C12'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27491' format= '0' cloningstrategyid='5' refsequenceid= '28844'>
+<sample sampleid='1709690' cloneid='16864' well='D01'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27493' format= '0' cloningstrategyid='5' refsequenceid= '26841'>
+<sample sampleid='1709698' cloneid='16872' well='D02'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27495' format= '0' cloningstrategyid='5' refsequenceid= '25736'>
+<sample sampleid='1709706' cloneid='16880' well='D03'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27497' format= '0' cloningstrategyid='5' refsequenceid= '28257'>
+<sample sampleid='1709714' cloneid='16888' well='D04'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27499' format= '0' cloningstrategyid='5' refsequenceid= '28262'>
+<sample sampleid='1709722' cloneid='16896' well='D05'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27501' format= '0' cloningstrategyid='5' refsequenceid= '25397'>
+<sample sampleid='1709730' cloneid='16902' well='D06'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27503' format= '0' cloningstrategyid='5' refsequenceid= '25185'>
+<sample sampleid='1709738' cloneid='16906' well='D07'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27505' format= '0' cloningstrategyid='5' refsequenceid= '25239'>
+<sample sampleid='1709746' cloneid='16912' well='D08'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27507' format= '0' cloningstrategyid='5' refsequenceid= '26472'>
+<sample sampleid='1709753' cloneid='16920' well='D09'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27509' format= '0' cloningstrategyid='5' refsequenceid= '27282'>
+<sample sampleid='1709761' cloneid='16928' well='D10'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27511' format= '0' cloningstrategyid='5' refsequenceid= '28815'>
+<sample sampleid='1709769' cloneid='16936' well='D11'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27513' format= '0' cloningstrategyid='5' refsequenceid= '28871'>
+<sample sampleid='1709777' cloneid='16944' well='D12'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27515' format= '0' cloningstrategyid='5' refsequenceid= '25679'>
+<sample sampleid='1709691' cloneid='16952' well='E01'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27517' format= '0' cloningstrategyid='5' refsequenceid= '25709'>
+<sample sampleid='1709699' cloneid='16960' well='E02'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27519' format= '0' cloningstrategyid='5' refsequenceid= '26849'>
+<sample sampleid='1709707' cloneid='16968' well='E03'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27521' format= '0' cloningstrategyid='5' refsequenceid= '25428'>
+<sample sampleid='1709715' cloneid='16976' well='E04'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27523' format= '0' cloningstrategyid='5' refsequenceid= '27357'>
+<sample sampleid='1709723' cloneid='16984' well='E05'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27525' format= '0' cloningstrategyid='5' refsequenceid= '25271'>
+<sample sampleid='1709731' cloneid='16992' well='E06'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27527' format= '0' cloningstrategyid='5' refsequenceid= '27332'>
+<sample sampleid='1709739' cloneid='16998' well='E07'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27529' format= '0' cloningstrategyid='5' refsequenceid= '25455'>
+<sample sampleid='1709747' cloneid='17006' well='E08'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27531' format= '0' cloningstrategyid='5' refsequenceid= '25717'>
+<sample sampleid='1709754' cloneid='17014' well='E09'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27533' format= '0' cloningstrategyid='5' refsequenceid= '25663'>
+<sample sampleid='1709762' cloneid='17022' well='E10'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27535' format= '0' cloningstrategyid='5' refsequenceid= '25186'>
+<sample sampleid='1709770' cloneid='17030' well='E11'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27537' format= '0' cloningstrategyid='5' refsequenceid= '25678'>
+<sample sampleid='1709778' cloneid='17038' well='E12'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27539' format= '0' cloningstrategyid='5' refsequenceid= '28403'>
+<sample sampleid='1709692' cloneid='17046' well='F01'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27541' format= '0' cloningstrategyid='5' refsequenceid= '25375'>
+<sample sampleid='1709700' cloneid='17054' well='F02'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27543' format= '0' cloningstrategyid='5' refsequenceid= '25250'>
+<sample sampleid='1709708' cloneid='17062' well='F03'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27545' format= '0' cloningstrategyid='5' refsequenceid= '26477'>
+<sample sampleid='1709716' cloneid='17070' well='F04'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27547' format= '0' cloningstrategyid='5' refsequenceid= '27301'>
+<sample sampleid='1709724' cloneid='17078' well='F05'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27549' format= '0' cloningstrategyid='5' refsequenceid= '26507'>
+<sample sampleid='1709732' cloneid='17086' well='F06'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27551' format= '0' cloningstrategyid='5' refsequenceid= '28796'>
+<sample sampleid='1709740' cloneid='17094' well='F07'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27553' format= '0' cloningstrategyid='5' refsequenceid= '28330'>
+<sample sampleid='1709748' cloneid='17102' well='F08'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27555' format= '0' cloningstrategyid='5' refsequenceid= '28833'>
+<sample sampleid='1709755' cloneid='17110' well='F09'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27557' format= '0' cloningstrategyid='5' refsequenceid= '28288'>
+<sample sampleid='1709763' cloneid='17116' well='F10'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27559' format= '0' cloningstrategyid='5' refsequenceid= '25756'>
+<sample sampleid='1709771' cloneid='17123' well='F11'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27561' format= '0' cloningstrategyid='5' refsequenceid= '25213'>
+<sample sampleid='1709779' cloneid='17131' well='F12'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27563' format= '0' cloningstrategyid='5' refsequenceid= '26853'>
+<sample sampleid='1709693' cloneid='17139' well='G01'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27565' format= '0' cloningstrategyid='5' refsequenceid= '28341'>
+<sample sampleid='1709701' cloneid='17147' well='G02'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27567' format= '0' cloningstrategyid='5' refsequenceid= '25374'>
+<sample sampleid='1709709' cloneid='17155' well='G03'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27569' format= '0' cloningstrategyid='5' refsequenceid= '25706'>
+<sample sampleid='1709717' cloneid='17161' well='G04'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27571' format= '0' cloningstrategyid='5' refsequenceid= '26897'>
+<sample sampleid='1709725' cloneid='17169' well='G05'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27573' format= '0' cloningstrategyid='5' refsequenceid= '26818'>
+<sample sampleid='1709733' cloneid='17177' well='G06'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27575' format= '0' cloningstrategyid='5' refsequenceid= '28822'>
+<sample sampleid='1709741' cloneid='17185' well='G07'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27577' format= '0' cloningstrategyid='5' refsequenceid= '28304'>
+<sample sampleid='1709749' cloneid='17193' well='G08'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27579' format= '0' cloningstrategyid='5' refsequenceid= '26474'>
+<sample sampleid='1709756' cloneid='17201' well='G09'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27581' format= '0' cloningstrategyid='5' refsequenceid= '26448'>
+<sample sampleid='1709764' cloneid='17209' well='G10'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27583' format= '0' cloningstrategyid='5' refsequenceid= '27322'>
+<sample sampleid='1709772' cloneid='17217' well='G11'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27585' format= '0' cloningstrategyid='5' refsequenceid= '28279'>
+<sample sampleid='1709780' cloneid='17225' well='G12'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27587' format= '0' cloningstrategyid='5' refsequenceid= '26868'>
+<sample sampleid='1709694' cloneid='17233' well='H01'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27589' format= '0' cloningstrategyid='5' refsequenceid= '25748'>
+<sample sampleid='1709702' cloneid='17239' well='H02'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27591' format= '0' cloningstrategyid='5' refsequenceid= '27362'>
+<sample sampleid='1709710' cloneid='17247' well='H03'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27593' format= '0' cloningstrategyid='5' refsequenceid= '26475'>
+<sample sampleid='1709718' cloneid='17255' well='H04'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27595' format= '0' cloningstrategyid='5' refsequenceid= '26503'>
+<sample sampleid='1709726' cloneid='17263' well='H05'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27597' format= '0' cloningstrategyid='5' refsequenceid= '28345'>
+<sample sampleid='1709734' cloneid='17268' well='H06'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27599' format= '0' cloningstrategyid='5' refsequenceid= '25425'>
+<sample sampleid='1709742' cloneid='17273' well='H07'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27601' format= '0' cloningstrategyid='5' refsequenceid= '28347'>
+<sample sampleid='1709750' cloneid='17277' well='H08'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27603' format= '0' cloningstrategyid='5' refsequenceid= '27286'>
+<sample sampleid='1709757' cloneid='17282' well='H09'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27605' format= '0' cloningstrategyid='5' refsequenceid= '25442'>
+<sample sampleid='1709765' cloneid='17286' well='H10'	sampletype='ISOLATE'	/> 
+</construct>
+ <construct constructid='27607' format= '0' cloningstrategyid='5' refsequenceid= '25389'>
+<sample sampleid='1709773' cloneid='17290' well='H11'	sampletype='ISOLATE'	/> 
+</construct>
+</clone-collection>
+</clone-collections>
