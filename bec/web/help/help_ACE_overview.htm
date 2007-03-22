@@ -116,10 +116,10 @@
         reads as internal and build contig collections (see <em><strong>Gap Mapper</strong></em>).<br>
       </p>
       <p><em><strong><a name="assembler">Assembly Wrapper</a>.</strong></em> This 
-        tool automates contig assembly by calling the Phred/Phrap package for 
-        each clone on a user-submitted list. By adjusting a variety of trimming 
-        parameters some contigs can be assembled that failed to assemble with 
-        default conditions.<br>
+        tool automates contig assembly by calling the Phred/Phrap assembler for 
+        each clone on a user-submitted list. Some contigs that fail assembly with 
+        default parameters can be assembled by adjusting a variety of trimming 
+        parameters.<br>
         Vector trimming during contig assembly is performed using 'Cross_match'. 
         In some cases, trimming is essential for contig assembly, whereas in others, 
         it prevents assembly. For example, a high degree of similarity between 
@@ -206,24 +206,20 @@
         that exceed the maximum permitted number of mutations of at least one 
         type are rejected. For each remaining isolate, the overall score is computed 
         by normalizing the sum of the penalties over the number of bases covered. 
-        Isolates that exceed the maximum permitted number of mutations of at least 
-        one type are rejected. For each remaining isolate, the overall score is 
-        computed by normalizing the sum of the penalties over the number of bases 
-        covered. These scores determine the rank order among the surviving isolates 
-        of the same gene. Special care should be taken when comparing with full 
-        coverage of the reference sequence and ones with partial coverage - shorter 
-        contigs might have smaller absolute number of discrepancies but poorer 
-        quality. Using average number of discrepancies per base is also not adequate, 
-        since averages become unreliable as the length of the coverage decreases. 
-        Instead we have chosen to augment discrepancy counts for each partial 
-        coverage contig by pseudo-counts based on the length of the uncovered 
-        sequence and the average frequency of discrepancies across all reads. 
-        The rank order among the surviving isolates of the same gene are displayed 
-        as a color coded virtual plate map allowing user quickly pick follow-up 
-        clones and determine if there are any systematic problems with cloning 
-        or sequencing (e.g., clones in the same position repeatedly fail, suggesting 
-        a problematic sequencing capillary or mechanical problem in the plate 
-        handling). </p>
+        These scores determine the rank order among the surviving isolates of 
+        the same gene. Special care should be taken when comparing with full coverage 
+        of the reference sequence and ones with partial coverage - shorter contigs 
+        might have smaller absolute number of discrepancies but poorer quality. 
+        Using average number of discrepancies per base is also not adequate, since 
+        averages become unreliable as the length of the coverage decreases. Instead 
+        we have chosen to augment discrepancy counts for each partial coverage 
+        contig by pseudo-counts based on the length of the uncovered sequence 
+        and the average frequency of discrepancies across all reads. The rank 
+        order among the surviving isolates of the same gene are displayed as a 
+        color coded virtual plate map allowing user quickly pick follow-up clones 
+        and determine if there are any systematic problems with cloning or sequencing 
+        (e.g., clones in the same position repeatedly fail, suggesting a problematic 
+        sequencing capillary or mechanical problem in the plate handling). </p>
       <p> <strong><em><a name="decision">Decision Tool.</a></em></strong> This 
         tool sorts clones into a finished-and-accepted group, a rejected group, 
         and a set of groups slated for further processing. The <a href="image/image_Fig6.htm" target="_blank">flowchart</a> 

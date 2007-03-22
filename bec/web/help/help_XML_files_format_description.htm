@@ -3,7 +3,8 @@
 
 <%@ page import="edu.harvard.med.hip.bec.*" %>
 <html>
-<head><title>JSP Page</title>
+<head>
+<title>JSP Page</title>
 <style>
 <!--
  li.MsoNormal
@@ -14,7 +15,27 @@
 	margin-left:0in; margin-right:0in; margin-top:0in}
 -->
 </style>
-    
+<style type="text/css">
+<!--
+.ElementHeader {
+	background-color: #3399FF;
+}
+-->
+</style>
+<style type="text/css">
+<!--
+.ElementDetail {
+	background-color: #CCFFFF;
+}
+-->
+</style>
+<style type="text/css">
+<!--
+.AttributeDetail {
+	background-color: #CCCCCC;
+}
+-->
+</style>
 </head>
 <body>
 
@@ -38,22 +59,256 @@
 
 <table width="74%" border="0" cellpadding="2" cellspacing="2" align="center">
   <tr> 
-    <td> 
-      <h2 ><font color="#0099CC">Reference sequence file</font></h2>
-      <p >Reference sequence file describs target sequences for clones. sequence 
-        element contains: sequence id, sequence, species, CDS start, CDS stop, 
-        cDNA source, chromosome and sequence properties (terms in bold are required). 
-        The sequence id is the unique identifier for each sequence and will be 
-        used as 'user reference sequence id'. Each sequence can be described by 
-        features. The feature element description contains: feature name type 
-        ('GenBank Accession'), feature name value (the GenBank accession number 
-        for 'GenBank Accession' name type), feature url and description. The annotation 
-        type field must use valid annotation types from the database. Please define 
-        all annotation types prior to reference sequence submission.</p>
-      <p >&nbsp;</p>
-      <p ><h2 ><font color="#0099CC">Plate mapping file</font></h2>
+    <td> <h2 ><font color="#0099CC">Reference sequence file</font></h2>
+      <p >Reference sequence file describs target sequences for clone(s). All 
+        steps on the '<em>Cloning project settings</em>' menu (see ACE tutorial) 
+        MUST be performed before XML file can be written, because some items, 
+        like species, should be defined and get their ACE unique IDs before they 
+        can be referenced in XML.</p>
+      <h2 >Elements</h2>
+      <h3>Refsequence-feature</h3>
+      <table width="100%" class="ElementTable" >
+        <tr> 
+          <th class="ElementHeader">Element</th>
+          <td class="ElementDetail" colspan="5">refsequence-feature</td>
+        </tr>
+        <tr> 
+          <th class="ElementHeader">Description</th>
+          <td colspan="5" class="ElementDetail">represent one annotation to reference 
+            sequence</td>
+        </tr>
+        <tr> 
+          <th rowspan="5" class="ElementHeader">Attributes</th>
+          <th class="ElementHeader">Name</th>
+          <th class="ElementHeader">Type</th>
+          <th class="ElementHeader"><p>Optional/</p>
+            <p>Required</p></th>
+          <th class="ElementHeader">Default Value</th>
+          <th class="ElementHeader">Description</th>
+        </tr>
+        <tr> 
+          <td class="AttributeDetail">name_type</td>
+          <td class="AttributeDetail">String</td>
+          <td class="AttributeDetail">Required</td>
+          <td class="AttributeDetail"><i>n/a</i></td>
+          <td class="AttributeDetail">Annotation type defined under '<em>Cloning 
+            Project Settings </em>' menu</td>
+        </tr>
+        <tr> 
+          <td class="AttributeDetail">name_value</td>
+          <td class="AttributeDetail">String</td>
+          <td class="AttributeDetail">Required</td>
+          <td class="AttributeDetail"><i>n/a</i></td>
+          <td class="AttributeDetail">Annotation value, e.g., GI for target sequence</td>
+        </tr>
+        <tr> 
+          <td class="AttributeDetail">url</td>
+          <td class="AttributeDetail">String</td>
+          <td class="AttributeDetail">Optional</td>
+          <td class="AttributeDetail"><i>n/a</i></td>
+          <td class="AttributeDetail">Link to annotation record, e.g., link to 
+            PubMed record for GI</td>
+        </tr>
+        <tr> 
+          <td class="AttributeDetail">description</td>
+          <td class="AttributeDetail">String</td>
+          <td class="AttributeDetail">Optional</td>
+          <td class="AttributeDetail"><i>n/a</i></td>
+          <td class="AttributeDetail">Annotation description</td>
+        </tr>
+        <tr> 
+          <th class="ElementHeader">Contents</th>
+          <td colspan="5" class="ElementDetail">none</td>
+        </tr>
+      </table>
+      <p >&nbsp; 
+      <h2 ><font color="#0099CC">Plate mapping file</font></h2>
+      <p >XML file describs plate mapping information and cloning strategy. All 
+        steps on the 'Cloning project settings' menu (see ACE tutorial) MUST be 
+        performed before XML file can be written, because some items, like cloning 
+        strategy, should be defined and get their ACE unique IDs before they will 
+        be referenced in XML. Example of Plate mapping XML file.</p>
+      <h2 >Elements</h2>
+      <h3>Clone collection</h3>
+      <table width="100%" class="ElementTable" >
+        <tr> 
+          <th width="16%" class="ElementHeader">Element</th>
+          <td class="ElementDetail" colspan="5">clone-collection</td>
+        </tr>
+        <tr> 
+          <th class="ElementHeader">Description</th>
+          <td colspan="5" class="ElementDetail">Definition of sequencing plate</td>
+        </tr>
+        <tr> 
+          <th rowspan="5" class="ElementHeader">Attributes</th>
+          <th width="11%" class="ElementHeader">Name</th>
+          <th width="7%" class="ElementHeader">Type</th>
+          <th width="17%" class="ElementHeader">Optional/ Required</th>
+          <th width="17%" class="ElementHeader">Default Value</th>
+          <th width="32%" class="ElementHeader">Description</th>
+        </tr>
+        <tr> 
+          <td class="AttributeDetail">userid</td>
+          <td class="AttributeDetail">int</td>
+          <td class="AttributeDetail">Required</td>
+          <td class="AttributeDetail"><i>n/a</i></td>
+          <td class="AttributeDetail">User unique ID, user must be register with 
+            ACE </td>
+        </tr>
+        <tr> 
+          <td class="AttributeDetail">name</td>
+          <td class="AttributeDetail">String</td>
+          <td class="AttributeDetail">Required</td>
+          <td class="AttributeDetail"><i>n/a</i></td>
+          <td class="AttributeDetail">Unique plate name </td>
+        </tr>
+        <tr> 
+          <td class="AttributeDetail">type</td>
+          <td class="AttributeDetail">String</td>
+          <td class="AttributeDetail">Optinal</td>
+          <td class="AttributeDetail"><i>n/a</i></td>
+          <td class="AttributeDetail">Container type description</td>
+        </tr>
+        <tr> 
+          <td class="AttributeDetail">projectid</td>
+          <td class="AttributeDetail">int</td>
+          <td class="AttributeDetail">Required</td>
+          <td class="AttributeDetail"><i>n/a</i></td>
+          <td class="AttributeDetail">Project unique ID, see <em>'<a href="help_generalhelp.jsp#ace_configuration" target="_blank">System 
+            Settings</a> </em>' for details</td>
+        </tr>
+        <tr> 
+          <th class="ElementHeader">Contents</th>
+          <td colspan="5" class="ElementDetail">sample, construct</td>
+        </tr>
+      </table>
+      <h3>Construct</h3>
+      <table width="100%" class="ElementTable" >
+        <tr> 
+          <th width="14%" class="ElementHeader">Element</th>
+          <td class="ElementDetail" colspan="5">construct</td>
+        </tr>
+        <tr> 
+          <th class="ElementHeader">Description</th>
+          <td colspan="5" class="ElementDetail">container for all isolate originated 
+            from the same clone</td>
+        </tr>
+        <tr> 
+          <th rowspan="5" class="ElementHeader">Attributes</th>
+          <th width="23%" class="ElementHeader">Name</th>
+          <th width="6%" class="ElementHeader">Type</th>
+          <th width="11%" class="ElementHeader">Optional/ 
+            Required</p></th>
+          <th width="11%" class="ElementHeader">Default Value</th>
+          <th width="35%" class="ElementHeader">Description</th>
+        </tr>
+        <tr> 
+          <td class="AttributeDetail">format</td>
+          <td class="AttributeDetail">enum</td>
+          <td class="AttributeDetail">Required</td>
+          <td class="AttributeDetail"><i>1</i></td>
+          <td class="AttributeDetail">Defins whether stop codon was replace by 
+            non-stop codon or not </td>
+        </tr>
+        <tr> 
+          <td class="AttributeDetail">cloningstrategy_name</td>
+          <td class="AttributeDetail">int</td>
+          <td class="AttributeDetail">Required</td>
+          <td class="AttributeDetail"><i>n/a</i></td>
+          <td class="AttributeDetail">Cloning strategy ID, see <em>'<a href="help_generalhelp.jsp#ace_configuration" target="_blank">System 
+            Settings</a> </em>' for details</td>
+        </tr>
+        <tr> 
+          <td class="AttributeDetail">refsequenceid</td>
+          <td class="AttributeDetail">int</td>
+          <td class="AttributeDetail">Required</td>
+          <td class="AttributeDetail"><i>n/a</i></td>
+          <td class="AttributeDetail">Target sequence ID as submited from reference 
+          </td>
+        </tr>
+        <tr> 
+          <td class="AttributeDetail">constructid</td>
+          <td class="AttributeDetail">int</td>
+          <td class="AttributeDetail">Required</td>
+          <td class="AttributeDetail"><i>n/a</i></td>
+          <td class="AttributeDetail">Construct unique identifier</td>
+        </tr>
+        <tr> 
+          <th class="ElementHeader">Contents</th>
+          <td colspan="5" class="ElementDetail">sample*</td>
+        </tr>
+      </table>
+	  <p>Construct format:
+      <ul>
+        <li>0 - stop codon was replaced by non-stop codon;</li>
+        <li>1 - stop codon preserved;</li>
+      </ul>
       
-    </td>
+      <h3 >Sample</h3>
+      <table width="100%" class="ElementTable" >
+        <tr> 
+          <th class="ElementHeader">Element</th>
+          <td class="ElementDetail" colspan="5">sample</td>
+        </tr>
+        <tr> 
+          <th class="ElementHeader">Description</th>
+          <td colspan="5" class="ElementDetail">represent one phisical sample 
+            on sequencing plate, clone ID is substance identifier. </td>
+        </tr>
+        <tr> 
+          <th rowspan="5" class="ElementHeader">Attributes</th>
+          <th class="ElementHeader">Name</th>
+          <th class="ElementHeader">Type</th>
+          <th class="ElementHeader"><p>Optional/</p>
+            <p>Required</p></th>
+          <th class="ElementHeader">Default Value</th>
+          <th class="ElementHeader">Description</th>
+        </tr>
+        <tr> 
+          <td class="AttributeDetail">sampleid</td>
+          <td class="AttributeDetail">int</td>
+          <td class="AttributeDetail">Required</td>
+          <td class="AttributeDetail"><i>n/a</i></td>
+          <td class="AttributeDetail">Unique sample ID; can be equal to clone 
+            ID depending on customer LIMS.</td>
+        </tr>
+        <tr> 
+          <td class="AttributeDetail">cloneid</td>
+          <td class="AttributeDetail">int</td>
+          <td class="AttributeDetail">Required</td>
+          <td class="AttributeDetail"><i>n/a</i></td>
+          <td class="AttributeDetail">Unique clone ID</td>
+        </tr>
+        <tr> 
+          <td class="AttributeDetail">well</td>
+          <td class="AttributeDetail">String</td>
+          <td class="AttributeDetail">Required</td>
+          <td class="AttributeDetail"><i>n/a</i></td>
+          <td class="AttributeDetail">Well name in 'A01' annotation</td>
+        </tr>
+        <tr> 
+          <td class="AttributeDetail">sampletype</td>
+          <td class="AttributeDetail">enum**</td>
+          <td class="AttributeDetail">Required</td>
+          <td class="AttributeDetail"><i>n/a</i></td>
+          <td class="AttributeDetail">Sample type: see below for possible values</td>
+        </tr>
+        <tr> 
+          <th class="ElementHeader">Contents</th>
+          <td colspan="5" class="ElementDetail">empty</td>
+        </tr>
+      </table>
+      Sample Type: 
+      <ul>
+        <li>CONTROL_POSITIVE </li>
+        <li>CONTROL_NEGATIVE </li>
+        <li>ISOLATE </li>
+        <li> EMPTY </li></p>
+        - empty well 
+      </ul>
+	  <strong><em>Note: </em></strong> All attributes of any type (int, enum,..) 
+      MUST be placed in quots in XML file, e.g., &lt;construct constructid=<strong>'</strong>27433<strong>'</strong> 
+      format= '0' cloningstrategyid='5' ....</td>
   </tr></table>
 </body>
 </html>

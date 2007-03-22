@@ -29,11 +29,7 @@
     <tr>
       <td width="100%"><html:errors/></td>
     </tr>
-	<tr>
-        <td><i>If you are not sure about certain parameter settings, leave them 
-          unchanged </i> <a href="Help_ConfigureSystem.jsp">[parameter help file]</a>. 
-          </i></td>
-      </tr>
+	
   </table>
   </center>
 </div>
@@ -47,7 +43,7 @@
         View Mine </a>&nbsp;&nbsp;<a href="<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetSpec.do?forwardName=<%=Spec.POLYMORPHISM_SPEC_INT%>"> 
         View All </a></b> </div>
       <p> 
-      <p> 
+     
       
       </td>
   </tr>

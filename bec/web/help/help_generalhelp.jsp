@@ -54,13 +54,13 @@ cellspacing="2" align="center">
         user expands 'Process' menu and selects 'Read manipulation' item.</p>
       <h2 ><font color="#0099CC">ACE tutorial</font></h2>
       <ul>
-        <li><a href="#where_to_start">Where to start?</a></li>
+        <li><a href="#where_to_start">Where to start</a></li>
         <li><a href="#ace_configuration">System settings</a></li>
         <li><a href="#create_spec">Analysis setting</a></li>
         <li><a href="#upload_plates">Plate upload</a></li>
         <li><a href="#primers">Primers design and management</a></li>
         <li><a href="#trace_upload">Trace files upload</a></li>
-        <li><a href="#data_processing">Sequencing data processing and clone evaluation.</a></li>
+        <li><a href="#data_processing">Sequencing data processing and clone evaluation</a></li>
         <li><a href="#delete_data">Data clean-up</a></li>
         <li><a href="#report_data">Reports</a></li>
         <li><a href="#view_data">Real time views</a></li>
@@ -134,7 +134,7 @@ target="_blank">ACE Configuration file</a>. To create new cloning strategy use
           <td><div align="center"><strong><font color="#FFFFFF">Module</font></strong></div></td>
         </tr>
         <tr> 
-          <td valign="top">Clone Ranking</td>
+          <td valign="top"><a href="specs/help_rank_criteria.htm" target="_blank">Clone Ranking</a></td>
           <td valign="top">Analysis Settings &gt; Clone Ranking </td>
           <td valign="top">Isolate Ranker</td>
           </tr>
@@ -149,17 +149,20 @@ target="_blank">ACE Configuration file</a>. To create new cloning strategy use
             </dl></td>
          </tr>
         <tr> 
-          <td valign="top">Set of Parameter for Primer Design </td>
+          <td valign="top"><a href="specs/help_primer3_spec.htm" target="_blank"> 
+            Primer Design Specification</a></td>
           <td valign="top">Analysis Settings &gt; Primer Designer </td>
           <td valign="top">Primer Designer</td>
          </tr>
         <tr> 
-          <td valign="top">Set of Parameter for Polymorphism Detection </td>
+          <td valign="top"><a href="specs/help_polym_finder.htm" target="_blank">Polymorphism 
+            Detector Specification</a></td>
           <td valign="top">Analysis Settings &gt; Polymorphism Detection</td>
           <td valign="top">Polymorphism Finder</td>
         </tr>
         <tr> 
-          <td valign="top">Set of Parameter for Sequence Trimming </td>
+          <td valign="top"><a href="specs/help_sequence_trim.htm" target="_blank">Sequence Trimming 
+            Specification</a></td>
           <td valign="top">Analysis Settings &gt; Sequence Trimming </td>
           <td valign="top"><dl>
               <dt>Gap MapperLow Confidence Regions Finder </dt>
@@ -230,7 +233,7 @@ target="_blank"	>Prepare XML files for submission</a>.</li>
           of Gap Mapper or Low Confidens Regions Finder run for the particular 
           clone. ACE extracts last stretch collection defined for the clone. 
           <p>Primer Designer can be run in try mode, in this case information 
-            about designed primers is sent to user in <a href="reports/primer_design.htm">tab 
+            about designed primers is sent to user in <a href="reports/primer_design.htm" target="_blank">tab 
             delimited text file</a>, however, no information is stored in database 
             and, hence, cannot be used for vendor primer order.<br>
             *<strong><em>Note:</em></strong> Options (c) and (d) should not be 
@@ -251,8 +254,8 @@ target="_blank"	>Prepare XML files for submission</a>.</li>
           starts to put them in 96-well plate format. User has an option to specify 
           wells where first and last primers will be placed on the plate allowing 
           to preserve empty wells for controls if desired. ACE allows user to 
-          create an order file in format required by vendor ( <a href="reports/sample1_order_oligo.html">sample_order_file1</a>, 
-          <a href="reports/sample2_order_oligo.html">sample_order_file_2</a>).</li>
+          create an order file in format required by vendor ( <a href="reports/sample1_order_oligo.html" target="_blank">sample_order_file1</a>, 
+          <a href="reports/sample2_order_oligo.html" target="_blank">sample_order_file_2</a>).</li>
         <li>To store your <strong>information</strong> regarding when <strong>primer 
           plates</strong> were ordered or used for sequencing select '<em>Process 
           &gt; Internal Primer Design and Order &gt; Track Oligo Plate</em>' choose 
@@ -267,8 +270,7 @@ target="_blank"	>Prepare XML files for submission</a>.</li>
         <p>&lt;sequencing facility plate label>Tab< HIP plate label>.</li>
       <li>In ACE go to <em>'Trace Files -&gt; Create Renaming File'</em>. Select 
         mapping file, <a
-href="help_TraceFilesNamingFormats.html"
-onClick="window.open(href, 'GeneralReport', 'width=800,height=400,scrollbars=yes');">trace 
+href="help_TraceFilesNamingFormats.html" target="_blank">trace 
         files' naming format</a> and type of reads. The 'Internal reads' option 
         currently implemented only for primers designed by ACE. Click 'Submit' 
         button. ACE writes 'renaming_xxx.txt' file into TRACE_FILES_TRANCFER_INPUT_DIR 
@@ -293,7 +295,25 @@ onClick="window.open(href, 'GeneralReport', 'width=800,height=400,scrollbars=yes
         will be finished.</li>
       <p>**********************************************</p>
       <h3><a name="data_processing">Sequencing data processing and clone evaluation.</a></h3>
-      <p>User Goal: inform ACE ACE what type of end read he has orded and what 
+       
+      <ul>
+        <li><a href="#end_read_pr">End Read Processing</a></li>
+        <li><a href="#assembler">Sequence Assembly </a></li>
+        <li><a href="#discrepancy">Discrepancy Finder</a></li>
+        <li><a href="#polym">Polymorphism Finder</a></li>
+        <li><a href="#isolate">Isolate Ranker </a> </li>
+        <li><a href="#mapper">Gap Mapper</a></li>
+        <li><a href="#lqr">Low Confidence Regions Finder</a></li>
+      </ul>
+	  
+	  <p>&nbsp;</p>
+      <p> Untrimmed, these low confidence reads regions can potentially distort 
+        sequence assembly and downstream sequence analysis. ACE use sliding window 
+        a</p>
+      <p>Sequencher provides simple-to-use but powerful tools that help you trim 
+        poor quality or ambiguous data. Trim Ends removes misleading data from 
+        the ends of sequencing fragments. </p>
+<p>User Goal: inform ACE ACE what type of end read he has orded and what 
         primer were used for sequencing. This information MUST be submitted before 
         running 'End Reads Wrapper'.</p>
       <p>User Action: </p>
@@ -387,7 +407,7 @@ onClick="window.open(href, 'GeneralReport', 'width=800,height=400,scrollbars=yes
           is proportional to the number of specified clones. The 'Quick Decision 
           Tool' provides feedback on the screen in addition to sending the report 
           by e-mail.</li>
-        <li>To run <a href="help_ACE_overview.htm#decision">Decision Tool </a> 
+        <li>To run <a href="help_ACE_overview.htm#decision" target="_blank">Decision Tool </a> 
           choose <em>'Reports &gt; Detailed Decision Tool'</em> and fill the query 
           form. There is no limit on the number of processed clones.</li>
         <li>'Mismatched Clones' report helps to detect cases of misidentified 
@@ -417,7 +437,7 @@ target="_blank"> requested information</a> for the specified set of clones. To
       <h3><a name="view_data">Real time views</a></h3>
       <ul>
         <li><strong><a
-href="image/image_Fig4.htm">Comprehensive plate viewer</a></strong> gives access 
+href="image/image_Fig4.htm" target="_blank">Comprehensive plate viewer</a></strong> gives access 
           to complete information about plate clones. Select 'View &gt; Plate 
           Results', enter plate label (case insensitive), check 'Show Isolate 
           Ranker Output' option. </li>
@@ -478,14 +498,15 @@ href="screen_shots/report_ordered_primers.html">Sample report</a>.</li>
         <li> To view set of <strong>low confidence regions</strong> for the clone 
           created by Low Confidence Finder select <em>Process &gt; View Process 
           Results &gt; View low confidence regions for clone sequences' </em> 
-          and specify clone IDs. <a href="screen_shots/report_view-lqr.html">Sample 
+          and specify clone IDs. <a href="screen_shots/report_view-lqr.html" target="_blank">Sample 
           report.</a> </li>
       </ul>
       <p><a href="#view_data">Back</a> </p>
-      <h3>&nbsp;</h3>
-      <p class="MsoNormal">&nbsp;</p>
-      <p class="MsoNormal">&nbsp;</p></td>
-  </tr></table>
+     
+      </td>
+  </tr><tr> <td colspan="2"><p class="disclaimer">&copy; 2005 by Helen 
+          Taycher  
+          last changed March 17, 2007</p></td></tr></table>
 </body>
 </html>
 

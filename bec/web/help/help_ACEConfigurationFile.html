@@ -35,7 +35,7 @@
   </tr>
   <tr> 
     <td valign="top">CODON_START_1...<em>N</em>_NAME</td>
-    <td valign="top">User freindly value of start codon(s)</td>
+    <td valign="top">User friendly value of start codon(s)</td>
   </tr>
   <tr> 
     <td valign="top">CODON_STOP_CLOSED_1...<em>N</em></td>
@@ -59,7 +59,7 @@
   </tr>
   <tr> 
     <td>BLAST_DBASES_PATH</td>
-    <td>Storage for blastable databses created by user. These databases are used 
+    <td>Storage for blastable databases created by user. These databases are used 
       by 'Mismatched Clones' report (see user guide).</td>
   </tr>
   <tr> 
@@ -85,12 +85,12 @@
   </tr>
   <tr> 
     <td>IS_HIP_VERSION</td>
-    <td>0 (false) for all non-HIP instalations</td>
+    <td>0 (false) for all non-HIP installations</td>
   </tr>
   <tr> 
     <td>PLATE_TYPE_WELL_NAMING</td>
-    <td>1 . Naming format for the 96-plates A01-H12. No other format is supported 
-      by current version</td>
+    <td>1 . Naming format for the 96-plates A01-H12. [No other format is supported 
+      by current version]</td>
   </tr>
   <tr> 
     <td>&nbsp;</td>
@@ -98,19 +98,17 @@
   </tr>
   <tr> 
     <td>PHRED_QUALITYDEF_FIRST_BASE</td>
-    <td></td>
+    <td rowspan="4">Parameters used by '<a href="help_generalhelp.jsp#report_data" target="_blank">Trace 
+      Files Quality Report</a>' to define quality of reads</td>
   </tr>
   <tr> 
     <td>PHRED_QUALITYDEF_LAST_BASE</td>
-    <td></td>
   </tr>
   <tr> 
     <td>PHRED_QUALITYDEF_MIN_LENGTH</td>
-    <td></td>
   </tr>
   <tr> 
     <td>PHRED_QUALITYDEF_SCORE_PASS</td>
-    <td></td>
   </tr>
   <tr> 
     <td>&nbsp;</td>
@@ -136,7 +134,7 @@
   </tr>
   <tr> 
     <td>PHREDPHAP_SCRIPT_PATH</td>
-    <td>Path to PhredPhrap script</td>
+    <td>Path to phredPhrap.perl script</td>
   </tr>
   <tr> 
     <td>BLAST_EXE_COMMON_PATH</td>
@@ -153,25 +151,27 @@
   </tr>
   <tr> 
     <td>TRACE_FILES_INPUT_PATH_DIR</td>
-    <td>The initial trace files storage. This directory can reside on any computer, 
-      however, server running ACE should be able to see the directory. </td>
+    <td>The initial trace file location. This directory can reside on any computer, 
+      however, server running ACE should be able to access the directory</td>
   </tr>
   <tr> 
     <td>TRACE_FILES_OUTPUT_PATH_ROOT</td>
-    <td></td>
+    <td>Root directory for trace files arranged by clone; resides on ACE server</td>
   </tr>
   <tr> 
-    <td>TRACE_FILES_TRANCFER_INPUT_DIR</td>
-    <td></td>
+    <td valign="top">TRACE_FILES_TRANCFER_INPUT_DIR</td>
+    <td>The initial trace file location for traces renamed according to ACE format. 
+      Traces moved into this directory from . TRACE_FILES_INPUT_PATH_DIR. This 
+      directory should reside on ACE server</td>
   </tr>
   <tr> 
-    <td>TRACE_FILES_TRANSFER_OUTPUT_DIR </td>
-    <td></td>
+    <td valign="top">TRACE_FILES_TRANSFER_OUTPUT_DIR </td>
+    <td>Should be equal toTRACE_FILES_TRANCFER_INPUT_DIR for any typical installation</td>
   </tr>
   <tr> 
     <td>MOVE_TRACE_FILES_BASE_DIR </td>
     <td>Path to directory where trace files will be moved, when user runs 'Move 
-      trace file from clone directory' action</td>
+      trace file from clone directory' </td>
   </tr>
   <tr> 
     <td>NEEDLE_OUTPUT_PATH</td>
@@ -190,27 +190,30 @@
   </tr>
   <tr> 
     <td>VECTOR_FN_LIBRARY_DEFAULT</td>
-    <td></td>
+    <td>File name for vector library (FASTA format) that contains sequences for 
+      all vectors used by facility</td>
   </tr>
   <tr> 
     <td>VECTOR_FN_LIBRARY_DEFAULT_NAME</td>
-    <td></td>
+    <td>User friendly for 'all vectors' library</td>
   </tr>
   <tr> 
     <td>VECTOR_FN_LIBRARY_EMPTY</td>
-    <td></td>
+    <td>Empty text file, used as vector library file when 'No trimming' option 
+      is specified.</td>
   </tr>
   <tr> 
     <td>VECTOR_FN_LIBRARY_EMPTY_NAME</td>
-    <td></td>
+    <td>'No trimming' - user option that indicates that no vector trimming will 
+      be performed by cross_match</td>
   </tr>
   <tr> 
     <td>VECTOR_FN_1...<em>N</em></td>
-    <td></td>
+    <td>File name for vector library (FASTA format)</td>
   </tr>
   <tr> 
     <td>VECTOR_FN_1...<em>N</em>_NAME</td>
-    <td></td>
+    <td>User friendly vector name</td>
   </tr>
   <tr> 
     <td>&nbsp;</td>
@@ -218,9 +221,8 @@
   </tr>
   <tr> 
     <td>POLYORPHISM_FINDER_DATA_DIRECTORY</td>
-    <td>Input/output files for Polymorphism Finder will be stored here. You need 
-      this directory only if you are going to use Polymorphism Finder. Set value 
-      to /usr/tmp if you are not going to use Polymorphism Finder. </td>
+    <td>Input/output files for Polymorphism Finder will be stored here. This directory 
+      is need if Polymorphism Finder will be used, set value to /usr/tmp otherwise</td>
   </tr>
   <tr> 
     <td>PF_DB_1...<em>N</em></td>
@@ -236,18 +238,21 @@
   </tr>
   <tr> 
     <td>FILE_NAME_INPUT_DATA_FILE</td>
-    <td>File name for discrepancy data temporary file created by Polymorphism 
-      Finder </td>
+    <td>File name for discrepancy data file created by Polymorphism Finder </td>
   </tr>
   <tr> 
     <td>FILE_NAME_ORFSEQUENCES_DATA_FILE</td>
-    <td>File name for ORF sequence texttemporary file created by Polymorphism 
-      Finder </td>
+    <td>File name for ORF sequence text file created by Polymorphism Finder </td>
   </tr>
   <tr> 
     <td>FILE_NAME_ORFSEQUENCES_INDEX_FILE</td>
-    <td>File name for ORF sequences index temporary file created by Polymorphism 
-      Finder </td>
+    <td>File name for ORF sequences index file created by Polymorphism Finder 
+    </td>
+  </tr>
+  <tr> 
+    <td colspan="2"><p class="disclaimer">&copy; 2005 by Helen 
+        Taycher 
+        last changed January 15, 2007</p></td>
   </tr>
 </table>
 <p>&nbsp;</p>
