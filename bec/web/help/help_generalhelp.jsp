@@ -49,9 +49,9 @@ cellspacing="2" align="center">
         and minimize the need to produce additional sequencing primers.</p>
       <p class="MsoNormal"><strong><em>Note: </em></strong>ACE GUI consists of 
         the main window and left hand drop-down menu. Main window displays forms 
-        according to user selectiong from the left-hand menu. Throughout this 
-        tutorial the notation like 'Process &gt; Read Manipulation' means that 
-        user expands 'Process' menu and selects 'Read manipulation' item.</p>
+        according to user selection from the left-hand menu. Throughout this tutorial 
+        the notation like 'Process &gt; Read Manipulation' means that user expands 
+        'Process' menu and selects 'Read manipulation' item.</p>
       <h2 ><font color="#0099CC">ACE tutorial</font></h2>
       <ul>
         <li><a href="#where_to_start">Where to start</a></li>
@@ -93,7 +93,7 @@ cellspacing="2" align="center">
           <a href="help_vector_xml_format.html"
 target="_blank">XML file</a> with vector(s) description. Each vector is described 
           by name, source, type (1 for destination vector, 0 for master vector), 
-          filename, filepath. In addition a vector may have a set of features. 
+          filename, file path. In addition a vector may have a set of features. 
           Feature description contains: feature name ('recombination site'), feature 
           property (1 for added, 0 for remain, -1 for lost when insert is integrated), 
           feature description.</li>
@@ -117,7 +117,7 @@ target="_blank">ACE Configuration file</a>. To create new cloning strategy use
           '<em>Cloning Project Settings &gt; Add Cloning Strategy</em>'. </li>
       </ul>
       <h3><a name="create_spec">Analysis setting</a></h3>
-      <p>Particular processing modules imbeded into ACE require analysis specifications 
+      <p>Particular processing modules imbedded into ACE require analysis specifications 
         (spec) to be predefined. All analysis specifications are shared among 
         all users of ACE and all projects. The main window that allow to create 
         new spec of any kind (see 'Page' column in the following table) provides 
@@ -212,9 +212,9 @@ target="_blank"	>Prepare XML files for submission</a>.</li>
           </ul>
         </li>
       </ul>
-      <p>Uppon finishing the upload ACE sends e-mail report to the user.</p>
+      <p>Upon finishing the upload ACE sends e-mail report to the user.</p>
       <p><a href="#upload_plates">Back</a> </p>
-      <h3><a name="primers">Primers design and managment</a></h3>
+      <h3><a name="primers">Primers design and management</a></h3>
       <p>This set of modules allows users to: (a) design gene-specific sequencing 
         primers; (b) select specific primer(s) for vendor order; (c) order primers; 
         (d) track primer plates;</p>
@@ -230,7 +230,7 @@ target="_blank"	>Prepare XML files for submission</a>.</li>
           primer walk. Select '<em>Design primers for Stretch Collection</em>' 
           to design primers needed to complete coverage (i.e., fill in gaps or 
           cover low confidence discrepancies). Stretch collection is a result 
-          of Gap Mapper or Low Confidens Regions Finder run for the particular 
+          of Gap Mapper or Low Confidence Regions Finder run for the particular 
           clone. ACE extracts last stretch collection defined for the clone. 
           <p>Primer Designer can be run in try mode, in this case information 
             about designed primers is sent to user in <a href="reports/primer_design.htm" target="_blank">tab 
@@ -250,7 +250,7 @@ target="_blank"	>Prepare XML files for submission</a>.</li>
           order. Available options are (a) only primers designed for stretch collections; 
           (b) only primers designed for reference sequence; (c) primers designed 
           for stretch collections and reference sequence. ACE pools out all primers 
-          aproved for the specified clones according to the user selection and 
+          approved for the specified clones according to the user selection and 
           starts to put them in 96-well plate format. User has an option to specify 
           wells where first and last primers will be placed on the plate allowing 
           to preserve empty wells for controls if desired. ACE allows user to 
@@ -270,16 +270,16 @@ target="_blank"	>Prepare XML files for submission</a>.</li>
         <p>&lt;sequencing facility plate label>Tab< HIP plate label>.</li>
       <li>In ACE go to <em>'Trace Files -&gt; Create Renaming File'</em>. Select 
         mapping file, <a
-href="help_TraceFilesNamingFormats.html" target="_blank">trace 
-        files' naming format</a> and type of reads. The 'Internal reads' option 
-        currently implemented only for primers designed by ACE. Click 'Submit' 
-        button. ACE writes 'renaming_xxx.txt' file into TRACE_FILES_TRANCFER_INPUT_DIR 
-        directory, the same file is sent to user by e-mail. Renaming file contains 
-        one entry per each trace file in the format: <original file name><em> 
-        &lt;Trace File name&gt; Tab </em>&lt;ACE recognizable file name>. Make 
-        sure that number of entries in 'renaming_xxx.txt' file is equal to the 
-        number of trace files. If 'renaming_xxx.txt' file is empty or number of 
-        the entries is less than expected one of the following problems occured: 
+href="help_TraceFilesNamingFormats.html" target="_blank">trace files' naming format</a> 
+        and type of reads. The 'Internal reads' option currently implemented only 
+        for primers designed by ACE. Click 'Submit' button. ACE writes 'renaming_xxx.txt' 
+        file into TRACE_FILES_TRANCFER_INPUT_DIR directory, the same file is sent 
+        to user by e-mail. Renaming file contains one entry per each trace file 
+        in the format: <original file name><em> &lt;Trace File name&gt; Tab </em>&lt;ACE 
+        recognizable file name>. Make sure that number of entries in 'renaming_xxx.txt' 
+        file is equal to the number of trace files. If 'renaming_xxx.txt' file 
+        is empty or number of the entries is less than expected one of the following 
+        problems occurred: 
         <ul>
           <li>Errors in mapping file or plate indicated in mapping file have not 
             been submitted into ACE .</li>
@@ -293,7 +293,7 @@ href="help_TraceFilesNamingFormats.html" target="_blank">trace
         Trace Files'</em>, select renaming_xxx.txt file created by ACE on the 
         previous step. ACE will send user e-mail when transfer trace files transfer 
         will be finished.</li>
-      <p>**********************************************</p>
+      <p>&nbsp;</p>
       <h3><a name="data_processing">Sequencing data processing and clone evaluation.</a></h3>
        
       <ul>
@@ -304,34 +304,68 @@ href="help_TraceFilesNamingFormats.html" target="_blank">trace
         <li><a href="#isolate">Isolate Ranker </a> </li>
         <li><a href="#mapper">Gap Mapper</a></li>
         <li><a href="#lqr">Low Confidence Regions Finder</a></li>
-      </ul>
-	  
-	  <p>&nbsp;</p>
-      <p> Untrimmed, these low confidence reads regions can potentially distort 
-        sequence assembly and downstream sequence analysis. ACE use sliding window 
-        a</p>
-      <p>Sequencher provides simple-to-use but powerful tools that help you trim 
-        poor quality or ambiguous data. Trim Ends removes misleading data from 
-        the ends of sequencing fragments. </p>
-<p>User Goal: inform ACE ACE what type of end read he has orded and what 
-        primer were used for sequencing. This information MUST be submitted before 
-        running 'End Reads Wrapper'.</p>
-      <p>User Action: </p>
-      <ul>
-        <li>Select in ACE menu Process->Put request for end reads sequencing. 
-        </li>
-        <li>Choose vector that was used for cloning, click 'Submit' button. </li>
-        <li>Choose primers that will be used for sequencing, select 'NONE' as 
-          primer type if this direction is not sequenced. Please, pay close attention 
-          to primers chooce, the possible output of wrong primer selection - clone 
-          will be described as 'No match' clone. </li>
-        <li>Specify plates. </li>
-      </ul>
-      <p>If your primers are not listed by ACE for the selected vector, please 
-        contact informatics team. </p>
-      <P>ACE will send user e-mail after action will be performed. This e-mail 
-        contains as attachment naming files for end read (one file per plate/direction)</P>
-      <h3><strong> </strong> </h3>
+        <li><a href="#finish">Finished Clones</a></li>
+       </ul>
+	  <p><a name="end_read_pr">End Read Processing</a> </p>
+      <p><a name="assembler">Sequence Assembly </a> </p>
+      <p><a name="discrepancy">Discrepancy Finder</a> </p>
+      <p>To run Discrepancy Finder (see<a href="help_ACE_overview.htm#discrepancy" target="_blank"> 
+        ACE overview </a> for details) use '<em>Process &gt; Evaluate Clones &gt; 
+        Run Discrepancy Finder</em>', specify items that should be analyzed: (a) 
+        plate labels (case insensitive) - all clones from submitted clones will 
+        be analyzed; (b) clone IDs; (c) clone sequence IDs (user can get clone 
+        sequence ID by running 'Genral Report' and set high quality cut-off. ACE 
+        assigns low confidence status if the Phred confidence score of at least 
+        one base used to define the discrepancy or one out of four bases on either 
+        side of the discrepancy is below the a user-defined threshold (default 
+        set to 25). </p>
+      <p><a name="polym">Polymorphism Finder</a> </p>
+      <p><a name="isolate">Isolate Ranker </a> </p>
+      <p>To run Isolate Ranker (see<a href="help_ACE_overview.htm#isolate" target="_blank"> 
+        ACE overview </a> for details) select '<em>Process &gt; Evaluate Clones 
+        &gt; Run Isolate Ranker</em>' and specify plate labels (case insensitive) 
+        and required analysis specifications (see <a href="#create_spec">'Analysis 
+        settings'</a> section for details). Isolate Ranker can rank isolates located 
+        on different plates, however, these plates should be run by module at 
+        the same time. Isolate Ranker will rank isolates based on the most relevant 
+        contig for the particular clone, e.g, if clone has end reads, collection 
+        of contigs and gaps defined by Gap Mapper and several clone sequences 
+        assembled under different conditions (see Assembler description for details) 
+        isolate will be ranked based on LAST assembled sequence.</p>
+		<a name="mapper">Gap Mapper</a>
+      <p><a name="lqr" >Low Confidence Regions Finder</a></p>
+      <p>If clone sequence has low confidence discrepancies that should be resolved 
+        before clone can be accepted, user should consider to run 'Low Confidence 
+        Regions Finder' to define regions of low confidence (LCR) and preside 
+        with 'Primer Designer' to design primers to cover LCRs (see<a href="help_ACE_overview.htm#lqr" target="_blank"> 
+        ACE overview </a> for details). To run 'Low Confidence Regions Finder' 
+        use '<em>Process &gt; Evaluate Clones &gt; Run Low Confidence Regions 
+        Finder in Clone Sequences</em>', specify clone IDs, select specification 
+        for sequence trimming (see <a href="#create_spec">'Analysis settings'</a> 
+        section for details). If end reads be done to resolve low confidence discrepancies 
+        on 5' and 3' ends, set how many bases are expected to be covered by these 
+        end reads. 'Low Confidence Regions Finder' will not try to define LCR 
+        for this regions. The Finder can be run in try mode, in this case information 
+        about LCRs is sent to user in <a href="reports/lqf_report.html" target="_blank">tab 
+        delimited text file</a>, however, it is not stored in database and, hence, 
+        cannot be used later for primer(s) design. 
+      <p> <a name="finish">Finished clones</a> 
+      <p>Once a clone has either met the acceptance or rejection criteria, it 
+        is useful to set its appropriate final status. This process removes the 
+        clone from further processing reducing the job size, thereby focusing 
+        the effort on only those clones that are still pending. A clone which 
+        final status set to not 'In Process' (default clone final status assigned 
+        on clone submission into ACE) is excluded from the following processes: 
+        (a) assembly; (b) primer design and order; (c) polymorphism search; (d) 
+        no data can be deleted or reanalyzed (see <a href="#delete_data">Data 
+        clean-up</a> section for details). To set <strong>clone final status</strong> 
+        select '<em>Process &gt; Set Final Clones Status</em>' and specify clone 
+        IDs and final status. Optionally XML file with results of clone analysis 
+        can be created. You can change clone final status back to 'In Process' 
+        at any time. 
+      <p>&nbsp;
+      <p>**********************************************</p>
+      <p> <strong> </strong> </p>
       <p>End Reads wrapper module performes the following actions </p>
       <ul>
         <li>distribute all none active chromat files into appropriate directories 
@@ -348,9 +382,7 @@ href="help_TraceFilesNamingFormats.html" target="_blank">trace
           </ul>
         </li>
       </ul>
-      User input information for the module - list of plates which trace files 
-      should be distributed. 
-      <p>ACE will send user e-mail after action will be performed. </p>
+      <p>&nbsp;</p>
       <p>**********************************</p>
       <h3><a name="delete_data">Data clean up</a></h3>
       <p>ACE allows removal of trace files and clone information from the database. 
@@ -391,7 +423,7 @@ href="help_TraceFilesNamingFormats.html" target="_blank">trace
           &gt; Delete data &gt; Move trace file from clone directory into temporary 
           directory (allows trace files recovery)</em>' - traces will be moved 
           to the storage directory. </li>
-        <li>To <strong>delete intermidiate files</strong> created during clone 
+        <li>To <strong>delete intermediate files</strong> created during clone 
           sequence assembly by PhredPhrap from hard drive select '<em>Process 
           &gt; Delete data &gt; Clean-up hard drive</em>'.<br>
         </li>
@@ -457,7 +489,7 @@ href="image/image_Fig4.htm" target="_blank">Comprehensive plate viewer</a></stro
           &gt; Plates</em>'. Plates are grouped by project name (alphabetical 
           order). Click on the check box located before project name to hide all 
           plates related to the project.</li>
-        <li>To veiw <strong>all analysis specifications </strong> stored in ACE 
+        <li>To view<strong>all analysis specifications </strong> stored in ACE 
           select 'View &gt; Process Configurations'. <strong><em>Note: </em></strong>you 
           can view only one specification at a time. </li>
         <li>To view complete information about <strong>vectors</strong> uploaded 

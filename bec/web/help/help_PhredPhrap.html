@@ -10,7 +10,7 @@
   problem. The error message will be like this:</P>
       <P> 
 <PRE>  /Documents/test_sample_001.ab1: unable to match primer ID string: skipping chromatogram
-    unknown chemistry (DT3700POP5{BDv3}.mob) in chromat /Documents/test_sample_001.ab1
+    unknown chemistry (DT3700POP5{BDv3}.mob) in chromate /Documents/test_sample_001.ab1
     add a line of the form
     "DT3700POP5{BDv3}.mob"    &lt;chemistry&gt;    &lt;dye type&gt;   &lt;machine type&gt;
     to the file /phredpar.dat
@@ -35,10 +35,11 @@ The error message will be raised if:
       file has lines like this: <PRE>"DP6%25Ac{-21M13}"   primer      rhodamine         ABI_373_377
 "ET Terminators"     terminator  energy-transfer   MolDyn_MegaBACE
 </PRE>
-      <P>So, if Phred finds a primer ID string "DP6%25Ac{-21M13}", Phred now 
-      knoes that this was dye primer chemistry with rhodamine dyes, run on an 
-      ABI 373 or 377 sequencer. 
-      <P>Phred then adjust the base calling for the given machine, and uses a 
+      
+<P>So, if Phred finds a primer ID string "DP6%25Ac{-21M13}", Phred now knows that 
+  this was dye primer chemistry with rhodamine dyes, run on an ABI 373 or 377 
+  sequencer. 
+<P>Phred then adjust the base calling for the given machine, and uses a 
       machine-and chemistry-specific lookup table for quality values. This 
       allows Phred to come up with high accuracy for base calls and quality 
       scores. 
@@ -53,7 +54,7 @@ The error message will be raised if:
       <H2><font color="#0099CC">How to fix it</font></H2>
       
 <P>All you need to do is add a line for the "primer ID string" to your Phred parameter 
-  file with any text editor. The Phred error mesage tells you what the line should 
+  file with any text editor. The Phred error message tells you what the line should 
   look like, and where the Phred parameter file is. The location of Phred parameter 
   file is given to you by the error message:</P>
       

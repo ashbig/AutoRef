@@ -10,18 +10,17 @@
       
      
 <table border="0" align="center" width="90%">
-<tr><td><H1 align="center"> <font color="#0099CC">Chages to phredPhrap script</font></H1>
+<tr><td><H1 align="center"> <font color="#0099CC">Changes to phredPhrap script</font></H1>
 </td></tr>
   <tr> 
     <td> 
       <h2><font color="#0099CC">        Vector Trimming        </font></h2>
 	  <P> Raw sequence data typically contains vector sequences. phredPhrap uses 
-        <a href="http://bozeman.genome.washington.edu/">CrossMatch</a> for vector 
+        <a href="http://bozeman.genome.washington.edu/">cross_match</a> for vector 
         masking. Vector libraries are submitted in FASTA-format text files. ACE 
-        allows user to have unlimmited number of vector files to be used by cross_match. 
-        Each vector library should be mapped in <a href="<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("../../../../BEC_TEST/bec/web/help/JSP_REDIRECTION") %>help/help_ACEConfigurationFile.html">AceConfiguration.properties</a> 
-        file. 
-    </td>
+        allows user to have unlimited number of vector files to be used by cross_match. 
+        Each vector library should be mapped in <a href="help_ACEConfigurationFile.html" target="_blank">AceConfiguration.properties</a> 
+        file. </td>
   </tr>
   <tr> 
     <td><h2>&nbsp;</h2>
@@ -29,14 +28,14 @@
       <p>We found that additional trimming of trace files can be useful in many 
         cases, specially density of sequencing coverage is low. ACE allows user 
         to specify criteria for trace files trimming (how many bases to trim at 
-        the begining/end of the trace file, and phed score for quality trimming).</p></td>
+        the beginning / end of the trace file, and Phred score for quality trimming).</p></td>
   </tr>
   <tr> 
     <td><p>&nbsp;</p>
       <h2><font color="#0099CC">Changes to phradPhrap scrip</font></h2> <p>To 
         run ACE you need to change phredPhrap.perl script to allow:</p>
       <ul>
-        <li> use of multipal vector sequence libraries by cross_match</li>
+        <li> use of multiple vector sequence libraries by cross_match</li>
         <li>user specified quality trimming of trace files. </li>
       </ul></td>
   </tr>
@@ -44,7 +43,7 @@
     <td> <p><strong># Load library</strong>
       <p> use Getopt::Long;<br>
       </p>
-      <p><strong># Get paramenters from user input.</strong><br>
+      <p><strong># Get parameters from user input.</strong><br>
         <br>
         <br>
         $trim_score =&quot;&quot;;<br>
@@ -69,9 +68,8 @@
         $outputPath = $clone_path.&quot;/contig_dir&quot;;<br>
       </p>
       <p><strong>#data for trace files quality trimming by ACE</strong><br>
-        <strong>$java_pass&lt;/strong&gt; = &quot;/hard_drive/j2sdk1.4.1_02/bin/java&quot;;<br>
-        $java_trimming_script&lt;/strong&gt; = &quot;/path to trimming script 
-        location/ &nbsp;&nbsp;Trimming_java_script&quot;;</strong></p>
+        <strong>$java_pass= set to /JAVA_HOME/bin/java;<br>
+        $java_trimming_script = &quot;/path to trimming script location/ &nbsp;&nbsp;Trimming_java_script&quot;;</strong></p>
       <p>$trim_score_value = 0;$trim_first_base_value = 0;$trim_last_base_value 
         = 0;<br>
       </p>
@@ -82,9 +80,10 @@
         ;}</p>
       <p><br>
         <strong># settings for vector trimming<br>
-        # at least one empty vector sequence file requered.<br>
-        # change this to reflect wherever you put you fasta file of vector sequences</strong></p>
-      <p>$szVectorFilePath = &quot;/c/vectors/&quot;;</p>
+        # at least one empty vector sequence file required.<br>
+        # change this to reflect wherever you put you FASTA files with vector 
+        sequences</strong></p>
+      <p>$szVectorFilePath = ...;</p>
       <p>$szDefaultVectorFileName = &quot;vector_empty.seq&quot;;<br>
         if ($vectorfilename eq &quot;&quot;)<br>
         {<br>

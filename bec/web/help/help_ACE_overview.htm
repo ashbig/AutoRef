@@ -14,7 +14,7 @@
     <td> <h3> <strong>ACE Overview</strong></h3>
       <p><strong>Automated Clone Evaluation (ACE) </strong>system is a comprehensive, 
         multi-platform and multi-user, web-based sequence verification software 
-        system especially suited for protain expression clones. It automates all 
+        system especially suited for protein expression clones. It automates all 
         steps of sequence verification process: sequence contig assembly, identification 
         and annotation of differences between the clone and reference sequences, 
         gap mapping, primer design, polymorphism detection, and assignment of 
@@ -39,10 +39,10 @@
         compared with the reference/target sequence (<strong><em>Discrepancy Finder</em></strong>). 
         For clones based on cDNA produced from tissue, ACE can compare any discrepancies 
         with one or more sequence databases, such as GenBank, to determine if 
-        they correspond to naturally occurring polymorphisms (<strong><em>Polymorphism 
+        they correspond to naturally occurring polymorphism (<strong><em>Polymorphism 
         Finder</em></strong>). During the final decision process, users can optionally 
         configure the software to avoid penalizing clones for discrepancies that 
-        represent polymorphisms (<em><strong>Decision Tool</strong></em>). <br>
+        represent polymorphism's (<em><strong>Decision Tool</strong></em>). <br>
         If more than one isolate exists for a given clone, an optional module
         (<em><strong>Isolate Ranker</strong></em>) can rank isolates based on
         user-defined preferences specified in the form of penalties associated
@@ -96,8 +96,9 @@
         to describe the specific naming format for trace files in a format that 
         ACE can use to process these files automatically. This defines a set of 
         rules to extract plate name, well name and read direction (<a href="image/image_Fig2.htm" target="_blank">Figure 
-        2</a>).Detailled 
-        desription how to create new Trace File Format can be found <a href="help_TraceFilesNamingFormats.html" target="_blank"> here.</a></p>
+        2</a>). Detailled description how to create new Trace File Format can 
+        be found <a href="help_TraceFilesNamingFormats.html" target="_blank"> 
+        here.</a></p>
       <p><strong><em><a name="end_read_pr">End Read Processor.</a></em></strong> 
         End reads are treated slightly differently from internal reads because 
         some users employ them to select the best candidate from multiple isolates 
@@ -126,7 +127,7 @@
         target sequence and sequences in the vector library causes Phred/Phrap 
         to mask valid (i.e. gene) sequence when vector trimming is applied blindly. 
         This problem can be partially alleviated by removing irrelevant vector 
-        sequences from the vector library upfront. Moreover, editing vector sequences 
+        sequences from the vector library up front. Moreover, editing vector sequences 
         down to about 300 bp of insert-flanking regions might further improve 
         success. The modified trimming strategy works in most cases but occasionally 
         it might be necessary to turn off vector trimming altogether to get assembly 
@@ -171,22 +172,22 @@
         A discrepancy in ACE refers to any mismatch between the clone and its 
         target sequence described on both the <a href="image/table_DiscrepancyTypes.htm" target="_blank">nucleotide 
         and polypeptide levels</a>. ACE assigns confidence status (low or high) 
-        to any discrepancy. Lowconfidence status is asigned to a discrepancy if 
-        the Phred confidence score of at least one base used to define the discrepancy 
-        or one out of four bases on either side of the discrepancy is below the 
-        a user-defined threshold (default set to 25).</p>
+        to any discrepancy. Low confidence status is assigned to a discrepancy 
+        if the Phred confidence score of at least one base used to define the 
+        discrepancy or one out of four bases on either side of the discrepancy 
+        is below the a user-defined threshold (default set to 25).</p>
       <p><strong><em><a name="polym">Polymorphism Finder </a>. </em></strong>This 
         module determines if discrepancies are attributable to natural sequence 
         variations of the gene, which is particularly relevant for human genes 
         cloned using different tissue samples from those used to make the reference 
         sequences. The process requires two steps: (1) a relatively short sequence 
-        segment comprising the discrepancy and its flanking nucleotids is compared 
+        segment comprising the discrepancy and its flanking nucleotides is compared 
         using NCBI BLAST to data from all user-selected GenBank databases to find 
         an identical match; (2) each 100% hit is verified by comparing the entire 
         clone target sequence with the hit sequence to ask if it came from the 
         same gene using Pairwise BLAST. A match provides good evidence that the 
         observed sequence variation occurs naturally, but the absence of a match 
-        is inconclusive. Lenth of flanking sequence attached to the discrepancy 
+        is inconclusive. Length of flanking sequence attached to the discrepancy 
         and list of GenBank databases to search for the match are stored as user 
         defined specifications for Polymorphism Finder and can be reused. The 
         Polymorphism Finder stores the NCBI GI number for each verified hit as 
