@@ -306,21 +306,40 @@ href="help_TraceFilesNamingFormats.html" target="_blank">trace files' naming for
         <li><a href="#lqr">Low Confidence Regions Finder</a></li>
         <li><a href="#finish">Finished Clones</a></li>
        </ul>
-	  <p><a name="end_read_pr">End Read Processing</a> </p>
-      <p><a name="assembler">Sequence Assembly </a> </p>
-      <p><a name="discrepancy">Discrepancy Finder</a> </p>
+	  <p><a name="end_read_pr"><strong>End Read Processing</strong></a> </p>
+      <p><a name="assembler"><strong>Sequence Assembly </strong></a> </p>
+      <p><a name="discrepancy"><strong>Discrepancy Finder</strong></a> </p>
       <p>To run Discrepancy Finder (see<a href="help_ACE_overview.htm#discrepancy" target="_blank"> 
         ACE overview </a> for details) use '<em>Process &gt; Evaluate Clones &gt; 
         Run Discrepancy Finder</em>', specify items that should be analyzed: (a) 
-        plate labels (case insensitive) - all clones from submitted clones will 
+        plate labels (case insensitive) - all clones from submitted plates will 
         be analyzed; (b) clone IDs; (c) clone sequence IDs (user can get clone 
-        sequence ID by running 'Genral Report' and set high quality cut-off. ACE 
-        assigns low confidence status if the Phred confidence score of at least 
-        one base used to define the discrepancy or one out of four bases on either 
-        side of the discrepancy is below the a user-defined threshold (default 
-        set to 25). </p>
-      <p><a name="polym">Polymorphism Finder</a> </p>
-      <p><a name="isolate">Isolate Ranker </a> </p>
+        sequence ID by running 'Genral Report') and set quality cut-off. ACE assigns 
+        low confidence status if the Phred confidence score of at least one base 
+        used to define the discrepancy or one out of four bases on either side 
+        of the discrepancy is below the a user-defined threshold (default set 
+        to 25). </p>
+      <p><a name="polym"><strong>Polymorphism Finder</strong></a> </p>
+      <p>To run Polymorphism Finder (see<a href="help_ACE_overview.htm#polym" target="_blank"> 
+        ACE overview </a> for details) use '<em>Process &gt; Evaluate Clones &gt; 
+        Run Polymorphism Finder</em>', specify items that should be analyzed and 
+        choose <a href="specs/help_polym_finder.htm" target="_blank">Polymorphism 
+        Finder Specification</a>. ACE creates three intermediate files and puts 
+        them into directory specified by POLYMORPHISM_FINDER_DATA_DIRECTORY variable 
+        in <a href="help_ACEConfigurationFile.html" target="_blank">ApplicationHostSettings.properties</a> 
+        configuration file. These files will be automatically transferred to the 
+        dedicated server that hosts GenBank database(s), results of Polymorphism 
+        Finder run performed on the server will be transferred back and uploaded 
+        into ACE database. Please contact ACE administrator for the details when 
+        and how the data files transfer is arranged. You can view Polymorphism 
+        Finder results by using comprehensive plate viewer ('<em>View &gt; Plate 
+        Results</em>'), click on well link for your clone, click '<a href="reports/discr_report.html" target="_blank">Discrepancy 
+        Report</a>' button on sample view for clone sequence - the value in 'Polymorphism' 
+        column for each discrepancy will be changed to 'Y' (discrepancy id known 
+        polymorphism) or 'N' (no hits for discrepancy was found). <a href="reports/polym_report_discr.html" target="_blank">'Details'</a> 
+        button gives you access to the list of GI of GenBank records that were 
+        verified as hits for the particular discrepancy.</p>
+      <p><a name="isolate" ><strong>Isolate Ranker</strong> </a> </p>
       <p>To run Isolate Ranker (see<a href="help_ACE_overview.htm#isolate" target="_blank"> 
         ACE overview </a> for details) select '<em>Process &gt; Evaluate Clones 
         &gt; Run Isolate Ranker</em>' and specify plate labels (case insensitive) 
@@ -328,12 +347,13 @@ href="help_TraceFilesNamingFormats.html" target="_blank">trace files' naming for
         settings'</a> section for details). Isolate Ranker can rank isolates located 
         on different plates, however, these plates should be run by module at 
         the same time. Isolate Ranker will rank isolates based on the most relevant 
-        contig for the particular clone, e.g, if clone has end reads, collection 
+        contig for the particular clone, e.g., if clone has end reads, collection 
         of contigs and gaps defined by Gap Mapper and several clone sequences 
         assembled under different conditions (see Assembler description for details) 
         isolate will be ranked based on LAST assembled sequence.</p>
-		<a name="mapper">Gap Mapper</a>
-      <p><a name="lqr" >Low Confidence Regions Finder</a></p>
+		
+      <a name="mapper"><strong>Gap Mapper</strong></a> 
+      <p><a name="lqr" ><strong>Low Confidence Regions Finder</strong></a></p>
       <p>If clone sequence has low confidence discrepancies that should be resolved 
         before clone can be accepted, user should consider to run 'Low Confidence 
         Regions Finder' to define regions of low confidence (LCR) and preside 
@@ -349,7 +369,7 @@ href="help_TraceFilesNamingFormats.html" target="_blank">trace files' naming for
         about LCRs is sent to user in <a href="reports/lqf_report.html" target="_blank">tab 
         delimited text file</a>, however, it is not stored in database and, hence, 
         cannot be used later for primer(s) design. 
-      <p> <a name="finish">Finished clones</a> 
+      <p> <a name="finish"><strong>Finished clones</strong></a> 
       <p>Once a clone has either met the acceptance or rejection criteria, it 
         is useful to set its appropriate final status. This process removes the 
         clone from further processing reducing the job size, thereby focusing 
@@ -469,10 +489,10 @@ target="_blank"> requested information</a> for the specified set of clones. To
       <h3><a name="view_data">Real time views</a></h3>
       <ul>
         <li><strong><a
-href="image/image_Fig4.htm" target="_blank">Comprehensive plate viewer</a></strong> gives access 
-          to complete information about plate clones. Select 'View &gt; Plate 
-          Results', enter plate label (case insensitive), check 'Show Isolate 
-          Ranker Output' option. </li>
+href="image/image_Fig4.htm" target="_blank">Comprehensive plate viewer</a></strong> 
+          gives access to complete information about plate clones. Select '<em>View 
+          &gt; Plate Results</em>', enter plate label (case insensitive), check 
+          'Show Isolate Ranker Output' option. </li>
         <li>To view<strong> plate history</strong> select '<em>View &gt; Plate 
           history</em>' and enter plate label (case insensitive);</li>
         <li>To view <strong>plate description</strong> select '<em>View &gt; Plate 
