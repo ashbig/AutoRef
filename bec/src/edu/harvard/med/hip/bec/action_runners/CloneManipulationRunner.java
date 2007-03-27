@@ -36,27 +36,27 @@ import edu.harvard.med.hip.bec.programs.phred.*;
  */
 public class CloneManipulationRunner extends ProcessRunner
 {
-    
+
     /** Creates a new instance of CloneManipulationRunner */
     private int              m_clone_final_status = IsolateTrackingEngine.FINAL_STATUS_INPROCESS;
     private boolean         m_IsCreateDistributionFile = false;
-    
+
     public void             setCloneFinalStatus(int v){m_clone_final_status = v;}
     public void             setIsCreateDistributionFile(boolean v){ m_IsCreateDistributionFile = v;}
-    
+
     public String getTitle()
     {
         switch ( m_process_type)
         {
             case Constants.PROCESS_SET_CLONE_FINAL_STATUS: return "Set final clone status";
             default: return "";
-            
+
         }
     }
-    
-    
-    
-    
+
+
+
+
     public void run_process()
     {
          Connection  conn =null;
@@ -73,19 +73,19 @@ public class CloneManipulationRunner extends ProcessRunner
                     case Constants.PROCESS_SET_CLONE_FINAL_STATUS  :
                     {
                         String distribution_file_name = Constants.getTemporaryFilesPath() + "distribution_file"+ System.currentTimeMillis();
-                          
+
                         sql = "update isolatetracking set process_status = "+m_clone_final_status
                         +" where process_status != "+IsolateTrackingEngine.FINAL_STATUS_NOT_APPLICABLE
                         +" and isolatetrackingid in (select isolatetrackingid from flexinfo where flexcloneid in (";
-                     
+
                         sql_groups_of_items =  prepareItemsListForSQL();
                         if (sql_groups_of_items == null || sql_groups_of_items.size() < 1) return;
                         process_messages.append(Constants.LINE_SEPARATOR+"New clones final status "+IsolateTrackingEngine.getCloneFinalStatusAsString(m_clone_final_status)+Constants.LINE_SEPARATOR);
-                            
+
                         int process_id = Request.createProcessHistory( conn, ProcessDefinition.RUN_UPDATE_FINAL_CLONE_STATUS, new ArrayList(),m_user) ;
-          
+
                         PreparedStatement pst_insert_process_object = conn.prepareStatement("insert into process_object (processid,objectid,objecttype) values("+process_id+",?,"+Constants.PROCESS_OBJECT_TYPE_CLONEID+")");
-       
+
                         for ( int count = 0; count < sql_groups_of_items.size(); count++)
                         {
                             try
@@ -93,27 +93,27 @@ public class CloneManipulationRunner extends ProcessRunner
                                 current_items=(String)sql_groups_of_items.get(count);
                                  DatabaseTransaction.executeUpdate(sql+current_items+"))", conn);
                                  process_messages.append("The following clones have been updated "+Algorithms.replaceChar(current_items, ',', ' '));
-                                 
+
                                  clones = Algorithms.splitString(current_items, ",");
                                  for ( int count_clones = 0; count_clones < clones.size(); count_clones++ )
                                  {
                                      pst_insert_process_object.setInt(1,Integer.parseInt((String)clones.get(count_clones)));
                                      DatabaseTransaction.executeUpdate(pst_insert_process_object);
                                  }
-                                 if ( m_IsCreateDistributionFile && 
+                                 if ( m_IsCreateDistributionFile &&
                                  (  m_clone_final_status == IsolateTrackingEngine.FINAL_STATUS_ACCEPTED ||
                                         m_clone_final_status == IsolateTrackingEngine.FINAL_STATUS_REJECTED))
                                  {
-                                    if ( count == sql_groups_of_items.size()-1)  
+                                    if ( count == sql_groups_of_items.size()-1)
                                         process_messages.append(Constants.LINE_SEPARATOR +"Distribution file name is " + distribution_file_name);
-                       
+
                                      writeDistributionFile( count,sql_groups_of_items.size()-1,current_items , distribution_file_name);
                                  }
                                  //clean up hraddrive
                                   if (   m_clone_final_status == IsolateTrackingEngine.FINAL_STATUS_ACCEPTED ||
                                         m_clone_final_status == IsolateTrackingEngine.FINAL_STATUS_REJECTED)
                                  {
-                                   
+
                                      deleteIntermidiateFilesFromHardDrice(current_items );
                                  }
                                  conn.commit();
@@ -121,18 +121,18 @@ public class CloneManipulationRunner extends ProcessRunner
                             catch(Exception e)
                             {
                                 process_messages.append("The following clones failed update "+Algorithms.replaceChar(current_items, ',', ' '));
-                                 
+
                             }
                         }
-                        
-                           
+
+
                         break;
                     }
-                  
+
                  }
               m_additional_info= process_messages.toString();
-         } 
-        catch(Exception e)  
+         }
+        catch(Exception e)
         {
             m_error_messages.add(e.getMessage());
         }
@@ -141,9 +141,9 @@ public class CloneManipulationRunner extends ProcessRunner
             sendEMails( getTitle() );
             DatabaseTransaction.closeConnection(conn);
         }
-        
-        
-        
+
+
+
     }
     //-------------------------------------------------------------------------------------
     public void            deleteIntermidiateFilesFromHardDrice(String current_clone_ids)throws Exception
@@ -151,7 +151,7 @@ public class CloneManipulationRunner extends ProcessRunner
         ArrayList clone_directories = getCloneDirectories(current_clone_ids);
         deleteIntermidiateFilesFromHardDrice( clone_directories );
     }
-  
+
   private  ArrayList    getCloneDirectories(String current_clone_ids)throws Exception
   {
       ArrayList clone_directories = new ArrayList ();
@@ -159,7 +159,7 @@ public class CloneManipulationRunner extends ProcessRunner
       CloneDescription clone_desc = null;
                  String sql = " select   flexcloneid as cloneid,  flexsequenceid as userrefsequenceid  from flexinfo f, isolatetracking iso, sequencingconstruct  sc "
         + " where sc.constructid = iso.constructid and f.isolatetrackingid=iso.isolatetrackingid and flexcloneid in ("+current_clone_ids+") ";
-    
+
         try
         {
               // DatabaseTransactionLocal t = DatabaseTransactionLocal.getInstance();
@@ -180,16 +180,16 @@ public class CloneManipulationRunner extends ProcessRunner
         {
             DatabaseTransactionLocal.closeResultSet(rs);
         }
-        
-      
+
+
   }
-    
+
   private void          deleteIntermidiateFilesFromHardDrice(ArrayList clone_directories )throws Exception
   {
       EndReadsWrapperRunner er = new EndReadsWrapperRunner();
       String trace_files_root = er.getOuputBaseDir();
       CloneDescription clone_desc = null;
-     
+
       String trace_files_clone_directory = null;
       for (int count = 0; count < clone_directories.size(); count++)
       {
@@ -198,7 +198,7 @@ public class CloneManipulationRunner extends ProcessRunner
           cleanUpDirectory(trace_files_clone_directory);
       }
   }
-  
+
   private void          cleanUpDirectory(String trace_files_clone_directory)throws Exception
   {
       //clean up all phred files
@@ -208,17 +208,17 @@ public class CloneManipulationRunner extends ProcessRunner
 
         //delete all .phd files from previous processing
         FileOperations.deleteAllFilesFormDirectory(trace_files_clone_directory + File.separator +PhredWrapper.PHD_DIR_NAME);
-         
+
   }
     //--------------------------------------------------------------------------------
-    private void         writeDistributionFile( int dump_count, int number_of_cycles, 
+    private void         writeDistributionFile( int dump_count, int number_of_cycles,
                 String sql_clone_ids , String distribution_file_name) throws Exception
     {
         ArrayList distribution_file_messages = new ArrayList();
          FileWriter fr =  new FileWriter(distribution_file_name, true);
-         
+
          //write header
-        if ( dump_count == 0) 
+        if ( dump_count == 0)
         {
                 fr.write(  Algorithms.getXMLFileHeader() + Constants.LINE_SEPARATOR);
                 fr.write(  "<clone-data-collections>");
@@ -227,12 +227,12 @@ public class CloneManipulationRunner extends ProcessRunner
         ArrayList clone_data = getCloneData(sql_clone_ids);
         Hashtable cloning_strategies = getCloningStrategies(clone_data);
         writeClones(clone_data, cloning_strategies, fr);
-        
+
         //write footer
         if ( dump_count == number_of_cycles )fr.write( "</clone-data-collections>");
         fr.close();
     }
-      
+
     private Hashtable       getCloningStrategies(ArrayList clone_data)throws Exception
     {
         Hashtable cloning_strategies = new Hashtable();
@@ -249,7 +249,7 @@ public class CloneManipulationRunner extends ProcessRunner
                     cloning_strategy =  CloningStrategy.getById(clone_desc.getCloningStrategyId());
                     cloning_strategy.setLinker3(BioLinker.getLinkerById(cloning_strategy.getLinker3Id()));
                     cloning_strategy.setLinker5(BioLinker.getLinkerById(cloning_strategy.getLinker5Id()));
-                    
+
                     cloning_strategies.put(new Integer(clone_desc.getCloningStrategyId()),cloning_strategy);
                 }
                 catch(Exception e)
@@ -267,6 +267,9 @@ public class CloneManipulationRunner extends ProcessRunner
         ArrayList clone_data = new ArrayList ();
                 ResultSet rs = null;
               CloneDescription seq_desc = null;
+               Hashtable processed_isolatetracking_ids = new Hashtable();
+        Integer current_clone_id = null;
+
        /* String sql = " select process_status, flexcloneid as cloneid, label, position, flexsequenceid as userrefsequenceid, cs.sequenceid as clone_sequenceid "
         +" from flexinfo f, isolatetracking iso, sample s, containerheader c, assembledsequence cs "
         + " where f.isolatetrackingid=iso.isolatetrackingid and s.sampleid=iso.sampleid and s.containerid = c.containerid and cs.isolatetrackingid = iso.isolatetrackingid "
@@ -276,7 +279,7 @@ public class CloneManipulationRunner extends ProcessRunner
         +" cs.refsequenceid as refsequenceid from flexinfo f, isolatetracking iso, sample s, containerheader c, assembledsequence cs, sequencingconstruct  sc "
         + " where sc.constructid = iso.constructid and f.isolatetrackingid=iso.isolatetrackingid and s.sampleid=iso.sampleid and s.containerid = c.containerid and cs.isolatetrackingid = iso.isolatetrackingid "
         +" and flexcloneid in ("+sql_clone_ids+") order by flexcloneid, cs.sequenceid";
-    
+
         try
         {
               // DatabaseTransactionLocal t = DatabaseTransactionLocal.getInstance();
@@ -285,14 +288,25 @@ public class CloneManipulationRunner extends ProcessRunner
             while(rs.next())
             {
                 seq_desc = new CloneDescription();
+                 seq_desc.setCloneId(  rs.getInt("cloneid"));
 
+                if (seq_desc.getCloneId() > 0 )
+                 {
+                    current_clone_id = new Integer(seq_desc.getCloneId());
+                    if (  processed_isolatetracking_ids.contains( current_clone_id ))
+                    {
+                        continue;
+                    }
+                    processed_isolatetracking_ids.put(current_clone_id,current_clone_id);
+                 }
+                 else
+                     current_clone_id = null;
                 seq_desc.setFlexSequenceId(rs.getInt("userrefsequenceid"));
-                seq_desc.setPlateName(rs.getString("label")); 
+                seq_desc.setPlateName(rs.getString("label"));
                 seq_desc.setPosition(rs.getInt("position"));
-                seq_desc.setCloneSequenceId(rs.getInt("clone_sequenceid")); 
+                seq_desc.setCloneSequenceId(rs.getInt("clone_sequenceid"));
                 seq_desc.setBecRefSequenceId( rs.getInt("refsequenceid"));
               //  seq_desc.setIsolateTrackingId( rs.getInt("isolatetrackingid"));
-                 seq_desc.setCloneId(  rs.getInt("cloneid"));
                  seq_desc.setCloneFinalStatus( rs.getInt("process_status"));
                  seq_desc.setCloningStrategyId(rs.getInt("cloningstrategyid"));
                  //seq_desc.setCloneFinalStatus( rs.getInt("process_status"));
@@ -301,7 +315,7 @@ public class CloneManipulationRunner extends ProcessRunner
                // seq_desc.setSampleId(rs.getInt("sampleid"));
                // seq_desc.setCloneStatus( rs.getInt("Status"));
                  clone_data.add( seq_desc );
-                
+
             }
             return clone_data;
         } catch (Exception sqlE)
@@ -311,10 +325,10 @@ public class CloneManipulationRunner extends ProcessRunner
         {
             DatabaseTransactionLocal.closeResultSet(rs);
         }
-        
+
     }
-    
-    private void writeClones(ArrayList clone_data, Hashtable cloning_strategies, 
+
+    private void writeClones(ArrayList clone_data, Hashtable cloning_strategies,
                 FileWriter fr) throws Exception
     {
         CloneDescription clone_description = null;
@@ -324,26 +338,27 @@ public class CloneManipulationRunner extends ProcessRunner
             clone_description = (CloneDescription) clone_data.get(count);
             cloning_strategy = (CloningStrategy) cloning_strategies.get(new Integer(clone_description.getCloningStrategyId()));
             fr.write( getCloneInXMLFormat(clone_description, cloning_strategy));
-            
+
             fr.flush();
-            
+
         }
     }
-        
+
     private CloneSequence        getCloneSequence(int clone_id) throws Exception
     {
         CloneSequence clone_sequence = null;
         CloneDescription clone_description = null;
         ArrayList discrepancy_descriptions = null;
-        
+
           clone_sequence = CloneSequence.getOneByCloneId(clone_id);
          discrepancy_descriptions = DiscrepancyDescription.assembleDiscrepancyDefinitions( clone_sequence.getDiscrepancies());
          clone_sequence.setDiscrepancies(discrepancy_descriptions);
          return clone_sequence;
-        
+
     }
-    
-    
+
+  
+
     private String getCloneInXMLFormat(CloneDescription clone_description, CloningStrategy cloning_strategy) throws Exception
     {
         StringBuffer clone_data_in_xml_format = new StringBuffer();
@@ -359,7 +374,7 @@ clone_data_in_xml_format.append("</target_sequence>"+Constants.LINE_SEPARATOR);
 clone_data_in_xml_format.append("<linker_5 description='' sequence='"+cloning_strategy.getLinker5().getSequence()+"'/>"+Constants.LINE_SEPARATOR);
 clone_data_in_xml_format.append("<linker_3 description='' sequence='"+cloning_strategy.getLinker3().getSequence()+"'/>"+Constants.LINE_SEPARATOR);
 clone_data_in_xml_format.append("</reference_data>"+Constants.LINE_SEPARATOR);
-        
+
 clone_data_in_xml_format.append(" <sequence_description cds_start='" + clone_sequence.getCdsStart());
 clone_data_in_xml_format.append("'  cds_stop='" + clone_sequence.getCdsStop()+"' id='"+ clone_description.getCloneSequenceId() );
 clone_data_in_xml_format.append("'   linker_start='"+clone_sequence.getLinker5Start() );
@@ -369,7 +384,7 @@ clone_data_in_xml_format.append("  <sequence-text>"+clone_sequence.getText()+" <
 clone_data_in_xml_format.append(" <sequence-score>"+clone_sequence.getScores()+"</sequence-score>" +Constants.LINE_SEPARATOR);
 
 clone_data_in_xml_format.append(" <discrepancy_collection> " +Constants.LINE_SEPARATOR);
-   
+
 
 clone_data_in_xml_format.append( getDiscrepancyCollectionInXMLFormat(clone_sequence.getDiscrepancies())+Constants.LINE_SEPARATOR);
 clone_data_in_xml_format.append(" </discrepancy_collection>" +Constants.LINE_SEPARATOR );
@@ -380,9 +395,9 @@ return clone_data_in_xml_format.toString() ;
 
 
     }
-    
-    
-    private String getDiscrepancyCollectionInXMLFormat(ArrayList clone_discrepancies)
+
+
+    public static  String getDiscrepancyCollectionInXMLFormat(ArrayList clone_discrepancies)
     {
         StringBuffer discrepancies_in_xml_format = new StringBuffer();
         DiscrepancyDescription discrepancy_description = null;
@@ -413,11 +428,11 @@ return clone_data_in_xml_format.toString() ;
             runner.setCloneFinalStatus(IsolateTrackingEngine.FINAL_STATUS_REJECTED);
             runner.setIsCreateDistributionFile(true);
             runner.run();
-      
+
         }
         catch(Exception e){}
         System.exit(0);
     }
-    
-    
+
+
 }
