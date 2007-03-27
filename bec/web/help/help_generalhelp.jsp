@@ -307,7 +307,63 @@ href="help_TraceFilesNamingFormats.html" target="_blank">trace files' naming for
         <li><a href="#finish">Finished Clones</a></li>
        </ul>
 	  <p><a name="end_read_pr"><strong>End Read Processing</strong></a> </p>
-      <p><a name="assembler"><strong>Sequence Assembly </strong></a> </p>
+	  <p>End reads are treated slightly differently from internal reads because 
+        some users employ them to select the best candidate from multiple isolates 
+        for a target. End reads processing consists from two steps: (1) user should 
+        order end reads (this step is needed, because ACE uses <a href="http://emboss.sourceforge.net/apps/release/4.0/emboss/apps/needle.html" target="_blank">needle</a> 
+        which cannot build different strands alignment and choose the best one 
+        compare to BLAST); (2) end reads should be uploaded. 
+      <ul>
+        <li>To <strong>order end reads </strong>select '<em>Process &gt; Read 
+          Manipulation &gt; Request End Reads Sequencing</em>', choose vector 
+          from drop-down list and click 'Submit' button, select universal primers 
+          for forward and reverse reads and select what plates to sequence. Be 
+          sure to select proper primers, because sequencing primer orientation 
+          for vector (see <a href="#ace_configuration">'System settings' section 
+          for details)</a> defines how ACE will choose the strand of end read 
+          sequence while building alignment to target sequence. For example, if 
+          you use M13F (forward primer) for sequencing, however, you did a mistake 
+          and selected M13R as forward primer in ACE while ordering end reads, 
+          ACE will use reverse strand of end read sequence to build the alignment 
+          which will show no similarity to the target sequence. If you run only 
+          forward or only reverse reads select '----' option from drop-down list 
+          when choosing corresponding primer.</li>
+        <li>To <em>submit end reads</em> use '<em>Process &gt; Read Manipulation 
+          &gt; Check Quality and Distribute End Reads</em>' and specify plate 
+          names. End reads trace files should be uploaded into TRACE_FILES_INPUT_PATH_DIR 
+          directory as defined by <a href="help_ACEConfigurationFile.html">ACE 
+          Configuration file</a>. (see '<a href="#trace_upload">Trace files upload' 
+          </a>section). Submission of end reads starts from distribution of all 
+          none active and internal reads chromate files into appropriate directories 
+          (none active chromate files are traces for empty wells,controls, wrong 
+          named files). Next, all end read trace files for the requested plates 
+          that <a href="help_ACE_overview.htm#end_read_pr" target="_blank">pass 
+          quality check</a> got distributed into corresponding clone directory 
+          and their data submitted into ACE database. ACE send user e-mail with 
+          attached report where all traces that did not pass quality check are 
+          listed. This report can be used to upload low quality end reads as internal 
+          reads by using '<em>Process &gt; Read Manipulation &gt; Submit low quality 
+          end reads</em>' (internal read does not have corresponding record in 
+          ACE database, it is stored as trace file in clone directory).</li>
+      </ul>
+      <p><a name="assembler"><strong>Sequence Assembly </strong></a></p>
+      <p>The are two ways to <strong>run assembler</strong> in ACE by choosing 
+        '<em>Process &gt; Read Manipulation &gt; Run Assembler for End Reads</em>' 
+        or '<em>Process &gt; Read Manipulation &gt; Assemble Clone Sequences</em>'. 
+        In both cases user is asked: (a) select library for vector trimming (see 
+        '<a href="help_ACE_overview.htm#assembler" target="_blank">ACE overview</a>' 
+        for description of vector trimming and <a href="help_ACEConfigurationFile.html">ACE 
+        configuration file</a> for vector libraries setup); (b) determine how 
+        low quality reads should be treated; (c) determine quality trimming of 
+        independent sequencing reads during the assembly. Two assembler options 
+        are different in the way ACE process clones when Phrap yields no contig 
+        assembly, target sequence is short (&lt; 800 bp) and at least one end 
+        read sequence is available. In this case ACE extracts sequence for existing 
+        end read from database, aligns it to target sequence and checks if complete 
+        coverage is achieved (at least 20 bases upstream / downstream of target 
+        sequence are covered by end read sequence) , if yes - ACE submits end 
+        read sequence as clone assembled sequence into database.<br>
+      </p>
       <p><a name="discrepancy"><strong>Discrepancy Finder</strong></a> </p>
       <p>To run Discrepancy Finder (see<a href="help_ACE_overview.htm#discrepancy" target="_blank"> 
         ACE overview </a> for details) use '<em>Process &gt; Evaluate Clones &gt; 
