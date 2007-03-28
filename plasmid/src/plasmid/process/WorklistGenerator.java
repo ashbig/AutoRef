@@ -10,6 +10,7 @@ import java.io.*;
 import java.util.*;
 import plasmid.util.ContainerLabelComparator;
 import plasmid.coreobject.*;
+import com.jscape.inet.sftp.*;
 
 /**
  *
@@ -80,13 +81,14 @@ public class WorklistGenerator {
      * }
      */
     
-    public void printFullWorklist(String filename) throws Exception {
+    public void printFullWorklist(String filename, Sftp ftp) throws Exception {
         convertWorklist();
         
         if(worklist == null || filename == null)
             return;
         
-        OutputStreamWriter f = new FileWriter(filename);
+        OutputStreamWriter f = new OutputStreamWriter(ftp.getOutputStream(filename, 0, false));
+        //OutputStreamWriter f = new FileWriter(filename);
         for(int i=0; i<worklist.size(); i++) {
             SampleLineage w = (SampleLineage)worklist.get(i);
             Sample from = w.getSampleFrom();
@@ -98,13 +100,14 @@ public class WorklistGenerator {
         f.close();
     }
     
-    public void printWorklist(String filename) throws Exception {
+    public void printWorklist(String filename, Sftp ftp) throws Exception {
         convertWorklist();
         
         if(worklist == null || filename == null)
             return;
         
-        OutputStreamWriter f = new FileWriter(filename);
+        OutputStreamWriter f = new OutputStreamWriter(ftp.getOutputStream(filename, 0, false));
+       // OutputStreamWriter f = new FileWriter(filename);
         for(int i=0; i<worklist.size(); i++) {
             SampleLineage w = (SampleLineage)worklist.get(i);
             Sample from = w.getSampleFrom();
@@ -121,11 +124,12 @@ public class WorklistGenerator {
         f.close();
     }
     
-    public void printWorklistForRobot(String filename, int avolumn, int dvolumn, boolean isWash) throws Exception {
+    public void printWorklistForRobot(String filename, int avolumn, int dvolumn, boolean isWash, Sftp ftp) throws Exception {
         if(worklist == null || filename == null)
             return;
         
-        OutputStreamWriter f = new FileWriter(filename);
+        //OutputStreamWriter f = new FileWriter(filename);
+        OutputStreamWriter f = new OutputStreamWriter(ftp.getOutputStream(filename, 0, false));
         
         int i=0;
         int size = worklist.size();

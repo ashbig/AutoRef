@@ -86,7 +86,7 @@ public class Constants {
     public static final String BATCH_ORDER_PLASMIDID = "PlasmID Clone ID";
     public static final String BATCH_ORDER_FLEXID = "FLEXGene Clone ID";   
     public static final String BATCH_ORDER_CLONES = "Batch Order Clones";
-        
+    
     /** Creates a new instance of Constants */
     public Constants() {
     }

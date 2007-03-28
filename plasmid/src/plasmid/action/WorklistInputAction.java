@@ -32,6 +32,8 @@ import plasmid.coreobject.*;
 import plasmid.util.StringConvertor;
 import plasmid.process.*;
 import plasmid.util.Mailer;
+import plasmid.util.SftpHandler;
+import com.jscape.inet.sftp.*;
 
 /**
  *
@@ -189,9 +191,11 @@ public class WorklistInputAction extends InternalUserAction{
             String worklistname = Constants.FULLWORKLIST+"_"+worklistid+".txt";
             List worklist = calculator.calculateMapping();
             WorklistGenerator generator = new WorklistGenerator(worklist, isPrintEmpty);
-            generator.printFullWorklist(Constants.WORKLIST_FILE_PATH+worklistname);
-            generator.printWorklist(Constants.USER_WORKLIST_FILE_PATH+fileWorklist);
-            generator.printWorklistForRobot(Constants.USER_WORKLIST_FILE_PATH+fileWorklistRobot, volumn, volumn, true);
+            Sftp ftp = SftpHandler.getSftpConnection();
+            generator.printFullWorklist(Constants.WORKLIST_FILE_PATH+worklistname, ftp);
+            generator.printWorklist(Constants.USER_WORKLIST_FILE_PATH+fileWorklist, ftp);
+            generator.printWorklistForRobot(Constants.USER_WORKLIST_FILE_PATH+fileWorklistRobot, volumn, volumn, true, ftp);
+            SftpHandler.disconnectSftp(ftp);
             
             List filenames = new ArrayList();
             filenames.add(fileWorklist);
