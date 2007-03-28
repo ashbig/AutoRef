@@ -57,29 +57,29 @@ plates is the same as your input order.</p>
     <td colspan="3" valign="top" class="formlabel">Destination containers: <br>(separated by white space)</td>
   </tr>
   <tr> 
-    <td width="20%" height="98" valign="top" class="formlabel">Working copies</td>
-    <td class="itemtext">
+    <td width="20%" height="98" valign="top" class="formlabel">Working copies:</td>
+    <td height="98" valign="top" class="itemtext">
         <html:textarea styleClass="itemtext" property="destContainerListWorking" rows="5"/>
     </td>
-    <td>
+    <td  height="98" valign="top" class="formlabel">
         <html:text property="volumnWorking" styleClass="itemtext" size="30"/>Volumn (in microliter)
     </td>
   </tr>
   <tr> 
-    <td width="20%" height="98" valign="top" class="formlabel">Local archive copies</td>
-    <td class="itemtext">
+    <td width="20%" height="98" valign="top" class="formlabel">Local archive copies:</td>
+    <td height="98" valign="top" class="itemtext">
         <html:textarea styleClass="itemtext" property="destContainerListArchive" rows="5"/>
     </td>
-    <td>
+    <td height="98" valign="top" class="formlabel">
         <html:text property="volumnArchive" styleClass="itemtext" size="30"/>Volumn (in microliter)
     </td>
   </tr>
   <tr> 
-    <td width="20%" height="98" valign="top" class="formlabel">BioBank copies</td>
-    <td class="itemtext">
+    <td width="20%" height="98" valign="top" class="formlabel">BioBank copies:</td>
+    <td height="98" valign="top" class="itemtext">
         <html:textarea styleClass="itemtext" property="destContainerListBiobank" rows="5"/>
     </td>
-    <td>
+    <td height="98" valign="top" class="formlabel">
         <html:text property="volumnBiobank" styleClass="itemtext" size="30"/>Volumn (in microliter)
     </td>
   </tr>

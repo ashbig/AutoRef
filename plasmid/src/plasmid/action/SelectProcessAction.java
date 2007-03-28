@@ -60,11 +60,12 @@ public class SelectProcessAction extends InternalUserAction{
         if(protocols != null) {
             request.setAttribute(Constants.PROTOCOLS, protocols);
         }
-        
         if(Process.PLATING.equals(processname)) {
             return mapping.findForward("success_plating");
         }
-        
+        if(Process.GENERATE_MULTIPLE_GLYCEROL.equals(processname)) {
+            return mapping.findForward("success_multiple_glycerol");
+        }
         return mapping.findForward("success");
     }
 }

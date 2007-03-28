@@ -33,6 +33,7 @@
         <html:select property="processname" styleClass="itemtext">
           <html:option value="<%=Process.CULTURE%>"><%=Process.CULTURE%></html:option>
           <html:option value="<%=Process.GENERATE_GLYCEROL%>"><%=Process.GENERATE_GLYCEROL%></html:option>
+          <html:option value="<%=Process.GENERATE_MULTIPLE_GLYCEROL%>"><%=Process.GENERATE_MULTIPLE_GLYCEROL%></html:option>
         </html:select>
     </td>
   </tr>

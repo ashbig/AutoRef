@@ -113,8 +113,8 @@
     <form-bean      name="findClonesForm"
                     type="plasmid.form.FindClonesForm"/>
                     
-    <form-bean      name="multipleGenerateWorklistForm"
-                    type="plasmid.form.MultipleGenerateWorklistForm"/>
+    <form-bean      name="generateMultipleWorklistForm"
+                    type="plasmid.form.GenerateMultipleWorklistForm"/>
                     
  </form-beans>
 
@@ -347,7 +347,7 @@
     
     <action    path="/MultipleWorklistInput"
                type="plasmid.action.MultipleWorklistInputAction"
-               name="multipleGenerateWorklistForm"
+               name="generateMultipleWorklistForm"
               input="/MultipleWorklistInput.jsp"
               validate="true">
       <forward  name="success"   path="/WorklistOutput.jsp"/>
@@ -435,6 +435,7 @@
               input="/SelectProcess.jsp"
               validate="false">
       <forward  name="success"   path="/WorklistInput.jsp"/>
+      <forward  name="success_multiple_glycerol"   path="/MultipleWorklistInput.jsp"/>
       <forward  name="success_plating"   path="/PlatingInput.jsp"/>
     </action>
       
