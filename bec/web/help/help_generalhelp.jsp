@@ -134,26 +134,27 @@ target="_blank">ACE Configuration file</a>. To create new cloning strategy use
           <td><div align="center"><strong><font color="#FFFFFF">Module</font></strong></div></td>
         </tr>
         <tr> 
-          <td valign="top"><a href="specs/help_rank_criteria.htm" target="_blank">Clone Ranking</a></td>
+          <td valign="top"><a href="specs/help_rank_criteria.htm" target="_blank">Clone 
+            Ranking</a></td>
           <td valign="top">Analysis Settings &gt; Clone Ranking </td>
           <td valign="top">Isolate Ranker</td>
-          </tr>
+        </tr>
         <tr> 
-          <td valign="top"><a href="specs/help_acceptance_spec.htm" target="_blank">Clone Acceptance 
-            Criteria </a></td>
+          <td valign="top"><a href="specs/help_acceptance_spec.htm" target="_blank">Clone 
+            Acceptance Criteria </a></td>
           <td valign="top">Analysis Settings &gt; Clone Acceptance Criteria </td>
           <td valign="top"><dl>
               <dt>Decision Tool</dt>
               <dt>Quick Decision Tool</dt>
               <dt>Isolate Ranker</dt>
             </dl></td>
-         </tr>
+        </tr>
         <tr> 
           <td valign="top"><a href="specs/help_primer3_spec.htm" target="_blank"> 
             Primer Design Specification</a></td>
           <td valign="top">Analysis Settings &gt; Primer Designer </td>
           <td valign="top">Primer Designer</td>
-         </tr>
+        </tr>
         <tr> 
           <td valign="top"><a href="specs/help_polym_finder.htm" target="_blank">Polymorphism 
             Detector Specification</a></td>
@@ -161,8 +162,8 @@ target="_blank">ACE Configuration file</a>. To create new cloning strategy use
           <td valign="top">Polymorphism Finder</td>
         </tr>
         <tr> 
-          <td valign="top"><a href="specs/help_sequence_trim.htm" target="_blank">Sequence Trimming 
-            Specification</a></td>
+          <td valign="top"><a href="specs/help_sequence_trim.htm" target="_blank">Sequence 
+            Trimming Specification</a></td>
           <td valign="top">Analysis Settings &gt; Sequence Trimming </td>
           <td valign="top"><dl>
               <dt>Gap MapperLow Confidence Regions Finder </dt>
@@ -243,7 +244,8 @@ target="_blank"	>Prepare XML files for submission</a>.</li>
           order. To <strong>approve primers</strong> select '<em>Process &gt; 
           Internal Primer Design and Order &gt; Approve Internal Primers</em>', 
           specify clone IDs and select what kind of primers (designed for reference 
-          sequence or for stretch collection) </li> should be displayed. </li>
+          sequence or for stretch collection) </li>
+        should be displayed. </li> 
         <li>To <strong>place primers order</strong> use <em>'Process &gt; Internal 
           Primer Design and Order &gt; Order Internal Primers'</em>, specify clone 
           IDs, choose type of approved primers that should be included in the 
@@ -295,7 +297,6 @@ href="help_TraceFilesNamingFormats.html" target="_blank">trace files' naming for
         will be finished.</li>
       <p>&nbsp;</p>
       <h3><a name="data_processing">Sequencing data processing and clone evaluation.</a></h3>
-       
       <ul>
         <li><a href="#end_read_pr">End Read Processing</a></li>
         <li><a href="#assembler">Sequence Assembly </a></li>
@@ -305,64 +306,70 @@ href="help_TraceFilesNamingFormats.html" target="_blank">trace files' naming for
         <li><a href="#mapper">Gap Mapper</a></li>
         <li><a href="#lqr">Low Confidence Regions Finder</a></li>
         <li><a href="#finish">Finished Clones</a></li>
-       </ul>
-	  <p><a name="end_read_pr"><strong>End Read Processing</strong></a> </p>
-	  <p>End reads are treated slightly differently from internal reads because 
+      </ul>
+      <p><a name="end_read_pr"><strong>End Read Processing</strong></a> </p>
+      <p>End reads are treated slightly differently from internal reads because 
         some users employ them to select the best candidate from multiple isolates 
-        for a target. End reads processing consists from two steps: (1) user should 
-        order end reads (this step is needed, because ACE uses <a href="http://emboss.sourceforge.net/apps/release/4.0/emboss/apps/needle.html" target="_blank">needle</a> 
-        which cannot build different strands alignment and choose the best one 
-        compare to BLAST); (2) end reads should be uploaded. 
+        for a target. End reads processing consists of two steps: (1) ordering 
+        of the end reads (this is needed, because ACE uses <a href="http://emboss.sourceforge.net/apps/release/4.0/emboss/apps/needle.html" target="_blank">needle</a> 
+        which cannot build different strands alignment and ???? choose the best 
+        one compare to BLAST); (2) uploading of the end reads. 
       <ul>
         <li>To <strong>order end reads </strong>select '<em>Process &gt; Read 
           Manipulation &gt; Request End Reads Sequencing</em>', choose vector 
           from drop-down list and click 'Submit' button, select universal primers 
-          for forward and reverse reads and select what plates to sequence. Be 
-          sure to select proper primers, because sequencing primer orientation 
-          for vector (see <a href="#ace_configuration">'System settings' section 
-          for details)</a> defines how ACE will choose the strand of end read 
-          sequence while building alignment to target sequence. For example, if 
-          you use M13F (forward primer) for sequencing, however, you did a mistake 
-          and selected M13R as forward primer in ACE while ordering end reads, 
-          ACE will use reverse strand of end read sequence to build the alignment 
-          which will show no similarity to the target sequence. If you run only 
-          forward or only reverse reads select '----' option from drop-down list 
-          when choosing corresponding primer.</li>
-        <li>To <em>submit end reads</em> use '<em>Process &gt; Read Manipulation 
-          &gt; Check Quality and Distribute End Reads</em>' and specify plate 
-          names. End reads trace files should be uploaded into TRACE_FILES_INPUT_PATH_DIR 
-          directory as defined by <a href="help_ACEConfigurationFile.html">ACE 
-          Configuration file</a>. (see '<a href="#trace_upload">Trace files upload' 
-          </a>section). Submission of end reads starts from distribution of all 
-          none active and internal reads chromate files into appropriate directories 
-          (none active chromate files are traces for empty wells,controls, wrong 
-          named files). Next, all end read trace files for the requested plates 
-          that <a href="help_ACE_overview.htm#end_read_pr" target="_blank">pass 
-          quality check</a> got distributed into corresponding clone directory 
-          and their data submitted into ACE database. ACE send user e-mail with 
-          attached report where all traces that did not pass quality check are 
-          listed. This report can be used to upload low quality end reads as internal 
-          reads by using '<em>Process &gt; Read Manipulation &gt; Submit low quality 
-          end reads</em>' (internal read does not have corresponding record in 
-          ACE database, it is stored as trace file in clone directory).</li>
+          for forward and reverse reads and select plates to sequence. Be sure 
+          to select proper primers, because sequencing primer orientation for 
+          vector (see <a href="#ace_configuration">'System settings'</a> section 
+          for details) determines the way ACE chooses the strand of the end read 
+          sequence while building alignment to target sequence. E.g. if you mistakenly 
+          specified M13R as a forward primer in ACE while in fact you used M13F 
+          for sequencing, ACE will use complement of the end read sequence to 
+          build the alignment which will show no similarity to the target sequence. 
+          If you run only forward or only reverse reads select '----' option from 
+          drop-down list when choosing corresponding primer.</li>
+        <li>To <b>submit end reads</em> </b>use<b> '</b><em>Process &gt; Read 
+          Manipulation &gt; Check Quality and Distribute End Reads</em></em>' 
+          and specify plate names. End read trace files should be already uploaded 
+          into TRACE_FILES_INPUT_PATH_DIR directory as defined in the <a href="help_ACEConfigurationFile.html">ACE 
+          Configuration file</a> (see '<a href="#trace_upload">Trace files upload' 
+          </a>). ACE distributes all 'inactive' and internal reads chromate files 
+          into appropriate directories ('inactive' traces correspond to empty 
+          wells and controls). Remaining end read trace files for the requested 
+          plates that <a href="help_ACE_overview.htm#end_read_pr" target="_blank">pass 
+          the quality check</a> get distributed into corresponding clone directories 
+          and their data gets submitted into ACE database. ACE sends to the user 
+          an e-mail with attached report listing all traces that did not pass 
+          quality check. This report can be used to upload low quality end reads 
+          as internal reads by using '<em>Process &gt; Read Manipulation &gt; 
+          Submit low quality end reads</em>' (internal reads do not have corresponding 
+          records in the ACE database, rather, it is stored as a trace file in 
+          the clone directory).</li>
       </ul>
       <p><a name="assembler"><strong>Sequence Assembly </strong></a></p>
-      <p>The are two ways to <strong>run assembler</strong> in ACE by choosing 
-        '<em>Process &gt; Read Manipulation &gt; Run Assembler for End Reads</em>' 
-        or '<em>Process &gt; Read Manipulation &gt; Assemble Clone Sequences</em>'. 
-        In both cases user is asked: (a) select library for vector trimming (see 
-        '<a href="help_ACE_overview.htm#assembler" target="_blank">ACE overview</a>' 
-        for description of vector trimming and <a href="help_ACEConfigurationFile.html">ACE 
-        configuration file</a> for vector libraries setup); (b) determine how 
-        low quality reads should be treated; (c) determine quality trimming of 
-        independent sequencing reads during the assembly. Two assembler options 
-        are different in the way ACE process clones when Phrap yields no contig 
-        assembly, target sequence is short (&lt; 800 bp) and at least one end 
-        read sequence is available. In this case ACE extracts sequence for existing 
-        end read from database, aligns it to target sequence and checks if complete 
-        coverage is achieved (at least 20 bases upstream / downstream of target 
-        sequence are covered by end read sequence) , if yes - ACE submits end 
-        read sequence as clone assembled sequence into database.<br>
+      <p>There are two ways to <strong>run assembler</strong> in ACE:</p>
+      <ul>
+        <li> '<em>Process &gt; Read Manipulation &gt; Run Assembler for End Reads</em>'</li>
+        <li> '<em>Process &gt; Read Manipulation &gt; Assemble Clone Sequences</em>'</li>
+      </ul>
+      <p>The two options differ in the treatment of clones for which Phrap yields 
+        no contig assembly, target sequence is short (&lt; 800 bp) and at least 
+        one end read is available. The first option implies additional pocessing 
+        step in such case. ACE extracts sequence for existing end read from database, 
+        aligns it with the target sequence and checks if complete coverage is 
+        achieved (at least 20 bases upstream / downstream of target sequence are 
+        covered by end read sequence). If complete coverage is achieved ACE submits 
+        end read sequence as assembled sequence for the clone into the database.</p>
+      <p>In both cases the user is asked to:</p>
+      <ul>
+        <li>select library for vector trimming (see '<a href="help_ACE_overview.htm#assembler" target="_blank">ACE 
+          overview</a>' for description of vector trimming and <a href="help_ACEConfigurationFile.html">ACE 
+          configuration file</a> for vector libraries setup); </li>
+        <li>determine how low quality reads should be treated; </li>
+        <li> set parameters for the quality trimming of independent sequencing 
+          reads during the assembly. </li>
+      </ul>
+       <br>
       </p>
       <p><a name="discrepancy"><strong>Discrepancy Finder</strong></a> </p>
       <p>To run Discrepancy Finder (see<a href="help_ACE_overview.htm#discrepancy" target="_blank"> 
@@ -407,60 +414,41 @@ href="help_TraceFilesNamingFormats.html" target="_blank">trace files' naming for
         of contigs and gaps defined by Gap Mapper and several clone sequences 
         assembled under different conditions (see Assembler description for details) 
         isolate will be ranked based on LAST assembled sequence.</p>
-		
-      <a name="mapper"><strong>Gap Mapper</strong></a> 
+      <p><a name="mapper"><strong>Gap Mapper</strong></a> </p>
+      <p>&nbsp; </p>
       <p><a name="lqr" ><strong>Low Confidence Regions Finder</strong></a></p>
       <p>If clone sequence has low confidence discrepancies that should be resolved 
-        before clone can be accepted, user should consider to run 'Low Confidence 
-        Regions Finder' to define regions of low confidence (LCR) and preside 
-        with 'Primer Designer' to design primers to cover LCRs (see<a href="help_ACE_overview.htm#lqr" target="_blank"> 
-        ACE overview </a> for details). To run 'Low Confidence Regions Finder' 
-        use '<em>Process &gt; Evaluate Clones &gt; Run Low Confidence Regions 
-        Finder in Clone Sequences</em>', specify clone IDs, select specification 
-        for sequence trimming (see <a href="#create_spec">'Analysis settings'</a> 
-        section for details). If end reads be done to resolve low confidence discrepancies 
-        on 5' and 3' ends, set how many bases are expected to be covered by these 
-        end reads. 'Low Confidence Regions Finder' will not try to define LCR 
-        for this regions. The Finder can be run in try mode, in this case information 
-        about LCRs is sent to user in <a href="reports/lqf_report.html" target="_blank">tab 
-        delimited text file</a>, however, it is not stored in database and, hence, 
-        cannot be used later for primer(s) design. 
+        before clone can be accepted, the user may run 'Low Confidence Regions 
+        Finder' to determine low confidence regions (LCR) and proceed with 'Primer 
+        Designer' to design primers to cover LCRs (see<a href="help_ACE_overview.htm#lqr" target="_blank"> 
+        ACE overview </a> for details). 
+      <p>To access this functionality use '<em>Process &gt; Evaluate Clones &gt; 
+        Run Low Confidence Regions Finder in Clone Sequences</em>', specify clone 
+        IDs, select specification for sequence trimming (see <a href="#create_spec">'Analysis 
+        settings'</a> section for details). If you are going to repeat end reads 
+        using universal primers, set the number of bases that are expected to 
+        be covered by these end reads. 'Low Confidence Regions Finder' will not 
+        try to define LCR for these regions. The Finder can be run in the &quot;try 
+        mode&quot;; in this case the information about LCRs is emailed to the 
+        user in <a href="reports/lqf_report.html" target="_blank">tab delimited 
+        text file</a>, but is not stored in database and, hence, cannot be used 
+        later for primer(s) design. 
       <p> <a name="finish"><strong>Finished clones</strong></a> 
-      <p>Once a clone has either met the acceptance or rejection criteria, it 
-        is useful to set its appropriate final status. This process removes the 
-        clone from further processing reducing the job size, thereby focusing 
-        the effort on only those clones that are still pending. A clone which 
-        final status set to not 'In Process' (default clone final status assigned 
-        on clone submission into ACE) is excluded from the following processes: 
-        (a) assembly; (b) primer design and order; (c) polymorphism search; (d) 
-        no data can be deleted or reanalyzed (see <a href="#delete_data">Data 
+      <p>Once you decide that a clone has met acceptance or rejection criteria 
+        (based on the Decision Tool report or on manual inspection), it is worth 
+        setting its final status in ACE. This removes the clone from further processing 
+        reducing the job size, thereby focusing the effort on the clones still 
+        pending. A clone with status other than 'In Process' (default clone status 
+        assigned on clone submission into ACE) is excluded from the following 
+        processes: (a) assembly; (b) primer design and order; (c) polymorphism 
+        search; (d) data deletion or repeasted analysis (see <a href="#delete_data">Data 
         clean-up</a> section for details). To set <strong>clone final status</strong> 
         select '<em>Process &gt; Set Final Clones Status</em>' and specify clone 
         IDs and final status. Optionally XML file with results of clone analysis 
-        can be created. You can change clone final status back to 'In Process' 
-        at any time. 
-      <p>&nbsp;
-      <p>**********************************************</p>
-      <p> <strong> </strong> </p>
-      <p>End Reads wrapper module performes the following actions </p>
-      <ul>
-        <li>distribute all none active chromat files into appropriate directories 
-          (none active chromat files are trace files that (a)are named not according 
-          to ACE nomenculature; (b) trace files for empty wells; (c) trace files 
-          for controls); </li>
-        <li>distribute all internal reads chromat files; </li>
-        <li>for each end read chromat file: 
-          <ul>
-            <li>run base calling program (phred, with trimming );</li>
-            <li>submit read information (scored sequence, type of the read, start/stop 
-              of trimmed sequence);</li>
-            <li>distribute chromat file into appropriate directorie;</li>
-          </ul>
-        </li>
-      </ul>
-      <p>&nbsp;</p>
-      <p>**********************************</p>
-      <h3><a name="delete_data">Data clean up</a></h3>
+        can be created. You can change clone status back to 'In Process' at any 
+        time. 
+      <p>&nbsp; 
+      <p><a name="delete_data">Data clean up</a></p>
       <p>ACE allows removal of trace files and clone information from the database. 
         This is useful in cases when: (a) wrong plates have been submitted into 
         ACE; (b) errors occurred in clones mapping on the plate; (c) plates have 
@@ -515,9 +503,9 @@ href="help_TraceFilesNamingFormats.html" target="_blank">trace files' naming for
           is proportional to the number of specified clones. The 'Quick Decision 
           Tool' provides feedback on the screen in addition to sending the report 
           by e-mail.</li>
-        <li>To run <a href="help_ACE_overview.htm#decision" target="_blank">Decision Tool </a> 
-          choose <em>'Reports &gt; Detailed Decision Tool'</em> and fill the query 
-          form. There is no limit on the number of processed clones.</li>
+        <li>To run <a href="help_ACE_overview.htm#decision" target="_blank">Decision 
+          Tool </a> choose <em>'Reports &gt; Detailed Decision Tool'</em> and 
+          fill the query form. There is no limit on the number of processed clones.</li>
         <li>'Mismatched Clones' report helps to detect cases of misidentified 
           input data such as (a) mislabeled or rotated plates; (b) plates cross-contamination; 
           (c) systematic sequencing facility errors. The report blasts end reads' 
@@ -609,9 +597,7 @@ href="screen_shots/report_ordered_primers.html">Sample report</a>.</li>
           and specify clone IDs. <a href="screen_shots/report_view-lqr.html" target="_blank">Sample 
           report.</a> </li>
       </ul>
-      <p><a href="#view_data">Back</a> </p>
-     
-      </td>
+      <p><a href="#view_data">Back</a> </p></td>
   </tr><tr> <td colspan="2"><p class="disclaimer">&copy; 2005 by Helen 
           Taycher  
           last changed March 17, 2007</p></td></tr></table>
