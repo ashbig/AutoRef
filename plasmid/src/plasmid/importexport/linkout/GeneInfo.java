@@ -13,6 +13,7 @@ package plasmid.importexport.linkout;
 public class GeneInfo {
     private String geneid;
     private String species;
+    private String gi;
     
     /** Creates a new instance of GeneInfo */
     public GeneInfo() {
@@ -28,4 +29,7 @@ public class GeneInfo {
     public String getHtmlSpecies() {
         return species.replaceAll(" ", "%20");
     }
+    
+    public String getGi() {return gi;}
+    public void setGi(String s) {this.gi = s;}
 }

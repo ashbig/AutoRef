@@ -17,6 +17,7 @@ public class Process {
     public static final String PLATING = "Plating";
     public static final String CULTURE = "Grow Culture";
     public static final String GENERATE_GLYCEROL = "Generate Glycerol Stock";
+    public static final String GENERATE_MULTIPLE_GLYCEROL = "Generate Multiple Glycerol Stock";
     public static final String ENTER_CULTURE_RESULT = "Enter Culture Results";
    
     private String processname;

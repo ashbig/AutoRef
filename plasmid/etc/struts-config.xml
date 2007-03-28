@@ -113,6 +113,9 @@
     <form-bean      name="findClonesForm"
                     type="plasmid.form.FindClonesForm"/>
                     
+    <form-bean      name="multipleGenerateWorklistForm"
+                    type="plasmid.form.MultipleGenerateWorklistForm"/>
+                    
  </form-beans>
 
   <!-- ========== Global Forward Definitions ============================== -->
@@ -340,6 +343,14 @@
               scope="request"
               input="/Login.jsp">
       <forward  name="success"   path="/ViewCart.do"/>
+    </action>
+    
+    <action    path="/MultipleWorklistInput"
+               type="plasmid.action.MultipleWorklistInputAction"
+               name="multipleGenerateWorklistForm"
+              input="/MultipleWorklistInput.jsp"
+              validate="true">
+      <forward  name="success"   path="/WorklistOutput.jsp"/>
     </action>
             
     <action     path="/PlaceOrder"

@@ -26,6 +26,9 @@ public class PlateManager extends TableManager {
     }
     
     public boolean insertPlateAndSample(List plates) {
+        if(plates == null || plates.size() == 0)
+            return true;
+        
         List s = new ArrayList();
         if(insertPlate(plates)) {
             for(int i=0; i<plates.size(); i++) {

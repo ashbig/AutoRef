@@ -24,7 +24,6 @@ public class Container {
     public static final String RESERVOIR_PYR = "Reservoir Pyr bttm";
     public static final String RK_RIPLATE_DW = "RK96dw/MP16";
     public static final String MICRONIC96TUBEMP16 = "Micronic96Tubes on 30mmNest/MP16";
-    
     public static final String EMPTY = "EMPTY";
     public static final String FILLED = "FILLED";
     

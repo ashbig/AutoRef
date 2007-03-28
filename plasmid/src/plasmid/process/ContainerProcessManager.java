@@ -353,7 +353,7 @@ public class ContainerProcessManager {
         return null;
     }
     
-    public boolean persistData(List containers, ProcessExecution process, WorklistInfo info, boolean isInsertContainer) {
+    public boolean persistData(List newContainers, List updateContainers, ProcessExecution process, WorklistInfo info) {
         DatabaseTransaction t = null;
         Connection conn = null;
         
@@ -370,29 +370,31 @@ public class ContainerProcessManager {
         }
         
         PlateManager manager = new PlateManager(conn);
-        if(isInsertContainer) {
-            if(!manager.insertPlate(containers)) {
-                if(Constants.DEBUG) {
-                    System.out.println("Cannot insert containers.");
-                    System.out.println(manager.getErrorMessage());
-                }
-                DatabaseTransaction.rollback(conn);
-                DatabaseTransaction.closeConnection(conn);
-                return false;
+        if(!manager.insertPlate(newContainers)) {
+            if(Constants.DEBUG) {
+                System.out.println("Cannot insert containers.");
+                System.out.println(manager.getErrorMessage());
             }
-        } else {
-            if(!manager.updatePlates(containers, Container.FILLED, Container.WORKBENCH)) {
-                if(Constants.DEBUG) {
-                    System.out.println("Cannot update containers.");
-                    System.out.println(manager.getErrorMessage());
-                }
-                DatabaseTransaction.rollback(conn);
-                DatabaseTransaction.closeConnection(conn);
-                return false;
+            DatabaseTransaction.rollback(conn);
+            DatabaseTransaction.closeConnection(conn);
+            return false;
+        }
+        if(!manager.updatePlates(updateContainers, Container.FILLED, Container.WORKBENCH)) {
+            if(Constants.DEBUG) {
+                System.out.println("Cannot update containers.");
+                System.out.println(manager.getErrorMessage());
             }
+            DatabaseTransaction.rollback(conn);
+            DatabaseTransaction.closeConnection(conn);
+            return false;
         }
         
         List samples = new ArrayList();
+        List containers = new ArrayList();
+        if(newContainers != null)
+            containers.addAll(newContainers);
+        if(updateContainers != null)
+            containers.addAll(updateContainers);
         for(int i=0; i<containers.size(); i++) {
             Container c = (Container)containers.get(i);
             List ss = c.getSamples();
@@ -569,7 +571,7 @@ public class ContainerProcessManager {
                 execution.setInputObjects(containers);
                 execution.setOutputObjects(tubes);
                 
-                if(!manager.persistData(tubes,execution,null,true)) {
+                if(!manager.persistData(tubes,null,execution,null)) {
                     System.out.println("Error occured while inserting into database.");
                 }
             }

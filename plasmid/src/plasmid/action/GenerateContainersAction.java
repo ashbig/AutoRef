@@ -86,14 +86,13 @@ public class GenerateContainersAction extends Action {
             List lineages = mapper.getWorklist();
             List samples = new ArrayList();
             List tubes = new ArrayList();
+            List newDestContainers = new ArrayList();
+            List updateDestContainers = new ArrayList();
             
-            boolean b = false;
-            if(WorklistInfo.YES.equals(info.getTube()) && Process.GENERATE_GLYCEROL.equals(info.getProcessname())) 
-                b = true;
-            
-            if(b) {
-                for(int i=0; i<destContainers.size(); i++) {
-                    Container c = (Container)destContainers.get(i);
+            for(int i=0; i<destContainers.size(); i++) {
+                Container c = (Container)destContainers.get(i);
+              
+                if(Container.MICRONIC96TUBEMP16.equals(c.getType())) {
                     String label = c.getLabel();
                     Map m = manager.readTubeMappingFile(ContainerProcessManager.TUBEMAPFILEPATH+label+".trx");
                     
@@ -105,17 +104,18 @@ public class GenerateContainersAction extends Action {
                     for(int n=0; n<l.size(); n++) {
                         Container c1 = (Container)l.get(n);
                         tubes.add(c1);
+                        newDestContainers.add(c1);
                         samples.addAll(c1.getSamples());
                     }
-                }
-                destContainers = tubes;
-                manager.setContainerids(destContainers);
-            } else {
-                for(int i=0; i<destContainers.size(); i++) {
-                    Container c = (Container)destContainers.get(i);
+                } else {
+                    updateDestContainers.add(c);
                     samples.addAll(c.getSamples());
                 }
             }
+            manager.setContainerids(tubes);
+            destContainers = new ArrayList();
+            destContainers.addAll(newDestContainers);
+            destContainers.addAll(updateDestContainers);
             manager.setSampleids(samples);
             List newSampleLineages = manager.setSampleToidsForLineages(samples, lineages);
             if(newSampleLineages == null) {
@@ -126,7 +126,7 @@ public class GenerateContainersAction extends Action {
             execution.setInputObjects(srcContainers);
             execution.setOutputObjects(destContainers);
             
-            if(!manager.persistData(destContainers,execution,info,b)) {
+            if(!manager.persistData(newDestContainers,updateDestContainers,execution,info)) {
                 throw new Exception("Error occured while inserting into database.");
             }
         } catch (Exception ex) {

@@ -96,7 +96,7 @@ public class Sample {
     public static String getSampleType(String processname) {
         if(Process.CULTURE.equals(processname))
             return Sample.CULTURE;
-        if(Process.GENERATE_GLYCEROL.equals(processname))
+        if(Process.GENERATE_GLYCEROL.equals(processname) || Process.GENERATE_MULTIPLE_GLYCEROL.equals(processname))
             return Sample.GLYCEROL;
         if(Process.PLATING.equals(processname))
             return Sample.AGAR;

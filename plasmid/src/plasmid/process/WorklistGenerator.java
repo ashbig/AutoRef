@@ -18,8 +18,8 @@ import plasmid.coreobject.*;
 public class WorklistGenerator {
     public static int NUMOFTIPS = 8;
     public static final String DELIM = "\t";
-    private List worklist;
-    private boolean isPrintEmpty;
+    protected List worklist;
+    protected boolean isPrintEmpty;
     
     /** Creates a new instance of WorklistGenerator */
     public WorklistGenerator() {
@@ -81,6 +81,8 @@ public class WorklistGenerator {
      */
     
     public void printFullWorklist(String filename) throws Exception {
+        convertWorklist();
+        
         if(worklist == null || filename == null)
             return;
         
@@ -90,13 +92,15 @@ public class WorklistGenerator {
             Sample from = w.getSampleFrom();
             Sample to = w.getSampleTo();
             
-            f.write("\t"+from.getContainerlabel()+"\t"+from.getPosition()+"\t"+to.getContainerlabel()+"\t"+to.getPosition()+"\t"+to.getType()+"\t"+from.getSampleid()+"\t"+to.getCloneid()+"\t"+from.getContainerid()+"\t"+to.getContainerid()+"\n");
+            f.write("\t"+from.getContainerlabel()+"\t"+from.getPosition()+"\t"+to.getContainerlabel()+"\t"+to.getPosition()+"\t"+to.getType()+"\t"+from.getSampleid()+"\t"+to.getCloneid()+"\t"+from.getContainerid()+"\t"+to.getContainerid()+"\t"+from.getContainerType()+"\t"+to.getContainerType()+"\n");
             
         }
         f.close();
     }
     
     public void printWorklist(String filename) throws Exception {
+        convertWorklist();
+        
         if(worklist == null || filename == null)
             return;
         
@@ -188,6 +192,14 @@ public class WorklistGenerator {
                 if(st.hasMoreTokens()) {
                     destContainerid = st.nextToken();
                 }
+                String srcContainerType = null;
+                if(st.hasMoreTokens()) {
+                    srcContainerType = st.nextToken();
+                }
+                String destContainerType = null;
+                if(st.hasMoreTokens()) {
+                    destContainerType = st.nextToken();
+                }
                 
                 Sample from = new Sample();
                 from.setContainerlabel(sourcePlate);
@@ -196,6 +208,8 @@ public class WorklistGenerator {
                     from.setSampleid(Integer.parseInt(sampleid));
                 if(srcContainerid != null)
                     from.setContainerid(Integer.parseInt(srcContainerid));
+                if(srcContainerType != null)
+                    from.setContainerType(srcContainerType);
                 
                 Sample to = new Sample();
                 to.setContainerlabel(destPlate);
@@ -205,6 +219,8 @@ public class WorklistGenerator {
                     to.setCloneid(Integer.parseInt(cloneid));
                 if(destContainerid != null)
                     to.setContainerid(Integer.parseInt(destContainerid));
+                if(destContainerType != null)
+                    to.setContainerType(destContainerType);
                 worklist.add(new SampleLineage(from, to));
             }
         }
@@ -296,5 +312,8 @@ public class WorklistGenerator {
         }
         
         return ids;
+    }
+    
+    protected void convertWorklist() {       
     }
 }
