@@ -111,7 +111,7 @@ public class SelectProcessAction extends BecAction
                     //allow to select not to run this end read
                     Oligo ol = new Oligo();
                     ol.setId(-1)   ;
-                    ol.setName("-----") ;
+                    ol.setName("NONE") ;
                
                     primers.add(ol);
                     spec_collection.add( primers);
