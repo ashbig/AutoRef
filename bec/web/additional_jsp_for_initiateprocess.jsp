@@ -180,7 +180,7 @@ additional_jsp_buffer.append(" </tr> <tr> <td>"+line_padding+"Last base to inclu
 
 if ( forwardName_int ==  Constants.PROCESS_FIND_GAPS)
 {
-additional_jsp_buffer.append("<tr><td><P>"+line_padding+"<input NAME='isRunLQR' id='isRunLQR' type = checkbox value=0 checked><strong>Run LQR Finder on contig sequences</strong></td></tr>");
+additional_jsp_buffer.append("<tr><td><P>"+line_padding+"<input NAME='isRunLQR' id='isRunLQR' type = checkbox value=0 checked><strong>Run LCR Finder on contig sequences</strong></td></tr>");
 isTryMode=true;
 }
 additional_jsp = additional_jsp_buffer.toString();

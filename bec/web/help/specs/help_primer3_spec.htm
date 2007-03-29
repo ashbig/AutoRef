@@ -15,20 +15,21 @@
   description below the entry form); (2) sequence processing parameters (e.g., 
   length of reliable part of sequencing reads); (3) type of desired coverage (e.g., 
   single forward, single reverse, double coverage). Sequence processing parameters 
-  define quality of exspected reads and whether universal primers are used for 
-  end reads, and how many bases of ORF region these reads are exspected to cover. 
+  define quality of expected reads and whether universal primers are used for 
+  end reads, and how many bases of ORF region these reads are expected to cover. 
   <strong><em>Note</em></strong>: use Primer Designer specification with parameters 
   <strong>'Distance between 5p Universal Primer and START codon</strong>' and 
   <strong>'Distance between 3p Universal Primer and STOP codon</strong>' set to 
   0 when design primers for stretch collection. <br>
 </p>
 
-<p>Main form to create new Primer Design Specification accessible through '<em>Analysis 
-  Settings &gt; Primer Designer</em>' </p>
-  
-         Home > Analysis Settings > Primer Designer  
-        
+<p>Main form to create new Primer Design Specification  accessible through 
+  '<em>Analysis Settings &gt; Primer Designer</em>' <br>
+</p>
 
+
+  
+         
 
 <table width ='90%' border=0 align='center'><tr >
 <td >
@@ -43,8 +44,8 @@ Create New Set of Parameter for Primer Design </h2></td></tr><tr><td valign='top
 
 <table border="0" cellpadding="0" cellspacing="0" width="90%" align=center>
   <tr> 
-    <td colspan=2><div align="right"><font color="#0000FF"> <b> <u>View Mine &nbsp;&nbsp; 
-        View All </u></b> <u>&nbsp;&nbsp;<b>Delete</b></u></font> </div>
+    <td colspan=2><div align="right"><font color="#0000FF"> <b> <u>View Mine</u> &nbsp;&nbsp; 
+       <u> View All </u></b> &nbsp;&nbsp;<u><b>Delete</b></u></font> </div>
       </td>
   </tr>
   <tr> 
@@ -140,16 +141,16 @@ Create New Set of Parameter for Primer Design </h2></td></tr><tr><td valign='top
   <tr> 
     <td colspan="3" height="1" align="center" valign="bottom"><div align="left">
         <p><strong>Primer Length</strong><br>
-          Minimum, Optimum, and Maximum lengths (in bases) of a primer oligo. 
-          Primer3 will not pick primers shorter than Min or longer than Max, and 
-          with default arguments will attempt to pick primers close with size 
-          close to Opt. Min cannot be smaller than 1. Max cannot be larger than 
-          36. (This limit is governed by maximum oligo size for which melting-temperature 
+          Minimum, Optimum, and Maximum lengths (in bases) of a primer. Primer3 
+          will not pick primers shorter than Min or longer than Max, and with 
+          default arguments will attempt to pick primers close with size close 
+          to Opt. Min cannot be smaller than 1. Max cannot be larger than 36. 
+          (This limit is governed by maximum primer size for which melting-temperature 
           calculations are valid.) Min cannot be greater than Max. <br>
           <strong>Primer Tm </strong><br>
-          Minimum, Optimum, and Maximum melting temperatures (Celsius) for a primer 
-          oligo. Primer3 will not pick oligos with temperatures smaller than Min 
-          or larger than Max, and with default conditions will try to pick primers 
+          Minimum, Optimum, and Maximum melting temperatures (Celsius) for a primer. 
+          Primer3 will not pick primers with temperatures smaller than Min or 
+          larger than Max, and with default conditions will try to pick primers 
           with melting temperatures close to Opt. <br>
           Primer3 uses the oligo melting temperature formula given in Rychlik, 
           Spencer and Rhoads, Nucleic Acids Research, vol 18, num 21, pp 6409-6412 
@@ -159,7 +160,6 @@ Create New Set of Parameter for Primer Design </h2></td></tr><tr><td valign='top
         </p>
       </div>
       <p></p> </p> </table>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
+
 </body>
 </html>

@@ -13,7 +13,7 @@
 </h2>
 <p> Contigs calculated by Gap Mapper and Low Confidence Region Finder are trimmed 
   on 5' and 3' ends to exclude low quality end sequences to ensure that complete 
-  coverage will be achived by primers designed based on these contigs information. 
+  coverage will be archived by primers designed based on these contigs information. 
   Low quality base trimming procedure incorporates a sliding window algorithm 
   to scan the sequence for low quality regions. The process requires the following 
   parameters: 
@@ -29,11 +29,11 @@
 
     </li>
 </UL>
-<p>Sequence Trimming Specification guids Gap Mapper and Low Confidence Region 
+<p>Sequence Trimming Specification guides Gap Mapper and Low Confidence Region 
   Finder treatment of closely located low confidence regions on clone contig and 
-  short contigs surounded by two gaps to make primers placement more efficient. 
+  short contigs surrounded by two gaps to make primers placement more efficient. 
   For example, short contig (length &lt; <b>'Minimum contig length'</b> parameter) 
-  will be droped, two 'gaps' that surround contig and short contig itself will 
+  will be dropped, two 'gaps' that surround contig and short contig itself will 
   be collapsed into one long 'gap'. This long 'gap' will became a subject for 
   primer coverage (see Figure below).</p>
 <p><center>
@@ -61,7 +61,7 @@ Create New Set of Parameter for Sequence Trimming </h2></td></tr><tr><td valign=
 
 <table border="0" cellpadding="2" cellspacing="2" width="90%" align=center>
   <tr> 
-    <td colspan =2><div align="right"><font color="#0000FF"><b> <u>View Mine &nbsp;&nbsp; View All </u></b> 
+    <td colspan =2><div align="right"><font color="#0000FF"><b> <u>View Mine</u>&nbsp;&nbsp;<u> View All </u></b> 
         </font> </div>
      
    
@@ -118,7 +118,9 @@ onBlur="checkNumeric(this,1,50,'','','');"></td>
   </tr>
 <TR><TD COlspan=2>&nbsp;</TD></TR>
 <tr> 
-    <td bgColor="#b8c6ed"><b><font color="#000080">Minimum distance between sequence stretches needed to treat them separately (Gap Mappere, Low Confidence Finder):</font></b> </td>
+    <td bgColor="#b8c6ed"><b><font color="#000080">Minimum distance between sequence 
+      stretches needed to treat them separately (Gap Mapper, Low Confidence Finder):</font></b> 
+    </td>
     <td bgColor="#b8c6ed"><input name="SW_MIN_DISTANCE_BTW_CONTIGS" type="text" 
     id="SW_MIN_DISTANCE_BTW_CONTIGS"     value="50"  
 ></td>
