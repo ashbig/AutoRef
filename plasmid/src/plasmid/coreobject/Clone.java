@@ -16,6 +16,7 @@ import plasmid.util.StringConvertor;
  */
 public class Clone implements Serializable {
     public static final String AVAILABLE = "AVAILABLE";
+    public static final String NOT_AVAILABLE = "NOT AVAILABLE";
     public static final String CDNA = "cDNA";
     public static final String SHRNA = "shRNA";
     public static final String GENOMIC_FRAGMENT = "genomic fragment";

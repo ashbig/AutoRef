@@ -35,6 +35,7 @@
     <td class="tableheader">Clone Type</td>
     <td class="tableheader">Species Specific ID</td>
     <td class="tableheader">Gene Symbol</td>
+    <td class="tableheader">Keyword</td>
     <td class="tableheader">Gene Name</td>
     <td class="tableheader">Reference Sequence</td>
     <td class="tableheader">Mutation</td>
@@ -84,6 +85,7 @@
         <td><a target="_blank" href="http://www.wormbase.org/db/gene/gene?name=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
         </logic:equal>        
         <td><bean:write name="insert" property="name"/></td>
+        <td><bean:write name="insert" property="annotation"/></td>  
         <td><bean:write name="insert" property="description"/></td>
         <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=nucleotide&val=<bean:write name="insert" property="targetseqid"/>"><bean:write name="insert" property="targetgenbank"/></a></td>
         <td><bean:write name="insert" property="hasmutation"/></td>

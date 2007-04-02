@@ -10,6 +10,7 @@ import java.io.*;
 import java.util.*;
 import plasmid.util.ContainerLabelComparator;
 import plasmid.coreobject.*;
+import com.jscape.inet.sftp.*;
 
 /**
  *
@@ -30,7 +31,7 @@ public class MultipleWorklistGenerator extends WorklistGenerator {
         super(worklist, b);
     }
         
-    public void printWorklistForRobot(String filename, List avolumn, int dvolumn, boolean isWash) throws Exception {
+    public void printWorklistForRobot(String filename, List avolumn, int dvolumn, boolean isWash, Sftp ftp) throws Exception {
 
     }
         

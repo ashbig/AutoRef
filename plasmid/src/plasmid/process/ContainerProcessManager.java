@@ -16,6 +16,8 @@ import plasmid.database.DatabaseManager.*;
 import plasmid.Constants;
 import plasmid.util.PlatePositionConvertor;
 import plasmid.util.CloneGrowthComparator;
+import plasmid.util.SftpHandler;
+import com.jscape.inet.sftp.*;
 
 /**
  *
@@ -537,11 +539,14 @@ public class ContainerProcessManager {
                     System.out.println("Incompatible container types.");
                     System.exit(0);
                 }
+                
+                Sftp ftp = SftpHandler.getSftpConnection();
                 List worklist = calculator.calculateMapping();
                 WorklistGenerator generator = new WorklistGenerator(worklist);
-                generator.printFullWorklist(filepath+"full_worklist.txt");
-                generator.printWorklist(filepath+"worklist.txt");
+                generator.printFullWorklist(filepath+"full_worklist.txt", ftp);
+                generator.printWorklist(filepath+"worklist.txt", ftp);
                 generator.readWorklist(filepath+"full_worklist.txt");
+                SftpHandler.disconnectSftp(ftp);
                 
                 ContainerMapper mapper = new ContainerMapper(generator.getWorklist());
                 List destContainers = mapper.mapContainer();

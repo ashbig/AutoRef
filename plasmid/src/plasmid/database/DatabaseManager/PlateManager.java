@@ -149,16 +149,22 @@ public class PlateManager extends TableManager {
             return true;
         
         String sql = "update sample set result=? where sampleid=?";
-        
+        String sql2 = "update clone set status='"+Clone.NOT_AVAILABLE+"' where cloneid in "+
+                    " (select cloneid from sample where sampleid=?)";
         try {
             PreparedStatement stmt = conn.prepareStatement(sql);
-            
+            PreparedStatement stmt2 = conn.prepareStatement(sql2);
             for(int i=0; i<results.size(); i++) {
                 Result s = (Result)results.get(i);
                 stmt.setString(1, s.getResultvalue());
                 stmt.setInt(2, s.getSampleid());
-                System.out.println("update sample: "+s.getSampleid()+"\t"+s.getResultvalue());
+                //System.out.println("update sample: "+s.getSampleid()+"\t"+s.getResultvalue());
                 DatabaseTransaction.executeUpdate(stmt);
+                
+                if(Result.NOTGROW.equals(s.getResultvalue())) {
+                    stmt2.setInt(1, s.getSampleid());
+                    DatabaseTransaction.executeUpdate(stmt2);
+                }
             }
             DatabaseTransaction.closeStatement(stmt);
         } catch (Exception ex) {
