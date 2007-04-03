@@ -72,6 +72,7 @@
       </table></td>
   </tr>
   <tr>
+  
     <td><%@ include file="page_footer.jsp" %></td>
   </tr>
 </table>

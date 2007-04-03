@@ -44,11 +44,13 @@
 <tr><td > <a href = "<%= jsp_redirection %>help/help_ACE_overview.htm"  target="_blank">ACE overview</td></tr>
 
 <tr><td > <a href = "<%= jsp_redirection %>help/help_generalhelp.jsp"  target="_blank">ACE tutorial</td></tr>
+<!--<tr><td > <a href = "<%= jsp_redirection %>help/help_troubleshooting.html"  target="_blank">ACE troubleshooting</td></tr>-->
+
 <tr><td >&nbsp; </td></tr><tr><td><P></p><b>Module help</b></td></tr>
 
 
-<tr><td > <a href = "<%= jsp_redirection %>help/help_ReportRunner.html"  target="_blank"> Report runner</td></tr>
-<tr><td > <a href = "<%= jsp_redirection %>help/help_TraceFilesNamingFormats.html"  target="_blank">How to create trace file names' format</td></tr>
+<tr><td > <a href = "<%= jsp_redirection %>help/help_ReportRunner.html"  target="_blank"> General Report</td></tr>
+<tr><td > <a href = "<%= jsp_redirection %>help/help_TraceFilesNamingFormats.html"  target="_blank">How to create trace file name format</td></tr>
 
 <tr><td >&nbsp; </td></tr><tr><td><P></p><b>File format for data submission</b></td></tr>
 
