@@ -47,11 +47,19 @@ cellspacing="2" align="center">
         are acceptable based on user defined criteria. ACE was designed to eliminate 
         bad clones as early as possible in the validation process, and minimize 
         the need to produce additional sequencing primers.</p>
+      <p class="MsoNormal">An effective way to use this tutorial is to have both 
+        the tutorial and ACE application open simultaneously and split on the 
+        computer screen. This split view will allow the user to follow the tutorial 
+        on the actual GUI or main window making the instructions far easier to 
+        comprehend. If the ACE application has not been referred for an extended 
+        period of time it will time out and need to be logged into again, you 
+        will get an 'expired message' when this happened.</p>
       <p class="MsoNormal"><strong><em>Note: </em></strong>ACE GUI consists of 
-        the main window and left hand drop-down menu. Main window displays forms 
-        according to user selection from the left-hand menu. Throughout this tutorial 
-        the notation like 'Process &gt; Read Manipulation' means that user expands 
-        'Process' menu and selects 'Read manipulation' item.</p>
+        the main window and left hand drop-down menu. The main window displays 
+        forms according to user selection from the left-hand menu. Throughout 
+        this tutorial a notation like 'Process &gt; Read Manipulation' means that 
+        user should select 'Process' menu and select 'Read manipulation' item 
+        to get to the desired application.</p>
       <h2 ><font color="#0099CC">ACE Tutorial</font></h2>
       <ul>
         <li><a href="#where_to_start">Getting started</a></li>
@@ -87,11 +95,10 @@ cellspacing="2" align="center">
       filled in and submitted to create or update new definitions and/or summary 
       tablesthat are to be used in all analysis. 
       <ul>
-        <li>ACE project is a logical container for all related plates. One common 
-          project can be created and used for all plates submitted into ACE. To 
-          <strong>create a new project</strong> select '<em>Cloning Project Settings 
-          &gt; Project Definition</em>' fill in project name and optional project 
-          description fields.</li>
+        <li>Related plates are organized into ACE project. One project can be 
+          created and used for all plates in ACE. To <strong>create a new project</strong> 
+          select '<em>Cloning Project Settings &gt; Project Definition</em>' and 
+          fill in project name and optional project description fields.</li>
         <li>To introduce <strong>new biological specie </strong>select <em>'Cloning 
           Project Settings &gt; Species Definition</em>'. Clones within a project 
           can belong to different species.</li>
@@ -452,47 +459,55 @@ href="help_TraceFilesNamingFormats.html" target="_blank">trace files' naming for
         time. 
       <p>&nbsp; 
       <h3><a name="report_data">Reports</a></h3>
-      ACE sends reports by e-mail as attached tab delimited files. 
-      <ul>
-        <li>'Quick Decision Tool' report is a simplified version of the Decision 
-          Tool which determines if clone(s) meets user defined acceptance criteria. 
-          To run the report select <em>Reports &gt; Quick Decision Tool'</em> 
-          and specify user acceptance criteria and set of clones. Execution time 
-          is proportional to the number of specified clones. The 'Quick Decision 
-          Tool' provides feedback on the screen in addition to sending the report 
-          by e-mail.</li>
-        <li>To run <a href="help_ACE_overview.htm#decision" target="_blank">Decision 
-          Tool </a> choose <em>'Reports &gt; Detailed Decision Tool'</em> and 
-          fill the query form. There is no limit on the number of clones that 
-          can be processed.</li>
-        <li>'Mismatched Clones' report helps to detect cases of misidentified 
-          input data such as (a) mislabeled or rotated plates; (b) cross-contamination; 
-          (c) systematic sequencing facility errors. The report blasts end read 
-          sequences against user selected blastable database which usually contains 
-          reference sequences for the cloning project and vector sequences. To 
-          run report select <em>' Reports &gt; Mismatched Clones'</em>, specify 
-          clones and blastable database. There is no limit on the number of clones 
-          that can be processed.</li>
-        <li>General report provides snapshot of <a href="help_ReportRunner.html"
-target="_blank"> requested information</a> for the specified set of clones. To 
-          run general report choose <em>'Reports &gt; General Report'</em> and 
-          fill the query form. There is no limit on the number of clones that 
-          can be processed.</li>
-        <li>To examine quality of existing trace files choose <em>'Reports &gt; 
-          Trace Files Quality Report'</em> and provide clone IDs. For each clone 
-          trace file ACE extracts Phred confidence base scores and determines 
-          whether a read meets minimum quality requirements: (a) the read must 
-          be longer than the user-defined minimum length; (b) the average confidence 
-          score for all non-ambiguous bases between the first and last base must 
-          be above the minimum confidence score. The value of these thresholds 
-          are defined in <a href="help_ACEConfigurationFile.html" target="_blank">ACE 
+      In the report section 6 types of reports can be requested from ACE, all 
+      will be send to user by e-mail as attached, tab delimited file(s), and where 
+      noted below also created on-line in ACE. <ul>
+        <li>'<strong>Quick Decision Tool</strong>' report is a simplified version 
+          of the <a href="help_ACE_overview.htm#decision">Decision Tool</a> which 
+          determines if clone(s) meets user defined acceptance criteria. To run 
+          the report select <em>Reports &gt; Quick Decision Tool'</em> and specify 
+          user acceptance criteria and set of clones. Execution time is proportional 
+          to the number of specified clones. The 'Quick Decision Tool' provides 
+          feedback online in addition to sending a report by e-mail.</li>
+        <li>To run <a href="help_ACE_overview.htm#decision" target="_blank"><strong>Detailed 
+          Decision Tool </strong></a>choose <em>'Reports &gt; Detailed Decision 
+          Tool'</em> and fill the query form. There is no limit on the number 
+          of clones that can be processed.</li>
+        <li>'<strong>Mismatched Clones</strong>' report helps to detect cases 
+          of misidentified input data such as (a) mislabeled or rotated plates; 
+          (b) cross-contamination on the clone plate; (c) systematic errors. End 
+          read sequences are compared against user selected database using NCBI 
+          BLAST. Database should contain reference sequences for the project and 
+          vector sequences. To run the report select <em>' Reports &gt; Mismatched 
+          Clones'</em>, specify clones and database. There is no limit on the 
+          number of clones that can be processed at any given time.</li>
+        <li><strong>'General report'</strong> provides a snapshot of <a href="help_ReportRunner.html"
+target="_blank"> requested information</a> for the specified set of query objects, 
+          which can be either plate(s), clone IDs, user reference sequence IDs, 
+          assembled clone sequence IDs (clone sequence IDs can be extracted from 
+          General Report or Detaile Decision Tool report files). To run general 
+          report choose <em>'Reports &gt; General Report'</em> and fill the query 
+          form. There is no limit on the number of query objects that can be processed 
+          .</li>
+        <li>The <strong>'Trace File Quality' </strong>report allows to examine 
+          quality of existing trace files, and can be accessed at <em>'Reports 
+          &gt; Trace Files Quality Report'</em>. Either plate labels or clone 
+          IDs can be provide, and for each clone trace file ACE extracts Phred 
+          confidence base scores and determines whether a read meets minimum quality 
+          requirements: (a) the read must be longer than the user-defined minimum 
+          length; (b) the average confidence score for all non-ambiguous bases 
+          between the first and last base must be above the minimum confidence 
+          score. The value of these thresholds are defined in <a href="help_ACEConfigurationFile.html" target="_blank">ACE 
           configuration file</a>. There is no limit on the number of clones that 
           can be processed.</li>
+        <li>To obtain a list of end reads that failed and should repeated the 
+          user can invoke the <strong>End Read Report</strong> '<em>Reports &gt; 
+          End Reads Repor</em>t' for any plate(s).</li>
       </ul>
       <p><a href="#report_data">Back</a> </p>
       <h3><a name="primers">Primer design and management</a></h3>
       <p>This set of features allow users to: (a) design gene-specific sequencing 
-        primers; (b) select specific primer(s) for vendor order; (c) order primers; 
+        primers; (b) select specific primer(s) for synthesis; (c) order primers; 
         (d) track primer plates;</p>
       <ul>
         <li>To <strong>order gene-specific primers</strong> use '<em>Process &gt; 
@@ -503,47 +518,55 @@ target="_blank"> requested information</a> for the specified set of clones. To
           Next choose specification for Primer3 and define what region of the 
           target sequence the primer should cover. Select '<em>Design primers 
           for Reference Sequence</em>' option if you would like to design primers 
-          for a complete primer walk. Select '<em>Design primers for Stretch Collection</em>' 
-          to design primers needed to complete coverage (i.e., fill in gaps or 
-          cover low confidence discrepancies). Stretch collection is a result 
-          of Gap Mapper or Low Confidence Regions Finder run for a particular 
-          clone. ACE extracts the last stretch collection defined for the clone. 
+          for a primer walk independent of (end read) coverage. Select '<em>Design 
+          primers for Stretch Collection</em>' to design primers needed to complete 
+          coverage (fill in gaps or cover low confidence discrepancy region). 
+          Stretch collection is stored in ACE after Gap Mapper or Low Confidence 
+          Regions Finder was run for a particular clone. ACE extracts only the 
+          most recent stretch collection defined for a clone to be used in primer 
+          design based on stretch collections 
           <p>Primer Designer can be run in try mode, in this case information 
-            about designed primers is sent to user in <a href="reports/primer_design.htm" target="_blank">tab 
-            delimited text file</a>, however, no information is stored in database 
-            and, hence, cannot be used for vendor primer order.<br>
+            about designed primers is only sent to user in <a href="reports/primer_design.htm" target="_blank">tab 
+            delimited text file</a>, however, no information is stored in database.<br>
             *<strong><em>Note:</em></strong> Options (c) and (d) should not be 
             used in conjunction with '<em>Design primers for Stretch Collection</em>' 
             mode. </li>
         <li>Designed primers must be approved by user to be included in vendor 
           order. To <strong>approve primers</strong> select '<em>Process &gt; 
           Internal Primer Design and Order &gt; Approve Internal Primers</em>', 
-          specify clone IDs and select what kind of primers (designed for reference 
-          sequence or for stretch collection) </li>
-        should be displayed. </li> 
-        <li>To <strong>place primers order</strong> use <em>'Process &gt; Internal 
+          specify clone IDs and select the kind of primers (designed for reference 
+          sequence or for stretch collection) that </li>
+        should be displayed for approval. User can approve primers designed under 
+        both options for any clone for primer synthesis</li> 
+        <li>To <strong>create a primer order</strong> use <em>'Process &gt; Internal 
           Primer Design and Order &gt; Order Internal Primers'</em>, specify clone 
-          IDs, choose type of approved primers that should be included in the 
+          IDs and choose type of approved primers that should be included in the 
           order. Available options are (a) only primers designed for stretch collections; 
           (b) only primers designed for reference sequence; (c) primers designed 
-          for stretch collections and reference sequence. ACE selects all primers 
-          approved for the specified clones according to the user selection and 
-          puts them in A01-H12 96-well plate format. User has an option to specify 
-          wells where first and last primers will be placed on the plate preserving 
-          empty wells for controls if desired. ACE allows user to create an order 
-          file in format required by vendor (<a href="reports/sample1_order_oligo.html" target="_blank">sample_order_file1</a>, 
-          <a href="reports/sample2_order_oligo.html" target="_blank">sample_order_file_2</a>).</li>
-        <li>To store <strong>information</strong> regarding when <strong>primer 
-          plates</strong> were ordered or used for sequencing select '<em>Process 
-          &gt; Internal Primer Design and Order &gt; Track Oligo Plate</em>' choose 
-          plate status and enter comments.<br>
+          for stretch collection(s) together with primers for reference sequence. 
+          ACE selects all primers approved for the specified clones according 
+          to the user selection and maps them in A01-H12 96-well plate format. 
+          User has the option to specify the first and last primer position on 
+          a plate, preserving empty wells for controls if desired. ACE supports 
+          multipal output formats to create an order file compatible with vendor 
+          order sheets (<a href="reports/sample1_order_oligo.html" target="_blank">sample_order_file1</a>, 
+          <a href="reports/sample2_order_oligo.html" target="_blank">sample_order_file_2</a>)</li>
+        <li>To store <strong>information</strong> regarding <strong>primer plate</strong> 
+          orders or usage select '<em>Process &gt; Internal Primer Design and 
+          Order &gt; Track Oligo Plate</em>', choose plate status and enter comments 
+          (optional). This step is requered if user intends to use primers more 
+          than once (i.e., second clone for target sequence)<br>
         </li>
       </ul>
       <h3><a name="view_data">Real time views</a></h3>
+	  Two different view optiona are available. While under <em>'View'</em> more 
+      general, plate, clone, or project oriented data provided, the outcome of 
+      specific processes visually accessible under '<em>Process &gt; View Process 
+      Results</em>'. 
       <ul>
         <li><strong><a
 href="image/image_Fig4.htm" target="_blank">Comprehensive plate viewer</a></strong> 
-          gives access to complete information about plate clones. Select '<em>View 
+          gives access to complete information about a plate. Select '<em>View 
           &gt; Plate Results</em>', enter plate label (case insensitive), check 
           'Show Isolate Ranker Output' option. </li>
         <li>To view<strong> plate history</strong> select '<em>View &gt; Plate 
@@ -553,17 +576,20 @@ href="image/image_Fig4.htm" target="_blank">Comprehensive plate viewer</a></stro
           displays (1) plate label; (2) plate unique ID; (3) plate type (96 well 
           plate); (4) link to cloning strategy description; (5) for each well: 
           (a) well number; (b) sample type - Isolate, Control, Empty; (c) clone 
-          ID; (d) clone final status; (e) description of the last process run 
-          on clone data; (f) link to reference sequence description; (g) link 
-          to clone sequence description if available. </li>
+          ID; (d) clone final status; (e) description of the last process run; 
+          (f) link to reference sequence description; (g) link to clone sequence 
+          description if available. </li>
         <li>To view <strong>clone processing history </strong>select '<em>View 
-          &gt; Clone History</em>' and enter clone IDs;</li>
+          &gt; Clone History</em>' and enter clone IDs. The interface gives the 
+          user information about all steps a clone has passed in ACE, links to 
+          step specific specification, date and time of execution for each step, 
+          and user performed task.</li>
         <li>To view <strong>all plates uploaded into ACE</strong> select '<em>View 
-          &gt; Plates</em>'. Plates are grouped by project name (alphabetical 
+          &gt; Plates</em>'. Plates are grouped by project name (alpha numerical 
           order). Click on the check box located before project name to hide all 
           plates related to the project.</li>
-        <li>To view <strong>all analysis specifications </strong> stored in ACE 
-          select 'View &gt; Process Configurations'. <strong><em>Note: </em></strong>you 
+        <li>To view <strong>any analysis specifications </strong> stored in ACE 
+          select 'View &gt; Process Configurations'. <strong><em>Note: </em></strong>user 
           can view only one specification at a time. </li>
         <li>To view complete information about <strong>vectors</strong> uploaded 
           into ACE select '<em>View &gt; Vectors</em>'. </li>
@@ -578,32 +604,32 @@ href="image/image_Fig4.htm" target="_blank">Comprehensive plate viewer</a></stro
           status of reverse end read. The view helps to detect systematic problems 
           with submitted end reads, for example, cases when all forward or reverse 
           reads failed.</li>
-        <li> To view <strong>primers designed for clone(s)</strong> select '<em>Process 
+        <li> To view <strong>primer designed for clone(s)</strong> select '<em>Process 
           &gt; View Process Results &gt; View Internal Primers</em> ', submit 
           clone IDs and indicate type of primers: primers designed for reference 
           sequence or primers designed for stretch collection (see description 
           of GapMapper module for details). <a href="screen_shots/report_view_primers.html"
 target="_blank">Sample report</a>.</li>
-        <li> To view <strong>all primers ordered for the clone</strong> select 
-          '<em>Process &gt; View Process Results &gt; View Oligo Order(s) for 
-          Clone(s)</em>'. <a target="_blank"
+        <li> To view <strong>all primer ordered for a clone</strong> select '<em>Process 
+          &gt; View Process Results &gt; View Oligo Order(s) for Clone(s)</em>'. 
+          <a target="_blank"
 href="screen_shots/report_ordered_primers.html">Sample report</a>.</li>
-        <li> To view <strong>ordered oligo plates</strong> select '<em>Process 
+        <li> To view <strong>ordered oligo plate(s)</strong> select '<em>Process 
           &gt; View Process Results &gt; View Oligo Plate</em>'. <a target="_blank" href="screen_shots/report_oligo_plate.html">Sample 
           report.</a></li>
         <li> To view <strong>all contig collections</strong> created by Gap Mapper 
-          for the clone select '<em>Process &gt; View Process Results &gt; View 
+          for a clone select '<em>Process &gt; View Process Results &gt; View 
           all contig collections </em>'. Multiple contig collections are created 
           when Gap Mapper is launched several times with different specification 
           or with additional trace files.</li>
-        <li> To view <strong>last contig collection </strong>designed for the 
-          clone by Gap Mapper select <em>Process &gt; View Process Results &gt; 
-          View latest contig collection</em>. <a href="screen_shots/report_view_contigs.html" target="_blank">Sample 
+        <li> To view <strong>only the last contig collection </strong>designed 
+          for the clone by Gap Mapper select <em>Process &gt; View Process Results 
+          &gt; View latest contig collection</em>. <a href="screen_shots/report_view_contigs.html" target="_blank">Sample 
           report.</a> </li>
-        <li> To view set of <strong>low confidence regions</strong> for the clone 
-          created by Low Confidence Finder select <em>Process &gt; View Process 
-          Results &gt; View low confidence regions for clone sequences' </em> 
-          and specify clone IDs. <a href="screen_shots/report_view-lqr.html" target="_blank">Sample 
+        <li> To view <strong>low confidence region(s)</strong> for a clone created 
+          by Low Confidence Finder select <em>Process &gt; View Process Results 
+          &gt; View low confidence regions for clone sequences' </em> and specify 
+          clone IDs. <a href="screen_shots/report_view-lqr.html" target="_blank">Sample 
           report.</a> </li>
       </ul>
       <p><a href="#view_data">Back</a> </p>
