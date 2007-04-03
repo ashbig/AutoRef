@@ -100,45 +100,43 @@ cellspacing="2" align="center">
           select '<em>Cloning Project Settings &gt; Project Definition</em>' and 
           fill in project name and optional project description fields.</li>
         <li>To introduce <strong>new biological specie </strong>select <em>'Cloning 
-          Project Settings &gt; Species Definition</em>'. Clones within a project 
+          Project Settings &gt; Species Definition</em>': clones within a project 
           can belong to different species.</li>
         <li>A clone has a target (reference) sequence against which it will be 
           verified by ACE. The reference sequence can be annotated according to 
-          various annotation conventions. ACE can give arbitrary names to these 
-          conventions using <em>'Cloning Project Settings &gt; Annotation Type</em>' 
-          menu. These <strong>annotation types</strong> will appear as parameter 
-          names for reference sequences submission. Example of annotation type 
-          is GI, SGD etc.</li>
+          various annotation conventions. ACE can accepts any names for these 
+          descriptors using <em>'Cloning Project Settings &gt; Annotation Type</em>'. 
+          These <strong>annotation types</strong> will appear as parameter names 
+          for reference sequence submission. Examples of annotation type are GI, 
+          gene symbol, SGD etc.</li>
         <li>To introduce <strong>new vector</strong> definitions into ACE select 
           '<em>Cloning Project Settings &gt; Vector Information</em>' and submit 
           an <a href="help_vector_xml_format.html"
 target="_blank">XML file</a> with vector(s) description. Each vector is described 
-          by name, source, type (1 for destination vector, 0 for master vector), 
+          by its name, source, type (1 for destination vector, 0 for master vector), 
           filename, file path. In addition a vector may have a set of features. 
           Feature description contains: feature name ('recombination site'), feature 
           property (1 for added, 0 for remain, -1 for lost when insert is integrated), 
-          feature description.</li>
-        <li>To introduce <strong>new sequencing (none gene-specific) primer</strong> 
-          to ACE select '<em>Cloning Project Settings &gt; Sequencing Primer</em>' 
-          and provide primer name, sequence (if sequence is unknown enter 'NN'), 
-          Tm and primer type.</li>
-        <li>For each vector only certain universal primers are used for end reads 
-          by the sequencing facility. To specify this relationship between vector 
-          and primers use <em>'Cloning Project Settings &gt; Link Vector with 
-          Sequencing Primer'</em>. User needs to define '<em>sequencing primer 
-          position</em>' and '<em>sequencing primer orientation</em>' for the 
-          vector-primer relation (see <a href="screen_shots/vector-primer-relation.html">Figure 
-          1</a>). Several primers can be used for the same vector. </li>
-        <li>The linker is a part of vector sequence up-stream or down-stream of 
-          the insert that is important for clone function and thus, users want 
-          this area to be sequence verify. To define a linker use '<em>Cloning 
-          Project Settings &gt; Add Linker</em>'.</li>
+          feature description. These features will be displayed under '<em>View 
+          &gt; Vectors</em>'.</li>
+        <li>To introduce <strong> a new sequencing primer (none gene-specific) 
+          </strong> to ACE select '<em>Cloning Project Settings &gt; Sequencing 
+          Primer</em>' and provide primer name, sequence (if sequence is unknown 
+          enter 'NN'), Tm and select primer type from drop-down menu.</li>
+        <li>For each vector only certain universal primers are used for end reads. 
+          To specify a relationship between vector and universal primers use <em>'Cloning 
+          Project Settings &gt; Link Vector with Sequencing Primer'</em>. Several 
+          primer-vector combinations can be created for the same vector (see <a href="screen_shots/vector-primer-relation.html">screenshot</a> for details). </li>
+        <li>A linker is defined in ACE as part of the vector sequence located 
+          up-stream or down-stream of the insert and is considered important for 
+          clone function and sequence verification is required for acceptance. 
+          To define a linker use '<em>Cloning Project Settings &gt; Add Linker</em>'.</li>
         <li>Cloning strategy in ACE is a collection of the following parameters: 
-          sequencing vector, 5' and 3' linkers, start and stop codons. Application 
-          administrator defines start and stop codon possible values in an <a
+          sequencing vector, 5' and 3' linkers, start and stop codons. The application 
+          administrator defines possible start and stop codon values in an <a
 href="help_ACEConfigurationFile.html"
-target="_blank"> ACE Configuration file</a>. To create new cloning strategy use 
-          '<em>Cloning Project Settings &gt; Add Cloning Strategy</em>'. </li>
+target="_blank"> ACE Configuration file</a>. To create a new cloning strategy 
+          use '<em>Cloning Project Settings &gt; Add Cloning Strategy</em>'. </li>
       </ul>
       <h3><a name="create_spec">Analysis setting</a></h3>
       <p>&nbsp;</p>
@@ -147,10 +145,11 @@ target="_blank"> ACE Configuration file</a>. To create new cloning strategy use
         users of ACE and site projects.The table below list Specification Name 
         (i.e. Clone acceptance criteria from the menu), Page (path to the main 
         window to create or view spec), Feature (name of feature where spec is 
-        required). When at the main window to create new spec you can view (a) 
-        all specs created by current user of ACE; (b) all site specs of particular 
-        kind. Often a set of clones will be analyzed with multiple analysis specifications. 
-        Click specification name for details.</p>
+        required). When creating a new spec user can view all specs created by 
+        user or all specs created at site to avoid duplication. New analysis settings 
+        can be added at any time and used during the analysis. Often a set of 
+        clones will be re-analyzed using multiple analysis settings. Click specification 
+        name for details.</p>
       <div align="center"></div>
       <table  border="1">
         <tr bgcolor="#0033FF"> 
@@ -204,20 +203,23 @@ target="_blank"> ACE Configuration file</a>. To create new cloning strategy use
       <p><em><strong>For non-HIP users:</strong></em></p>
       <ul>
         <li>Select cloning strategy to be used (see 'Cloning Project settings' 
-          section if new cloning strategy needs to be created).</li>
+          if new cloning strategy needs to be created).</li>
         <li><a
 href="help_XML_files_format_description.htm"
 target="_blank"	>Prepare XML files for submission</a>.</li>
-        <li>Select <em>'Process &gt; Upload plates information &gt; Upload reference 
-          sequence information from file'</em> and upload XML file with reference 
-          sequence information.</li>
-        <li>Select <em>'Process &gt; Upload plates information&gt; Upload clone 
-          collection from file' </em> and upload XML file with plate mapping information.</li>
+        <li>Upload XML files:</li>
+        <ul>
+          <li> upload reference sequence information using <em>'Process &gt; Upload 
+            plates information &gt; Upload reference sequence information from 
+            file';</em></li>
+          <li>upload plate mapping information using<em>'Process &gt; Upload plates 
+            information&gt; Upload clone collection from file'</em> .</li>
+        </ul>
       </ul>
       <p><em></em></p>
       <p><em><strong>For HIP users only: </strong></em>The HIP version of ACE 
         interacts with HIP&#8217;s cloning database, FLEX. The following section 
-        is for HIP users only and is not available in the DEMO version.</p>
+        is for HIP users only and is not available to other sites.</p>
       <ul>
         <li>Confirm with informatics team that plates have been submitted for 
           sequencing in FLEX. </li>
@@ -228,16 +230,16 @@ target="_blank"	>Prepare XML files for submission</a>.</li>
             </li>
             <li>Choose from next step in plate processing (available selection: 
               'Run end reads' and 'Run clone evaluation').</li>
-            <li>Choose Start Codon (available selection: ATG; Natural - as submitted 
+            <li>Choose 'Start' Codon (available selection: ATG; Natural - as submitted 
               from GenBank for reference sequence. If your clones have been normalized 
               with start codon other than 'ATG' please contact informatics team).</li>
-            <li>Choose Fusion Stop Codon (available selection: GGA; TTG. If your 
-              clones have been normalized with different fusion codon please contact 
-              informatics team).</li>
-            <li>Choose Closed Stop Codon (available selection: TGA; TAA; TAG; 
+            <li>Choose Fusion 'Stop' Codon (available selection: GGA; TTG. If 
+              your clones have been normalized with different fusion codon please 
+              contact informatics team).</li>
+            <li>Choose Closed 'Stop' Codon (available selection: TGA; TAA; TAG; 
               Natural).</li>
             <li>Choose cloning vector. If your vector is not available go to <em>'Cloning 
-              project settings > Add vector</em>. 
+              project settings > Add vector'</em> before proceesing. 
             <li>Choose 5' upstream and 3' downstream linkers.</li>
             <li>Choose project.</li>
           </ul>
@@ -247,10 +249,10 @@ target="_blank"	>Prepare XML files for submission</a>.</li>
       <p><a href="#upload_plates">Back</a> </p>
       <h3>Operational Steps</h3>
       <p>Once all the above parameters are entered in ACE the application is ready 
-        to recieve sequence data and begin to analyze the clones. A typical workflow 
-        used in our laboratory is shown in <a href="image/image_Fig1.htm" target="_blank">Figure 
-        2 </a>.<br>
-		<h3><a name="trace_upload">Trace files upload</a></h3>
+        to recieve sequence data and begin to analyze the clones. A typical sequence 
+        verification workflow used in our laboratory.<br>
+      
+      <h3><a name="trace_upload">Trace files upload</a></h3>
       <p>Uploading the trace files to ACE is a critical operation that links the 
         unique plate name created by the sequencing facility to the physical plate 
         of clones and reference information stored in ACE. </p>
@@ -368,95 +370,94 @@ href="help_TraceFilesNamingFormats.html" target="_blank">trace files' naming for
       </p>
       <p>To run Discrepancy Finder (see<a href="help_ACE_overview.htm#discrepancy" target="_blank"> 
         ACE overview </a> for details) use '<em>Process &gt; Evaluate Clones &gt; 
-        Run Discrepancy Finder</em>', specify items that should be analyzed: (a) 
-        plate labels (case insensitive) - all clones from submitted plates will 
-        be analyzed; (b) clone IDs; (c) clone sequence IDs (user can get clone 
-        sequence ID by running 'General Report') and set quality cut-off. ACE 
-        assigns low confidence status if the Phred confidence score of at least 
-        one base used to define the discrepancy or one out of four bases on either 
-        side of the discrepancy is below the a user-defined threshold (default 
-        set to 25). </p>
+        Run Discrepancy Finder</em>' and specify items that should be analyzed: 
+        (a) plate label(s) (case insensitive) - all clones from submitted plate(s) 
+        will be analyzed; (b) clone IDs; (c) clone sequence IDs (user can get 
+        clone sequence ID by running '<a href="help_ReportRunner.html" target="_blank">General 
+        Report</a>'), and set quality cut-off based on Phred score (default set 
+        to 25). </p>
       <p><a name="polym"><strong>Polymorphism Finder</strong></a> </p>
       <p>To run Polymorphism Finder (see<a href="help_ACE_overview.htm#polym" target="_blank"> 
         ACE overview </a> for details) use '<em>Process &gt; Evaluate Clones &gt; 
         Run Polymorphism Finder</em>', specify items that should be analyzed and 
         choose <a href="specs/help_polym_finder.htm" target="_blank">Polymorphism 
         Finder Specification</a>. ACE creates three intermediate files and puts 
-        them into directory specified by POLYMORPHISM_FINDER_DATA_DIRECTORY variable 
-        in <a href="help_ACEConfigurationFile.html" target="_blank">ApplicationHostSettings.properties</a> 
-        configuration file. These files will be automatically transferred to the 
-        dedicated server that hosts GenBank database(s), results of Polymorphism 
-        Finder run performed on the server will be transferred back and uploaded 
-        into ACE database. Please contact ACE administrator for the details when 
-        and how the data files transfer is arranged. You can view Polymorphism 
+        them into a directory specified by POLYMORPHISM_FINDER_DATA_DIRECTORY 
+        variable in <a href="help_ACEConfigurationFile.html" target="_blank">ACE 
+        configuration file</a>. These files will be automatically transferred 
+        to the dedicated server that hosts GenBank database(s), and results of 
+        Polymorphism Finder run performed on the server will be transferred back 
+        and uploaded into ACE. Please contact ACE administrator for the details 
+        when and how the data file transfer is arranged. You can view Polymorphism 
         Finder results by using comprehensive plate viewer ('<em>View &gt; Plate 
         Results</em>'), click on well link for your clone, click '<a href="reports/discr_report.html" target="_blank">Discrepancy 
         Report</a>' button on sample view for clone sequence - the value in 'Polymorphism' 
         column for each discrepancy will be changed to 'Y' (discrepancy id known 
-        polymorphism) or 'N' (no hits for discrepancy was found). <a href="reports/polym_report_discr.html" target="_blank">'Details'</a> 
-        button gives you access to the list of GI of GenBank records that were 
-        verified as hits for the particular discrepancy.</p>
+        polymorphism) or 'N' (no hit for discrepancy was found). <a href="reports/polym_report_discr.html" target="_blank">'Details'</a> 
+        button gives you access to the list of GenBank GI record(s) that were 
+        found as hits for the particular discrepancy.</p>
       <p><a name="isolate" ><strong>Isolate Ranker</strong> </a> </p>
       <p>To run Isolate Ranker (see<a href="help_ACE_overview.htm#isolate" target="_blank"> 
         ACE overview </a> for details) select '<em>Process &gt; Evaluate Clones 
-        &gt; Run Isolate Ranker</em>' and specify plate labels (case insensitive) 
-        and required analysis specifications (see <a href="#create_spec">'Analysis 
-        settings'</a> section for details). Isolate Ranker can rank isolates located 
-        on different plates; however, these plates should be run by module at 
-        the same time. Isolate Ranker will rank isolates based on the most relevant 
-        contig for the particular clone, e.g., if clone has end reads, collection 
-        of contigs and gaps defined by Gap Mapper and several clone sequences 
-        assembled under different conditions (see Assembler description for details) 
-        isolate will be ranked based on LAST assembled sequence.</p>
+        &gt; Run Isolate Ranker</em>' and specify plate label(s) (case insensitive) 
+        and process specifications (see <a href="#create_spec">'Analysis settings'</a> 
+        section for details). Isolate Ranker can operate on isolates for the same 
+        target located on different plates; however, these plates must be run 
+        by module at the same time. Isolate Ranker will sort isolates based on 
+        the most recent contig for the particular clone, e.g., if clone has end 
+        reads, collection of contigs and gaps defined by Gap Mapper and several 
+        clone sequences assembled under different conditions (see Assembler description 
+        for details) isolate will be ranked based on LAST assembled sequence. 
+        The result is shown in <a
+href="image/image_Fig4.htm" target="_blank">'comprehensive plate viewer'</a>.</p>
       <p><a name="mapper"><strong>Gap Mapper</strong></a> </p>
-      <p>User may run 'Gap Mapper' to determine gaps in clone coverage that are 
-        resulted from not sufficient number of reads or too short or fail reads 
-        (see<a href="help_ACE_overview.htm#mapper" target="_blank"> ACE overview 
-        </a> for details). </p>
-      <p>To access Gap Mapper use '<em>Process &gt; Evaluate Clones &gt; Run Gap 
-        Mapper</em>', specify clone ID and <a href="#assembler">sequence assembly 
-        parameters</a>. These parameters should set because Gap Mapper invokes 
-        sequence assembler as first step of processing (consult <a href="help_ACE_overview.htm#mapper" target="_blank"> 
-        ACE overview)</a>. User can instruct ACE to calculate low confidence regions 
-        (LCR) of assembled contigs by '<em>Run LQR Finder on contig sequences</em>' 
-        option. LCR and gaps defined by Gap Mapper will become tagets for primer(s) 
-        design to finish clone sequencing. Gap Mapper can be run in the &quot;try 
-        mode&quot;; in this case the information about gaps ans LCRs is emailed 
-        to the user as <a href="reports/gap_mapper_report.html" target="_blank">tab 
-        delimited text file</a>, but is not stored in database and; hence, cannot 
-        be used later for primer(s) design. </p>
+      <p>User may run 'Gap Mapper' to determine gaps in clone coverage (see<a href="help_ACE_overview.htm#mapper" target="_blank"> 
+        ACE overview </a> for details). </p>
+      <p>To operate 'Gap Mapper' use '<em>Process &gt; Evaluate Clones &gt; Run 
+        Gap Mapper</em>', enter clone IDs and select <a href="#assembler">sequence 
+        assembly parameters</a>. Sequence assembly These parameters should set 
+        because Gap Mapper invokes sequence assembler as first step of processing 
+        (consult <a href="help_ACE_overview.htm#mapper" target="_blank"> ACE overview)</a>. 
+        User can instruct ACE to calculate low confidence regions (LCR) of assembled 
+        contigs by '<em>Run LQR Finder on contig sequences</em>' option. LCR and 
+        gaps defined by Gap Mapper will become tagets for primer(s) design to 
+        finish clone sequencing. Gap Mapper can be run in the &quot;try mode&quot;; 
+        in this case the information about gaps ans LCRs is emailed to the user 
+        as <a href="reports/gap_mapper_report.html" target="_blank">tab delimited 
+        text file</a>, but is not stored in database and; hence, cannot be used 
+        later for primer(s) design. </p>
       <p>&nbsp; </p>
-      <p><a name="lqr" ><strong>Low Confidence Regions Finder</strong></a></p>
-      <p>If clone sequence has low confidence discrepancies that should be resolved 
-        before clone can be accepted, the user may run 'Low Confidence Regions 
-        Finder' to determine low confidence regions (LCR) and proceed with 'Primer 
-        Designer' to design primers to cover LCRs (see<a href="help_ACE_overview.htm#lqr" target="_blank"> 
+      <p><a name="lqr" ><strong>Low Confidence Region Finder</strong></a></p>
+      <p>If an assembled clone sequence has low confidence discrepancies (<a href="help_generalhelp.jsp#discrepancy">Discrepancy 
+        Finder</a>) that should be resolved before clone acceptance, the user 
+        should run 'Low Confidence Region Finder' to determine the presence of 
+        a low confidence region(s) (LCR), which allows for region specific design 
+        of internal primer(s) in 'Primer Designer' (see<a href="help_ACE_overview.htm#lqr" target="_blank"> 
         ACE overview </a> for details). 
       <p>To access this functionality use '<em>Process &gt; Evaluate Clones &gt; 
         Run Low Confidence Regions Finder in Clone Sequences</em>', specify clone 
-        ID, select specification for sequence trimming (see <a href="#create_spec">'Analysis 
-        settings'</a> section for details). If you are going to repeat end reads 
-        using universal primers, set the number of bases that are expected to 
-        be covered by these end reads. 'Low Confidence Regions Finder' will not 
-        try to define LCR for these regions. The Finder can be run in the &quot;try 
-        mode&quot;; in this case the information about LCRs is emailed to the 
-        user in <a href="reports/lqf_report.html" target="_blank">tab delimited 
-        text file</a>, but is not stored in database and, hence, cannot be used 
-        later for primer(s) design. 
+        IDs and select specification (see <a href="#create_spec">'Analysis settings'</a> 
+        section for details). If you are going to repeat end reads using universal 
+        primers, set the number of bases that are expected to be covered by these 
+        end reads. 'Low Confidence Regions Finder' will not define LCR for these 
+        regions. The Finder can be run in &quot;try mode&quot;; in this case the 
+        information about LCRs is only emailed to the user as a <a href="reports/lqf_report.html" target="_blank">tab 
+        delimited text file</a>, but not stored in database and cannot be used 
+        later for region specific primer(s) design. 
       <p> <a name="finish"><strong>Finished clones</strong></a> 
-      <p>Once you decide that a clone has met acceptance or rejection criteria 
-        (based on the Decision Tool report or on manual inspection), it is worth 
-        setting its final status in ACE. This removes the clone from further processing 
-        reducing the job size, thereby focusing the effort on the clones still 
-        pending. A clone with status other than 'In Process' (default clone status 
-        assigned on clone submission into ACE) is excluded from the following 
-        processes: (a) assembly; (b) primer design and order; (c) polymorphism 
-        search; (d) data deletion or repeated analysis (see <a href="#delete_data">Data 
-        clean-up</a> section for details). To set <strong>clone final status</strong> 
-        select '<em>Process &gt; Set Final Clones Status</em>' and specify clone 
-        IDs and final status. Optionally XML file with results of clone analysis 
-        can be created. You can change clone status back to 'In Process' at any 
-        time. 
+      <p>Once user decides that a clone has met acceptance or rejection criteria 
+        (based on Decision Tool report or manual inspection), it is possible to 
+        assign a final status for the clone in ACE. This prohibits further processing 
+        of clone data, thus reducing the job size and focusing the efforts on 
+        clones still pending. A clone with status other than 'In Process' (default 
+        clone status assigned on clone submission into ACE) is excluded from the 
+        following processes: (a) assembly; (b) primer design and order; (c) polymorphism 
+        search; (d) data deletion (see <a href="#delete_data">Data clean-up</a> 
+        section for details). To set <strong>clone final status</strong> select 
+        '<em>Process &gt; Set Final Clones Status</em>' and specify clone IDs 
+        and final status. Optionally, an XML file with results of clone analysis 
+        can be created. User can change clone status back to 'In Process' at any 
+        time, which allows full processing again. 
       <p>&nbsp; 
       <h3><a name="report_data">Reports</a></h3>
       In the report section 6 types of reports can be requested from ACE, all 

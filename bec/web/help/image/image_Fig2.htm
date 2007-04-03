@@ -6,18 +6,18 @@
 </head>
 
 <body>
-<p><strong>Storage of trace file information.</strong></p>
-<p> Decoding trace file names from sequencing facility. Sequence trace file names 
-  usually contain plate name, well and read direction in various configurations. 
-  The user describes the location of each of these items separately by specifying 
-  the separator, section number, offset inside each section, and the length. The 
-  separator is a string (often a single character such as the underscore in this 
-  example) that may be repeated in the name, breaking it into several 'sections'. 
-  The section number identifies the part that contains desired item; offset from 
-  the beginning of the section and length allow ACE to extract the item. If the 
-  sequencing facility applies its own name to the plate, it MUST provides a lookup 
-  table indicating the correspondence between the users’ and the sequencing facility’s 
-  plate names. </p>
+<p><strong>Translation of trace file name from sequencing facility name to ACE 
+  format</strong></p>
+<p> Sequence trace file names usually contain plate name, well and read direction 
+  in various configurations. The user describes the location of each of these 
+  items separately by specifying the separator, section number, offset inside 
+  each section, and the length. The separator is a string (often a single character 
+  such as the underscore in this example) that may be repeated in the name, breaking 
+  it into several 'sections'. The section number identifies the part that contains 
+  desired item; offset from the beginning of the section and length allow ACE 
+  to extract the item. If the sequencing facility applies its own name to the 
+  plate, it MUST provides a lookup table indicating the correspondence between 
+  the users’ and the sequencing facility’s plate names. </p>
 <p><div align="center">
 <IMG SRC="fig2_TraceFileName1_raster.jpg"  BORDER="0">
 </div></p>

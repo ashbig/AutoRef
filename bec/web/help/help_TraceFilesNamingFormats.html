@@ -18,69 +18,75 @@
     <td><p>&nbsp;</p>
       <p><font color="#0099CC"><strong>Introduction</strong></font></p>
       <p>Clone validation projects often include sequence reads from different 
-        clones representing similar target sequences(e.g., paralogs, multiple 
+        clones representing similar target sequences (e.g., paralogs, multiple 
         isolates of the same gene, etc.). To prevent faulty assemblies, it is 
         essential that reads from closely related clones do not end up in one 
         another&#8217;s analysis. The ACE package creates a hierarchical directory 
         structure and stores all files related to a single clone in a directory 
         specific to that clone, as required by the Phred/Phrap package.</p>
-      <p>The Trace File Distributor parses identifier information encoded in the
-        filename for each trace file, embedded there by the sequencing facility,
-        that indicates which clone it belongs to. However, because different facilities
-        utilize different naming conventions, the Trace File Distributor stores
-        each facility&#8217;s format and uses it to convert the filename into
-        a format that ACE can use to process these files automatically. </p></td>
+      <p>The Trace File Distributor parses identifier information encoded in the 
+        filename for each trace file, that indicates which clone it belongs to. 
+        However, because different facilities utilize different naming conventions, 
+        the Trace File Distributor stores each facility&#8217;s format and uses 
+        that stored information to convert the filename into a format that ACE 
+        can use to process these files automatically. </p></td>
   </tr>
   <tr>
     <td><p>&nbsp;
-      <p><font color="#0099CC"><strong>Trace file name formats definition</strong></font> 
+      <p><font color="#0099CC"><strong>Trace file name format definition</strong></font> 
       <p>To be recognizable by ACE a trace file name MUST include information 
-        about the plate label and well of the clone on the plate <a href="image/image_Fig2.htm" target="_blank">(see 
-        Figure </a>). For end reads only, information about the direction of the 
-        read (forward or reverse) MUST be included in the trace file name as well. 
-        <br>
-        There are two ways to inform ACE how to extract this information. <em><strong>First: 
-        </strong></em> define start position and length of the each item. For 
-        example, well description in file name is from position 4 to position 
-        6 (three letters or digits).<em><strong> Second:</strong></em> to define 
-        a separator that allows to devide file name into several columns and give 
-        number of relevant column. Moreover, the user can define that in column 
-        <em>'N'</em> letter /digits from position <em>'a'</em> to position 
-        <em>'b'</em> describe the item. </td>
+        about the plate label and position of each clone on the plate (<a href="image/image_Fig2.htm" target="_blank">Translation 
+        of trace file name from sequencing facility name to ACE format</a>). For 
+        end reads only, information about the direction of the read (forward or 
+        reverse) MUST be included in the trace file name as well. <br>
+        There are two ways to inform ACE how to extract this information. 
+      <p>Example 1: 64h11s2.scf, where '64' - equals plate name, H11 - position, 
+        s - direction of the read (here: forward) 
+      <p>Example 2: VcxXG002291-D02-F_010.ab1, where 'VcxXG002291' - equals plate 
+        name, D02 - well (second D02), F - read direction 
+      <p><em><strong>First: </strong></em> User defines start position and length 
+        of each item. In example 1, the well description in the file name starts 
+        with position 3 and ends at position 5 (start 3, length 3), the direction 
+        is described by the single letter at positon 6 (start 6, length 1).
+      <p><em><strong> Second:</strong></em> Use defines a separator that devides 
+        thefile name into several columns and gives the number of each relevant 
+        column. Moreover, the user can define that in column <em>'N'</em> letter 
+        / digits from position <em>'a'</em> to position <em>'b'</em> describe 
+        the item. In example 2, the separator is '-' in example 2, the plate name 
+        would be column 1, the well column 2 and the direction column 3.
+    </td>
   </tr>
   <tr>
     <td><p>&nbsp;
       <p><font color="#0099CC"><strong>How to find what trace file name formats 
         exist</strong></font> 
-      <p> From thedrop down menu select : '<em>Trace Files &gt; Create name format'</em>. 
-        All existing ACE trace file name formts will be listed in a table allowing 
-        user to verify whether his trace name format is already present, and if 
-        not to create one.</td>
+      <p> From the drop down menu select : '<em>Trace Files &gt; Create name format'</em>. 
+        All existing ACE trace file name formats will be listed in a table allowing 
+        the user to verify whether an appropriate trace name format already exists, 
+        and if not to create one.</td>
   </tr>
   <tr>
     <td><p>&nbsp;
-      <p><font color="#0099CC"><strong>How to create new format</strong></font>
+      <p><font color="#0099CC"><strong>How to create new format</strong></font> 
+      <p>The user will
       <UL>
-        <li>From drop down menu on the left select : '<em>Trace Files &gt; Create 
+        <li>Select from drop down menu on the left: '<em>Trace Files &gt; Create 
           name format</em>'</li>
         <li> Enter 'example trace file name' with extension (all trace files processed 
           by ACE must have an extension visible by OS)</li>
         <li> Give new format a name (format name must be unique. Consult table 
-          for exsisting format names)</li>
+          for existing format names)</li>
         <li> Define in what direction trace file name should be read by ACE (from 
           'left to right' or from 'right to left')</li>
-        <li> Define how plate label information should be extracted from file 
-          name</li>
-        <li> Define how position information should be extracted from file name<br>
+        <li> Define how plate label information should be extracted</li>
+        <li> Define how position information should be extracted <br>
           <strong>For end reads only</strong></li>
         <li> Define how direction of the read is annotated</li>
-        <li> Define how direction information should be extracted from file name</li>
-        <li>Click 'Verify new format' button; ACE will parse the example file 
-          name based on the new format description and will show on the new screen 
-          the plate label, well and read direction. If these items have been extracted 
-          properly click 'Submit' button, otherwise go back and change format 
-          definition.</li>
-      </UL>
+        <li> Define how direction information should be extracted </li></ul>
+        Upon pressing the 'Verify new format' button ACE will parse the example 
+      file name based on the new format description and will show on a new screen 
+      the plate label, well and read direction. If these items have been extracted 
+      properly select 'Submit', otherwise go back and change format definition(s).</li> </UL> 
       <p><strong><font size="+1"><em>Note: </em></font></strong>Do not change 
         value of fields that are not involved in your format definition. <br>
 
@@ -183,7 +189,7 @@
       <tr>
         <td><strong>Format <em><font color="#663399"><font size="2">VXG-short </font></font></em></strong></td>
           <td><strong> File name: </strong>1119_D02_VcxXG002291-D02-F_010.ab1 
-            , where 'VcxXG002291' - equalsplate name, D02 - well (second D02), 
+            , where 'VcxXG002291' - equals plate name, D02 - well (second D02), 
             F - read direction </td>
       </tr>
     </table>
