@@ -1,6 +1,6 @@
 <!--Copyright 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.--> <%@page contentType="text/html"%>
 
-<%@ page import="edu.harvard.med.hip.bec.*" %> <html> <head><title>JSP Page</title> <style>
+<%@ page import="edu.harvard.med.hip.bec.*" %> <html> <head><style>
 <!--
  li.MsoNormal
 	{mso-style-parent:"";

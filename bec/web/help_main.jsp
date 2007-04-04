@@ -37,13 +37,13 @@
            <table border="0" cellpadding="0" cellspacing="0" width="90%" align='center' >
 
 <tr><td align='center'><h3>ACE Installation (for application administrator only)</h3> </td></td>
-<tr><td > <a href = "<%= jsp_redirection %>help/help_installation.jsp"  target="_blank"> ACE installation instructions</td></tr>
-<tr><td > <a href = "<%= jsp_redirection %>help/help_ACEConfigurationFile.html" target="_blank" > ACE configuration </td></tr>
+<tr><td > <a href = "./help/help_installation.jsp"  target="_blank"> ACE installation instructions</td></tr>
+<tr><td > <a href = "./help/help_ACEConfigurationFile.html" target="_blank" > ACE configuration </td></tr>
 
 <tr><td align='center'><hr><h3>ACE user help</h3> </td></td>
 <tr><td > <a href = "./help/help_ACE_overview.htm"  target="_blank">ACE overview</td></tr>
 
-<tr><td > <a href = "<%= jsp_redirection %>help/help_generalhelp.jsp"  target="_blank">ACE tutorial</td></tr>
+<tr><td > <a href = "./help/help_generalhelp.jsp"  target="_blank">ACE tutorial</td></tr>
 <!--<tr><td > <a href = "<%= jsp_redirection %>help/help_troubleshooting.html"  target="_blank">ACE troubleshooting</td></tr>-->
 
 <tr><td >&nbsp; </td></tr><tr><td><P></p><b>Module help</b></td></tr>
@@ -54,10 +54,10 @@
 
 <tr><td >&nbsp; </td></tr><tr><td><P></p><b>File format for data submission</b></td></tr>
 
-<tr><td > <a href = "<%= jsp_redirection %>help/help_reference_sequence_xml_format.html" target="_blank" >Reference sequence submission XML format</td></tr>
-<tr><td > <a href = "<%= jsp_redirection%>help/help_vector_xml_format.html"  target="_blank">Vector submission XML format</td></tr>
-<tr><td > <a href = "<%= jsp_redirection %>help/help_clonecollection_xml_format.html"  target="_blank">Clone collection (plate) submission XML format</td></tr>
-<tr><td > <a href = "<%= jsp_redirection %>help/help_clone_sequence_xml_format.html"  target="_blank">Clone sequence submission FASTA format</td></tr>
+<tr><td > <a href = "./help/help_reference_sequence_xml_format.html" target="_blank" >Reference sequence submission XML format</td></tr>
+<tr><td > <a href = "./help/help_vector_xml_format.html"  target="_blank">Vector submission XML format</td></tr>
+<tr><td > <a href = "./help/help_clonecollection_xml_format.html"  target="_blank">Clone collection (plate) submission XML format</td></tr>
+<tr><td > <a href = "./help/help_clone_sequence_xml_format.html"  target="_blank">Clone sequence submission FASTA format</td></tr>
 
 </table>
 
