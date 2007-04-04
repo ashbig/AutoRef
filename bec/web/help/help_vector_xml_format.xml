@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?> 
+  <!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+ <vector-info>
+ <!--  Vector data   --> 
+ <!--  vector type 0  master , 1  expression   --> 
+ <vector>
+ 
+	  <vector-name>pDNR-Dual</vector-name> 
+	  <vector-source>BD Biosciences (Clontech)</vector-source> 
+	  <vector-type>0</vector-type> 
+	 <vector-feature>
+		  <feature-name>recombination site</feature-name> 
+		  <feature-description>LoxP</feature-description> 
+		 <!--  feature type -> 1 - added; 0 - remain; -1 - lost 	  --> 
+		  <feature-type>0</feature-type> 
+	  </vector-feature>
+	 <vector-feature>
+		  <feature-name>antibiotic selection marker</feature-name> 
+		  <feature-description>CmR</feature-description> 
+		  <feature-type>0</feature-type> 
+	  </vector-feature>
+	  
+	  <vector-feature>
+		  <feature-name>antibiotic selection marker</feature-name> 
+		  <feature-description> SacB  (reverse orientation)</feature-description> 
+		  <feature-type>0</feature-type> 
+	 </vector-feature>
+	  <vector-feature>
+		  <feature-name>origin of replication</feature-name> 
+		  <feature-description>  pUC ori </feature-description> 
+		  <feature-type>0</feature-type>
+		</vector-feature>
+			  <vector-feature>
+				  <feature-name>multiple cloning site</feature-name> 
+				  <feature-description>  MCS</feature-description> 
+				  <feature-type>0</feature-type> 
+				  </vector-feature>
+			  <vector-feature>
+				  <feature-name>splice donor site </feature-name> 
+				  <feature-description>  CD </feature-description> 
+				  <feature-type>0</feature-type>
+				  </vector-feature>
+			  <vector-feature>
+				  <feature-name>negative selection marker</feature-name> 
+				  <feature-description>  SacB</feature-description> 
+				  <feature-type>0</feature-type>
+				  </vector-feature>
+	  <vector-feature>
+		  <feature-name>sequencing priming site</feature-name> 
+		  <feature-description>  M13 Forward </feature-description> 
+		  <feature-type>0</feature-type>
+	   
+	    </vector-feature>
+
+  </vector>
+  </vector-info>
+  
+ 
+  
+

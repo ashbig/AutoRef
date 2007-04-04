@@ -111,7 +111,7 @@ cellspacing="2" align="center">
           gene symbol, SGD etc.</li>
         <li>To introduce <strong>new vector</strong> definitions into ACE select 
           '<em>Cloning Project Settings &gt; Vector Information</em>' and submit 
-          an <a href="help_vector_xml_format.html"
+          an <a href="help_vector_xml_format.xml"
 target="_blank">XML file</a> with vector description(s) (several vectors can be 
           submitted from one XML file). Each vector is described by its name, 
           source, type (1 for destination vector, 0 for master vector), filename, 
