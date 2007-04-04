@@ -112,11 +112,12 @@ cellspacing="2" align="center">
         <li>To introduce <strong>new vector</strong> definitions into ACE select 
           '<em>Cloning Project Settings &gt; Vector Information</em>' and submit 
           an <a href="help_vector_xml_format.html"
-target="_blank">XML file</a> with vector(s) description. Each vector is described 
-          by its name, source, type (1 for destination vector, 0 for master vector), 
-          filename, file path. In addition a vector may have a set of features. 
-          Feature description contains: feature name ('recombination site'), feature 
-          property (1 for added, 0 for remain, -1 for lost when insert is integrated), 
+target="_blank">XML file</a> with vector description(s) (several vectors can be 
+          submitted from one XML file). Each vector is described by its name, 
+          source, type (1 for destination vector, 0 for master vector), filename, 
+          file path. In addition a vector may have a set of features. Feature 
+          description contains: feature name ('recombination site'), feature property 
+          (1 for added, 0 for remain, -1 for lost when insert is integrated), 
           feature description. These features will be displayed under '<em>View 
           &gt; Vectors</em>'.</li>
         <li>To introduce <strong> a new sequencing primer (none gene-specific) 
@@ -126,7 +127,8 @@ target="_blank">XML file</a> with vector(s) description. Each vector is describe
         <li>For each vector only certain universal primers are used for end reads. 
           To specify a relationship between vector and universal primers use <em>'Cloning 
           Project Settings &gt; Link Vector with Sequencing Primer'</em>. Several 
-          primer-vector combinations can be created for the same vector (see <a href="screen_shots/vector-primer-relation.html">screenshot</a> for details). </li>
+          primer-vector combinations can be created for the same vector (see <a href="screen_shots/vector-primer-relation.html">screenshot</a> 
+          for details). </li>
         <li>A linker is defined in ACE as part of the vector sequence located 
           up-stream or down-stream of the insert and is considered important for 
           clone function and sequence verification is required for acceptance. 
@@ -249,48 +251,45 @@ target="_blank"	>Prepare XML files for submission</a>.</li>
       <p><a href="#upload_plates">Back</a> </p>
       <h3>Operational Steps</h3>
       <p>Once all the above parameters are entered in ACE the application is ready 
-        to recieve sequence data and begin to analyze the clones. A typical sequence 
-        verification workflow used in our laboratory.<br>
-      
-      <h3><a name="trace_upload">Trace files upload</a></h3>
+        to recieve sequence data and begin to analyze the clones. 
+      <h3><a name="trace_upload">Trace file upload</a></h3>
       <p>Uploading the trace files to ACE is a critical operation that links the 
         unique plate name created by the sequencing facility to the physical plate 
         of clones and reference information stored in ACE. </p>
       
       <li>Copy trace files into directory specified in <a href="help_ACEConfigurationFile.html" target="_blank">ACE 
-        configuration file</a> (TRACE_FILES_TRANCFER_INPUT_DIR). </li>
-      <li>Create mapping file which is tab delimited text file with one record 
-        per plate. Each record should contain two fields: 
-        <p>&lt;sequencing facility plate label>Tab< HIP plate label>.</li>
-      <li>In ACE go to <em>'Trace Files -&gt; Create Renaming File'</em>. Select 
+        configuration file</a> (TRACE_FILES_TRANSFER_INPUT_DIR). </li>
+      <li>Create mapping file, atab delimited text file with one record per plate. 
+        Each record should contain two fields: 
+        <p>&lt;sequencing facility plate label>Tab< HIP plate label></li>
+      <li>In ACE go to <em>'Trace Files &gt; Create Renaming File'</em>. Select 
         mapping file, <a
 href="help_TraceFilesNamingFormats.html" target="_blank">trace files' naming format</a> 
         and type of reads. The 'Internal reads' option currently implemented only 
-        for primers designed by ACE. Click 'Submit' button. ACE writes 'renaming_xxx.txt' 
-        file into the TRACE_FILES_TRANCFER_INPUT_DIR directory, the same file 
+        supports primers designed by ACE. Click 'Submit' button. ACE writes 'renaming_xxx.txt' 
+        file into the TRACE_FILES_TRANSFER_INPUT_DIR directory, the same file 
         is sent to user by e-mail. Renaming file contains one entry per trace 
         file in the format: <original file name><em> &lt;Trace File name&gt; Tab 
-        </em>&lt;ACE recognizable file name>. Make sure thatthe number of entries 
-        in 'renaming_xxx.txt' file is equal to the number of trace files. If 'renaming_xxx.txt' 
-        file is empty or number of the entries is less than expected one of the 
-        following problems occurred: 
+        </em>&lt;ACE recognizable file name>. Make sure that the number of entries 
+        in renaming file is equal to the number of trace files to be submitted. 
+        If the renaming file is empty or number of the entries is less than expected 
+        one of the following problems occurred: 
         <ul>
           <li>Error in mapping file</li>
           <li>The plate indicated in mapping file was notsubmitted to ACE .</li>
-          <li>There is no trace files named according to the selected format. 
-          </li>
+          <li>There is no trace file name in the selected format. </li>
           <li>Some of the files have not been named properly, for example, some 
             trace files for plate have wrong position annotation. </li>
         </ul>
       </li>
-      <li>Upload trace files on ACE server: <em>use 'Trace Files -&gt; Upload 
-        Trace Files'</em>, select renaming_xxx.txt file created by ACE on the 
-        previous step. ACE will send user an e-mail when transfer of the trace 
-        files is finished.</li>
+      <li>Upload trace files on ACE server: <em>use 'Trace Files &gt; Upload Trace 
+        Files'</em>, select renaming_xxx.txt file created by ACE on the previous 
+        step. ACE will send user an e-mail when transfer of the trace files is 
+        completed.</li>
       <p>&nbsp;</p>
       
    
-      <h3><a name="data_processing">Sequencing data processing and clone evaluation.</a></h3>
+      <h3><a name="data_processing">Sequencing data processing and clone evaluation</a></h3>
       <ul>
         <li><a href="#end_read_pr">End Read Processing</a></li>
         <li><a href="#assembler">Sequence Assembly </a></li>
@@ -304,12 +303,8 @@ href="help_TraceFilesNamingFormats.html" target="_blank">trace files' naming for
       <p><a name="end_read_pr"><strong>End Read Processing</strong></a> </p>
       <p>End reads are treated slightly differently from internal reads because 
         some users employ them to select the best candidate from multiple isolates 
-        for a single target. End reads processing consists of two steps: (1) order 
-        end reads (this is needed, because ACE uses <a href="http://emboss.sourceforge.net/apps/release/4.0/emboss/apps/needle.html" target="_blank">needle</a> 
-        which cannot build different strands alignment BLAST. ACE applies user 
-        define definitions whether read sequence id read in sense or antisense 
-        orientation to the target sequence (see '<a href="#ace_configuration">Cloning project settings</a>' section); 
-        (2) uploading of the end reads. 
+        for a single target. End reads processing consists of two steps: (1) placing 
+        end read order; (2) uploading of the end reads in ACE. 
       <ul>
         <li>To <strong>order end reads </strong>select '<em>Process &gt; Read 
           Manipulation &gt; Request End Reads Sequencing</em>', choose vector 
@@ -318,29 +313,27 @@ href="help_TraceFilesNamingFormats.html" target="_blank">trace files' naming for
           to select proper primers, because sequencing primer orientation for 
           vector (see <a href="#ace_configuration">'Cloning project settings'</a> 
           section for details) determines the way ACE chooses the strand of the 
-          end read sequence while building alignment to target sequence. E.g. 
-          if you mistakenly specified M13R as a forward primer while in fact you 
-          used M13F for sequencing, ACE will use complement of the end read sequence 
-          to build the alignment which will show no similarity to the target sequence. 
-          If you run only forward or only reverse reads select 'NONE' option from 
-          drop-down list when choosing corresponding primer.</li>
-        <li>To <b>submit end reads</em> </b>use<b> '</b><em>Process &gt; Read 
-          Manipulation &gt; Check Quality and Distribute End Reads</em></em>' 
-          and specify plate names. End read trace files should be already uploaded 
-          into TRACE_FILES_INPUT_PATH_DIR directory as defined in the <a href="help_ACEConfigurationFile.html">ACE 
-          Configuration file</a> (see '<a href="#trace_upload">Trace files upload' 
-          </a>). ACE distributes all 'inactive' and internal reads chromate files 
-          into appropriate directories ('inactive' traces correspond to empty 
-          wells and controls). Remaining end read trace files for the requested 
-          plates that <a href="help_ACE_overview.htm#end_read_pr" target="_blank">pass 
+          sequence while building alignment to target sequence in <a href="http://www.emboss.org"  target="_blank"><em>needle</em></a>. 
+          E.g. if you mistakenly specified M13R as a forward primer while in fact 
+          you used M13F for sequencing, ACE will use complement of the end read 
+          sequence to build the alignment which will show no similarity to the 
+          target sequence. If you run only forward or only reverse reads select 
+          'NONE' option from drop-down list when choosing corresponding primer.</li>
+        <li>After traces have been transfered to ACE server (see '<a href="#trace_upload">Trace 
+          files upload' </a>) user needs to <b>submit end reads</em> </b>use<b> 
+          '</b><em>Process &gt; Read Manipulation &gt; Check Quality and Distribute 
+          End Reads</em></em>' and specify plate name(s). ACE distributes all 
+          'inactive' and internal reads chromate files into appropriate directories 
+          ('inactive' traces correspond to empty wells and controls). End read 
+          trace files for the requested plate(s) that <a href="help_ACE_overview.htm#end_read_pr" target="_blank">pass 
           the quality check</a> get distributed into corresponding clone directories 
-          and their data gets submitted into ACE database. The end read can be 
-          submitted only one for clone. ACE sends the user an e-mail with attached 
-          report listing all traces that did not pass quality check. This report 
-          can be used to upload low quality end reads as internal reads by using 
-          '<em>Process &gt; Read Manipulation &gt; Submit low quality end reads</em>' 
-          (internal reads do not have corresponding records in the ACE database; 
-          rather, it is stored as a trace file in the clone directory). </li>
+          and their data get submitted into ACE database. ACE sends the user an 
+          e-mail with attached report listing all traces that did not pass quality 
+          check. This report can be used to upload low quality end reads as 'internal' 
+          reads for analysis purposes by using '<em>Process &gt; Read Manipulation 
+          &gt; Submit low quality end reads</em>' (internal reads are not checked 
+          for quality in ACE ; rather, they are stored as trace files in the clone 
+          directories). </li>
       </ul>
       <p><a name="assembler"><strong>Sequence Assembly </strong></a></p>
       <p>There are two ways to <strong>run assembler</strong> in ACE:</p>
@@ -348,15 +341,14 @@ href="help_TraceFilesNamingFormats.html" target="_blank">trace files' naming for
         <li> '<em>Process &gt; Read Manipulation &gt; Run Assembler for End Reads</em>'</li>
         <li> '<em>Process &gt; Read Manipulation &gt; Assemble Clone Sequences</em>'</li>
       </ul>
-      <p>The first option is run after end reads have been submitted. The advantage 
-        of this option is it is possible to get an assembly in cases where only 
-        one read is acceptable and when target sequence is short (&lt; 800 bp). 
-        The first option applies additional pocessing steps. In such cases, ACE 
-        extracts sequence for existing end read from the database, aligns it with 
-        the target sequence and checks if complete coverage is achieved (at least 
-        20 bases upstream / downstream of target sequence are covered by end read 
-        sequence). ACE submits end read sequence as assembled sequence into the 
-        database if complete coverage is confirmed.</p>
+      <p>The first option is used after end reads have been submitted only. It 
+        applies additional pocessing steps when only one end read of acceptable 
+        quality and target sequence is short (&lt; 800 bp). In such cases, ACE 
+        extracts the end read sequence from the database, aligns it with the target 
+        sequence, verifies that complete coverage is achieved (at least 20 bases 
+        upstream / downstream of target sequence are covered by end read sequence) 
+        and submits the end read sequence as 'assembled' sequence into the database 
+        if coverage is given.</p>
       <p>In both cases the user is asked to:</p>
       <ul>
         <li>select library for vector trimming (see '<a href="help_ACE_overview.htm#assembler" target="_blank">ACE 
