@@ -11,8 +11,8 @@
  
  *
  * The following information is used by CVS
- * $Revision: 1.11 $
- * $Date: 2006-05-18 15:43:36 $
+ * $Revision: 1.12 $
+ * $Date: 2007-04-04 17:45:56 $
  * $Author: Elena $
  *
  ******************************************************************************
@@ -38,15 +38,13 @@ import edu.harvard.med.hip.bec.database.*;
  * Utility class to send simple messages.
  *
  * @author     $Author: Elena $
- * @version    $Revision: 1.11 $ $Date: 2006-05-18 15:43:36 $
+ * @version    $Revision: 1.12 $ $Date: 2007-04-04 17:45:56 $
  */
 
 public class Mailer
 {
     
-    public final static String SMTP_HOST ="gate.med.harvard.edu";
-    
-    /**
+     /**
      * Utility Method to send a message
      *
      * @param to The address to send to.
@@ -63,10 +61,8 @@ public class Mailer
     {
         Properties props = new Properties();
         props.put("mail.smtp.host",BecProperties.getInstance().getProperty("mail.smtp.host"));
+        props.put("mail.smtp.auth", "true");
         Session session = Session.getDefaultInstance(props,null);
-        
-        
-        
         try
         {
             // create a message
@@ -109,8 +105,26 @@ public class Mailer
             }
             // add the multipart to the message
             msg.setContent(mp);
+            msg.saveChanges();
+            
              // send the message
-            Transport.send(msg);
+            if ( BecProperties.getInstance().getProperty("EMAIL_PASSWORD") != null && 
+                !BecProperties.getInstance().getProperty("EMAIL_PASSWORD").trim().equals(""))
+            {
+                String user =      BecProperties.getInstance().getProperty("ACE_FROM_EMAIL_ADDRESS");
+                user = user.substring(0, user.indexOf('@'));
+                Transport trans = session.getTransport("smtp");
+                trans.connect(BecProperties.getInstance().getProperty("mail.smtp.host"), 
+                            user, 
+                            BecProperties.getInstance().getProperty("EMAIL_PASSWORD"));
+                trans.sendMessage(msg, address);
+                trans.close();
+            }
+            else
+            {
+                Transport.send(msg);
+            }
+            
         } catch(MessagingException mex)
         {
             mex.printStackTrace();
@@ -171,8 +185,11 @@ public class Mailer
      
 
     public static void main(String [] args) throws Exception
-    {
-        
+    {BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
+            sysProps.verifyApplicationSettings();
+         
+         Mailer.sendMessage("htlena@yahoo.com", "hip_informatics@hms.harvard.edu", " subject",
+    "String msgText"); 
       }
     
 } // End class Mailer
