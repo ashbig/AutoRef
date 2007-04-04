@@ -41,7 +41,7 @@
 <tr><td > <a href = "<%= jsp_redirection %>help/help_ACEConfigurationFile.html" target="_blank" > ACE configuration </td></tr>
 
 <tr><td align='center'><hr><h3>ACE user help</h3> </td></td>
-<tr><td > <a href = "<%= jsp_redirection %>help/help_ACE_overview.htm"  target="_blank">ACE overview</td></tr>
+<tr><td > <a href = "./help/help_ACE_overview.htm"  target="_blank">ACE overview</td></tr>
 
 <tr><td > <a href = "<%= jsp_redirection %>help/help_generalhelp.jsp"  target="_blank">ACE tutorial</td></tr>
 <!--<tr><td > <a href = "<%= jsp_redirection %>help/help_troubleshooting.html"  target="_blank">ACE troubleshooting</td></tr>-->
