@@ -1,7 +1,5 @@
 <!--Copyright 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
-<%@page contentType="text/html"%>
 
-<%@ page import="edu.harvard.med.hip.bec.*" %>
 <html>
 <head>
 <title>XML format for plate upload</title>
@@ -44,7 +42,7 @@
 <table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
     <tr>
         
-    <td > <h1><font color="#0099CC" > XML format for plate upload</font></h1>
+    <td > <h1><font color="#0099CC" > XML files for plate upload</font></h1>
       <hr>    <p>    </td>
     </tr>
 </table>
@@ -60,13 +58,13 @@
 
 <table width="74%" border="0" cellpadding="2" cellspacing="2" align="center">
   <tr> 
-    <td> <h2 ><font color="#0099CC">Reference sequence file</font></h2>
-      <p >Reference sequence file describs target sequences for clone(s). All 
-        steps on the '<em>Cloning project settings</em>' menu (see ACE tutorial) 
-        MUST be performed before XML file can be written, because some items, 
-        like species, should be defined and get their ACE unique IDs before they 
-        can be referenced in XML. <a href="ref.xml" target="_blank">Example of Reference sequence 
-        description XML file</a>.</p>
+    <td> <h2 ><font color="#0099CC">1. Reference sequence file</font></h2>
+      <p >The reference sequence file describs target sequences for clone(s). 
+        All steps on the '<em>Cloning project settings</em>' menu (see ACE tutorial) 
+        MUST be performed before the XML file can be written, because some items, 
+        like species, should be defined and get their unique ACE IDs before they 
+        can be referenced in the XML. <a href="ref.xml" target="_blank">Example 
+        of Reference sequence description XML file</a>.</p>
       <h2 >Elements</h2>
 	  <h3>Sequence-info</h3>
       <table width="100%" class="ElementTable" >
@@ -278,13 +276,13 @@
         </tr>
       </table>
       <p >&nbsp; 
-      <h2 ><font color="#0099CC">Plate mapping file</font></h2>
-      <p >XML file describs plate mapping information and cloning strategy. All 
-        steps on the 'Cloning project settings' menu (see ACE tutorial) MUST be 
-        performed before XML file can be written, because some items, like cloning 
-        strategy, should be defined and get their ACE unique IDs before they will 
-        be referenced in XML. <a href="container.xml" target="_blank">Example of Plate mapping 
-        XML file</a>.</p>
+      <h2 ><font color="#0099CC">2. Plate mapping file</font></h2>
+      <p >The XML file describ the plate mapping information and cloning strategy. 
+        All steps on the 'Cloning project settings' menu (see ACE tutorial) MUST 
+        be performed before the XML file can be written, because some items, like 
+        cloning strategy, should be defined and have their unique ACE IDs before 
+        they can be referenced in the XML file. <a href="container.xml" target="_blank">Example 
+        of Plate mapping XML file</a>.</p>
       <h2 >Elements</h2>
       <h3>Clone collections</h3>
       <table width="100%" class="ElementTable" >
@@ -492,7 +490,7 @@
         - empty well 
       </ul>
 	  <strong><em>Note: </em></strong> All attributes of any type (int, enum,..) 
-      MUST be placed in quots in XML file, e.g., &lt;construct constructid=<strong>'</strong>27433<strong>'</strong> 
+      MUST be placed in quots in the XML file, e.g., &lt;construct constructid=<strong>'</strong>27433<strong>'</strong> 
       format= '0' cloningstrategyid='5' ....</td>
   </tr></table>
 </body>

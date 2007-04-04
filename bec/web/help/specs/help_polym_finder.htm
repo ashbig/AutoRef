@@ -8,20 +8,20 @@
 <body>
 <h2><font color="#0099CC" >Polymorphism Finder Specification</font></h2>
 <p><br>
-  Polymorphism Finder is a two step process. First, a relatively short sequence 
-  segment comprising the discrepancy and its flanking nucleotides is compared 
-  using NCBI BLAST to data from all user-selected GenBank databases to find an 
-  identical match. The number of nucleotides in flanking sequence defined by '<b>Number 
-  of flanking bases to append on both sides of discrepancy for search</b>' parameter, 
-  however, it should be less or equal to 20. The list of available GenBank databases 
-  on local non-ACE server is defined by administrator in <a href="./../help_ACEConfigurationFile.html" target="_blank">ACE 
+  Polymorphism Finder is working in two steps. First, a relatively short sequence 
+  segment comprising the discrepancy and flanking nucleotides is compared using 
+  NCBI BLAST to data from all user-selected GenBank databases to find a perfect 
+  match. The number of flanking nucleotides is defined by the '<b>Number of flanking 
+  bases to append on both sides of discrepancy for search</b>' parameter. However, 
+  it should be less or equal to 20. The list of available GenBank databases on 
+  a local non-ACE server is defined by the administrator in the <a href="./../help_ACEConfigurationFile.html" target="_blank">ACE 
   configuration file</a> as set of paired parameters (PF_DB_1...<em>N</em> - PF_DB_1...<em>N</em>_NAME). 
-  Second step is verification of each 100% hit by comparing the entire clone target 
-  sequence with the hit sequence using Pairwise BLAST. The resulting alignment 
-  should satisfy '<strong>minimum match length</strong>' and '<strong>required 
-  percent identity</strong>' requirements to confirm polymorphism.</p>
-<p>Main form to create new Polymorphism Finder Specification accessible through 
-  '<em>Analysis Settings &gt; Polymorphism Detection</em>' <br>
+  The second step in the process is the verification of each 100% hit by comparing 
+  the entire clone target sequence with the hit sequence using Pairwise BLAST. 
+  The resulting alignment should satisfy the '<strong>minimum match length</strong>' 
+  and '<strong>required percent identity</strong>' requirements to confirm polymorphism.</p>
+<p>The main form to create a new Polymorphism Finder Specification is accessible 
+  through '<em>Analysis Settings &gt; Polymorphism Detection</em>' <br>
 </p>
 
 

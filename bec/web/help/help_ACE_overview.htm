@@ -13,13 +13,13 @@
     <td> <h3> <strong>ACE Overview</strong></h3>
       <p><strong>Automated Clone Evaluation (ACE) </strong>system is a comprehensive, 
         multi-platform and multi-user, web-based sequence verification software 
-        system especially suited for protein expression clones. It automates all 
-        steps of sequence verification process: sequence contig assembly, identification 
-        and annotation of differences between the clone and reference sequences, 
-        gap mapping, primer design, polymorphism detection, and assignment of 
-        final clone based on user defined criteria. ACE utilizes well-established 
+        suite especially suited for protein expression clones. It automates all 
+        steps of the sequence verification process: sequence contig assembly, 
+        identification and annotation of differences between the clone and reference 
+        sequence, gap mapping, primer design, polymorphism detection, and assignment 
+        of final clone quality based on user defined criteria. ACE utilizes well-established 
         algorithms and third-party programs(Phred/Phrap, BLAST, <em>needle</em>, 
-        Primer3) to perform specific tasks. ACE provides an integrated environment 
+        Primer3) to perform specific tasks. It provides an integrated environment 
         that relieves the user from routine process management tasks, such as 
         bookkeeping of all project- and clone-related information, re-entering 
         of parameters and criteria, and history tracking. </p>
@@ -34,18 +34,14 @@
         and then processed by the assembler to determine if end reads alone are 
         sufficient to yield a complete assembly (<em><strong>Assembly Wrapper</strong></em>). 
         Whether or not the assembly yielded a single contig covering the full-length 
-        CDS, clone contig(s) are analyzed to detect differences or &#8220;discrepancies&#8221; 
+        CDS the clone contig(s) is analyzed to detect differences or &#8220;discrepancies&#8221; 
         compared with the reference/target sequence (<strong><em>Discrepancy Finder</em></strong>). 
-        For clones based on cDNA produced from tissue, ACE can compare any discrepancies 
-        with one or more sequence database such as GenBank, to determine if they 
-        correspond to naturally occurring polymorphism (<strong><em>Polymorphism 
-        Finder</em></strong>). During the final decision process, users can optionally 
-        configure the software to avoid penalizing clones for discrepancies that 
-        represent polymorphism's (<em><strong>Decision Tool</strong></em>). <br>
-        If more than one isolate exists for a given clone (target sequence), an 
-        optional module (<em><strong>Isolate Ranker</strong></em>) can rank isolates 
-        based on user-defined preferences specified in the form of penalties associated 
-        with different types of discrepancies. <br>
+        ACE can compare any discrepancy with one or more sequence database such 
+        as GenBank, to determine if they correspond to anaturally occurring polymorphism 
+        (<strong><em>Polymorphism Finder</em></strong>). During the final decision 
+        process, users can optionally configure the software to avoid penalizing 
+        clones for discrepancies that represent polymorphisms (<em>see <strong> 
+        Decision Tool</strong></em>). <br>
         Clones that failed to assemble into a single contig covering the CDS can 
         be processed to find the remaining gaps in sequence coverage (<em><strong>Gap 
         Mapper</strong></em>). In addition, clones with discrepancies based on 
@@ -54,7 +50,11 @@
         clones with low confidence regions or gaps in sequence coverage can be 
         processed to define appropriate internal sequencing primers to generate 
         high confidence clone sequence (<em><strong>Primer Designer</strong></em>). 
-        <br>
+      </p>
+      <p>If more than one isolate exists for a given clone (target sequence), 
+        an optional module (<em><strong>Isolate Ranker</strong></em>) can rank 
+        isolates based on user-defined preferences specified in the form of penalties 
+        associated with different types of discrepancies. <br>
         At any stage during the clone verification process, a set of clones can 
         be processed by the Decision Tool in order to determine how far each clone 
         has progressed in the analysis pipeline and its acceptance/rejection status. 
@@ -96,8 +96,8 @@
         vastly different naming conventions, a mechanism must exist to rename 
         files into a format compatible with the ACE parser. Users employ the Trace 
         File Distributor to describe the specific naming format for trace files 
-        in a way that allows ACE process these files automatically. Multiple sets 
-        of rules to extract plate name, well name and read direction can be created 
+        in a way that allows ACE to process these files automatically. Multiple 
+        sets of rules to extract plate, well name, and read direction can be created 
         by the user to accomodate multiple naming conventions (<a href="image/image_Fig2.htm" target="_blank">Translation 
         of trace file name from sequencing facility name to ACE format</a>). Detailled 
         descriptions of how to create a new Trace File Format can be found <a href="help_TraceFilesNamingFormats.html" target="_blank"> 
@@ -143,7 +143,7 @@
         score or below a minimum length can be completely excluded from assembly. 
       </p>
       <p><em><strong><a name="primer">Internal Primer Management</a></strong></em> 
-        This suit of modules allows users to: (a) design gene-specific sequencing 
+        This suite of modules allows users to: (a) design gene-specific sequencing 
         primers; (b) select specific primer(s) for placement on a vendor order; 
         (c) view all primers (both designed and ordered) and their design specifications, 
         and (d) track and manage primer plates and individual primers. <br>
@@ -159,13 +159,13 @@
         which are provided to <em>Primer3</em> for primer prediction. Fragment 
         size takes into account the expected distance between the primer and reliable 
         sequence, expected high quality read length, and the <em>Primer3</em> 
-        window size which are user-specified values. The Primer Design module 
+        window size, which are user-specified values. The Primer Design module 
         then collates the output of <em>Primer3</em>. <br>
       </p>
       <p><strong><em><font color="#6699CC">2. Contig Analysis</font></em></strong></p>
       <p><strong><em><a name="discrepancy">Discrepancy Finder</a>.</em></strong> 
         This module detects mismatches between the clone contig(s) and its reference 
-        sequence and creats a list of discrepancy descriptions for each clone. 
+        sequence and creates a list of discrepancy descriptions for each clone. 
         <br>
         The Discrepancy Finder builds a global alignment between the clone contig(s) 
         and its reference nucleotide sequence using the <em>needle</em> program 
@@ -178,8 +178,8 @@
         target sequence described on both the <a href="image/table_DiscrepancyTypes.htm" target="_blank">nucleotide 
         and polypeptide levels</a>. ACE assigns confidence status (low or high) 
         to any discrepancy. Low confidence status is assigned to a discrepancy 
-        if the Phred confidence score of at least one base used to define the 
-        discrepancy or one out of four bases on either side of the discrepancy 
+        if a Phred confidence score of at least one base is used to define the 
+        discrepancy or if one out of four bases on either side of the discrepancy 
         is below the a user-defined threshold (default set to 25).</p>
       <p><strong><em><a name="polym">Polymorphism Finder</a> </em></strong>This 
         module determines if discrepancies are attributable to natural sequence 
@@ -213,16 +213,16 @@
         type are rejected. For each remaining isolate, the overall score is computed 
         by normalizing the sum of the penalties over the number of bases covered. 
         These scores determine the rank order among the surviving isolates of 
-        the same gene. Special care should be taken when comparing with full coverage 
-        of the reference sequence and with ???? having partial coverage - shorter 
-        contigs might have smaller absolute number of discrepancies but poorer 
-        quality. Using average number of discrepancies per base is also not adequate, 
-        since averages become unreliable as the length of the coverage decreases. 
-        Instead we have chosen to augment discrepancy counts for each partial 
-        coverage contig by pseudo-counts based on the length of the uncovered 
-        sequence and the average frequency of discrepancies across all reads. 
-        The rank order among the surviving isolates of the same gene are displayed 
-        as a color coded virtual plate <a href="image/image_Fig4.htm">map</a> 
+        the same gene. Special care should be taken when comparing isolates with 
+        full coverage of the reference sequence and with isolates having partial 
+        coverage - shorter contigs might have smaller absolute number of discrepancies 
+        but poorer quality. Using average number of discrepancies per base is 
+        also not adequate, since averages become unreliable as the length of the 
+        coverage decreases. Instead we have chosen to augment discrepancy counts 
+        for each partial coverage contig by pseudo-counts based on the length 
+        of the uncovered sequence and the average frequency of discrepancies across 
+        all reads. The rank order among the surviving isolates of the same gene 
+        are displayed as a color coded virtual plate <a href="image/image_Fig4.htm">map</a> 
         allowing user quickly to pick follow-up clones as well as determine if 
         there are any systematic problems with cloning or sequencing (e.g., clones 
         in the same position repeatedly fail, all clones fail to match reference). 

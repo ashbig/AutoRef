@@ -12,42 +12,41 @@
 <h2><font color="#0099CC" >Sequence Trimming Specification</font><br>
 </h2>
 <p> Contigs calculated by Gap Mapper and Low Confidence Region Finder are trimmed 
-  on 5' and 3' ends to exclude low quality end sequences to ensure that complete 
-  coverage will be archived by primers designed based on these contigs information. 
-  Low quality base trimming procedure incorporates a sliding window algorithm 
+  at the 5' and 3' ends excluding low quality sequences to ensure that complete 
+  coverage will be achieved with primers designed based on the contig information. 
+  The low quality base trimming procedure incorporates a sliding window algorithm 
   to scan the sequence for low quality regions. The process requires the following 
   parameters: 
 <UL>
   <li><b><font color="#000080">Phred base score defining high quality sequence</font></b> 
     - high quality score cut-off for each base;</li>
   <li><b><font color="#000080">Sliding window size for low-quality trimming</font></b> 
-    - sliding window size, which specifies the number<br>
+    - sliding window size, which specifies the number
     of DNA bases of the sliding window;</li>
   <li><b><font color="#000080">Max number of low-quality bases allowed</font></b> 
-    - Maximum number of low quality bases per window,<br>
+    - Maximum number of low quality bases per window,
     above which a window is considered to be a low quality region and is trimmed;<br>
 
     </li>
 </UL>
-<p>Sequence Trimming Specification guides Gap Mapper and Low Confidence Region 
-  Finder treatment of closely located low confidence regions on clone contig and 
-  short contigs surrounded by two gaps to make primers placement more efficient. 
-  For example, short contig (length &lt; <b>'Minimum contig length'</b> parameter) 
-  will be dropped, two 'gaps' that surround contig and short contig itself will 
-  be collapsed into one long 'gap'. This long 'gap' will became a subject for 
-  primer coverage (see Figure below).</p>
+<p>Sequence Trimming Specification guides the treatment of closely located low 
+  confidence regions on clone contigs and short contigs surrounded by two gaps 
+  in Low Confidence Region Finder and Gap Mapper to make primer placement more 
+  efficient. For example, a short contig (length &lt; <b>'Minimum contig length'</b>) 
+  will be dropped, if two gaps surround the contig, and they will be collapsed 
+  into one long gap. This long gap will became a subject for primer coverage (see 
+  Figure below).</p>
 <p><center>
 <IMG SRC="ShortContigDrop1_raster.jpg" BORDER="0">
 </center>
 </p>
 <p>The same rule applies to two low confidence regions located close to each other: 
-  if distance between them is less than '<b>Minimum distance 
-  between sequence stretches</font></b>' they will be collapsed into one low confidence 
-  region - subject for primers coverage.</p>
-<p>&nbsp;</p>
-<p>Main form to create new Sequence Trimming Specification accessible through 
-  '<em>Analysis Settings > Sequence Trimming'</em> </p>
-<p>&nbsp; 
+  if the distance between them is less than defined in '<b>Minimum distance between 
+  sequence stretches</font></b>', they will be collapsed into one low confidence 
+  region and create a single subject for primer coverage.</p>
+<p>The main form to create a new Sequence Trimming Specification is accessible 
+  through '<em>Analysis Settings > Sequence Trimming'</em> </p>
+
 <table width ='90%' border=0 align='center'><tr >
 <td >
 <h2 style='font: bold, 14px, Times New Roman ;text-align: left; color: #008000;white-space: nowrap; '>

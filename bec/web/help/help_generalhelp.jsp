@@ -39,34 +39,34 @@ width="80%">
 cellspacing="2" align="center">
   <tr> 
     <td> <p class="MsoNormal"><strong><em>Automated Clone Evaluation (ACE)</em></strong> 
-        system is a software suite designed to address the main goals of sequence 
-        verification process for projects of any scale: (1) determine the sequence 
-        of each clone accurately; (2) identify if and where that sequence varies 
-        from the intended target sequence; (3) evaluate and annotate the polypeptide 
-        consequences of any variations; and (4) determine if these observed differences 
-        are acceptable based on user defined criteria. ACE was designed to eliminate 
-        bad clones as early as possible in the validation process, and minimize 
-        the need to produce additional sequencing primers.</p>
+        is a software suite designed to address the main goals of sequence verification 
+        for projects of any scale: (1) determine the sequence of each clone accurately; 
+        (2) identify if and where that sequence varies from the intended target 
+        sequence; (3) evaluate and annotate the polypeptide consequences of any 
+        variations; and (4) determine if these observed differences are acceptable 
+        based on user defined criteria. ACE was designed to eliminate bad clones 
+        as early as possible in the validation process, and minimize the need 
+        to produce additional sequencing primers.</p>
       <p class="MsoNormal">An effective way to use this tutorial is to have both 
-        the tutorial and ACE application open simultaneously and split on the 
-        computer screen. This split view will allow the user to follow the tutorial 
-        on the actual GUI or main window making the instructions far easier to 
-        comprehend. If the ACE application has not been referred for an extended 
-        period of time it will time out and need to be logged into again, you 
-        will get an 'expired message' when this happened.</p>
+        the tutorial and the ACE application open simultaneously and split on 
+        the computer screen. This split view will allow the user to follow the 
+        tutorial on the actual GUI or main window making the instructions far 
+        easier to comprehend. If the ACE application has not been referred for 
+        an extended period of time it will time out and need to be logged into 
+        again; you will get an 'expired message' when this happened.</p>
       <p class="MsoNormal"><strong><em>Note: </em></strong>ACE GUI consists of 
-        the main window and left hand drop-down menu. The main window displays 
+        a main window and aleft hand drop-down menu. The main window displays 
         forms according to user selection from the left-hand menu. Throughout 
         this tutorial a notation like 'Process &gt; Read Manipulation' means that 
-        user should select 'Process' menu and select 'Read manipulation' item 
+        user should select the 'Process' menu and select 'Read manipulation' item 
         to get to the desired application.</p>
       <h2 ><font color="#0099CC">ACE Tutorial</font></h2>
       <ul>
         <li><a href="#where_to_start">Getting started</a></li>
-        <li>Progect and Analysis Settings and definitions</li>
+        <li>Project and Analysis Settings and definitions</li>
         <ul>
-          <li><a href="#ace_configuration">Clonning project settings</a></li>
-          <li><a href="#create_spec">Analysis setting</a></li>
+          <li><a href="#ace_configuration">Cloning project settings</a></li>
+          <li><a href="#create_spec">Analysis settings</a></li>
         </ul>
         <li>Defining new targets</li>
         <ul>
@@ -89,25 +89,25 @@ cellspacing="2" align="center">
         and definitions must be pre-defined in ACE. Once these settings have been 
         entered they do not have to be entered again unless projects or definitions 
         change.</p>
-      <h3><a name="ace_configuration">Cloning project settings.</a></h3>
+      <h3><a name="ace_configuration">Cloning project settings</a></h3>
       All definitions created in this section are shared among site users and 
       site projects. The main window for each menu item provides the form to be 
       filled in and submitted to create or update new definitions and/or summary 
-      tablesthat are to be used in all analysis. 
+      tables that are to be used in all analysis. 
       <ul>
-        <li>Related plates are organized into ACE project. One project can be 
-          created and used for all plates in ACE. To <strong>create a new project</strong> 
+        <li>Related plates are organized into an ACE project. One project can 
+          be created and used for all plates in ACE. To <strong>create a new project</strong> 
           select '<em>Cloning Project Settings &gt; Project Definition</em>' and 
           fill in project name and optional project description fields.</li>
-        <li>To introduce <strong>new biological specie </strong>select <em>'Cloning 
+        <li>To introduce <strong>a new biological species </strong>select <em>'Cloning 
           Project Settings &gt; Species Definition</em>': clones within a project 
           can belong to different species.</li>
         <li>A clone has a target (reference) sequence against which it will be 
           verified by ACE. The reference sequence can be annotated according to 
-          various annotation conventions. ACE can accepts any names for these 
-          descriptors using <em>'Cloning Project Settings &gt; Annotation Type</em>'. 
-          These <strong>annotation types</strong> will appear as parameter names 
-          for reference sequence submission. Examples of annotation type are GI, 
+          various annotation conventions. ACE can accept any names for these descriptors 
+          using <em>'Cloning Project Settings &gt; Annotation Type</em>'. These 
+          <strong>annotation types</strong> will appear as parameter names for 
+          reference sequence submission. Examples of annotation types are GI, 
           gene symbol, SGD etc.</li>
         <li>To introduce <strong>new vector</strong> definitions into ACE select 
           '<em>Cloning Project Settings &gt; Vector Information</em>' and submit 
@@ -120,19 +120,21 @@ target="_blank">XML file</a> with vector description(s) (several vectors can be
           (1 for added, 0 for remain, -1 for lost when insert is integrated), 
           feature description. These features will be displayed under '<em>View 
           &gt; Vectors</em>'.</li>
-        <li>To introduce <strong> a new sequencing primer (none gene-specific) 
+        <li>To introduce <strong> a new sequencing primer (non gene-specific) 
           </strong> to ACE select '<em>Cloning Project Settings &gt; Sequencing 
           Primer</em>' and provide primer name, sequence (if sequence is unknown 
           enter 'NN'), Tm and select primer type from drop-down menu.</li>
         <li>For each vector only certain universal primers are used for end reads. 
-          To specify a relationship between vector and universal primers use <em>'Cloning 
-          Project Settings &gt; Link Vector with Sequencing Primer'</em>. Several 
-          primer-vector combinations can be created for the same vector (see <a href="screen_shots/vector-primer-relation.html">screenshot</a> 
+          To specify a relationship between a vector and universal primers use 
+          <em>'Cloning Project Settings &gt; Link Vector with Sequencing Primer'</em>. 
+          Several primer-vector combinations can be created for the same vector 
+          (see <a href="screen_shots/vector-primer-relation.html">screenshot</a> 
           for details). </li>
         <li>A linker is defined in ACE as part of the vector sequence located 
           up-stream or down-stream of the insert and is considered important for 
-          clone function and sequence verification is required for acceptance. 
-          To define a linker use '<em>Cloning Project Settings &gt; Add Linker</em>'.</li>
+          clone function. Sequence verification of the linker is required for 
+          acceptance. To define a linker use '<em>Cloning Project Settings &gt; 
+          Add Linker</em>'.</li>
         <li>Cloning strategy in ACE is a collection of the following parameters: 
           sequencing vector, 5' and 3' linkers, start and stop codons. The application 
           administrator defines possible start and stop codon values in an <a
@@ -140,10 +142,10 @@ href="help_ACEConfigurationFile.html"
 target="_blank"> ACE Configuration file</a>. To create a new cloning strategy 
           use '<em>Cloning Project Settings &gt; Add Cloning Strategy</em>'. </li>
       </ul>
-      <h3><a name="create_spec">Analysis setting</a></h3>
+      <h3><a name="create_spec">Analysis settings</a></h3>
       <p>&nbsp;</p>
       <p>Certain processing modules imbedded in ACE require analysis specifications 
-        (spec). All analysis specificationsin this section are shared among site 
+        (spec). All analysis specifications in this section are shared among site 
         users of ACE and site projects.The table below list Specification Name 
         (i.e. Clone acceptance criteria from the menu), Page (path to the main 
         window to create or view spec), Feature (name of feature where spec is 
@@ -247,11 +249,11 @@ target="_blank"	>Prepare XML files for submission</a>.</li>
           </ul>
         </li>
       </ul>
-      <p>Upon finishing the upload ACE will send e-mail report to the user.</p>
+      <p>Upon finishing the upload ACE will send an e-mail report to the user.</p>
       <p><a href="#upload_plates">Back</a> </p>
       <h3>Operational Steps</h3>
-      <p>Once all the above parameters are entered in ACE the application is ready 
-        to recieve sequence data and begin to analyze the clones. 
+      <p>Once all of the above parameters have been entered in ACE, the application 
+        is ready to recieve sequence data and begin to analyze the clones. 
       <h3><a name="trace_upload">Trace file upload</a></h3>
       <p>Uploading the trace files to ACE is a critical operation that links the 
         unique plate name created by the sequencing facility to the physical plate 
@@ -259,7 +261,7 @@ target="_blank"	>Prepare XML files for submission</a>.</li>
       
       <li>Copy trace files into directory specified in <a href="help_ACEConfigurationFile.html" target="_blank">ACE 
         configuration file</a> (TRACE_FILES_TRANSFER_INPUT_DIR). </li>
-      <li>Create mapping file, atab delimited text file with one record per plate. 
+      <li>Create mapping file, a tab delimited text file with one record per plate. 
         Each record should contain two fields: 
         <p>&lt;sequencing facility plate label>Tab< HIP plate label></li>
       <li>In ACE go to <em>'Trace Files &gt; Create Renaming File'</em>. Select 
@@ -271,12 +273,12 @@ href="help_TraceFilesNamingFormats.html" target="_blank">trace files' naming for
         is sent to user by e-mail. Renaming file contains one entry per trace 
         file in the format: <original file name><em> &lt;Trace File name&gt; Tab 
         </em>&lt;ACE recognizable file name>. Make sure that the number of entries 
-        in renaming file is equal to the number of trace files to be submitted. 
-        If the renaming file is empty or number of the entries is less than expected 
+        in the renaming file is equal to the number of trace files to be submitted. 
+        If the renaming file is empty or the number of entries is less than expected 
         one of the following problems occurred: 
         <ul>
           <li>Error in mapping file</li>
-          <li>The plate indicated in mapping file was notsubmitted to ACE .</li>
+          <li>The plate indicated in mapping file was not submitted to ACE .</li>
           <li>There is no trace file name in the selected format. </li>
           <li>Some of the files have not been named properly, for example, some 
             trace files for plate have wrong position annotation. </li>
@@ -320,10 +322,10 @@ href="help_TraceFilesNamingFormats.html" target="_blank">trace files' naming for
           target sequence. If you run only forward or only reverse reads select 
           'NONE' option from drop-down list when choosing corresponding primer.</li>
         <li>After traces have been transfered to ACE server (see '<a href="#trace_upload">Trace 
-          files upload' </a>) user needs to <b>submit end reads</em> </b>use<b> 
+          files upload' </a>) user needs to <b>submit end reads</em> </b>using<b> 
           '</b><em>Process &gt; Read Manipulation &gt; Check Quality and Distribute 
           End Reads</em></em>' and specify plate name(s). ACE distributes all 
-          'inactive' and internal reads chromate files into appropriate directories 
+          'inactive' and internal reads trace files into appropriate directories 
           ('inactive' traces correspond to empty wells and controls). End read 
           trace files for the requested plate(s) that <a href="help_ACE_overview.htm#end_read_pr" target="_blank">pass 
           the quality check</a> get distributed into corresponding clone directories 
@@ -377,14 +379,14 @@ href="help_TraceFilesNamingFormats.html" target="_blank">trace files' naming for
         them into a directory specified by POLYMORPHISM_FINDER_DATA_DIRECTORY 
         variable in <a href="help_ACEConfigurationFile.html" target="_blank">ACE 
         configuration file</a>. These files will be automatically transferred 
-        to the dedicated server that hosts GenBank database(s), and results of 
-        Polymorphism Finder run performed on the server will be transferred back 
-        and uploaded into ACE. Please contact ACE administrator for the details 
+        to the dedicated server that hosts GenBank database(s), and the results 
+        of the Polymorphism Finder run performed on the server will be transferred 
+        back and uploaded into ACE. Please contact ACE administrator for the details 
         when and how the data file transfer is arranged. You can view Polymorphism 
         Finder results by using comprehensive plate viewer ('<em>View &gt; Plate 
         Results</em>'), click on well link for your clone, click '<a href="reports/discr_report.html" target="_blank">Discrepancy 
         Report</a>' button on sample view for clone sequence - the value in 'Polymorphism' 
-        column for each discrepancy will be changed to 'Y' (discrepancy id known 
+        column for each discrepancy will be changed to 'Y' (discrepancy is known 
         polymorphism) or 'N' (no hit for discrepancy was found). <a href="reports/polym_report_discr.html" target="_blank">'Details'</a> 
         button gives you access to the list of GenBank GI record(s) that were 
         found as hits for the particular discrepancy.</p>
@@ -397,7 +399,7 @@ href="help_TraceFilesNamingFormats.html" target="_blank">trace files' naming for
         target located on different plates; however, these plates must be run 
         by module at the same time. Isolate Ranker will sort isolates based on 
         the most recent contig for the particular clone, e.g., if clone has end 
-        reads, collection of contigs and gaps defined by Gap Mapper and several 
+        reads, the collection of contigs and gaps defined by Gap Mapper and several 
         clone sequences assembled under different conditions (see Assembler description 
         for details) isolate will be ranked based on LAST assembled sequence. 
         The result is shown in <a
@@ -440,10 +442,10 @@ href="image/image_Fig4.htm" target="_blank">'comprehensive plate viewer'</a>.</p
       <p>Once user decides that a clone has met acceptance or rejection criteria 
         (based on Decision Tool report or manual inspection), it is possible to 
         assign a final status for the clone in ACE. This prohibits further processing 
-        of clone data, thus reducing the job size and focusing the efforts on 
-        clones still pending. A clone with status other than 'In Process' (default 
-        clone status assigned on clone submission into ACE) is excluded from the 
-        following processes: (a) assembly; (b) primer design and order; (c) polymorphism 
+        of clone data, thus reducing the job size and focusing efforts on clones 
+        still pending. A clone with status other than 'In Process' (default clone 
+        status assigned on clone submission into ACE) is excluded from the following 
+        processes: (a) assembly; (b) primer design and order; (c) polymorphism 
         search; (d) data deletion (see <a href="#delete_data">Data clean-up</a> 
         section for details). To set <strong>clone final status</strong> select 
         '<em>Process &gt; Set Final Clones Status</em>' and specify clone IDs 
@@ -452,9 +454,10 @@ href="image/image_Fig4.htm" target="_blank">'comprehensive plate viewer'</a>.</p
         time, which allows full processing again. 
       <p>&nbsp; 
       <h3><a name="report_data">Reports</a></h3>
-      In the report section 6 types of reports can be requested from ACE, all 
+      In the report section, 6 types of reports can be requested from ACE, all 
       will be send to user by e-mail as attached, tab delimited file(s), and where 
-      noted below also created on-line in ACE. <ul>
+      noted below also created on-line in ACE. 
+      <ul>
         <li>'<strong>Quick Decision Tool</strong>' report is a simplified version 
           of the <a href="help_ACE_overview.htm#decision">Decision Tool</a> which 
           determines if clone(s) meets user defined acceptance criteria. To run 
@@ -478,14 +481,14 @@ href="image/image_Fig4.htm" target="_blank">'comprehensive plate viewer'</a>.</p
 target="_blank"> requested information</a> for the specified set of query objects, 
           which can be either plate(s), clone IDs, user reference sequence IDs, 
           assembled clone sequence IDs (clone sequence IDs can be extracted from 
-          General Report or Detaile Decision Tool report files). To run general 
-          report choose <em>'Reports &gt; General Report'</em> and fill the query 
-          form. There is no limit on the number of query objects that can be processed 
-          .</li>
-        <li>The <strong>'Trace File Quality' </strong>report allows to examine 
+          General Report or Detailed Decision Tool report files). To run general 
+          report choose <em>'Reports &gt; General Report'</em> and fill in the 
+          query form. There is no limit on the number of query objects that can 
+          be processed.</li>
+        <li>The <strong>'Trace File Quality' </strong>report allows users to examine 
           quality of existing trace files, and can be accessed at <em>'Reports 
           &gt; Trace Files Quality Report'</em>. Either plate labels or clone 
-          IDs can be provide, and for each clone trace file ACE extracts Phred 
+          IDs can be provided, and for each clone trace file ACE extracts Phred 
           confidence base scores and determines whether a read meets minimum quality 
           requirements: (a) the read must be longer than the user-defined minimum 
           length; (b) the average confidence score for all non-ambiguous bases 
@@ -517,7 +520,7 @@ target="_blank"> requested information</a> for the specified set of query object
           Stretch collection is stored in ACE after Gap Mapper or Low Confidence 
           Regions Finder was run for a particular clone. ACE extracts only the 
           most recent stretch collection defined for a clone to be used in primer 
-          design based on stretch collections 
+          design based on stretch collections. 
           <p>Primer Designer can be run in try mode, in this case information 
             about designed primers is only sent to user in <a href="reports/primer_design.htm" target="_blank">tab 
             delimited text file</a>, however, no information is stored in database.<br>
