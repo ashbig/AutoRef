@@ -406,20 +406,18 @@ href="help_TraceFilesNamingFormats.html" target="_blank">trace files' naming for
 href="image/image_Fig4.htm" target="_blank">'comprehensive plate viewer'</a>.</p>
       <p><a name="mapper"><strong>Gap Mapper</strong></a> </p>
       <p>User may run 'Gap Mapper' to determine gaps in clone coverage (see<a href="help_ACE_overview.htm#mapper" target="_blank"> 
-        ACE overview </a> for details). </p>
-      <p>To operate 'Gap Mapper' use '<em>Process &gt; Evaluate Clones &gt; Run 
-        Gap Mapper</em>', enter clone IDs and select <a href="#assembler">sequence 
-        assembly parameters</a>. Sequence assembly These parameters should set 
-        because Gap Mapper invokes sequence assembler as first step of processing 
-        (consult <a href="help_ACE_overview.htm#mapper" target="_blank"> ACE overview)</a>. 
-        User can instruct ACE to calculate low confidence regions (LCR) of assembled 
-        contigs by '<em>Run LQR Finder on contig sequences</em>' option. LCR and 
-        gaps defined by Gap Mapper will become tagets for primer(s) design to 
-        finish clone sequencing. Gap Mapper can be run in the &quot;try mode&quot;; 
-        in this case the information about gaps ans LCRs is emailed to the user 
-        as <a href="reports/gap_mapper_report.html" target="_blank">tab delimited 
-        text file</a>, but is not stored in database and; hence, cannot be used 
-        later for primer(s) design. </p>
+        ACE overview </a> for details). 
+      <br>To operate 'Gap Mapper' use '<em>Process &gt; Evaluate Clones &gt; Run 
+        Gap Mapper</em>', enter clone IDs and specify <a href="#assembler">sequence 
+        assembly parameters</a>. These parameters should be set because Gap Mapper 
+        invokes sequence assembler as first step of processing (consult <a href="help_ACE_overview.htm#mapper" target="_blank"> 
+        ACE overview)</a>. User can instruct ACE to calculate low confidence regions 
+        (LCR) of assembled contigs by selecting '<em>Run LQR Finder on contig 
+        sequences</em>' option. Gap Mapper can be run in &quot;try mode&quot;; 
+        in this case the information about gaps and LCRs is only emailed to the 
+        user as a <a href="reports/gap_mapper_report.html" target="_blank">tab 
+        delimited text file</a>, but not stored in database and cannot be used 
+        later for region specific primer(s) design. </p>
       <p>&nbsp; </p>
       <p><a name="lqr" ><strong>Low Confidence Region Finder</strong></a></p>
       <p>If an assembled clone sequence has low confidence discrepancies (<a href="help_generalhelp.jsp#discrepancy">Discrepancy 
@@ -533,7 +531,7 @@ target="_blank"> requested information</a> for the specified set of query object
           specify clone IDs and select the kind of primers (designed for reference 
           sequence or for stretch collection) that </li>
         should be displayed for approval. User can approve primers designed under 
-        both options for any clone for primer synthesis</li> 
+        both options for any clone for primer synthesis</li>. 
         <li>To <strong>create a primer order</strong> use <em>'Process &gt; Internal 
           Primer Design and Order &gt; Order Internal Primers'</em>, specify clone 
           IDs and choose type of approved primers that should be included in the 
@@ -546,7 +544,7 @@ target="_blank"> requested information</a> for the specified set of query object
           a plate, preserving empty wells for controls if desired. ACE supports 
           multipal output formats to create an order file compatible with vendor 
           order sheets (<a href="reports/sample1_order_oligo.html" target="_blank">sample_order_file1</a>, 
-          <a href="reports/sample2_order_oligo.html" target="_blank">sample_order_file_2</a>)</li>
+          <a href="reports/sample2_order_oligo.html" target="_blank">sample_order_file_2</a>).</li>
         <li>To store <strong>information</strong> regarding <strong>primer plate</strong> 
           orders or usage select '<em>Process &gt; Internal Primer Design and 
           Order &gt; Track Oligo Plate</em>', choose plate status and enter comments 
@@ -555,10 +553,9 @@ target="_blank"> requested information</a> for the specified set of query object
         </li>
       </ul>
       <h3><a name="view_data">Real time views</a></h3>
-	  Two different view optiona are available. While under <em>'View'</em> more 
-      general, plate, clone, or project oriented data provided, the outcome of 
-      specific processes visually accessible under '<em>Process &gt; View Process 
-      Results</em>'. 
+	  Two different view options are available. Under <em>'View'</em> more general, 
+      plate, clone, or project oriented data are provided and the outcome of specific 
+      processes visually accessible under '<em>Process &gt; View Process Results</em>'. 
       <ul>
         <li><strong><a
 href="image/image_Fig4.htm" target="_blank">Comprehensive plate viewer</a></strong> 
@@ -616,7 +613,7 @@ href="screen_shots/report_ordered_primers.html">Sample report</a>.</li>
         <li> To view <strong>all contig collections</strong> created by Gap Mapper 
           for a clone select '<em>Process &gt; View Process Results &gt; View 
           all contig collections </em>'. Multiple contig collections are created 
-          when Gap Mapper is launched several times with different specification 
+          when Gap Mapper is launched several times with a different specification 
           or with additional trace files.</li>
         <li> To view <strong>only the last contig collection </strong>designed 
           for the clone by Gap Mapper select <em>Process &gt; View Process Results 
