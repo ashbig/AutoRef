@@ -11,14 +11,14 @@
 <table border=0 width="90%" align='center'>
   <Tr>
     <td> <h3> <strong>ACE Overview</strong></h3>
-      <p><strong>Automated Clone Evaluation (ACE) </strong>system is a comprehensive, 
+      <p><strong>Automated Clone Evaluation (ACE) </strong> is a comprehensive, 
         multi-platform and multi-user, web-based sequence verification software 
         suite especially suited for protein expression clones. It automates all 
         steps of the sequence verification process: sequence contig assembly, 
-        identification and annotation of differences between the clone and reference 
+        identification and annotation of differences between the clone and a reference 
         sequence, gap mapping, primer design, polymorphism detection, and assignment 
         of final clone quality based on user defined criteria. ACE utilizes well-established 
-        algorithms and third-party programs(Phred/Phrap, BLAST, <em>needle</em>, 
+        algorithms and third-party programs (Phred/Phrap, BLAST, <em>needle</em>, 
         Primer3) to perform specific tasks. It provides an integrated environment 
         that relieves the user from routine process management tasks, such as 
         bookkeeping of all project- and clone-related information, re-entering 
@@ -37,12 +37,12 @@
         CDS the clone contig(s) is analyzed to detect differences or &#8220;discrepancies&#8221; 
         compared with the reference/target sequence (<strong><em>Discrepancy Finder</em></strong>). 
         ACE can compare any discrepancy with one or more sequence database such 
-        as GenBank, to determine if they correspond to anaturally occurring polymorphism 
+        as GenBank, to determine if they correspond to a naturally occurring polymorphism 
         (<strong><em>Polymorphism Finder</em></strong>). During the final decision 
         process, users can optionally configure the software to avoid penalizing 
         clones for discrepancies that represent polymorphisms (<em>see <strong> 
         Decision Tool</strong></em>). <br>
-        Clones that failed to assemble into a single contig covering the CDS can 
+        Clones that fail to assemble into a single contig covering the CDS can 
         be processed to find the remaining gaps in sequence coverage (<em><strong>Gap 
         Mapper</strong></em>). In addition, clones with discrepancies based on 
         low confidence sequence can be processed to delineate these low confidence 
@@ -102,7 +102,7 @@
         of trace file name from sequencing facility name to ACE format</a>). Detailled 
         descriptions of how to create a new Trace File Format can be found <a href="help_TraceFilesNamingFormats.html" target="_blank"> 
         here.</a></p>
-      <p><strong><em><a name="end_read_pr">End Read Processo.</a></em></strong> 
+      <p><strong><em><a name="end_read_pr">End Read Processor</a></em></strong> 
         End reads are treated differently from internal reads because some users 
         employ them to select the best candidate from multiple isolates of the 
         same target. We have found that poor quality end reads will lead to the 
@@ -139,7 +139,7 @@
         In addition to vector trimming, ACE enables quality trimming of independent 
         sequencing reads during the assembly. When prompted, ACE trims all reads 
         prior to assembly by removing bases prior to base 50 and after base 900 
-        (user-adjustable values). Furthermore reads with a low average confidence 
+        (user-adjustable values). Furthermore, reads with a low average confidence 
         score or below a minimum length can be completely excluded from assembly. 
       </p>
       <p><em><strong><a name="primer">Internal Primer Management</a></strong></em> 
@@ -216,8 +216,8 @@
         the same gene. Special care should be taken when comparing isolates with 
         full coverage of the reference sequence and with isolates having partial 
         coverage - shorter contigs might have smaller absolute number of discrepancies 
-        but poorer quality. Using average number of discrepancies per base is 
-        also not adequate, since averages become unreliable as the length of the 
+        but poorer quality. Using an average number of discrepancies per base 
+        is also not adequate, since averages become unreliable as the length of 
         coverage decreases. Instead we have chosen to augment discrepancy counts 
         for each partial coverage contig by pseudo-counts based on the length 
         of the uncovered sequence and the average frequency of discrepancies across 

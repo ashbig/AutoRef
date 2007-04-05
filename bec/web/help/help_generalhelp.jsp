@@ -53,9 +53,9 @@ cellspacing="2" align="center">
         tutorial on the actual GUI or main window making the instructions far 
         easier to comprehend. If the ACE application has not been referred for 
         an extended period of time it will time out and need to be logged into 
-        again; you will get an 'expired message' when this happened.</p>
+        again; you will get an 'expired message' when this happens.</p>
       <p class="MsoNormal"><strong><em>Note: </em></strong>ACE GUI consists of 
-        a main window and aleft hand drop-down menu. The main window displays 
+        a main window and a left hand drop-down menu. The main window displays 
         forms according to user selection from the left-hand menu. Throughout 
         this tutorial a notation like 'Process &gt; Read Manipulation' means that 
         user should select the 'Process' menu and select 'Read manipulation' item 
@@ -111,7 +111,7 @@ cellspacing="2" align="center">
           gene symbol, SGD etc.</li>
         <li>To introduce <strong>new vector</strong> definitions into ACE select 
           '<em>Cloning Project Settings &gt; Vector Information</em>' and submit 
-          an <a href="help_vector_xml_format.xml"
+          an <a href="help_vector_xml_format.pdf"
 target="_blank">XML file</a> with vector description(s) (several vectors can be 
           submitted from one XML file). Each vector is described by its name, 
           source, type (1 for destination vector, 0 for master vector), filename, 
@@ -299,7 +299,7 @@ href="help_TraceFilesNamingFormats.html" target="_blank">trace files' naming for
         <li><a href="#polym">Polymorphism Finder</a></li>
         <li><a href="#isolate">Isolate Ranker </a> </li>
         <li><a href="#mapper">Gap Mapper</a></li>
-        <li><a href="#lqr">Low Confidence Regions Finder</a></li>
+        <li><a href="#lqr">Low Confidence Region Finder</a></li>
         <li><a href="#finish">Finished Clones</a></li>
       </ul>
       <p><a name="end_read_pr"><strong>End Read Processing</strong></a> </p>
@@ -327,8 +327,8 @@ href="help_TraceFilesNamingFormats.html" target="_blank">trace files' naming for
           End Reads</em></em>' and specify plate name(s). ACE distributes all 
           'inactive' and internal reads trace files into appropriate directories 
           ('inactive' traces correspond to empty wells and controls). End read 
-          trace files for the requested plate(s) that <a href="help_ACE_overview.htm#end_read_pr" target="_blank">pass 
-          the quality check</a> get distributed into corresponding clone directories 
+          trace files for the requested plate(s) that pass 
+          the quality check get distributed into corresponding clone directories 
           and their data get submitted into ACE database. ACE sends the user an 
           e-mail with attached report listing all traces that did not pass quality 
           check. This report can be used to upload low quality end reads as 'internal' 
@@ -354,8 +354,9 @@ href="help_TraceFilesNamingFormats.html" target="_blank">trace files' naming for
       <p>In both cases the user is asked to:</p>
       <ul>
         <li>select library for vector trimming (see '<a href="help_ACE_overview.htm#assembler" target="_blank">ACE 
-          overview</a>' for description of vector trimming and <a href="help_ACEConfigurationFile.html">ACE 
-          configuration file</a> for vector libraries setup); </li>
+          overview, Assembly Wrapper</a>' for description of vector trimming and 
+          <a href="help_ACEConfigurationFile.html">ACE configuration file</a> 
+          for vector libraries setup); </li>
         <li>determine how low quality reads should be treated; </li>
         <li> set parameters for the quality trimming of independent sequencing 
           reads during the assembly. </li>
@@ -402,14 +403,14 @@ href="help_TraceFilesNamingFormats.html" target="_blank">trace files' naming for
         reads, the collection of contigs and gaps defined by Gap Mapper and several 
         clone sequences assembled under different conditions (see Assembler description 
         for details) isolate will be ranked based on LAST assembled sequence. 
-        The result is shown in <a
-href="image/image_Fig4.htm" target="_blank">'comprehensive plate viewer'</a>.</p>
+        The result is shown in '<a
+href="image/image_Fig4.htm" target="_blank">Plate viewer and sample reports'</a>.</p>
       <p><a name="mapper"><strong>Gap Mapper</strong></a> </p>
       <p>User may run 'Gap Mapper' to determine gaps in clone coverage (see<a href="help_ACE_overview.htm#mapper" target="_blank"> 
         ACE overview </a> for details). 
       <br>To operate 'Gap Mapper' use '<em>Process &gt; Evaluate Clones &gt; Run 
         Gap Mapper</em>', enter clone IDs and specify <a href="#assembler">sequence 
-        assembly parameters</a>. These parameters should be set because Gap Mapper 
+        assembly</a> parameters. These parameters should be set because Gap Mapper 
         invokes sequence assembler as first step of processing (consult <a href="help_ACE_overview.htm#mapper" target="_blank"> 
         ACE overview)</a>. User can instruct ACE to calculate low confidence regions 
         (LCR) of assembled contigs by selecting '<em>Run LQR Finder on contig 
@@ -557,9 +558,9 @@ target="_blank"> requested information</a> for the specified set of query object
       plate, clone, or project oriented data are provided and the outcome of specific 
       processes visually accessible under '<em>Process &gt; View Process Results</em>'. 
       <ul>
-        <li><strong><a
-href="image/image_Fig4.htm" target="_blank">Comprehensive plate viewer</a></strong> 
-          gives access to complete information about a plate. Select '<em>View 
+        <li>'<a
+href="image/image_Fig4.htm" target="_blank"><strong>Plate viewer and sample reports</strong></a>' 
+          view gives access to complete information about a plate. Select '<em>View 
           &gt; Plate Results</em>', enter plate label (case insensitive), check 
           'Show Isolate Ranker Output' option. </li>
         <li>To view<strong> plate history</strong> select '<em>View &gt; Plate 

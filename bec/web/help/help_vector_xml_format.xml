@@ -47,12 +47,7 @@
 				  <feature-description>  SacB</feature-description> 
 				  <feature-type>0</feature-type>
 				  </vector-feature>
-	  <vector-feature>
-		  <feature-name>sequencing priming site</feature-name> 
-		  <feature-description>  M13 Forward </feature-description> 
-		  <feature-type>0</feature-type>
-	   
-	    </vector-feature>
+	  
 
   </vector>
   </vector-info>
