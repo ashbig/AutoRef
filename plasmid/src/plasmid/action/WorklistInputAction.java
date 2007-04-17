@@ -195,6 +195,9 @@ public class WorklistInputAction extends InternalUserAction{
             generator.printFullWorklist(Constants.WORKLIST_FILE_PATH+worklistname, ftp);
             generator.printWorklist(Constants.USER_WORKLIST_FILE_PATH+fileWorklist, ftp);
             generator.printWorklistForRobot(Constants.USER_WORKLIST_FILE_PATH+fileWorklistRobot, volumn, volumn, true, ftp);
+            
+            File localFileWorklist = ftp.download(Constants.USER_WORKLIST_FILE_PATH+fileWorklist);
+            File localFileWorklistRobot = ftp.download(Constants.USER_WORKLIST_FILE_PATH+fileWorklistRobot);
             SftpHandler.disconnectSftp(ftp);
             
             List filenames = new ArrayList();
@@ -216,8 +219,10 @@ public class WorklistInputAction extends InternalUserAction{
             String to = user.getEmail();
             String subject = "Worklist";
             String text = "The attached files are your worklists.";
-            fileCol.add(new File(Constants.USER_WORKLIST_FILE_PATH+fileWorklist));
-            fileCol.add(new File(Constants.USER_WORKLIST_FILE_PATH+fileWorklistRobot));
+            //fileCol.add(new File(Constants.USER_WORKLIST_FILE_PATH+fileWorklist));
+            //fileCol.add(new File(Constants.USER_WORKLIST_FILE_PATH+fileWorklistRobot));
+            fileCol.add(localFileWorklist);
+            fileCol.add(localFileWorklistRobot);
             Mailer.sendMessage(to,Constants.EMAIL_FROM,null,subject,text,fileCol);
             
             if(b) {
