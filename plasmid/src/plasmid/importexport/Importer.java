@@ -72,7 +72,11 @@ public class Importer {
     //public static final String filepath = "G:\\plasmid\\Yeast_2006_12\\";
     //public static final String filepath = "G:\\plasmid\\BA2_2007_02\\";
     //public static final String filepath = "G:\\plasmid\\Velkov_2007_01\\";
-    public static final String filepath = "G:\\plasmid\\ORFome_2007_02\\";
+    //public static final String filepath = "G:\\plasmid\\ORFome_2007_02\\";
+    //public static final String filepath = "G:\\plasmid\\YP_plate_200704\\";
+    //public static final String filepath = "G:\\plasmid\\Kinase_200704\\";
+    //public static final String filepath = "G:\\plasmid\\plate_outside_200704\\";
+    public static final String filepath = "G:\\plasmid\\Outside_200704\\";
    
     private List tables;
     private String error;
@@ -207,6 +211,10 @@ public class Importer {
                 if(table.getTableName().trim().equalsIgnoreCase(ImportTable.CLONEINSERT)) {
                     System.out.println("Importing CLONEINSERT.");
                     iimp.importCloneInsert(table, cimp.getIdmap(), rimp.getIdmap(), rimp.getMaxseqid());
+                }
+                if(table.getTableName().trim().equalsIgnoreCase(ImportTable.CLONEINSERTONLY)) {
+                    System.out.println("Importing CLONEINSERTONLY.");
+                    cimp.importCloneInsert(table);
                 }
                 if(table.getTableName().trim().equalsIgnoreCase(ImportTable.REFSEQ)) {
                     System.out.println("Importing REFSEQ.");

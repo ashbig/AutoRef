@@ -196,11 +196,12 @@ public class ContainerProcessManager {
         return false;
     }
     
-    public Map readTubeMappingFile(String filename) {
+    public Map readTubeMappingFile(String filename, Sftp ftp) {
         BufferedReader in = null;
         Map mapping = new HashMap();
         try {
-            in = new BufferedReader(new FileReader(filename));
+            //in = new BufferedReader(new FileReader(filename));
+            in = new BufferedReader(new InputStreamReader(ftp.getInputStream(filename, 0)));
             String line = in.readLine();
             int i=0;
             int j=1;
@@ -545,8 +546,7 @@ public class ContainerProcessManager {
                 WorklistGenerator generator = new WorklistGenerator(worklist);
                 generator.printFullWorklist(filepath+"full_worklist.txt", ftp);
                 generator.printWorklist(filepath+"worklist.txt", ftp);
-                generator.readWorklist(filepath+"full_worklist.txt");
-                SftpHandler.disconnectSftp(ftp);
+                generator.readWorklist(filepath+"full_worklist.txt", ftp);
                 
                 ContainerMapper mapper = new ContainerMapper(generator.getWorklist());
                 List destContainers = mapper.mapContainer();
@@ -555,7 +555,7 @@ public class ContainerProcessManager {
                 List tubes = new ArrayList();
                 for(int i=0; i<destContainers.size(); i++) {
                     Container c = (Container)destContainers.get(i);
-                    Map m = manager.readTubeMappingFile(TUBEMAPFILEPATH+c.getLabel());
+                    Map m = manager.readTubeMappingFile(TUBEMAPFILEPATH+c.getLabel(), ftp);
                     
                     List l = mapper.convertToTubes(c, m, true);
                     for(int n=0; n<l.size(); n++) {
@@ -564,6 +564,7 @@ public class ContainerProcessManager {
                         samples.addAll(c1.getSamples());
                     }
                 }
+                SftpHandler.disconnectSftp(ftp);
                 manager.setContainerids(tubes);
                 manager.setSampleids(samples);
                 

@@ -43,6 +43,7 @@ public class ImportTable {
     public static final String CLONEPROPERTY = "Clone Property";
     public static final String INSERTPROPERTY = "Insert Property";
     public static final String CLONECOLLECTION = "Clone Collection";
+    public static final String CLONEINSERTONLY = "Clone Insert Only";
     
     private String tableName;
     private ArrayList columnNames;

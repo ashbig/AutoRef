@@ -82,12 +82,13 @@ public class WorklistInputAction extends InternalUserAction{
         try {
             List newSrcLabels = null;
             List mapList = new ArrayList();
+            Sftp ftp = SftpHandler.getSftpConnection();
             if(b) {
                 newSrcLabels = srcLabels;
                 srcLabels = new ArrayList();
                 for(int i=0; i<newSrcLabels.size(); i++) {
                     String label = (String)newSrcLabels.get(i);
-                    Map m = manager.readTubeMappingFile(ContainerProcessManager.TUBEMAPFILEPATH+label+".trx");
+                    Map m = manager.readTubeMappingFile(ContainerProcessManager.TUBEMAPFILEPATH+label+".trx", ftp);
                     
                     if(m == null) {
                         throw new Exception("Cannot read tube mapping file for container: "+label);
@@ -191,13 +192,12 @@ public class WorklistInputAction extends InternalUserAction{
             String worklistname = Constants.FULLWORKLIST+"_"+worklistid+".txt";
             List worklist = calculator.calculateMapping();
             WorklistGenerator generator = new WorklistGenerator(worklist, isPrintEmpty);
-            Sftp ftp = SftpHandler.getSftpConnection();
             generator.printFullWorklist(Constants.WORKLIST_FILE_PATH+worklistname, ftp);
             generator.printWorklist(Constants.USER_WORKLIST_FILE_PATH+fileWorklist, ftp);
             generator.printWorklistForRobot(Constants.USER_WORKLIST_FILE_PATH+fileWorklistRobot, volumn, volumn, true, ftp);
             
-            File localFileWorklist = ftp.download(Constants.USER_WORKLIST_FILE_PATH+fileWorklist);
-            File localFileWorklistRobot = ftp.download(Constants.USER_WORKLIST_FILE_PATH+fileWorklistRobot);
+            File localFileWorklist = ftp.download("/tmp/"+fileWorklist, Constants.USER_WORKLIST_FILE_PATH+fileWorklist);
+            File localFileWorklistRobot = ftp.download("/tmp/"+fileWorklistRobot, Constants.USER_WORKLIST_FILE_PATH+fileWorklistRobot);
             SftpHandler.disconnectSftp(ftp);
             
             List filenames = new ArrayList();

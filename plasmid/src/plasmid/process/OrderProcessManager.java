@@ -17,6 +17,7 @@ import plasmid.util.*;
 import plasmid.database.*;
 import plasmid.Constants;
 import plasmid.database.DatabaseManager.*;
+import com.jscape.inet.sftp.Sftp;
 
 /**
  *
@@ -930,11 +931,12 @@ public class OrderProcessManager {
         }
     }
     
-    public void printBioTracyWorklist(List clones, String path, String filename, String isBatch) throws Exception {
+    public void printBioTracyWorklist(List clones, String path, String filename, String isBatch, Sftp ftp) throws Exception {
         if(clones == null || filename == null)
             return;
         
-        OutputStreamWriter f = new FileWriter(path+filename);
+        //OutputStreamWriter f = new FileWriter(path+filename);
+        OutputStreamWriter f = new OutputStreamWriter(ftp.getOutputStream(path+filename, 0, false));
         f.write(filename+"\n\n\n");
         for(int i=0; i<clones.size(); i++) {
             CloneInfo clone = (CloneInfo)clones.get(i);
@@ -951,11 +953,12 @@ public class OrderProcessManager {
         f.close();
     }
     
-    public void printBioTracySummary(List groups, String filename, String worklistFilenameRoot) throws Exception {
+    public void printBioTracySummary(List groups, String filename, String worklistFilenameRoot, Sftp ftp) throws Exception {
         if(groups == null || filename == null)
             return;
         
-        OutputStreamWriter f = new FileWriter(filename);
+        //OutputStreamWriter f = new FileWriter(filename);
+        OutputStreamWriter f = new OutputStreamWriter(ftp.getOutputStream(filename, 0, false));
         f.write("File Name\tHost Type\tSelection Condition\tGrowth Condition\tComments\n");
         for(int i=0; i<groups.size(); i++) {
             List clones = (List)groups.get(i);

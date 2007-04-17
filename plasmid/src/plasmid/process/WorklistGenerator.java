@@ -165,9 +165,9 @@ public class WorklistGenerator {
         f.close();
     }
     
-    public void readWorklist(String filename) throws Exception {
+    public void readWorklist(String filename, Sftp ftp) throws Exception {
         worklist = new ArrayList();
-        BufferedReader in = new BufferedReader(new FileReader(filename));
+        BufferedReader in = new BufferedReader(new InputStreamReader(ftp.getInputStream(filename, 0)));
         String line;
         while((line = in.readLine()) != null) {
             if(line.trim().length()>0) {

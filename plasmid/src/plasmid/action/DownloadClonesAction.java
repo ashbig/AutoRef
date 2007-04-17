@@ -30,6 +30,8 @@ import plasmid.process.*;
 import plasmid.form.DownloadClonesForm;
 import plasmid.Constants;
 import plasmid.query.coreobject.CloneInfo;
+import plasmid.util.SftpHandler;
+import com.jscape.inet.sftp.*;
 
 /**
  *
@@ -95,14 +97,16 @@ public class DownloadClonesAction extends UserAction {
             String filename = "order"+orderid+"_"+formatter.format(today);
             List files = new ArrayList();
             try {
+                Sftp ftp = SftpHandler.getSftpConnection();
                 for(int i=0; i<groups.size(); i++) {
                     List group = (List)groups.get(i);
                     String worklistfilename = filename+"_"+(i+1)+".txt";
-                    manager.printBioTracyWorklist(group, Constants.BIOTRACY_WORKLIST_PATH, worklistfilename, isBatch);
+                    manager.printBioTracyWorklist(group, Constants.BIOTRACY_WORKLIST_PATH, worklistfilename, isBatch, ftp);
                     files.add(worklistfilename);
                 }
                 String summaryfilename = filename+"_summary.xls";
-                manager.printBioTracySummary(groups, Constants.BIOTRACY_WORKLIST_PATH+summaryfilename, filename);
+                manager.printBioTracySummary(groups, Constants.BIOTRACY_WORKLIST_PATH+summaryfilename, filename, ftp);
+                SftpHandler.disconnectSftp(ftp);
                 files.add(summaryfilename);
             } catch (Exception ex) {
                 if(Constants.DEBUG) {

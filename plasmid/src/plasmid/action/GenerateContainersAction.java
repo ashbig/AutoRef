@@ -29,6 +29,8 @@ import plasmid.coreobject.*;
 import plasmid.util.Mailer;
 import plasmid.database.DatabaseManager.ProcessManager;
 import plasmid.coreobject.Process;
+import plasmid.util.SftpHandler;
+import com.jscape.inet.sftp.*;
 
 /**
  *
@@ -66,9 +68,11 @@ public class GenerateContainersAction extends Action {
             if(info == null) {
                 throw new Exception("Cannot get data from WORKLISTINFO with worklistid: "+worklistid);
             }
+            
+            Sftp ftp = SftpHandler.getSftpConnection();
             String filename = info.getWorklistname();
             WorklistGenerator generator = new WorklistGenerator();
-            generator.readWorklist(Constants.WORKLIST_FILE_PATH+filename);
+            generator.readWorklist(Constants.WORKLIST_FILE_PATH+filename, ftp);
             
             Set destContainerLabels = generator.getDestContainerLabels();
             List dContainers = manager.getContainers(new ArrayList(destContainerLabels), false);
@@ -94,7 +98,7 @@ public class GenerateContainersAction extends Action {
               
                 if(Container.MICRONIC96TUBEMP16.equals(c.getType())) {
                     String label = c.getLabel();
-                    Map m = manager.readTubeMappingFile(ContainerProcessManager.TUBEMAPFILEPATH+label+".trx");
+                    Map m = manager.readTubeMappingFile(ContainerProcessManager.TUBEMAPFILEPATH+label+".trx", ftp);
                     
                     if(m == null) {
                         throw new Exception("Cannot read tube mapping file for container: "+label);
@@ -112,6 +116,8 @@ public class GenerateContainersAction extends Action {
                     samples.addAll(c.getSamples());
                 }
             }
+            SftpHandler.disconnectSftp(ftp);
+            
             manager.setContainerids(tubes);
             destContainers = new ArrayList();
             destContainers.addAll(newDestContainers);

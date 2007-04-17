@@ -451,4 +451,31 @@ public class CloneImporter {
             throw new Exception("Error occured while inserting into CLONECOLLECTION table");
         }
     }
+    
+    public void importCloneInsert(ImportTable table) throws Exception {
+        List cs = new ArrayList();
+        List columns = table.getColumnNames();
+        List contents = table.getColumnInfo();
+        for(int n=0; n<contents.size(); n++) {
+            DnaInsert insert = new DnaInsert();
+            List row = (List)contents.get(n);
+            for(int i=0; i<columns.size(); i++) {
+                String columnName = (String)columns.get(i);
+                String columnInfo = (String)row.get(i);
+                //System.out.println(columnName);
+                //System.out.println(columnInfo);
+                if("cloneid".equalsIgnoreCase(columnName)) {
+                    insert.setCloneid(((Integer)idmap.get(columnInfo)).intValue());
+                }
+                if("insertid".equalsIgnoreCase(columnName)) {
+                    insert.setInsertid(Integer.parseInt(columnInfo));
+                }
+            }
+            cs.add(insert);
+        }
+        
+        if(!manager.insertCloneInsertsWithoutInsertInfo(cs)) {
+            throw new Exception("Error occured while inserting into CLONECOLLECTION table");
+        }
+    }
 }
