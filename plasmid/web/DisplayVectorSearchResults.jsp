@@ -91,6 +91,7 @@
     <td>&nbsp;</td>
     <td>&nbsp;</td>
     <td>&nbsp;</td>
+    <td>&nbsp;</td>
     </logic:equal>
 
     <logic:notEqual name="clone" property="type" value="<%=Clone.NOINSERT%>">

@@ -314,7 +314,6 @@ public class CollectionManager extends TableManager {
         restrictedCollections.add(CollectionInfo.BA_221);
         restrictedCollections.add(CollectionInfo.FT_EXP);
         restrictedCollections.add(CollectionInfo.FT_EXP1);
-        restrictedCollections.add(CollectionInfo.PA_201);
         restrictedCollections.add(CollectionInfo.VC_EXP2);
         restrictedCollections.add(CollectionInfo.YPT_221);
         
