@@ -258,7 +258,7 @@ public class CollectionManager extends TableManager {
         
         return count;
     }
-        
+    
     public List findRestrictedCollections(List collections, List restrictions) {
         String sql = "select restriction from collection where name=?";
         PreparedStatement stmt = null;
@@ -299,5 +299,27 @@ public class CollectionManager extends TableManager {
         }
         
         return restrictedCollections;
+    }
+    
+    public static List findShippingRestrictedCollections(List collections) {
+        List restrictedClones = new ArrayList();
+        restrictedClones.addAll(collections);
+        
+        List restrictedCollections = new ArrayList();
+        restrictedCollections.add(CollectionInfo.FT_221);
+        restrictedCollections.add(CollectionInfo.YP_221);
+        restrictedCollections.add(CollectionInfo.VC_221);
+        restrictedCollections.add(CollectionInfo.VC_EXP);
+        restrictedCollections.add(CollectionInfo.BA_EXP);
+        restrictedCollections.add(CollectionInfo.BA_221);
+        restrictedCollections.add(CollectionInfo.FT_EXP);
+        restrictedCollections.add(CollectionInfo.FT_EXP1);
+        restrictedCollections.add(CollectionInfo.PA_201);
+        restrictedCollections.add(CollectionInfo.VC_EXP2);
+        restrictedCollections.add(CollectionInfo.YPT_221);
+        
+        restrictedClones.retainAll(restrictedCollections);
+        
+        return restrictedClones;
     }
 }

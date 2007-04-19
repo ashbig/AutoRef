@@ -114,10 +114,13 @@ public class OrderProcessManager {
             return new ArrayList();
         
         List cloneids = new ArrayList();
+        List collectionNames = new ArrayList();
         for(int i=0; i<items.size(); i++) {
             ShoppingCartItem s = (ShoppingCartItem)items.get(i);
             if(s.getType().equals(ShoppingCartItem.CLONE)) {
                 cloneids.add(s.getItemid());
+            } else if(s.getType().equals(ShoppingCartItem.COLLECTION)) {
+                collectionNames.add(s.getItemid());
             }
         }
         
@@ -137,6 +140,9 @@ public class OrderProcessManager {
         } finally {
             DatabaseTransaction.closeConnection(conn);
         }
+        
+        List restrictedCollections = CollectionManager.findShippingRestrictedCollections(collectionNames);
+        restrictedClones.addAll(restrictedCollections);
         
         return restrictedClones;
     }

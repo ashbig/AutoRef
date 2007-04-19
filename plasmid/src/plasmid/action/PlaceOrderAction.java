@@ -186,7 +186,7 @@ public class PlaceOrderAction extends UserAction {
             String text = "Thank you for placing a clone request at PlasmID. "+
             "Clones are sent as glycerol stocks (most U.S. orders) "+
             "or as DNA spotted to paper (most overseas orders). "+
-            "The turn-around time is currently about five to seven business days. "+
+            "The turn-around time is currently about five to ten business days. "+
             "Large orders may take additional time.\n";
             text += "\n"+manager.formOrderText(order);
             text += "\n"+"Please sign in at PlasmID to view order status, "+
@@ -196,7 +196,7 @@ public class PlaceOrderAction extends UserAction {
             "Thank you,\n"+
             "The DF/HCC DNA Resource Core\n"+
             "http://dnaseq.med.harvard.edu\n"+
-            "http://plasmid.hms.harvard.edu\n\n"+
+            "http://plasmid.med.harvard.edu/PLASMID/\n\n"+
             "If you have further questions, please contact Stephanie Mohr.\n"+
             "Email:  stephanie_mohr@hms.harvard.edu\n"+
             "Phone: 617-324-4251\n";

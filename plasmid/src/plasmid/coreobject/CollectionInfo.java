@@ -16,6 +16,18 @@ public class CollectionInfo {
     public static final String DISTRIBUTION = "Distribution";
     public static final String DISPLAYPRICE = " upon request";
     
+    public static final String FT_221 = "HIP FLEXGene Francisella tularensis ORF collection (pDONR221 vector)";
+    public static final String YP_221 = "HIP FLEXGene Yersinia pestis ORF collection (pDONR221 vector)";
+    public static final String VC_221 = "HIP FLEXGene Vibrio cholerae ORF collection (pDONR221 vector)";
+    public static final String VC_EXP = "HIP FLEXGene Vibrio cholerae ORF collection (cell-free expression vector)";
+    public static final String BA_EXP = "HIP FLEXGene Bacillus anthracis ORF collection (cell-free expression vector)";
+    public static final String BA_221 = "HIP FLEXGene Bacillus anthracis ORF collection (pDONR221 vector)";
+    public static final String FT_EXP = "HIP FLEXGene Francisella tularensis ORF collection (yeast expression vector with tags)";
+    public static final String FT_EXP1 = "HIP FLEXGene Francisella tularensis ORF collection (E. coli expression vector)";
+    public static final String PA_201 = "HIP FLEXGene Pseudomonas aeruginosa ORF collection (pDONR201 vector)";
+    public static final String VC_EXP2 = "HIP FLEXGene Vibrio cholerae ORF collection (bacterial expression with C-terminal GST tag)";
+    public static final String YPT_221 = "String HIP FLEXGene Yersinia pseudotuberculosis ORF collection (pDONR221 vector)";
+    
     private String name;
     private String description;
     private double price;
@@ -73,7 +85,7 @@ public class CollectionInfo {
     
     public String getDisplayPrice() {
         String s = ""+price;
-        if(price<0) 
+        if(price<0)
             s = DISPLAYPRICE;
         
         return s;
@@ -81,7 +93,7 @@ public class CollectionInfo {
     
     public String getDisplayMemberPrice() {
         String s = ""+memberprice;
-        if(memberprice<0) 
+        if(memberprice<0)
             s = DISPLAYPRICE;
         
         return s;
