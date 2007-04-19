@@ -111,6 +111,7 @@ To request individual clones from the collection, download the Excel file, find 
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=clonetype&displayPage=<bean:write name="displayPage"/>&forward=collection">Clone Type</a></td>
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=geneid&displayPage=<bean:write name="displayPage"/>&forward=collection">Species Specific ID</a></td>
     <td class="tableheader">Gene Symbol</td>
+    <td class="tableheader">Keywords</td>
     <td class="tableheader">Gene Name</td>
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=targetseq&displayPage=<bean:write name="displayPage"/>&forward=collection">Reference Sequence</a></td>
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=insertmutation&displayPage=<bean:write name="displayPage"/>&forward=collection">Mutation</a></td>
@@ -136,6 +137,7 @@ To request individual clones from the collection, download the Excel file, find 
     <td>&nbsp;</td>
     <td>&nbsp;</td>
     <td>&nbsp;</td>
+    <td>&nbsp;</td>
     </logic:equal>
     <logic:notEqual name="clone" property="type" value="<%=Clone.NOINSERT%>">
     <logic:iterate name="clone" property="inserts" id="insert">
@@ -152,6 +154,7 @@ To request individual clones from the collection, download the Excel file, find 
     <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=nucleotide&val=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
     </logic:equal>
     <td><bean:write name="insert" property="name"/></td>
+    <td><bean:write name="insert" property="annotation"/></td>
     <td><bean:write name="insert" property="description"/></td>
     <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=nucleotide&val=<bean:write name="insert" property="targetseqid"/>"><bean:write name="insert" property="targetgenbank"/></a></td>
     <td><bean:write name="insert" property="hasmutation"/></td>

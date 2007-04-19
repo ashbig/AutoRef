@@ -36,6 +36,7 @@
     <td class="tableheader">Clone Type</td>
     <td class="tableheader">Gene ID</td>
     <td class="tableheader">Gene Symbol</td>
+    <td class="tableheader">Keywords</td>
     <td class="tableheader">Gene Name</td>
     <td class="tableheader">Reference Sequence</td>
     <td class="tableheader">Insert Format</td>
@@ -61,12 +62,14 @@
         <logic:iterate name="clone" property="inserts" id="insert">
         <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=gene&cmd=Retrieve&dopt=Graphics&list_uids=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
         <td><bean:write name="insert" property="name"/></td>
+        <td><bean:write name="insert" property="annotation"/></td>
         <td><bean:write name="insert" property="description"/></td>
         <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=nucleotide&val=<bean:write name="insert" property="targetseqid"/>"><bean:write name="insert" property="targetgenbank"/></a></td>
         <td><bean:write name="insert" property="format"/></td>
         </logic:iterate>
     </logic:notEqual>
     <logic:equal name="clone" property="type" value="<%=Clone.NOINSERT%>">
+        <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>

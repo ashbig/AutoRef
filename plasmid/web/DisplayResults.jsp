@@ -119,6 +119,7 @@
     <td>&nbsp;</td>
     <td>&nbsp;</td>
     <td>&nbsp;</td>
+    <td>&nbsp;</td>
     </logic:equal>
 
     <logic:notEqual name="clone" property="type" value="<%=Clone.NOINSERT%>">
@@ -194,6 +195,7 @@
     <td><a target="_blank" href="GetCloneDetail.do?cloneid=<bean:write name="clone" property="cloneid"/>&species=<bean:write name="refseqSearchForm" property="species"/>"><bean:write name="clone" property="name"/></a></td>
     <td><bean:write name="clone" property="type"/></td>
     <logic:equal name="clone" property="type" value="<%=Clone.NOINSERT%>">
+    <td>&nbsp;</td>
     <td>&nbsp;</td>
     <td>&nbsp;</td>
     <td>&nbsp;</td>
