@@ -137,6 +137,8 @@ public class OneToOneContainerMapper implements ContainerMapper {
                     labelPrefix = "BaxXG";
                 } else if(project.getId()==Project.Yersinia_pseudotuberculosis) {
                     labelPrefix = "YpsXG";
+                } else if(project.getId()==Project.ORFEOME_pENTR223) {
+                    labelPrefix = "HsxXG";
                 }
                 newBarcode = labelPrefix+container.getLabel().substring(3);
                 newContainerType = ExpressionCloneContainer.EXPRESSION_CONTAINER_TYPE;
