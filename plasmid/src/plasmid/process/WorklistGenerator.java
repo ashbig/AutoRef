@@ -82,15 +82,15 @@ public class WorklistGenerator {
      */
     
     public void printFullWorklist(String filename, Sftp ftp) throws Exception {
-        convertWorklist();
+        List newWorklist = convertWorklist();
         
-        if(worklist == null || filename == null)
+        if(newWorklist == null || filename == null)
             return;
         
         OutputStreamWriter f = new OutputStreamWriter(ftp.getOutputStream(filename, 0, false));
         //OutputStreamWriter f = new FileWriter(filename);
-        for(int i=0; i<worklist.size(); i++) {
-            SampleLineage w = (SampleLineage)worklist.get(i);
+        for(int i=0; i<newWorklist.size(); i++) {
+            SampleLineage w = (SampleLineage)newWorklist.get(i);
             Sample from = w.getSampleFrom();
             Sample to = w.getSampleTo();
             
@@ -101,15 +101,15 @@ public class WorklistGenerator {
     }
     
     public void printWorklist(String filename, Sftp ftp) throws Exception {
-        convertWorklist();
+        List newWorklist = convertWorklist();
         
-        if(worklist == null || filename == null)
+        if(newWorklist == null || filename == null)
             return;
         
         OutputStreamWriter f = new OutputStreamWriter(ftp.getOutputStream(filename, 0, false));
        // OutputStreamWriter f = new FileWriter(filename);
-        for(int i=0; i<worklist.size(); i++) {
-            SampleLineage w = (SampleLineage)worklist.get(i);
+        for(int i=0; i<newWorklist.size(); i++) {
+            SampleLineage w = (SampleLineage)newWorklist.get(i);
             Sample from = w.getSampleFrom();
             Sample to = w.getSampleTo();
             
@@ -318,6 +318,7 @@ public class WorklistGenerator {
         return ids;
     }
     
-    protected void convertWorklist() {       
+    protected List convertWorklist() {       
+        return worklist;
     }
 }

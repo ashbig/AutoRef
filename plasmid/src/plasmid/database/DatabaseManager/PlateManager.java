@@ -91,7 +91,6 @@ public class PlateManager extends TableManager {
             
             for(int i=0; i<samples.size(); i++) {
                 Sample s = (Sample)samples.get(i);
-                
                 stmt.setInt(1, s.getSampleid());
                 stmt.setString(2, s.getType());
                 stmt.setString(3, s.getStatus());

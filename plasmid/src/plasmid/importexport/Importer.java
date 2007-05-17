@@ -76,7 +76,9 @@ public class Importer {
     //public static final String filepath = "G:\\plasmid\\YP_plate_200704\\";
     //public static final String filepath = "G:\\plasmid\\Kinase_200704\\";
     //public static final String filepath = "G:\\plasmid\\plate_outside_200704\\";
-    public static final String filepath = "G:\\plasmid\\Outside_200704\\";
+    //public static final String filepath = "G:\\plasmid\\Outside_200704\\";
+    //public static final String filepath = "G:\\plasmid\\BC1000_1520_2007_04\\";
+    public static final String filepath = "G:\\plasmid\\Kinase_dead_200603\\plate\\";
    
     private List tables;
     private String error;

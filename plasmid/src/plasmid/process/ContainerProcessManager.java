@@ -341,6 +341,7 @@ public class ContainerProcessManager {
             sl.getSampleTo().setSampleid(s.getSampleid());
             l.add(sl);
         }
+   
         return l;
     }
     
@@ -392,6 +393,9 @@ public class ContainerProcessManager {
             return false;
         }
         
+        for(int i=0; i<updateContainers.size(); i++) {
+            Container c = (Container)updateContainers.get(i);
+        }
         List samples = new ArrayList();
         List containers = new ArrayList();
         if(newContainers != null)

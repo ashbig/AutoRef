@@ -2,6 +2,7 @@
 <%@ page errorPage="ProcessError.do"%>
 <%@ page import="plasmid.coreobject.Process" %> 
 <%@ page import="plasmid.Constants" %> 
+<%@ page import="plasmid.coreobject.Container" %> 
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -31,7 +32,7 @@
 plates is the same as your input order.</p>
 
       <html:form action="MultipleWorklistInput.do">
-
+<input type="hidden" name="processname" value="<bean:write name="generateWorklistForm" property="processname"/>">
 <table width="100%" border="0">
   <tr> 
     <td width="20%" class="formlabel">Process:</td>
@@ -75,12 +76,33 @@ plates is the same as your input order.</p>
     </td>
   </tr>
   <tr> 
+    <td colspan="3" class="formlabel"><html:checkbox property="isBiobank">Check here if you need BioBank copy</html:checkbox></td>
+  </tr>
+  <tr> 
     <td width="20%" height="98" valign="top" class="formlabel">BioBank copies:</td>
     <td height="98" valign="top" class="itemtext">
         <html:textarea styleClass="itemtext" property="destContainerListBiobank" rows="5"/>
     </td>
     <td height="98" valign="top" class="formlabel">
         <html:text property="volumnBiobank" styleClass="itemtext" size="30"/>Volumn (in microliter)
+    </td>
+  </tr>
+  <tr> 
+    <td width="20%" height="98" valign="top" class="formlabel">Reservoir for glycerol stock:</td>
+    <td height="98" valign="top" class="itemtext">
+        <html:select property="glyceroltype" styleClass="itemtext">
+          <html:option value="<%=Container.COSTAR_FLT%>"><%=Container.COSTAR_FLT%></html:option>
+          <html:option value="<%=Container.COSTAR_RD%>"><%=Container.COSTAR_RD%></html:option>
+          <html:option value="<%=Container.GREINER%>"><%=Container.GREINER%></html:option>
+          <html:option value="<%=Container.PCR_ON_MP16%>"><%=Container.PCR_ON_MP16%></html:option>
+          <html:option value="<%=Container.RESERVOIR_MP16%>"><%=Container.RESERVOIR_MP16%></html:option>
+          <html:option value="<%=Container.RESERVOIR_PYR%>"><%=Container.RESERVOIR_PYR%></html:option>
+          <html:option value="<%=Container.RK_RIPLATE_DW%>"><%=Container.RK_RIPLATE_DW%></html:option>
+          <html:option value="<%=Container.MICRONIC96TUBEMP16%>"><%=Container.MICRONIC96TUBEMP16%></html:option>
+        </html:select>
+    </td>
+    <td height="98" valign="top" class="formlabel">
+        <html:text property="volumnGlycerol" styleClass="itemtext" size="30"/>Volumn (in microliter)
     </td>
   </tr>
   <tr> 

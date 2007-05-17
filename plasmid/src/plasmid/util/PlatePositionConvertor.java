@@ -18,7 +18,7 @@ public class PlatePositionConvertor {
     /** Creates a new instance of PlatePositionConvertor */
     public PlatePositionConvertor() {
     }
-        
+    
     public static int convertWellFromA8_12toInt( String well) throws Exception {
         well.trim();
         int position = -1;
@@ -29,7 +29,7 @@ public class PlatePositionConvertor {
         int first_char_value = 0;
         int second_char_value = 0;
         int row_value = 0;
-       
+        
         if(column>12)
             throw new Exception("Well is not valid.");
         
@@ -43,43 +43,38 @@ public class PlatePositionConvertor {
     
     //convert well nomenculature from A10 to int
     public static String convertWellFromInttoA8_12( int well) throws Exception {
-        if(well>96)
+        return convertWellFromInttoA8_12(well, 8, 12);
+    }
+    
+    public static String convertWellFromInttoA8_12( int well, int rownum, int colnum) throws Exception {
+        if(well>rownum*colnum)
             throw new Exception("Well is not valid.");
         
         String position = null;
         
         int a_value = (int) 'A';
-        int row_value = well % 8;
-        int column = (int) well / 8  +1 ;
-        char rowname = (char) (a_value + row_value - 1);
+        int row_value = (well-1) % rownum;
+        int column = (int) well / rownum  +1 ;
+        char rowname = (char) (a_value + row_value);
         String column_string ="";
         
-        if (row_value == 0 ) {
-            if (column - 1 < 10)
-                return "H" +  "0"+(column -1 );
-            else
-                return "H" +  (column -1);
-        }
-        
-        else {
-            if (column < 10)
-                return "" +  rowname+"0"+column;
-            else
-                return "" +  rowname+column;
-        }               
+        if (column < 10)
+            return "" +  rowname+"0"+column;
+        else
+            return "" +  rowname+column;
     }
     
-    public static void main (String args[]) {
+    public static void main(String args[]) {
         String inputFile = "G:\\plasmid\\plate_outside_200704\\plate.txt";
         String outputFile = "G:\\plasmid\\plate_outside_200704\\plateout.txt";
         String line;
         
         try {
             PrintWriter output = new PrintWriter(new BufferedWriter(new FileWriter(outputFile)));
- 
+            
             BufferedReader in = new BufferedReader((new FileReader(inputFile)));
             
-            while((line = in.readLine()) != null) {     
+            while((line = in.readLine()) != null) {
                 int position = PlatePositionConvertor.convertWellFromA8_12toInt(line);
                 output.println(line+"\t"+position);
             }

@@ -14,6 +14,7 @@ import org.apache.struts.action.ActionMapping;
 
 import java.util.*;
 import plasmid.coreobject.Process;
+import plasmid.coreobject.Container;
 
 /**
  *
@@ -31,9 +32,22 @@ public class GenerateMultipleWorklistForm extends ActionForm {
     private int volumnArchive;
     private int volumnBiobank;
     private String worklistname;
+    private String glyceroltype;
+    private int volumnGlycerol;
+    private boolean isBiobank;
     
     /** Creates a new instance of GenerateWorklistForm */
     public GenerateMultipleWorklistForm() {
+        srcContainerList = null;
+        destContainerListWorking = null;
+        destContainerListArchive = null;
+        destContainerListBiobank = null;
+        volumnWorking = 100;
+        volumnArchive = 100;
+        volumnBiobank = 200;
+        glyceroltype = Container.RESERVOIR_MP16;
+        volumnGlycerol = 300;
+        isBiobank = true;
     }
         
     public String getProcessname() { return processname;}
@@ -47,6 +61,9 @@ public class GenerateMultipleWorklistForm extends ActionForm {
     public int getVolumnArchive() {return volumnArchive;}
     public int getVolumnBiobank() {return volumnBiobank;}
     public String getWorklistname() {return worklistname;}
+    public String getGlyceroltype() {return glyceroltype;}
+    public int getVolumnGlycerol() {return volumnGlycerol;}
+    public boolean getIsBiobank() {return isBiobank;}
     
     public void setProcessname(String s) {this.processname = s;}
     public void setProtocols(List l) {this.protocols = l;}
@@ -59,6 +76,9 @@ public class GenerateMultipleWorklistForm extends ActionForm {
     public void setVolumnArchive(int i) {this.volumnArchive = i;}
     public void setVolumnBiobank(int i) {this.volumnBiobank = i;}
     public void setWorklistname(String s) {this.worklistname = s;}
+    public void setGlyceroltype(String s) {this.glyceroltype = s;}
+    public void setVolumnGlycerol(int i) {this.volumnGlycerol = i;}
+    public void setIsBiobank(boolean b) {this.isBiobank = b;}
     
     /**
      * Reset all properties to their default values.
@@ -71,9 +91,12 @@ public class GenerateMultipleWorklistForm extends ActionForm {
         destContainerListWorking = null;
         destContainerListArchive = null;
         destContainerListBiobank = null;
-        volumnWorking = 3;
-        volumnArchive = 3;
-        volumnBiobank = 3;
+        volumnWorking = 100;
+        volumnArchive = 100;
+        volumnBiobank = 200;
+        glyceroltype = Container.RESERVOIR_MP16;
+        volumnGlycerol = 300;
+        isBiobank = false;
     }  
     
     /**
@@ -96,14 +119,16 @@ public class GenerateMultipleWorklistForm extends ActionForm {
             errors.add("destContainerListWorking", new ActionError("error.container.required"));
         if ((destContainerListArchive == null) || (destContainerListArchive.trim().length() < 1))
             errors.add("destContainerListArchive", new ActionError("error.container.required"));
-        if ((destContainerListBiobank == null) || (destContainerListBiobank.trim().length() < 1))
+        if (isBiobank && ((destContainerListBiobank == null) || (destContainerListBiobank.trim().length() < 1)))
             errors.add("destContainerListBiobank", new ActionError("error.container.required"));
         if (volumnWorking <= 0)
             errors.add("volumnWorking", new ActionError("error.volumn.invalid", (new Integer(volumnWorking)).toString()));
         if (volumnArchive <= 0)
             errors.add("volumnArchive", new ActionError("error.volumn.invalid", (new Integer(volumnArchive)).toString()));
-        if (volumnBiobank <= 0)
+        if (isBiobank && volumnBiobank <= 0)
             errors.add("volumnBiobank", new ActionError("error.volumn.invalid", (new Integer(volumnBiobank)).toString()));
+        if (volumnGlycerol <= 0)
+            errors.add("volumnGlycerol", new ActionError("error.volumn.invalid", (new Integer(volumnGlycerol)).toString()));
             
         return errors;
     }

@@ -116,6 +116,9 @@
     <form-bean      name="generateMultipleWorklistForm"
                     type="plasmid.form.GenerateMultipleWorklistForm"/>
                     
+    <form-bean      name="plate96To384MappingForm"
+                    type="plasmid.form.Plate96To384MappingForm"/>
+                    
  </form-beans>
 
   <!-- ========== Global Forward Definitions ============================== -->
@@ -358,6 +361,15 @@
                name="checkoutForm"
               input="/CheckoutConfirm.jsp">
       <forward  name="success"  path="/ViewOrderDetail.jsp"/>
+    </action>
+    
+    <action    path="/Plate96To384Input"
+               type="plasmid.action.Plate96To384InputAction"
+               name="plate96To384MappingForm"
+              scope="request"
+              input="/Plate96To384Input.jsp"
+              validate="true">
+      <forward  name="success"   path="/Plate96To384Input.jsp"/>
     </action>
     
     <action     path="/PrepareAdvancedSearch"

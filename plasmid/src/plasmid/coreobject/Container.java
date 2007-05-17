@@ -14,6 +14,7 @@ import java.util.*;
  */
 public class Container {
     public static final String PLATE_96 = "96 Well Plate";
+    public static final String PLATE_384 = "384 Well Plate";
     public static final String TUBE = "Tube";
     public static final String TUBE_96 = "Tube 96 Well";
     public static final String COSTAR_FLT = "Costar96flatb on 30mmNest/MP16";
@@ -93,6 +94,8 @@ public class Container {
             return 1;
         if(MICRONIC96TUBEMP16.equals(type))
             return 96;
+        if(PLATE_384.equals(type))
+            return 384;
         return 0;
     }
     

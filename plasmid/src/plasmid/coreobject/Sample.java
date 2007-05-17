@@ -79,7 +79,11 @@ public class Sample {
     public void setContainerType(String s) {this.containerType = s;}
     
     public void setPositions(int p) throws Exception {
-        String st = PlatePositionConvertor.convertWellFromInttoA8_12(p);
+        setPositions(p, 8, 12);
+    }
+    
+    public void setPositions(int p, int rownum, int colnum) throws Exception {
+        String st = PlatePositionConvertor.convertWellFromInttoA8_12(p, rownum, colnum);
         String positionX = st.substring(0, 1);
         String positionY = st.substring(1);
         int y = Integer.parseInt(positionY);

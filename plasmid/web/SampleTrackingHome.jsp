@@ -31,6 +31,7 @@
     <li class="text"><a href="SelectProcess.jsp">Generate Worklist</a>
     <li class="text"><a href="GetResultTypes.do">Enter Results</a>
     <li class="text"><a href="FindClones.jsp">Find Clones</a>
+    <li class="text"><a href="Plate96To384Input.jsp">Generate Condensed Archive Plates</a>
 </ul>
 
     </td>

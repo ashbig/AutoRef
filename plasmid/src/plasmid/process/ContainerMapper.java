@@ -34,7 +34,7 @@ public class ContainerMapper {
     public List mapContainer() throws Exception {
         WorklistGenerator g = new WorklistGenerator(worklist);
         List containers = new ArrayList(g.getDestContainers());
-        
+    
         for(int i=0; i<worklist.size(); i++) {
             SampleLineage sl = (SampleLineage)worklist.get(i);
             Sample to = sl.getSampleTo();
