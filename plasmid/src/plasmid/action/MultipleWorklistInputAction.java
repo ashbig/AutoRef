@@ -57,12 +57,18 @@ public class MultipleWorklistInputAction extends InternalUserAction{
         int volumnWorking = ((GenerateMultipleWorklistForm)form).getVolumnWorking();
         int volumnArchive = ((GenerateMultipleWorklistForm)form).getVolumnArchive();
         int volumnBiobank = ((GenerateMultipleWorklistForm)form).getVolumnBiobank();
+        boolean isBiobank = ((GenerateMultipleWorklistForm)form).getIsBiobank();
         List volums = new ArrayList();
         volums.add(new Integer(volumnWorking));
         volums.add(new Integer(volumnArchive));
-        volums.add(new Integer(volumnBiobank));
-        int dVolum = volumnWorking+volumnArchive+volumnBiobank;
-        
+        int dVolum = volumnWorking+volumnArchive;
+        if(isBiobank) {
+            volums.add(new Integer(volumnBiobank));
+            dVolum += volumnBiobank;
+        }
+        String glyceroltype = ((GenerateMultipleWorklistForm)form).getGlyceroltype();
+        int volumnGlycerol = ((GenerateMultipleWorklistForm)form).getVolumnGlycerol();
+  
         User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
         
         StringConvertor sc = new StringConvertor();
@@ -89,7 +95,7 @@ public class MultipleWorklistInputAction extends InternalUserAction{
             saveErrors(request, errors);
             return (new ActionForward(mapping.getInput()));
         }
-        if(destLabelsBiobank.size()==0) {
+        if(isBiobank && destLabelsBiobank.size()==0) {
             errors.add(ActionErrors.GLOBAL_ERROR,
             new ActionError("error.general", "Destination plate labels (BioBank copy) are invalid."));
             saveErrors(request, errors);
@@ -99,7 +105,9 @@ public class MultipleWorklistInputAction extends InternalUserAction{
         List destLabels = new ArrayList();
         destLabels.add(destLabelsWorking);
         destLabels.add(destLabelsArchive);
-        destLabels.add(destLabelsBiobank);
+        if(isBiobank) {
+            destLabels.add(destLabelsBiobank);
+        }
         
         ContainerProcessManager manager = new ContainerProcessManager();
         
@@ -198,9 +206,16 @@ public class MultipleWorklistInputAction extends InternalUserAction{
             String fileWorklistRobot = Constants.WORKLISTROBOT+"_"+worklistid+".gwl";
             String worklistname = Constants.FULLWORKLIST+"_"+worklistid+".txt";
             MultipleWorklistGenerator generator = new MultipleWorklistGenerator(worklist, false);
+            generator.setGlycerollabel("Glycerol");
+            generator.setGlyceroltype(glyceroltype);
+            generator.setGlycerolvolume(volumnGlycerol);
+            generator.setVolumes(volums);
             generator.printFullWorklist(Constants.WORKLIST_FILE_PATH+worklistname, ftp);
             generator.printWorklist(Constants.USER_WORKLIST_FILE_PATH+fileWorklist, ftp);
-            generator.printWorklistForRobot(Constants.USER_WORKLIST_FILE_PATH+fileWorklistRobot, volums, dVolum, true, ftp);
+            generator.printWorklistForRobot(Constants.USER_WORKLIST_FILE_PATH+fileWorklistRobot, -1, -1, true, ftp);
+            File localFileWorklist = ftp.download("/tmp/"+fileWorklist, Constants.USER_WORKLIST_FILE_PATH+fileWorklist);
+            File localFileWorklistRobot = ftp.download("/tmp/"+fileWorklistRobot, Constants.USER_WORKLIST_FILE_PATH+fileWorklistRobot);
+            SftpHandler.disconnectSftp(ftp);
             
             List filenames = new ArrayList();
             filenames.add(fileWorklist);
@@ -219,8 +234,8 @@ public class MultipleWorklistInputAction extends InternalUserAction{
             String to = user.getEmail();
             String subject = "Worklist";
             String text = "The attached files are your worklists.";
-            fileCol.add(new File(Constants.USER_WORKLIST_FILE_PATH+fileWorklist));
-            fileCol.add(new File(Constants.USER_WORKLIST_FILE_PATH+fileWorklistRobot));
+            fileCol.add(localFileWorklist);
+            fileCol.add(localFileWorklistRobot);
             Mailer.sendMessage(to,Constants.EMAIL_FROM,null,subject,text,fileCol);
             
             request.setAttribute("filenames", filenames);

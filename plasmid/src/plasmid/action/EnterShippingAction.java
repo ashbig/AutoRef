@@ -29,6 +29,7 @@ import plasmid.process.*;
 import plasmid.Constants;
 import plasmid.util.StringConvertor;
 import plasmid.util.Mailer;
+import plasmid.database.DatabaseManager.DefTableManager;
 
 /**
  *
@@ -80,6 +81,10 @@ public class EnterShippingAction extends InternalUserAction {
             errors.add(ActionErrors.GLOBAL_ERROR,
             new ActionError("error.general", "Please enter valid containers."));
             saveErrors(request, errors);
+            
+            List shippingMethods = DefTableManager.getVocabularies("shippingmethod", "method");
+            request.setAttribute("shippingMethods", shippingMethods);
+            
             return (new ActionForward(mapping.getInput()));
         }
         
@@ -134,5 +139,5 @@ public class EnterShippingAction extends InternalUserAction {
         
         ((ProcessShippingForm)form).resetValues();
         return mapping.findForward("success");
-    }   
+    }
 }
