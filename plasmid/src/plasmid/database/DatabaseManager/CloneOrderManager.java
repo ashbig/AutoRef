@@ -40,8 +40,8 @@ public class CloneOrderManager extends TableManager {
         " (orderdate,orderstatus,ponumber,shippingto,billingto,"+
         " shippingaddress,billingaddress,numofclones,numofcollection,"+
         " costforclones,costforcollection,costforshipping,totalprice,userid,orderid,"+
-        " shippingmethod,shippingaccount,trackingnumber,isbatch)"+
-        " values(sysdate,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        " shippingmethod,shippingaccount,trackingnumber,isbatch,comments)"+
+        " values(sysdate,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         
         String sql2 = "insert into orderclones(orderid,cloneid,collectionname,quantity)"+
         " values(?,?,?,?)";
@@ -68,6 +68,7 @@ public class CloneOrderManager extends TableManager {
             stmt.setString(16, order.getShippingaccount());
             stmt.setString(17, order.getTrackingnumber());
             stmt.setString(18, order.getIsBatch());
+            stmt.setString(19, order.getComments());
             DatabaseTransaction.executeUpdate(stmt);
             
             stmt2 = conn.prepareStatement(sql2);
@@ -254,7 +255,7 @@ public class CloneOrderManager extends TableManager {
         " costforcollection,costforshipping,totalprice,c.userid,shippingdate,whoshipped,"+
         " shippingmethod,shippingaccount,trackingnumber,receiveconfirmationdate,"+
         " whoconfirmed,whoreceivedconfirmation,shippedcontainers,u.email,u.piname,"+
-        " u.piemail,u.phone,c.isbatch,u.usergroup"+
+        " u.piemail,u.phone,c.isbatch,u.usergroup,c.comments"+
         " from cloneorder c, userprofile u where c.userid=u.userid and c.orderid="+orderid;
         
         if(user != null) {
@@ -299,6 +300,7 @@ public class CloneOrderManager extends TableManager {
                 String phone = rs.getString(28);
                 String isbatch = rs.getString(29);
                 String usergroup = rs.getString(30);
+                String comments = rs.getString(31);
                 
                 order = new CloneOrder(orderid, date, st, ponumber,shippingto,billingto,shippingaddress,billingaddress, numofclones, numofcollection, costforclones, costforcollection,costforshipping, total, userid);
                 order.setShippingdate(shippingdate);
@@ -315,6 +317,7 @@ public class CloneOrderManager extends TableManager {
                 order.setPiemail(piemail);
                 order.setPhone(phone);
                 order.setUsergroup(usergroup);
+                order.setComments(comments);
                 if(isbatch != null)
                     order.setIsBatch(isbatch);
             }
@@ -340,7 +343,7 @@ public class CloneOrderManager extends TableManager {
         " c.costforcollection,c.costforshipping,c.totalprice,c.userid,u.firstname,u.lastname,"+
         " c.shippingdate, c.whoshipped, c.shippingmethod,c.shippingaccount,c.trackingnumber,"+
         " c.receiveconfirmationdate, c.whoconfirmed,c.whoreceivedconfirmation,u.email,c.shippedcontainers,"+
-        " u.piname, u.piemail, u.phone, c.isbatch"+
+        " u.piname, u.piemail, u.phone, c.isbatch, c.comments"+
         " from cloneorder c, userprofile u where c.userid=u.userid";
         
         if(user != null) {
@@ -400,7 +403,7 @@ public class CloneOrderManager extends TableManager {
                 String piemail = rs.getString(29);
                 String phone = rs.getString(30);
                 String isbatch = rs.getString(31);
-                
+                String comments = rs.getString(32);
                 CloneOrder order = new CloneOrder(orderid, date, st, ponumber,shippingto,billingto,shippingaddress,billingaddress, numofclones, numofcollection, costforclones, costforcollection,costforshipping, total, userid);
                 
                 order.setFirstname(firstname);
@@ -418,6 +421,7 @@ public class CloneOrderManager extends TableManager {
                 order.setPiname(piname);
                 order.setPiemail(piemail);
                 order.setPhone(phone);
+                order.setComments(comments);
                 if(isbatch != null)
                     order.setIsBatch(isbatch);
                 
@@ -442,7 +446,7 @@ public class CloneOrderManager extends TableManager {
         " c.costforcollection,c.costforshipping,c.totalprice,c.userid,u.firstname,u.lastname,"+
         " c.shippingdate, c.whoshipped, c.shippingmethod,c.shippingaccount,c.trackingnumber,"+
         " c.receiveconfirmationdate, c.whoconfirmed,c.whoreceivedconfirmation,u.email,"+
-        " c.shippedcontainers, u.piname, u.piemail, u.phone, c.isbatch"+
+        " c.shippedcontainers, u.piname, u.piemail, u.phone, c.isbatch, c.comments"+
         " from cloneorder c, userprofile u where c.userid=u.userid";
         
         if(orderids != null) {
@@ -519,7 +523,7 @@ public class CloneOrderManager extends TableManager {
                 String piemail = rs.getString(29);
                 String phone = rs.getString(30);
                 String isbatch = rs.getString(31);
-                
+                String comments = rs.getString(32);
                 CloneOrder order = new CloneOrder(orderid, date, st, ponumber,shippingto,billingto,shippingaddress,billingaddress, numofclones, numofcollection, costforclones, costforcollection,costforshipping, total, userid);
                 
                 order.setFirstname(firstname);
@@ -537,6 +541,7 @@ public class CloneOrderManager extends TableManager {
                 order.setPiname(piname);
                 order.setPiemail(piemail);
                 order.setPhone(phone);
+                order.setComments(comments);
                 if(isbatch != null)
                     order.setIsBatch(isbatch);
                 orders.add(order);
@@ -607,7 +612,8 @@ public class CloneOrderManager extends TableManager {
         " trackingnumber=?,"+
         " costforshipping=?,"+
         " totalprice=?,"+
-        " shippedcontainers=?"+
+        " shippedcontainers=?,"+
+        " comments=?"+
         " where orderid=?";
         PreparedStatement stmt = null;
         
@@ -622,7 +628,8 @@ public class CloneOrderManager extends TableManager {
             stmt.setDouble(7, order.getCostforshipping());
             stmt.setDouble(8, order.getPrice());
             stmt.setString(9, order.getShippedContainers());
-            stmt.setInt(10, order.getOrderid());
+            stmt.setString(10, order.getComments());
+            stmt.setInt(11, order.getOrderid());
             DatabaseTransaction.executeUpdate(stmt);
         } catch (Exception ex) {
             handleError(ex, "Cannot update order with shipping for orderid: "+order.getOrderid());

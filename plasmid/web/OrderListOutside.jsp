@@ -47,13 +47,13 @@
     <td class="tableinfo"><bean:write name="order" property="numofclones"/></td>
     <td class="tableinfo"><bean:write name="order" property="numofcollection"/></td>
     <td class="tableinfo"><bean:write name="order" property="totalPriceString"/></td>
-    <logic:equal name="order" property="beforeInprocess" value="-1">
+    <logic:equal name="order" property="beforeCancell" value="-1">
         <html:form action="CancelOrder.do">
         <html:hidden name="order" property="orderid"/>
         <td class="tableinfo"><html:submit styleClass="itemtext" value="<%=Constants.BUTTON_CANCEL_ORDER%>"/></td>
         </html:form>
     </logic:equal>    
-    <logic:notEqual name="order" property="beforeInprocess" value="-1">
+    <logic:notEqual name="order" property="beforeCancell" value="-1">
         <td class="tableinfo">&nbsp;</td>
     </logic:notEqual>
   </tr>

@@ -38,6 +38,7 @@
             <html:option value="<%=CloneOrder.PENDING_MTA%>"/>
             <html:option value="<%=CloneOrder.INPROCESS%>"/>
             <html:option value="<%=CloneOrder.SHIPPED%>"/>
+            <html:option value="<%=CloneOrder.PARTIALLY_SHIPPED%>"/>
             <html:option value="<%=CloneOrder.CANCEL%>"/>
         </html:select>
     </td>
@@ -87,6 +88,12 @@
             </logic:equal>
             <logic:notEqual name="order" property="status" value="<%=CloneOrder.INPROCESS%>">
             <option value="<%=CloneOrder.INPROCESS%>" /><%=CloneOrder.INPROCESS%>
+            </logic:notEqual>
+            <logic:equal name="order" property="status" value="<%=CloneOrder.CANCEL%>">
+            <option value="<%=CloneOrder.CANCEL%>" selected/><%=CloneOrder.CANCEL%>
+            </logic:equal>
+            <logic:notEqual name="order" property="status" value="<%=CloneOrder.CANCEL%>">
+            <option value="<%=CloneOrder.CANCEL%>" /><%=CloneOrder.CANCEL%>
             </logic:notEqual>
         </select>
     </td>

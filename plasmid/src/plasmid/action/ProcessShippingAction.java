@@ -70,12 +70,17 @@ public class ProcessShippingAction  extends InternalUserAction {
         ((ProcessShippingForm)form).setShippingMethod(order.getShippingmethod());
         ((ProcessShippingForm)form).setShippingDate(formatter.format(today));
         ((ProcessShippingForm)form).setWhoShipped(user.getUsername());
-        ((ProcessShippingForm)form).setShippingAccount(order.getShippingaccount());
+        //((ProcessShippingForm)form).setShippingAccount(order.getShippingaccount());
         ((ProcessShippingForm)form).setTrackingNumber(order.getTrackingnumber());
-        ((ProcessShippingForm)form).setShippingCharge(order.getCostforshipping());
+        //((ProcessShippingForm)form).setShippingCharge(order.getCostforshipping());
+        ((ProcessShippingForm)form).setComments(order.getComments());
         
         List shippingMethods = DefTableManager.getVocabularies("shippingmethod", "method");
+        List shippingStatus = new ArrayList();
+        shippingStatus.add(CloneOrder.SHIPPED);
+        shippingStatus.add(CloneOrder.PARTIALLY_SHIPPED);
         request.setAttribute("shippingMethods", shippingMethods);
+        request.setAttribute("allStatus", shippingStatus);
         request.setAttribute(Constants.CLONEORDER, order);
             
         return mapping.findForward("success");

@@ -58,10 +58,12 @@ public class EnterShippingAction extends InternalUserAction {
         String shippingMethod = ((ProcessShippingForm)form).getShippingMethod();
         String shippingDate = ((ProcessShippingForm)form).getShippingDate();
         String whoShipped = ((ProcessShippingForm)form).getWhoShipped();
-        String shippingAccount = ((ProcessShippingForm)form).getShippingAccount();
+       // String shippingAccount = ((ProcessShippingForm)form).getShippingAccount();
         String trackingNumber = ((ProcessShippingForm)form).getTrackingNumber();
-        double shippingCharge = ((ProcessShippingForm)form).getShippingCharge();
-        String labels = ((ProcessShippingForm)form).getContainers();
+      //  double shippingCharge = ((ProcessShippingForm)form).getShippingCharge();
+      //  String labels = ((ProcessShippingForm)form).getContainers();
+        String comments = ((ProcessShippingForm)form).getComments();
+        String status = ((ProcessShippingForm)form).getShippingStatus();
         
         OrderProcessManager manager = new OrderProcessManager();
         CloneOrder order = manager.getCloneOrder(user, orderid);
@@ -74,9 +76,9 @@ public class EnterShippingAction extends InternalUserAction {
         
         request.setAttribute(Constants.CLONEORDER, order);
         
-        StringConvertor sc = new StringConvertor();
-        List labelList = sc.convertFromStringToList(labels, " \n\t");
-        
+       // StringConvertor sc = new StringConvertor();
+       // List labelList = sc.convertFromStringToList(labels, " \n\t");
+        /**
         if(labelList.size()==0) {
             errors.add(ActionErrors.GLOBAL_ERROR,
             new ActionError("error.general", "Please enter valid containers."));
@@ -107,16 +109,17 @@ public class EnterShippingAction extends InternalUserAction {
             saveErrors(request, errors);
             return (new ActionForward(mapping.getInput()));
         }
-        
-        order.setStatus(CloneOrder.SHIPPED);
+        */
+        order.setStatus(status);
         order.setShippingmethod(shippingMethod);
         order.setShippingdate(shippingDate);
         order.setWhoshipped(whoShipped);
-        order.setShippingaccount(shippingAccount);
+        //order.setShippingaccount(shippingAccount);
         order.setTrackingnumber(trackingNumber);
-        order.setCostforshipping(shippingCharge);
-        order.setPrice(order.calculateTotalPrice());
-        order.setShippedContainers(sc.convertFromListToString(labelList));
+        //order.setCostforshipping(shippingCharge);
+        //order.setPrice(order.calculateTotalPrice());
+        //order.setShippedContainers(sc.convertFromListToString(labelList));
+        order.setComments(comments);
         
         if(!manager.updateShipping(order)) {
             errors.add(ActionErrors.GLOBAL_ERROR,

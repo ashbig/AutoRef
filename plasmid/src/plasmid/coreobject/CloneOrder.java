@@ -19,16 +19,18 @@ public class CloneOrder {
     public static final String PENDING_MTA = "Pending MTA";
     public static final String INPROCESS = "In Process";
     public static final String SHIPPED = "Shipped";
+    public static final String PARTIALLY_SHIPPED = "Partially Shipped";
     public static final String COMPLETE = "Complete";
     public static final String CANCEL = "Cancelled";
     public static final String TBD = "To Be Determined";
     public static final String allstatus[] = {
         CloneOrder.PENDING, 
-        CloneOrder.PENDING_MTA, 
+        CloneOrder.PENDING_MTA,
+        CloneOrder.CANCEL, 
         CloneOrder.INPROCESS, 
+        CloneOrder.PARTIALLY_SHIPPED,
         CloneOrder.SHIPPED, 
-        CloneOrder.COMPLETE,
-        CloneOrder.CANCEL};
+        CloneOrder.COMPLETE};
     
     protected int orderid;
     protected String orderDate;
@@ -69,6 +71,8 @@ public class CloneOrder {
     
     protected List items;
     protected List batches;
+    
+    protected String comments;
     
     /** Creates a new instance of CloneOrder */
     public CloneOrder() {
@@ -126,6 +130,7 @@ public class CloneOrder {
     public String getPhone() {return phone;}
     public String getIsBatch() {return isBatch;}
     public String getUsergroup() {return usergroup;}
+    public String getComments() {return comments;}
     
     public void setOrderid(int i) {this.orderid = i;}
     public void setOrderDate(String s) {this.orderDate = s;}
@@ -159,6 +164,7 @@ public class CloneOrder {
     public void setPhone(String s) {this.phone = s;}
     public void setIsBatch(String s) {this.isBatch = s;}
     public void setUsergroup(String s) {this.usergroup = s;}
+    public void setComments(String s) {this.comments = s;}
     
     public List getItems() {return items;}
     public void setItems(List l) {this.items = l;}
@@ -214,5 +220,16 @@ public class CloneOrder {
     
     public int getBeforeInprocess() {
         return (CloneOrder.compareStatus(status, CloneOrder.INPROCESS));
+    }
+    
+    public int getBeforeCancell() {
+        return (CloneOrder.compareStatus(status, CloneOrder.CANCEL));
+    }
+    
+    public boolean getIsProcessShipping() {
+        if(CloneOrder.INPROCESS.equals(status) || CloneOrder.PARTIALLY_SHIPPED.equals(status))
+            return true;
+        
+        return false;
     }
 }

@@ -56,38 +56,30 @@
             <html:options name="shippingMethods"/>
         </html:select>
     </td>
-    <td width="20%" class="formlabel">Shipping Account:</td>
-    <td width="30%" class="text"><html:text maxlength="50" property="shippingAccount"/></td>
+    <td width="20%" class="formlabel">Tracking Number:</td>
+    <td width="30%" class="text"><html:text maxlength="50" property="trackingNumber"/></td>
   </tr>
   <tr> 
     <td class="formlabel">Shipping Date:</td>
     <td class="text"><html:text property="shippingDate"/></td>
-    <td class="formlabel">Tracking Number:</td>
-    <td class="text"><html:text property="trackingNumber"/></td>
-  </tr>
-  <tr> 
     <td class="formlabel">Who Shipped:</td>
     <td class="text"><bean:write name="processShippingForm" property="whoShipped"/></td>
-    <td class="formlabel">Who Received Shipping Confirmation:</td>
-    <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="whoreceivedconfirmation"/></td>
   </tr>
   <tr> 
-    <td class="formlabel">Shipping Received Confirmation Date:</td>
-    <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="receiveconfirmationdate"/></td>
-    <td class="formlabel">Who Confirmed:</td>
-    <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="whoconfirmed"/></td>
+    <td class="formlabel">Shipping Status:</td>
+    <td class="text">
+        <html:select property="shippingStatus">
+        <html:options name="allStatus"/>
+        </html:select>
+    </td>
+    <td class="formlabel">&nbsp;</td>
+    <td class="text">&nbsp;</td>
   </tr>
   <tr> 
-    <td class="formlabel">Shipping Charge:</td>
-    <td class="text"><html:text property="shippingCharge"/></td>
-    <td class="formlabel"></td>
-    <td class="text"></td>
+    <td class="formlabel" colspan="4">Comments:</td>
   </tr>
   <tr> 
-    <td class="formlabel" colspan="4">Please enter all the plates (separate by white space):</td>
-  </tr>
-  <tr> 
-    <td class="text" colspan="4"><html:textarea rows="5" cols="60" property="containers"/></td>
+    <td class="text" colspan="4"><html:textarea rows="5" cols="60" property="comments"/></td>
   </tr>
 </table>
 <html:hidden name="<%=Constants.CLONEORDER%>" property="orderid"/>
