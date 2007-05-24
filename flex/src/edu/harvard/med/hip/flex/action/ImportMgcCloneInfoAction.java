@@ -84,6 +84,8 @@ public class ImportMgcCloneInfoAction extends AdminAction
         t.start();
         request.setAttribute("message",
         "Information is uploading. It can take up to an hour based on number of clones. The e-mail notification will be sent to you upon completion.");
+        request.setAttribute("title","Master list of MGC clones: import information");
+       
         return mapping.findForward("proccessing");
         
     }

@@ -294,7 +294,8 @@
     <forward    name="helpExternal" path="/tmp.jsp"/>
     <forward    name="queryCloneStorage" path="/QueryStorageCloneInput.jsp"/>
     <forward    name="plateCondensation" path="/GetProjects.do?forwardName=PLATE_CONDENSATION"/>
-
+    <forward    name="transferACEtoFLEX" path="/ACEtoFLEXImporterInput.jsp"/>
+    
   </global-forwards>
   
 
@@ -1420,6 +1421,16 @@
                input="/GetProjects.do?forwardName=PLATE_CONDENSATION">
       <forward  name="success"   path="/PlateCondensationOutput.jsp"/>
     </action>  
+    
+       <!-- Action mapping for data import from ACE to FLEX -->
+    <action path="/ACEtoFLEXImporter"
+            type="edu.harvard.med.hip.flex.action.ACEtoFLEXImporterAction"
+            name="mgcCloneInfoImportForm"
+            scope="request"
+            input="/ACEtoFLEXImporterInput.jsp">
+      <forward name="proccessing" path="/ImportMgcMasterListResponse.jsp"/>
+
+    </action>
      
     <!-- The standard administrative actions available with Struts -->
     <!-- These would be either omitted or protected by security -->
