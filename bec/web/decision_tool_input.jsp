@@ -25,7 +25,7 @@
    <td ><input type="checkbox"  name="is_forward_er_uploaded" value="1" > Is forward end read uploaded? </td>  </tr>
 
   <tr>
-    <td> <input type="checkbox" name="clone_final_status" value="1"> Clone final status</td>
+    <td> <input checked type="checkbox" name="clone_final_status" value="1" disabled> Clone final status</td>
 	 <td><input type="checkbox"  name="is_reverse_er_uploaded" value="1" > Is reverse end read uploaded? </td>
   </tr>
   <tr>
