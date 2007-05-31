@@ -272,6 +272,7 @@ public class UICloneSample
             what_str += ", a.SEQUENCEID as clonesequenceid   ,a.ANALYSISSTATUS as cloneseqANALYSISSTATUS  ,a.SEQUENCETYPE as cloneSEQUENCETYPE "
             + ", a.CDSSTART   as cloneseqCDSStart,   a.CDSSTOP   as cloneseqcdsstop ";
             where_str +="  and a.isolatetrackingid(+) =i.isolatetrackingid   ";
+            orderby_str+=",  clonesequenceid desc";
         }
         if ( isACERefsequenceId )
         {
