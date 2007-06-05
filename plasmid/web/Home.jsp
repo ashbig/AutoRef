@@ -20,9 +20,9 @@
 	     <!-- ImageReady Slices (monday_3.ai) -->
       <IMG SRC="monday_4.gif" WIDTH=376 HEIGHT=275 BORDER=0 ALT="" USEMAP="#monday_4_Map"> 
       <MAP NAME="monday_4_Map">
-        <AREA SHAPE="rect" ALT="" COORDS="99,91,277,119" HREF="http://128.103.32.228/PLASMID/Submission.jsp">
-        <AREA SHAPE="rect" ALT="" COORDS="72,180,304,208" HREF="http://128.103.32.228/PLASMID/collection_overview.jsp" target="_blank">
-        <AREA SHAPE="rect" ALT="" COORDS="86,136,290,163" HREF="http://128.103.32.228/PLASMID/OrderOverview.jsp">
+        <AREA SHAPE="rect" ALT="" COORDS="99,91,277,119" HREF="http://plasmid.med.harvard.edu/PLASMID/Submission.jsp">
+        <AREA SHAPE="rect" ALT="" COORDS="72,180,304,208" HREF="http://plasmid.med.harvard.edu/PLASMID/collection_overview.jsp" target="_blank">
+        <AREA SHAPE="rect" ALT="" COORDS="86,136,290,163" HREF="http://plasmid.med.harvard.edu/PLASMID/OrderOverview.jsp">
       </MAP> 
       <!-- End ImageReady Slices -->  
       </td>
