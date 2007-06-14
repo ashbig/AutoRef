@@ -68,13 +68,16 @@
   <tr> 
     <td width="20%" class="formlabel">Shipping Method:</td>
     <td width="30%" class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="shippingmethod"/></td>
+    <td class="formlabel">Shipping Date:</td>
+    <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="shippingdate"/></td>
+  </tr>
+  <tr> 
+    <td width="20%" class="formlabel">Shipping Account:</td>
+    <td width="30%" class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="shippingaccount"/></td>
     <td width="20%" class="formlabel">Tracking Number:</td>
     <td width="30%" class="text"><a target="_blank" href="http://www.fedex.com/Tracking?ascend_header=1&clienttype=dotcom&cntry_code=us&language=english&tracknumbers=<bean:write name="<%=Constants.CLONEORDER%>" property="trackingnumber"/>"><bean:write name="<%=Constants.CLONEORDER%>" property="trackingnumber"/></a></td>
   </tr>
-  <tr> 
-    <td class="formlabel">Shipping Date:</td>
-    <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="shippingdate"/></td>
-  <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
+  <tr>   <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
     <td class="formlabel">Who Shipped:</td>
     <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="whoshipped"/></td>
   </logic:equal>
