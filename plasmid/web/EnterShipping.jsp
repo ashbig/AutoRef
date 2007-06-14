@@ -56,24 +56,24 @@
             <html:options name="shippingMethods"/>
         </html:select>
     </td>
-    <td width="20%" class="formlabel">Tracking Number:</td>
-    <td width="30%" class="text"><html:text maxlength="50" property="trackingNumber"/></td>
+    <td width="20%" class="formlabel">Shipping Date:</td>
+    <td width="30%" class="text"><html:text property="shippingDate"/></td>
   </tr>
   <tr> 
-    <td class="formlabel">Shipping Date:</td>
-    <td class="text"><html:text property="shippingDate"/></td>
+    <td class="formlabel">Shipping Account:</td>
+    <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="shippingaccount"/></td>
+    <td class="formlabel">Tracking Number:</td>
+    <td class="text"><html:text maxlength="50" property="trackingNumber"/></td>
+  </tr>
+  <tr>
     <td class="formlabel">Who Shipped:</td>
     <td class="text"><bean:write name="processShippingForm" property="whoShipped"/></td>
-  </tr>
-  <tr> 
     <td class="formlabel">Shipping Status:</td>
     <td class="text">
         <html:select property="shippingStatus">
         <html:options name="allStatus"/>
         </html:select>
     </td>
-    <td class="formlabel">&nbsp;</td>
-    <td class="text">&nbsp;</td>
   </tr>
   <tr> 
     <td class="formlabel" colspan="4">Comments:</td>
