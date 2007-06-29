@@ -116,7 +116,7 @@
 
 <table width="100%" border="0">
   <tr>
-  <td height="28" colspan="8"> <div align="center" class="homeMainText">Questions about PlasmID? Please contact <a href="mailto:plasmidhelp@hms.harvard.edu">the PlasmID help</a>.</div></td>
+  <td height="28" colspan="8"> <div align="center" class="homeMainText">Questions about PlasmID? Please contact <a href="mailto:plasmidhelp@hms.harvard.edu">PlasmID help</a>.</div></td>
   </tr>
 </table>
     </td>

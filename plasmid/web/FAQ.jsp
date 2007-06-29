@@ -158,7 +158,7 @@
   </td>
     </tr>
   </table>
-  <p align="center">Still have questions? Please contact <a href="mailto:plasmidhelp@hms.harvard.edu">the PlasmID help</a>.</p>
+  <p align="center">Still have questions? Please contact <a href="mailto:plasmidhelp@hms.harvard.edu">PlasmID help</a>.</p>
   </div>
 </body>
 </html>

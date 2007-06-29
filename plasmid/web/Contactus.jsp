@@ -41,7 +41,7 @@
           240 Longwood Ave.<br>
           Boston, MA 02115</span></p>
         <p><span class="mainbodytextlarge">Contact Info:</span><br>
-          <span class="homeMainText">Questions about PlasmID? Please contact <a href="mailto:plasmidhelp@hms.harvard.edu">the PlasmID help</a>.</span></p>
+          <span class="homeMainText">Questions about PlasmID? Please contact <a href="mailto:plasmidhelp@hms.harvard.edu">PlasmID help</a>.</span></p>
       </blockquote></td>
     <td width="42%" align="center" valign="middle"><img src="biobank_arm_no_effect.gif" width="250" height="396"> 
       <p class="homepageLink">&nbsp;</p></td>
