@@ -41,11 +41,7 @@
           240 Longwood Ave.<br>
           Boston, MA 02115</span></p>
         <p><span class="mainbodytextlarge">Contact Info:</span><br>
-          <span class="homeMainText">For questions about the collection or to 
-          inquire about sharing plasmids, please contact <a href="http://dnaseq.med.harvard.edu/contact_us.htm" title="Contact Stephanie Mohr" target="_blank">Stephanie 
-          Mohr</a>.<br>
-          </span><span class="homeMainText">For all other questions, please contact 
-          <a href="mailto:dongmei_zuo@hms.harvard.edu">PlasmID Support</a>.</span></p>
+          <span class="homeMainText">Questions about PlasmID? Please contact <a href="mailto:plasmidhelp@hms.harvard.edu">the PlasmID help</a>.</span></p>
       </blockquote></td>
     <td width="42%" align="center" valign="middle"><img src="biobank_arm_no_effect.gif" width="250" height="396"> 
       <p class="homepageLink">&nbsp;</p></td>

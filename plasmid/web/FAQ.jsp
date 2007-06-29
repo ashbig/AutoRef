@@ -158,8 +158,7 @@
   </td>
     </tr>
   </table>
-  <p align="center">Still have questions? Please contact <a href="http://dnaseq.med.harvard.edu/contact_us.htm" target="_blank">Stephanie 
-    Mohr</a>.</p>
+  <p align="center">Still have questions? Please contact <a href="mailto:plasmidhelp@hms.harvard.edu">the PlasmID help</a>.</p>
   </div>
 </body>
 </html>

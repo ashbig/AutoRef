@@ -14,57 +14,15 @@
 
 <body>
 <jsp:include page="submissionTitle.jsp" />
-<TABLE borderColor=#ffffff width=1000 align=center 
-      bgColor=#ffffff border=0>
-  <TBODY>
-    <TR> 
-      <TD align="left" valign="top"> <p class="homepageText3">What You Do ...</p>
-        <ul>
-          <li class="homepageText3">Provide Plasmids as DNA</li>
-          <li class="homepageText3">Provide Supporting Information</li>
-          <li class="homepageText3">Contact us to arrange drop-off or pick-up</li>
-          <li class="homepageText3">Forward Requests by e-mail or refer requestors 
-            directly to PlasmID</li>
-        </ul></TD>
-      <TD align="left" valign="top"> <span class="homepageText3">... What We Do 
-        </span> <div align="left"> 
-          <ul>
-            <li class="homepageText3">Transform DNA into a phage-resistant host 
-              strain</li>
-            <li class="homepageText3">Create working and archival glycerol stocks</li>
-            <li class="homepageText3">Store stocks in our automated freezer storage 
-              system</li>
-            <li class="homepageText3">Curate information to be added to PlasmID</li>
-            <li class="homepageText3">Handle MTAs, obtain institutional permissions, 
-              and accomodate restrictions</li>
-            <li class="homepageText3">Distribute the Plasmids to Academic and 
-              Non-Profit labs who request them (U.S. and abroad)</li>
-          </ul>
-        </div></TD>
-    </TR>
-    <TR align="left" valign="top" class="homepageText3"> 
-      <TD width="50%" bordercolor="#999999"> <div align="left">THE OLD WAY ...</div></TD>
-      <TD width="50%" height="20"> <div align="left">... THE NEW WAY</div></TD>
-    </TR>
-    <TR align="left" valign="top"> 
-      <TD><img src="file://///Hipfs/hipdata/smohr/PlasmID%20November%202005%20Update/oldway.gif" width="466" height="195"></TD>
-      <TD><img src="file://///Hipfs/hipdata/smohr/PlasmID%20November%202005%20Update/newway.gif" width="467" height="194"></TD>
-    </TR>
-    <TR> 
-      <TD height="99" colspan="2"> <p align="center" class="homeMainText">If you 
-          would like to share clones with the repository, please contact Stephanie 
-          Mohr <a 
-            href="mailto:stephanie_mohr@hms.harvard.edu">by email</a> or by phone 
-          617-324-4251. </p>
-        <p class="homeMainText">Useful Downloads for Plasmid Submission<br>
-<ul>
-  <li class="underbullet"><a target="_blank" href="MQF.pdf">Material Qualification Form</a></li>
-  <li class="underbullet"><a target="_blank" href="PIT.pdf">Plasmid Intake Template</a></li>
-</ul></p>
-        <p></p></TD>
-    </TR>
-  </TBODY>
-</TABLE>
+<p>Sharing plasmids with the <a href="http://dnaseq.med.harvard.edu/">
+DF/HCC DNA Resource Core</a> benefits you by alleviating the burden of storage, maintenance and distribution, and benefits the general research community by making plasmids available from a central source.</p>
+<p>We encourage submission of plasmids from researchers at any of the <a href="http://www.dfhcc.harvard.edu/">
+DF/HCC</a> parent institutions and from the research community at large. Small and large collections are equally welcome.</p>
+<p>Submitting plasmids generally involves the following three steps. (1) Gaining permission from your institution to include the plasmids in the repository for distribution under specific terms (usually, the UB-MTA). NOTE that this permission has already been granted by all seven <a href="http://www.dfhcc.harvard.edu/">
+  DF/HCC</a> institutions. (2) Providing us with information about the plasmids, such as maps or sequence files, growth conditions, relevant authors and publications, etc. so we are set up to handle the plasmids when they arrive. We can provide templates for submission of information. And (3) providing the plasmids as purified DNA in solution or spotted to a dry matrix, along with a map that matches plasmid information with sample locations.</p>
+<p>What happens here? We generally curate the information and import it into PlasmID, transform the DNA into a phage-resistance bacterial host strain, and perform DNA sequencing and/or other analyses to verify the plasmids. Once those steps are complete, we will notify you that we are ready to distribute the plasmids and will make the plasmids searchable at PlasmID. In general, we store a working copy of the glycerol stock, along with one or two archival back-up copies, at -80&#176C and we typically also store the original DNA sample shared with the core facility dry on matrix.</p>
+<p>To get things started, please contact <a href="mailto:plasmidhelp@hms.harvard.edu">the PlasmID help</a>.</p>
+
 <jsp:include page="footer.jsp" /></body>
 </html>
 

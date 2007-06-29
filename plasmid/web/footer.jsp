@@ -5,7 +5,7 @@
         <tr align="center"> 
           <td height="52"> <p class="footertext"><a href="Home.jsp" class="footertext">Home</a> 
               &#149; <a href="Submission.jsp" class="footertext">Plasmid 
-              Submission</a> &#149; <a href="OrderOverview.jsp" class="footertext">Plasmid Search & Order</a> 
+              Submission</a> &#149; <a href="OrderOverview.jsp" class="footertext">Plasmid Request</a> 
               &#149; <a href="Contactus.jsp" class="footertext">Contact Us</a></p>
             <p class="footertext">©2004 Harvard Institute of Proteomics</p></td>
         </tr>

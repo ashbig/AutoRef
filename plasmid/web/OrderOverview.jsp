@@ -116,9 +116,7 @@
 
 <table width="100%" border="0">
   <tr>
-  <td height="28" colspan="8"> <div align="center" class="homeMainText">Have questions 
-        not answered in our <a target="_blank" href="FAQ.jsp">FAQ</a>? Please contact <a href="http://dnaseq.med.harvard.edu/contact_us.htm" title="Contact DNA Resource Core" target="_blank">Stephanie 
-        Mohr</a>.</div></td>
+  <td height="28" colspan="8"> <div align="center" class="homeMainText">Questions about PlasmID? Please contact <a href="mailto:plasmidhelp@hms.harvard.edu">the PlasmID help</a>.</div></td>
   </tr>
 </table>
     </td>

@@ -32,19 +32,19 @@
         <p align="left" class="homepageText3">What's New?</p>
         <ul>
           <li> 
-            <div align="left">Retroviral, adenoviral, AAV and lentiviral expression vectors and helpers from J. Lee (HGTI/HMS)
+            <div align="left">Sequence-verified, genome-scale ORF collection for the bacterial pathogen F. tularensis (See <a href="http://www.ncbi.nlm.nih.gov/sites/entrez?Db=pubmed&Cmd=ShowDetailView&TermToSearch=17593976&ordinalpos=1&itool=EntrezSystem2.PEntrez.Pubmed.Pubmed_ResultsPanel.Pubmed_RVDocSum">Murthy et al. 2007</a>) (HIP/HMS)
             </div>
           </li>
           <li> 
-            <div align="left">Vectors for transposon-mediated gene disruption in bacteria and mycobacteria from J. Mekalanos (HMS)
+            <div align="left">Sequence-verified, genome-scale ORF collections also include Y. pestis and V. cholerae (HIP/HMS)
 </div>
           </li>
           <li> 
-            <div align="left">Sequence-verified ORFs for human, yeast, P. aeruginosa, Y. pestis, F. tularensis and V. cholerae (HIP/HMS)
+            <div align="left">Human kinase collection now includes clones in entry vectors for recombinational cloning and <a href="http://plasmid.med.harvard.edu/PLASMID/GetCollection.do?collectionName=HIP%20human%20kinase%20collection%20(pJP1520,%20complete%20set)">clones in a mammalian expression vector</a> (HIP/HMS)
 </div>
           </li>
           <li> 
-            <div align="left">Harvard Institute of Proteomics named site of the Protein Structure Initiative Materials Repository (PSI-MR), funded by NIGMS/NIH (RFA-GM-06-003) for storage and distribution of more than 50,000 plasmid clones for protein expression
+            <div align="left">Harvard  Institute of Proteomics named site of the Materials Repository of the <a href="http://www.nigms.nih.gov/Initiatives/PSI/">Protein Structure Initiative</a>, funded by <a href="http://www.nigms.nih.gov/">NIGMS/NIH</a> for  storage and distribution of more than 100,000 plasmid clones for protein expression
 </div>
           </li>
         </ul>
