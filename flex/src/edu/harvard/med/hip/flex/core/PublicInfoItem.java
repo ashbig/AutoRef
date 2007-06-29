@@ -60,6 +60,10 @@ public class PublicInfoItem
        
     }
     public PublicInfoItem()    {}
+    public String       toString()
+    {
+        return  m_name +" "+m_value+" "+m_description ;
+    }
     
     public  void   setName (String v){   m_name  = v;}
     public  void   setValue (String v){   m_value  = v;}

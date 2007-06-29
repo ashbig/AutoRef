@@ -12,10 +12,8 @@ import java.io.*;
 
 import edu.harvard.med.hip.flex.user.*;
 import edu.harvard.med.hip.flex.util.*;
-/**
- *
- * @author  htaycher
- */
+import  edu.harvard.med.hip.flex.infoimport.file_mapping.*;
+
 
 
 public abstract class ImportRunner implements Runnable
@@ -30,6 +28,7 @@ public abstract class ImportRunner implements Runnable
     protected int         m_items_type = -1;
     protected User        m_user = null;
     protected int         m_process_type = -1;
+    protected ArrayList     m_file_input_data = null;
     private   String        m_process_title = null;
     /** Creates a new instance of ProcessRunner */
     public ImportRunner()
@@ -45,7 +44,13 @@ public abstract class ImportRunner implements Runnable
          m_items_type = type;
          m_items = item_ids;
     }
-    
+    public void         setInputData(int file_type, InputStream file_input) throws Exception
+    {
+        if ( m_file_input_data == null) m_file_input_data = new ArrayList();
+        //read files into file_data object
+        m_file_input_data.add(new edu.harvard.med.hip.flex.infoimport.file_mapping.FileToRead(file_input, true, file_type));
+       
+    }
     
      public  String             getItems()   {      return  m_items;    }   
      public int                 getProcessType(){ return m_process_type;}
@@ -62,6 +67,8 @@ public abstract class ImportRunner implements Runnable
          {
                case ConstantsImport.PROCESS_DATA_TRANSFER_ACE_TO_FLEX  : 
                     {((AceToFlexImporter)this).run_process(); break;}
+               case ConstantsImport.PROCESS_IMPORT_OUTSIDE_CONTAINERS_INTO_FLEX  : 
+                    {((OutsidePlatesImporter)this).run_process(); break;}
           }
      }
      
@@ -176,7 +183,7 @@ public abstract class ImportRunner implements Runnable
                 FlexProperties.getInstance().getProperty("HIP_EMAIL_FROM") ,
                         null, title,  msgText,  fl);
             } 
-             fl = ImportRunner.writeFile( m_process_messages.toArray(), temp_path+"ProcessMessages_"+time_stamp+".txt", "\n");
+            fl = ImportRunner.writeFile( m_process_messages.toArray(), temp_path+"ProcessMessages_"+time_stamp+".txt", "\n");
             Mailer.sendMessageWithAttachedFile(m_user.getUsername(), 
                 FlexProperties.getInstance().getProperty("HIP_EMAIL_FROM") ,
                         null, title,  msgText,  fl);
