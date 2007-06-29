@@ -95,6 +95,14 @@ public int                 getCDSStart  ( ) { return m_cds_start  ;}
 public int                 getCDSStop  ( ) { return m_cds_stop ;}
 public  String                getSequenceText(){return  m_sequencetext ;}
   
+public boolean              isVerified()
+{
+    if ( m_cds_start == -1 || m_cds_stop == -1 || m_sequencetext == null || m_sequencetext.length() == 0) return false;
+    if ( m_cds_start >= m_sequencetext.length()) return false;
+    if ( m_cds_stop > m_sequencetext.length())return false;
+    if (m_cds_stop - m_cds_start / 3 != 0 ) return false;
+    return true;
+}
     public void insert(Connection conn, ArrayList errors) throws Exception
     {
         if(m_id == -1)m_id = FlexIDGenerator.getID("sequenceid");

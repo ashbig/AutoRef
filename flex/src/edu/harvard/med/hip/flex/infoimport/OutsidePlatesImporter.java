@@ -212,24 +212,7 @@ public class OutsidePlatesImporter extends ImportRunner
       {
           
       }
-       private void          readFlexSequenceDataFromEntrez(HashMap flex_sequences)
-       {
-           String key = null;
-           Object sequence = null;
-           Iterator iter = flex_sequences.keySet().iterator();
-           while (iter.hasNext())
-           {
-               key = (String)iter.next();
-               sequence = flex_sequences.get(key);
-               //possible values: ImportFlexSequence - sequence build from file
-               // Integer: is flexsequnce exsits in db and was verified
-               //string - instraction to extract sequence from PubMed
-               if (sequence instanceof String)
-               {
-                   
-               }
-           }
-       }
+       
        private void             reassignSequenceIds(HashMap old_new_sequence_id, HashMap containers)
        {
            
@@ -286,7 +269,56 @@ public class OutsidePlatesImporter extends ImportRunner
 
     
     ////////////////////////////////////////////////////////////////////////////
-    
+    private void          readFlexSequenceDataFromEntrez(HashMap flex_sequences)
+       {
+           String key = null;
+           Object sequence = null;
+            java.net.URL url =   null; 
+            String urlString = null;ImportFlexSequence sw=  null;
+           InputSource in = null;
+           
+           Iterator iter = flex_sequences.keySet().iterator();
+           EntrezParser SAXHandler = new EntrezParser();
+           SAXParser parser = new SAXParser();
+            parser.setContentHandler(SAXHandler);
+            parser.setErrorHandler(SAXHandler);
+            String featureURI = "http://xml.org/sax/features/string-interning";
+           try
+           {
+                  parser.setFeature(featureURI, true);
+           }
+           catch(Exception e)
+           {
+               m_error_messages.add("Cannot get  set parser feuture "+e.getMessage());
+           }
+         
+           
+           while (iter.hasNext())
+           {
+               key = (String)iter.next();
+               sequence = flex_sequences.get(key);
+               //possible values: ImportFlexSequence - sequence build from file
+               // Integer: is flexsequnce exsits in db and was verified
+               //string - instraction to extract sequence from PubMed
+               if (sequence instanceof String)
+               {
+                   urlString = (String) sequence + key;
+                   try
+                   {
+                       url = new java.net.URL(urlString);
+                       in = new InputSource( new InputStreamReader(    url.openStream()));
+                       parser.parse(in);
+                       sw=          SAXHandler.getImportSequence(0);
+                   }
+                   catch(Exception e)
+                   {
+                       m_error_messages.add("Cannot get  sequence from internet"+e.getMessage());
+                   }
+                   if ( sw.isVerified() )
+                       flex_sequences.put(key, sw);
+               }
+           }
+       }
      // read and parse XML for data mapping
    private  FileStructure[]        readDatMappingSchema() throws Exception
    {
