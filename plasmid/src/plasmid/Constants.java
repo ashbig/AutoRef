@@ -30,7 +30,7 @@ public class Constants {
     public static final String PRINT_LABEL_MESSAGE = "PRINT_LABEL_MESSAGE";
     public static final String PROTOCOLS = "Protocols";
     public static final String RESULTTYPES = "Result Types";
-    public static final String EMAIL_FROM = "hip_informatics@hms.harvard.edu";
+    public static final String EMAIL_FROM = "plasmidhelp@hms.harvard.edu";
     
     public static final String WORKLIST_FILE_PATH = FlexProperties.getInstance().getProperty("worklist");
     public static final String USER_WORKLIST_FILE_PATH = FlexProperties.getInstance().getProperty("userworklist");
