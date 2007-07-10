@@ -370,7 +370,7 @@ public class OligoPlateManager {
     }
     
     public void sendOligoOrders() throws MessagingException{
-        String to = "dongmei_zuo@hms.harvard.edu";
+        String to = "andreas_rolfs@hms.harvard.edu";
         String from = "dongmei_zuo@hms.harvard.edu";
         //String cc = "dongmei_zuo@hms.harvard.edu";
         String cc = "flexgene_manager@hms.harvard.edu";
