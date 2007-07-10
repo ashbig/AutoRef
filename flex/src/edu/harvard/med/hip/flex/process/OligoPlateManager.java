@@ -372,8 +372,8 @@ public class OligoPlateManager {
     public void sendOligoOrders() throws MessagingException{
         String to = "andreas_rolfs@hms.harvard.edu";
         String from = "dongmei_zuo@hms.harvard.edu";
-        //String cc = "dongmei_zuo@hms.harvard.edu";
-        String cc = "flexgene_manager@hms.harvard.edu";
+        String cc = "dongmei_zuo@hms.harvard.edu";
+        //String cc = "flexgene_manager@hms.harvard.edu";
         String subject = "Oligo order for project - "+project.getName();
         String msgText = "The attached files are our oligo order.\n"+
         "Thank you!";
