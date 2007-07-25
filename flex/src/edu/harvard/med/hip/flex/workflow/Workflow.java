@@ -282,6 +282,19 @@ public class Workflow {
         
         return null;
     }
+     public Vector getNextProtocol()
+     {
+        Enumeration enu = flow.elements();
+        
+        while(enu.hasMoreElements())
+        {
+            
+            FlowRecord r = (FlowRecord)enu.nextElement();
+            return r.getNext();
+        }
+        
+        return null;
+    }
     
     /**
      * Return the previous protocol name for the given protocol name.

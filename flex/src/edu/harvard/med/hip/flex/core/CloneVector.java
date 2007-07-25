@@ -10,7 +10,7 @@ import java.util.*;
 import java.sql.*;
 
 import edu.harvard.med.hip.flex.database.*;
-
+import edu.harvard.med.hip.flex.util.*;
 /**
  *
  * @author  dzuo
@@ -22,6 +22,7 @@ public class CloneVector {
     protected String file;
     protected String path;
     protected List features;
+    protected List m_tags = null;
     protected String description;
     protected String restriction;
     protected String hipname;
@@ -65,6 +66,60 @@ public class CloneVector {
         this.file = file;
         this.path = path;
         this.features = features;
+    }
+    
+     public CloneVector(String name, String source, String type, 
+     String file, String path, List features, String description,
+        String restriction, String hipname, int id) 
+     {
+         this( name, source,  type,  file,  path,  features) ;
+        this.description = description;
+        this.restriction = restriction;
+        this.hipname = hipname;
+        this.vectorid = id;
+     
+     }
+   
+     
+   public static List  getAllVectors() throws FlexDatabaseException
+   {
+       String sql = "select vectorname,vectorsource,vectortype,vectorfile,vectorfilepath,"
+      +"description,restriction,hipname,vectorid from vector";
+       return getVectorsBySQL(sql);
+   }
+   
+   private static List getVectorsBySQL(String sql) throws FlexDatabaseException 
+   {
+     
+        ResultSet rs = null;
+        List vectorList = new ArrayList();
+        try 
+        { 
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            while(rs.next()) 
+            {
+                CloneVector vector = new CloneVector
+                        (rs.getString("vectorname"),
+                        rs.getString("vectorsource"),
+                        rs.getString("vectortype"),
+                        rs.getString("vectorfile"),
+                        rs.getString("vectorfilepath"),
+                        null,
+                        rs.getString("description"),
+                        rs.getString("restriction"), 
+                        rs.getString("hipname"), rs.getInt("vectorid") );
+                vectorList.add(vector);
+            }
+            return vectorList;
+        } catch (Exception ex)
+        {
+            throw new FlexDatabaseException(ex);
+        } 
+        finally 
+        {
+            DatabaseTransaction.closeResultSet(rs);
+        }
     }
     
     public static List findDestVectors(String sourceVector) throws FlexDatabaseException {
@@ -162,12 +217,112 @@ public class CloneVector {
     public String getRestriction() {return restriction;}
     public int getVectorid() {return vectorid;}
     public String getNameAndId() {return name+"!"+vectorid;}
+    public List     getTags(){ return m_tags;}
+    
     
     public void setDescription(String s) {this.description = s;}
     public void setRestriction(String s) {this.restriction = s;}
     public void setHipname(String s) {this.hipname = s;}
     public void setVectorid(int id) {this.vectorid = id;}
-    
+    public void setFeatures(List v) {this.features = v;}
+    public void         setName(String v) {name = v;}
+    public void         setSource(String v) { source = v;}
+    public void         setType(String v) { type =v;}
+    public void         setFile(String v) { file =v;}
+    public void         setPath(String v) { path =v;}
+     
+    public static void            insertVectors(ArrayList vectors,Connection conn) throws Exception
+    {
+        String sql_vector = "insert into vector (vectorid, VECTORNAME, VECTORSOURCE  ,VECTORTYPE , "
+        + "VECTORFILE  ,VECTORFILEPATH ,DESCRIPTION  ,RESTRICTION  ,HIPNAME  )"+
+        " values( ?,?,?,?,?,?,?,?,?)";
+        
+         String sql_vector_feature = "insert into VECTORFEATURE  (FEATUREID ,FEATURENAME "
+ + " ,FEATUREDESCRIPTION ,FEATURESTATUS,VECTORNAME) values(vectorfeatureid.nextval,?,?,?,?)";
+                  String sql_vector_tag = "insert into VECTORTAG  (TAGNAME ,TAGTYPE "
+ + " ,VECTORNAME) values( ?,?,?)";
+
+         PreparedStatement stmt_vector= null;
+         PreparedStatement stmt_vector_feature = null;
+         PreparedStatement stmt_vector_tag = null;
+        
+         VectorFeature v_feature = null;
+         CloneVector vector =   null;
+         VectorTag v_tag = null;
+         int vector_id = -1; int count=1;
+        try {
+            stmt_vector = conn.prepareStatement(sql_vector);
+            stmt_vector_feature = conn.prepareStatement(sql_vector_feature);
+            stmt_vector_tag = conn.prepareStatement(sql_vector_tag);
+            for(int v_count = 0; v_count < vectors.size(); v_count ++)
+            {
+                count=1;
+                vector = (CloneVector) vectors.get( v_count);
+  //System.out.println("submitting "+vector.getName());
+                vector_id = FlexIDGenerator.getID("vectorid");
+                if (vector.getHipname() == null) 
+                {
+                    if (vector_id>99) vector.setHipname("HIPaATT"+vector_id);
+                    else   vector.setHipname("HIPaATT0"+vector_id);
+                }
+    ////?????            stmt_vector.setInt(1, vector.getVectorid());
+                stmt_vector.setInt(count++,    vector_id);
+                stmt_vector.setString(count++, vector.getName());
+                stmt_vector.setString(count++, vector.getSource());
+                stmt_vector.setString(count++, vector.getType());
+                 stmt_vector.setString(count++, vector.getFile());
+                stmt_vector.setString(count++, vector.getPath());
+                stmt_vector.setString(count++, vector.getDescription());
+                stmt_vector.setString(count++, vector.getRestriction());
+                stmt_vector.setString(count++, vector.getHipname());
+                DatabaseTransaction.executeUpdate(stmt_vector);
+                if ( vector.getFeatures() != null)
+                {
+                    for ( int f_count = 0; f_count < vector.getFeatures().size(); f_count ++)
+                    {
+                         v_feature = (VectorFeature)vector.getFeatures().get(f_count);
+                ////?????             stmt_vector_feature.setInt(1, v_feature.getId());
+                         stmt_vector_feature.setString(1, v_feature.getName());
+                          stmt_vector_feature.setString(2, v_feature.getDescription());
+                          stmt_vector_feature.setString(3, v_feature.getStatus()); 
+                          stmt_vector_feature.setString(4, vector.getName()); 
+                           DatabaseTransaction.executeUpdate(stmt_vector_feature);
+                     }
+                }
+                if (vector.getTags() != null)
+                {
+                    for ( int t_count = 0; t_count < vector.getTags().size(); t_count ++)
+                    {
+                         v_tag = (VectorTag)vector.getTags().get(t_count);
+                        stmt_vector.setString(1, v_tag.getName());
+                        stmt_vector.setString(2, v_tag.getType());
+                        stmt_vector.setString(3, vector.getName());
+
+                           DatabaseTransaction.executeUpdate(stmt_vector_feature);
+                     }
+                }
+             //  System.out.println("finished "+vector.getName());
+              }
+             System.out.println("finished ");
+           
+        } catch (Exception ex) {
+            conn.rollback();
+            System.out.println(ex.getMessage());
+            throw new Exception("Error occured while inserting VECTOR info. \n "+ex.getMessage());
+            
+        }
+         finally
+         {
+              DatabaseTransaction.closeStatement(stmt_vector);
+               DatabaseTransaction.closeStatement(stmt_vector_feature );
+              DatabaseTransaction.closeStatement(stmt_vector_tag );
+      
+         }
+      
+    }
+      
+      
+      //***************************
     public static void main(String args[]) {
         String vectorname = "pDNR-Dual";
         List vectors = null;

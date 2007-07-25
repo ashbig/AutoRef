@@ -65,7 +65,15 @@ public class CloningStrategy {
         this.linker5p = linker5p;
         this.linker3p = linker3p;
     }
-    
+    public CloningStrategy(int id, String name, CloneVector clonevector, 
+            CloneLinker linker5p, CloneLinker linker3p, String type) {
+        this.id = id;
+        this.name = name;
+        this.clonevector = clonevector;
+        this.linker5p = linker5p;
+        this.linker3p = linker3p;
+        this.type = type;
+    }
     public CloningStrategy(int id) {
         this.id = id;
     }
@@ -163,6 +171,52 @@ public class CloningStrategy {
         
         return s;
     }
+    
+    
+     public static int findStrategyByVectorAndLinker(String vectorname, String linkerid5p_name,
+             String linkerid3p_name) throws FlexDatabaseException 
+     {
+        String sql = "Select * from cloningstrategy"+
+        " where linkerid_5p=(select linkerid from linker where linkername = ?)"+
+        " and linkerid_3p=(select linkerid from linker where linkername = ?)"+
+        " and vectorname=?";
+        DatabaseTransaction t = null;
+        Connection c = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        int result = -1;
+        try 
+        {
+            t = DatabaseTransaction.getInstance();
+            c = t.requestConnection();
+            stmt = c.prepareStatement(sql);
+            stmt.setString(1, linkerid5p_name);
+            stmt.setString(2, linkerid3p_name);
+            stmt.setString(3, vectorname);
+            rs = t.executeQuery(stmt);
+            if(rs.next())
+            {
+                result =  rs.getInt("STRATEGYID");
+              //  String name = rs.getString("STRATEGYNAME");
+              //  String type = rs.getString("TYPE");
+               }
+            return result;
+        } 
+        catch (Exception ex) 
+        {
+            System.out.println(ex);
+            throw new FlexDatabaseException(ex);
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+            DatabaseTransaction.closeConnection(c);
+        }
+    
+    }
+    
+    
+    
+    
     
     public static List getAllDestStrategy() {
         List l = new ArrayList();

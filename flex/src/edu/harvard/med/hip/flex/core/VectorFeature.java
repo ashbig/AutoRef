@@ -15,6 +15,7 @@ public class VectorFeature {
     protected String name;
     protected String description;
     protected String status;
+    private String              m_vector_name = null;
     
     /** Creates a new instance of VectorFeature */
     public VectorFeature() {
@@ -40,4 +41,15 @@ public class VectorFeature {
     public String getName() {return name;}
     public String getDescription() {return description;}
     public String getStatus() {return status;}
+    public String   getVectorName(){ return m_vector_name;}
+    
+    public void         setName(String v) { name=v;}
+    public void         setDescription(String v) { description= v;}
+    public void         setStatus(String v) { status = v;}
+    public void         setVectorName(String v){ m_vector_name = v;}
+    
+    public String       toString()
+    {
+       return name+" "+ description+" "+ status+" "+ m_vector_name;
+    }
 }

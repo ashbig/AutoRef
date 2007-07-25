@@ -1,5 +1,5 @@
 /**
- * $Id: Protocol.java,v 1.46 2005-11-29 20:08:58 dzuo Exp $
+ * $Id: Protocol.java,v 1.47 2007-07-25 19:09:33 Elena Exp $
  *
  * File     : FlexProcessException.java
  * Date     : 04162001
@@ -124,6 +124,10 @@ public class Protocol {
     public static final String CREATE_EXPRESSION_PLATE = "Create expression plate";
     public static final String ENTER_EXPRESSION_RESULT = "Enter expression result";
     public static final String REARRAY_OLIGO = "Rearray oligo plates";
+     public static final String UPLOAD_CONTAINERS_FROM_FILE = "Upload containers from file";
+   
+    
+    
     
     public static final int CREATE_EXPRESSION_PLATE_CODE = 55;
     public static final int ENTER_EXPRESSION_RESULT_CODE = 56;

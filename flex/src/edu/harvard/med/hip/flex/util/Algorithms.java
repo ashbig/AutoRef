@@ -163,8 +163,54 @@ public class Algorithms {
         return res;
     }
     
+    public static  String convertStringArrayToString(ArrayList arr, String delim)
+    {
+        StringBuffer res = new StringBuffer();
+        if (arr == null) return null;
+        for (int count = 0; count < arr.size();count++)
+        {
+            res.append((String)arr.get(count));
+            if (count != arr.size()- 1 ) res.append(delim);
+        }
+        return res.toString();
+    }
     
-    
+    public static String[] splitString(String value, String spliter, 
+         boolean isTrim, int array_size)
+    {
+        StringTokenizer st = null;
+        String result[] = null;
+        String val = null;
+        int member_number = 0;
+        
+        if(spliter == null)
+            st = new StringTokenizer(value);
+        else 
+            st = new StringTokenizer(value, spliter);
+        if (array_size>0) result = new String[array_size];
+        else
+        {
+            ArrayList temp = new ArrayList();
+            while(st.hasMoreTokens()) 
+            {
+                val = st.nextToken();
+                if (isTrim) val = val.trim();
+                temp.add( val );
+            }
+            result = new String[temp.size()];
+            for (int c = 0; c < temp.size(); c++)
+            {
+                result[member_number++] = (String)temp.get(c);
+            }
+        }
+        while(st.hasMoreTokens()) 
+        {
+             val = st.nextToken();
+            if (isTrim) val = val.trim();
+            result[member_number++]= val;
+        }
+        return result;
+    }
     
     
     public static int numberOf(String str, char ch) {
