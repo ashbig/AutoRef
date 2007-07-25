@@ -43,13 +43,14 @@ public class ImportConstruct
     public      void        setType(String v){m_type = v;}
     public      void        setSequenceId(int v){m_sequence_id = v;}
     
-    public      void        insert(Connection conn, int projectid, int workflowid) throws Exception
+    public   static   void        insert(Connection conn, int projectid, int workflowid,
+        int  constructid, int sequence_id, String   type , String  size_class  ) throws Exception
     {
-         if (m_id == -1)        m_id = FlexIDGenerator.getID("constructid");
+         if (constructid == -1)        constructid = FlexIDGenerator.getID("constructid");
       
             String sql = "INSERT INTO ConstructDesign (constructid, sequenceid, " +
         " constructtype, constructsizeclass, constructpairid,  projectid, workflowid)\n" +
-        " VALUES(" + m_id+ "," +m_sequence_id+ ",'" + m_type + "','"  + m_size_class + "',constructpairid.nextval,"
+        " VALUES(" + constructid+ "," + sequence_id+ ",'" + type + "','"  + size_class + "',constructpairid.nextval,"
          + projectid+","+workflowid+")";
           DatabaseTransaction.executeUpdate(sql,conn);
       

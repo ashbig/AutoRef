@@ -127,6 +127,7 @@ public class MgcMasterListImporter
         mgc_containers = readCloneInfo(  input,  fileName, report_file_name) ;
         //verify container duplicates, delete containers that already submitted 
     //    printContainers(mgc_containers);
+ 
         mgc_containers = verifyDuplicates(mgc_containers );
         if ( mgc_containers != null && mgc_containers.size() > 0)
         {
@@ -777,7 +778,6 @@ public class MgcMasterListImporter
                         //Integer.parseInt(info[0]),
                         //info[6], info[3], Integer.parseInt(info[4]),
                         //MgcSample.STATUS_AVAILABLE);
-                
                 
                 writeToFile("Get from import file mgc clone\t "+clone.toString() + "\n", report_file_name);
                cont.addSample(clone);
@@ -1436,7 +1436,7 @@ public class MgcMasterListImporter
     public static void main(String args[])
     {
         
-        String file = "E:\\HTaycher\\MGC\\Submissions\\IRAT_98-133.txt";
+        String file = "E:\\ARolfs\\MGC_Submission\\2006_nov_IRAT_120.txt";
         InputStream input;
         
         try

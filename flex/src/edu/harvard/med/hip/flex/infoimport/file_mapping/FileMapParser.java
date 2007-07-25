@@ -70,7 +70,7 @@ public class FileMapParser extends DefaultHandler
                                Attributes attributes) throws SAXException
       {
           String local_value = null; String local_name = null;
-           // System.out.println("here element " + localName);
+        //    System.out.println("here element " + localName);
   
           i_element_buffer = new StringBuffer();
           int file_type = FileStructure.FILE_TYPE_NOT_DEFINED;
@@ -128,7 +128,7 @@ public class FileMapParser extends DefaultHandler
                         else   if (local_name== FILE_COLUMN_OBJECT_PROPERTY_TYPE   )i_current_column.setObjectPropertyType(local_value);
                         else  if (local_name== FILE_COLUMN_OBJECT_INSTRUCTION   ) i_current_column.setPropertyInstruction(local_value);
                         else if (local_name== FILE_COLUMN_OBJECT_PROPERTY_ORDER   ) i_current_column.setObjectPropertyOrder(Integer.parseInt(local_value));
-                        
+                        else if (local_name == FILE_COLUMN_IS_KEY && local_value.equalsIgnoreCase("1"))i_current_column.setIsKey(true);
                       }
                  }
                   else
@@ -181,18 +181,12 @@ public class FileMapParser extends DefaultHandler
                         i_file_structure.addConnector(col_header,file_type,con_column);
                  }
            }
-              
-     
-             //System.out.println(localName +" "+ i_current_status);
       }
 
       public void endElement(String namespaceURI, String localName,
                                 String qualifiedName)
       {
-          
-          
-                
-            i_element_buffer= null;
+             i_element_buffer= null;
       }
       
       public void characters(char characters[], int start, int length)

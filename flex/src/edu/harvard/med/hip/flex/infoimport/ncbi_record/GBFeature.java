@@ -18,6 +18,7 @@ public class GBFeature
      
     public static final String         FEATURE_TYPE_CDS = "CDS";
     public static final String         FEATURE_TYPE_GENE = "gene";
+    public static final String         FEATURE_TYPE_SOURCE ="source";
     
     private String      m_key = null;
     private String      m_interval_to = null;

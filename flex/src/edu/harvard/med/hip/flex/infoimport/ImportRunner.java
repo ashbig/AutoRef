@@ -13,7 +13,11 @@ import java.io.*;
 import edu.harvard.med.hip.flex.user.*;
 import edu.harvard.med.hip.flex.util.*;
 import  edu.harvard.med.hip.flex.infoimport.file_mapping.*;
+import edu.harvard.med.hip.flex.process.*;
 
+import org.xml.sax.*;
+import org.xml.sax.helpers.DefaultHandler;
+import org.apache.xerces.parsers.SAXParser;
 
 
 public abstract class ImportRunner implements Runnable
@@ -27,9 +31,11 @@ public abstract class ImportRunner implements Runnable
     protected String      m_processed_items = null;
     protected int         m_items_type = -1;
     protected User        m_user = null;
+    protected Researcher        m_researcher = null;
     protected int         m_process_type = -1;
-    protected ArrayList     m_file_input_data = null;
+    protected Hashtable     m_file_input_data = null;
     private   String        m_process_title = null;
+    private   String        m_input_files_data_schema = null;
     /** Creates a new instance of ProcessRunner */
     public ImportRunner()
     {
@@ -37,6 +43,7 @@ public abstract class ImportRunner implements Runnable
         m_process_messages = new ArrayList();
     }
     public  void        setUser(User v){m_user=v;}
+    public  void        setResearcher( Researcher v)       { m_researcher = v;}
     public  void        setProcessType(int process_id)    {        m_process_type = process_id;    }
  
     public void       setInputData(int type,String item_ids)
@@ -44,12 +51,16 @@ public abstract class ImportRunner implements Runnable
          m_items_type = type;
          m_items = item_ids;
     }
-    public void         setInputData(int file_type, InputStream file_input) throws Exception
+    public void         setInputData(String file_type, InputStream file_input) throws Exception
     {
-        if ( m_file_input_data == null) m_file_input_data = new ArrayList();
+        if ( m_file_input_data == null) m_file_input_data = new Hashtable();
         //read files into file_data object
-        m_file_input_data.add(new edu.harvard.med.hip.flex.infoimport.file_mapping.FileToRead(file_input, true, file_type));
+        m_file_input_data.put(file_type, file_input );
        
+    }
+    public void         setDataFilesMappingSchema(String v)
+    { 
+        m_input_files_data_schema = v;
     }
     
      public  String             getItems()   {      return  m_items;    }   
@@ -69,6 +80,11 @@ public abstract class ImportRunner implements Runnable
                     {((AceToFlexImporter)this).run_process(); break;}
                case ConstantsImport.PROCESS_IMPORT_OUTSIDE_CONTAINERS_INTO_FLEX  : 
                     {((OutsidePlatesImporter)this).run_process(); break;}
+               case ConstantsImport.PROCESS_IMPORT_VECTORS : 
+               case ConstantsImport.PROCESS_IMPORT_LINKERS : 
+               case ConstantsImport.PROCESS_IMPORT_INTO_NAMESTABLE : 
+                    {((ItemsImporter)this).run_process(); break;}
+             
           }
      }
      
@@ -177,7 +193,7 @@ public abstract class ImportRunner implements Runnable
              String temp_path = FlexProperties.getInstance().getProperty("tmp");
             if (m_error_messages.size() > 0)
             {
-                fl = ImportRunner.writeFile( m_error_messages.toArray(), temp_path+"ProcessMessages_"+time_stamp+".txt", "\n");
+                fl = ImportRunner.writeFile( m_error_messages.toArray(), temp_path+"ErrorMessages_"+time_stamp+".txt", "\n");
           
                 Mailer.sendMessageWithAttachedFile(m_user.getUsername(), 
                 FlexProperties.getInstance().getProperty("HIP_EMAIL_FROM") ,
@@ -193,7 +209,41 @@ public abstract class ImportRunner implements Runnable
          catch(Exception e)         {         }
       }
      
-     
+   protected  FileStructure[]        readDataMappingSchema() throws Exception
+   {
+        
+        try
+        {
+            if ( m_input_files_data_schema == null)
+                throw new Exception("Select file mapping description");
+            InputStream in_stream = new FileInputStream(m_input_files_data_schema);
+             FileMapParser SAXHandler = new FileMapParser();
+             SAXParser parser = new SAXParser();
+             parser.setContentHandler(SAXHandler);
+             parser.setErrorHandler(SAXHandler);
+             InputSource in = new InputSource(in_stream);
+              parser.setFeature("http://xml.org/sax/features/string-interning", true);
+             parser.parse(in);
+             return SAXHandler.getFileStructures();
+        }
+        catch(Exception e)
+        {
+            m_error_messages.add("Cannot read data schema XML file");
+            throw new Exception("Cannot read data schema XML file");
+        }
+   }
+    
+   
+     protected boolean checkNamesInDatabase(ArrayList cur_names, Hashtable names )
+    {
+        for (int i_count = 0; i_count < cur_names.size(); i_count++)
+        {
+            if (names.get( (String)cur_names.get(i_count)) == null)
+                return false;
+        }
+        return true;
+    
+    }
      public static File writeFile(Object[] fileData, String file_name, String end_of_line)
         throws IOException
         {

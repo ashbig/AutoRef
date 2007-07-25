@@ -53,8 +53,23 @@ public class FileStructure
     public static final int FILE_TYPE_SEQUENCE_INFO =3;
     public static final int FILE_TYPE_GENE_INFO=4;
     public static final int FILE_TYPE_AUTHOR_INFO=5;
+    public static final int FILE_TYPE_VECTOR_INFO=6;
+    public static final int FILE_TYPE_VECTOR_FEATURE_INFO=7;
+    public static final int FILE_TYPE_LINKER_INFO=8;
+    public static final int FILE_TYPE_INPUT_FOR_NAME_TABLE=9;
     
      public static final int FILE_TYPE_XML_DATAMAPPING_SCHEMA = -10;
+   
+    public static   final   String   STR_FILE_TYPE_ONE_FILE_SUBMISSION =          "FILE_TYPE_ONE_FILE_SUBMISSION";
+    public static   final   String   STR_FILE_TYPE_PLATE_MAPPING=        "FILE_TYPE_PLATE_MAPPING";
+    public static   final   String   STR_FILE_TYPE_NOT_DEFINED=         "FILE_TYPE_NOT_DEFINED";
+    public static   final   String   STR_FILE_TYPE_SEQUENCE_INFO=        "FILE_TYPE_SEQUENCE_INFO";
+    public static   final   String   STR_FILE_TYPE_GENE_INFO =         "FILE_TYPE_GENE_INFO";
+    public static   final   String   STR_FILE_TYPE_AUTHOR_INFO=         "FILE_TYPE_AUTHOR_INFO";
+    public static   final   String   STR_FILE_TYPE_VECTOR_INFO  =    "FILE_TYPE_VECTOR_INFO";
+    public static   final   String   STR_FILE_TYPE_VECTOR_FEATURE_INFO=      "FILE_TYPE_VECTOR_FEATURE_INFO";
+     public static   final   String   STR_FILE_TYPE_LINKER_INFO=      "FILE_TYPE_LINKER_INFO";
+     public static   final   String   STR_FILE_TYPE_INPUT_FOR_NAME_TABLE=      "FILE_TYPE_INPUT_FOR_NAME_TABLE";
    
     
     /** Creates a new instance of FileStructure */

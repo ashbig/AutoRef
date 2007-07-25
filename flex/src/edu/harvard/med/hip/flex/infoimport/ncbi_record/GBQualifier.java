@@ -18,6 +18,7 @@ public class GBQualifier
     public static final String      Q_DB_REF = "db_xref";
     public static final String      Q_PROTEIN_ID = "protein_id";
     public static final String      Q_GENE = "gene";
+    public static final String      Q_CLONE = "clone";
     
     private String          m_name = null;
     private String          m_value = null;

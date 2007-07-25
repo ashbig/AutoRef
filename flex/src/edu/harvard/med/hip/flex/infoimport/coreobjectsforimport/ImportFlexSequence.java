@@ -66,7 +66,7 @@ public class ImportFlexSequence
         
         for (int count =0; count < m_additional_info.size(); count++)
         {
-            seq.append( (PublicInfoItem) m_additional_info.get(count));
+            seq.append( (PublicInfoItem) m_additional_info.get(count)+"\n");
         }
         return seq.toString();
      
@@ -100,10 +100,23 @@ public boolean              isVerified()
     if ( m_cds_start == -1 || m_cds_stop == -1 || m_sequencetext == null || m_sequencetext.length() == 0) return false;
     if ( m_cds_start >= m_sequencetext.length()) return false;
     if ( m_cds_stop > m_sequencetext.length())return false;
-    if (m_cds_stop - m_cds_start / 3 != 0 ) return false;
+    if ( (m_cds_stop - m_cds_start + 1) % 3 != 0 ) return false;
     return true;
 }
-    public void insert(Connection conn, ArrayList errors) throws Exception
+   
+
+public String               getStopCodon()
+{
+    if ( m_cds_start == -1 || m_cds_stop == -1 || m_sequencetext == null || m_sequencetext.length() == 0) return null;
+    return m_sequencetext.substring( m_cds_stop - 3, m_cds_stop);
+    
+}
+
+
+
+
+
+public void insert(Connection conn, ArrayList errors) throws Exception
     {
         if(m_id == -1)m_id = FlexIDGenerator.getID("sequenceid");
             
@@ -112,13 +125,19 @@ public boolean              isVerified()
             m_chromosome = ( m_chromosome == null) ? null : "'"+m_chromosome+"'";
              
             //insert into flexsequence table.
-            String sql = 	"insert into flexsequence (sequenceid, flexstatus, genusspecies, dateadded,"+
-            "cdsstart, cdsstop, cdslength, gccontent, cdnasource, chromosome)\n"+
-            "values ("+m_id+", '"+m_flexstatus+"', '"+m_species+"',sysdate,"+
-            m_cds_start+","+m_cds_stop+","+(m_cds_stop - m_cds_start) +","+getGccontent(m_sequencetext, m_cds_start,m_cds_stop)+
-            ","+m_cdnasource+","+m_chromosome+")";
+            String sql_i  = 	"insert into flexsequence (sequenceid, flexstatus, genusspecies, dateadded,"+
+            "cdsstart, cdsstop, cdslength, gccontent";
+             if ( m_cdnasource != null) sql_i +=   ",cdnasource";
+            if ( m_chromosome != null) sql_i += ",chromosome";
+            sql_i += ")";
+          
+            String sql_values =  " values ("+m_id+", '"+m_flexstatus+"', '"+m_species+"',sysdate,"+
+            m_cds_start+","+m_cds_stop+","+(m_cds_stop - m_cds_start + 1) +","+getGccontent(m_sequencetext, m_cds_start,m_cds_stop);
+            if ( m_cdnasource != null) sql_values +=   ","+m_cdnasource;
+            if ( m_chromosome != null) sql_values += ","+m_chromosome;
+            sql_values += ")";
             
-            DatabaseTransaction.executeUpdate(sql,conn);
+            DatabaseTransaction.executeUpdate(sql_i + sql_values ,conn);
             
             //insert into sequencetext table.
             if(m_sequencetext != null)
@@ -126,16 +145,16 @@ public boolean              isVerified()
                 int i=0;
                 while(m_sequencetext.length()-4000*i>4000) {
                     String text = m_sequencetext.substring(4000*(i), 4000*(i+1)).toUpperCase();
-                    sql = "insert into sequencetext(sequenceid, sequenceorder, sequencetext)\n"+
+                    sql_i = "insert into sequencetext(sequenceid, sequenceorder, sequencetext)\n"+
                     "values("+ m_id+","+(i+1)+",'"+text+"')";;
-                    DatabaseTransaction.executeUpdate(sql,conn);
+                    DatabaseTransaction.executeUpdate(sql_i,conn);
                     
                     i++;
                 }
                 String text = m_sequencetext.substring(4000*(i));
-                sql = "insert into sequencetext(sequenceid, sequenceorder, sequencetext)\n"+
+                sql_i = "insert into sequencetext(sequenceid, sequenceorder, sequencetext)\n"+
                 "values("+ m_id+","+(i+1)+",'"+text+"')";
-                DatabaseTransaction.executeUpdate(sql,conn);
+                DatabaseTransaction.executeUpdate(sql_i,conn);
             }
             
             PublicInfoItem.insertPublicInfo(  conn, "NAME", 

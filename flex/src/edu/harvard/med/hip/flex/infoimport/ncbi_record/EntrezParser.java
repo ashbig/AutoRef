@@ -20,6 +20,7 @@ import java.util.*;
 import edu.harvard.med.hip.flex.infoimport.coreobjectsforimport.*;
 import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.infoimport.*;
+import edu.harvard.med.hip.flex.util.*;
 // this dirty code use Axis later
 /**
  *
@@ -132,11 +133,13 @@ private static final String             GBSeqid ="GBSeqid";
      
      ArrayList       m_sequences = null;
      private StringBuffer          i_element_buffer = null;
+     private ArrayList             i_entered_names = null;
      public ImportFlexSequence          getImportSequence(int v){ return (ImportFlexSequence)  m_sequences.get(v); }
      
      public void startDocument()    
      { 
          m_sequences = new ArrayList();  
+         i_entered_names  = new ArrayList();  
       }
      
     
@@ -144,17 +147,17 @@ private static final String             GBSeqid ="GBSeqid";
                                Attributes attributes) throws SAXException
       {
             String local_value = null; String local_name = null;
-           // System.out.println("here element " + localName);
+          //  System.out.println("here element " + localName);
             if ( isWrongTag(localName))        
             {    
-                System.out.println("wrong tag   "+ localName);
+            //    System.out.println("wrong tag   "+ localName);
                // throw new SAXException("Wrong tag: "+localName);      
             }
-          System.out.println(localName + rawName +uri);
+        //  System.out.println(localName + rawName +uri);
             i_element_buffer = new StringBuffer();
           if (localName==GBSeq )    { i_current_sequence = new ImportFlexSequence(); m_sequences.add(i_current_sequence);          }
-          if ( localName == GBFeature_key  )       {              i_current_feature = new GBFeature();}
-          if (localName == GBQualifier_name)       { i_current_qualifier = new GBQualifier();}
+          if ( localName == GBFeature_key  )              {              i_current_feature = new GBFeature();}
+          if (localName == GBQualifier_name)                { i_current_qualifier = new GBQualifier();}
       
       }
        
@@ -163,15 +166,23 @@ private static final String             GBSeqid ="GBSeqid";
       public void endElement(String namespaceURI, String localName,
                                 String qualifiedName)
       {
-            PublicInfoItem p_info = null;
+           
+            PublicInfoItem p_info = null;int ind =-1;
              if ( i_element_buffer == null) return;
              String value = i_element_buffer.toString();
-          
+          // System.out.println(namespaceURI + localName +qualifiedName + value);
+        
+           
             if (localName == GBSeq_locus) 
             { 
-                p_info = new PublicInfoItem("LOCUS_ID", value); 
-                i_current_sequence.addPublicInfo(p_info);
+               /* if( !i_entered_names.contains("LOCUS_ID"))
+                {
+                    i_entered_names.add("LOCUS_ID");
+                     p_info = new PublicInfoItem("LOCUS_ID", value); 
+                     i_current_sequence.addPublicInfo(p_info);
+                 }
                  i_element_buffer= null;                return;
+                **/
             }
             if (localName == GBSeq_sequence)
             {
@@ -185,21 +196,31 @@ private static final String             GBSeqid ="GBSeqid";
             }
             if ( localName == GBSeq_accession_version )
             {
-                p_info = new PublicInfoItem("GENBANK_ACCESSION_VERSION", value); 
-                i_current_sequence.addPublicInfo(p_info);
-                 i_element_buffer= null;               return;
+                if( !i_entered_names.contains("GENBANK_ACCESSION_VERSION"))
+                {
+                    i_entered_names.add("GENBANK_ACCESSION_V");
+                    p_info = new PublicInfoItem("GENBANK_ACCESSION_V", value); 
+                    i_current_sequence.addPublicInfo(p_info);
+                }
+                 i_element_buffer= null;        
+                 return;
             }
              if ( localName == GBSeq_primary_accession )
             {
-                p_info = new PublicInfoItem("GENBANK_ACCESSION", value); 
-                i_current_sequence.addPublicInfo(p_info);
+                if( !i_entered_names.contains("GENBANK_ACCESSION"))
+                {
+                    i_entered_names.add("GENBANK_ACCESSION");
+                    p_info = new PublicInfoItem("GENBANK_ACCESSION", value); 
+                    i_current_sequence.addPublicInfo(p_info);
+                }
                  i_element_buffer= null;           return;
             }
             String q_value = null; String q_name = null;
             if ( localName == GBFeature_key )
             {
                 if    (value.intern() == GBFeature.FEATURE_TYPE_CDS ||
-                    value.intern() == GBFeature.FEATURE_TYPE_GENE)
+                    value.intern() == GBFeature.FEATURE_TYPE_GENE ||
+                       value.intern() == GBFeature.FEATURE_TYPE_SOURCE )
                 {
                     i_current_feature.setKey(value);
                 }
@@ -213,7 +234,8 @@ private static final String             GBSeqid ="GBSeqid";
             {
                     if ( value.intern() == GBQualifier.Q_DB_REF ||
                             value.intern() == GBQualifier.Q_GENE ||
-                            value.intern() == GBQualifier.Q_PROTEIN_ID)
+                            value.intern() == GBQualifier.Q_PROTEIN_ID ||
+                            value.intern() == GBQualifier.Q_CLONE)
                     {
                         i_current_qualifier.setName(value);
                     }
@@ -223,36 +245,84 @@ private static final String             GBSeqid ="GBSeqid";
                     }
                     i_element_buffer= null;                return;
             }
-                
+            if ( localName == GBSeqid && value.startsWith("gi|") && !i_entered_names.contains("GI"))    
+            {
+                value = value.substring(value.indexOf('|')+ 1);
+                i_entered_names.add("GI");
+                p_info = new PublicInfoItem("GI", value); 
+                i_current_sequence.addPublicInfo(p_info);
+                i_element_buffer= null;                return;
+            }
             if (localName == GBQualifier_value  && i_current_qualifier != null)
             {
                     if (i_current_qualifier.getName() == null ) return;
                     if (   i_current_qualifier.getName().intern() ==  GBQualifier.Q_DB_REF)
                     {
-                        int ind = value.indexOf(':');
+                         ind = value.indexOf(':');
                         if ( ind < 0 ) {i_current_qualifier = null; return;}
                         q_name = value.substring(0, ind); q_value = value.substring(ind+1);
-                        if ( ConstantsImport.getFlexSequenceNames().get(q_name) != null)
+                        
+                        // reassign for locus_id
+                        if ( q_name.equalsIgnoreCase("GeneId")) q_name = "LOCUS_ID";
+                        if ( ConstantsImport.getFlexSequenceNames().get(q_name) != null
+                                   && !i_entered_names.contains(q_name))
                         {
                             p_info = new PublicInfoItem(q_name,q_value ); 
+                                 i_entered_names.add(q_name);
                             i_current_sequence.addPublicInfo(p_info);
                         }
                     }
-                    else if (i_current_qualifier.getName().intern()  == GBQualifier.Q_GENE )
+                    else if (i_current_qualifier.getName().intern()  == GBQualifier.Q_GENE 
+                            &&  !i_entered_names.contains("GENE_SYMBOL"))
                     {
+                        i_entered_names.add("GENE_SYMBOL");
                          p_info = new PublicInfoItem("GENE_SYMBOL",value); 
                         i_current_sequence.addPublicInfo(p_info);
                      }
                     else if (i_current_qualifier.getName().intern() ==  GBQualifier.Q_PROTEIN_ID)
                     {
-                         int ind = value.indexOf(':');
+                        ind = value.indexOf(':');
                         if ( ind < 0 ) {i_current_qualifier = null; return;}
                         q_name = value.substring(0, ind-1); q_value = value.substring(ind+1);
-                        if ( ConstantsImport.getFlexSequenceNames().get(q_name) != null)
+                        if ( ConstantsImport.getFlexSequenceNames().get(q_name) != null
+                                 &&  !i_entered_names.contains("PID"))
                         {
+                            i_entered_names.add("PID");
                             p_info = new PublicInfoItem("PID",q_value ); 
                             i_current_sequence.addPublicInfo(p_info);
                         }
+                    }
+                    else if (i_current_qualifier.getName().intern() ==  GBQualifier.Q_CLONE)
+                    {
+                        //MGC:3716 IMAGE:3631740
+                        ArrayList tmp = Algorithms.splitString(value, " ");
+                        for ( int count = 0; count < tmp.size(); count++)
+                        {
+                            q_name = (String) tmp.get(count);
+                            ind = q_name.indexOf("MGC:");
+                            if ( ind != -1 ) 
+                            {
+                                  q_value = q_name.substring(ind+"MGC:".length()); q_name = "MGC_ID"; 
+                            }
+                            else
+                            {
+                                ind = q_name.indexOf("IMAGE:");
+                                if ( ind != -1) 
+                                {
+                                     q_value = q_name.substring(ind+"IMAGE:".length()); q_name = "IMAGE_ID";
+                                }
+                            
+                            }
+                            if ( ConstantsImport.getFlexSequenceNames().get(q_name) != null
+                                 &&  !i_entered_names.contains(q_name))
+                            {
+                                i_entered_names.add(q_name);
+                                p_info = new PublicInfoItem(q_name,q_value ); 
+                                i_current_sequence.addPublicInfo(p_info);
+                            }
+                        }
+                       
+                      
                     }
                     i_current_qualifier = null;
                     i_element_buffer= null;                return;
@@ -366,13 +436,13 @@ private static final String             GBSeqid ="GBSeqid";
         parser.setErrorHandler(SAXHandler);
         String featureURI = "http://xml.org/sax/features/string-interning";
         parser.setFeature(featureURI, true);
-        String urlString = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&retmode=xml&id=5";
+        String urlString = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&retmode=xml&id=75516650";
           java.net.URL url = new java.net.URL(urlString);
         InputSource in = new InputSource( new InputStreamReader(    url.openStream()));
         parser.setFeature(featureURI, true);
         parser.parse(in);
         ImportFlexSequence sw=          SAXHandler.getImportSequence(0);
-        System.out.println(sw);
+        //System.out.println(sw);
   }
   catch(Exception e)
   {

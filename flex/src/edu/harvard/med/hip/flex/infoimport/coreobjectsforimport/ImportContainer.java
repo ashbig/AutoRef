@@ -52,6 +52,8 @@ public class ImportContainer
         m_additional_info = new ArrayList();
          i_submitted_samples = new int[ number_of_samples_per_container + 1];
     }
+    
+    public          void        setType(String v){ m_type = v;}
     public          void        setLocation(int v){ m_location_id = v;}
     public          ArrayList   getSamples(){ return m_samples;}
     public int                  getId(){ return m_id;}
@@ -73,7 +75,7 @@ public class ImportContainer
         i_submitted_samples[ v.getPosition()] = 1;
         m_samples.add(v);   
     }
-    public          void        addPublicInfo(PublicInfoItem v){m_additional_info.add(v);}
+    public          void        addPublicInfo(PublicInfoItem v){if ( !m_additional_info.contains(v)) m_additional_info.add(v);}
     public          void       setPublicInfo(ArrayList v){m_additional_info = v;}
     public          ArrayList        getPublicInfo(){ return m_additional_info;}
     public String               getLabel(){ return m_label;}
@@ -89,43 +91,94 @@ public class ImportContainer
         }
         return null;
     }
-     public void insert(Connection conn, ArrayList errors) throws FlexDatabaseException
+    
+     private  String getLabel( int thread_number, String project_code, String plate_type)
+     {
+        int count = Integer.toString(thread_number).length();
+        StringBuffer temp = new StringBuffer(project_code + plate_type) ;
+        for (int i = 0; i < 6 - count; i++)
+        {
+            temp.append("0");
+        }
+        
+        return ( temp.toString() + thread_number );
+    }
+     
+     
+     public void insert(Connection conn, ArrayList errors, 
+             int projectid, int workflowid,
+             String project_code,  String plate_type) throws Exception
      {
         int threadid = FlexIDGenerator.getID("threadid");
         if (m_id == -1)
             m_id = FlexIDGenerator.getID("containerid");
-        int is_addition_info = (m_additional_info.size() > 0 )? 1:0;
+        
+        
+        // reassigne label 
+        
+        
+        PublicInfoItem p_info= new PublicInfoItem("USER_ID", m_label);
+        this.addPublicInfo(p_info);
+        m_label = getLabel( FlexIDGenerator.getID("threadid"),  project_code,  plate_type);
+          int is_addition_info = (m_additional_info.size() > 0 )? 1:0;
+     
         String sql = 	"insert into containerheader " +
         "(containerid, containertype, locationid, label, threadid, additionalinfo) "+
         "values ("+m_id+",'"+m_type+"',"+m_location_id+",'"+m_label+"',"+threadid+","+
                 is_addition_info+")";
+      
         
         DatabaseTransaction.executeUpdate(sql,conn);
         PublicInfoItem.insertPublicInfo(  conn, "CONTAINERHEADER_NAME", 
             m_additional_info, m_id, "CONTAINERID",
             true, errors) ;
+        
+        ImportSample sample = null;
         //foreach sample, insert record into containercell and sample table
         for (int count = 0; count < m_samples.size(); count++)
         {
-            ((ImportSample) m_samples.get(count)).insert(conn, m_id, errors);
-        }
+           try
+           {
+               sample = (ImportSample) m_samples.get(count);
+                ImportConstruct.insert(conn, projectid,  workflowid,
+                    sample.getConstructId(), Integer.parseInt( sample.getSequenceId()), 
+                    sample.getConstructType() , sample.getConstructSize() );
+                 sample.insert(conn, m_id, errors);
+                 }
+            catch(Exception e)
+            {
+                System.out.println(e.getMessage());
+            }
+           
+         }
     }
      
-     public void insertMGC(Connection conn, ArrayList errors, String file_name) throws FlexDatabaseException
+     public void insertMGC(Connection conn, ArrayList errors, String file_name) throws Exception
      {
-          
+        PublicInfoItem pi_temp = null;  
         int threadid = FlexIDGenerator.getID("threadid");
         if (m_id == -1)
             m_id = FlexIDGenerator.getID("containerid");
+        
+        // replace label and add USER_ID property 
+        
+        String originalContainerName = m_label;
+        PublicInfoItem p_info= new PublicInfoItem("USER_ID", m_label);
+        this.addPublicInfo(p_info);
+        m_label = MgcContainer.getLabel(FlexIDGenerator.getID("MGCCONTAINERLABEL"));
+             
+        
         String sql = 	"insert into containerheader " +
         "(containerid, containertype, locationid, label, threadid) "+
         "values ("+m_id+",'"+m_type+"',"+m_location_id+",'"+m_label+"',"+threadid+")";
         
         DatabaseTransaction.executeUpdate(sql,conn);
         
-         String originalContainerName = PublicInfoItem.getPublicInfoByName("ORIGINALLABEL",m_additional_info).getValue();
-         String marker =  PublicInfoItem.getPublicInfoByName("MARKER",m_additional_info).getValue();
-         String sql1 = "insert into mgccontainer " +
+        
+          pi_temp =  PublicInfoItem.getPublicInfoByName("MARKER",m_additional_info);
+           String marker = ( pi_temp == null) ? "" : pi_temp.getValue();;
+         
+          String sql1 = "insert into mgccontainer " +
             "(mgccontainerid, filename, oricontainer, marker ,glycerolcontainerid,CULTURECONTAINERID, dnacontainerid) "+
             "values ("+ m_id + ",'" +file_name+ "','"+ originalContainerName + "','" + marker + "', -1, -1,-1)";
             DatabaseTransaction.executeUpdate(sql1,conn);

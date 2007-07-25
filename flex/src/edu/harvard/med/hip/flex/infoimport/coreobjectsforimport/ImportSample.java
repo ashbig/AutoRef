@@ -9,13 +9,16 @@
 
 package edu.harvard.med.hip.flex.infoimport.coreobjectsforimport;
 
+import java.io.*;
 import java.util.*;
 import java.sql.*;
-import javax.sql.*;
+import java.util.*;
+import javax.crypto.NullCipher;
+import sun.jdbc.rowset.*;
 
+import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.util.*;
-import edu.harvard.med.hip.flex.core.*;
 /**
  *
  * @author htaycher
@@ -25,6 +28,20 @@ public class ImportSample
   
     public static final String      SAMPLE_POSITION = "POSITION";
     public static final String      SAMPLE_CONSTRUCT_TYPE = "CONSTRUCT_TYPE";
+    public static final String      SAMPLE_CONSTRUCT_SIZE ="CONSTRUCT_SIZE";
+    
+    // for clones tables only
+    public static final String      SAMPLE_CLONE_STATUS ="CLONE_STATUS";
+    public static final String      SAMPLE_CLONE_TYPE ="CLONE_TYPE";
+    public static final String      SAMPLE_CLONING_STRATEGYID="CLONING_STRATEGYID";
+    
+    
+    public static final String      CLONE_STATUS_SEQUENCE_VERIFIED = "SEQUENCE VERIFIED";
+public static final String      CLONE_STATUS_UNSEQUENCED = "UNSEQUENCED";
+public static final String      CLONE_STATUS_IN_PROCESS = "IN PROCESS";
+public static final String      CLONE_STATUS_SUCESSFUL = "SUCESSFUL";
+public static final String      CLONE_STATUS_FAIL = "FAIL";
+public static final String      CLONE_STATUS_FAILED_BY_SEQUENCE_VALIDATION ="FAILED BY SEQUENCE VALIDATION";
 
     private int         m_id = -1;
     private int         m_construct_id =-1;
@@ -36,6 +53,9 @@ public class ImportSample
      private String         m_sequence_id = null;
      private String         m_construct_type = null;
      private String            m_construct_size_class = ImportConstruct.CONSTRUCT_SIZE_SMALL;
+    private int             i_cloning_strategy_id = -1;
+    private String             i_clone_type = null;
+    private String              i_clone_status = null;
    
     
     /** Creates a new instance of ImportSample */
@@ -50,20 +70,37 @@ public class ImportSample
     }
     
     public int          getPosition(){ return m_position;}
+    public int          getId() throws Exception{  if (m_id == -1)        m_id = FlexIDGenerator.getID("sampleid");return m_id;}
     public String       getSequenceId(){ return m_sequence_id;}
-     public void          setPosition(int v){  m_position = v;}
-   
+    public int          getConstructId() throws Exception{  if (m_construct_id == -1)        m_construct_id = FlexIDGenerator.getID("constructid"); return m_construct_id;}
+    public String       getConstructType(   ){  return    m_construct_type ;}
+      public String     getConstructSize(  ){   return        m_construct_size_class ;}
+    
+    public int          getCloningStrategyId(   ){  return    i_cloning_strategy_id;}
+    public String       getCloneType(   ){  return    i_clone_type ;}
+    public String       getCloneStatus(   ){  return     i_clone_status ;}
+ 
+    
+    public void          setPosition(int v){  m_position = v;}
     public void         setConstructId(int v){    m_construct_id = v;}
     public void         setConstructType( String   v){      m_construct_type = v;}
      public void         setConstructSize( String v){           m_construct_size_class = v;}
-    public void         setSequenceID(String v){ m_sequence_id = v;}
+    public void         setSequenceId(String v){ m_sequence_id = v;}
     public          void        addPublicInfo(PublicInfoItem v)
     {
         if (m_additional_info == null) m_additional_info = new ArrayList();
-        m_additional_info.add(v);
+        if ( !m_additional_info.contains(v))
+                m_additional_info.add(v);
     }
     public void         setContainerId(int v){         m_containerid = v;}
     public ArrayList    getPublicInfo() { return m_additional_info;}
+    public void          setCloningStrategyId(int v   ){      i_cloning_strategy_id = v;}
+    public void         setCloneType( String v  ){      i_clone_type  = v;}
+    public void         setCloneStatus( String v  ){       i_clone_status  = v;}
+ 
+    
+    
+    
     public boolean      isSameSample(ImportSample sample)
     {
          if (m_position != sample.getPosition()) return false;
@@ -77,14 +114,35 @@ public class ImportSample
        
          return true;
     }
-    public void insert(Connection conn, int containerid, ArrayList errors) throws FlexDatabaseException
+    
+    public String toString()
+    {
+        StringBuffer seq = new StringBuffer();
+        seq.append("ID: "+m_id +"\n");
+        seq.append("Status: "+m_status+"\n");
+        seq.append("Position: "+m_position+"\n");
+        seq.append("Construct ID: "+m_containerid+"\n");
+        seq.append("Sequence ID: "+m_sequence_id+"\n");
+        seq.append("Construct Type: "+m_construct_type+"\n");
+        
+        for (int count =0; count < m_additional_info.size(); count++)
+        {
+            seq.append( (PublicInfoItem) m_additional_info.get(count)+"\n");
+        }
+        return seq.toString();
+     
+    }
+    
+    
+    public void insert(Connection conn, int containerid, ArrayList errors) throws Exception
      {
            int is_addition_info = (m_additional_info.size() > 0 )? 1:0;
              if (m_id == -1)        m_id = FlexIDGenerator.getID("sampleid");
-      
+          if(m_construct_id == -1) m_construct_id =  FlexIDGenerator.getID("constructid");
+         
            String sql = "insert into sample (sampleid, sampletype, containerid, containerposition,"
           +"       constructid, status_gb, additionalinfo)"
-         + "values ("+ m_id +",'"+ m_type +"',"+m_containerid+","+m_position
+         + "values ("+ m_id +",'"+ m_type +"',"+containerid+","+m_position
         + ","+m_construct_id + ",'"+m_status+"',"+is_addition_info+")";
        
         DatabaseTransaction.executeUpdate(sql,conn);
@@ -94,35 +152,221 @@ public class ImportSample
         DatabaseTransaction.executeUpdate(sql, conn);
          PublicInfoItem.insertPublicInfo(  conn, "SAMPLE_NAME", 
                 m_additional_info, m_id, "SAMPLEID",                true, errors) ;
+         
+   
        
       }
-       public void insertMGC(Connection conn,  int containerid, ArrayList errors) throws FlexDatabaseException
+       public void insertMGC(Connection conn,  int containerid, ArrayList errors) throws Exception
      {
+           PublicInfoItem pi_temp = null;
+           
+           pi_temp =  PublicInfoItem.getPublicInfoByName("VECTOR",m_additional_info);
+           if (pi_temp == null)  throw new Exception("No vector set for the ");
+           String vector =  pi_temp.getValue();
+           m_additional_info.remove(pi_temp);
+       
+           String mgc_status = ( m_sequence_id != null)? MgcSample.STATUS_AVAILABLE: MgcSample.STATUS_NO_SEQUENCE;
+           
+           String orientation = null;
+           pi_temp =  PublicInfoItem.getPublicInfoByName("ORIENTATION",m_additional_info);
+           if ( pi_temp != null)
+           {
+               orientation = pi_temp.getValue();
+               m_additional_info.remove(pi_temp);
+           }
+           else
+           {
+               orientation = String.valueOf( MgcSample.ORIENTATION_NOTKNOWN );
+           }
+             
+           String row =  null; String column = null;
+           //if they were not defined
+           if ( PublicInfoItem.getPublicInfoByName("ROW",m_additional_info)== null ||
+                   PublicInfoItem.getPublicInfoByName("COLUMN",m_additional_info) == null )
+           {
+               String temp = Algorithms.convertWellFromInttoA8_12(m_position);
+               column = temp.substring(1);
+               row = String.valueOf( temp.charAt(0));
+               pi_temp =  PublicInfoItem.getPublicInfoByName("COLUMN",m_additional_info);
+               if ( pi_temp!= null ) m_additional_info.remove(pi_temp);
+               pi_temp =  PublicInfoItem.getPublicInfoByName("ROW",m_additional_info);
+               if ( pi_temp!= null ) m_additional_info.remove(pi_temp);
+           }
+           else
+           {
+               pi_temp =  PublicInfoItem.getPublicInfoByName("ROW",m_additional_info);
+               row =  pi_temp.getValue();
+               m_additional_info.remove(pi_temp);
+               pi_temp =  PublicInfoItem.getPublicInfoByName("COLUMN",m_additional_info);
+               column = pi_temp.getValue();
+               m_additional_info.remove(pi_temp);
+            }
+           
+         
+            
              int is_addition_info = (m_additional_info.size() > 0 )? 1:0;
              if (m_id == -1)        m_id = FlexIDGenerator.getID("sampleid");
       
            String sql = "insert into sample (sampleid, sampletype, containerid, containerposition,"
-          +"       constructid, status_gb, additionalinfo)"
-         + "values ("+ m_id +",'"+ m_type +"',"+m_containerid+","+m_position
-        + ","+m_construct_id + ",'"+m_status+"',"+is_addition_info+")";
+          +"        status_gb, additionalinfo)"
+         + "values ("+ m_id +",'"+ m_type +"',"+containerid+","+m_position
+        +  ",'"+m_status+"',"+is_addition_info+")";
        
-            DatabaseTransaction.executeUpdate(sql,conn);
+           DatabaseTransaction.executeUpdate(sql,conn);
 
             sql = "insert into containercell (containerid, position, sampleid) " +
                 "values(" + containerid + ","+m_position+","+m_id+")";
             DatabaseTransaction.executeUpdate(sql, conn);
-            
-           String mgc_status = ( m_sequence_id != null)? MgcSample.STATUS_AVAILABLE: MgcSample.STATUS_NO_SEQUENCE;
-           String orientation = PublicInfoItem.getPublicInfoByName("ORIENTATION",m_additional_info).getValue();;
-           String vector = PublicInfoItem.getPublicInfoByName("VECTOR",m_additional_info).getValue();;
-           String row = PublicInfoItem.getPublicInfoByName("ROW",m_additional_info).getValue();;
-           String column = PublicInfoItem.getPublicInfoByName("COLUMN",m_additional_info).getValue();;
-           String mgc_id = PublicInfoItem.getPublicInfoByName("MGCID",m_additional_info).getValue();;
-           String image_id = PublicInfoItem.getPublicInfoByName("IMAGEID",m_additional_info).getValue();;
+             
+           pi_temp =  PublicInfoItem.getPublicInfoByName(FlexSequence.MGC_ID,m_additional_info);
+           String mgc_id = ( pi_temp == null) ? "-1" : pi_temp.getValue();
+        
+           pi_temp =  PublicInfoItem.getPublicInfoByName(FlexSequence.IMAGE_ID,m_additional_info);
+           String image_id = ( pi_temp == null) ? "-1" : pi_temp.getValue();
+         
            sql = "insert into mgcclone (mgccloneid, mgcid, imageid, vector, orgrow, orgcol, "
             + " sequenceid, status, orientation)  values ("+ m_id + "," + mgc_id +","+ image_id +
             ",'"+ vector + "','"+ row+"',"+ column + "," + m_sequence_id + ",'" + mgc_status + "',"+ orientation +")" ;
            DatabaseTransaction.executeUpdate(sql, conn);
            
        }
+       
+       
+       public static void populateObtainedMasterprogressTables(Connection conn, Collection samples             ) throws Exception
+       {
+            ResultSet rs = null;   
+            String clone_type= null; String clone_status = null;
+            int cloning_strategy = -1;
+            PublicInfoItem  p_info = null;
+            ImportSample sample = null;
+  String sqlQuery_populateCloningprogressTable = "select statusid, constructid from cloningprogress"+
+        " where constructid in (select constructid from sample where sampleid=?)";
+  String sql_populateCloningprogressTable = "insert into cloningprogress select distinct constructid, ? "+
+        " from sample where sampleid=?";
+  String sqlUpdate_populateCloningprogressTable = "update cloningprogress set statusid= ?"+ConstructInfo.CLONE_OBTAINED_ID+
+        " where constructid=?";
+  String sql_populateObtainedmastercloneTable = "insert into obtainedmasterclone"+
+        " select mastercloneid.nextval, s.sampleid, s.containerid,"+
+        " c.label, s.containerposition, s.sampletype, s.constructid"+
+        " from sample s, containerheader c where s.containerid=c.containerid  and s.sampleid=?";
+String sql_populateClonesTable = "insert into clones (CLONEID,CLONENAME,"+
+        " CLONETYPE,MASTERCLONEID,SEQUENCEID,STRATEGYID,COMMENTS,STATUS,CONSTRUCTID)"+
+        " select clonesid.nextval, null, ?, o.mastercloneid,"+
+        " c.sequenceid, ?, null, ?, c.constructid"+
+        " from obtainedmasterclone o, constructdesign c, sample s"+
+        " where o.sampleid=s.sampleid  and s.constructid=c.constructid and s.sampleid=?";
+            
+String sql_populateOriginalStorageTable = "insert into clonestorage"+
+        " select storageid.nextval, o.sampleid, 'Original Storage',"+
+        " 'GLYCEROL', c.cloneid, o.containerid, o.containerlabel, o.containerposition"+
+        " from obtainedmasterclone o, clones c  where o.mastercloneid=c.mastercloneid  and o.sampleid=?";
+        
+String sql_updateSampleTable = "update sample set cloneid= (select cloneid from clonestorage"+
+	" where storagesampleid=?) where sampleid=? and cloneid is null";
+
+ String sql_updateSequenceTable = "update flexsequence set flexstatus='"+FlexSequence.CLONE_OBTAINED+"'"+
+        " where sequenceid in (select distinct sequenceid"+
+        " from constructdesign where constructid in ("+
+        " select distinct constructid from sample where sampleid=?))"+
+        " and (flexstatus in('"+FlexSequence.INPROCESS+"','"+FlexSequence.FAILED+"','"
+        +FlexSequence.FAILED_CLONING+"','"+FlexSequence.PENDING+"','"+FlexSequence.REJECTED+"'))";
+            
+PreparedStatement stmt_populateCloningprogressTable = conn.prepareStatement(sql_populateCloningprogressTable);
+PreparedStatement stmtQuery_populateCloningprogressTable = conn.prepareStatement(sqlQuery_populateCloningprogressTable);
+PreparedStatement stmtUpdate_populateCloningprogressTable = conn.prepareStatement(sqlUpdate_populateCloningprogressTable);
+PreparedStatement stmt_populateObtainedmastercloneTable = conn.prepareStatement(sql_populateObtainedmastercloneTable);        
+PreparedStatement stmt_populateClonesTable = conn.prepareStatement(sql_populateClonesTable);
+PreparedStatement stmt_populateOriginalStorageTable = conn.prepareStatement(sql_populateOriginalStorageTable);
+PreparedStatement stmt_updateSampleTable = conn.prepareStatement(sql_updateSampleTable);
+PreparedStatement stmt_updateSequenceTable = conn.prepareStatement(sql_updateSequenceTable);
+        Iterator iter =   samples.iterator();
+        while ( iter.hasNext())
+        {
+           
+        //populateCloningprogressTable 
+            sample = (ImportSample)iter.next();
+            clone_status = sample.getCloneStatus();
+            clone_type = sample.getCloneType();
+            cloning_strategy = sample.getCloningStrategyId();
+            
+            if ( clone_type == null || clone_status == null || cloning_strategy ==-1) 
+            {
+                throw new Exception("Cannot submit sample into clones table (clone type, clone status or cloning strategy is not valid: sample info "+sample.toString());
+            }
+            if ( !isValidCLoneStatus(clone_status))
+                throw new Exception("Cannot submit sample into clones table clone status is not valid: sample info "+sample.toString());
+    
+            stmtQuery_populateCloningprogressTable.setInt(1, sample.getId());
+            rs = DatabaseTransaction.executeQuery(stmtQuery_populateCloningprogressTable);
+            if(rs.next()) 
+            {
+                int statusid=rs.getInt(1);
+                int constructid = rs.getInt(2);
+                if(statusid == ConstructInfo.SEQUENCE_REJECTED_ID || statusid == ConstructInfo.FAILED_CLONING_ID) 
+                {
+                    stmtUpdate_populateCloningprogressTable.setInt(1, constructid);
+                    DatabaseTransaction.executeUpdate(stmtUpdate_populateCloningprogressTable);
+                }
+           } 
+            else
+            {
+                stmt_populateCloningprogressTable.setInt(1, mapCloneStatusToConstructStatus(clone_status) );
+                stmt_populateCloningprogressTable.setInt(2, sample.getId());
+                DatabaseTransaction.executeUpdate(stmt_populateCloningprogressTable);
+            }
+            stmt_populateObtainedmastercloneTable.setInt(1, sample.getId());
+            DatabaseTransaction.executeUpdate(stmt_populateObtainedmastercloneTable);
+            
+            
+          
+            stmt_populateClonesTable.setString(1, clone_type);
+	    stmt_populateClonesTable.setInt(2, cloning_strategy);
+	    stmt_populateClonesTable.setString(3, clone_status);
+            stmt_populateClonesTable.setInt(4, sample.getId());
+            DatabaseTransaction.executeUpdate(stmt_populateClonesTable);
+            
+            stmt_populateOriginalStorageTable.setInt(1, sample.getId());
+	    DatabaseTransaction.executeUpdate(stmt_populateOriginalStorageTable);
+	    stmt_updateSampleTable.setInt(1, sample.getId());
+	    stmt_updateSampleTable.setInt(2, sample.getId());
+	    DatabaseTransaction.executeUpdate(stmt_updateSampleTable);
+	    stmt_updateSequenceTable.setInt(1, sample.getId());
+            DatabaseTransaction.executeUpdate(stmt_updateSequenceTable);
+        }
+         
+        DatabaseTransaction.closeResultSet(rs);
+        DatabaseTransaction.closeStatement(stmtQuery_populateCloningprogressTable);
+        DatabaseTransaction.closeStatement(stmtUpdate_populateCloningprogressTable);
+        DatabaseTransaction.closeStatement(stmt_populateCloningprogressTable);
+        DatabaseTransaction.closeStatement(stmt_populateObtainedmastercloneTable);
+ 	DatabaseTransaction.closeStatement(stmt_populateClonesTable);
+ 	DatabaseTransaction.closeStatement(stmt_populateOriginalStorageTable);
+ 	DatabaseTransaction.closeStatement(stmt_updateSampleTable);
+ 	DatabaseTransaction.closeStatement(stmt_updateSequenceTable);
+      
+    }
+
+   private static int      mapCloneStatusToConstructStatus(String status)
+   {
+      
+     if ( status.intern() == CLONE_STATUS_SEQUENCE_VERIFIED)   return 4	;//SEQUENCE VERIFIED
+     if ( status.intern() == CLONE_STATUS_UNSEQUENCED ) return 1	;//CLONE OBTAINED
+     if ( status.intern() == CLONE_STATUS_IN_PROCESS) return 3	;//IN SEQUENCING PROCESS	
+     if ( status.intern() == CLONE_STATUS_SUCESSFUL) return 4	;//SEQUENCE VERIFIED
+     if ( status.intern() == CLONE_STATUS_FAIL ) return 6	;//FAILED CLONING
+     if ( status.intern() == CLONE_STATUS_FAILED_BY_SEQUENCE_VALIDATION) return 5	;//SEQUENCE REJECTED
+     return -1;
+   }
+   
+   
+   private static boolean      isValidCLoneStatus(String status)
+   {
+         if ( status.intern() == CLONE_STATUS_SEQUENCE_VERIFIED ||
+                 status.intern() == CLONE_STATUS_UNSEQUENCED 
+                 || status.intern() == CLONE_STATUS_IN_PROCESS
+                 || status.intern() == CLONE_STATUS_SUCESSFUL
+                 || status.intern() == CLONE_STATUS_FAIL 
+                 || status.intern() == CLONE_STATUS_FAILED_BY_SEQUENCE_VALIDATION) return true	;//SEQUENCE REJECTED
+     return false;
+   }
 }
