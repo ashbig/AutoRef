@@ -365,7 +365,7 @@ public class OrderProcessManager {
             }
             
             CloneManager manager = new CloneManager(conn);
-            Map found = manager.queryClonesByCloneid(items, true, true, isWorkingStorage, true, null, null, null, Clone.AVAILABLE);
+            Map found = manager.queryClonesByCloneid(items, true, true, isWorkingStorage, true, null, null, null, null);
             
             List orderClones = new ArrayList();
             for(int i=0; i<clones.size(); i++) {
