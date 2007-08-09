@@ -231,6 +231,11 @@ public class CloneVector {
     public void         setFile(String v) { file =v;}
     public void         setPath(String v) { path =v;}
      
+    public String toString()
+    {
+       return "Vector name: "+  name+" vector source: "+  source+" vector type: "+ type
+               +" hip name: "+ hipname;
+    }
     public static void            insertVectors(ArrayList vectors,Connection conn) throws Exception
     {
         String sql_vector = "insert into vector (vectorid, VECTORNAME, VECTORSOURCE  ,VECTORTYPE , "
@@ -321,7 +326,7 @@ public class CloneVector {
       
     }
       
-      
+   
       //***************************
     public static void main(String args[]) {
         String vectorname = "pDNR-Dual";

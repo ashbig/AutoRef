@@ -78,6 +78,13 @@ public class CloningStrategy {
         this.id = id;
     }
     
+    public String toString()
+    {
+        return "Strategy name:" + name+" vector name: "+ clonevector
+                +" linker 5p name: "+ linker5p.getName() +
+                " linker 3p name: " + linker3p.getName() +" type: "+type;
+     }
+    
     public int getId() {return id;}
     public String getName() {return name;}
     public CloneVector getClonevector() {return clonevector;}
@@ -85,6 +92,13 @@ public class CloningStrategy {
     public CloneLinker getLinker3p() {return linker3p;}
     public String getType() {return type;}
     
+    
+    public void             setName(String v) { name = v;}
+    public void             setClonevector(CloneVector v) { clonevector  =v;}
+    public void             setLinker5p(CloneLinker v) { linker5p = v;}
+    public void             setLinker3p(CloneLinker v) { linker3p = v;}
+    public void             setType(String v) { type = v;}
+
     public static CloningStrategy findStrategyByName(String name) {
         String sql = "Select * from cloningstrategy where strategyname='"+name+"'";
         DatabaseTransaction t = null;
@@ -214,13 +228,39 @@ public class CloningStrategy {
     
     }
     
-    
-    
-    
-    
-    public static List getAllDestStrategy() {
+    public static List getAllCloningStrategies() 
+    {
+        String sql = "select strategyid, strategyname, vectorname, linkerid_5p, "
++"(select linkername from linker where linkerid=linkerid_5p) as linker_5p_name, linkerid_3p, "
++" (select linkername from linker where linkerid=linkerid_3p) as linker_3p_name, type "
+ +" from cloningstrategy";
         List l = new ArrayList();
+        DatabaseTransaction t = null;
+        ResultSet rs = null;
+        try {
+            t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            while (rs.next()) 
+            {
+                CloningStrategy c = new CloningStrategy(rs.getInt("strategyid"), 
+                        rs.getString("strategyname"),
+                        new CloneVector(rs.getString("vectorname")), 
+                        new CloneLinker(rs.getInt("linkerid_5p"), rs.getString("linker_5p_name"),""),
+                        new CloneLinker(rs.getInt("linkerid_3p"), rs.getString("linker_3p_name"),""));
+                l.add(c);
+            }
+        } catch (Exception ex) {
+            System.out.println(ex);
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+        return l;
+    }
+    
+    public static List getAllDestStrategy()
+    {
         String sql = "select * from cloningstrategy where type='destination plasmid'";
+        List l = new ArrayList();
         DatabaseTransaction t = null;
         ResultSet rs = null;
         try {
@@ -302,5 +342,51 @@ public class CloningStrategy {
         }
         
         return 0;
+    }
+    
+    
+    public static void            insertCloningStrategies(Collection cloning_strategies,Connection conn) 
+            throws Exception
+    {
+        String sql_strategy = "insert into cloningstrategy (strategyid, strategyname, linkerid_5p, linkerid_3p, vectorname, type   )"+
+        " values(strategyid.nextval,?,(select linkerid from linker where linkername=?),(select linkerid from linker where linkername=?),?,?)";
+  
+       PreparedStatement stmt_strategy = null;
+       CloningStrategy  cl_strategy = null;
+       String temp = null;
+        try {
+            stmt_strategy = conn.prepareStatement(sql_strategy);
+            Iterator iter = cloning_strategies.iterator();
+            while(iter.hasNext())
+            {
+                cl_strategy = (CloningStrategy) iter.next();
+                temp = (cl_strategy.getName() == null) ? "strategy "+ cl_strategy.getClonevector().getName()
+                : cl_strategy.getName();
+                if ( temp.length() > 49) temp = temp.substring(0,49);
+               /*sql_strategy = "insert into cloningstrategy (strategyid, strategyname, linkerid_5p, linkerid_3p, vectorname, type   )"+
+        " values(strategyid.nextval,'"+temp
+ +"',(select linkerid from linker where linkername='"+cl_strategy.getLinker5p().getName()
+ +"'),(select linkerid from linker where linkername='"+cl_strategy.getLinker3p().getName()+"'),'"
+  + cl_strategy.getClonevector().getName()+ "','"+cl_strategy.getType()+"')";
+  DatabaseTransaction.executeUpdate(sql_strategy,conn);
+  /**/
+                stmt_strategy.setString(1, temp);
+                stmt_strategy.setString(2, cl_strategy.getLinker5p().getName() );
+                stmt_strategy.setString(3, cl_strategy.getLinker3p().getName() );
+                stmt_strategy.setString(4, cl_strategy.getClonevector().getName() );
+                stmt_strategy.setString(5, cl_strategy.getType());
+                
+                DatabaseTransaction.executeUpdate(stmt_strategy);
+             }
+           
+        } catch (Exception ex) {
+            throw new Exception("Error occured while inserting cloning strategy info. \n "+ex.getMessage());
+            
+        }
+         finally
+         {
+              DatabaseTransaction.closeStatement(stmt_strategy);
+         }
+      
     }
 }

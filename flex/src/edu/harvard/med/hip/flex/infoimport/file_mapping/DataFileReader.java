@@ -24,7 +24,8 @@ public class DataFileReader
     public static final int     SUBMISSION_VECTOR = 0;
      public static final int     SUBMISSION_PLATES = 1;
      public static final int    SUBMISSION_LINKER = 2;
-     
+      public static final int    SUBMISSION_NO_SETTINGS_REQUIRED = 3;
+    
     private ArrayList       m_error_messages = null;
     private int             m_number_of_samples_per_container = 96;
     private HashMap         m_containers = null; // by label
@@ -34,7 +35,7 @@ public class DataFileReader
     private HashMap         m_vectors = null;
      private HashMap         m_linkers = null;
        private HashMap         m_additional_info = null; // by label
-  
+    private ArrayList        m_some_data = null;
     
     public ArrayList        getErrorMesages(){ return m_error_messages ;}
     public void            setNumberOfWellsInContainer(int v){m_number_of_samples_per_container = v;}
@@ -46,6 +47,8 @@ public class DataFileReader
     public HashMap         getVectors(){ return m_vectors;} // by name 
     public HashMap          getLinkers(){ return m_linkers;}// by name
     public  HashMap         getAdditionalInfo(){ return m_additional_info;}
+    public ArrayList        getArrayOfObjects(){ return m_some_data;}
+    
     
     public DataFileReader(int submission_type)
     {
@@ -70,6 +73,8 @@ public class DataFileReader
                 m_linkers= new HashMap();
                 
             }
+            case DataFileReader.SUBMISSION_NO_SETTINGS_REQUIRED:
+                m_some_data = new ArrayList();
         }
     }
     
@@ -203,6 +208,8 @@ public class DataFileReader
           { setVectorsFeatures(records_out, m_additional_info ); break;}
           case FileStructure.FILE_TYPE_LINKER_INFO:
           { setLinkers(records_out); break;}
+          case FileStructure.FILE_TYPE_CLONING_STRATEGY:
+          { setCloningStrategy(records_out); break;}
       
       }
   }
@@ -240,7 +247,8 @@ public class DataFileReader
                       object_property_value_description.getFileColumnDescription().getObjectPropertyName(),
                         value,
                         object_property_value_description.getFileColumnDescription().getPropertyInstruction(),
-                       object_property_value_description.getFileColumnDescription().isKey());
+                       object_property_value_description.getFileColumnDescription().isKey(),
+                  object_property_value_description.getFileColumnDescription().isSubmit());
           records_out[record_count++] = record_out;
           value = "";
       }
@@ -300,6 +308,8 @@ public class DataFileReader
       String temp_object_type = null;String temp_property_name = null;
       for ( int count = 0; count < records_of_row.length; count++)
       {
+             if ( records_of_row[count].isEmptyField()) continue;
+       
          temp_object_type = records_of_row[count].getObjectType() ;
          temp_property_name = records_of_row[count].getObjectProperty();
          if ( temp_object_type.intern() == FileStructureColumn.PROPERTY_NAME_USER_ID)
@@ -309,6 +319,7 @@ public class DataFileReader
           else
           {
               p_info= new PublicInfoItem(temp_property_name, records_of_row[count].getColumnValue());
+              p_info.setIsSubmit(records_of_row[count].isPubInfoSubmit());
               additional_info_from_record.add(p_info);
            }
       }
@@ -334,6 +345,8 @@ public class DataFileReader
      
       for ( int count = 0; count < records_of_row.length; count++)
      {
+             if ( records_of_row[count].isEmptyField()) continue;
+       
          temp_object_type = records_of_row[count].getObjectType() ;
          temp_property_name = records_of_row[count].getObjectProperty();
          if ( records_of_row[count].isKey()) key = records_of_row[count].getColumnValue();
@@ -390,6 +403,8 @@ public class DataFileReader
       String temp_object_type = null;String temp_property_name = null;
      for ( int count = 0; count < records_of_row.length; count++)
      {
+             if ( records_of_row[count].isEmptyField()) continue;
+       
          temp_object_type = records_of_row[count].getObjectType() ;
          temp_property_name = records_of_row[count].getObjectProperty();
           
@@ -432,6 +447,8 @@ public class DataFileReader
      
       for ( int count = 0; count < records_of_row.length; count++)
      {
+             if ( records_of_row[count].isEmptyField()) continue;
+       
          temp_object_type = records_of_row[count].getObjectType() ;
          temp_property_name = records_of_row[count].getObjectProperty();
          if ( temp_object_type.intern() == FileStructureColumn.OBJECT_TYPE_LINKER)
@@ -455,6 +472,56 @@ public class DataFileReader
      
      
      
+  private  void    setCloningStrategy(  ColumnValue[] records_of_row )
+  {
+      CloningStrategy row_strategy =    new CloningStrategy();
+      String key = null;
+      String temp_object_type = null;String temp_property_name = null;
+     
+     for ( int count = 0; count < records_of_row.length; count++)
+     {
+             if ( records_of_row[count].isEmptyField()) continue;
+       
+         temp_object_type = records_of_row[count].getObjectType() ;
+         temp_property_name = records_of_row[count].getObjectProperty();
+         if ( temp_object_type.intern() == FileStructureColumn.OBJECT_TYPE_CLONING_STRATEGY)
+          {
+             
+              if (temp_property_name.intern() == ImportCloningStrategy.CS_FIVE_PRIME_LINKER_NAME)
+              {
+                  row_strategy.setLinker5p(new CloneLinker(-1, records_of_row[count].getColumnValue(), null));
+              }
+              else  if (temp_property_name.intern() == ImportCloningStrategy.CS_THREE_PRIME_LINKER_NAME)
+              {
+                   row_strategy.setLinker3p(new CloneLinker(-1, records_of_row[count].getColumnValue(), null));
+            
+              }
+               else  if (temp_property_name.intern() == ImportCloningStrategy.CS_TYPE)
+              {
+                   row_strategy.setType(  records_of_row[count].getColumnValue() );
+            
+              }
+               else  if (temp_property_name.intern() == ImportCloningStrategy.CS_VECTOR_NAME)
+              {
+                   row_strategy.setClonevector(new CloneVector( records_of_row[count].getColumnValue() ));
+            
+              }
+               else  if (temp_property_name.intern() == ImportCloningStrategy.CS_NAME)
+              {
+                   row_strategy.setName( records_of_row[count].getColumnValue() );
+            
+              }
+              
+       }
+         
+     }
+      if (  row_strategy.getClonevector().getName()== null || 
+              row_strategy.getLinker5p().getName() == null ||
+              row_strategy.getLinker5p().getName() == null ) return;
+      if (row_strategy.getType() == null )row_strategy.setType("entry plasmid");
+      m_some_data.add(  row_strategy);
+   }
+     
      
   //one sample per row
   private  ImportContainer    setContainerProperties(  ColumnValue[] records_of_row )
@@ -466,6 +533,8 @@ public class DataFileReader
       String temp_object_type = null;String temp_property_name = null;
      for ( int count = 0; count < records_of_row.length; count++)
      {
+             if ( records_of_row[count].isEmptyField()) continue;
+       
          temp_object_type = records_of_row[count].getObjectType() ;
          temp_property_name = records_of_row[count].getObjectProperty();
          if ( temp_object_type.intern() == FileStructureColumn.OBJECT_TYPE_CONTAINER)
@@ -487,7 +556,8 @@ public class DataFileReader
               else
               {
                   p_info= new PublicInfoItem(temp_property_name, records_of_row[count].getColumnValue());
-                  
+                    p_info.setIsSubmit(records_of_row[count].isPubInfoSubmit());
+            
                   if ( row_container != null )
                    {
                       row_container.addPublicInfo(p_info);
@@ -515,6 +585,8 @@ public class DataFileReader
    
      for ( int count = 0; count < records_of_row.length; count++)
      {
+              if ( records_of_row[count].isEmptyField()) continue;
+       
           temp_object_type = records_of_row[count].getObjectType() ;
           temp_property_name = records_of_row[count].getObjectProperty();
           if (row_sample == null ) row_sample = new ImportSample( );
@@ -558,7 +630,8 @@ public class DataFileReader
               else
               {
                   p_info= new PublicInfoItem(temp_property_name, records_of_row[count].getColumnValue());
-                    row_sample.addPublicInfo(p_info);
+                    p_info.setIsSubmit(records_of_row[count].isPubInfoSubmit());
+                   row_sample.addPublicInfo(p_info);
                  
                }
        }
@@ -570,12 +643,14 @@ public class DataFileReader
   private  String    setFlexSequenceProperties(          ColumnValue[] records_of_row ) throws Exception
   {
       ImportFlexSequence row_sequence = null;
+      PublicInfoItem p_info = null;
       ArrayList       flexsequence_additional_properties = new ArrayList();
        String sequence_id = null;
       String temp_object_type = null;String temp_property_name = null;
-   
+    boolean isCheckSequenceTotalNumberCodons = true;
       for ( int count = 0; count < records_of_row.length; count++)
       {
+          if ( records_of_row[count].isEmptyField()) continue;
           temp_object_type = records_of_row[count].getObjectType() ;
           temp_property_name = records_of_row[count].getObjectProperty();
        
@@ -621,7 +696,13 @@ public class DataFileReader
                        sequence_id = records_of_row[count].getColumnValue();
                    }
                    else
-                        flexsequence_additional_properties.add(new PublicInfoItem(temp_property_name, records_of_row[count].getColumnValue()));
+                   {
+                         p_info = new PublicInfoItem(temp_property_name, records_of_row[count].getColumnValue());
+                         p_info.setIsSubmit(records_of_row[count].isPubInfoSubmit());
+                         flexsequence_additional_properties.add(p_info);
+            
+                   }
+                        
 
               }
            }
@@ -632,20 +713,22 @@ public class DataFileReader
           if ( row_sequence.getCDSStop() == -1 && row_sequence.getCDSStart() == -1
                   && row_sequence.getSequenceText()!= null && row_sequence.getSequenceText().length() > 3)
           {
-              if (row_sequence.getSequenceText().length() % 3 == 0)
+              row_sequence.setCDSStart(1);
+              row_sequence.setCDSStop(row_sequence.getSequenceText().length()  );
+            
+              if (row_sequence.getSequenceText().length() % 3 != 0)
               {
-                  row_sequence.setCDSStart(1);
-                  row_sequence.setCDSStop(row_sequence.getSequenceText().length()  );
-              }
-              else
-              {
+                   p_info =  PublicInfoItem.getPublicInfoByName(ImportFlexSequence.PROPERTY_NAME_IS_CHECK_CDS, row_sequence.getPublicInfo());
+                   if (  p_info != null && p_info.getValue().intern() == ImportFlexSequence.PROPERTY_VALUE_NOTCHECK_CDS)
+                        isCheckSequenceTotalNumberCodons = false;
+                   else
                 //  System.out.println("sequence length: "+ row_sequence.getSequenceText().length() +" gene id: "+PublicInfoItem.getPublicInfoByName( "GENE_ID", row_sequence.getPublicInfo()));
-                  throw new Exception ("Wrong sequence text ");
+                      throw new Exception ("Wrong sequence text "+row_sequence.getSequenceText().length());
               }
                   
           }
 
-          if ( (row_sequence.getCDSStop() - row_sequence.getCDSStart() + 1) % 3 != 0)
+          if ( isCheckSequenceTotalNumberCodons &&  (row_sequence.getCDSStop() - row_sequence.getCDSStart() + 1) % 3 != 0)
               throw new Exception ("Wrong sequence text ");
           if (sequence_id == null) 
               throw new Exception ("Cannot id sequence ");

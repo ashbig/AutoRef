@@ -30,6 +30,7 @@ public class FileStructureColumn
     public static final String       OBJECT_TYPE_VECTOR = "VECTOR";
     public static final String       OBJECT_TYPE_VECTOR_FEATURE = "VECTOR_FEATURE";
     public static final String       OBJECT_TYPE_LINKER = "LINKER";
+    public static final String       OBJECT_TYPE_CLONING_STRATEGY = "CLONING_STRATEGY";
     
      // intermediate property not set to additional properties
     public static final String   PROPERTY_NAME_USER_ID = "USER_ID";
@@ -43,6 +44,7 @@ public class FileStructureColumn
     private     HashMap         m_property_translation = null;
     private     String          m_property_instruction = null;
     private     boolean         m_is_key = false;
+    private     boolean         m_is_public_info_for_submission = true;
   //  private     String          m_table_column_value = null;
     /** Creates a new instance of FileStructureColumn */
     public FileStructureColumn() 
@@ -58,6 +60,7 @@ public class FileStructureColumn
     public     HashMap          getPropertyTranslation(){ return m_property_translation ;}
     public     String          getPropertyInstruction(){ return m_property_instruction ;}
     public      boolean         isKey(){ return m_is_key;}
+    public      boolean         isSubmit(){ return m_is_public_info_for_submission;}
     
     public     void             setFileColumnName(String v){  m_file_column_name = v;}
     public     void             setObjectType(String v){  m_object_type = v;}
@@ -67,6 +70,7 @@ public class FileStructureColumn
     public     void          setPropertyInstruction(String v){  m_property_instruction = v ;}
     public      void            setObjectPropertyType(int v){ m_object_property_type = v;}
     public void                 setIsKey(boolean v){ m_is_key = v;}
+    public void                 setIsSubmit(boolean v){ m_is_public_info_for_submission= v;}
     public     void          addPropertyTranslation(String valuein, String valueout)
     {  
         if ( m_property_translation ==null)

@@ -39,6 +39,9 @@ public class ItemsImporter  extends ImportRunner
         {
             case ConstantsImport.PROCESS_IMPORT_VECTORS:return "Vector(s) upload.";
             case ConstantsImport.PROCESS_IMPORT_LINKERS: return "Linker(s) upload.";
+             case ConstantsImport.PROCESS_IMPORT_INTO_NAMESTABLE: return "Names upload";
+                case ConstantsImport.PROCESS_IMPORT_CLONING_STRATEGIES: return "Cloning strategy upload";
+           
             default: return "";
         }
   
@@ -56,6 +59,8 @@ public class ItemsImporter  extends ImportRunner
                 case ConstantsImport.PROCESS_IMPORT_VECTORS: uploadVectors(conn);
                 case ConstantsImport.PROCESS_IMPORT_LINKERS: uploadLinkers(conn);
                 case ConstantsImport.PROCESS_IMPORT_INTO_NAMESTABLE: uploadIntoNameTable(conn );
+                case ConstantsImport.PROCESS_IMPORT_CLONING_STRATEGIES: uploadCloningStrategies(conn);
+              
             }
            
         }
@@ -102,7 +107,7 @@ public class ItemsImporter  extends ImportRunner
            }
            // check for duplicates
            iter = vectors.keySet().iterator();
-           Hashtable ext_vectors = ConstantsImport.getVectors();
+           Hashtable ext_vectors = getVectorsHash();
            ArrayList vect = new ArrayList();
            while( iter.hasNext())
            {
@@ -113,13 +118,45 @@ public class ItemsImporter  extends ImportRunner
                }
            }
            //upload
-             CloneVector.insertVectors(vect, conn);
+            CloneVector.insertVectors(vect, conn);
              
-              DatabaseTransaction.commit(conn);
+            DatabaseTransaction.commit(conn);
+           for (int count = 0; count < vect.size(); count++)
+            {
+                m_process_messages.add("Vector: " +((CloneVector)vect.get(count)).toString()+ " have been added.");
+            }
             
     }
     
-    
+      public static Hashtable getVectorsHash() throws Exception
+      { 
+           Hashtable result =  new Hashtable();
+          List vectors = CloneVector.getAllVectors();
+          Iterator iter = vectors.iterator();
+          CloneVector vect = null;
+          while(iter.hasNext())
+          {
+              vect = (CloneVector)iter.next();
+              result.put(vect.getName().toUpperCase(), vect);
+          }
+       
+          return result;
+      }  
+      
+       public static Hashtable getLinkersHash() throws Exception
+      {
+          Hashtable result = new Hashtable();
+          List linkers = CloneLinker.getAllLinkers();
+          Iterator iter = linkers.iterator();
+          CloneLinker linker = null;
+          while(iter.hasNext())
+          {
+              linker = (CloneLinker)iter.next();
+              result.put(linker.getName().toUpperCase(), linker);
+          }
+         return result;
+      }
+       
      private void uploadLinkers(Connection conn) throws Exception
     {
          // read in data mapping schema
@@ -132,20 +169,25 @@ public class ItemsImporter  extends ImportRunner
            HashMap linkers = freader.getLinkers();
            // check for duplicates
            Iterator iter = linkers.keySet().iterator();
-           Hashtable ext_linkerss = ConstantsImport.getLinkers();
+           Hashtable ext_linkerss = getLinkersHash();
            ArrayList link = new ArrayList(); String key = null;
            while( iter.hasNext())
            {
                key = (String) iter.next();
                if ( ext_linkerss.get(key.toUpperCase()) == null)
                {
-                   link.add(linkers.get(key));
+                   link.add( linkers.get(key));
                }
            }
            //upload
             CloneLinker.insertLinkers(link, conn);
             
              DatabaseTransaction.commit(conn);
+            for (int count = 0; count < link.size(); count++)
+            {
+            
+                m_process_messages.add("Linker: " +((CloneLinker)link.get(count)).toString()+ " have been added.");
+            }
           }
     
      
@@ -193,4 +235,58 @@ public class ItemsImporter  extends ImportRunner
             throw new Exception( e.getMessage() );
         }
      }
+     
+     
+    private void uploadCloningStrategies(Connection conn) throws Exception
+    {
+         // read in data mapping schema
+          FileStructure[]           file_structures = readDataMappingSchema();
+          DataFileReader freader =   new DataFileReader(DataFileReader.SUBMISSION_NO_SETTINGS_REQUIRED);
+          InputStream input = (InputStream) m_file_input_data.get(ConstantsImport.FILE_TYPE[FileStructure.FILE_TYPE_CLONING_STRATEGY]);
+          freader.readFileIntoSetOfObjects( input, true,
+            FileStructure.FILE_TYPE_CLONING_STRATEGY, true, true,
+                  file_structures[FileStructure.FILE_TYPE_CLONING_STRATEGY] ) ; 
+           ArrayList cloning_strategies = freader.getArrayOfObjects();
+           // check for duplicates
+           Hashtable ext_cloning_strategies = getCloningStrategiesHash();
+           Hashtable cloning_strategies_to_submit = new Hashtable(); 
+           CloningStrategy cl_strategy = null;
+           String key = null;
+           for(int count = 0; count < cloning_strategies.size(); count++)
+           {
+               cl_strategy= (CloningStrategy)cloning_strategies.get(count);
+               key = cl_strategy.getClonevector().getName()+"_"+cl_strategy.getLinker5p().getName()+"_"+cl_strategy.getLinker3p().getName();
+               if ( ext_cloning_strategies.get(key.toUpperCase()) == null)
+               {
+                   cloning_strategies_to_submit.put(key, cl_strategy);
+               }
+           }
+           //upload
+            CloningStrategy.insertCloningStrategies(cloning_strategies_to_submit.values(), conn);
+            DatabaseTransaction.commit(conn);
+            Iterator iter = cloning_strategies_to_submit.values().iterator();
+            while(iter.hasNext())
+            {
+                m_process_messages.add("Cloning strategy: " +((CloningStrategy)iter.next()).toString()+ " have been added.");
+            }
+          }
+    
+    
+    private    Hashtable     getCloningStrategiesHash()
+    {
+         Hashtable result = new Hashtable();
+          List strategies = CloningStrategy.getAllCloningStrategies();
+          Iterator iter = strategies.iterator();
+          CloningStrategy strat = null; String key = null;
+          while(iter.hasNext())
+          {
+              strat = (CloningStrategy)iter.next();
+              key = strat.getClonevector().getName()+"_"+strat.getLinker5p().getName()+"_"+strat.getLinker3p().getName();
+             
+              result.put(key.toUpperCase(), strat);
+          }
+         return result;
+    }
+        
+     
 }

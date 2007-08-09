@@ -104,7 +104,10 @@ public class TranslationTable
      {
            InputStream iStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(TR_TABLE_FILE);
            if ( iStream == null)
+           {
                    System.err.println("Unable to load properites file");
+                   throw new Exception("Unable to load properites file");
+           }
            Properties prop = null;         
            try 
             {
@@ -121,7 +124,7 @@ public class TranslationTable
           for (Enumeration e_prop = prop.keys() ; e_prop.hasMoreElements() ;)
           {
                original_key = (String) e_prop.nextElement();//N.AAs ;N.Starts ;N.Base1; N.Base2; N.Base3
-       System.out.println(original_key) ;    
+  //     System.out.println(original_key) ;    
                if ( !original_key.startsWith("TABLE_")) continue;
                
                key = original_key.substring( original_key.indexOf('_') + 1);
@@ -144,7 +147,7 @@ public class TranslationTable
                    new_table = new  TranslationTable(key, tr_table[0], tr_table[1],
                         tr_table[2], tr_table[3], tr_table[4] );
                    i_tanslation_tables.put(key, new_table);
-                   System.out.println( new_table.toString());
+         //          System.out.println( new_table.toString());
                }
                catch(Exception e ){ throw new Exception (e.getMessage());}
                

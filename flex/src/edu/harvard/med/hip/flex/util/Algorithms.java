@@ -315,6 +315,23 @@ public class Algorithms {
         System.out.println(s);
          **/
     }
+    
+    public static boolean     isIntegers(String[] input)
+    {
+        try
+        {
+            for (int count = 0; count < input.length; count++)
+            {
+                Integer.parseInt( input[count]);
+            }
+            return true;
+        }
+        catch(Exception e)
+        {
+            return false;
+        }
+    }
+    
 }
 
 

@@ -31,7 +31,8 @@ public class ImportFlexSequence
       public static final String   PROPERTY_NAME_CDSNA_SOURCE = "CDSNASOURCE";
        public static final String   PROPERTY_NAME_CHROMOSOME = "CHROMOSOME";
     
-        
+     public static final String   PROPERTY_NAME_IS_CHECK_CDS = "IS_CHECK_CDS";   
+     public static final String   PROPERTY_VALUE_NOTCHECK_CDS = "N";   
        
     private ArrayList         m_constructs = null;
    

@@ -48,7 +48,11 @@ public class CloneLinker {
     public void         setName(String v) { name = v;}
     public void         setSequence(String v) { sequence = v;}
     
-    public static void            insertLinkers(ArrayList linkers,Connection conn) 
+    public String toString()
+    {
+        return "Linker ID: "+ id+" linker name: "+ name +" linker sequence: "+ sequence;
+    }
+    public static void            insertLinkers(Collection linkers,Connection conn) 
             throws Exception
     {
         String sql_linker = "insert into linker (LINKERID  ,LINKERNAME  ,LINKERSEQUENCE  )"+
@@ -58,9 +62,10 @@ public class CloneLinker {
        CloneLinker  linker = null;
         try {
             stmt_linker = conn.prepareStatement(sql_linker);
-            for(int l_count = 0; l_count < linkers.size(); l_count ++)
+            Iterator iter = linkers.iterator();
+            while( iter.hasNext())
             {
-                linker = (CloneLinker) linkers.get( l_count);
+                linker = (CloneLinker) iter.next();
     ////?????            stmt_linker.setInt(1, linker.getId());
                 stmt_linker.setString(1, linker.getName());
                 stmt_linker.setString(2, linker.getSequence());

@@ -39,6 +39,7 @@ public class FileMapParser extends DefaultHandler
      private static final String FILE_COLUMN_OBJECT_INSTRUCTION = "property_instruction";
      private static final String FILE_COLUMN_OBJECT_PROPERTY_ORDER = "property_order";
   private static final String FILE_COLUMN_IS_KEY = "key";
+  private static final String FILE_COLUMN_IS_PUBINFO_SUBMIT = "isSubmit";
                   
      
      private static final String TRANSLATOR_DEFINITION_ELEMENT ="column_translation";
@@ -129,6 +130,7 @@ public class FileMapParser extends DefaultHandler
                         else  if (local_name== FILE_COLUMN_OBJECT_INSTRUCTION   ) i_current_column.setPropertyInstruction(local_value);
                         else if (local_name== FILE_COLUMN_OBJECT_PROPERTY_ORDER   ) i_current_column.setObjectPropertyOrder(Integer.parseInt(local_value));
                         else if (local_name == FILE_COLUMN_IS_KEY && local_value.equalsIgnoreCase("1"))i_current_column.setIsKey(true);
+                        else if (local_name == FILE_COLUMN_IS_PUBINFO_SUBMIT && local_value.equalsIgnoreCase("0"))i_current_column.setIsSubmit(false);
                       }
                  }
                   else
@@ -215,6 +217,7 @@ public class FileMapParser extends DefaultHandler
                     localName==   FILE_COLUMN_OBJECT_INSTRUCTION     ||
                     localName==   FILE_COLUMN_OBJECT_PROPERTY_ORDER     ||
                     localName==   FILE_COLUMN_IS_KEY ||
+                    localName==   FILE_COLUMN_IS_PUBINFO_SUBMIT ||
 
 
                     localName==   TRANSLATOR_DEFINITION_ELEMENT    ||

@@ -115,12 +115,10 @@ public class ImportContainer
         
         
         // reassigne label 
-        
-        
         PublicInfoItem p_info= new PublicInfoItem("USER_ID", m_label);
         this.addPublicInfo(p_info);
-        m_label = getLabel( FlexIDGenerator.getID("threadid"),  project_code,  plate_type);
-          int is_addition_info = (m_additional_info.size() > 0 )? 1:0;
+        m_label = getLabel( threadid,  project_code,  plate_type);
+        int is_addition_info = ( PublicInfoItem.isAnyPublicInfoForSubmission(m_additional_info)) ? 1 : 0;
      
         String sql = 	"insert into containerheader " +
         "(containerid, containertype, locationid, label, threadid, additionalinfo) "+
@@ -148,6 +146,7 @@ public class ImportContainer
             catch(Exception e)
             {
                 System.out.println(e.getMessage());
+                throw new Exception("Cannot upload container "+ e.getMessage());
             }
            
          }
@@ -168,15 +167,17 @@ public class ImportContainer
         m_label = MgcContainer.getLabel(FlexIDGenerator.getID("MGCCONTAINERLABEL"));
              
         
+        int is_addition_info = ( PublicInfoItem.isAnyPublicInfoForSubmission(m_additional_info)) ? 1 : 0;
+     
         String sql = 	"insert into containerheader " +
-        "(containerid, containertype, locationid, label, threadid) "+
-        "values ("+m_id+",'"+m_type+"',"+m_location_id+",'"+m_label+"',"+threadid+")";
+        "(containerid, containertype, locationid, label, threadid, additionalinfo) "+
+        "values ("+m_id+",'"+m_type+"',"+m_location_id+",'"+m_label+"',"+threadid+","+is_addition_info +")";
         
         DatabaseTransaction.executeUpdate(sql,conn);
         
         
           pi_temp =  PublicInfoItem.getPublicInfoByName("MARKER",m_additional_info);
-           String marker = ( pi_temp == null) ? "" : pi_temp.getValue();;
+           String marker = ( pi_temp == null) ? "" : pi_temp.getValue();
          
           String sql1 = "insert into mgccontainer " +
             "(mgccontainerid, filename, oricontainer, marker ,glycerolcontainerid,CULTURECONTAINERID, dnacontainerid) "+
@@ -190,4 +191,57 @@ public class ImportContainer
             ((ImportSample) m_samples.get(count)).insertMGC(conn, m_id, errors);
         }
     }
+     
+     
+     public void checkCloningStrategyIDAsigment() throws Exception
+     {
+         ImportSample sample = null;
+         int cloning_strategy_id = -1;
+         Hashtable cloning_strategies = new Hashtable();
+         
+         for (int count = 0; count < m_samples.size(); count++)
+         {
+             sample = (ImportSample) m_samples.get(count);
+             if ( sample.getCloningStrategyId() == -1)
+             {
+                 cloning_strategy_id = sample.getCloningStrategyID( cloning_strategies);
+                 if(cloning_strategy_id == -1) throw new Exception("Cannot define cloning strategy id for clone "+sample.toString());
+                 sample.setCloningStrategyId(cloning_strategy_id);
+             }
+         }
+     }
+     
+     private int          getCloningStrategyID(Hashtable cloning_strategies)
+            throws Exception
+     {
+         int[] result = {-1,-1,-1};
+         String vector_name = null;String linker_5p_name = null;String linker_3p_name = null;
+         PublicInfoItem temp = null;
+         
+         temp = PublicInfoItem.getPublicInfoByName(ImportSample.SAMPLE_VECTOR,m_additional_info);
+         if ( temp != null) vector_name = temp.getValue();
+         temp = PublicInfoItem.getPublicInfoByName(ImportSample.SAMPLE_FIVE_PRIME_LINKER,m_additional_info);
+         if ( temp != null)linker_5p_name = temp.getValue();
+         temp = PublicInfoItem.getPublicInfoByName(ImportSample.SAMPLE_THREE_PRIME_LINKER,m_additional_info);
+         if ( temp != null) linker_3p_name = temp.getValue();
+        
+        if (vector_name == null || linker_5p_name == null || linker_3p_name == null)
+            return -1;
+         
+         String strategy_key =  vector_name+"_"+linker_5p_name +"_"+ linker_3p_name;
+         // try to get cloning strategies for this parameters
+         if ( cloning_strategies.get(strategy_key) != null)
+         {
+             return ((Integer)cloning_strategies.get(strategy_key)).intValue();
+         }
+         else
+         {
+             int clstr_id = CloningStrategy.findStrategyByVectorAndLinker( vector_name,  linker_5p_name, linker_3p_name);
+             if (clstr_id == -1) return -1;
+             
+             cloning_strategies.put(strategy_key, new Integer(clstr_id));
+             return clstr_id;
+         }
+       
+     }
 }

@@ -21,12 +21,12 @@ import edu.harvard.med.hip.flex.infoimport.file_mapping.*;
  */
 public class ConstantsImport 
 {
+    
       public static Hashtable s_flex_names = null;
       public static Hashtable s_container_names = null;
       public static Hashtable s_sample_names = null;
-      public static Hashtable s_vectors = null;
-       public static Hashtable s_linkers = null;
       public static Hashtable s_species_names= null;
+       
       
       public static void        fillInNames() throws Exception
       {
@@ -54,39 +54,10 @@ public class ConstantsImport
       public static Hashtable getFlexSequenceNames(){return s_flex_names;}
       public static Hashtable getContainerNames(){return s_container_names;}
       public static Hashtable getSampleNames() { return s_sample_names;}
-      public static Hashtable getVectors() throws Exception
-      { 
-          if ( s_vectors == null)
-          {
-              s_vectors =  new Hashtable();
-              List vectors = CloneVector.getAllVectors();
-              Iterator iter = vectors.iterator();
-              CloneVector vect = null;
-              while(iter.hasNext())
-              {
-                  vect = (CloneVector)iter.next();
-                  s_vectors.put(vect.getName().toUpperCase(), vect);
-              }
-          } 
-          return s_vectors;
-      }
+     
       
-      public static Hashtable getLinkers() throws Exception
-      {
-          if ( s_linkers == null)
-          {
-              s_linkers = new Hashtable();
-              List linkers = CloneLinker.getAllLinkers();
-              Iterator iter = linkers.iterator();
-              CloneLinker linker = null;
-              while(iter.hasNext())
-              {
-                  linker = (CloneLinker)iter.next();
-                  s_linkers.put(linker.getName().toUpperCase(), linker);
-              }
-          }
-          return s_linkers;
-      }
+  
+     
       
       private static Hashtable fillInNames( String sql,  String field_name ) throws Exception
     {
@@ -150,6 +121,7 @@ public class ConstantsImport
        public static final int     PROCESS_IMPORT_VECTORS = 2;
         public static final int     PROCESS_IMPORT_LINKERS = 3;
         public static final int     PROCESS_IMPORT_INTO_NAMESTABLE = 4;
+        public static final int     PROCESS_IMPORT_CLONING_STRATEGIES = 5;
  
    //   submission item type
        public static final int     ITEM_TYPE_PLATE_LABELS = 0;
@@ -174,7 +146,8 @@ public class ConstantsImport
             FileStructure.STR_FILE_TYPE_VECTOR_INFO ,
             FileStructure.STR_FILE_TYPE_VECTOR_FEATURE_INFO,
             FileStructure.STR_FILE_TYPE_LINKER_INFO,
-            FileStructure.STR_FILE_TYPE_INPUT_FOR_NAME_TABLE
+            FileStructure.STR_FILE_TYPE_INPUT_FOR_NAME_TABLE,
+           FileStructure.STR_FILE_TYPE_CLONING_STRATEGY    
      };
      //database mapping
    /*   public static HashMap database_dictionary_tables_map = null;

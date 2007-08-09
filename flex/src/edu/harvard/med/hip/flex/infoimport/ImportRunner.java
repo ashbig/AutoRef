@@ -83,6 +83,7 @@ public abstract class ImportRunner implements Runnable
                case ConstantsImport.PROCESS_IMPORT_VECTORS : 
                case ConstantsImport.PROCESS_IMPORT_LINKERS : 
                case ConstantsImport.PROCESS_IMPORT_INTO_NAMESTABLE : 
+              case ConstantsImport.PROCESS_IMPORT_CLONING_STRATEGIES:
                     {((ItemsImporter)this).run_process(); break;}
              
           }

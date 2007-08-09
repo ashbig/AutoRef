@@ -45,6 +45,7 @@ public class PublicInfoItem
     private String   m_value = null;
     private String   m_description = null;
     private String   m_url = null;
+    private boolean     i_is_submit = true;
     /** Creates a new instance of PublicInfoItem */
     public PublicInfoItem(String a, String b, String c, String d)
     {
@@ -52,6 +53,11 @@ public class PublicInfoItem
         m_value = b;
         m_description = c;
         m_url = d;
+    }
+     public PublicInfoItem(String a, String b, String c, String d, boolean e)
+    {
+        this( a,b, c,d);
+        i_is_submit = e;
     }
     public PublicInfoItem(String a, String b)
     {
@@ -62,18 +68,21 @@ public class PublicInfoItem
     public PublicInfoItem()    {}
     public String       toString()
     {
-        return  m_name +" "+m_value+" "+m_description ;
+        if ( ! i_is_submit) return  m_name +" "+m_value+" "+m_description  ;
+        return  m_name +" "+m_value+" "+m_description +" "+ i_is_submit;
     }
     
     public  void   setName (String v){   m_name  = v;}
     public  void   setValue (String v){   m_value  = v;}
     public  void   setDescription (String v){   m_description  = v;}
     public  void   setUrl (String v){   m_url  = v;}
+    public void    setIsSubmit(boolean v){ i_is_submit= v;}
     
     public String   getName (){ return m_name  ;}
     public String   getValue (){ return m_value  ;}
     public String   getDescription (){ return m_description  ;}
     public String   getUrl (){ return m_url  ;}
+    public boolean  isSubmit(){ return i_is_submit;}
     
    public static void   insertPublicInfo( Connection conn, String table_name, 
            Collection public_info, int owner_id, String owner_column_name,
@@ -88,10 +97,11 @@ public class PublicInfoItem
         
         try 
         {
-            stmt = conn.prepareStatement(sql);
+             stmt = conn.prepareStatement(sql);
              for (Iterator iter = public_info.iterator (); iter.hasNext (); )
              {
                 info_item = (PublicInfoItem)iter.next ();
+                if ( ! info_item.isSubmit() ) continue;
                 stmt.setInt(1, owner_id);
                 stmt.setString(2, info_item.getName());
                 stmt.setString(3, info_item.getValue());
@@ -155,6 +165,20 @@ public class PublicInfoItem
          }
          return null;
     }
+    
+    
+    public static  boolean  isAnyPublicInfoForSubmission(  Collection public_info)
+    {
+         PublicInfoItem info_item = null;
+         for (Iterator iter = public_info.iterator (); iter.hasNext (); )
+         {
+              info_item = (PublicInfoItem)iter.next ();
+              if (info_item.isSubmit()) return true;
+              
+         }
+         return false;
+    }
+    
     
    public ArrayList    sorPublicInfo(ArrayList  public_info)
   {

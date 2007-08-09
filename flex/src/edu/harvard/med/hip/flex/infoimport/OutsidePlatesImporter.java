@@ -166,6 +166,7 @@ private boolean         m_is_fillin_clones_records = false;
 private boolean         m_is_define_construct_type_by_nuclsequence = false;
 private boolean         m_is_put_on_queue = false;
 private boolean         m_is_get_flexsequence_from_ncbi = false;
+private boolean         m_is_flexsequence_gi = false;
 
 
 private String          m_sample_biotype = "LI";// from processprotocol
@@ -187,8 +188,11 @@ public void              isDefineContructTypeByNSequence(boolean v){ m_is_define
 public void                 isPutOnQueue(boolean v){ m_is_put_on_queue = v;}   
 public void              setSampleBioType(String v){ m_sample_biotype = v;}   
 public void              isGetFLEXSequenceFromNCBI(boolean v){ m_is_get_flexsequence_from_ncbi= v;}
-   
-    public String getTitle() {        return "Upload of information for third-party containers into FLEX.";    }
+public void              isFLEXSequenceIDGI(boolean v) { m_is_flexsequence_gi = v;}   
+    
+
+
+public String getTitle() {        return "Upload of information for third-party containers into FLEX.";    }
     
     public void run_process() 
     {
@@ -219,6 +223,14 @@ public void              isGetFLEXSequenceFromNCBI(boolean v){ m_is_get_flexsequ
                throw new Exception();
             }
             insertObjects(conn);
+            // prepare final messages
+            ImportContainer container = null;
+            Iterator iter = i_containers.values().iterator();
+            while(iter.hasNext())
+            {
+                container = (ImportContainer) iter.next();
+                m_process_messages.add("Container "+PublicInfoItem.getPublicInfoByName(FileStructureColumn.PROPERTY_NAME_USER_ID, container.getPublicInfo()).getValue()+ " have been uploaded in FLEX. FLEX container label "+ container.getLabel());
+            }
              //conn.rollback();
             DatabaseTransaction.commit(conn);
         }
@@ -236,6 +248,10 @@ public void              isGetFLEXSequenceFromNCBI(boolean v){ m_is_get_flexsequ
     }
     
    
+      //---------------------------------------------------------------------------------//
+    //                          Private Methods
+    //---------------------------------------------------------------------------------//
+  
     private void checkContainerLabelsForDublicates() throws Exception
     {
         if (i_containers == null || i_containers.size() == 0)                return;
@@ -308,9 +324,16 @@ public void              isGetFLEXSequenceFromNCBI(boolean v){ m_is_get_flexsequ
           while(iter.hasNext())
           {
               key = (String)iter.next();
-              sequence = (ImportFlexSequence) i_flex_sequences.get( key );
-              if ( sequence == null) continue;
-              gi = PublicInfoItem.getPublicInfoByName(FlexSequence.GI, sequence.getPublicInfo()).getValue();
+              if ( ! m_is_flexsequence_gi )
+              {
+                  sequence = (ImportFlexSequence) i_flex_sequences.get( key );
+                  if ( sequence == null) continue;
+                  gi = PublicInfoItem.getPublicInfoByName(FlexSequence.GI, sequence.getPublicInfo()).getValue();
+              }
+              else
+              {
+                  gi = key;
+              }
               if (gi != null)
               {
                   gis_for_sql.append("'" + gi + "',");
@@ -609,6 +632,7 @@ public void              isGetFLEXSequenceFromNCBI(boolean v){ m_is_get_flexsequ
          String codon_seq = null;
          String tr_table_name = null;String construct_type = null;
          TranslationTable tr_table = null;
+         PublicInfoItem p_info  = null;
          while ( iter.hasNext (  )  ) 
          { 
              container =  (ImportContainer)iter.next();
@@ -618,6 +642,17 @@ public void              isGetFLEXSequenceFromNCBI(boolean v){ m_is_get_flexsequ
                 if ( i_flex_sequences.get(sample.getSequenceId()) instanceof ImportFlexSequence )
                 {
                     sequence = (ImportFlexSequence) i_flex_sequences.get(sample.getSequenceId());
+                    
+                    // use for vector sequences and other not CDS sequences
+                    p_info =  PublicInfoItem.getPublicInfoByName(ImportFlexSequence.PROPERTY_NAME_IS_CHECK_CDS, sequence.getPublicInfo());
+                    if (  p_info != null && p_info.getValue().intern() == ImportFlexSequence.PROPERTY_VALUE_NOTCHECK_CDS)
+                    {
+                        sample.setConstructType(Construct.FUSION);
+                        sample.setConstructSize( ImportConstruct.defineConstructSize(sequence.getSequenceText().length()));
+                        continue;
+                    }
+                
+                    
                     codon_seq =sequence.getStopCodon();
                     
                     edu.harvard.med.hip.flex.util.FlexProperties pr = SpeciesTranslationProperties.getInstance();
@@ -670,7 +705,7 @@ public void              isGetFLEXSequenceFromNCBI(boolean v){ m_is_get_flexsequ
              flex_sequence.insert(conn, m_error_messages);
              i_flex_sequences.put( flex_sequence_key, String.valueOf(flex_sequence.getId()));
          }
-        setFlexSequenceIdsForSamples( );
+         setFlexSequenceIdsForSamples( );
         iter = i_containers.keySet().iterator (  ) ; 
         String container_key = null;
        
@@ -722,6 +757,7 @@ public void              isGetFLEXSequenceFromNCBI(boolean v){ m_is_get_flexsequ
           while ( iter.hasNext (  )  ) 
          { 
              container =  (ImportContainer) iter.next();
+             container.checkCloningStrategyIDAsigment();
              ImportSample.populateObtainedMasterprogressTables( conn, container.getSamples()) ;
          }
         
@@ -751,7 +787,7 @@ public void              isGetFLEXSequenceFromNCBI(boolean v){ m_is_get_flexsequ
                 for (int p_count = 0; p_count < sequence.getPublicInfo(). size(); p_count++)
                 {
                     p_item = (PublicInfoItem ) sequence.getPublicInfo().get(p_count);
-                    if ( !flexsequence_names.contains( p_item.getName()))
+                    if ( !flexsequence_names.contains( p_item.getName()) && p_item.isSubmit())
                          flexsequence_names.add( p_item.getName());
                     
                 }
@@ -764,7 +800,7 @@ public void              isGetFLEXSequenceFromNCBI(boolean v){ m_is_get_flexsequ
             for (int p_count = 0; p_count < container.getPublicInfo().size(); p_count++)
             {
                 p_item = (PublicInfoItem ) container.getPublicInfo().get(p_count);
-                if (! container_names.contains( p_item.getName()))
+                if (! container_names.contains( p_item.getName())&& p_item.isSubmit())
                      container_names.add( p_item.getName());
             }
             for (int s_count = 0; s_count <  container.getSamples().size(); s_count++)
@@ -773,7 +809,7 @@ public void              isGetFLEXSequenceFromNCBI(boolean v){ m_is_get_flexsequ
                 for (int p_count = 0; p_count < sample.getPublicInfo().size(); p_count++)
                 {
                     p_item = (PublicInfoItem ) sample.getPublicInfo().get(p_count);
-                    if ( ! sample_names.contains( p_item.getName()))
+                    if ( ! sample_names.contains( p_item.getName())&& p_item.isSubmit())
                          sample_names.add( p_item.getName());
                 }
             }

@@ -57,6 +57,7 @@ public class FileStructure
     public static final int FILE_TYPE_VECTOR_FEATURE_INFO=7;
     public static final int FILE_TYPE_LINKER_INFO=8;
     public static final int FILE_TYPE_INPUT_FOR_NAME_TABLE=9;
+    public static final int FILE_TYPE_CLONING_STRATEGY = 10;
     
      public static final int FILE_TYPE_XML_DATAMAPPING_SCHEMA = -10;
    
@@ -70,6 +71,7 @@ public class FileStructure
     public static   final   String   STR_FILE_TYPE_VECTOR_FEATURE_INFO=      "FILE_TYPE_VECTOR_FEATURE_INFO";
      public static   final   String   STR_FILE_TYPE_LINKER_INFO=      "FILE_TYPE_LINKER_INFO";
      public static   final   String   STR_FILE_TYPE_INPUT_FOR_NAME_TABLE=      "FILE_TYPE_INPUT_FOR_NAME_TABLE";
+     public static   final   String   STR_FILE_TYPE_CLONING_STRATEGY=      "FILE_TYPE_CLONING_STRATEGY";
    
     
     /** Creates a new instance of FileStructure */
