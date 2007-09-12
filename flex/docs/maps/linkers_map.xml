@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE web-app
+     PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<file_maps>
+<file_map file_type="FILE_TYPE_LINKER_INFO">
+    <file_column header="linker_name" object="LINKER"  property_name="LINKER_NAME" />
+    <file_column header="linker_sequence" object="LINKER"   property_name="LINKER_SEQUENCE"/>	
+    
+</file_map>
+
+
+
+</file_maps>
+
+

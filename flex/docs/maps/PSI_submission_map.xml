@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE web-app
+     PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<file_maps>
+<file_map file_type="FILE_TYPE_ONE_FILE_SUBMISSION" max_number_of_column_per_property="2">
+    <file_column header="plate" object="CONTAINER" property_name="LABEL" />
+    <file_column header="well" object="SAMPLE" property_name="POSITION" />
+
+
+    <file_column header="Genus_species" object="FLEXSEQUENCE"   property_name="SPECIES" />
+    <file_column header="Ntseq" object="FLEXSEQUENCE"   property_name="TEXT" />
+    <!--  name of this property hardcoded , do not change -->
+     <!--  construct for this type of sequences will be open -->
+    <file_column header="CheckSeq" isSubmit="0" object="FLEXSEQUENCE"  object_property_type="NAMEPROPERTY" property_name="IS_CHECK_CDS" >
+    	<column_translation file_value="Yes" translated_value="Y" />
+    	<column_translation file_value="No" translated_value="N" />
+    </file_column>
+    
+    <file_column header="Protein_Name" object="FLEXSEQUENCE"   property_name="P_NAME" object_property_type="NAMEPROPERTY"/>
+    <file_column header="BCSG_ID" object="FLEXSEQUENCE"   property_name="BCSG_ID" object_property_type="NAMEPROPERTY"/>
+    <file_column header="PMID" object="FLEXSEQUENCE"   property_name="PMID" object_property_type="NAMEPROPERTY"/>
+    <file_column header="GI_ID" object="FLEXSEQUENCE"   property_name="P_ID" object_property_type="NAMEPROPERTY"/>
+    <file_column header="Protein_ID" object="FLEXSEQUENCE"   property_name="P_ACCESSION_NUMBER" object_property_type="NAMEPROPERTY"/>
+    <file_column header="RefSeq_ID" object="FLEXSEQUENCE"   property_name="P_REFSEQID" object_property_type="NAMEPROPERTY"/>
+    <file_column header="Locus_tag" object="FLEXSEQUENCE"   property_name="SYNONYM" object_property_type="NAMEPROPERTY"/>
+    <file_column header="GeneID" object="FLEXSEQUENCE"   property_name="GENE_ID" object_property_type="NAMEPROPERTY"/>
+
+    <file_column header="FIVE_PRIME_LINKER" object="SAMPLE" object_property_type="NAMEPROPERTY" isSubmit="0" property_name="FIVE_PRIME_LINKER"/>
+    <file_column header="THREE_PRIME_LINKER" object="SAMPLE" object_property_type="NAMEPROPERTY" isSubmit="0" property_name="THREE_PRIME_LINKER"/>
+    <file_column header="PSI-MR_name_for_vector" object="SAMPLE" object_property_type="NAMEPROPERTY" isSubmit="0" property_name="VECTOR"/>
+
+    <file_column header="USER_ID" object="FLEXSEQUENCE"   property_name="USER_ID" />
+<!-- for clones tables -->
+	<!--  name of this property hardcoded , do not change -->
+	    <file_column header="CloneStatus" object="SAMPLE" object_property_type="NAMEPROPERTY" property_name ="CLONE_STATUS" isSubmit="0"/>
+	<!--  name of this property hardcoded , do not change -->
+	   <file_column header="CloneType" object="SAMPLE" object_property_type="NAMEPROPERTY" property_name ="CLONE_TYPE" isSubmit="0"/>
+	
+	  
+	  
+	  <!-- count properties must start from 0 and use incremental count, moreover name of this property hardcoded -->
+	    
+	      <file_column header="CloneStorage" object="SAMPLE" object_property_type="NAMEPROPERTY" isSubmit="0" property_name ="CLONE_STORAGE_TYPE_0">
+	            <column_translation file_value="Original" translated_value="Original Storage" />
+	        </file_column>
+	
+	<!--  name of this property hardcoded , do not change -->
+	 
+	    <file_column header="CloneStorageForm" object="SAMPLE" object_property_type="NAMEPROPERTY" isSubmit="0" property_name ="CLONE_STORAGE_FORM">
+	            <column_translation file_value="DNA" translated_value="DNA"  />
+    </file_column>
+
+</file_map>
+</file_maps>
+
+
+			
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+

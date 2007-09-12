@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE web-app
+     PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<file_maps>
+<file_map file_type="FILE_TYPE_VECTOR_INFO">
+    <file_column header="vector_name" object="VECTOR"  property_name="VECTOR_NAME" key="1"/>
+    <file_column header="vector_source" object="VECTOR"   property_name="SOURCE"/>	
+    <file_column header="vector_type" object="VECTOR" property_name="TYPE"/>
+    <file_column header="description" object="VECTOR" property_name="DESCRIPTION"   />
+        <file_column header="restriction" object="VECTOR" property_name="RESTRICTIONS"   />
+
+    <connector primary_key_header="vector_name" foreign_file_type = "FILE_TYPE_VECTOR_FEATURE_INFO" foreign_key_header="vector_name"/>	
+
+</file_map>
+
+<file_map file_type="FILE_TYPE_VECTOR_FEATURE_INFO">
+    <file_column header="vector_name" object="VECTOR_FEATURE"  property_name="VECTOR_NAME" key="1"/>
+    <file_column header="feature_type" object="VECTOR_FEATURE" property_name="DESCRIPTION"/>	
+    <file_column header="name" object="VECTOR_FEATURE" property_name="FEATURE_NAME"/>	
+    <file_column header="status" object="VECTOR_FEATURE" property_name="STATUS"/>	
+
+  
+</file_map>	
+
+
+</file_maps>
+
+

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE web-app
+     PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<file_maps>
+<file_map file_type="FILE_TYPE_CLONING_STRATEGY" >
+    
+    <file_column header="FIVE_PRIME_LINKER_NAME" object="CLONING_STRATEGY"  property_name="FIVE_PRIME_LINKER_NAME"/>
+    <file_column header="THREE_PRIME_LINKER_NAME" object="CLONING_STRATEGY"  property_name="THREE_PRIME_LINKER_NAME"/>
+    <file_column header="VECTOR_NAME" object="CLONING_STRATEGY"  property_name="VECTOR_NAME"/>
+
+   <file_column header="TYPE" object="CLONING_STRATEGY"   property_name="TYPE" />
+   <file_column header="STRATEGY_NAME" object="CLONING_STRATEGY"   property_name="STRATEGY_NAME" />
+
+
+</file_map>
+</file_maps>
+
+
