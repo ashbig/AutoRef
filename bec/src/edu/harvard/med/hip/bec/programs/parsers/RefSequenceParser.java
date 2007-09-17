@@ -258,18 +258,131 @@ public class RefSequenceParser extends DefaultHandler
               localName.equalsIgnoreCase( COLLECTION_START) )return false;
           return true;
       }
-   public static void main(String[] args)
+   
+      
+      
+      private  void writeRefSequenceFile(ArrayList seq_ids, String file_name)throws Exception
+      {
+          // get refseq info
+          ArrayList ref_sequences = new ArrayList();
+          RefSequence ref = null;
+          PublicInfoItem pinfo = null;
+          java.sql.Connection  flex_connection = edu.harvard.med.hip.bec.database.DatabaseTransactionLocal.getInstance(
+                    edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("FLEX_URL") , 
+                    edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("FLEX_USERNAME"), 
+                    edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("FLEX_PASSWORD")).requestConnection();
+   
+   
+          for (int count = 0; count < seq_ids.size(); count++)
+          {
+              ref =getRefSequenceFormFlex ( Integer.parseInt( (String)seq_ids.get(count)), flex_connection);
+              if (ref != null)ref_sequences.add(ref);
+          }
+          FileWriter out = new FileWriter(file_name);
+          out.write("<?xml version='1.0' encoding='ISO-8859-1'?>");
+          out.write("<!DOCTYPE web-app   \n  PUBLIC '-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN' 'http://java.sun.com/dtd/web-app_2_3.dtd'>");
+          out.write("\n<"+COLLECTION_START+">");
+          for (int count = 0; count < ref_sequences.size(); count++)
+          {
+              ref = (RefSequence)ref_sequences.get(count);
+              out.write("\n\n<"+REFSEQUENCE_START+">");
+              out.write("\n<"+REFSEQUENCE_ID+">" + ref.getId() + "</"+REFSEQUENCE_ID+">");
+              out.write("\n<"+REFSEQUENCE_SPECIES+">" + ref.getSpecies() + "</"+REFSEQUENCE_SPECIES+">");
+              out.write("\n<"+REFSEQUENCE_CDS_START+">" + ref.getCdsStart() + "</"+REFSEQUENCE_CDS_START+">");
+             out.write("\n<"+REFSEQUENCE_CDS_STOP+">" + ref.getCdsStop() + "</"+REFSEQUENCE_CDS_STOP+">");
+             if (  ref.getCdnaSource() != null)
+                 out.write("\n<"+REFSEQUENCE_SOURCE+">" + ref.getCdnaSource() + "</"+REFSEQUENCE_SOURCE+">");
+             if ( ref.getChromosome() != null) out.write("\n<"+REFSEQUENCE_CHROMOSOME+">" + ref.getChromosome() + "</"+REFSEQUENCE_CHROMOSOME+">");
+             out.write("\n<"+REFSEQUENCE_SEQUENCE+">" + ref.getText() + "</"+REFSEQUENCE_SEQUENCE+">");
+             for (int c_f = 0; c_f < ref.getPublicInfo().size(); c_f++)
+             {
+                 pinfo = (PublicInfoItem)ref.getPublicInfo().get(c_f);
+                    out.write("\n<"+REFSEQUENCE_FEATURE_START+">" );
+                 out.write("\n<"+REFSEQUENCE_FEATURE_NAME_TYPE+">" + pinfo.getName() + "</"+REFSEQUENCE_FEATURE_NAME_TYPE+">");
+                 out.write("\n<"+REFSEQUENCE_FEATURE_NAME_VALUE+">" + pinfo.getValue() + "</"+REFSEQUENCE_FEATURE_NAME_VALUE+">");
+                if ( pinfo.getDescription() != null)  out.write("\n<"+REFSEQUENCE_FEATURE_DESCRIPTION+">" + pinfo.getDescription() + "</"+REFSEQUENCE_FEATURE_DESCRIPTION+">");
+                if ( pinfo.getUrl() != null) out.write("\n<"+REFSEQUENCE_FEATURE_URL+">" + pinfo.getUrl() + "</"+REFSEQUENCE_FEATURE_URL+">");
+                 out.write("\n</"+REFSEQUENCE_FEATURE_START+">" );
+          
+             }
+             out.write("\n</"+REFSEQUENCE_START+">");
+            
+             out.flush();
+          
+          }
+             out.write("\n</"+COLLECTION_START+">");
+       
+          out.close();
+      }
+      
+     private  edu.harvard.med.hip.bec.coreobjects.sequence.RefSequence getRefSequenceFormFlex(int id, java.sql.Connection flex_connection)throws Exception
+    {
+         
+        String sql = null; String sequencetext = "";
+        RefSequence ref_sequence = null;
+          sql = "select * from sequencetext where sequenceid="+id+" order by sequenceorder";
+         java.sql.ResultSet    rs = edu.harvard.med.hip.bec.database.DatabaseTransactionLocal.executeQuery(sql, flex_connection);
+            while(rs.next())
+            {
+                sequencetext += rs.getString("SEQUENCETEXT");
+            }
+            ref_sequence = new RefSequence(sequencetext);
+            
+            //get sequence characteristics
+           sql = "select s.genusspecies as species,s.cdsstart as cdsstart,"+
+            "s.cdsstop as cdsstop,s.gccontent as gccontent, cdnasource,chromosome "+
+            "from flexsequence s where s.sequenceid="+id;
+           rs = edu.harvard.med.hip.bec.database. DatabaseTransactionLocal.executeQuery(sql,flex_connection);
+       
+            while(rs.next())
+            {
+                String species = rs.getString("SPECIES");
+                ref_sequence.setId(id);
+                ref_sequence.setSpecies(  edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.getSpeciesId(species) );
+               
+                ref_sequence.setCdsStart(rs.getInt("CDSSTART") );
+                ref_sequence.setCdsStop( rs.getInt("CDSSTOP") );
+                ref_sequence.setGCcontent(rs.getInt("GCCONTENT"));
+                ref_sequence.setCdnaSource(rs.getString("cdnasource"));
+                ref_sequence.setChromosome(rs.getString("chromosome"));
+            }
+
+        // public info stuff
+                sql = "select nametype, namevalue,nameurl,description from name where sequenceid="+id;
+
+                rs =  edu.harvard.med.hip.bec.database.DatabaseTransactionLocal.executeQuery(sql,flex_connection);
+                ArrayList public_info = new ArrayList();
+                
+                while(rs.next())
+                {
+                    public_info.add(new PublicInfoItem(rs.getString("nametype"),
+                                                       rs.getString("namevalue"),
+                                                       rs.getString("description"),
+                                                        rs.getString("nameurl")));
+                }
+                if (public_info != null)
+                    ref_sequence.setPublicInfo(public_info);
+                edu.harvard.med.hip.bec.database. DatabaseTransaction.closeResultSet(rs);
+                return ref_sequence;
+         
+    }
+    
+      //*****************************************************************
+      
+      public static void main(String[] args)
   {
      try{
-         File f = new File("C:\\BEC\\bec\\docs\\REFSEQUENCE.xml");
+         /*  
+         String fm = "C:\\tmp\\RefSequence.xml";
+         File f = new File(fm);
          f.exists();
         RefSequenceParser SAXHandler = new RefSequenceParser();
         SAXParser parser = new SAXParser();
         parser.setContentHandler(SAXHandler);
         parser.setErrorHandler(SAXHandler);
-        parser.parse("C:\\bio\\fixed_refseq_length_test.xml");
+        parser.parse(fm);
         ArrayList v= SAXHandler.getRefSequences();
-        java.sql.Connection conn = edu.harvard.med.hip.bec.database.DatabaseTransaction.getInstance().requestConnection();
+      java.sql.Connection conn = edu.harvard.med.hip.bec.database.DatabaseTransaction.getInstance().requestConnection();
         RefSequence ds = null;
         for (int count = 0; count < v.size();count++)
         {
@@ -278,11 +391,24 @@ public class RefSequenceParser extends DefaultHandler
         }
         
         conn.commit();
+       */  
+           edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
+       
+         edu.harvard.med.hip.bec.util.BecProperties sysProps =   edu.harvard.med.hip.bec.util.BecProperties.getInstance( edu.harvard.med.hip.bec.util.BecProperties.PATH);
+            sysProps.verifyApplicationSettings();
+         String fname = "c:\\tmp\\ref.xml";
+         ArrayList ref = edu.harvard.med.hip.bec.util.Algorithms.splitString(" 		62984	18385	18369	18454	18403	62996	18316	18397	62986	62993	63012	62991	18302	18401	63011	18429	21268	62978	18362	63013	18376	19551	82715	229440	82721	82706	33325	32938	82716	33295	19123	19398	18821	81930	18464	81931	62445	32754	1531	18927	32448	62463	62457	18950	62446	62699	62741	62778	62756	62790	62766	18899	62771	62783	62586	62560	62537	62519	19349	62535	5060	82926	5162	19144	82896	33211	18791	32914	19311	19391	18919	82913	32535	19332	82921	82911	18979	33265	18520	18738	18727	18975	33110	32241	82924	82907	82895	82928	82906	82914	18965	82894	82903	19286		");
+          RefSequenceParser SAXHandler = new RefSequenceParser();
+       SAXHandler.writeRefSequenceFile(ref,fname);
   }
   catch(Exception e){
       System.out.println(e.getMessage());
      //e.printStackTrace(System.err);
   }
+     
+     
+     
+     
    }
 
 

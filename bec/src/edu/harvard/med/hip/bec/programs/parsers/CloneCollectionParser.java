@@ -286,20 +286,186 @@ public class CloneCollectionParser extends DefaultHandler
             return true;
     }
   //    public ArrayList     getBioREFSEQUENCEs(){ return i_bioREFSEQUENCEs;}
+//**********************************************************************************
+      public  void  writeCloneCollectionXML(int project_id,int cloningstrategyid,
+      int user_id,String item_value, int item_type, String file_name) throws Exception
+      {
+          if (item_type != edu.harvard.med.hip.bec.Constants.ITEM_TYPE_PLATE_LABELS) return;
+          ArrayList labels =  edu.harvard.med.hip.bec.util.Algorithms.splitString(item_value);
+           ArrayList samples = null;
+           SampleInfo sample = null ;
+           int construct_id = 0;
+           boolean isCloseConstruct = false;
+         
+           java.sql.Connection  flex_connection = edu.harvard.med.hip.bec.database.DatabaseTransactionLocal.getInstance(
+                    edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("FLEX_URL") , 
+                    edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("FLEX_USERNAME"), 
+                    edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("FLEX_PASSWORD")).requestConnection();
+   
+          FileWriter out = new FileWriter(file_name);
+          out.write("<?xml version='1.0' encoding='ISO-8859-1'?>");
+          out.write("<!DOCTYPE web-app   \n  PUBLIC '-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN' 'http://java.sun.com/dtd/web-app_2_3.dtd'>");
+          out.write("\n<"+CLONE_COLLECTIONS_START+">");
+        
+          for (int count = 0; count < labels.size(); count++)
+          {
+              samples =  getSampleInfoFromFLEX((String) labels.get(count),   flex_connection) ;
+              for (int c_sample = 0; c_sample < samples.size(); c_sample++)
+             {
+                 if ( c_sample == 0)    
+                     out.write("\n\n<"+CLONE_COLLECTION_START+"  "+ CLONE_COLLECTION_USERID +"='"+ user_id +"' "+CLONE_COLLECTION_NAME+"='"+(String) labels.get(count)+"' "+CLONE_COLLECTION_PROJECT_ID+"='"+project_id+"'>");
+         
+                sample = (SampleInfo)samples.get(c_sample);
+                if ( sample.isControl())
+                {
+                    out.write( "\n<"+SAMPLE_START +" "+  SAMPLE_ID +"='"+ sample.getId()+"' "+SAMPLE_CLONEID+"='0' "+SAMPLE_WELL+"='"+ edu.harvard.med.hip.bec.sampletracking.objects.Container.convertPositionFrom_int_to_alphanumeric(sample.getPosition())+"'	"+SAMPLE_TYPE+"='"+sample.getType()+"'	/>"); 
 
+                }
+                else
+                {
+                  
+                    if (  construct_id != sample.getConstructId())
+                    {
+                      if (construct_id != 0) out.write( " \n</"+CONSTRUCT_START+">");
+                      out.write( "\n <"+CONSTRUCT_START+" " +
+                            CONSTRUCT_ID +"='"+ sample.getConstructId() +"' "+
+                            CONSTRUCT_FORMAT +"= '"+sample.getFormat() +"' " +
+                            CONSTRUCT_CS_ID +"='" + cloningstrategyid+"' " +
+                            CONSTRUCT_REFSEQUENCEID +"= '" + sample.getSequenceId() +"'>");
+                        isCloseConstruct = true;    
+                    }
+                      construct_id = sample.getConstructId();
+                      out.write( "\n<"+SAMPLE_START +" "+  SAMPLE_ID +"='"+ sample.getId()+"' "+SAMPLE_CLONEID+"='"+sample.getCloneId()+"' "+SAMPLE_WELL+"='"+ edu.harvard.med.hip.bec.sampletracking.objects.Container.convertPositionFrom_int_to_alphanumeric(sample.getPosition())+"'	"+SAMPLE_TYPE+"='"+sample.getType()+"'	/>"); 
+                  
+                }
+         	
+             }
+               
+             out.write("\n</"+CLONE_COLLECTION_START+">");
+             out.flush();
+          }
+             out.write("\n</"+CLONE_COLLECTIONS_START+">");
+       
+          out.close();
+          
+      }
+      
+    private  ArrayList getSampleInfoFromFLEX(String platename,  java.sql.Connection flex_connection) throws Exception
+    {
+        ArrayList samples = new ArrayList();
+        boolean isCloneIdsSet = false;
+        int plate_id  = -1;
+        SampleInfo sample = null ;
+     
+         String sql = "select sampleid, sampletype, containerid,"+
+        " containerposition as position, cd.constructtype as format, cd.constructid as constructid, cd.sequenceid as sequenceid, c.cloneid as CLONEID "+
+        " from clonesequencing c, sample s, constructdesign cd"+
+        " where s.containerid =  (select containerid from containerheader " +
+        " where label='" + platename +"')"+
+        " and c.sequencingsampleid(+)=s.sampleid"+
+        " and s.constructid=cd.constructid(+)"+
+        " order by cd.constructid, containerposition";
+        java.sql.ResultSet rs = edu.harvard.med.hip.bec.database.DatabaseTransactionLocal.executeQuery(sql,flex_connection);
+            
+            while(rs.next())
+            {
+                sample = new SampleInfo();
+                sample.setId ( rs.getInt("sampleid") );
+                sample.setPlateId( rs.getInt("containerid") );
+                sample.setPosition ( rs.getInt("position") );
+                
+                sample.setType ( rs.getString("sampletype") );
+                //not control
+                if ( !sample.isControl() )
+                {
+                    sample.setConstructId ( rs.getInt("constructid") );
+                    sample.setSequenceId (rs.getInt("sequenceid") );
+                    sample.setFormat (rs.getString("format") );
+                }
+                int cloneid = rs.getInt("CLONEID");
+                if ( !isCloneIdsSet && cloneid> 1)
+                    isCloneIdsSet = true;
+                //not empty sample
+                if ( !sample.isEmpty() && ! sample.isControl() )
+                {
+                    sample.setCloneId (cloneid);
+                }
+                else
+                {
+                    sample.setCloneId (0);
+                }
+                samples.add(sample);
+            }
+        edu.harvard.med.hip.bec.database.DatabaseTransactionLocal.closeResultSet(rs);
+        return samples;
+    }
+     class SampleInfo
+    {
+        private int i_sampleid  = -1;
+        private int i_plateid = -1;
+        private int i_position = -1;
+        private int i_cloneid = -1;
+        private String i_type = null;
+        
+        private int i_constructid = -1;
+        private int i_sequenceid = -1;
+        private int i_format = -1;
+        
+        public SampleInfo(){}
+        
+        public int getId (){ return i_sampleid   ;}
+        public int getPlateId (){ return i_plateid;}
+        public int getPosition (){ return i_position  ;}
+        public int getCloneId (){ return i_cloneid  ;}
+        public String getType (){ return i_type  ;}
+
+        public int getConstructId (){ return i_constructid  ;}
+        public int getSequenceId (){ return i_sequenceid  ;}
+        public int getFormat (){ return i_format  ;}
+        
+        public void setId (int v){  i_sampleid   = v;}
+        public void setPlateId (int v){  i_plateid = v;}
+        public void setPosition (int v){  i_position  = v;}
+        public void setCloneId (int v){  i_cloneid  = v;}
+        public void setType (String v){  i_type  = v;}
+
+        public void setConstructId (int v){  i_constructid  = v;}
+        public void setSequenceId (int v){  i_sequenceid  = v;}
+        public void setFormat (int v){  i_format  = v;}
+        public void setFormat (String  v)
+        {  
+            if (v.equalsIgnoreCase("CLOSED") )
+            {
+                i_format = edu.harvard.med.hip.bec.coreobjects.endreads.Construct.FORMAT_CLOSE;
+            }
+            else
+                i_format = edu.harvard.med.hip.bec.coreobjects.endreads.Construct.FORMAT_OPEN;
+        }
+        
+        public boolean isEmpty()    {        return (i_type.equals("EMPTY"));    }
+        public boolean isControl()    {        return (i_type.startsWith("CONTROL"));} 
+    }
+    //**********************************************************************************
+     
+         
    public static void main(String[] args)
   {
      try{
-         File f = new File("C:\\BEC\\bec\\docs\\REFSEQUENCE.xml");
-         f.exists();
-        CloneCollectionParser SAXHandler = new CloneCollectionParser();
+      /*     CloneCollectionParser SAXHandler = new CloneCollectionParser();
         SAXParser parser = new SAXParser();
         parser.setContentHandler(SAXHandler);
         parser.setErrorHandler(SAXHandler);
-        parser.parse("C:\\bio\\plate_1.xml");
+        parser.parse("c:\\tmp\\container.xml");
         ArrayList v= SAXHandler.getCollections();
         System.out.println(v.size());
         
+          /* */ edu.harvard.med.hip.bec.util.BecProperties sysProps =   edu.harvard.med.hip.bec.util.BecProperties.getInstance( edu.harvard.med.hip.bec.util.BecProperties.PATH);
+            sysProps.verifyApplicationSettings();
+           
+         CloneCollectionParser SAXHandler = new CloneCollectionParser();
+      //  edu.harvard.med.hip.bec.user.User user =  edu.harvard.med.hip.bec.user.AccessManager.getInstance().getUser("test","test");
+        SAXHandler.writeCloneCollectionXML(3,2,1,"YSG003370", edu.harvard.med.hip.bec.Constants.ITEM_TYPE_PLATE_LABELS, "c:\\tmp\\container_YSG003370.xml");
+      
   }
   catch(Exception e){
       System.out.println(e.getMessage());
