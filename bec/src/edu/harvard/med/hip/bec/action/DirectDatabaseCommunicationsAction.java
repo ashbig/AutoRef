@@ -409,7 +409,7 @@ public class DirectDatabaseCommunicationsAction extends BecAction
                 display_title.add("5' Linker");display_title.add("3' Linker");
                 sql = "select strategyid as item_1, s.name as item_2, startcodon as item_3, fusionstopcodon as item_4, ";
 sql += " closedstopcodon as item_5, v.vectorname as item_6, (select name from linker where linkerid = s.linker5id) as item_7,";
-sql += " (select name from linker where linkerid = s.linker5id) as item_8";
+sql += " (select name from linker where linkerid = s.linker3id) as item_8";
 sql += " from cloningstrategy s, vector v where v.vectorid=s.vectorid order by strategyid ";
                  display_items = getDisplayItems(sql, display_title.size());
                  for (int jj =  0; jj < display_items.size(); jj++ )
