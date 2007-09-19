@@ -96,7 +96,8 @@ public class AddItemsAction extends AdminAction {
                      }
                      case -ConstantsImport.PROCESS_IMPORT_CLONING_STRATEGIES:
                      {
-                        map_name= FlexProperties.getInstance().getProperty("ADD_CLONING_STRATEGY_MAP");
+                        map_name= FlexProperties.getInstance().getProperty("flex.repository.basedir")
+                        + FlexProperties.getInstance().getProperty("ADD_CLONING_STRATEGY_MAP");
                         imp.setDataFilesMappingSchema(map_name);
                         imp.setProcessType(ConstantsImport.PROCESS_IMPORT_CLONING_STRATEGIES) ;
                         imp.setInputData(FileStructure.STR_FILE_TYPE_CLONING_STRATEGY, inputFile.getInputStream());
@@ -105,7 +106,9 @@ public class AddItemsAction extends AdminAction {
                      }
                      case -ConstantsImport.PROCESS_IMPORT_LINKERS:
                      {
-                         map_name= FlexProperties.getInstance().getProperty("ADD_LINKER_MAP");
+                         map_name= FlexProperties.getInstance().getProperty("flex.repository.basedir")+
+                                 
+                                 FlexProperties.getInstance().getProperty("ADD_LINKER_MAP");
             imp.setDataFilesMappingSchema(map_name);
                          imp.setProcessType(ConstantsImport.PROCESS_IMPORT_LINKERS) ;
                          imp.setInputData(FileStructure.STR_FILE_TYPE_LINKER_INFO, inputFile.getInputStream());
@@ -114,7 +117,8 @@ public class AddItemsAction extends AdminAction {
                      }
                      case -ConstantsImport.PROCESS_IMPORT_VECTORS:
                      {
-                          map_name= FlexProperties.getInstance().getProperty("ADD_VECTOR_MAP");
+                          map_name= FlexProperties.getInstance().getProperty("flex.repository.basedir")
+                          + FlexProperties.getInstance().getProperty("ADD_VECTOR_MAP");
                             imp.setDataFilesMappingSchema(map_name);
                           imp.setProcessType(ConstantsImport.PROCESS_IMPORT_VECTORS) ;
                           imp.setInputData(FileStructure.STR_FILE_TYPE_VECTOR_INFO, inputFile.getInputStream());
