@@ -294,11 +294,59 @@ public String getTitle() {        return "Upload of information for third-party 
     }
     private void    readDataFromFiles( FileStructure[]  file_structures) throws Exception
     {
-         DataFileReader freader = new DataFileReader();
          if (file_structures[FileStructure.FILE_TYPE_ONE_FILE_SUBMISSION] == null)
-            return ;        
+            readDataFromFilesMultipalFileSubmission(file_structures);  
+         else
+             readDataFromFilesOneFileSubmission(file_structures);
+          
+    }
+    
+    
+            
+    private void    readDataFromFilesMultipalFileSubmission( FileStructure[]  file_structures) throws Exception
+    {
+        HashMap temp_data = null; ArrayList item_data = null; String key = null;
+        ImportFlexSequence cur_sequence = null;
+        
+         DataFileReader freader = new DataFileReader();
          freader.setNumberOfWellsInContainer(m_number_of_samples_per_container);
-        freader.readFileIntoSetOfObjects( (InputStream)m_file_input_data.get(FileStructure.STR_FILE_TYPE_ONE_FILE_SUBMISSION), true,
+         freader.readFileIntoSetOfObjects( (InputStream)m_file_input_data.get(FileStructure.STR_FILE_TYPE_PLATE_MAPPING), true,
+                FileStructure.FILE_TYPE_PLATE_MAPPING, 
+               true, true,file_structures[ FileStructure.FILE_TYPE_PLATE_MAPPING]) ;
+          i_containers = freader.getContainers();  
+          freader.readFileIntoSetOfObjects( (InputStream)m_file_input_data.get(FileStructure.STR_FILE_TYPE_SEQUENCE_INFO), true,
+                FileStructure.FILE_TYPE_SEQUENCE_INFO, 
+               true, true,file_structures[ FileStructure.FILE_TYPE_SEQUENCE_INFO]) ;
+          i_flex_sequences = freader.getFlexSequences();
+          if ( file_structures[ FileStructure.FILE_TYPE_GENE_INFO] != null )
+          {
+              freader.readFileIntoSetOfObjects( (InputStream)m_file_input_data.get(FileStructure.STR_FILE_TYPE_GENE_INFO), true,
+                FileStructure.FILE_TYPE_GENE_INFO, 
+               true, true,file_structures[ FileStructure.FILE_TYPE_GENE_INFO]) ;
+              temp_data=  freader.getAdditionalInfo();
+              // assign flexsequence names to flexsequences
+              Iterator iter = temp_data.keySet().iterator();
+              while(iter.hasNext())
+              {
+                  key = (String)iter.next();
+                  item_data = (ArrayList) temp_data.get(key);
+                  cur_sequence = (ImportFlexSequence)i_flex_sequences.get(key);
+                  cur_sequence.addPublicInfoItems(item_data);
+              }
+          }
+         // min of two files requered
+         /*
+          FileStructure.STR_FILE_TYPE_GENE_INFO,
+            FileStructure.STR_FILE_TYPE_AUTHOR_INFO ,
+          **/
+    }
+    
+     private void    readDataFromFilesOneFileSubmission( FileStructure[]  file_structures) throws Exception
+    {
+         DataFileReader freader = new DataFileReader();
+          
+         freader.setNumberOfWellsInContainer(m_number_of_samples_per_container);
+         freader.readFileIntoSetOfObjects( (InputStream)m_file_input_data.get(FileStructure.STR_FILE_TYPE_ONE_FILE_SUBMISSION), true,
 
          FileStructure.FILE_TYPE_ONE_FILE_SUBMISSION, 
                true, true,file_structures[ FileStructure.FILE_TYPE_ONE_FILE_SUBMISSION]) ;
@@ -394,6 +442,7 @@ public String getTitle() {        return "Upload of information for third-party 
         PublicInfoItem p_info= null;
         String sequence_id = null;
          Iterator iter = null;
+         boolean is_verified_seq_ids = true;
          Hashtable mgc_ids = null; String[] mgs_id_per_sequence = null;
          if ( m_project_id  == Project.MGC_PROJECT)
          {
@@ -409,6 +458,11 @@ public String getTitle() {        return "Upload of information for third-party 
              {
                 sample =(ImportSample)container.getSamples().get(count) ;
                 sequence_id = (String) i_flex_sequences.get(sample.getSequenceId());
+                if ( sequence_id == null)
+                {
+                 is_verified_seq_ids  =false;
+                 m_error_messages.add("No sequence found for sequence "+ sample.getSequenceId());
+                }
                 sample.setSequenceId(sequence_id);
                     // for MGC project only we need to assign MGC_ID and IMAGE_ID to the samples
                 
@@ -432,7 +486,8 @@ public String getTitle() {        return "Upload of information for third-party 
              }
             
          }
-       
+       if ( !is_verified_seq_ids ) 
+           throw new Exception("Cannot define sequence for samples");
    }
    
    // hash of MGC ids: key  - sequence id from database, element String[], where Str[0] - MGC ID,
@@ -550,7 +605,7 @@ public String getTitle() {        return "Upload of information for third-party 
                if (sequence instanceof String)
                {
                    urlString = (String) sequence ;
-                   System.out.println("started "+urlString);
+                 //  System.out.println("started "+urlString);
                    try
                    {
                        url = new java.net.URL(urlString);
@@ -613,7 +668,7 @@ public String getTitle() {        return "Upload of information for third-party 
       
         if (m_is_check_flex_sequences_against_FLEX_database)
             checkFlexSequencesInFLEXDatabase( );
-            if ( m_is_define_construct_type_by_nuclsequence)
+        if ( m_is_define_construct_type_by_nuclsequence)
         {
             // set type of construct by last codon
              // and construct group

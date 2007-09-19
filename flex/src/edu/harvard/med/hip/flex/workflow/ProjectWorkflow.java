@@ -38,7 +38,12 @@ public class ProjectWorkflow extends Workflow {
         super(id);
         this.code = code;
     }
-
+    public void           setCode(String v){ code = v;}
+    public ProjectWorkflow(String code, int workflowid, String name, String description) 
+    {
+        super(workflowid,  name,  description );
+        this.code = code;
+    }
     /**
      * Constructor.
      *
@@ -53,6 +58,7 @@ public class ProjectWorkflow extends Workflow {
         String sql = "select code from projectworkflow "+
                      "where projectid = "+projectid+
                      " and workflowid = "+workflowid;
+ System.out.println(sql);
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         ResultSet rs = t.executeQuery(sql);
         try{

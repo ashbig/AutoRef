@@ -36,6 +36,7 @@ public abstract class ImportRunner implements Runnable
     protected Hashtable     m_file_input_data = null;
     private   String        m_process_title = null;
     private   String        m_input_files_data_schema = null;
+    private   InputStream   m_instream_input_files_data_schema = null;
     /** Creates a new instance of ProcessRunner */
     public ImportRunner()
     {
@@ -62,6 +63,7 @@ public abstract class ImportRunner implements Runnable
     { 
         m_input_files_data_schema = v;
     }
+    public void         setDataFilesMappingSchema(InputStream v){ m_instream_input_files_data_schema= v;}
     
      public  String             getItems()   {      return  m_items;    }   
      public int                 getProcessType(){ return m_process_type;}
@@ -192,18 +194,20 @@ public abstract class ImportRunner implements Runnable
              File fl = null;
              String time_stamp = String.valueOf( System.currentTimeMillis());
              String temp_path = FlexProperties.getInstance().getProperty("tmp");
+             
+             System.out.println("m_error_messages "+ m_error_messages.size() +" m_process_messages "+ m_process_messages.size() );
             if (m_error_messages.size() > 0)
             {
                 fl = ImportRunner.writeFile( m_error_messages.toArray(), temp_path+"ErrorMessages_"+time_stamp+".txt", "\n");
-          
-                Mailer.sendMessageWithAttachedFile(m_user.getUsername(), 
-                FlexProperties.getInstance().getProperty("HIP_EMAIL_FROM") ,
-                        null, title,  msgText,  fl);
+                 System.out.println("m_error_messages "+ fl.getName() );
+       
+                Mailer.sendMessageWithAttachedFile( fl, m_user.getUserEmail(),
+                        null, "Error messages for process "+ title,   "Error messages for process "+msgText);
+             
             } 
             fl = ImportRunner.writeFile( m_process_messages.toArray(), temp_path+"ProcessMessages_"+time_stamp+".txt", "\n");
-            Mailer.sendMessageWithAttachedFile(m_user.getUsername(), 
-                FlexProperties.getInstance().getProperty("HIP_EMAIL_FROM") ,
-                        null, title,  msgText,  fl);
+            Mailer.sendMessageWithAttachedFile( fl, m_user.getUserEmail(),
+                        null, title,  msgText);
             
                     
          }
@@ -212,12 +216,16 @@ public abstract class ImportRunner implements Runnable
      
    protected  FileStructure[]        readDataMappingSchema() throws Exception
    {
-        
+        InputStream in_stream = null;
         try
         {
-            if ( m_input_files_data_schema == null)
+            if ( m_instream_input_files_data_schema != null)
+                in_stream = m_instream_input_files_data_schema;
+            else if ( m_input_files_data_schema != null)
+                in_stream = new FileInputStream(m_input_files_data_schema);
+            else
                 throw new Exception("Select file mapping description");
-            InputStream in_stream = new FileInputStream(m_input_files_data_schema);
+            
              FileMapParser SAXHandler = new FileMapParser();
              SAXParser parser = new SAXParser();
              parser.setContentHandler(SAXHandler);
@@ -229,6 +237,7 @@ public abstract class ImportRunner implements Runnable
         }
         catch(Exception e)
         {
+            System.out.println("after parsing "+e.getMessage());
             m_error_messages.add("Cannot read data schema XML file");
             throw new Exception("Cannot read data schema XML file");
         }

@@ -92,7 +92,6 @@ The request uploading may take some time. The e-mail notification will be sent t
     <tr>
          <td class="prompt">Put sequences on queue for processing?<td>
         <td align="right">
-<%System.out.println("c");%>
             <input type="radio" name="isPutOnQueue"  value="true">Yes
             <input type="radio" name="isPutOnQueue" checked value="false">No
         </td>

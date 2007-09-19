@@ -14,9 +14,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.8 $
- * $Date: 2005-03-03 19:28:42 $
- * $Author: dzuo $
+ * $Revision: 1.9 $
+ * $Date: 2007-09-19 15:42:25 $
+ * $Author: Elena $
  *
  ******************************************************************************
  *
@@ -51,11 +51,13 @@ import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.core.ContainerThread;
 import edu.harvard.med.hip.flex.database.*;
 
+import edu.harvard.med.hip.flex.infoimport.coreobjectsforimport.*;
+
 /**
  * Action called when requesting to view the process history of a container
  *
- * @author     $Author: dzuo $
- * @version    $Revision: 1.8 $ $Date: 2005-03-03 19:28:42 $
+ * @author     $Author: Elena $
+ * @version    $Revision: 1.9 $ $Date: 2007-09-19 15:42:25 $
  */
 
 public class ViewContainerProcessHistoryAction extends CollaboratorAction
@@ -84,8 +86,7 @@ public class ViewContainerProcessHistoryAction extends CollaboratorAction
         // the container that was searched
         Container container = null;
         boolean isMGC = false;
-        
-        /*
+         /*
          * Either the container id or the container barcode parameter must
          * be in the request
          */
@@ -93,11 +94,12 @@ public class ViewContainerProcessHistoryAction extends CollaboratorAction
         String containerBarcode =
         request.getParameter(Constants.CONTAINER_BARCODE_KEY);
         //containerBarcode = containerBarcode.toUpperCase();
-        
+      
    
         int threadid = -1;
         try
         {
+              // get container description
             if(containerIdS!=null && containerIdS.length() !=0 )
             {
                 
@@ -114,7 +116,7 @@ public class ViewContainerProcessHistoryAction extends CollaboratorAction
                     container = (Container)containerList.get(0);
                     threadid = container.getThreadid();
                     String let = containerBarcode.substring(0,3);
-                    System.out.println("threadid: "+threadid);
+        //            System.out.println("threadid: "+threadid);
                 // check if it mgc 
                     if ( let.equalsIgnoreCase("MGC") || 
                         ( let.equalsIgnoreCase("MGS")  && containerBarcode.indexOf("-") == -1)
@@ -132,7 +134,7 @@ public class ViewContainerProcessHistoryAction extends CollaboratorAction
                 throw new FlexCoreException("Unable to find any containers with label " + containerBarcode);
             }
             
-            if(threadid <1 && !isMGC)
+            if(threadid <1 && !isMGC )
             {
                 
                 errors.add(ActionErrors.GLOBAL_ERROR,
@@ -167,8 +169,10 @@ public class ViewContainerProcessHistoryAction extends CollaboratorAction
             return new ActionForward(mapping.getInput());
             
         } 
+        
         else
         {
+            // get out for show container details
             try
             {
                 ContainerThread thread = null;

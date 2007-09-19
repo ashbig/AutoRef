@@ -75,7 +75,7 @@ public class ImportContainer
         i_submitted_samples[ v.getPosition()] = 1;
         m_samples.add(v);   
     }
-    public          void        addPublicInfo(PublicInfoItem v){if ( !m_additional_info.contains(v)) m_additional_info.add(v);}
+    public          void        addPublicInfo(PublicInfoItem v){if ( ! PublicInfoItem.contains(m_additional_info, v)) m_additional_info.add(v);}
     public          void       setPublicInfo(ArrayList v){m_additional_info = v;}
     public          ArrayList        getPublicInfo(){ return m_additional_info;}
     public String               getLabel(){ return m_label;}

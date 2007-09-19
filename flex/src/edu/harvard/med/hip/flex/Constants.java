@@ -18,10 +18,11 @@ public class Constants {
     /*
      * Application constants
      */
-    public static Hashtable s_projects = null;
+   /* public static Hashtable s_projects = null;
     public static Hashtable s_workflows = null;
     public static Hashtable s_protocols_id = null;
      public static Hashtable s_protocols_name = null;
+    **/
     // constant for workflow (queue) admin group
     public static final String WORKFLOW_GROUP = "Workflow Admin";
     
@@ -192,6 +193,22 @@ public class Constants {
     public static final String PERIMETER_REARRAY = "PERIMETER_REARRAY";
     public static final String CREATE_EXP_DNA = "CREATE_EXP_DNA";
     
+    
+    
+//forward name for 
+    public static final String     VIEW_CONTAINER="VIEW_CONTAINER";
+//forward name for 
+    public static final String VIEW_SEQUENCE="VIEW_SEQUENCE";
+//forward name for  
+    public static final String VIEW_LINKERS="VIEW_LINKERS";
+//forward name for  
+    public static final String VIEW_VECTORS="VIEW_VECTORS";
+//forward name for  
+    public static final String VIEW_CLONINGSTRATEGIES="VIEW_CLONINGSTRATEGIES";
+//forward name for  
+    public static final String NEW_PLATE_LABELS="NEW_PLATE_LABELS";
+    public static final String VIEW_NAMETYPE="VIEW_NAMETYPE";
+    
     //The following fields represents values in species table.
     public static final String HUMAN = "Homo sapiens";
     public static final String MOUSE = "Mus musculus";
@@ -201,6 +218,11 @@ public class Constants {
     public static final String TMPDIR = FlexProperties.getInstance().getProperty("tmp"); 
   
     public static final String ISDISPLAY = "isDisplay";
+    
+    public static final String UI_TABLE_HEADER = "UI_TABLE_HEADER";
+    public static final String UI_TABLE_NO_DATA = "UI_TABLE_NO_DATA";
+    public static final String UI_TABLE_CONTENT = "UI_TABLE_CONTENT";
+    public static final String UI_PAGE_TITLE = "UI_PAGE_TITLE";
     
     /** Creates new Constants */
     private Constants() {

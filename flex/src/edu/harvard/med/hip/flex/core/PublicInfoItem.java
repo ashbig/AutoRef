@@ -71,6 +71,26 @@ public class PublicInfoItem
         if ( ! i_is_submit) return  m_name +" "+m_value+" "+m_description  ;
         return  m_name +" "+m_value+" "+m_description +" "+ i_is_submit;
     }
+    public boolean equals(PublicInfoItem obj)
+    {
+        if ( !obj.getName().equalsIgnoreCase(m_name)) return false;
+        if ( !obj.getValue().equalsIgnoreCase(m_value)) return false;
+        return true;
+    }
+    
+    public static boolean contains (ArrayList p_info, PublicInfoItem obj)
+    {
+        PublicInfoItem obj2 = null;
+        for (int count = 0; count < p_info.size(); count++)
+        {
+            obj2 = (PublicInfoItem) p_info.get(count);
+            if ( obj2.equals(obj))
+                return true;
+        }
+        return false;
+    }
+  
+    
     
     public  void   setName (String v){   m_name  = v;}
     public  void   setValue (String v){   m_value  = v;}
@@ -118,9 +138,10 @@ public class PublicInfoItem
             else
                 error_messages.add("Cannot submit info "+ e.getMessage());
         } 
+        finally{DatabaseTransaction.closeStatement(stmt);}
     }
    
-     public static ArrayList  getPublicInfo( Connection conn, String table_name, 
+     public static ArrayList  getPublicInfo( String table_name, 
             int owner_id, String owner_column_name)        throws FlexDatabaseException
      {
    
@@ -200,4 +221,21 @@ public class PublicInfoItem
             } );
      return public_info;
   }
+   
+    public static void main(String[] args)
+  {
+    PublicInfoItem item1 = new PublicInfoItem("A", "B",null,null);
+    PublicInfoItem item2 = new PublicInfoItem("A", "B",null,null);
+    System.out.println(item1.equals(item2));
+    ArrayList ar1 = new ArrayList();
+    ar1.add(item1); 
+    if ( ! PublicInfoItem.contains (ar1, item2))
+        ar1.add(item2);
+    for(int count = 0; count < ar1.size(); count++)
+    {
+        if( ar1.get(count).equals(item2))
+            ar1.add(item2);
+            
+    }
+    }
 }

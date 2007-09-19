@@ -154,7 +154,7 @@ public class Algorithms {
         if(spliter == null)
             st = new StringTokenizer(value);
         else 
-            st = new StringTokenizer(value, spliter);
+            st = new StringTokenizer(value, spliter, true);
         
         while(st.hasMoreTokens()) {
             String val = st.nextToken().trim();
@@ -178,16 +178,14 @@ public class Algorithms {
     public static String[] splitString(String value, String spliter, 
          boolean isTrim, int array_size)
     {
-        StringTokenizer st = null;
         String result[] = null;
         String val = null;
+        String prev_val = null;
         int member_number = 0;
-        
-        if(spliter == null)
-            st = new StringTokenizer(value);
-        else 
-            st = new StringTokenizer(value, spliter);
+    
+        StringTokenizer st =  new StringTokenizer(value, spliter, true);
         if (array_size>0) result = new String[array_size];
+        
         else
         {
             ArrayList temp = new ArrayList();
@@ -195,7 +193,17 @@ public class Algorithms {
             {
                 val = st.nextToken();
                 if (isTrim) val = val.trim();
-                temp.add( val );
+                if (val.equals(spliter) )
+                {
+                    if( prev_val == null || (prev_val != null && prev_val.equals(spliter)))
+                    { 
+                        temp.add("");
+                    }
+                }
+                else
+                    temp.add( val );
+                prev_val= val;
+                
             }
             result = new String[temp.size()];
             for (int c = 0; c < temp.size(); c++)
@@ -203,12 +211,7 @@ public class Algorithms {
                 result[member_number++] = (String)temp.get(c);
             }
         }
-        while(st.hasMoreTokens()) 
-        {
-             val = st.nextToken();
-            if (isTrim) val = val.trim();
-            result[member_number++]= val;
-        }
+        
         return result;
     }
     
@@ -271,14 +274,34 @@ public class Algorithms {
         
     }
     
-    
+    public static String    getString(String[] input, String delim)
+    {
+        StringBuffer result = new StringBuffer();
+        for (int count = 0; count < input.length; count++)
+        {
+            result.append(input[count]+delim);
+        }
+        return result.toString();
+    }
     public static void main(String args[]) {
         String inputFile = "C:\\Documents and Settings\\dzuo\\My Documents\\work\\production\\ORFclone\\pos_in.txt";
         String outputFile = "C:\\Documents and Settings\\dzuo\\My Documents\\work\\production\\vcholera\\pos_out.txt";
         String line;
         
         try {
-            PrintWriter output = new PrintWriter(new BufferedWriter(new FileWriter(outputFile)));
+            
+     String l ="100014440	OCAB	9	a	9	NIH_MGC_425	pENTR223.1	gtacaaaaaagcagaagGGCCGTCAAGGCCCACC	TCAGGCCTCATGGgcccagctttcttg	5'-attL1/attL2-3'	without	human	BC140408				NM_181534.2";
+           
+                  
+                  String[] t = null;
+                  t=l.split(edu.harvard.med.hip.flex.infoimport.ConstantsImport.TAB_DELIMETER);
+                  t = Algorithms.splitString(l, edu.harvard.med.hip.flex.infoimport.ConstantsImport.TAB_DELIMETER, false, -1);
+  l ="   CLONE_ID	CLONE_COLLECTION	PLATE_NUM	ROW	COL	LIBR_NAME	VECTOR_NAME	5'_LINKER	3'_LINKER	CLONING_ORIENTATION	STOP_CODON_STATUS	SPECIES	GB_ACCNUM	PARENT_GENE_ID	PARENT_GENE_SYMBOL	PARENT_CLONE_ID	PARENT_GB_ACCNUM";
+     t=l.split(edu.harvard.med.hip.flex.infoimport.ConstantsImport.TAB_DELIMETER);
+                      
+  t = Algorithms.splitString(l, edu.harvard.med.hip.flex.infoimport.ConstantsImport.TAB_DELIMETER, false, -1);
+  l=l;
+       /*     PrintWriter output = new PrintWriter(new BufferedWriter(new FileWriter(outputFile)));
  
             BufferedReader in = new BufferedReader((new FileReader(inputFile)));
             //String ignore = in.readLine();
@@ -289,7 +312,7 @@ public class Algorithms {
                 int num = Algorithms.convertWellFromA8_12toInt(s);
                 output.println(line+"\t"+num);
                 
-               /* 
+               
                 int num = Integer.parseInt(line);
                 String s = Algorithms.convertWellFromInttoA8_12(num);
                 String positionX = s.substring(0, 1);
@@ -301,10 +324,10 @@ public class Algorithms {
                 fmt.setGroupingUsed(false);
                 String well = positionX+fmt.format(y);
                 output.println(line+"\t"+well+"\t"+positionX+"\t"+y);
-                **/
+                
             }
             in.close();
-            output.close();
+            output.close();*/
         } catch (Exception ex) {
             System.out.println(ex);
         }

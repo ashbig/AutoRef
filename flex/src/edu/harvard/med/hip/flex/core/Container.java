@@ -1,5 +1,5 @@
 /**
- * $Id: Container.java,v 1.8 2006-08-31 19:25:48 dzuo Exp $
+ * $Id: Container.java,v 1.9 2007-09-19 15:42:44 Elena Exp $
  *
  * File     	: Container.java
  * Date     	: 04162001
@@ -46,13 +46,16 @@ import sun.jdbc.rowset.*;
 /**
  * Generic representation of all types of containers.
  */
-public class Container {
+public class Container 
+{
     protected int id;
     protected String type;
     protected Location location;
     protected String label;
     protected Vector samples = new Vector();
     protected int threadid = -1;
+    protected ArrayList         m_additional_info = null;
+    protected boolean           m_is_additional_info = false;
     
     /**
      * Constructor.
@@ -170,14 +173,19 @@ public class Container {
      * @return A list of Container object with the given label.
      * @exception FlexCoreException, FlexDatabaseException.
      */
+    
     public static List findContainers(String label) throws FlexCoreException,
+    FlexDatabaseException {
+        return findContainers( label, 0);
+    }
+    public static List findContainers(String label, int mode) throws FlexCoreException,
     FlexDatabaseException {
         
         List containerList = new LinkedList();
         
         String sql = "select c.containerid as containerid, "+
         "c.containertype as containertype, "+
-        "c.label as label, "+
+        "c.label as label, c.additionalinfo as isadditionalinfo, "+
         "c.locationid as locationid, "+
         "c.threadid as threadid, "+
         "l.locationtype as locationtype, "+
@@ -186,6 +194,7 @@ public class Container {
         "where c.locationid = l.locationid\n"+
         "and upper(c.label) = '"+ label.toUpperCase()+"'";
         ResultSet rs = null;
+        boolean is_additional_info= false;
         try {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             rs = t.executeQuery(sql);
@@ -199,8 +208,16 @@ public class Container {
                 int locationid = rs.getInt("LOCATIONID");
                 String locationtype = rs.getString("LOCATIONTYPE");
                 String description = rs.getString("DESCRIPTION");
+                if ( mode != 0 )
+                {
+                    is_additional_info = (rs.getInt("isadditionalinfo") == 1 );
+                }
                 Location location = new Location(locationid, locationtype, description);
                 Container curContainer = new Container(id,containerType,location,containerLabel);
+                 if ( mode != 0 && is_additional_info )
+                 {
+                    curContainer.restorAdditionalInfo();
+                 }
                 curContainer.setThreadid(threadId);
                 curContainer.restoreSample();
                 containerList.add(curContainer);
@@ -253,6 +270,13 @@ public class Container {
         return containerList;
     }
     
+    
+    
+    public boolean getIsPublicInfo() { return m_is_additional_info ;}
+    public ArrayList getPublicInfo(){ return m_additional_info ;}
+    public void setIsPublicInfo(boolean v) { this.m_is_additional_info = v;}
+    public void setPublicInfo(ArrayList v){ this.m_additional_info = v;}
+  
     /**
      * Return the container id.
      *
@@ -546,6 +570,34 @@ public class Container {
         }
     }
     
+    
+    private void    restorAdditionalInfo() throws FlexDatabaseException 
+    {
+        m_additional_info = new ArrayList();
+       // m_is_additional_info
+        
+        String sql = "select containerid, nametype, namevalue, nameurl, description from containerheader_name where containerid="+id;
+        
+        DatabaseTransaction t = DatabaseTransaction.getInstance();
+        Connection c = t.requestConnection();
+        CachedRowSet crs = t.executeQuery(sql);
+        PublicInfoItem p_info= null;//new PublicInfoItem("USER_ID", m_label);
+      
+        try 
+        {
+            while(crs.next())
+            {
+                m_is_additional_info = true;
+                p_info = new PublicInfoItem(  crs.getString("nametype"),crs.getString("namevalue"), crs.getString("description"),crs.getString("nameurl"));
+                m_additional_info.add(p_info);
+            }
+        } catch (SQLException ex) {
+            throw new FlexDatabaseException(ex);
+        } finally {
+            DatabaseTransaction.closeResultSet(crs);
+            DatabaseTransaction.closeConnection(c);
+        }
+    }
     /**
      * Insert the container record into database.
      *
@@ -789,6 +841,7 @@ public class Container {
         return ret;
     }
     
+   
     /**
      * Static method to find the DNA template plate from the rearrayed
      * MGC container.
@@ -840,9 +893,11 @@ public class Container {
     public static void main(String args[]) throws Exception {
         try {
             System.out.println(System.currentTimeMillis());
-            Container.findContainers("MAB000206-F");
+            List v = Container.findContainers("EDN003162", 1 );
+            Container c = (Container) v.get(0);
             System.out.println(System.currentTimeMillis());
-            Container.findContainersFromView("MAB000206-F");
+            Container.findContainers("FPL7",1);
+             Container.findContainers("FPL7");
             System.out.println(System.currentTimeMillis());
         }
         catch(Exception e) {

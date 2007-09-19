@@ -156,7 +156,7 @@ else if (user.getUserGroup().equals("System Admin")) user_level = SADMIN;
  <% if (user_level >= COLLABORATOR){%>    
 <td width="10%"> &nbsp;</td>     <td class="label">
            <small>
-            <a href="/FLEX/ContainerScan.jsp" target="display">Container History</a>
+            <a href="/FLEX/ContainerScan.jsp?title=Container Process History" target="display">Container History</a>
             </small>
         </td>
    </tr><%}%>
@@ -180,7 +180,47 @@ else if (user.getUserGroup().equals("System Admin")) user_level = SADMIN;
                 </table><%}%>
                 </td></tr>
                 
-              
+ <% if (user_level >= RESEARCHER){%>    
+           	<tr><td>&nbsp;</tr></td>
+                <TR><TD><B>View</b>
+                <table  border="0">
+            
+<% if (user_level >= RESEARCHER){%>    
+<td width="10%"> &nbsp;</td>     <td class="label">
+<small><a href="/FLEX/ContainerScan.jsp?forwardName=<%= Constants.VIEW_CONTAINER %>&amp;title=Container Details" target="display">Container Details</a>
+</small>    </td></tr><%}%>
+ <% if (user_level >= RESEARCHER){%>    
+<td width="10%"> &nbsp;</td>     <td class="label">
+            <small>
+            <a href="/FLEX/GetProjects.do?forwardName=<%= Constants.NEW_PLATE_LABELS%>" target="display">Print Submitted Plates</a>
+            </small>
+        </td>
+   </tr><%}%>        
+<!--<% if (user_level >= RESEARCHER){%>    
+<td width="10%"> &nbsp;</td>     <td class="label">
+<small><a href="ViewItems.do?forwardName=<%= Constants.VIEW_SEQUENCE%>" target="display">FLEX Sequence</a></small>
+        </td>   </tr><%}%>-->
+
+<% if (user_level >= RESEARCHER){%>    
+<td width="10%"> &nbsp;</td>     <td class="label">
+<small><a href="/FLEX/ViewItems.do?forwardName=<%= Constants.VIEW_LINKERS%>" target="display">Linker</a></small>
+        </td>   </tr><%}%>
+    
+<% if (user_level >= RESEARCHER){%>    
+<td width="10%"> &nbsp;</td>     <td class="label">
+<small><a href="/FLEX/ViewItems.do?forwardName=<%= Constants.VIEW_VECTORS%>" target="display">Vectors</a></small>
+</td></tr><%}%>
+
+<% if (user_level >= RESEARCHER){%>    
+<td width="10%"> &nbsp;</td>     <td class="label">
+<small><a href="/FLEX/ViewItems.do?forwardName=<%= Constants.VIEW_CLONINGSTRATEGIES%>" target="display">Cloning Strategies</a></small>
+        </td>   </tr><%}%>
+
+   
+</table><%}%>
+                
+                
+                
 <% if (user_level >= RESEARCHER){%>    
             	<tr><td>&nbsp;</tr></td>
                 <TR><TD><B>MGC Project</b>
@@ -189,7 +229,7 @@ else if (user.getUserGroup().equals("System Admin")) user_level = SADMIN;
   <% if (user_level >= WADMIN){%>    
 <td width="10%"> &nbsp;</td>     <td class="label">
               <small>
-            <a href="/FLEX/ImportMgcCloneList.jsp" target="display">Import MGC Master List</a>
+            <a href="/FLEX/AddNewPlatesFromFile.do?forwardName=1" target="display">Import MGC Master List</a>
             </small>
         </td>
    </tr><%}%>
@@ -207,18 +247,21 @@ else if (user.getUserGroup().equals("System Admin")) user_level = SADMIN;
         </small>
     </td>
 </tr><%}%>
-  <% if (user_level >= RESEARCHER){%>    
+ <!-- <% if (user_level >= RESEARCHER){%>    
 <td width="10%"> &nbsp;</td>     <td class="label">
             <small>
             <a href="/FLEX/MgcPBSelectFile.jsp" target="display">Print New MGC Plates</a>
             </small>
         </td>
-   </tr><%}%>
+   </tr><%}%>-->
            
 
                 </table><%}%>
                 </td></tr>
-                
+   <% if (user_level >= WADMIN){%>    
+	<tr><td>&nbsp;</tr></td>
+                <TR><TD><B> <a href="/FLEX/AddItems.jsp" target="display">Add</a></b>        </td>
+   </tr><%}%>               
               
  <% if (user_level >= CUSTOMER){%>    
            	<tr><td>&nbsp;</tr></td>

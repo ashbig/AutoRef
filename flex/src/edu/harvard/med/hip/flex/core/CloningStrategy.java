@@ -80,7 +80,7 @@ public class CloningStrategy {
     
     public String toString()
     {
-        return "Strategy name:" + name+" vector name: "+ clonevector
+        return "Strategy name:" + name + " vector name: "+ clonevector.getName()
                 +" linker 5p name: "+ linker5p.getName() +
                 " linker 3p name: " + linker3p.getName() +" type: "+type;
      }
@@ -233,7 +233,7 @@ public class CloningStrategy {
         String sql = "select strategyid, strategyname, vectorname, linkerid_5p, "
 +"(select linkername from linker where linkerid=linkerid_5p) as linker_5p_name, linkerid_3p, "
 +" (select linkername from linker where linkerid=linkerid_3p) as linker_3p_name, type "
- +" from cloningstrategy";
+ +" from cloningstrategy order by strategyid";
         List l = new ArrayList();
         DatabaseTransaction t = null;
         ResultSet rs = null;
@@ -246,7 +246,8 @@ public class CloningStrategy {
                         rs.getString("strategyname"),
                         new CloneVector(rs.getString("vectorname")), 
                         new CloneLinker(rs.getInt("linkerid_5p"), rs.getString("linker_5p_name"),""),
-                        new CloneLinker(rs.getInt("linkerid_3p"), rs.getString("linker_3p_name"),""));
+                        new CloneLinker(rs.getInt("linkerid_3p"), rs.getString("linker_3p_name"),""),
+                        rs.getString("type"));
                 l.add(c);
             }
         } catch (Exception ex) {

@@ -16,12 +16,30 @@ import java.sql.*;
  * @author  dzuo
  * @version
  */
-public class Nametype {
-    private String name;
+public class Nametype 
+{
+    // name tables names
+    public static final String   TABLE_NAME_SAMPLE_NAMETYPE = "SAMPLE_NAMETYPE";
+    public static final String   TABLE_NAME_NAMETYPE = "NAMETYPE";
+    public static final String   TABLE_NAME_CONTAINERHEADER_NAMETYPE= "CONTAINERHEADER_NAMETYPE";
+    public static final String   TABLE_NAME_SPECIES = "SPECIES";
+    public static final String   TABLE_NAME_FLEXSTATUS= "FLEXSTATUS";
+    public static final String   TABLE_NAME_SAMPLETYPE ="SAMPLETYPE";
+    public static final String   TABLE_NAME_CONTAINERTYPE=  "CONTAINERTYPE";
+            
+            
+    private String name = null;
+    private String m_description = null;
     
     /** Creates new Nametype */
-    public Nametype(String name) {
+    public Nametype(String name)
+    {
         this.name = name;
+    }
+    public Nametype(String name, String description)
+    {
+        this( name);
+        m_description = description;
     }
     
     /**
@@ -29,17 +47,20 @@ public class Nametype {
      *
      * @return A list of Nametype objects.
      */
-    public static Vector getAllNametypes() {
+    public static Vector getAllNametypes() 
+    {
         Vector result = new Vector();
-        String sql = "select * from nametype";
+        String sql = "select * from nametype order by nametype";
         ResultSet rs = null;
         
         try {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             rs = t.executeQuery(sql);
-            while(rs.next()) {
-                String name = rs.getString("NAMETYPE");
-                Nametype nt = new Nametype(name);
+            while(rs.next()) 
+            {
+                //String name = rs.getString("NAMETYPE");
+                
+                Nametype nt = new Nametype(rs.getString("NAMETYPE"), rs.getString("DISPLAYTITLE"));
                 result.addElement(nt);
             }
         } catch (Exception e) {
@@ -60,7 +81,7 @@ public class Nametype {
      * false otherwise.
      */
     public static boolean exists(String nametype) {
-        String sql = "select * from nametype where nametype='"+nametype+"'";
+        String sql = "select nametype from nametype where nametype='"+nametype+"'";
         ResultSet rs = null;
         boolean ret = false;
         
@@ -108,13 +129,60 @@ public class Nametype {
     public String getName() {
         return name;
     }
+    public String getDescription() {
+        return m_description;
+    }
+    public void setDescription(String v) { m_description = v;}
+   
+     public static ArrayList getInfoFromNamesTable( String table_name ) throws Exception
+    {
+       String sql = null ;
+       ArrayList nametypes = new ArrayList();
+       table_name= table_name.toUpperCase();
+       if ( table_name.intern() == Nametype.TABLE_NAME_SAMPLE_NAMETYPE) sql = " select  nametype, displaytitle as description from " + table_name +" order by nametype";
+       if ( table_name.intern() == Nametype.TABLE_NAME_NAMETYPE) sql = " select  nametype, displaytitle as description from " + table_name +" order by nametype";
+       if ( table_name.intern() == Nametype.TABLE_NAME_CONTAINERHEADER_NAMETYPE) sql = "  select  nametype, displaytitle as description from  " + table_name +" order by nametype";
+       if ( table_name.intern() == Nametype.TABLE_NAME_SPECIES) sql = "select  genusspecies as nametype from  " + table_name +" order by nametype ";
+        if ( table_name.intern() == Nametype.TABLE_NAME_FLEXSTATUS) sql = " select  flexstatus as nametype from  " + table_name +" order by nametype ";
+       if ( table_name.intern() == Nametype.TABLE_NAME_SAMPLETYPE) sql = " select  sampletype as nametype from  " + table_name +" order by nametype ";
+        if ( table_name.intern() == Nametype.TABLE_NAME_CONTAINERTYPE) sql = " select  containertype as nametype from  " + table_name +" order by nametype";
+     
+       if (sql == null) throw new Exception("Not known table.");
+       
+       ResultSet rs = null;
+       Nametype  nametype = null;
+        try 
+        {
+            rs  = DatabaseTransaction.getInstance().executeQuery(sql);
+            while( rs.next()) 
+            {
+                nametype = new Nametype( rs.getString("nametype"));
+                if ( table_name.equalsIgnoreCase("SAMPLE_NAMETYPE")
+                || table_name.equalsIgnoreCase("NAMETYPE")  
+                ||  table_name.equalsIgnoreCase("CONTAINERHEADER_NAMETYPE")) 
+                {
+                     nametype.setDescription( rs.getString("description"));
+                }
+                nametypes.add(nametype);
+              
+            }
+            return nametypes;
+        }
+        catch(Exception ee)
+        {
+            throw new Exception (ee.getMessage());
+        }
+        finally         {              DatabaseTransaction.closeResultSet(rs);         }
+      
+    }
     
     public static void main(String [] args) {
         DatabaseTransaction t = null;
         Connection conn = null;
         
         try {
-            t = DatabaseTransaction.getInstance();
+            
+             t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
             
             if(Nametype.addNametype("DUMMY", conn)) {
@@ -127,8 +195,8 @@ public class Nametype {
         } catch (Exception ex) {
             System.out.println(ex);
         } finally {
-            DatabaseTransaction.rollback(conn);
-            DatabaseTransaction.closeConnection(conn);
+            //DatabaseTransaction.rollback(conn);
+            //DatabaseTransaction.closeConnection(conn);
         }        
     }        
 }

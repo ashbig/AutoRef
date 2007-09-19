@@ -256,7 +256,16 @@
                         
     <form-bean      name="plateCondensationForm"
                     type="edu.harvard.med.hip.flex.form.PlateCondensationForm"/> 
-                           
+    
+    <form-bean      name="forwardNameForm"
+                    type="edu.harvard.med.hip.flex.form.Seq_GetSpecForm"/>   
+                    
+                      <!-- Form used to add item -->
+    <form-bean      name="addItemsForm"
+                    type="edu.harvard.med.hip.flex.form.AddItemsForm"/>
+    <form-bean      name="addNewPlatesFromFileForm"
+                    type="edu.harvard.med.hip.flex.form.AddNewPlatesFromFileForm"/>
+
  </form-beans>
 
   <!-- ========== Global Forward Definitions ============================== -->
@@ -279,7 +288,8 @@
     <forward    name="importSequence" path="/GetProjects.do?forwardName=IMPORT_SEQUENCES"/>
     <forward    name="addResearcher" path="/AddResearcher.jsp"/>
     <forward    name="mgcPlateHandle" path="/GetProjects.do?forwardName=MGC_PLATE_HANDLE"/>
-    <forward    name="importMGCMaster" path="/ImportMgcCloneList.jsp"/>
+   <!-- <forward    name="importMGCMaster" path="/ImportMgcCloneList.jsp"/>-->
+    <forward    name="importMGCMaster" path="/AddNewPlatesFromFile.do?forwardName=1"/>
     <forward    name="importStatus" path="/MgcPBSelectFile.jsp"/>
     <forward    name="displayMGCRequest" path="/DisplayMGCRequest.jsp"/>    
     <forward    name="specialOligoOrder" path="/GetProjects.do?forwardName=SPECIAL_OLIGO_ORDER"/>
@@ -295,7 +305,13 @@
     <forward    name="queryCloneStorage" path="/QueryStorageCloneInput.jsp"/>
     <forward    name="plateCondensation" path="/GetProjects.do?forwardName=PLATE_CONDENSATION"/>
     <forward    name="transferACEtoFLEX" path="/ACEtoFLEXImporterInput.jsp"/>
-    
+    <forward    name="display_vectors" path="/ViewItems.do?forwardName=VIEW_VECTORS"/>"
+    <forward    name="display_linkers" path="/ViewItems.do?forwardName=VIEW_LINKERS"/>
+    <forward    name="display_cloning_strategy" path="/ViewItems.do?forwardName=VIEW_CLONINGSTRATEGIES"/>
+    <forward    name="containerDetails" path="/ContainerScan.jsp?forwardName=VIEW_CONTAINER"/>
+    <forward    name="printSubmittedContainerLAbels" path="/GetProjects.do?forwardName=Constants.NEW_PLATE_LABELS"/>
+    <forward    name="addItems" path="/AddItems.jsp"/>  
+   
   </global-forwards>
   
 
@@ -363,6 +379,7 @@
                 name="projectWorkflowForm"
                 type="edu.harvard.med.hip.flex.action.SelectProjectAction">
         <forward    name="success"   path="/SelectWorkflow.jsp"/>
+        <forward    name="display_user_plates_for_project"   path="/DisplayLabelsForSubmittedPlates.jsp"/>
     </action>
 
     <!-- Process user's selection of a workflow -->
@@ -526,6 +543,7 @@
     <forward  name="success_rearray" path="/RearrayPlates.jsp" />
     <forward  name="success_sequencing" path="/EnterSrcForSequencing.jsp" />
     <forward  name="success_glycerol" path="/IsCreateSequencing.jsp" />
+    <forward  name="success_upload_containers_from_file" path="/AddNewPlatesFromFile.jsp" />
     </action> 
     
     <!-- Process the source plate input -->
@@ -1431,6 +1449,42 @@
       <forward name="proccessing" path="/ImportMgcMasterListResponse.jsp"/>
 
     </action>
+    
+    <!-- Process display item -->
+    <action     path="/ViewItems"
+                name="projectWorkflowForm"
+                scope="request"
+                validate="false"
+                type="edu.harvard.med.hip.flex.action.ViewItemsAction">
+            <forward name="view_items" path="/ViewItems.jsp"/>
+          <forward name="view_nametypes" path="/DisplayNametype.jsp"/>
+            
+  </action>
+  <!-- add new items-->
+   <action     path="/AddItems"
+        name="addItemsForm"
+        scope="request"
+        input="/AddItems.jsp"
+        validate="true"
+        type="edu.harvard.med.hip.flex.action.AddItemsAction">
+            <forward name="add_items" path="/AddItemsEntryParameters.jsp"/>
+            <forward name="confirm_add_items" path="/AddItemsConfirm.jsp"/>
+           
+                           
+</action>
+
+ <!-- add new items-->
+   <action     path="/AddNewPlatesFromFile"
+        name="addNewPlatesFromFileForm"
+        scope="request"
+        input="/AddNewPlatesFromFile.jsp"
+        validate="true"
+        type="edu.harvard.med.hip.flex.action.AddNewPlatesFromFileAction">
+            <forward name="confirm_add_plates" path="/AddItemsConfirm.jsp"/>
+             <forward name="submit_mgc_plates" path="/AddNewPlatesFromFile.jsp"/>
+                           
+</action>
+
      
     <!-- The standard administrative actions available with Struts -->
     <!-- These would be either omitted or protected by security -->

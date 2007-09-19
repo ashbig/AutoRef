@@ -15,12 +15,20 @@
     <LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
 </head>
 <body>
-    <h2><bean:message key="flex.name"/> : Container Process History</h2>
+   
+    <h2><bean:message key="flex.name"/> : <%= request.getParameter("title" )%></h2>
     <hr>
     <html:errors/>
     <p>
     <H3>Please Scan the Container</h3>
+    <% String forwardName = request.getParameter("forwardName");
+       if ( forwardName == null)
+           {%> 
+
     <form action="ViewContainerProcessHistory.do" >
+        <%}else{%> <form action="ViewContainerDetails.do" ><%}%>
+         <input name="forwardName" type="hidden" value="<%= request.getParameter("forwardName") %>" > 
+
     <table>
         <tr>
             <td class="prompt">Label:</td>

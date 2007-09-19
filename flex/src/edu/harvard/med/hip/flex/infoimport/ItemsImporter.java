@@ -198,6 +198,7 @@ public class ItemsImporter  extends ImportRunner
          BufferedReader in = null;
          String line = null;
          boolean isFirstLine = true;
+         Nametype nametype = null;
          try 
         {
             InputStream input = (InputStream) m_file_input_data.get(ConstantsImport.FILE_TYPE[FileStructure.FILE_TYPE_INPUT_FOR_NAME_TABLE]);
@@ -206,27 +207,38 @@ public class ItemsImporter  extends ImportRunner
             while((line = in.readLine()) != null) 
             {
                  if (  isFirstLine )    { isFirstLine = false;  table_name = line.trim().toUpperCase();   continue; }
-                 if (  ! line.trim().equals("") ) {    items.add(line.trim());                 } 
+                 if (  ! line.trim().equals("") )
+                 {    
+                     line = line.trim();
+                     String[] tmp = line.split("\t");
+                     if (tmp.length == 1) nametype = new Nametype(tmp[0].toUpperCase());
+                     else if ( tmp.length == 2) nametype = new Nametype(tmp[0].toUpperCase(),tmp[1]);
+                     items.add( nametype );    
+                 } 
             }
             in.close();            input.close();
             // drop duplicates
              Hashtable table_content = ConstantsImport.getNamesTableContent(table_name);
             
              ArrayList new_items = new ArrayList();
+             StringBuffer new_items_to_upload = new StringBuffer();
              if ( table_content != null)
              {
                 for (int count = 0; count < items.size(); count++)
                 {
-                    if (table_content.get( (String) items.get(count)) == null)
+                    nametype = (Nametype) items.get(count);
+                    if (table_content.get(nametype.getName() ) == null)
                     {
-                        new_items.add( (String) items.get(count));
+                        new_items.add( nametype);
+                        new_items_to_upload.append( nametype.getName()+" ");
                     }
                 }
              }
              else 
                  new_items.addAll(items);
             ConstantsImport.uploadIntoNamesTable(  table_name,    new_items,  conn );
-              DatabaseTransaction.commit(conn);
+            DatabaseTransaction.commit(conn);
+            m_process_messages.add("Uploading into table "+table_name+" items: "+ new_items_to_upload);
             
         }
         catch(Exception e)
@@ -248,7 +260,9 @@ public class ItemsImporter  extends ImportRunner
                   file_structures[FileStructure.FILE_TYPE_CLONING_STRATEGY] ) ; 
            ArrayList cloning_strategies = freader.getArrayOfObjects();
            // check for duplicates
-           Hashtable ext_cloning_strategies = getCloningStrategiesHash();
+           ArrayList ext_clstr_params = getCloningStrategiesHash();
+           Hashtable ext_cloning_strategies = (Hashtable) ext_clstr_params.get(1);
+           ArrayList ext_cloning_strategies_names = (ArrayList)ext_clstr_params.get(0);
            Hashtable cloning_strategies_to_submit = new Hashtable(); 
            CloningStrategy cl_strategy = null;
            String key = null;
@@ -256,10 +270,26 @@ public class ItemsImporter  extends ImportRunner
            {
                cl_strategy= (CloningStrategy)cloning_strategies.get(count);
                key = cl_strategy.getClonevector().getName()+"_"+cl_strategy.getLinker5p().getName()+"_"+cl_strategy.getLinker3p().getName();
+               // need to prevent submission of the cloning strategy with 
+               //(a) the same parameters; (b) the same name;
                if ( ext_cloning_strategies.get(key.toUpperCase()) == null)
                {
-                   cloning_strategies_to_submit.put(key, cl_strategy);
+                    if ( ext_cloning_strategies_names.contains(cl_strategy.getName().toUpperCase()))
+                   {
+                          m_process_messages.add("Cloning strategy " + cl_strategy.toString()
+                           +" was not submitted into FLEX database. The cloning strategy with the same name exists. ");
+                    }
+                    else
+                        cloning_strategies_to_submit.put(key, cl_strategy);
                }
+               else
+               {
+                   m_process_messages.add("Cloning strategy " + cl_strategy.toString()
+                   +" was not submitted into FLEX database. The cloning strategy with the same parameters exists: "
+                           + ((CloningStrategy)ext_cloning_strategies.get(key.toUpperCase())).getName());
+               }
+              
+               
            }
            //upload
             CloningStrategy.insertCloningStrategies(cloning_strategies_to_submit.values(), conn);
@@ -272,9 +302,10 @@ public class ItemsImporter  extends ImportRunner
           }
     
     
-    private    Hashtable     getCloningStrategiesHash()
+    private    ArrayList     getCloningStrategiesHash()
     {
          Hashtable result = new Hashtable();
+         ArrayList names = new ArrayList();
           List strategies = CloningStrategy.getAllCloningStrategies();
           Iterator iter = strategies.iterator();
           CloningStrategy strat = null; String key = null;
@@ -284,8 +315,10 @@ public class ItemsImporter  extends ImportRunner
               key = strat.getClonevector().getName()+"_"+strat.getLinker5p().getName()+"_"+strat.getLinker3p().getName();
              
               result.put(key.toUpperCase(), strat);
+              names.add(strat.getName().toUpperCase());
           }
-         return result;
+          ArrayList result_clrs = new ArrayList();result_clrs.add(names);result_clrs.add(result);
+         return result_clrs;
     }
         
      

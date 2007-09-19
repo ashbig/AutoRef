@@ -1,7 +1,7 @@
 <%@ page contentType="text/html"%>
 <%@ page language="java" %>
 
-
+<%@ page import="java.util.*" %>
 <%@ page import="edu.harvard.med.hip.flex.*" %>
 <%@ page import="edu.harvard.med.hip.flex.core.*" %>
 <%@ page import="edu.harvard.med.hip.flex.process.*" %>
@@ -34,7 +34,8 @@
     </h3>
 </logic:present>
 
-
+ 
+   
 
 <%--Loop through all the containers and display all their details--%>
 <logic:iterate id="container" name="<%=Constants.CONTAINER_LIST_KEY%>">
@@ -60,22 +61,42 @@
         <td class="label">Label:</td>
         <td><bean:write name="container" property="label"/></td>
     </tr>
+   
+     <tr>
+        <td class="label">Location:</td>
+        <td><bean:write name="container" property="location.type"/></td>
+    </tr>
+    <%  List containers = (List) request.getAttribute(Constants.CONTAINER_LIST_KEY);
+         int c_count=0;
+         if (containers != null )
+             {
+              PublicInfoItem p_info = null;
+             Container c = (Container)containers.get(c_count++);
+             if ( c.getIsPublicInfo() )
+                 {
+              %>    <tr>   <td class="label" colspan=2 align="center">User Information for Container</td></tr><%
+                 for (int c_pinfo = 0; c_pinfo < c.getPublicInfo().size(); c_pinfo++)
+                     { p_info = (PublicInfoItem)  c.getPublicInfo().get(c_pinfo);
+                     %>
+                     <tr>   <td class="label"> &nbsp;&nbsp;&nbsp;<%= p_info.getName() %>:</td>
+                     <td><%= p_info.getValue() %></td></tr>
+                 <%}}}%>
+             
+       
     <tr>
-        <td>
+        <td> 
             <html:form action="/PrintLabel.do">
                 <html:hidden property="label" value="<%=((edu.harvard.med.hip.flex.core.Container)container).getLabel()%>"/>
                 <html:submit value="Reprint Label"/>
             </html:form>
         </td>
-        <logic:present name="process">
         <td>
             <html:form action="/SaveContainerDetail.do">
                 <html:hidden name="container" property="id"/>
-                <html:hidden name="process" property="executionid"/>
+               <logic:present name="process"> <html:hidden name="process" property="executionid"/> </logic:present>
                 <html:submit value="Export Data"/>
             </html:form>
         </td>
-        </logic:present>
     </tr>
 </table>
 <br>
@@ -126,8 +147,18 @@
             <td><bean:write name="sample" property="oligoid"/></td>
         </logic:notEqual>
          
-        <td><bean:write name="sample" property="cdslength"/></td>   
-        <td><flex:write name="sample" property="cloneid"/></td>    
+        <td><bean:write name="sample" property="cdslength"/></td>  
+        
+       
+            
+        <logic:greaterThan name="sample" property="cloneid" value="0">
+            <td>   
+                <a target="_blank" href="ViewClone.do?cloneid=<flex:write name="sample" property="cloneid"/>&amp;isDisplay=1">
+            <flex:write name="sample" property="cloneid"/></a> </td>
+        </logic:greaterThan>
+        <logic:lessThan name="sample" property="cloneid" value="1">
+            <td>&nbsp;</td>
+        </logic:lessThan>
                     
           <logic:present name="process">
             <td>

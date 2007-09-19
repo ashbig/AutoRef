@@ -1,5 +1,5 @@
 /**
- * $Id: Protocol.java,v 1.47 2007-07-25 19:09:33 Elena Exp $
+ * $Id: Protocol.java,v 1.48 2007-09-19 15:44:57 Elena Exp $
  *
  * File     : FlexProcessException.java
  * Date     : 04162001
@@ -11,6 +11,7 @@ package edu.harvard.med.hip.flex.process;
 import java.util.*;
 import java.math.*;
 import edu.harvard.med.hip.flex.database.*;
+import edu.harvard.med.hip.flex.workflow.*;
 import java.sql.*;
 import javax.sql.*;
 import sun.jdbc.rowset.*;
@@ -158,8 +159,9 @@ public class Protocol {
     public Protocol(int id) throws FlexDatabaseException {
         
         
-        if (Constants.s_protocols_id != null && Constants.s_protocols_id.get(String.valueOf(id)) != null) {
-            Protocol pr = (Protocol)Constants.s_protocols_id.get(String.valueOf(id));
+        if (ProjectWorkflowProtocolInfo.getInstance().getProtocolsByID() != null 
+                && ProjectWorkflowProtocolInfo.getInstance().getProtocolsByID().get (String.valueOf(id)) != null) {
+            Protocol pr = (Protocol)ProjectWorkflowProtocolInfo.getInstance().getProtocolsByID() .get(String.valueOf(id));
             
             this.id = id;
             this.processcode = pr.getProcesscode();
@@ -171,7 +173,7 @@ public class Protocol {
         String sql = "select protocolid, processcode, processname " +
         "from processprotocol " +
         "where protocolid = " + id;
-        
+   System.out.println(sql);     
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         // only one result should be returned if any
         //Vector protocolVect = t.executeSql(sql);
@@ -225,8 +227,15 @@ public class Protocol {
         
         
     }
+     public Protocol(int id, String processcode, String processname, int mode) throws FlexDatabaseException
+     {
+        this.id = id;
+        this.processcode = processcode;
+        this.processname = processname;
     
-    /**
+    }
+    public void addSubProtocol(SubProtocol  v){  if( subprotocol== null) subprotocol = new Vector();  subprotocol .add(v);}
+   /**
      * Constructor.
      *
      * @param id The protocol id.
@@ -252,9 +261,10 @@ public class Protocol {
     public Protocol(String processname) throws FlexDatabaseException {
         
         
-        if (Constants.s_protocols_name != null && Constants.s_protocols_name.get(processname) != null) {
+        if (ProjectWorkflowProtocolInfo.getInstance().getProtocolsByName() != null 
+                && ProjectWorkflowProtocolInfo.getInstance().getProtocolsByName().get(processname) != null) {
             
-            Protocol pr = (Protocol)Constants.s_protocols_name.get(processname);
+            Protocol pr = (Protocol)ProjectWorkflowProtocolInfo.getInstance().getProtocolsByName().get(processname);
             
             this.id = pr.getId();
             this.processcode = pr.getProcesscode();
@@ -266,7 +276,6 @@ public class Protocol {
         String sql = "select protocolid, processcode, processname " +
         "from processprotocol " +
         "where processname = '" + processname +"'";
-        
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         // only one result should be returned if any
         //Vector protocolVect = t.executeSql(sql);
@@ -308,7 +317,7 @@ public class Protocol {
     private void populateSubProtocols() throws FlexDatabaseException {
         String sql =
         "select subprotocolname, subprotocoldescription from subprotocol where protocolid="+id;
-        DatabaseTransaction t =
+   DatabaseTransaction t =
         DatabaseTransaction.getInstance();
         RowSet rs = t.executeQuery(sql);
         try {

@@ -1,5 +1,5 @@
 /**
- * $Id: Sample.java,v 1.12 2006-05-30 17:58:09 dzuo Exp $
+ * $Id: Sample.java,v 1.13 2007-09-19 15:42:43 Elena Exp $
  *
  * File     	: Sample.java
  * Date     	: 04162001
@@ -74,19 +74,26 @@ public class Sample {
     protected String pa;
     protected String sgd;
     protected String genbank;
+    protected ArrayList         m_additional_info = null;
+    protected boolean           m_is_additional_info = false;
+   
     
     public void setCloneid(int cloneid) {this.cloneid = cloneid;}
     public void setGeneSymbol(String s) {this.geneSymbol = s;}
     public void setPa(String s) {this.pa = s;}
     public void setSgd(String s) {this.sgd = s;}
     public void setGenbank(String s) {this.genbank = s;}
+    public void setIsAdditionalInfo(boolean v) { this.m_is_additional_info = v;}
+    public void setAdditionalInfo(ArrayList v){ this.m_additional_info = v;}
     
     public int getCloneid() {return cloneid;}
     public String getGeneSymbol() {return geneSymbol;}
     public String getPa() {return pa;}
     public String getSgd() {return sgd;}
     public String getGenbank() {return genbank;}
-    
+    public boolean isAdditionalInfo() { return m_is_additional_info ;}
+    public ArrayList getAdditionalInfo(){ return m_additional_info ;}
+   
     public Sample() {}
         
     /**

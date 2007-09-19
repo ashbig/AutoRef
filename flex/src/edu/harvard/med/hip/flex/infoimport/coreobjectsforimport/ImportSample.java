@@ -94,7 +94,7 @@ public static final String      CLONE_STATUS_FAILED_BY_SEQUENCE_VALIDATION ="FAI
     public          void        addPublicInfo(PublicInfoItem v)
     {
         if (m_additional_info == null) m_additional_info = new ArrayList();
-        if ( !m_additional_info.contains(v))
+        if ( ! PublicInfoItem.contains( m_additional_info, v))
                 m_additional_info.add(v);
     }
     public void         setContainerId(int v){         m_containerid = v;}

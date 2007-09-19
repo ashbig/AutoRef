@@ -86,7 +86,7 @@ public class CloneLinker {
     
     public static List  getAllLinkers() throws FlexDatabaseException
    {
-       String sql = "select LINKERID  ,LINKERNAME  ,LINKERSEQUENCE from linker ";
+       String sql = "select LINKERID  ,LINKERNAME  ,LINKERSEQUENCE from linker order by linkerid  ";
        return getLinkersBySQL(sql);
    }
    
@@ -115,4 +115,37 @@ public class CloneLinker {
             DatabaseTransaction.closeResultSet(rs);
         }
     }
+   
+    public static void main(String[] args)
+  {
+           ArrayList display_items = new ArrayList(); 
+         ArrayList header = new ArrayList(); 
+          List items = null;
+          String no_items_header = null;
+         String title= ""; ArrayList item_description = null;
+         
+         try
+         {
+         CloneLinker linker = null;
+               items = CloneLinker.getAllLinkers();
+               Iterator iter = items.iterator();
+               if( items != null && items.size() > 0 )
+               {  
+                       header.add(  "Linker ID");
+                       header.add(  "Linker Name");
+                       header.add(  "Linker Sequence" ) ;
+               } 
+               else
+                no_items_header = "No linkers available";
+               while(iter.hasNext()){
+                   linker = (CloneLinker)iter.next();
+                   item_description= new ArrayList();
+                   item_description.add(String.valueOf( linker .getId()));
+                   item_description.add(linker.getName());
+                   item_description.add(linker.getSequence());
+                   display_items.add(item_description);
+               }
+               title="Currently Available Linkers ";
+         }catch(Exception e){}
+     }
 }

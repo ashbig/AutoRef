@@ -1,5 +1,5 @@
 /**
- * $Id: FlexSequence.java,v 1.8 2006-08-31 19:25:49 dzuo Exp $
+ * $Id: FlexSequence.java,v 1.9 2007-09-19 15:42:44 Elena Exp $
  *
  * File     : FlexSequence.java
  * Date     : 05022001
@@ -78,6 +78,8 @@ public class FlexSequence extends CDNASequence {
     // "NAMEURL" => url (optional)
     // "DESCRIPTION"=>description (optional)
     protected Vector publicInfo = new Vector();
+    
+   
     
     /**
      * Constructor.

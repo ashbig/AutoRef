@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.5 $
- * $Date: 2002-12-12 17:02:23 $
+ * $Revision: 1.6 $
+ * $Date: 2007-09-19 15:42:24 $
  * $Author: Elena $
  *
  ******************************************************************************
@@ -58,7 +58,7 @@ import org.apache.struts.action.*;
  * the request to display the details of a container.
  *
  * @author     $Author: Elena $
- * @version    $Revision: 1.5 $ $Date: 2002-12-12 17:02:23 $
+ * @version    $Revision: 1.6 $ $Date: 2007-09-19 15:42:24 $
  */
 
 public class ViewContainerDetailsAction extends CollaboratorAction {
@@ -81,15 +81,25 @@ public class ViewContainerDetailsAction extends CollaboratorAction {
         ActionErrors errors = new ActionErrors();
         
         ActionForward retForward = null;
+        //for import container details
+         boolean isShowContainerDetails = false;
+      
         /*
          * Either the container id or the container barcode parameter must 
          * be in the request
          */
+        
         String containerIdS = request.getParameter(Constants.CONTAINER_ID_KEY);
-        String containerBarcode = 
-            request.getParameter(Constants.CONTAINER_BARCODE_KEY);
+        if ( containerIdS != null) containerIdS = containerIdS.trim();
+        String containerBarcode = request.getParameter(Constants.CONTAINER_BARCODE_KEY);
+        if ( containerBarcode != null) containerBarcode = containerBarcode.trim();
         String processId = request.getParameter(Constants.PROCESS_ID_KEY);
         Process process=null;
+            
+        String forwardName = (String) request.getParameter("forwardName");
+        if (forwardName != null && forwardName.intern() == Constants.VIEW_CONTAINER )
+            isShowContainerDetails=true;
+        
         
         if(processId != null && ! processId.equals("")) {
             try {
@@ -104,17 +114,30 @@ public class ViewContainerDetailsAction extends CollaboratorAction {
                 return new ActionForward(mapping.getInput());
             }
         }
-        
+              
+           
         List containerList = null;
         try {
-            if(containerIdS!=null && containerIdS.length() !=0 ) {
+            if(containerIdS!=null && containerIdS.length() !=0 ) 
+            {
                 containerList = new LinkedList();
                 Container container = new Container(Integer.parseInt(containerIdS));
                 container.restoreSample();
                 containerList.add(container);
-            } else if(containerBarcode!=null && containerBarcode.length() !=0) {
-                containerList = Container.findContainersFromView(containerBarcode);
-            } else {
+            } else if(containerBarcode!=null && containerBarcode.length() !=0) 
+            {
+                 if ( isShowContainerDetails )
+                {  
+
+                    containerList =  Container.findContainers(containerBarcode,1) ;
+                    request.setAttribute("forwardName",forwardName);
+                 }
+                 else
+                 {
+                    containerList = Container.findContainersFromView(containerBarcode);
+                 }
+            }
+            else {
               throw new FlexCoreException("Unable to find any containers with label " + containerBarcode); 
             }
         } catch (FlexDatabaseException fde) {

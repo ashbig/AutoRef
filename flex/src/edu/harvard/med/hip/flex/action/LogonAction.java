@@ -12,8 +12,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.9 $
- * $Date: 2002-10-02 17:49:39 $
+ * $Revision: 1.10 $
+ * $Date: 2007-09-19 15:42:25 $
  * $Author: Elena $
  *
  ******************************************************************************
@@ -65,7 +65,7 @@ import edu.harvard.med.hip.flex.Constants;
  * Implementation of <strong>Action</strong> that validates a user logon.
  *
  * @author $Author: Elena $
- * @version $Revision: 1.9 $ $Date: 2002-10-02 17:49:39 $
+ * @version $Revision: 1.10 $ $Date: 2007-09-19 15:42:25 $
  */
 
 public final class LogonAction extends Action {
@@ -98,14 +98,13 @@ public final class LogonAction extends Action {
         ActionErrors errors = new ActionErrors();
         String username = ((LogonForm) form).getUsername();
         String password = ((LogonForm) form).getPassword();
-        
+        System.out.println(username+" "+password);
         
         User user = new User(username,password);
         
         
         // get the access manager to verify they usernam/password combo.
         AccessManager accessManager = AccessManager.getInstance();
-        
         
         try {
             // ask accessManager if the username and password are valid
@@ -126,7 +125,8 @@ public final class LogonAction extends Action {
             
             return (new ActionForward(mapping.getInput()));
         }
-        LinkedList menu = null;
+      /* transfered to menubar.jsp
+       LinkedList menu = null;
         try{
             menu = UserGroup.getMenu(user.getUserGroup());
         }catch(Exception e) {
@@ -135,13 +135,13 @@ public final class LogonAction extends Action {
             
         };
         request.getSession().setAttribute("menulist",menu);
+       **/
         // Save our logged-in user in the session
         HttpSession session = request.getSession();
         session.setAttribute(Constants.USER_KEY, user);
         if (servlet.getDebug() >= 1)
             servlet.log("LogonAction: User '" + user.getUsername() +
             "' logged on in session " + session.getId());
-        
         // Remove the obsolete form bean
         if (mapping.getAttribute() != null) {
             if ("request".equals(mapping.getScope()))
@@ -149,12 +149,13 @@ public final class LogonAction extends Action {
             else
                 session.removeAttribute(mapping.getAttribute());
         }
-        
-        
+       
         //get all project/workflow/protocol information and store it
+     
         try{
-            Vector pr = Project.getAllProjects();
-          
+            ProjectWorkflowProtocolInfo.getInstance();
+        /*    Vector pr = Project.getAllProjects();
+            
             Constants.s_projects = new Hashtable(pr.size());
             Constants.s_workflows = new Hashtable();
             Constants.s_protocols_id = new Hashtable();
@@ -163,6 +164,7 @@ public final class LogonAction extends Action {
             {
                 
                 Project p = (Project)pr.get(i);
+     
                 Constants.s_projects.put( String.valueOf(p.getId()), p);
                 for (int w_count = 0; w_count < p.getWorkflows().size();w_count++)
                 {
@@ -197,10 +199,9 @@ public final class LogonAction extends Action {
                             
                      }
                 }
- 
+    
             }
-            
- 
+            */
           }
         catch(Exception e)
           {

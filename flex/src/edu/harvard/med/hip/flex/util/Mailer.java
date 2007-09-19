@@ -13,9 +13,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.17 $
- * $Date: 2004-06-24 19:49:22 $
- * $Author: dzuo $
+ * $Revision: 1.18 $
+ * $Date: 2007-09-19 15:46:00 $
+ * $Author: Elena $
  *
  ******************************************************************************
  *
@@ -50,8 +50,8 @@ import edu.harvard.med.hip.flex.database.*;
  *
  * Utility class to send simple messages.
  *
- * @author     $Author: dzuo $
- * @version    $Revision: 1.17 $ $Date: 2004-06-24 19:49:22 $
+ * @author     $Author: Elena $
+ * @version    $Revision: 1.18 $ $Date: 2007-09-19 15:46:00 $
  */
 
 public class Mailer
@@ -246,8 +246,108 @@ public class Mailer
         String from = "etaycher@hms.harvard.edu";
         sendMessageWithAttachedFile( to,  from, cc, subject,  msgText,  fl);
     }
+    ///////////////////////////////////////////////////////////////////
+     public static void sendMessageWithAttachedFile(File fl, String to,
+                        String cc, String subject, String msgText)
+                        throws MessagingException
+    {
+        ArrayList fileCol = new ArrayList();
+        fileCol.add(fl);
+        sendMessageWithFileCollection( to,    cc,  subject,  msgText,  fileCol);
+        
+    }
+    public static void sendMessageWithFileCollection(String to, 
+                        String cc, String subject, 
+                        String msgText, Collection fileCol)
+    throws MessagingException
+    {
+        Properties props = new Properties();
+        props.put("mail.smtp.host",FlexProperties.getInstance().getProperty("mail.smtp.host"));
+        props.put("mail.smtp.auth", "true");
+        Session session = Session.getDefaultInstance(props,null);
+        try
+        {
+         //    System.out.println("sending file 0" );
+            // create a message
+            MimeMessage msg = new MimeMessage(session);
+            String from =  FlexProperties.getInstance().getProperty("HIP_FROM_EMAIL_ADDRESS");
+           //  System.out.println("sending file 2"+ from );
+            msg.setFrom(new InternetAddress(from));
+            InternetAddress[] address =    {new InternetAddress(to)};
+            if(cc != null)
+            {
+               //   System.out.println("sending file cc send" );
+                InternetAddress[] ccAddresses =
+                {new InternetAddress(cc)};
+                msg.setRecipients(Message.RecipientType.CC, ccAddresses);
+            }
+           //  System.out.println("sending file 2 here"  );
+            msg.setRecipients(Message.RecipientType.TO, address);
+            msg.setSubject(subject);
+            msg.setSentDate(new Date());
+            
+            // create the message body part
+            MimeBodyPart mbp = new MimeBodyPart();
+            mbp.setText(msgText);
+                      
+            
+            // create the multipart and put the message into it.
+            Multipart mp = new MimeMultipart();
+            mp.addBodyPart(mbp);
+            
+            if(fileCol !=null )
+            {
+                // now attach all the files if there are any.
+                Iterator fileIter = fileCol.iterator();
+                while(fileIter.hasNext())
+                {
+                    BodyPart filePart = new MimeBodyPart();
+                    File curFile = (File)fileIter.next();
+                    DataSource source = new FileDataSource(curFile);
+                    filePart.setDataHandler(new DataHandler(source));
+                    filePart.setFileName(curFile.getName());
+                    mp.addBodyPart(filePart);
+                      System.out.println("sending file 4 send" );
+                }
+            }
+            // add the multipart to the message
+            msg.setContent(mp);
+            msg.saveChanges();
+          //    System.out.println("sending file 3 send" );
+             // send the message
+            if ( FlexProperties.getInstance().getProperty("EMAIL_PASSWORD") != null && 
+                !FlexProperties.getInstance().getProperty("EMAIL_PASSWORD").trim().equals(""))
+            {
+                String user =      FlexProperties.getInstance().getProperty("HIP_FROM_EMAIL_ADDRESS");
+                user = user.substring(0, user.indexOf('@'));
+                Transport trans = session.getTransport("smtp");
+                trans.connect(FlexProperties.getInstance().getProperty("mail.smtp.host"), 
+                            user, 
+                            FlexProperties.getInstance().getProperty("EMAIL_PASSWORD"));
+           //      System.out.println("sending file 1 send" );
+                trans.sendMessage(msg, address);
+                trans.close();
+            }
+            else
+            {
+         //        System.out.println("sending file 2" );
+       
+                Transport.send(msg);
+            }
+            
+        } catch(MessagingException mex)
+        {
+            mex.printStackTrace();
+             System.out.println("sending file =0"+mex.getMessage() );
+            Exception ex = null;
+            if((ex = mex.getNextException()) !=null)
+            {
+                ex.printStackTrace();
+            }
+        }
+    }
     
-    
+    /////////////////////////////////////////////////////
     public static void sendMessageWithAttachedFile(String to, String from,
     String cc, String subject, String msgText, File fl)
     throws MessagingException
@@ -351,6 +451,8 @@ public static void notifyUser(String user_name, String file_name, String subject
     }
 
 
+
+
 private static File writeFile(Vector fileData, String file_name)
 throws IOException
 {
@@ -367,6 +469,7 @@ throws IOException
  
     return fl;
 }
+
 
 
 

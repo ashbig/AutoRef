@@ -183,8 +183,9 @@ public class Workflow {
      */
     public Workflow(int id) throws FlexDatabaseException {
         this.id = id;
-        if (Constants.s_workflows != null && Constants.s_workflows.get(String.valueOf(id)) != null) {
-            Workflow w = (Workflow)Constants.s_workflows.get(String.valueOf(id));
+        if (ProjectWorkflowProtocolInfo.getInstance().getWorkflows() != null
+                && ProjectWorkflowProtocolInfo.getInstance().getWorkflows().get(String.valueOf(id)) != null) {
+            Workflow w = (Workflow)ProjectWorkflowProtocolInfo.getInstance().getWorkflows().get(String.valueOf(id));
             this.description = w.getDescription();
             this.name = w.getName();
             this.flow = w.getFlow();
@@ -206,7 +207,7 @@ public class Workflow {
             sql = "select currentprotocolid, nextprotocolid "+
             "from workflowtask where workflowid = "+id+
             " order by currentprotocolid";
-            rs = t.executeQuery(sql);
+             rs = t.executeQuery(sql);
             
             Vector v = new Vector();
             
@@ -342,13 +343,14 @@ public class Workflow {
     public Vector getFlow() {
         return flow;
     }
+    public void             setFlow(Vector v) { flow = v;    }
     
     public static Vector getAllWorkflows() throws FlexDatabaseException {
         
         Vector workflows = new Vector();
-        if (Constants.s_workflows != null) {
-            workflows = new Vector(Constants.s_workflows.values());
-            sortWorkflowsByName(workflows);
+        if (ProjectWorkflowProtocolInfo.getInstance().getWorkflows() != null) 
+        {
+            workflows = new Vector(ProjectWorkflowProtocolInfo.getInstance().getWorkflows().values());
             return workflows;
         }
         

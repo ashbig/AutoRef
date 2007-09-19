@@ -32,6 +32,10 @@ import edu.harvard.med.hip.flex.user.*;
 import edu.harvard.med.hip.flex.Constants;
 import edu.harvard.med.hip.flex.workflow.*;
 
+import java.sql.*;
+import javax.sql.*;
+import sun.jdbc.rowset.*;
+
 /**
  *
  * @author  dzuo
@@ -71,7 +75,18 @@ public class SelectProjectAction extends ResearcherAction {
             if(Constants.PERIMETER_REARRAY.equals(forwardName)) {
                 Workflow wf = new Workflow(Workflow.EXPRESSION_WORKFLOW);
                 workflows.add(wf);
-            } else {
+            } 
+            else if(Constants.NEW_PLATE_LABELS.equals(forwardName))
+            {
+                //get plate labels by project
+                ArrayList plate_data =  getUserPlatesByProject(project);
+                request.setAttribute("LABELS", plate_data);
+                request.setAttribute("projectname", project.getName());
+                request.setAttribute("forwardName", forwardName);
+                
+                return (mapping.findForward("display_user_plates_for_project")) ;
+            } 
+             else {
                 workflows = project.getWorkflows();
             }
             
@@ -86,4 +101,46 @@ public class SelectProjectAction extends ResearcherAction {
             return (mapping.findForward("error"));
         }
     }
+    
+    
+     private  ArrayList getUserPlatesByProject(Project project) throws Exception
+    {
+        ArrayList labels = new ArrayList();
+        String sql = null;
+        Protocol p = new Protocol(Protocol.UPLOAD_CONTAINERS_FROM_FILE);
+        if ( project.getName().equalsIgnoreCase("MGC Project") )
+        {
+            sql = "select c.containerid as containerid, mc.oricontainer as USER_ID, mc.marker as marker, c.label as label \n " + 
+        " from mgccontainer mc , containerheader c where  mc.mgccontainerid =  c.containerid  order by c.label";        
+        }
+        else
+             sql = "select label, namevalue as USER_ID, c.containerid as containerid "
++" from containerheader c, containerheader_name n where  c.containerid=n.containerid and  n.nametype='USER_ID' and "
++" c.containerid in (select containerid from processobject where executionid in "
++" ( select executionid from processexecution where protocolid="+p.getId()+" and projectid= "+project.getId()+")) order by USER_ID" ;        
+        String[] plate_description = null;
+        CachedRowSet crs = null;
+        try 
+        {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            crs = t.executeQuery(sql);
+            while(crs.next())
+            {
+                plate_description= new String[5];
+                plate_description[0] = String.valueOf( crs.getInt("CONTAINERID")); // containerid
+                plate_description[1] = crs.getString("USER_ID");// user name
+                plate_description[2] = crs.getString("LABEL");// flex name
+                labels.add ( plate_description );
+             }
+             return labels;
+        } catch (Exception ex) 
+        {
+               throw new Exception("Error during extracting mgc labels");
+        } finally {
+            DatabaseTransaction.closeResultSet(crs);
+        }
+        
+       
+    }
+    
 }

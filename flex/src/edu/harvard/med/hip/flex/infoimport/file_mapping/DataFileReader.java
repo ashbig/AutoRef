@@ -89,6 +89,8 @@ public class DataFileReader
             int file_type, boolean isDropEmptyString, boolean isTrimLine,
              FileStructure      mapping_file_structure    ) throws Exception
     {
+
+        
         BufferedReader in = null;
         String line = null;
         Collection header_struct = null;
@@ -109,7 +111,7 @@ public class DataFileReader
                  if (isTrimLine) line = line.trim();
                  if (  isFirstHeader && isFirstLine ) 
                  {
-                    String[] header_content = Algorithms.splitString(line, ConstantsImport.TAB_DELIMETER, false, -1);
+                    String[] header_content = line.split(ConstantsImport.TAB_DELIMETER);//Algorithms.splitString(line, ConstantsImport.TAB_DELIMETER, false, -1);
                     number_of_columns = header_content.length;
                      //construct recordStruct
                     header_struct = processHeader(header_content, mapping_file_structure);
@@ -118,7 +120,7 @@ public class DataFileReader
                  }
                  if ( isDropEmptyString && !line.equals("") ) 
                  {
-                     row_content = Algorithms.splitString(line, ConstantsImport.TAB_DELIMETER, false, -1);
+                     row_content = line.split(ConstantsImport.TAB_DELIMETER);//Algorithms.splitString(line, ConstantsImport.TAB_DELIMETER, false, -1);
                      if (number_of_columns != row_content.length)
                          m_error_messages.add("Line "+line+" has a problem, correct file.");
                      else
@@ -324,7 +326,7 @@ public class DataFileReader
            }
       }
       additional_info.put(key, additional_info_from_record);
-      System.out.println(key +" "+ additional_info_from_record.size());
+     // System.out.println(key +" "+ additional_info_from_record.size());
   }
   
   private  void              setObjectsPlateMappingFileSubmission( ColumnValue[] records_out      )
@@ -564,7 +566,8 @@ public class DataFileReader
                    }
                   else
                   {
-                      container_additional_properties.add(p_info);
+                      if  ( !container_additional_properties.contains(p_info)) 
+                        container_additional_properties.add(p_info);
                   }
                }
        }

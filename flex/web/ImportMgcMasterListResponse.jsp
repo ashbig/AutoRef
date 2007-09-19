@@ -8,10 +8,10 @@
 
 <html>
 <head>
-<title><bean:message key="flex.name"/> : Master list of MGC clones: import information</title>
+<title><bean:message key="flex.name"/> : <%= request.getAttribute("title") %><!--Master list of MGC clones: import information--></title>
 </head>
 <body>
-<h2><bean:message key="flex.name"/> : Master list of MGC clones: import information </h2>
+<h2><bean:message key="flex.name"/> : <%= request.getAttribute("title") %><!--Master list of MGC clones: import information --></h2>
 <hr>
 
 <p><%= request.getAttribute("message") %>

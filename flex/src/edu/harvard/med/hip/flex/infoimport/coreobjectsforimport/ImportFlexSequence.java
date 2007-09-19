@@ -45,7 +45,7 @@ public class ImportFlexSequence
     private String            m_chromosome = null;
     private int                 m_cds_start = -1;
     private int                 m_cds_stop =-1;
-   
+    private int                 m_gc_content =-1;
     private String              m_sequencetext = null;
     /** Creates a new instance of ImportFleaxSequence */
     public ImportFlexSequence()
@@ -76,6 +76,7 @@ public class ImportFlexSequence
     public ArrayList getPublicInfo(){ return m_additional_info ;}
     public void setPublicInfo(ArrayList v){ this.m_additional_info = v;}
   public          void        addPublicInfo(PublicInfoItem v){m_additional_info.add(v);}
+  public          void        addPublicInfoItems(ArrayList v){m_additional_info.addAll(v);}
     
    
     public void               setId  (int v) { m_id = v;}
@@ -86,6 +87,8 @@ public class ImportFlexSequence
     public void                 setCDSStart  (int v) { m_cds_start = v;}
     public void                 setCDSStop  (int v) { m_cds_stop =v;}
     public  void                setSequenceText(String v){ m_sequencetext = v;}
+    public void                 setGCContent(int v){ m_gc_content = v;}
+    
     
     public int               getId  ( ) { return m_id  ;}
 public String            getFlexStatus  ( ) { return m_flexstatus  ;}
@@ -95,7 +98,9 @@ public String            getChromosome  ( ) { return m_chromosome  ;}
 public int                 getCDSStart  ( ) { return m_cds_start  ;}
 public int                 getCDSStop  ( ) { return m_cds_stop ;}
 public  String                getSequenceText(){return  m_sequencetext ;}
-  
+public int                  getGCContent(){ return m_gc_content;}
+
+
 public boolean              isVerified()
 {
     if ( m_cds_start == -1 || m_cds_stop == -1 || m_sequencetext == null || m_sequencetext.length() == 0) return false;
@@ -188,5 +193,53 @@ private int getGccontent(String sequencetext, int cds_start, int cds_stop)
             }
         }
         return result;
+    }
+
+
+public static ImportFlexSequence             getById(int sequenceid) throws Exception
+{
+    ImportFlexSequence sequence = null;
+  String sql = "select  flexstatus ,genusspecies  ,"+
+        "  cdsstart,   cdsstop,  cdslength,   gccontent,"+
+        "to_char(s.dateadded, 'fmYYYY-MM-DD') as dateadded "+
+        "from flexsequence  where  sequenceid="+sequenceid;
+        DatabaseTransaction t = DatabaseTransaction.getInstance();
+        RowSet rs =  null;
+        try 
+        {
+            rs = t.executeQuery(sql);
+            while(rs.next())
+            {
+                sequence= new ImportFlexSequence();
+                sequence.setFlexStatus( rs.getString("STATUS"));
+                sequence.setSpesies( rs.getString("SPECIES"));
+               // dateadded = rs.getString("DATEADDED");
+                sequence.setCDSStart( rs.getInt("CDSSTART"));
+                sequence.setCDSStop( rs.getInt("CDSSTOP"));
+               sequence.setGCContent( rs.getInt("GCCONTENT"));
+            }
+            
+            // public info stuff
+            ArrayList seq_info = PublicInfoItem.getPublicInfo( "NAME", 
+            sequenceid, "SEQUENCEID") ;
+            
+            
+            String sequencetext = "";
+            sql = "select * from sequencetext where sequenceid="+sequenceid+" order by sequenceorder";
+            rs = t.executeQuery(sql);
+            
+            while(rs.next())
+            {
+                sequencetext += rs.getString("SEQUENCETEXT");
+            }
+            sequence.setSequenceText(sequencetext);
+            return sequence;
+            
+        } catch ( Exception sqlE) 
+        {
+            throw new Exception("Error occured while restoring sequence with id "+sequenceid+"\n"+sqlE.getMessage()+"\nSQL: "+sql);
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
     }
 }

@@ -30,25 +30,26 @@ public class ConstantsImport
       
       public static void        fillInNames() throws Exception
       {
-          String sql = " select nametype from SAMPLE_NAMETYPE order by nametype";
+          String sql = " select nametype from "+  Nametype.TABLE_NAME_SAMPLE_NAMETYPE+" order by nametype";
           s_sample_names = fillInNames(sql, "nametype");
            
-          sql = " select nametype from NAMETYPE order by nametype";
+          sql = " select nametype from "+ Nametype.TABLE_NAME_NAMETYPE+" order by nametype";
           s_flex_names= fillInNames(sql, "nametype");
            
-          sql = " select nametype from CONTAINERHEADER_NAMETYPE order by nametype";
+          sql = " select nametype from "+Nametype.TABLE_NAME_CONTAINERHEADER_NAMETYPE+" order by nametype";
           s_container_names= fillInNames(sql, "nametype");
           
-          sql = " select genusspecies from SPECIES order by genusspecies";
+          sql = " select genusspecies from "+Nametype.TABLE_NAME_SPECIES+" order by genusspecies";
           s_species_names = fillInNames(sql, "genusspecies");
       }
       
       public static Hashtable        getNamesTableContent(String table_name) throws Exception
       {
-          if ( table_name.equalsIgnoreCase("SAMPLE_NAMETYPE")) return   s_sample_names ;
-           if ( table_name.equalsIgnoreCase("NAMETYPE")) return  s_flex_names ;
-           if ( table_name.equalsIgnoreCase("CONTAINERHEADER_NAMETYPE")) return s_container_names  ;
-           if ( table_name.equalsIgnoreCase("SPECIES")) return  s_species_names ;
+          table_name= table_name.toUpperCase();
+          if ( table_name.intern() == Nametype.TABLE_NAME_SAMPLE_NAMETYPE) return   s_sample_names ;
+           if ( table_name.intern() == Nametype.TABLE_NAME_NAMETYPE) return  s_flex_names ;
+           if ( table_name.intern() == Nametype.TABLE_NAME_CONTAINERHEADER_NAMETYPE) return s_container_names  ;
+           if ( table_name.intern() == Nametype.TABLE_NAME_SPECIES) return  s_species_names ;
         return null;
       }
       public static Hashtable getFlexSequenceNames(){return s_flex_names;}
@@ -86,23 +87,36 @@ public class ConstantsImport
             Collection items, Connection conn ) throws Exception
     {
        String sql = null;
-       
-       if ( table_name.equalsIgnoreCase("SAMPLE_NAMETYPE")) sql = " insert into " + table_name +"(nametype) values (?)";
-       if ( table_name.equalsIgnoreCase("NAMETYPE")) sql = " insert into " + table_name +" values (?)";
-       if ( table_name.equalsIgnoreCase("CONTAINERHEADER_NAMETYPE")) sql = " insert into " + table_name +"(nametype) values (?)";
-       if ( table_name.equalsIgnoreCase("SPECIES")) sql = " insert into " + table_name +" values (?)";
-      if (sql == null) throw new Exception("Not known table.");
+       table_name= table_name.toUpperCase();
+       if ( table_name.intern() == Nametype.TABLE_NAME_SAMPLE_NAMETYPE) sql = " insert into " + table_name +"(nametype,displaytitle) values (?,?)";
+       if ( table_name.intern() == Nametype.TABLE_NAME_NAMETYPE) sql = " insert into " + table_name +" (nametype,displaytitle) values (?,?)";
+       if ( table_name.intern() == Nametype.TABLE_NAME_CONTAINERHEADER_NAMETYPE) sql = " insert into " + table_name +"(nametype,displaytitle) values (?,?)";
+       if ( table_name.intern() == Nametype.TABLE_NAME_SPECIES) sql = " insert into " + table_name +" values (?)";
+        if ( table_name.intern() == Nametype.TABLE_NAME_FLEXSTATUS) sql = " insert into " + table_name +" values (?)";
+       if ( table_name.intern() == Nametype.TABLE_NAME_SAMPLETYPE) sql = " insert into " + table_name +" values (?)";
+        if ( table_name.intern() == Nametype.TABLE_NAME_CONTAINERTYPE) sql = " insert into " + table_name +" values (?)";
+     
+       if (sql == null) throw new Exception("Not known table.");
        
        PreparedStatement stmt = null;
- 
+       String description = null;
+       Nametype  nametype = null;
         try 
         {
             stmt = conn.prepareStatement(sql);
             Iterator iter = items.iterator();
             while(iter.hasNext()) 
             {
-                    stmt.setString(1,    (String) iter.next());
-                    DatabaseTransaction.executeUpdate(stmt);
+                nametype = (Nametype)  iter.next();
+                stmt.setString(1,    nametype.getName());
+                if ( table_name.equalsIgnoreCase("SAMPLE_NAMETYPE")
+                || table_name.equalsIgnoreCase("NAMETYPE")  
+                ||  table_name.equalsIgnoreCase("CONTAINERHEADER_NAMETYPE")) 
+                {
+                    description = ( nametype.getDescription() == null) ? " " : nametype.getDescription();
+                     stmt.setString(2,   description );
+                }
+                DatabaseTransaction.executeUpdate(stmt);
             }
             
         }
@@ -113,6 +127,10 @@ public class ConstantsImport
         finally         {              DatabaseTransaction.closeStatement(stmt);         }
       
     }
+    
+    
+    
+   
       //constants for new imports
     
     //   processes
@@ -122,6 +140,8 @@ public class ConstantsImport
         public static final int     PROCESS_IMPORT_LINKERS = 3;
         public static final int     PROCESS_IMPORT_INTO_NAMESTABLE = 4;
         public static final int     PROCESS_IMPORT_CLONING_STRATEGIES = 5;
+        
+      
  
    //   submission item type
        public static final int     ITEM_TYPE_PLATE_LABELS = 0;
@@ -147,7 +167,8 @@ public class ConstantsImport
             FileStructure.STR_FILE_TYPE_VECTOR_FEATURE_INFO,
             FileStructure.STR_FILE_TYPE_LINKER_INFO,
             FileStructure.STR_FILE_TYPE_INPUT_FOR_NAME_TABLE,
-           FileStructure.STR_FILE_TYPE_CLONING_STRATEGY    
+           FileStructure.STR_FILE_TYPE_CLONING_STRATEGY ,
+           FileStructure.STR_FILE_TYPE_AUTHOR_CONNECTION
      };
      //database mapping
    /*   public static HashMap database_dictionary_tables_map = null;
@@ -179,7 +200,7 @@ public class ConstantsImport
          public static void main(String[] args)
   {
              try
-             {ConstantsImport.fillInNames();}catch(Exception e){}
+             { ;}catch(Exception e){}
          System.out.println(FILE_TYPE.length);
          }
         

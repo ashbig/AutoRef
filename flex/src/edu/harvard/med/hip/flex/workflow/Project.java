@@ -19,7 +19,8 @@ import edu.harvard.med.hip.flex.Constants;
  * @author  dzuo
  * @version 
  */
-public class Project {
+public class Project 
+{
     public final static int HUMAN = 1;
     public final static int YEAST = 2;
     public final static int PSEUDOMONAS = 3;
@@ -44,6 +45,29 @@ public class Project {
     public final static String YEASTSTRING = "Yeast";
     public final static String PSEUDOMONASSTRING = "Pseudomonas";
     
+    public final static String PROJECT_NAME_Human       ="Human" ;
+public final static String PROJECT_NAME_Yeast="Yeast";
+public final static String PROJECT_NAME_Pseudomonas="Pseudomonas";
+public final static String PROJECT_NAME_CLONTECH="CLONTECH";
+public final static String PROJECT_NAME_BC="Breast Cancer";
+public final static String PROJECT_NAME_HUMANKINASE="Human Kinase";
+public final static String PROJECT_NAME_MGC="MGC Project";
+public final static String PROJECT_NAME_PCANSER="Prostate Cancer";
+public final static String PROJECT_NAME_HTF="Human Transcription Factor";
+public final static String PROJECT_NAME_NIDDK="NIDDK Diabetis";
+public final static String PROJECT_NAME_YP="Yersinia pestis";
+public final static String PROJECT_NAME_NIDDKE_DH="NIDDK Diabetis - Human";
+public final static String PROJECT_NAME_RZPD="RZPD - Wall";
+public final static String PROJECT_NAME_FT="Francisella tularensis";
+public final static String PROJECT_NAME_Aventis="Aventis";
+public final static String PROJECT_NAME_VC="Vibrio cholerae";
+public final static String PROJECT_NAME_KMUT="Kinase Mutagenesis";
+public final static String PROJECT_NAME_BAS_ANTH="Bacillus anthracis";
+public final static String PROJECT_NAME_YPT="Yersinia pseudotuberculosis";
+public final static String PROJECT_NAME_YEAST_DB="Yeast DBD";
+public final static String PROJECT_NAME_PSI="PSI";
+public final static String PROJECT_NAME_ORF="ORFeome collaboration";
+       
     private int id;
     private String name;
     private String description;
@@ -64,13 +88,15 @@ public class Project {
      * @return The Project object.
      * @exception FlexDatabaseException.
      */
-    public Project(int id) throws FlexDatabaseException {  
+    public Project(int id) throws FlexDatabaseException 
+    {  
         //try to get from memory
        
-        if (Constants.s_projects != null && Constants.s_projects.get(String.valueOf(id) ) != null)
+        if (ProjectWorkflowProtocolInfo.getInstance().getProjects() != null 
+                && ProjectWorkflowProtocolInfo.getInstance().getProjects().get(String.valueOf(id) ) != null)
         {
             
-            Project p = (Project)Constants.s_projects.get(String.valueOf(id) );
+            Project p = (Project)ProjectWorkflowProtocolInfo.getInstance().getProjects().get(String.valueOf(id) );
             this.id = id;
             this.name = p.getName();
             this.workflows = p.getWorkflows();
@@ -81,6 +107,7 @@ public class Project {
         
        
         String sql = "select * from project where projectid = "+id;
+   System.out.println(sql);
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         ResultSet rs = t.executeQuery(sql);
         try{
@@ -98,6 +125,30 @@ public class Project {
         }
     }
 
+    
+    public Project(String project_name) 
+    {  
+        //try to get from memory
+        Project p = null;
+        if (ProjectWorkflowProtocolInfo.getInstance().getProjects() != null )
+        {
+            Iterator iter = ProjectWorkflowProtocolInfo.getInstance().getProjects().values().iterator();
+             while(iter.hasNext())
+             {
+                 p = (Project)iter.next();
+                 if ( p.getName().equals(project_name))
+                 {
+                    this.id = p.getId();
+                    this.name = p.getName();
+                    this.workflows = p.getWorkflows();
+                    this.description = p.getDescription();
+                    this.version = p.getVersion();
+                    return ;
+                  }
+             }
+        }
+        return;
+    }
     /**
      * Constructor.
      *
@@ -113,6 +164,12 @@ public class Project {
         this.description = description;
         this.version = version;
         populateWorkflows();
+    }
+     public Project(int id, String name, String description, String version, int mode) throws FlexDatabaseException {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.version = version;
     }
  
     /**
@@ -149,6 +206,7 @@ public class Project {
     public Vector getWorkflows() {
         return workflows;
     }
+     public void setWorkflows(Vector v) {         workflows = v;    }
     
     /**
      * Return the name of the project.
@@ -221,36 +279,40 @@ public class Project {
      * @return All the projects in the database as a Vector.
      * @exception The FlexDatabaseException.
      */
-    public static Vector getAllProjects() throws FlexDatabaseException {
+    public  static Vector getAllProjects() throws FlexDatabaseException {
         
         Vector projects = new Vector();  
-        if (Constants.s_projects != null)
+        if (ProjectWorkflowProtocolInfo.getInstance().getProjects() != null)
         {
             
-           projects= new Vector( Constants.s_projects.values()  );
-            sortProjectsByName(projects);
+           projects= new Vector( ProjectWorkflowProtocolInfo.getInstance().getProjects().values()  );
+           // sortProjectsByName(projects);
            return projects;
         }
-       
-        String sql = "select * from project";
-        DatabaseTransaction t = DatabaseTransaction.getInstance();
-        ResultSet rs = t.executeQuery(sql);
-        
-        
-        try{                   
-            while(rs.next()) {
-                int projectid = rs.getInt("PROJECTID");
-              //  String name = rs.getString("NAME");
-               // String description = rs.getString("DESCRIPTION");
-               // String version = rs.getString("VERSION");
-               // Project p = new Project(projectid, name, description, version);
-                Project p = new  Project(projectid);
-                projects.addElement(p);
-            }                
-        } catch(SQLException sqlE) {
-            throw new FlexDatabaseException(sqlE+"\nSQL: "+sql);
-        } finally {
-            DatabaseTransaction.closeResultSet(rs);
+        else
+        {
+            String sql = "select * from project order by name";
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            ResultSet rs = t.executeQuery(sql);
+
+            try
+            {                   
+                while(rs.next())
+                {
+                    int projectid = rs.getInt("PROJECTID");
+                 //   String name = rs.getString("NAME");
+                //    String description = rs.getString("DESCRIPTION");
+                //    String version = rs.getString("VERSION");
+                //    Project p = new Project(projectid, name, description, version,1);
+                    Project p = new Project(projectid);
+                    projects.addElement(p);
+                }
+              } catch(SQLException sqlE) {
+                throw new FlexDatabaseException(sqlE+"\nSQL: "+sql);
+            } finally {
+                DatabaseTransaction.closeResultSet(rs);
+            }
+
         }
         
         return projects;
@@ -273,8 +335,10 @@ public class Project {
      *
      * @exception The FlexDatabaseException.
      */
-    protected void populateWorkflows() throws FlexDatabaseException {
+    protected void populateWorkflows() throws FlexDatabaseException 
+    {
         String sql = "select * from projectworkflow where projectid = "+id;
+   System.out.println(sql);
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         ResultSet rs = t.executeQuery(sql);
         try{
@@ -294,36 +358,19 @@ public class Project {
         }        
     }
     
+    
+    
+    
     //**************************************************************//
     //                  Testing Methods                             //
     //**************************************************************//
     
     public static void main(String []  args) {
-        try {
-            Project project = new Project(Project.BREASTCANCER);;
-            System.out.println("Project name is: "+project.getName());
-            System.out.println("Project description is: "+project.getDescription());
-            System.out.println("Project version is: "+project.getVersion());
+      /*  try {
             
-            List workflows = project.getWorkflows();
-            Iterator iter = workflows.iterator();
-            while(iter.hasNext()) {
-                Workflow workflow = (Workflow)iter.next();
-                System.out.println("Workflow name is: "+workflow.getName());
-                System.out.println("Workflow description is: "+workflow.getDescription());
-
-                Protocol curr = new Protocol(22);
-                System.out.println("Current protocol is: "+curr.getProcessname()); 
-                
-                List nextProtocols = workflow.getNextProtocol(curr);
-                Iterator i = nextProtocols.iterator();
-                while(i.hasNext()) {
-                    Protocol p = (Protocol)i.next();
-                    System.out.println("Next protocol is: "+p.getProcessname());
-                }
-            }
+       
         } catch(FlexDatabaseException ex) {
             System.out.println(ex);
-        }
+        }*/
     }
 }

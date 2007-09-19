@@ -79,11 +79,23 @@ public class GetProjectsAction extends ResearcherAction {
                 Project p = new Project(Project.HUMAN);
                 projects = new Vector();
                 projects.add(p);
+            } else if(Constants.NEW_PLATE_LABELS.equals(forwardName))
+                 {
+                 projects = Project.getAllProjects();
+                 for(int i=0; i<projects.size(); i++)
+                 {
+                    Project proj = (Project)projects.elementAt(i);
+                     if( proj.getId() == -1)
+                        projects.remove(i);
+                }
+                 
             } else {
                 projects = Project.getAllProjects();
                 for(int i=0; i<projects.size(); i++) {
                     Project proj = (Project)projects.elementAt(i);
                     if(Project.MGC_PROJECT == (proj.getId()))
+                        projects.remove(i);
+                    if( proj.getId() == -1)
                         projects.remove(i);
                 }
             }

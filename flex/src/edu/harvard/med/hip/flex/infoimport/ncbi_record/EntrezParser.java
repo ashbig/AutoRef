@@ -135,7 +135,8 @@ private static final String             GBSeqid ="GBSeqid";
      private StringBuffer          i_element_buffer = null;
      private ArrayList             i_entered_names = null;
      public ImportFlexSequence          getImportSequence(int v){ return (ImportFlexSequence)  m_sequences.get(v); }
-     
+     public ArrayList                   getImportSequences( ){ return  m_sequences ; }
+   
      public void startDocument()    
      { 
          m_sequences = new ArrayList();  
@@ -170,8 +171,10 @@ private static final String             GBSeqid ="GBSeqid";
             PublicInfoItem p_info = null;int ind =-1;
              if ( i_element_buffer == null) return;
              String value = i_element_buffer.toString();
-          // System.out.println(namespaceURI + localName +qualifiedName + value);
-        
+             
+           //  String total = namespaceURI + localName +qualifiedName + value;
+         //  System.out.println(total);
+  
            
             if (localName == GBSeq_locus) 
             { 
@@ -264,7 +267,7 @@ private static final String             GBSeqid ="GBSeqid";
                         
                         // reassign for locus_id
                         if ( q_name.equalsIgnoreCase("GeneId")) q_name = "LOCUS_ID";
-                        if ( ConstantsImport.getFlexSequenceNames().get(q_name) != null
+                        if (ConstantsImport.getFlexSequenceNames() != null &&  ConstantsImport.getFlexSequenceNames().get(q_name) != null
                                    && !i_entered_names.contains(q_name))
                         {
                             p_info = new PublicInfoItem(q_name,q_value ); 
@@ -284,7 +287,7 @@ private static final String             GBSeqid ="GBSeqid";
                         ind = value.indexOf(':');
                         if ( ind < 0 ) {i_current_qualifier = null; return;}
                         q_name = value.substring(0, ind-1); q_value = value.substring(ind+1);
-                        if ( ConstantsImport.getFlexSequenceNames().get(q_name) != null
+                        if (ConstantsImport.getFlexSequenceNames() != null &&  ConstantsImport.getFlexSequenceNames().get(q_name) != null
                                  &&  !i_entered_names.contains("PID"))
                         {
                             i_entered_names.add("PID");
@@ -313,7 +316,7 @@ private static final String             GBSeqid ="GBSeqid";
                                 }
                             
                             }
-                            if ( ConstantsImport.getFlexSequenceNames().get(q_name) != null
+                            if ( ConstantsImport.getFlexSequenceNames() != null && ConstantsImport.getFlexSequenceNames().get(q_name) != null
                                  &&  !i_entered_names.contains(q_name))
                             {
                                 i_entered_names.add(q_name);
@@ -429,6 +432,7 @@ private static final String             GBSeqid ="GBSeqid";
   {
       EntrezParser SAXHandler = new EntrezParser();
         SAXParser parser = new SAXParser();
+         ImportFlexSequence sw=   null;
       try
      { 
           ConstantsImport.fillInNames();
@@ -436,12 +440,12 @@ private static final String             GBSeqid ="GBSeqid";
         parser.setErrorHandler(SAXHandler);
         String featureURI = "http://xml.org/sax/features/string-interning";
         parser.setFeature(featureURI, true);
-        String urlString = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&retmode=xml&id=75516650";
+        String urlString = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&retmode=xml&id=AM393121";
           java.net.URL url = new java.net.URL(urlString);
         InputSource in = new InputSource( new InputStreamReader(    url.openStream()));
         parser.setFeature(featureURI, true);
         parser.parse(in);
-        ImportFlexSequence sw=          SAXHandler.getImportSequence(0);
+         sw=          SAXHandler.getImportSequence(0);
         //System.out.println(sw);
   }
   catch(Exception e)

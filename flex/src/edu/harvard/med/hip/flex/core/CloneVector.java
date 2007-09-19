@@ -84,7 +84,7 @@ public class CloneVector {
    public static List  getAllVectors() throws FlexDatabaseException
    {
        String sql = "select vectorname,vectorsource,vectortype,vectorfile,vectorfilepath,"
-      +"description,restriction,hipname,vectorid from vector";
+      +"description,restriction,hipname,vectorid from vector order by vectorid";
        return getVectorsBySQL(sql);
    }
    

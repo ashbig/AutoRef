@@ -171,7 +171,13 @@ public class SelectProtocolAction extends FlexAction {
             }
             else if (Protocol.REARRAY_PCR_PLATES.equals(processname)) {
                 
-                return (mapping.findForward("success_rearray"));
+                 return (mapping.findForward("success_rearray"));
+                
+            }
+            else if (Protocol.UPLOAD_CONTAINERS_FROM_FILE.equals(processname))
+            {
+                 request.setAttribute("processid", new Integer(protocol.getId()));
+                 return (mapping.findForward("success_upload_containers_from_file"));
                 
             }
             else {
