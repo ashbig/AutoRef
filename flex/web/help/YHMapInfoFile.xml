@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE web-app
+     PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<file_maps>
+<file_map file_type="FILE_TYPE_ONE_FILE_SUBMISSION" max_number_of_column_per_property="2">
+    
+    
+    
+    
+    <file_column header="SourcePlateLabel" object="CONTAINER" property_name="LABEL"  />
+    <file_column header="Well" object="SAMPLE" property_name="POSITION" />
+  
+    <file_column key="1" header="Final_GI" object="FLEXSEQUENCE"
+              property_name ="SEARCHID"
+ <!--             property_instruction ="http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&amp;retmode=xml&amp;id=" /> -->
+    
+               property_instruction ="http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&amp;retmode=xml&amp;id=" /> 
+   
+    
+    <file_column header="Format" object="SAMPLE" property_name ="CONSTRUCT_TYPE" />
+<!--  name of this property hardcoded , do not change -->
+    
+     <file_column header="ConstructSizeClass" object="SAMPLE" property_name ="CONSTRUCT_SIZE" />
+<!--  name of this property hardcoded , do not change -->
+    <file_column header="CloneStatus" object="SAMPLE" object_property_type="NAMEPROPERTY" property_name ="CLONE_STATUS" isSubmit="0"/>
+<!--  name of this property hardcoded , do not change -->
+   <file_column header="CloneType" object="SAMPLE" object_property_type="NAMEPROPERTY" property_name ="CLONE_TYPE" isSubmit="0"/>
+
+<!--  name of this property hardcoded , do not change -->
+
+    <file_column header="CloningStrategy" object="SAMPLE" object_property_type="NAMEPROPERTY" isSubmit="0" property_name="CLONING_STRATEGYID"/>
+  
+  
+  <!-- count properties must start from 0 and use incremental count, moreover name of this property hardcoded -->
+    <file_column header="CloneStorageWorking" object="SAMPLE" object_property_type="NAMEPROPERTY" isSubmit="0" property_name ="CLONE_STORAGE_TYPE_0">
+        <column_translation file_value="Working" translated_value="Working Storage" />
+    </file_column>
+    
+      <file_column header="CloneStorage" object="SAMPLE" object_property_type="NAMEPROPERTY" isSubmit="0" property_name ="CLONE_STORAGE_TYPE_1">
+            <column_translation file_value="Original" translated_value="Original Storage" />
+        </file_column>
+
+<!--  name of this property hardcoded , do not change -->
+ 
+    <file_column header="CloneStorageForm" object="SAMPLE" object_property_type="NAMEPROPERTY" isSubmit="0" property_name ="CLONE_STORAGE_FORM">
+            <column_translation file_value="Glycerol" translated_value="GLYCEROL"  />
+    </file_column>
+</file_map>
+</file_maps>
+
+
+
+  					
+
+
+
+

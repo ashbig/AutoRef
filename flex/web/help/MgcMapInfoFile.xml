@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE web-app
+     PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<file_maps>
+<file_map file_type="FILE_TYPE_ONE_FILE_SUBMISSION" max_number_of_column_per_property="2">
+    <file_column key="1" header="GB_GI" object="FLEXSEQUENCE" property_name="SEARCHID"
+        property_instruction ="http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&amp;retmode=xml&amp;id=" />
+    <file_column header="COLLECTION_NAME" object="CONTAINER" property_name="LABEL" property_order ="0"/>
+    <file_column header="PLATE" object="CONTAINER" property_name="LABEL" property_order ="1" />	
+    <file_column header="ROW_POS" object="SAMPLE" property_name="POSITION" property_order ="0"/>
+    <file_column header="COL_POS" object="SAMPLE" property_name="POSITION" property_order ="1"/>
+    <file_column header="VECTOR_NAME" object="SAMPLE" object_property_type="NAMEPROPERTY" property_name="VECTOR"/>
+        <file_column header="MARKER" object="CONTAINER" object_property_type="NAMEPROPERTY" property_name="MARKER" />
+
+</file_map>
+</file_maps>
+
+	

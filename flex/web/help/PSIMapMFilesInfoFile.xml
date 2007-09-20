@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE web-app
+     PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<file_maps>
+<file_map file_type="FILE_TYPE_PLATE_MAPPING">
+    <file_column header="Unique_Clone_ID" object="SAMPLE" object_property_type="NAMEPROPERTY" 
+                 property_name="USER_ID" key="1"/>
+    <file_column header="Plate_Label" object="CONTAINER"   property_name="LABEL"/>	
+    <file_column header="Plate_Well" object="SAMPLE" property_name="POSITION"/>
+    <file_column header="PSI" object="CONTAINER" property_name="PSI" object_property_type="NAMEPROPERTY"  />
+    
+    <connector primary_key_header="PSI" foreign_file_type = "FILE_TYPE_AUTHOR_INFO" foreign_key_header="Author_Name"/>	
+    <connector primary_key_header="Clone_ID" foreign_file_type = "FILE_TYPE_SEQUENCE_INFO" foreign_key_header="Clone_ID"/>	
+    <connector primary_key_header="Clone_ID" foreign_file_type = "FILE_TYPE_GENE_INFO" foreign_key_header="Clone_ID"/>	
+	
+</file_map>
+		 					
+
+<file_map file_type="FILE_TYPE_SEQUENCE_INFO">
+    <file_column key="1" header="Unique_Clone_ID" object="FLEXSEQUENCE" object_property_type="NAMEPROPERTY"  property_name="USER_ID" isSubmit="0"/>	
+    <file_column header="NT_Seq" object="FLEXSEQUENCE" property_name="TEXT"/>	
+    <file_column header="CDS_start" object="FLEXSEQUENCE" property_name="CDS_START"/>	
+    <file_column header="CDS_stop" object="FLEXSEQUENCE" property_name="CDS_STOP"/>
+    <file_column header="5p_Linker" object="SAMPLE" object_property_type="NAMEPROPERTY" isSubmit="0" property_name="FIVE_PRIME_LINKER"/>
+    <file_column header="3p_Linker" object="SAMPLE" object_property_type="NAMEPROPERTY" isSubmit="0" property_name="THREE_PRIME_LINKER"/>
+    <file_column header="Vector" object="SAMPLE" object_property_type="NAMEPROPERTY" isSubmit="0" property_name="VECTOR"/>
+    
+    <file_column header="Protein_Produced" object="FLEXSEQUENCE"   property_name="" object_property_type="NAMEPROPERTY"/>
+     <file_column header="PDB_ID" object="FLEXSEQUENCE"   property_name="" object_property_type="NAMEPROPERTY"/>
+   <file_column header="Mutations_NT" object="FLEXSEQUENCE"   property_name="" object_property_type="NAMEPROPERTY"/>
+   <file_column header="Mutations_AA" object="FLEXSEQUENCE"   property_name="" object_property_type="NAMEPROPERTY"/>
+   <file_column header="Relative_Length" object="FLEXSEQUENCE"   property_name="" object_property_type="NAMEPROPERTY"/>
+     <file_column header="Host" object="FLEXSEQUENCE"   property_name="" object_property_type="NAMEPROPERTY"/>
+   <file_column header="Comments" object="FLEXSEQUENCE"   property_name="" object_property_type="NAMEPROPERTY"/>
+        
+	<connector primary_key_header="Unique_Clone_ID" foreign_file_type = "FILE_TYPE_PLATE_MAPPING" foreign_key_header="Unique_Clone_ID"/>	
+	<connector primary_key_header="Unique_Clone_ID" foreign_file_type = "FILE_TYPE_GENE_INFO" foreign_key_header="Unique_Clone_ID"/>	
+
+</file_map>	
+							 	
+
+<file_map file_type="FILE_TYPE_GENE_INFO">
+    <file_column key="1" header="Unique_Clone_ID" object="FLEXSEQUENCE" object_property_type="NAMEPROPERTY"  property_name="USER_ID" isSubmit="0"/>	
+    <file_column header="Genus_species" object="FLEXSEQUENCE" property_name="SPECIES"/>	
+    <file_column header="Tax_ID" object="FLEXSEQUENCE" object_property_type="NAMEPROPERTY"  property_name="TAXID"/>	
+    <file_column header="Insert_Source" object="FLEXSEQUENCE" object_property_type="NAMEPROPERTY"   property_name="INSERT_SOURCE"/>							
+    
+    <file_column header="TargetDB_ID" object="FLEXSEQUENCE" object_property_type="NAMEPROPERTY"   property_name=""/>							
+    <file_column header="GI" object="FLEXSEQUENCE" object_property_type="NAMEPROPERTY"   property_name="GI"/>							
+    <file_column header="Nucleotide_Accession" object="FLEXSEQUENCE" object_property_type="NAMEPROPERTY"   property_name=""/>							
+    <file_column header="GenPep_Accession" object="FLEXSEQUENCE" object_property_type="NAMEPROPERTY"   property_name=""/>							
+    <file_column header="Functional_Category" object="FLEXSEQUENCE" object_property_type="NAMEPROPERTY"   property_name="GI"/>							
+    <file_column header="Gene_symbol" object="FLEXSEQUENCE" object_property_type="NAMEPROPERTY"   property_name="GI"/>							
+
+     <connector primary_key_header="Unique_Clone_ID" foreign_file_type = "FILE_TYPE_PLATE_MAPPING" foreign_key_header="Unique_Clone_ID"/>	
+    <connector primary_key_header="Unique_Clone_ID" foreign_file_type = "FILE_TYPE_GENE_INFO" foreign_key_header="Unique_Clone_ID"/>	
+
+</file_map>
+
+<file_map file_type="FILE_TYPE_AUTHOR_INFO">
+    <file_column key="1" header="Author_Name" object="CONTAINER" object_property_type="NAMEPROPERTY"  property_name="SUBMITTER_NAME"/>	
+    <file_column header="Tel" object="CONTAINER" object_property_type="NAMEPROPERTY"  property_name="SUBMITTER_TEL"/>
+    <file_column header="Fax" object="CONTAINER" object_property_type="NAMEPROPERTY"  property_name="SUBMITTER_FAX"/>
+    <file_column header="Email" object="CONTAINER" object_property_type="NAMEPROPERTY"  property_name="SUBMITTER_EMAIL"/>
+    <file_column header="Institution" object="CONTAINER" object_property_type="NAMEPROPERTY"  property_name="SUBMITTER_ORGANIZATION_NAME"/>
+    <file_column header="Adress" object="CONTAINER" object_property_type="NAMEPROPERTY"  property_name="SUBMITTER_ADRESS"/>
+    <file_column header="www" object="CONTAINER" object_property_type="NAMEPROPERTY"  property_name="SUBMITTER_WWW"/>
+    <file_column header="descritption" object="CONTAINER" object_property_type="NAMEPROPERTY"  property_name="SUBMITTER_DESCRIPTION"/>
+     
+     <connector primary_key_header="Author_Name" foreign_file_type = "FILE_TYPE_PLATE_MAPPING" foreign_key_header="PSI"/>	
+  
+</file_map>
+</file_maps>
+
+
+PSI_abbreviation	Author_FN	Author_LN								
