@@ -563,17 +563,14 @@ public class SummaryTablePopulator {
     public static void main(String args[]) {
         //List containers = getContainers();
         List containers = new ArrayList();
-        containers.add(new Integer(19679));
-        containers.add(new Integer(19680));
-        //containers.add(new Integer(17182));
+        containers.add(new Integer(20308));
+        containers.add(new Integer(20309));
+        containers.add(new Integer(20310));
+        containers.add(new Integer(20311));
         
-        /**
-        List samples = new ArrayList();
-        samples.add(new Integer(1240797));
-        samples.add(new Integer(1240798));
-        samples.add(new Integer(1240799));
-        samples.add(new Integer(1240800));
-        */
+        //List samples = new ArrayList();
+        //samples.add(new Integer(1410486));
+        
         /**
          * List samples = getSamples();
          *
@@ -584,8 +581,8 @@ public class SummaryTablePopulator {
          */
         
         //change cloning strategy accordingly.
-        int cloningStrategyid = 4;
-        //int cloningStrategyid = 17;
+        //int cloningStrategyid = 4;
+        int cloningStrategyid = 8;
         //String cloneType = CloneInfo.EXPRESSION_CLONE;
         String cloneType = CloneInfo.MASTER_CLONE;
         

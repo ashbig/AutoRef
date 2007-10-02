@@ -35,7 +35,8 @@ public class CloningStrategy {
     public static final int CREATOR_EXPRESSION_pLDNT7_nFLAG = 22;
     public static final int GATEWAY_EXPRESSION_pDEST_GST = 25;
     public static final int GATEWAY_EXPRESSION_pENTR223_pCITE_GST = 29;
- 
+    public static final int GATEWAY_EXPRESSION_pLENTI62_V5_Dest = 59;
+
     protected int id;
     protected String name;
     protected CloneVector clonevector;
