@@ -54,7 +54,7 @@ public class ItemsImporter  extends ImportRunner
          try
         {
            conn = DatabaseTransaction.getInstance().requestConnection();   
-            switch (m_process_type)
+             switch (m_process_type)
             {
                 case ConstantsImport.PROCESS_IMPORT_VECTORS: uploadVectors(conn);
                 case ConstantsImport.PROCESS_IMPORT_LINKERS: uploadLinkers(conn);
@@ -62,7 +62,7 @@ public class ItemsImporter  extends ImportRunner
                 case ConstantsImport.PROCESS_IMPORT_CLONING_STRATEGIES: uploadCloningStrategies(conn);
               
             }
-           
+              
         }
         catch(Exception e)
         {
@@ -201,6 +201,7 @@ public class ItemsImporter  extends ImportRunner
          Nametype nametype = null;
          try 
         {
+             
             InputStream input = (InputStream) m_file_input_data.get(ConstantsImport.FILE_TYPE[FileStructure.FILE_TYPE_INPUT_FOR_NAME_TABLE]);
             in = new BufferedReader(new InputStreamReader(input));
         
@@ -219,7 +220,7 @@ public class ItemsImporter  extends ImportRunner
             in.close();            input.close();
             // drop duplicates
              Hashtable table_content = ConstantsImport.getNamesTableContent(table_name);
-            
+              
              ArrayList new_items = new ArrayList();
              StringBuffer new_items_to_upload = new StringBuffer();
              if ( table_content != null)
@@ -236,10 +237,19 @@ public class ItemsImporter  extends ImportRunner
              }
              else 
                  new_items.addAll(items);
-            ConstantsImport.uploadIntoNamesTable(  table_name,    new_items,  conn );
-            DatabaseTransaction.commit(conn);
-            m_process_messages.add("Uploading into table "+table_name+" items: "+ new_items_to_upload);
-            
+             
+            if ( new_items.size() > 0 )
+            {
+                ConstantsImport.uploadIntoNamesTable(  table_name,    new_items,  conn );
+           
+                DatabaseTransaction.commit(conn);
+                 m_process_messages.add("Uploading into table "+table_name+" items: "+ new_items_to_upload);
+   
+            }
+            else
+                 m_process_messages.add("Uploading into table "+table_name+" items: no new items" );
+   
+                    
         }
         catch(Exception e)
         {

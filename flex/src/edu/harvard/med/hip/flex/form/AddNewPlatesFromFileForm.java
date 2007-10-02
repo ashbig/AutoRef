@@ -33,9 +33,10 @@ public class AddNewPlatesFromFileForm    extends AddItemsForm
 {
    
     private int         m_projectid = -1;
-  //  private String      m_projectname = null;
+   private String      m_projectname = null;
     private int         m_workflowid = -1;
     private String      m_workflowname = null;
+    private int         m_number_of_wells=96;
    
     private String      m_processname = null;
     private int         m_processid = ConstantsImport.PROCESS_IMPORT_OUTSIDE_CONTAINERS_INTO_FLEX;
@@ -108,20 +109,21 @@ public class AddNewPlatesFromFileForm    extends AddItemsForm
     public void         setProcessname(String name)    {        m_processname = name;    }
     public String       getProcessname()    {        return m_processname;    }
     
-    //public void         setProjectname(String name)    { System.out.println(name)  ;        m_projectname = name;    }
-    //public String       getProjectname()    {      System.out.println(m_projectname)  ;   return m_projectname;    }
+    public void         setProjectname(String name)    {     m_projectname = name;    }
+    public String       getProjectname()    {        return m_projectname;    }
     
-    public void         setProjectid(int projectid)    {  System.out.println("setProjectid")  ;    m_projectid = projectid;   }
-    public int          getProjectid()    {   System.out.println("getProjectid")   ;  return m_projectid;    }
+    public void         setProjectid(int projectid)    {      m_projectid = projectid;   }
+    public int          getProjectid()    {    return m_projectid;    }
     
     public void         setWorkflowid(int workflowid)    {        m_workflowid = workflowid;    }
     public int          getWorkflowid()   {        return m_workflowid;    }
     
-    public void         setProcessid(int workflowid)    {        m_processid = workflowid;    }
+    public void         setProcessid(int processid)    {        m_processid = processid;    }
     public int          getProcessid()   {        return m_processid;    }
     
-    
-    
+    public void         setNumberOfWells(int number_of_wells)    {        m_number_of_wells = number_of_wells;    }
+    public int          getNumberOfWells()   {        return m_number_of_wells;    }
+
     
     /**
      * Validate the properties that have been set from this HTTP request,

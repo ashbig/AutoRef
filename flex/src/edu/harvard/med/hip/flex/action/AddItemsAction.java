@@ -84,7 +84,7 @@ public class AddItemsAction extends AdminAction {
              else 
              {
                  ConstantsImport.fillInNames();
-                 
+                 imp.setProcessType(forwardName);
                   switch (forwardName)
                  {
                      case -ConstantsImport.PROCESS_IMPORT_INTO_NAMESTABLE:

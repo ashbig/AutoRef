@@ -68,7 +68,7 @@
         <input type="hidden" name="forwardName"    value="<%= String.valueOf(-ConstantsImport.PROCESS_IMPORT_OUTSIDE_CONTAINERS_INTO_FLEX) %>">
         
         
-        <input type="hidden" name="number_of_wells" value="96">
+        <input type="hidden" name="numberofwells" value="96">
         
         <table>
         <tr>
