@@ -38,21 +38,24 @@
 <logic:present name="linkers">
        
          
+         	
+        
     <TABLE border="1" cellpadding="2" cellspacing="0">
         <tr class="headerRow">                       <td>Linker ID</td><td>Linker Name</td><td>Linker Sequence</td>    </tr>
          <logic:iterate id="linker" name="linkers"  >
-         
+        
              <flex:row oddStyleClass="oddRow" evenStyleClass="evenRow">
                 
-               <logic:empty name="linker" property="id">  <td>&nbsp;</td> </logic:empty>
+                 <logic:empty name="linker" property="id">  <td>&nbsp;</td> </logic:empty>
                  <logic:notEmpty name="linker" property="id"> <td> <flex:write name="linker" property="id"/>   </td>    </logic:notEmpty>       
                 
                     <logic:empty name="linker" property="name">  <td>&nbsp;</td> </logic:empty>
                  <logic:notEmpty name="linker" property="name"> <td> <flex:write name="linker" property="name"/>   </td>    </logic:notEmpty>       
              
-                    <logic:empty name="linker" property="sequence">  <td>&nbsp;</td> </logic:empty>
-                 <logic:notEmpty name="linker" property="sequence"> <td> <flex:write name="linker" property="sequence"/>   </td>    </logic:notEmpty>   
-                  
+                             <logic:empty name="linker" property="sequence">  <td>&nbsp;</td> </logic:empty>
+		                    <logic:notEmpty name="linker" property="sequence"> <td> <flex:write name="linker" property="sequence"/>   </td>    </logic:notEmpty>   
+		                     
+          
            
             </flex:row>
              
@@ -123,14 +126,7 @@
         </logic:iterate>
     </table>
 </logic:present>
-<logic:iterate id="linkers" name="linkers" >
-    <TABLE border="1" cellpadding="2" cellspacing="0">
-    <!-- header -->
-    <tr class="headerRow">
-        <td><bean:write name="header"/></td>
-    </tr>
-</logic:iterate>
- 
+
 
 <br>
 
