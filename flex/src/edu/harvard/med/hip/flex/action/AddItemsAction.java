@@ -46,7 +46,7 @@ import edu.harvard.med.hip.flex.infoimport.file_mapping.*;
  * @author  dzuo
  * @version
  */
-public class AddItemsAction extends AdminAction {
+public class AddItemsAction extends WorkflowAction {
     
     /**
      * Process the specified HTTP request, and create the corresponding HTTP

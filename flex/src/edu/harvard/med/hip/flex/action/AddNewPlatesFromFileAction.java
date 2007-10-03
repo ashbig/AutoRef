@@ -39,7 +39,7 @@ import edu.harvard.med.hip.flex.infoimport.file_mapping.*;
  *
  * @author htaycher
  */
-public class AddNewPlatesFromFileAction extends AdminAction 
+public class AddNewPlatesFromFileAction extends WorkflowAction 
 {
     
    public synchronized ActionForward flexPerform(ActionMapping mapping,

@@ -24,7 +24,7 @@
       boolean isDefineConstructSizeBySequence = false;
       boolean isCheckTargetSequenceInFLEX = false;
       boolean isFillInCLoneTables = false;
-      
+      boolean   isGetFLEXSequenceFromNCBI=false;
       boolean isOtherProject = false;
       if(Project.PROJECT_NAME_MGC.equals(projectname))
       {
@@ -32,7 +32,7 @@
       }
       else  if(Project.PROJECT_NAME_ORF.equals(projectname))
       {
-            isFillInClonesTables=true;
+            isFillInCLoneTables=true;
            
             isGetFLEXSequenceFromNCBI=true;
             isCheckTargetSequenceInFLEX =true;

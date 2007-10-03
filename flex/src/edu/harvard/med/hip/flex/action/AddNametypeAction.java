@@ -26,7 +26,7 @@ import org.apache.struts.upload.*;
  * @author  dzuo
  * @version
  */
-public class AddNametypeAction extends AdminAction {
+public class AddNametypeAction extends WorkflowAction {
     
     /**
      * Does the real work for the perform method which must be overriden by the
