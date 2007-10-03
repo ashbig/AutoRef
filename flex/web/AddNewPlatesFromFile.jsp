@@ -32,8 +32,10 @@
       }
       else  if(Project.PROJECT_NAME_ORF.equals(projectname))
       {
-         isPutOnQueue = true;
-         isCheckTargetSequenceInFLEX =true;
+            isFillInClonesTables=true;
+           
+            isGetFLEXSequenceFromNCBI=true;
+            isCheckTargetSequenceInFLEX =true;
       }
       else if(Project.PROJECT_NAME_PSI.equals(projectname))
        {
