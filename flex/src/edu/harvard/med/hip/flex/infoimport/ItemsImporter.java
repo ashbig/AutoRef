@@ -212,8 +212,12 @@ public class ItemsImporter  extends ImportRunner
                  {    
                      line = line.trim();
                      String[] tmp = line.split("\t");
-                     if (tmp.length == 1) nametype = new Nametype(tmp[0].toUpperCase());
-                     else if ( tmp.length == 2) nametype = new Nametype(tmp[0].toUpperCase(),tmp[1]);
+                     if (tmp.length == 1 )
+                     {
+                         if ( table_name.equalsIgnoreCase(Nametype.TABLE_NAME_SPECIES)) nametype = new Nametype(tmp[0]);
+                         else    nametype = new Nametype(tmp[0].toUpperCase());
+                     }
+                     else if ( tmp.length == 2) nametype = new Nametype(tmp[0],tmp[1]);
                      items.add( nametype );    
                  } 
             }
