@@ -24,11 +24,32 @@
         <column_translation file_value="with" translated_value="CLOSED" />
     </file_column>
 
-    <file_column header="VECTOR_NAME" object="CONTAINER" object_property_type="NAMEPROPERTY" property_name="VECTOR" isSubmit="0"/>
-    <file_column header="5'_LINKER" object="CONTAINER" object_property_type="NAMEPROPERTY" property_name="FIVE_PRIME_LINKER" isSubmit="0"/>
-    <file_column header="3'_LINKER" object="CONTAINER" object_property_type="NAMEPROPERTY" property_name="THREE_PRIME_LINKER" isSubmit="0"/>
+    <file_column header="VECTOR_NAME" object="CLONE" object_property_type="NAMEPROPERTY" property_name="VECTOR" isSubmit="0"/>
+    <file_column header="5'_LINKER" object="CLONE" object_property_type="NAMEPROPERTY" property_name="FIVE_PRIME_LINKER" isSubmit="0"/>
+    <file_column header="3'_LINKER" object="CLONE" object_property_type="NAMEPROPERTY" property_name="THREE_PRIME_LINKER" isSubmit="0"/>
 
     <file_column header="LIBR_NAME" object="CONTAINER" object_property_type="NAMEPROPERTY" property_name="LIBR_NAME"/>
+
+
+
+<!--  name of this property hardcoded , do not change -->
+
+<file_column header="CloneStatus" object="CLONE" object_property_type="NAMEPROPERTY" property_name ="CLONE_STATUS" isSubmit="0"/>
+<!--  name of this property hardcoded , do not change -->
+ 
+ <file_column header="CloneType" object="CLONE" object_property_type="NAMEPROPERTY" property_name ="CLONE_TYPE" isSubmit="0"/>
+<!--  name of this property hardcoded , do not change -->
+
+<file_column header="CloneStorage" object="CLONE" object_property_type="NAMEPROPERTY" isSubmit="0" property_name ="CLONE_STORAGE_TYPE_0">
+    <column_translation file_value="Original" translated_value="Original Storage" />
+</file_column>
+
+<!--  name of this property hardcoded , do not change -->
+ 
+<file_column header="CloneStorageForm" object="CLONE" object_property_type="NAMEPROPERTY" isSubmit="0" property_name ="CLONE_STORAGE_FORM">
+    <column_translation file_value="Glycerol" translated_value="GLYCEROL"  />
+</file_column>
+
 
 </file_map>
 </file_maps>
