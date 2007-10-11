@@ -59,6 +59,8 @@ public class FileStructure
     public static final int FILE_TYPE_INPUT_FOR_NAME_TABLE=9;
     public static final int FILE_TYPE_CLONING_STRATEGY = 10;
     public static final int FILE_TYPE_AUTHOR_CONNECTION = 11;
+    // used internaly , file of this type cannot be submitted
+    public static final int FILE_TYPE_OBJECT_ANNOTATIONS = -10;
     
      public static final int FILE_TYPE_XML_DATAMAPPING_SCHEMA = -10;
    

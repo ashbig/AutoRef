@@ -86,13 +86,13 @@ public class ItemsImporter  extends ImportRunner
           InputStream input = (InputStream)m_file_input_data.get(ConstantsImport.FILE_TYPE[FileStructure.FILE_TYPE_VECTOR_INFO]);
           freader.readFileIntoSetOfObjects( input, true,
             FileStructure.FILE_TYPE_VECTOR_INFO, true, true,
-                  file_structures[FileStructure.FILE_TYPE_VECTOR_INFO] ) ; 
+                  file_structures[FileStructure.FILE_TYPE_VECTOR_INFO]);//,null ) ; 
            HashMap vectors = freader.getVectors();
            
            input = (InputStream)m_file_input_data.get(ConstantsImport.FILE_TYPE[FileStructure.FILE_TYPE_VECTOR_FEATURE_INFO]);
            freader.readFileIntoSetOfObjects( input, true,
             FileStructure.FILE_TYPE_VECTOR_FEATURE_INFO, true, true,
-                  file_structures[FileStructure.FILE_TYPE_VECTOR_FEATURE_INFO] ) ; 
+                  file_structures[FileStructure.FILE_TYPE_VECTOR_FEATURE_INFO] );//,null) ; 
            HashMap vector_features = freader.getAdditionalInfo();
            
            //combine
@@ -165,7 +165,7 @@ public class ItemsImporter  extends ImportRunner
           InputStream input = (InputStream) m_file_input_data.get(ConstantsImport.FILE_TYPE[FileStructure.FILE_TYPE_LINKER_INFO]);
           freader.readFileIntoSetOfObjects( input, true,
             FileStructure.FILE_TYPE_LINKER_INFO, true, true,
-                  file_structures[FileStructure.FILE_TYPE_LINKER_INFO] ) ; 
+                  file_structures[FileStructure.FILE_TYPE_LINKER_INFO] );//,null) ; 
            HashMap linkers = freader.getLinkers();
            // check for duplicates
            Iterator iter = linkers.keySet().iterator();
@@ -214,7 +214,9 @@ public class ItemsImporter  extends ImportRunner
                      String[] tmp = line.split("\t");
                      if (tmp.length == 1 )
                      {
-                         if ( table_name.equalsIgnoreCase(Nametype.TABLE_NAME_SPECIES)) nametype = new Nametype(tmp[0]);
+                         if ( table_name.equalsIgnoreCase(Nametype.TABLE_NAME_SPECIES)
+                         || table_name.equalsIgnoreCase(Nametype.TABLE_NAME_CLONEAUTHORTYPE))
+                             nametype = new Nametype(tmp[0]);
                          else    nametype = new Nametype(tmp[0].toUpperCase());
                      }
                      else if ( tmp.length == 2) nametype = new Nametype(tmp[0],tmp[1]);
@@ -271,7 +273,7 @@ public class ItemsImporter  extends ImportRunner
           InputStream input = (InputStream) m_file_input_data.get(ConstantsImport.FILE_TYPE[FileStructure.FILE_TYPE_CLONING_STRATEGY]);
           freader.readFileIntoSetOfObjects( input, true,
             FileStructure.FILE_TYPE_CLONING_STRATEGY, true, true,
-                  file_structures[FileStructure.FILE_TYPE_CLONING_STRATEGY] ) ; 
+                  file_structures[FileStructure.FILE_TYPE_CLONING_STRATEGY]);// ,null) ; 
            ArrayList cloning_strategies = freader.getArrayOfObjects();
            // check for duplicates
            ArrayList ext_clstr_params = getCloningStrategiesHash();

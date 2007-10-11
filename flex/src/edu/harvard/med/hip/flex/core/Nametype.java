@@ -26,7 +26,7 @@ public class Nametype
     public static final String   TABLE_NAME_FLEXSTATUS= "FLEXSTATUS";
     public static final String   TABLE_NAME_SAMPLETYPE ="SAMPLETYPE";
     public static final String   TABLE_NAME_CONTAINERTYPE=  "CONTAINERTYPE";
-            
+    public static final String   TABLE_NAME_CLONEAUTHORTYPE="CLONEAUTHORTYPE";
             
     private String name = null;
     private String m_description = null;
@@ -146,7 +146,8 @@ public class Nametype
         if ( table_name.intern() == Nametype.TABLE_NAME_FLEXSTATUS) sql = " select  flexstatus as nametype from  " + table_name +" order by nametype ";
        if ( table_name.intern() == Nametype.TABLE_NAME_SAMPLETYPE) sql = " select  sampletype as nametype from  " + table_name +" order by nametype ";
         if ( table_name.intern() == Nametype.TABLE_NAME_CONTAINERTYPE) sql = " select  containertype as nametype from  " + table_name +" order by nametype";
-     
+         if ( table_name.intern() == Nametype.TABLE_NAME_CLONEAUTHORTYPE) sql = " select  nametype, displaytitle as description from " + table_name +" order by nametype";
+   
        if (sql == null) throw new Exception("Not known table.");
        
        ResultSet rs = null;

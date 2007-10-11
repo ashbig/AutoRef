@@ -33,7 +33,7 @@ public class ImportContainer
     private     ArrayList       m_samples = null;
     private     ArrayList           m_additional_info = null;
     private     int[]           i_submitted_samples = null;
- 
+    private     ArrayList       m_authors = null;
     /** Creates a new instance of ImportContainer */
     public ImportContainer(String      type, String label, int number_of_samples_per_container)   
     {   
@@ -41,6 +41,7 @@ public class ImportContainer
         m_label = label;
         m_samples=new ArrayList();
         m_additional_info = new ArrayList();
+        
         // arrays are 0 based, position - 1 based
          i_submitted_samples = new int[ number_of_samples_per_container + 1];
     }
@@ -54,6 +55,7 @@ public class ImportContainer
     }
     
     public          void        setType(String v){ m_type = v;}
+    public void                 addAuthor(ImportAuthor v){ if ( m_authors == null) m_authors=new ArrayList(); m_authors.add(v);}
     public          void        setLocation(int v){ m_location_id = v;}
     public          ArrayList   getSamples(){ return m_samples;}
     public int                  getId(){ return m_id;}
@@ -76,10 +78,18 @@ public class ImportContainer
         m_samples.add(v);   
     }
     public          void        addPublicInfo(PublicInfoItem v){if ( ! PublicInfoItem.contains(m_additional_info, v)) m_additional_info.add(v);}
+    public          void        addPublicInfoItems(ArrayList v)
+    {
+        for (int count = 0; count < v.size(); count++)
+        {
+            this.addPublicInfo( ( PublicInfoItem) v.get(count));
+        }
+    }
+
     public          void       setPublicInfo(ArrayList v){m_additional_info = v;}
     public          ArrayList        getPublicInfo(){ return m_additional_info;}
     public String               getLabel(){ return m_label;}
-    
+    public ArrayList            getAuthors(){ return m_authors;}
     private ImportSample        getSampleByPosition(int position)
     {
         ImportSample sample = null;
@@ -131,6 +141,20 @@ public class ImportContainer
             m_additional_info, m_id, "CONTAINERID",
             true, errors) ;
         
+        if ( m_authors != null && m_authors.size() > 0)
+        {
+            ImportAuthor author = null;
+            ArrayList author_info = null;
+            for (int count = 0; count < m_authors.size(); count++)
+            {
+                author = (ImportAuthor) m_authors.get(count);
+                author_info = author.convertToPublicInfoItem(count);
+                PublicInfoItem.insertPublicInfo(  conn, "CONTAINERHEADER_NAME", 
+                            author_info, m_id, "CONTAINERID",
+                            true, errors) ;
+            }
+        }
+        
         ImportSample sample = null;
         //foreach sample, insert record into containercell and sample table
         for (int count = 0; count < m_samples.size(); count++)
@@ -142,7 +166,7 @@ public class ImportContainer
                     sample.getConstructId(), Integer.parseInt( sample.getSequenceId()), 
                     sample.getConstructType() , sample.getConstructSize() );
                  sample.insert(conn, m_id, errors);
-                 }
+           }
             catch(Exception e)
             {
                 System.out.println(e.getMessage());
@@ -202,46 +226,15 @@ public class ImportContainer
          for (int count = 0; count < m_samples.size(); count++)
          {
              sample = (ImportSample) m_samples.get(count);
-             if ( sample.getCloningStrategyId() == -1)
+             if ( sample.getClone().getCloningStrategyId() == -1)
              {
-                 cloning_strategy_id = sample.getCloningStrategyID( cloning_strategies);
-                 if(cloning_strategy_id == -1) throw new Exception("Cannot define cloning strategy id for clone "+sample.toString());
-                 sample.setCloningStrategyId(cloning_strategy_id);
+                 sample.getClone().assignCloningStrategyID( cloning_strategies);
+                 cloning_strategy_id = sample.getClone().getCloningStrategyId( );
+                 if(cloning_strategy_id == -1) throw new Exception("Cannot define cloning strategy id for clone "+sample.getClone().toString());
+                 
              }
          }
      }
      
-     private int          getCloningStrategyID(Hashtable cloning_strategies)
-            throws Exception
-     {
-         int[] result = {-1,-1,-1};
-         String vector_name = null;String linker_5p_name = null;String linker_3p_name = null;
-         PublicInfoItem temp = null;
-         
-         temp = PublicInfoItem.getPublicInfoByName(ImportSample.SAMPLE_VECTOR,m_additional_info);
-         if ( temp != null) vector_name = temp.getValue();
-         temp = PublicInfoItem.getPublicInfoByName(ImportSample.SAMPLE_FIVE_PRIME_LINKER,m_additional_info);
-         if ( temp != null)linker_5p_name = temp.getValue();
-         temp = PublicInfoItem.getPublicInfoByName(ImportSample.SAMPLE_THREE_PRIME_LINKER,m_additional_info);
-         if ( temp != null) linker_3p_name = temp.getValue();
-        
-        if (vector_name == null || linker_5p_name == null || linker_3p_name == null)
-            return -1;
-         
-         String strategy_key =  vector_name+"_"+linker_5p_name +"_"+ linker_3p_name;
-         // try to get cloning strategies for this parameters
-         if ( cloning_strategies.get(strategy_key) != null)
-         {
-             return ((Integer)cloning_strategies.get(strategy_key)).intValue();
-         }
-         else
-         {
-             int clstr_id = CloningStrategy.findStrategyByVectorAndLinker( vector_name,  linker_5p_name, linker_3p_name);
-             if (clstr_id == -1) return -1;
-             
-             cloning_strategies.put(strategy_key, new Integer(clstr_id));
-             return clstr_id;
-         }
-       
-     }
+    
 }

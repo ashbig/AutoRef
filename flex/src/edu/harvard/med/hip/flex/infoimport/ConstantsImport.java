@@ -26,6 +26,11 @@ public class ConstantsImport
       public static Hashtable s_container_names = null;
       public static Hashtable s_sample_names = null;
       public static Hashtable s_species_names= null;
+      
+        public static Hashtable s_sample_type_names= null;
+          public static Hashtable s_containerheader_names= null;
+            public static Hashtable s_FLEX_status_names= null;
+              public static Hashtable s_author_type_names= null;
        
       
       public static void        fillInNames() throws Exception
@@ -41,6 +46,18 @@ public class ConstantsImport
           
           sql = " select genusspecies from "+Nametype.TABLE_NAME_SPECIES+" order by genusspecies";
           s_species_names = fillInNames(sql, "genusspecies");
+          
+             sql = " select nametype from "+Nametype.TABLE_NAME_CLONEAUTHORTYPE+" order by nametype";
+          s_author_type_names = fillInNames(sql, "nametype");
+          
+             sql = " select sampletype from "+Nametype.TABLE_NAME_SAMPLETYPE+" order by sampletype";
+          s_sample_type_names = fillInNames(sql, "sampletype");
+          
+             sql = " select flexstatus from "+Nametype.TABLE_NAME_FLEXSTATUS+" order by flexstatus";
+          s_FLEX_status_names = fillInNames(sql, "flexstatus");
+          
+             sql = " select containertype from "+Nametype.TABLE_NAME_CONTAINERTYPE+" order by containertype";
+          s_containerheader_names = fillInNames(sql, "containertype");
       }
       
       public static Hashtable        getNamesTableContent(String table_name) throws Exception
@@ -50,6 +67,12 @@ public class ConstantsImport
            if ( table_name.intern() == Nametype.TABLE_NAME_NAMETYPE) return  s_flex_names ;
            if ( table_name.intern() == Nametype.TABLE_NAME_CONTAINERHEADER_NAMETYPE) return s_container_names  ;
            if ( table_name.intern() == Nametype.TABLE_NAME_SPECIES) return  s_species_names ;
+          
+          if ( table_name.intern() == Nametype.TABLE_NAME_CLONEAUTHORTYPE) return  s_author_type_names ;
+          if ( table_name.intern() == Nametype.TABLE_NAME_SAMPLETYPE) return  s_sample_type_names ;
+          if ( table_name.intern() == Nametype.TABLE_NAME_FLEXSTATUS) return  s_FLEX_status_names ;
+          if ( table_name.intern() == Nametype.TABLE_NAME_CONTAINERHEADER_NAMETYPE) return  s_containerheader_names ;
+          
         return null;
       }
       public static Hashtable getFlexSequenceNames(){return s_flex_names;}
@@ -95,9 +118,9 @@ public class ConstantsImport
         if ( table_name.intern() == Nametype.TABLE_NAME_FLEXSTATUS) sql = " insert into " + table_name +" values (?)";
        if ( table_name.intern() == Nametype.TABLE_NAME_SAMPLETYPE) sql = " insert into " + table_name +" values (?)";
         if ( table_name.intern() == Nametype.TABLE_NAME_CONTAINERTYPE) sql = " insert into " + table_name +" values (?)";
+        if ( table_name.intern() == Nametype.TABLE_NAME_CLONEAUTHORTYPE) sql = " insert into " + table_name +" (nametype,displaytitle) values (?,?)";
      
        if (sql == null) throw new Exception("Not known table.");
-       
        PreparedStatement stmt = null;
        String description = null;
        Nametype  nametype = null;
@@ -111,17 +134,19 @@ public class ConstantsImport
                 stmt.setString(1,    nametype.getName());
                 if ( table_name.equalsIgnoreCase("SAMPLE_NAMETYPE")
                 || table_name.equalsIgnoreCase("NAMETYPE")  
-                ||  table_name.equalsIgnoreCase("CONTAINERHEADER_NAMETYPE")) 
+                ||  table_name.equalsIgnoreCase("CONTAINERHEADER_NAMETYPE")
+                ||  table_name.equalsIgnoreCase("CLONEAUTHORTYPE")) 
                 {
                     description = ( nametype.getDescription() == null) ? " " : nametype.getDescription();
                      stmt.setString(2,   description );
                 }
                 DatabaseTransaction.executeUpdate(stmt);
+                
             }
-            
-        }
+         }
         catch(Exception ee)
         {
+             System.out.println(ee.getMessage());
             throw new Exception (ee.getMessage());
         }
         finally         {              DatabaseTransaction.closeStatement(stmt);         }
@@ -151,6 +176,7 @@ public class ConstantsImport
        
        //configuration 
       public static final  String TAB_DELIMETER ="\t";
+      
       
       public static   final   String    UI_FILE_TYPE_t ="t";
     

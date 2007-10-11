@@ -119,6 +119,7 @@ import sun.jdbc.rowset.*;
 import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.util.*;
+import edu.harvard.med.hip.flex.util.objectcopy.*;
 import edu.harvard.med.hip.flex.process.*;
 import edu.harvard.med.hip.flex.workflow.*;
 import edu.harvard.med.hip.flex.infoimport.file_mapping.*;
@@ -173,6 +174,7 @@ private String          m_sample_biotype = "LI";// from processprotocol
     
 private     HashMap          i_containers = null;
 private     HashMap          i_flex_sequences = null;
+private     HashMap          i_authors = null;
 
 public void              setPlatesLocation(int v){ m_plate_location = v;} 
 public  void             setProjectId(int v)   {     m_project_id = v;}
@@ -295,61 +297,142 @@ public String getTitle() {        return "Upload of information for third-party 
     private void    readDataFromFiles( FileStructure[]  file_structures) throws Exception
     {
          if (file_structures[FileStructure.FILE_TYPE_ONE_FILE_SUBMISSION] == null)
-            readDataFromFilesMultipalFileSubmission(file_structures);  
+         {
+             readDataForPSI(file_structures); 
+         }
+        //    readDataFromFilesMultipalFileSubmission 
          else
              readDataFromFilesOneFileSubmission(file_structures);
           
     }
     
     
-            
-    private void    readDataFromFilesMultipalFileSubmission( FileStructure[]  file_structures) throws Exception
+        // the order of files is VERY IMPORTANT!!!!    
+    private void    readDataForPSI( FileStructure[]  file_structures) throws Exception
     {
-        HashMap temp_data = null; ArrayList item_data = null; String key = null;
-        ImportFlexSequence cur_sequence = null;
-        
          DataFileReader freader = new DataFileReader();
          freader.setNumberOfWellsInContainer(m_number_of_samples_per_container);
+         freader.isCreateCloneObjectPerSample(m_is_fillin_clones_records);
+       // read in containers, samples, create clone persample
          freader.readFileIntoSetOfObjects( (InputStream)m_file_input_data.get(FileStructure.STR_FILE_TYPE_PLATE_MAPPING), true,
                 FileStructure.FILE_TYPE_PLATE_MAPPING, 
-               true, true,file_structures[ FileStructure.FILE_TYPE_PLATE_MAPPING]) ;
-          i_containers = freader.getContainers();  
+               true, true,file_structures[ FileStructure.FILE_TYPE_PLATE_MAPPING]);//, null) ;
+          // read in target sequences
           freader.readFileIntoSetOfObjects( (InputStream)m_file_input_data.get(FileStructure.STR_FILE_TYPE_SEQUENCE_INFO), true,
                 FileStructure.FILE_TYPE_SEQUENCE_INFO, 
-               true, true,file_structures[ FileStructure.FILE_TYPE_SEQUENCE_INFO]) ;
-          i_flex_sequences = freader.getFlexSequences();
-          if ( file_structures[ FileStructure.FILE_TYPE_GENE_INFO] != null )
-          {
-              freader.readFileIntoSetOfObjects( (InputStream)m_file_input_data.get(FileStructure.STR_FILE_TYPE_GENE_INFO), true,
+               true, true,file_structures[ FileStructure.FILE_TYPE_SEQUENCE_INFO]);//, null) ;
+          
+           i_flex_sequences = freader.getFlexSequences();
+           freader.emptySampleHashMap();
+           
+           freader.readFileIntoSetOfObjects( (InputStream)m_file_input_data.get(FileStructure.STR_FILE_TYPE_GENE_INFO), true,
                 FileStructure.FILE_TYPE_GENE_INFO, 
-               true, true,file_structures[ FileStructure.FILE_TYPE_GENE_INFO]) ;
-              temp_data=  freader.getAdditionalInfo();
-              // assign flexsequence names to flexsequences
-              Iterator iter = temp_data.keySet().iterator();
-              while(iter.hasNext())
-              {
-                  key = (String)iter.next();
-                  item_data = (ArrayList) temp_data.get(key);
-                  cur_sequence = (ImportFlexSequence)i_flex_sequences.get(key);
-                  cur_sequence.addPublicInfoItems(item_data);
-              }
-          }
-         // min of two files requered
-         /*
-          FileStructure.STR_FILE_TYPE_GENE_INFO,
-            FileStructure.STR_FILE_TYPE_AUTHOR_INFO ,
-          **/
+               true, true,file_structures[ FileStructure.FILE_TYPE_GENE_INFO]);//, null) ;
+            if ( file_structures[ FileStructure.FILE_TYPE_AUTHOR_INFO] != null &&
+                   file_structures[ FileStructure.FILE_TYPE_AUTHOR_CONNECTION] != null)
+            {
+               freader.readFileIntoSetOfObjects( (InputStream)m_file_input_data.get(FileStructure.STR_FILE_TYPE_AUTHOR_INFO), true,
+                    FileStructure.FILE_TYPE_AUTHOR_INFO, 
+                    true, true,file_structures[ FileStructure.FILE_TYPE_AUTHOR_INFO]);//, null) ;
+               i_authors = freader.getAuthors();
+               freader.resetAdditionalInfo();     
+               freader.readFileIntoSetOfObjects( (InputStream)m_file_input_data.get(FileStructure.STR_FILE_TYPE_AUTHOR_CONNECTION), true,
+                    FileStructure.FILE_TYPE_AUTHOR_CONNECTION, 
+                true, true,file_structures[ FileStructure.FILE_TYPE_AUTHOR_CONNECTION]);//, null) ;
+                assignAuthorInformation( freader);
+            }
+           //readGeneInfo( freader,  file_structures);
+           i_containers = freader.getContainers();
+           // read authors 
+         //  readAuthorInformation( freader,  file_structures);
     }
     
+    
+    
+    private void           assignAuthorInformation(DataFileReader freader)
+    {
+        // read authors 
+            HashMap authors = null; HashMap author_connectors = null;
+            DataConnectorObject primary_key_connector_object = null;
+            DataConnectorObject f_key_connector_object = null;
+            ArrayList f_keys = null; ArrayList author_annotations_per_owner = null;
+            ImportSample sample = null; ImportContainer cur_container  =null;
+            ImportClone clone = null;
+            
+             authors= freader.getAuthors();
+             author_connectors = freader.getAdditionalInfo();
+               
+               // assign authors to objects owner can be container, sample, clone in the future
+                if ( author_connectors != null  && author_connectors.size() > 0)
+                {
+                    Iterator iter = author_connectors.keySet().iterator();
+                    while( iter.hasNext())
+                    {
+                        primary_key_connector_object = (DataConnectorObject)iter.next();
+                        f_keys =(ArrayList) author_connectors.get(primary_key_connector_object);
+                        author_annotations_per_owner = new ArrayList();
+                        for (int count_key = 0; count_key < f_keys.size(); count_key++)
+                        {
+                            f_key_connector_object = (DataConnectorObject)f_keys.get(count_key);
+                            ImportAuthor author = (ImportAuthor) authors.get( f_key_connector_object.getId());
+                             if (primary_key_connector_object.getType().intern() == FileStructureColumn.OBJECT_TYPE_CONTAINER)
+                            {
+                                //container go by label
+                                 cur_container = (ImportContainer) i_containers.get(primary_key_connector_object.getId());
+                                 if ( cur_container != null)   cur_container.addAuthor( author );
+                            }
+                            else if (primary_key_connector_object.getType().intern() == FileStructureColumn.OBJECT_TYPE_SAMPLE)
+                            {
+                                sample = (ImportSample) freader.getSamples().get(primary_key_connector_object.getId());
+                               // if (sample != null)sample.addAuthor(author);
+                            }
+                            else if (primary_key_connector_object.getType().intern() == FileStructureColumn.OBJECT_TYPE_CLONE)
+                            {
+                                clone = (ImportClone) freader.getClones().get(primary_key_connector_object.getId());
+                                if (clone != null)clone.addAuthor(author);
+                            }
+                           }
+                     }
+                
+            }
+             System.out.println("a");
+    }
+    /*
+    private HashMap    createSampleHashMap()
+    {
+        HashMap samples_hash= new HashMap();
+        ImportSample sample = null; ImportContainer cur_container  =null;
+        PublicInfoItem p_info = null;
+            
+        Iterator iter1 = i_containers.values().iterator();
+        while(iter1.hasNext()){
+             cur_container = (ImportContainer) iter1.next();
+             for (int count_sample = 0; count_sample < cur_container.getSamples().size();count_sample++)
+             {
+                 sample = (ImportSample) cur_container.getSamples().get(count_sample);
+                 p_info = PublicInfoItem.getPublicInfoByName( FileStructureColumn.PROPERTY_NAME_USER_ID, sample.getPublicInfo());
+                 if ( p_info != null) 
+                     samples_hash.put(p_info.getValue(), sample);
+                  if ( p_info != null && p_info.getValue().equals(primary_key_connector_object.getId()))
+                 {
+                     sample.addPublicInfoItems(author_annotations_per_owner);
+                 }
+             }
+        }
+        return samples_hash;
+    }
+     **/
+    /////////////////////////////////////////////
      private void    readDataFromFilesOneFileSubmission( FileStructure[]  file_structures) throws Exception
     {
          DataFileReader freader = new DataFileReader();
           
          freader.setNumberOfWellsInContainer(m_number_of_samples_per_container);
+         freader.isCreateCloneObjectPerSample(m_is_fillin_clones_records);
          freader.readFileIntoSetOfObjects( (InputStream)m_file_input_data.get(FileStructure.STR_FILE_TYPE_ONE_FILE_SUBMISSION), true,
 
          FileStructure.FILE_TYPE_ONE_FILE_SUBMISSION, 
-               true, true,file_structures[ FileStructure.FILE_TYPE_ONE_FILE_SUBMISSION]) ;
+               true, true,file_structures[ FileStructure.FILE_TYPE_ONE_FILE_SUBMISSION]);//, null) ;
          i_containers = freader.getContainers();
          i_flex_sequences = freader.getFlexSequences();
          if ( freader.getErrorMesages().size() > 0 )
@@ -709,19 +792,26 @@ public String getTitle() {        return "Upload of information for third-party 
                 
                     
                     codon_seq =sequence.getStopCodon();
-                    
-                    edu.harvard.med.hip.flex.util.FlexProperties pr = SpeciesTranslationProperties.getInstance();
-                    tr_table_name = pr.getProperty(sequence.getSpesies().replaceAll(" ","."));
-                    tr_table = ( TranslationTable) TranslationTable.getTranlationTables().get(tr_table_name);
-                    if ( tr_table == null)
+                    try
                     {
-                        tr_table  = ( TranslationTable) TranslationTable.getTranlationTables().get("1");
+                        edu.harvard.med.hip.flex.util.FlexProperties pr = SpeciesTranslationProperties.getInstance();
+                        tr_table_name = pr.getProperty(sequence.getSpesies().replaceAll(" ","."));
+                        Hashtable e = TranslationTable.getTranlationTables();
+                        if ( tr_table_name!= null ) tr_table = ( TranslationTable) e.get(tr_table_name);
+                        if ( tr_table == null)
+                        {
+                            tr_table  = ( TranslationTable) TranslationTable.getTranlationTables().get("1");
+                        }
+                        if ( tr_table != null)
+                        {
+                            construct_type = ( tr_table.isStopCodon( new Codon(codon_seq)) == Codon.PROPERTY_YES)? Construct.CLOSED: Construct.FUSION;
+                            sample.setConstructType(construct_type);
+                            sample.setConstructSize( ImportConstruct.defineConstructSize(sequence.getSequenceText().length()));
+                        }
                     }
-                    if ( tr_table != null)
+                    catch(Exception e)
                     {
-                        construct_type = ( tr_table.isStopCodon( new Codon(codon_seq)) == Codon.PROPERTY_YES)? Construct.CLOSED: Construct.FUSION;
-                        sample.setConstructType(construct_type);
-                        sample.setConstructSize( ImportConstruct.defineConstructSize(sequence.getSequenceText().length()));
+                        int a = 1;
                     }
                 }
                 

@@ -232,7 +232,7 @@ public class Algorithms {
     //convert well nomenculature from A10 to int
     public static int convertWellFromA8_12toInt( String well) {
         int position = -1;
-        well = well.toLowerCase();
+        well = well.toLowerCase().trim();
         int row = (int)well.charAt(0);
         int column = Integer.parseInt(well.substring(1));
         int a_value = (int) 'a';
@@ -283,6 +283,26 @@ public class Algorithms {
         }
         return result.toString();
     }
+    
+    public static boolean     isIntegers(String[] input)
+    {
+        try
+        {
+            for (int count = 0; count < input.length; count++)
+            {
+                Integer.parseInt( input[count]);
+            }
+            return true;
+        }
+        catch(Exception e)
+        {
+            return false;
+        }
+    }
+    
+    
+    
+    //////////////////////////////////////////////////////////////////////
     public static void main(String args[]) {
         String inputFile = "C:\\Documents and Settings\\dzuo\\My Documents\\work\\production\\ORFclone\\pos_in.txt";
         String outputFile = "C:\\Documents and Settings\\dzuo\\My Documents\\work\\production\\vcholera\\pos_out.txt";
@@ -290,19 +310,10 @@ public class Algorithms {
         
         try {
             
-     String l ="100014440	OCAB	9	a	9	NIH_MGC_425	pENTR223.1	gtacaaaaaagcagaagGGCCGTCAAGGCCCACC	TCAGGCCTCATGGgcccagctttcttg	5'-attL1/attL2-3'	without	human	BC140408				NM_181534.2";
-           
-                  
-                  String[] t = null;
-                  t=l.split(edu.harvard.med.hip.flex.infoimport.ConstantsImport.TAB_DELIMETER);
-                  t = Algorithms.splitString(l, edu.harvard.med.hip.flex.infoimport.ConstantsImport.TAB_DELIMETER, false, -1);
-  l ="   CLONE_ID	CLONE_COLLECTION	PLATE_NUM	ROW	COL	LIBR_NAME	VECTOR_NAME	5'_LINKER	3'_LINKER	CLONING_ORIENTATION	STOP_CODON_STATUS	SPECIES	GB_ACCNUM	PARENT_GENE_ID	PARENT_GENE_SYMBOL	PARENT_CLONE_ID	PARENT_GB_ACCNUM";
-     t=l.split(edu.harvard.med.hip.flex.infoimport.ConstantsImport.TAB_DELIMETER);
-                      
-  t = Algorithms.splitString(l, edu.harvard.med.hip.flex.infoimport.ConstantsImport.TAB_DELIMETER, false, -1);
-  l=l;
-       /*     PrintWriter output = new PrintWriter(new BufferedWriter(new FileWriter(outputFile)));
- 
+    int s = Algorithms.convertWellFromA8_12toInt("A01");
+     System.out.println(s);
+    /*     PrintWriter output = new PrintWriter(new BufferedWriter(new FileWriter(outputFile)));
+
             BufferedReader in = new BufferedReader((new FileReader(inputFile)));
             //String ignore = in.readLine();
             
@@ -339,21 +350,7 @@ public class Algorithms {
          **/
     }
     
-    public static boolean     isIntegers(String[] input)
-    {
-        try
-        {
-            for (int count = 0; count < input.length; count++)
-            {
-                Integer.parseInt( input[count]);
-            }
-            return true;
-        }
-        catch(Exception e)
-        {
-            return false;
-        }
-    }
+    
     
 }
 

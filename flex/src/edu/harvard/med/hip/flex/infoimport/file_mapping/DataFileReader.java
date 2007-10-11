@@ -25,30 +25,45 @@ public class DataFileReader
      public static final int     SUBMISSION_PLATES = 1;
      public static final int    SUBMISSION_LINKER = 2;
       public static final int    SUBMISSION_NO_SETTINGS_REQUIRED = 3;
-    
-    private ArrayList       m_error_messages = null;
+   
+      //set by user
     private int             m_number_of_samples_per_container = 96;
-    private HashMap         m_containers = null; // by label
-    private HashMap         m_flex_sequences = null; // by id 
+    private boolean             i_is_CreateCloneObjectPerSample = false;
+  
+       
+       // parsed data
+    private ArrayList       m_error_messages = null;
+     private HashMap         m_containers = null; // by label
+    private HashMap          m_flex_sequences = null; // by id 
+    private HashMap          m_authors = null; // by id 
+    private HashMap          m_clones = null; // by id 
      private HashMap         m_containers_additional_info = null; // by label
-    private HashMap         m_flex_sequences_additional_info = null; // by id 
+ //   private HashMap         m_flex_sequences_additional_info = null; // by id 
     private HashMap         m_vectors = null;
      private HashMap         m_linkers = null;
-       private HashMap         m_additional_info = null; // by label
+    private HashMap         m_additional_info = null; // by label
     private ArrayList        m_some_data = null;
     
+    //temp storage
+    private HashMap         i_samples_hash = null;
+   
     public ArrayList        getErrorMesages(){ return m_error_messages ;}
     public void            setNumberOfWellsInContainer(int v){m_number_of_samples_per_container = v;}
+    public void            isCreateCloneObjectPerSample(boolean v){i_is_CreateCloneObjectPerSample = v;}
+    public void             emptySampleHashMap(){ i_samples_hash = null;}
+    
     public HashMap         getContainers(){ return  m_containers ;} // by label
-    public HashMap         getFlexSequences()
-    { 
-        return m_flex_sequences;
-    } // by id 
+    public HashMap         getFlexSequences()    {         return m_flex_sequences;    } // by id 
     public HashMap         getVectors(){ return m_vectors;} // by name 
     public HashMap          getLinkers(){ return m_linkers;}// by name
     public  HashMap         getAdditionalInfo(){ return m_additional_info;}
+    public  HashMap         getClones(){ return m_clones;}
+    public HashMap          getSamples(){ if ( i_samples_hash == null) createSampleHashMap(); return i_samples_hash;}
+   
     public ArrayList        getArrayOfObjects(){ return m_some_data;}
-    
+    public HashMap          getAuthors(){ return m_authors;}
+    public void            resetAdditionalInfo(){  m_additional_info = new HashMap();}
+  
     
     public DataFileReader(int submission_type)
     {
@@ -61,7 +76,9 @@ public class DataFileReader
                   m_containers = new HashMap(); // by label
                   m_flex_sequences = new HashMap(); 
                   m_containers_additional_info= new HashMap(); 
-                  m_flex_sequences_additional_info= new HashMap(); 
+                //  m_flex_sequences_additional_info= new HashMap(); 
+                  m_additional_info =  new HashMap();
+                  m_clones= new HashMap(); 
             }
             case SUBMISSION_VECTOR:
             {
@@ -87,7 +104,7 @@ public class DataFileReader
     
     public     void  readFileIntoSetOfObjects(InputStream input, boolean isFirstHeader,
             int file_type, boolean isDropEmptyString, boolean isTrimLine,
-             FileStructure      mapping_file_structure    ) throws Exception
+             FileStructure      mapping_file_structure ) throws Exception//,String object_type   ) throws Exception
     {
 
         
@@ -100,11 +117,13 @@ public class DataFileReader
         Sample row_sample = null;
         FlexSequence row_sequence = null;
         Construct    row_construct = null;
-       
+        InputStreamReader reader = null;
+        
          boolean isFirstLine = true;
          try 
         {
-            in = new BufferedReader(new InputStreamReader(input));
+             reader = new InputStreamReader(input);
+            in = new BufferedReader(reader);
         
             while((line = in.readLine()) != null) 
             {
@@ -121,23 +140,23 @@ public class DataFileReader
                  if ( isDropEmptyString && !line.equals("") ) 
                  {
                      row_content = line.split(ConstantsImport.TAB_DELIMETER);//Algorithms.splitString(line, ConstantsImport.TAB_DELIMETER, false, -1);
-                     if (number_of_columns != row_content.length)
+                     if (number_of_columns != row_content.length )
                          m_error_messages.add("Line "+line+" has a problem, correct file.");
                      else
                      {
                          // one row cannot define more than one object of the particular type
-                         processRow(header_struct, row_content, mapping_file_structure.getType());
+                         processRow(header_struct, row_content, mapping_file_structure.getType());//,object_type);
                      }
                  } 
              
             }
             in.close();
-           
+           reader.close();
         }
         catch(Exception e)
         {
-            in.close();
-            throw new Exception("Cannot read file " +file_type );
+            in.close();reader.close();
+            throw new Exception("Cannot read file " +file_type +" line "+line);
         }
  
     
@@ -197,13 +216,23 @@ public class DataFileReader
       switch(file_type) 
       {
           case FileStructure.FILE_TYPE_ONE_FILE_SUBMISSION:
-          { setObjectPropertyOneFileSubmission(   records_out  ); break;}
-          case FileStructure.FILE_TYPE_GENE_INFO:
-          { setAdditionalInfo(records_out, m_flex_sequences_additional_info); break;}
-          case FileStructure.FILE_TYPE_AUTHOR_INFO:
-          { setAdditionalInfo(records_out, m_containers_additional_info); break;}
+          { processOneFileSubmission(   records_out  ); break;}
+          
           case FileStructure.FILE_TYPE_PLATE_MAPPING:
-          { setObjectsPlateMappingFileSubmission(records_out); break;}
+          { processPlateMappingFile(records_out); break;}
+       
+          case FileStructure.FILE_TYPE_SEQUENCE_INFO:
+          { processClonePropertiesFile(records_out); break;}
+        
+          case FileStructure.FILE_TYPE_GENE_INFO:
+          { processGeneInfoFile(records_out); break;}
+         
+          case FileStructure.FILE_TYPE_AUTHOR_INFO:
+          { setAuthorProperties(records_out); break;}
+             case FileStructure.FILE_TYPE_AUTHOR_CONNECTION:
+          {setOneToManyConnector( records_out,m_additional_info); break;}
+       
+           
           case FileStructure.FILE_TYPE_VECTOR_INFO:
           { setVectors(records_out); break;}
           case FileStructure.FILE_TYPE_VECTOR_FEATURE_INFO:
@@ -212,7 +241,9 @@ public class DataFileReader
           { setLinkers(records_out); break;}
           case FileStructure.FILE_TYPE_CLONING_STRATEGY:
           { setCloningStrategy(records_out); break;}
-      
+       /*   case FileStructure.FILE_TYPE_OBJECT_ANNOTATIONS :
+          { setAdditionalInfo(   records_out, 
+           m_additional_info  ,  object_type    ); break;}*/
       }
   }
 
@@ -289,7 +320,10 @@ public class DataFileReader
      return records_out;
   }
    
-  private  void              setObjectPropertyOneFileSubmission( ColumnValue[] records_out      )
+ 
+  
+  
+   private  void              processOneFileSubmission( ColumnValue[] records_out      )
         throws Exception
   {
      
@@ -298,47 +332,170 @@ public class DataFileReader
        ImportSample   sample= setSampleProperties( records_out );
        sample.setSequenceId(flex_sequence_id);
        row_container.addSample(sample);
+       ImportClone row_clone = setCloneProperties(records_out);
+       ImportClone temp_clone = (ImportClone)m_clones.get( row_clone.getUserId());
+       if ( i_is_CreateCloneObjectPerSample && 
+               row_clone!= null && temp_clone != null
+               ) temp_clone.reasignCloneProperties( row_clone) ;
        System.out.println(row_container.getLabel()+" "+sample.getPosition()+" "+flex_sequence_id);
   }
   
-  private  void              setAdditionalInfo( ColumnValue[] records_of_row, HashMap additional_info      )
+  private  String              setAdditionalInfo( ColumnValue[] records_of_row, 
+          HashMap additional_info   )throws Exception
+  {
+        return   setAdditionalInfo( records_of_row, additional_info  ,  null  );
+  }
+ 
+   
+  private  String              setAdditionalInfo( ColumnValue[] records_of_row, 
+          HashMap additional_info  , String object_type  )
         throws Exception
   {
       ArrayList additional_info_from_record = new ArrayList();
       PublicInfoItem p_info = null;
       String key = null;
-      String temp_object_type = null;String temp_property_name = null;
+      String temp_object_type = null;String temp_property_name = null;String temp_column_value = null;
       for ( int count = 0; count < records_of_row.length; count++)
       {
-             if ( records_of_row[count].isEmptyField()) continue;
+         if ( records_of_row[count].isEmptyField()) continue;
        
          temp_object_type = records_of_row[count].getObjectType() ;
+         // allow to collect data for any object
+         if ( object_type != null && !temp_object_type.equalsIgnoreCase(object_type) ) continue;
+         
          temp_property_name = records_of_row[count].getObjectProperty();
-         if ( temp_object_type.intern() == FileStructureColumn.PROPERTY_NAME_USER_ID)
+          temp_column_value = records_of_row[count].getColumnValue().trim();
+       
+          if ( temp_property_name.intern() == FileStructureColumn.PROPERTY_NAME_USER_ID)
          {
-              key = records_of_row[count].getColumnValue().toUpperCase();
+              key = temp_column_value.trim();
           }
           else
           {
-              p_info= new PublicInfoItem(temp_property_name, records_of_row[count].getColumnValue());
+              p_info= new PublicInfoItem(temp_property_name, temp_column_value);
               p_info.setIsSubmit(records_of_row[count].isPubInfoSubmit());
               additional_info_from_record.add(p_info);
            }
       }
       additional_info.put(key, additional_info_from_record);
+      return key;
      // System.out.println(key +" "+ additional_info_from_record.size());
   }
   
-  private  void              setObjectsPlateMappingFileSubmission( ColumnValue[] records_out      )
+  
+  
+   private  void              processClonePropertiesFile( ColumnValue[] records_out      )
+        throws Exception
+  {
+     try
+     {
+       String flex_sequence_id = setFlexSequenceProperties( records_out);
+       if ( i_samples_hash == null ) createSampleHashMap();
+       ImportSample   sample= (ImportSample) i_samples_hash.get( flex_sequence_id );
+       sample.setSequenceId(flex_sequence_id);
+       
+       ImportClone row_clone = setCloneProperties(records_out);
+       ImportClone temp_clone = (ImportClone)m_clones.get( row_clone.getUserId());
+       if ( i_is_CreateCloneObjectPerSample && 
+               row_clone!= null && temp_clone != null               ) 
+           temp_clone.reasignCloneProperties( row_clone) ;
+     }
+     catch(Exception e)
+     {
+         throw new Exception("Cannot read sequence "+ records_out);
+     }
+   }
+   
+   
+    private void    createSampleHashMap()
+    {
+        i_samples_hash= new HashMap();
+        ImportSample sample = null; ImportContainer cur_container  =null;
+        PublicInfoItem p_info = null;
+            
+        Iterator iter1 = m_containers.values().iterator();
+        while(iter1.hasNext())
+        {
+             cur_container = (ImportContainer) iter1.next();
+             for (int count_sample = 0; count_sample < cur_container.getSamples().size();count_sample++)
+             {
+                 sample = (ImportSample) cur_container.getSamples().get(count_sample);
+                 p_info = PublicInfoItem.getPublicInfoByName( FileStructureColumn.PROPERTY_NAME_USER_ID, sample.getPublicInfo());
+                 if ( p_info != null) 
+                     i_samples_hash.put(p_info.getValue(), sample);
+             }
+        }
+    }
+    
+    
+  private  void              processPlateMappingFile( ColumnValue[] records_out      )
         throws Exception
   {
      
        ImportContainer row_container = setContainerProperties(records_out);
        ImportSample   sample= setSampleProperties( records_out );
        row_container.addSample(sample);
+       ImportClone row_clone = setCloneProperties(records_out);
+       ImportClone temp_clone = (ImportClone)m_clones.get( row_clone.getUserId());
+       temp_clone.reasignCloneProperties( row_clone) ;
+      
        System.out.println(row_container.getLabel()+" "+sample.getPosition());
+  
   }
   
+   private  void              processGeneInfoFile( ColumnValue[] records_out      )
+        throws Exception
+  {
+       ArrayList item_data = null; 
+       PublicInfoItem p_info = null;
+       
+       resetAdditionalInfo();
+       String key = setAdditionalInfo( records_out, m_additional_info);
+       // get target sequence
+       ImportFlexSequence  row_sequence = (ImportFlexSequence)m_flex_sequences.get(key);
+        if ( row_sequence == null) return;
+// add info
+       // assign flexsequence names to flexsequences
+        Iterator  iter = m_additional_info.keySet().iterator();
+        while(iter.hasNext())
+       {
+          key = (String)iter.next();
+          item_data = (ArrayList) m_additional_info.get(key);
+          //reassigne PROPERTY_NAME_SPECIES
+          for (int count = 0; count < item_data.size(); count++)
+          {
+                p_info= ( PublicInfoItem)item_data.get(count);
+                if (p_info.getName().intern() == ImportFlexSequence.PROPERTY_NAME_SPECIES )
+                 { row_sequence.setSpesies(p_info.getValue());}
+                 else row_sequence.addPublicInfo(p_info);
+          }
+        }
+   }
+
+    /*private  void              processAuthorConnectionsFile( ColumnValue[] records_out      )
+        throws Exception
+  {
+  
+     //   resetAdditionalInfo();
+        //record author name 
+        String key = setOneToManyConnector( records_out, m_additional_info);
+        ImportAuthor author = (ImportAuthor) m_authors.get(  key );
+        DataConnectorObject row_connector_object = (DataConnectorObject)m_additional_info.get(key);
+        if (row_connector_object.getType().intern() == FileStructureColumn.OBJECT_TYPE_CONTAINER)
+        {
+            //container go by label
+             ImportContainer cur_container = (ImportContainer) m_containers.get(row_connector_object.getId());
+             if ( cur_container != null)  cur_container.addAuthor( author );
+        }
+        else if (row_connector_object.getType().intern() == FileStructureColumn.OBJECT_TYPE_SAMPLE)
+        {
+            ImportClone cur_clone = (ImportClone) m_clones.get(key);
+            if ( cur_clone != null)cur_clone.addAuthor( author );
+        }                                     
+              
+    }
+    
+    */
    private  void    setVectors(  ColumnValue[] records_of_row )
   {
       CloneVector row_vector =    new CloneVector();
@@ -532,23 +689,25 @@ public class DataFileReader
       ArrayList       container_additional_properties = new ArrayList();
       String label = null;
       PublicInfoItem p_info = null;
-      String temp_object_type = null;String temp_property_name = null;
+      String temp_object_type = null;String temp_property_name = null;String temp_column_value= null;
      for ( int count = 0; count < records_of_row.length; count++)
      {
-             if ( records_of_row[count].isEmptyField()) continue;
+         if ( records_of_row[count].isEmptyField()) continue;
        
          temp_object_type = records_of_row[count].getObjectType() ;
          temp_property_name = records_of_row[count].getObjectProperty();
+         temp_column_value = records_of_row[count].getColumnValue().trim();
+         
          if ( temp_object_type.intern() == FileStructureColumn.OBJECT_TYPE_CONTAINER)
           {
                if (temp_property_name.intern() == ImportContainer.PROPERTY_LABEL)
               {
                   // container there?
-                  label = records_of_row[count].getColumnValue().toUpperCase();
+                  label = temp_column_value.toUpperCase();
                   row_container = (ImportContainer) m_containers.get(label);
                   if ( row_container == null)
                   {
-                      row_container = new ImportContainer(records_of_row[count].getColumnValue(),
+                      row_container = new ImportContainer(temp_column_value,
                               m_number_of_samples_per_container);
                       m_containers.put(label, row_container);
                       if ( container_additional_properties.size() > 0)
@@ -557,7 +716,7 @@ public class DataFileReader
               }
               else
               {
-                  p_info= new PublicInfoItem(temp_property_name, records_of_row[count].getColumnValue());
+                  p_info= new PublicInfoItem(temp_property_name, temp_column_value);
                     p_info.setIsSubmit(records_of_row[count].isPubInfoSubmit());
             
                   if ( row_container != null )
@@ -580,61 +739,82 @@ public class DataFileReader
   private  ImportSample    setSampleProperties(ColumnValue[] records_of_row )
     throws Exception
   {
-      ImportSample row_sample = null;
+      ImportSample row_sample = null;ImportClone row_clone = null;
       ArrayList       sample_additional_properties = new ArrayList();
       PublicInfoItem p_info = null;
        int position = -1;
        String temp_object_type = null;String temp_property_name = null;
-   
+      String temp_column_value = null;
      for ( int count = 0; count < records_of_row.length; count++)
      {
               if ( records_of_row[count].isEmptyField()) continue;
        
           temp_object_type = records_of_row[count].getObjectType() ;
           temp_property_name = records_of_row[count].getObjectProperty();
-          if (row_sample == null ) row_sample = new ImportSample( );
+          temp_column_value = records_of_row[count].getColumnValue().trim();
+       
+          
+          if (row_sample == null ) 
+          {
+              row_sample = new ImportSample( );
+              if (i_is_CreateCloneObjectPerSample)
+              {
+                  row_clone = new ImportClone();
+                  row_sample.setClone(row_clone);
+                  
+              }
+          }
           if ( temp_object_type.intern() == FileStructureColumn.OBJECT_TYPE_SAMPLE)
           {
               if (temp_property_name.intern() == ImportSample.SAMPLE_POSITION)
               {
                   try
                   {
-                      position = Integer.parseInt(records_of_row[count].getColumnValue());
+                      position = Integer.parseInt(temp_column_value);
                   }
                   catch(Exception e)
                   {
-                      position = Algorithms.convertWellFromA8_12toInt(records_of_row[count].getColumnValue());
+                      position = Algorithms.convertWellFromA8_12toInt(temp_column_value);
                   }
                   if ( position < 0) 
-                      throw new Exception ("Wrong sample position "+records_of_row[count].getColumnValue());
+                      throw new Exception ("Wrong sample position "+temp_column_value);
                  row_sample.setPosition( position);
                  
               }
               else if (temp_property_name.intern() == ImportSample.SAMPLE_CONSTRUCT_TYPE)
               {
-                  row_sample.setConstructType(records_of_row[count].getColumnValue());
+                  row_sample.setConstructType(temp_column_value);
               }
               else if ( temp_property_name.intern() == ImportSample.SAMPLE_CONSTRUCT_SIZE)
               {
-                  row_sample.setConstructSize(records_of_row[count].getColumnValue());
+                  row_sample.setConstructSize(temp_column_value);
               }
-               else if ( temp_property_name.intern() == ImportSample.SAMPLE_CLONE_STATUS)
+           /*    else if ( temp_property_name.intern() == ImportSample.SAMPLE_CLONE_STATUS)
                {
-                  row_sample.setCloneStatus( records_of_row[count].getColumnValue());
+                  row_sample.setCloneStatus( temp_column_value);
                }
                 else if ( temp_property_name.intern() == ImportSample.SAMPLE_CLONE_TYPE )
                 {
-                  row_sample.setCloneType(records_of_row[count].getColumnValue());
+                  row_sample.setCloneType(temp_column_value);
                 }
                 else if ( temp_property_name.intern() == ImportSample.SAMPLE_CLONING_STRATEGYID)
                 {
-                  row_sample.setCloningStrategyId( Integer.parseInt(records_of_row[count].getColumnValue()));
+                  row_sample.setCloningStrategyId( Integer.parseInt(temp_column_value));
                 }
+            **/
               else
               {
-                  p_info= new PublicInfoItem(temp_property_name, records_of_row[count].getColumnValue());
+                  p_info= new PublicInfoItem(temp_property_name, temp_column_value);
                     p_info.setIsSubmit(records_of_row[count].isPubInfoSubmit());
                    row_sample.addPublicInfo(p_info);
+                   if ( temp_property_name.intern() == FileStructureColumn.PROPERTY_NAME_USER_ID)
+                 {
+                      if (row_clone != null) 
+                      {
+                          row_clone.setUserId(temp_column_value);
+                          m_clones.put(temp_column_value, row_clone);
+                      }
+                 }
                  
                }
        }
@@ -643,64 +823,131 @@ public class DataFileReader
        throw new Exception ("Sample position not defined ");
      
   }
+  
+  
+  
+  //one sample per row, assume that clones already created
+  private  ImportClone    setCloneProperties(ColumnValue[] records_of_row )
+    throws Exception
+  {
+      ImportClone row_clone = null;
+      ArrayList       clone_additional_properties = new ArrayList();
+      PublicInfoItem p_info = null;
+       int position = -1;
+       String temp_object_type = null;String temp_property_name = null;
+      String temp_column_value = null;
+     for ( int count = 0; count < records_of_row.length; count++)
+     {
+          if ( records_of_row[count].isEmptyField()) continue;
+          temp_object_type = records_of_row[count].getObjectType() ;
+          temp_property_name = records_of_row[count].getObjectProperty();
+          temp_column_value = records_of_row[count].getColumnValue().trim();
+          if (row_clone == null ){ row_clone = new ImportClone( );}
+          
+          // this can be sampleid
+           if ( temp_property_name.intern() == FileStructureColumn.PROPERTY_NAME_USER_ID)
+          { row_clone.setUserId(temp_column_value);     }
+          if ( temp_object_type.intern() == FileStructureColumn.OBJECT_TYPE_CLONE)
+          {
+              if (temp_property_name.intern() == ImportClone.CLONE_STATUS)
+              {row_clone.setStatus(temp_column_value.toUpperCase());}
+              else if (temp_property_name.intern() == ImportClone.CLONE_TYPE)
+               {row_clone.setType(temp_column_value.toUpperCase());}
+              else if ( temp_property_name.intern() == ImportClone.FIVE_PRIME_LINKER)
+               {row_clone.set5LinkerName(temp_column_value);}
+               else if ( temp_property_name.intern() == ImportClone.THREE_PRIME_LINKER)
+                {row_clone.set3LinkerName(temp_column_value);}
+               else if ( temp_property_name.intern() == ImportClone.CLONE_SEQUENCE_TEXT)
+                {row_clone.setSequenceText(temp_column_value);}
+                else if ( temp_property_name.intern() == ImportClone.VECTOR)
+                 {row_clone.setVectorName(temp_column_value);}
+                else if ( temp_property_name.intern() == ImportClone.CLONING_STRATEGYID)
+                {
+                   try
+                  {
+                      row_clone.setCloningStrategyId( Integer.parseInt(temp_column_value));
+                  }
+                  catch(Exception e)
+                  {
+                      throw new Exception ("Wrong clon cloning strategy id "+temp_column_value);
+                  }
+                 
+                }
+              else
+              {
+                  p_info= new PublicInfoItem(temp_property_name, temp_column_value);
+                    p_info.setIsSubmit(records_of_row[count].isPubInfoSubmit());
+                   row_clone.addPublicInfo(p_info);
+                  
+                 
+               }
+     }
+     }
+      return row_clone;
+  }
   private  String    setFlexSequenceProperties(          ColumnValue[] records_of_row ) throws Exception
   {
       ImportFlexSequence row_sequence = null;
       PublicInfoItem p_info = null;
       ArrayList       flexsequence_additional_properties = new ArrayList();
        String sequence_id = null;
-      String temp_object_type = null;String temp_property_name = null;
-    boolean isCheckSequenceTotalNumberCodons = true;
+      String temp_object_type = null;String temp_property_name = null; String temp_column_value = null;
+    
+      boolean isCheckSequenceTotalNumberCodons = true;
+      
+      
       for ( int count = 0; count < records_of_row.length; count++)
       {
           if ( records_of_row[count].isEmptyField()) continue;
           temp_object_type = records_of_row[count].getObjectType() ;
           temp_property_name = records_of_row[count].getObjectProperty();
-       
+          temp_column_value = records_of_row[count].getColumnValue().trim();
+        
+          
           if ( temp_object_type.intern() == FileStructureColumn.OBJECT_TYPE_FLEXSEQUENCE)
           {
                if (temp_property_name.intern() == ImportFlexSequence.PROPERTY_NAME_SEARCHID)
               {
-                  sequence_id= records_of_row[count].getColumnValue().toUpperCase();
+                  sequence_id= temp_column_value.toUpperCase();
                   m_flex_sequences.put( sequence_id, records_of_row[count].getInstruction()+
-                          records_of_row[count].getColumnValue().toUpperCase());
+                          temp_column_value.toUpperCase());
                   return sequence_id;
               }
               //coming from file that define one sequence in a row
               if ( row_sequence == null) row_sequence = new ImportFlexSequence();
               if (temp_property_name.intern() == ImportFlexSequence.PROPERTY_NAME_CDSNA_SOURCE)
               {
-                row_sequence.setCDNASource(records_of_row[count].getColumnValue());
+                row_sequence.setCDNASource(temp_column_value);
               }
               else if (temp_property_name.intern() == ImportFlexSequence.PROPERTY_NAME_SPECIES)
               {
-                row_sequence.setSpesies( records_of_row[count].getColumnValue() );
+                row_sequence.setSpesies(temp_column_value);
               }
               else if (temp_property_name.intern() == ImportFlexSequence.PROPERTY_NAME_CDS_START)
               {
-                row_sequence.setCDSStart(Integer.parseInt(records_of_row[count].getColumnValue()));
+                row_sequence.setCDSStart(Integer.parseInt(temp_column_value));
               }
               else if (temp_property_name.intern() == ImportFlexSequence.PROPERTY_NAME_CDS_STOP)
               {
-                row_sequence.setCDSStop(Integer.parseInt(records_of_row[count].getColumnValue()));
+                row_sequence.setCDSStop(Integer.parseInt(temp_column_value));
               }
               else if (temp_property_name.intern() == ImportFlexSequence.PROPERTY_NAME_CHROMOSOME)
               {
-                row_sequence.setChromosome(records_of_row[count].getColumnValue());
+                row_sequence.setChromosome(temp_column_value);
               }
               else if (temp_property_name.intern() == ImportFlexSequence.PROPERTY_NAME_SEQUENCETEXT)
               {
-                row_sequence.setSequenceText(records_of_row[count].getColumnValue());
+                row_sequence.setSequenceText(temp_column_value);
               }
               else 
               {
                    if ( temp_property_name.intern() == FileStructureColumn.PROPERTY_NAME_USER_ID)
                    {
-                       sequence_id = records_of_row[count].getColumnValue();
+                       sequence_id = temp_column_value;
                    }
                    else
                    {
-                         p_info = new PublicInfoItem(temp_property_name, records_of_row[count].getColumnValue());
+                         p_info = new PublicInfoItem(temp_property_name, temp_column_value);
                          p_info.setIsSubmit(records_of_row[count].isPubInfoSubmit());
                          flexsequence_additional_properties.add(p_info);
             
@@ -739,4 +986,99 @@ public class DataFileReader
           m_flex_sequences.put( sequence_id, row_sequence);
       return sequence_id;
   }
+  
+  
+    //one sample per row
+  private  ImportAuthor    setAuthorProperties(ColumnValue[] records_of_row )
+    throws Exception
+  {
+      ImportAuthor row_author = null; String key = null;
+      String temp_object_type = null;String temp_property_name = null;
+      String temp_column_value = null;
+      if ( m_authors == null) m_authors = new HashMap();
+      
+      for ( int count = 0; count < records_of_row.length; count++)
+     {
+          if ( records_of_row[count].isEmptyField()) continue;
+          temp_object_type = records_of_row[count].getObjectType() ;
+          temp_property_name = records_of_row[count].getObjectProperty();
+          temp_column_value = records_of_row[count].getColumnValue().trim();
+        
+          
+          if (row_author == null ) row_author = new ImportAuthor( );
+          if ( temp_object_type.intern() == FileStructureColumn.OBJECT_TYPE_AUTHOR)
+          {
+             
+              if (temp_property_name.intern() == ImportAuthor.AUTHOR_FNNAME )
+              {  row_author.setFNName(temp_column_value);              }
+             else if (temp_property_name.intern() == ImportAuthor.AUTHOR_LNNAME )
+              {  row_author.setFLName(temp_column_value);  }
+             else if (temp_property_name.intern() == ImportAuthor.AUTHOR_TEL)
+             {  row_author.setTel(temp_column_value);  }
+             else if (temp_property_name.intern() == ImportAuthor.AUTHOR_FAX )
+              {  row_author.setFax(temp_column_value);}  
+             else if (temp_property_name.intern() == ImportAuthor.AUTHOR_EMAIL )
+             {  row_author.setEMail(temp_column_value);  }
+             else if (temp_property_name.intern() == ImportAuthor. AUTHOR_ORGANIZATION_NAME)
+              {  row_author.setOrgName(temp_column_value);  }
+             else if (temp_property_name.intern() == ImportAuthor. AUTHOR_ADDRESS)
+              {  row_author.setAdress(temp_column_value);  }
+             else if (temp_property_name.intern() == ImportAuthor.  AUTHOR_WWW)
+              {  row_author.setWWW(temp_column_value);  }
+                else if (temp_property_name.intern() == ImportAuthor.AUTHOR_TYPE)
+              {  row_author.setType(temp_column_value);  }
+            
+             else if (temp_property_name.intern() == ImportAuthor. AUTHOR_DESCRIPTION)
+              {  row_author.setDescription(temp_column_value);  }
+               else if (temp_property_name.intern() == FileStructureColumn.PROPERTY_NAME_USER_ID)
+              {  key = temp_column_value; row_author.setName(temp_column_value); }
+          }
+ 
+       }
+       m_authors.put(key, row_author);
+       return row_author;
+     }
+     
+     private  void              setOneToManyConnector( ColumnValue[] records_of_row, 
+          HashMap hash_info     )
+        throws Exception
+  {
+      ArrayList items_per_key = new ArrayList();
+      String key = null;
+      String temp_object_type = null;String temp_property_name = null;String temp_column_value = null;
+      DataConnectorObject primary_key_connector_object = null;
+      DataConnectorObject f_key_connector_object = null;
+      
+      for ( int count = 0; count < records_of_row.length; count++)
+      {
+         if ( records_of_row[count].isEmptyField()) continue;
+       
+         temp_object_type = records_of_row[count].getObjectType() ;
+         temp_property_name = records_of_row[count].getObjectProperty();
+         temp_column_value = records_of_row[count].getColumnValue().trim();
+       
+         if ( temp_property_name.intern() == FileStructureColumn.PROPERTY_NAME_USER_ID)
+         {
+              primary_key_connector_object = new DataConnectorObject(temp_column_value, temp_object_type);
+         }
+          else
+          {
+               f_key_connector_object = new DataConnectorObject(temp_column_value, temp_object_type);
+          }
+           
+       
+      }
+      if ( ! hash_info.containsKey(primary_key_connector_object)  ) //new entity
+      {
+         items_per_key = new ArrayList();
+         hash_info.put(primary_key_connector_object, items_per_key);
+      }
+     else
+         items_per_key = (ArrayList)hash_info.get(primary_key_connector_object);
+     items_per_key.add(f_key_connector_object);
+     
+     // System.out.println(key +" "+ additional_info_from_record.size());
+  }
+  
+  
 }

@@ -55,9 +55,10 @@ public class ColumnValue
  
    public boolean isEmptyField()
    {
+       String temp = m_column_value.trim();
        for (int count = 0; count < i_empty_field_values.length; count++)
        {
-           if (m_column_value.intern() == i_empty_field_values[count] ) return true;
+           if (temp.equalsIgnoreCase( i_empty_field_values[count]) ) return true;
        }
        return false;
    }
