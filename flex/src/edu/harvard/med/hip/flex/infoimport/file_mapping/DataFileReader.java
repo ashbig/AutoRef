@@ -337,7 +337,6 @@ public class DataFileReader
        if ( i_is_CreateCloneObjectPerSample && 
                row_clone!= null && temp_clone != null
                ) temp_clone.reasignCloneProperties( row_clone) ;
-       System.out.println(row_container.getLabel()+" "+sample.getPosition()+" "+flex_sequence_id);
   }
   
   private  String              setAdditionalInfo( ColumnValue[] records_of_row, 

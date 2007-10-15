@@ -144,7 +144,8 @@ public class AddNewPlatesFromFileAction extends WorkflowAction
                       if ( inputAuthor!= null) importer.setInputData(FileStructure.STR_FILE_TYPE_AUTHOR_INFO, inputAuthor.getInputStream());
                       if ( inputAuthorConnection != null) importer.setInputData(FileStructure.STR_FILE_TYPE_AUTHOR_CONNECTION, inputAuthorConnection.getInputStream());
                   }
-                   importer.run();
+                  java.lang.Thread t = new java.lang.Thread(importer);
+                  t.start();
                      return mapping.findForward("confirm_add_plates");
             }
             default: return null;

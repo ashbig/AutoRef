@@ -127,6 +127,27 @@
     </table>
 </logic:present>
 
+<logic:present name="author">
+<TABLE border="0" cellpadding="2" cellspacing="2">
+    <tr><td class="label">Author Name:</td><td><bean:write name="author" property="name"/></td> </tr>
+    <tr><td class="label">Author Type:</td><td><bean:write name="author" property="type"/></td> </tr>
+    
+    <tr><td class="label">Author First Name:</td><td><bean:write name="author" property="FNName"/></td> </tr>
+    <tr><td class="label">Author Last Name:</td><td><bean:write name="author" property="FLName"/></td> </tr>
+    
+    <tr><td class="label">Author Address:</td><td><bean:write name="author" property="adress"/></td> </tr>
+    <tr><td class="label">Author Telephone:</td><td><bean:write name="author" property="tel"/></td> </tr>
+    <tr><td class="label">Author FAX:</td><td><bean:write name="author" property="fax"/></td> </tr>
+    <tr><td class="label">Author E-mail:</td><td><bean:write name="author" property="EMail"/></td> </tr>
+    <tr><td class="label">Author WWW:</td><td><bean:write name="author" property="WWW"/></td> </tr>
+    <tr><td class="label">Author Description:</td><td><bean:write name="author" property="description"/></td> </tr>
+  
+    
+</table>
+    
+</logic:present>
+    
+
 
 <br>
 

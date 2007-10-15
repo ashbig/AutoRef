@@ -26,6 +26,7 @@ import sun.jdbc.rowset.*;
 import java.sql.*;
 import javax.sql.*;
 import edu.harvard.med.hip.flex.database.*;
+import edu.harvard.med.hip.flex.infoimport.*;
 /**
  *
  * @author  htaycher
@@ -222,20 +223,55 @@ public class PublicInfoItem
      return public_info;
   }
    
+   
+    public static ArrayList restorePublicInfo(int owner_id, int owner_type) throws Exception
+     {
+         
+         ArrayList info = new ArrayList();
+         PublicInfoItem p_info = null;
+        String sql = "select nametype,namevalue,nameurl,description from " +
+                ConstantsImport.getNameTableNamePerOwner(owner_type)+
+                " where "+ ConstantsImport.getNameTableIdColumnNamePerOwner(owner_type)+"="+owner_id;
+        
+        DatabaseTransaction t = null;
+        ResultSet rs = null;
+        
+        try {
+            t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            
+            while(rs.next()) 
+            {
+                p_info = new PublicInfoItem();
+                p_info.setName(rs.getString("nametype"));
+                 p_info.setUrl(rs.getString("nameurl"));
+                 p_info.setValue(rs.getString("namevalue"));
+                 p_info.setDescription(rs.getString("description"));
+                
+                info.add(p_info);
+             }
+            return info;
+        } catch (Exception ex) {
+            System.out.println(ex);
+            throw new Exception(ex.getMessage());
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+       
+    }
+    
+      
+      ////////////////////////////////////////////////////
     public static void main(String[] args)
   {
-    PublicInfoItem item1 = new PublicInfoItem("A", "B",null,null);
-    PublicInfoItem item2 = new PublicInfoItem("A", "B",null,null);
-    System.out.println(item1.equals(item2));
-    ArrayList ar1 = new ArrayList();
-    ar1.add(item1); 
-    if ( ! PublicInfoItem.contains (ar1, item2))
-        ar1.add(item2);
-    for(int count = 0; count < ar1.size(); count++)
-    {
-        if( ar1.get(count).equals(item2))
-            ar1.add(item2);
-            
-    }
+        try
+        {
+    ArrayList r = PublicInfoItem.restorePublicInfo(258460 , ConstantsImport.ITEM_TYPE_CLONEID);
+      ArrayList authors = edu.harvard.med.hip.flex.infoimport.coreobjectsforimport.ImportAuthor.restoreAuthors(258460, ConstantsImport.ITEM_TYPE_CLONEID);
+      edu.harvard.med.hip.flex.infoimport.coreobjectsforimport.ImportAuthor at = 
+              edu.harvard.med.hip.flex.infoimport.coreobjectsforimport.ImportAuthor.restoreAuthor(12);
+        
+        }
+        catch(Exception e){}
     }
 }

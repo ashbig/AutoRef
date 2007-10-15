@@ -167,7 +167,7 @@ public class CloneInfo extends CDNASequence {
         " c.sequenceid, f.genusspecies, cd.constructid,  cd.constructtype, cd.projectid, cd.workflowid,"+
         " c.strategyid, cs.strategyname, cs.vectorname, cs.linkerid_5p, cs.linkerid_3p,"+
         " cl.pubhit, cl.resultexpect, cl.resultpubhit, cl.matchexpect, cl.matchpubhit,"+
-        " l5.linkersequence, l3.linkersequence, f.flexstatus"+
+        " l5.linkersequence, l5.linkername, l3.linkersequence,l3.linkername, f.flexstatus"+
         " from clones c, flexsequence f, constructdesign cd, cloningstrategy cs, clonesequencing g, clonesequence cl, linker l5, linker l3"+
         " where c.constructid=cd.constructid"+
         " and f.sequenceid=cd.sequenceid"+
@@ -211,13 +211,17 @@ public class CloneInfo extends CDNASequence {
                 matchexpect = rs.getString(21);
                 matchpubhit = rs.getString(22);
                 
-                String linker5p = rs.getString(23);
-                String linker3p = rs.getString(24);
-                flexstatus = rs.getString(25);
+                String linker5p_seq = rs.getString(23);
+                String linker5p_name = rs.getString(24);
+                
+                String linker3p_seq = rs.getString(25);
+                String linker3p_name = rs.getString(26);
+                
+                flexstatus = rs.getString(27);
                 
                 CloneVector cv = new CloneVector(vectorname);
-                CloneLinker l5p = new CloneLinker(linkerid5p, null, linker5p);
-                CloneLinker l3p = new CloneLinker(linkerid3p, null, linker3p);
+                CloneLinker l5p = new CloneLinker(linkerid5p, linker5p_name, linker5p_seq);
+                CloneLinker l3p = new CloneLinker(linkerid3p, linker3p_name, linker3p_seq);
                 CloningStrategy st = new CloningStrategy(strategyid, strategyname, cv, l5p, l3p);
                 setCloningstrategy(st);
             }

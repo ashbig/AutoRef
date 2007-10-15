@@ -45,30 +45,55 @@
         <TD class="label">Version:</td>
         <td><bean:write name="clone" property="constructtype"/></TD>
     </TR>
-    <TR>
-        <TD class="label">Cloning Strategy:</td>
-        <TD>
-            <bean:write name="clone" property="cloningstrategy.name"/>
-        </TD>
-        <TD class="label">Vector:</td>
-        <TD>
-            <a href="ViewVector.do?vectorname=<bean:write name="clone" property="cloningstrategy.clonevector.name"/>">
-                <bean:write name="clone" property="cloningstrategy.clonevector.name"/>
+   <!-- clone descriptions--> 
+      <tr><td colspan=2>&nbsp;</td></tr>
+ 
+    <logic:iterate id="pinfo" name="clone_publicinfo"  >
+    
+     <TR>
+        <td><bean:write name="pinfo" property="name"/></TD>
+        <td colspan=3><bean:write name="pinfo" property="value"/></TD>
+    </TR>
+     </logic:iterate>
+   <!-- clone authors --> 
+      <tr><td colspan=2>&nbsp;</td></tr>
+ 
+    <logic:iterate id="author" name="authors"  >
+     <TR>
+        <TD class="label">Author:</td>
+        <td colspan=3>
+            <a href="/FLEX/ViewItems.do?forwardName=<%= Constants.VIEW_AUTHOR%>&amp;ID=<bean:write name='author' property='id'/>" target="_blank" >
+                <bean:write name="author" property="name"/>      
             </a>
         </TD>
     </TR>
+     </logic:iterate>
+    <tr><td colspan=2>&nbsp;</td></tr>
+        <TR>
+            <TD class="label" >Cloning Strategy:</td>
+        <TD colspan=3>  <bean:write name="clone" property="cloningstrategy.name"/>  </td></tr>
+        
+       <tr> <TD class="label">Vector:</td>
+        <TD colspan=3> <a href="ViewVector.do?vectorname=<bean:write name="clone" property="cloningstrategy.clonevector.name"/>">
+                <bean:write name="clone" property="cloningstrategy.clonevector.name"/>
+            </a> </TD> </TR>
     <TR>
+        <TD class="label">5' Linker Name:</td>
+        <TD ><bean:write name="clone" property="cloningstrategy.linker5p.name"/> </TD>
+
         <TD class="label">5' Linker Sequence:</td>
-        <TD colspan="2">
-            <bean:write name="clone" property="cloningstrategy.linker5p.sequence"/>
-        </TD>
+        <TD ><bean:write name="clone" property="cloningstrategy.linker5p.sequence"/> </TD>
     </tr>
     <tr>
+        <TD class="label">3' Linker Name</td>
+        <TD > <bean:write name="clone" property="cloningstrategy.linker3p.name"/> </TD>
+        
         <TD class="label">3' Linker Sequence:</td>
-        <TD colspan="2">
-            <bean:write name="clone" property="cloningstrategy.linker3p.sequence"/>
-        </TD>
+        <TD > <bean:write name="clone" property="cloningstrategy.linker3p.sequence"/> </TD>
+ 
     </TR>
+    <tr><td colspan=2>&nbsp;</td></tr>
+   
     <TR>
         <TD class="label">Result Against Expected Sequence:</td>
         <td><bean:write name="clone" property="resultexpect"/></TD>

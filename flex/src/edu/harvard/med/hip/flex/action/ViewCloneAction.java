@@ -27,7 +27,9 @@ import edu.harvard.med.hip.flex.form.ViewCloneForm;
 import edu.harvard.med.hip.flex.core.CloneInfo;
 import edu.harvard.med.hip.flex.Constants;
 import edu.harvard.med.hip.flex.user.*;
-
+import edu.harvard.med.hip.flex.infoimport.coreobjectsforimport.*;
+import edu.harvard.med.hip.flex.infoimport.*;
+import edu.harvard.med.hip.flex.core.PublicInfoItem;
 /**
  *
  * @author  dzuo
@@ -55,7 +57,6 @@ public class ViewCloneAction extends Action {
     HttpServletResponse response)
     throws ServletException, IOException {
         int cloneid = ((ViewCloneForm)form).getCloneid();
-        
         User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
         boolean retValue = false;
         
@@ -76,7 +77,12 @@ public class ViewCloneAction extends Action {
             CloneInfo clone = new CloneInfo();
             clone.restoreClone(cloneid);
             List storages = clone.getStorages();
+            ArrayList authors = ImportAuthor.restoreAuthors(cloneid, ConstantsImport.ITEM_TYPE_CLONEID);
+            ArrayList clone_publicinfo = PublicInfoItem.restorePublicInfo(cloneid, ConstantsImport.ITEM_TYPE_CLONEID);
+            
             request.setAttribute("clone", clone);
+            request.setAttribute("authors", authors);
+            request.setAttribute("clone_publicinfo", clone_publicinfo);
             if(retValue) {
                 request.setAttribute(Constants.ISDISPLAY, new Integer(1));
             } else {

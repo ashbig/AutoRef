@@ -172,6 +172,7 @@ public class ConstantsImport
        public static final int     ITEM_TYPE_PLATE_LABELS = 0;
        public static final int     ITEM_TYPE_CLONEID = 1;
        public static final int     ITEM_TYPE_FLEXSEQUENCE_ID = 2;
+       public static final int     ITEM_TYPE_SAMPLE_ID = 3;
       
        
        //configuration 
@@ -214,6 +215,33 @@ public class ConstantsImport
      
      //           util functions   
      
+     public static String           getNameTableNamePerOwner(int owner_type)
+     {
+          switch(owner_type)
+          {
+              case ITEM_TYPE_PLATE_LABELS: return "containerheader_name";
+              case ITEM_TYPE_CLONEID : return "clonename";
+              case ITEM_TYPE_FLEXSEQUENCE_ID: return "name";
+              case ITEM_TYPE_SAMPLE_ID: return "sample_name";
+              default: return "";
+   
+          }
+     
+     }
+     
+     public static String           getNameTableIdColumnNamePerOwner(int owner_type)
+     {
+          switch(owner_type)
+          {
+              case ITEM_TYPE_PLATE_LABELS: return "containerid";
+              case ITEM_TYPE_CLONEID : return "cloneid";
+              case ITEM_TYPE_FLEXSEQUENCE_ID: return "sequenceid";
+              case ITEM_TYPE_SAMPLE_ID: return "sampleid";
+              default: return "";
+   
+          }
+     
+     }
      public static boolean          areEqual(int[] arr)
      {
          for (int count = 0; count < arr.length - 1; count++)

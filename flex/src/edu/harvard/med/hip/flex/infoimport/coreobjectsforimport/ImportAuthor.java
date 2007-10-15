@@ -18,6 +18,7 @@ import javax.sql.*;
 
 import edu.harvard.med.hip.flex.database.*;
 import  edu.harvard.med.hip.flex.util.*;
+import edu.harvard.med.hip.flex.infoimport.*;
 /**
  *
  * @author htaycher
@@ -167,5 +168,101 @@ public class ImportAuthor
             DatabaseTransaction.closeResultSet(crs);
         }
       
+     }
+     
+     
+     public static ArrayList restoreAuthors(int owner_id, int owner_type) throws Exception
+     {
+         
+         ArrayList authors = new ArrayList();
+          String sql = null;
+         ImportAuthor author = null;
+         if ( owner_type == ConstantsImport.ITEM_TYPE_CLONEID)
+         {
+            sql =  "select AUTHORID ,AUTHORNAME  ,FIRSTNAME  ,LASTNAME   ,TEL   ,FAX "+
+ ",AUTHOREMAIL   ,ADDRESS  ,WWW  ,DESCRIPTION  ,ORGANIZATIONNAME from authorinfo where authorid in "
++ "(select AUTHORID from CLONEAUTHOR where CLONEID = "+ owner_id+")";
+
+         }
+         else if (owner_type == ConstantsImport.ITEM_TYPE_PLATE_LABELS )
+         {
+             sql = "";
+         }
+        else if (owner_type == ConstantsImport.ITEM_TYPE_SAMPLE_ID )
+         {
+             sql = "";
+         }
+        
+        DatabaseTransaction t = null;
+        ResultSet rs = null;
+        
+        try {
+            t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            
+            while(rs.next()) 
+            {
+                author = retrieveAuthorFromResultSet(rs, 0);
+                authors.add(author);
+             }
+            return authors;
+        } catch (Exception ex) {
+            System.out.println(ex);
+            throw new Exception(ex.getMessage());
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+       
+    }
+    
+     
+      public static ImportAuthor restoreAuthor(int author_id) throws Exception
+     {
+         String sql = null;
+         ImportAuthor author = null;
+        sql =  "select a.AUTHORID as AUTHORID,AUTHORNAME  ,FIRSTNAME  ,LASTNAME   ,TEL   ,FAX "+
+ ",AUTHOREMAIL   ,ADDRESS  ,WWW  ,DESCRIPTION  ,ORGANIZATIONNAME, AUTHORTYPE from authorinfo a , CLONEAUTHOR c"
+             +" where a.authorid = c.authorid and c.authorid =  " + author_id;
+           
+        
+        DatabaseTransaction t = null;
+        ResultSet rs = null;
+        
+        try {
+            t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            
+            if(rs.next()) 
+            {
+                author = retrieveAuthorFromResultSet(rs, 1);
+            }
+            return author;
+        } catch (Exception ex) {
+            System.out.println(ex);
+            throw new Exception(ex.getMessage());
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+       
+    }
+    
+     
+     private static ImportAuthor retrieveAuthorFromResultSet(ResultSet rs, int mode)
+     throws Exception
+     {
+        ImportAuthor author = new ImportAuthor() ;
+        author.setName(rs.getString("AUTHORNAME"));
+         author.setFNName(rs.getString("FIRSTNAME"));
+         author.setFLName (rs.getString("LASTNAME"));
+         author.setTel  (rs.getString("TEL"));
+         author.setFax  (rs.getString("FAX"));
+         author.setEMail  (rs.getString("AUTHOREMAIL"));
+         author.setOrgName  (rs.getString("ORGANIZATIONNAME"));
+         author.setAdress  (rs.getString("ADDRESS"));
+         author.setWWW  (rs.getString("WWW"));
+         author.setDescription  (rs.getString("DESCRIPTION"));
+         if ( mode != 0) author.setType(rs.getString("AUTHORTYPE"));
+         author. setId(rs.getInt("AUTHORID"));
+         return author;
      }
 }

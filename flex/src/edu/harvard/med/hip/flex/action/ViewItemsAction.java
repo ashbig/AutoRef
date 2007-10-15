@@ -112,7 +112,14 @@ public class ViewItemsAction extends ResearcherAction {
                 request.setAttribute("nametypes",nametypes);
                 return (mapping.findForward("view_nametypes"));
             } 
-          
+             else if (Constants.VIEW_AUTHOR.equals(forwardName))
+             {
+                String author_id_str =  (String)request.getParameter("ID");
+                int author_id = Integer.parseInt(author_id_str);
+                ImportAuthor author = ImportAuthor.restoreAuthor(author_id);
+                if ( author != null) request.setAttribute("author",author);
+                title="Author Information";
+             }
             request.setAttribute(Constants.UI_PAGE_TITLE,title);
            
             request.setAttribute("forwardName",forwardName);

@@ -205,6 +205,7 @@ public class Constants {
     public static final String VIEW_VECTORS="VIEW_VECTORS";
 //forward name for  
     public static final String VIEW_CLONINGSTRATEGIES="VIEW_CLONINGSTRATEGIES";
+    public static final String VIEW_AUTHOR="VIEW_AUTHOR";
 //forward name for  
     public static final String NEW_PLATE_LABELS="NEW_PLATE_LABELS";
     public static final String VIEW_NAMETYPE="VIEW_NAMETYPE";

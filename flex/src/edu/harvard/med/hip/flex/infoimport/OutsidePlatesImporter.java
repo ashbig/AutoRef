@@ -317,7 +317,9 @@ public String getTitle() {        return "Upload of information for third-party 
          freader.readFileIntoSetOfObjects( (InputStream)m_file_input_data.get(FileStructure.STR_FILE_TYPE_PLATE_MAPPING), true,
                 FileStructure.FILE_TYPE_PLATE_MAPPING, 
                true, true,file_structures[ FileStructure.FILE_TYPE_PLATE_MAPPING]);//, null) ;
-          // read in target sequences
+           i_containers = freader.getContainers();
+         
+         // read in target sequences
           freader.readFileIntoSetOfObjects( (InputStream)m_file_input_data.get(FileStructure.STR_FILE_TYPE_SEQUENCE_INFO), true,
                 FileStructure.FILE_TYPE_SEQUENCE_INFO, 
                true, true,file_structures[ FileStructure.FILE_TYPE_SEQUENCE_INFO]);//, null) ;
@@ -342,7 +344,6 @@ public String getTitle() {        return "Upload of information for third-party 
                 assignAuthorInformation( freader);
             }
            //readGeneInfo( freader,  file_structures);
-           i_containers = freader.getContainers();
            // read authors 
          //  readAuthorInformation( freader,  file_structures);
     }
