@@ -136,48 +136,48 @@ public class RefseqImporter {
     }
     
     /**
-    public void importInsertRefseq(ImportTable table, Map insertidmap) throws Exception {
-        List seqs = new ArrayList();
-        List columns = table.getColumnNames();
-        List contents = table.getColumnInfo();
-        for(int n=0; n<contents.size(); n++) {
-            InsertRefseq c = new InsertRefseq();
-            List row = (List)contents.get(n);
-            for(int i=0; i<columns.size(); i++) {
-                String columnName = (String)columns.get(i);
-                String columnInfo = (String)row.get(i);
-                if("refseqid".equalsIgnoreCase(columnName)) {
-                    c.setRefseqid(((Integer)idmap.get(columnInfo)).intValue());
-                }
-                if("insertid".equalsIgnoreCase(columnName)) {
-                    c.setInsertid(((Integer)insertidmap.get(columnInfo)).intValue());
-                }
-                if("startonrefseq".equalsIgnoreCase(columnName)) {
-                    if(columnInfo != null)
-                        c.setStart(Integer.parseInt(columnInfo));
-                }
-                if("endonrefseq".equalsIgnoreCase(columnName)) {
-                    if(columnInfo != null)
-                        c.setStop(Integer.parseInt(columnInfo));
-                }
-                if("hasdiscrepancy".equalsIgnoreCase(columnName)) {
-                    c.setHasDiscrepancy(columnInfo);
-                }
-                if("discrepancy".equalsIgnoreCase(columnName)) {
-                    c.setDiscrepancy(columnInfo);
-                }
-                if("comments".equalsIgnoreCase(columnName)) {
-                    c.setComments(columnInfo);
-                }
-            }
-            seqs.add(c);
-        }
-        
-        if(!manager.insertInsertRefseqs(seqs)) {
-            throw new Exception("Error occured while inserting into INSERTREFSEQ table.");
-        }
-    }
-    */
+     * public void importInsertRefseq(ImportTable table, Map insertidmap) throws Exception {
+     * List seqs = new ArrayList();
+     * List columns = table.getColumnNames();
+     * List contents = table.getColumnInfo();
+     * for(int n=0; n<contents.size(); n++) {
+     * InsertRefseq c = new InsertRefseq();
+     * List row = (List)contents.get(n);
+     * for(int i=0; i<columns.size(); i++) {
+     * String columnName = (String)columns.get(i);
+     * String columnInfo = (String)row.get(i);
+     * if("refseqid".equalsIgnoreCase(columnName)) {
+     * c.setRefseqid(((Integer)idmap.get(columnInfo)).intValue());
+     * }
+     * if("insertid".equalsIgnoreCase(columnName)) {
+     * c.setInsertid(((Integer)insertidmap.get(columnInfo)).intValue());
+     * }
+     * if("startonrefseq".equalsIgnoreCase(columnName)) {
+     * if(columnInfo != null)
+     * c.setStart(Integer.parseInt(columnInfo));
+     * }
+     * if("endonrefseq".equalsIgnoreCase(columnName)) {
+     * if(columnInfo != null)
+     * c.setStop(Integer.parseInt(columnInfo));
+     * }
+     * if("hasdiscrepancy".equalsIgnoreCase(columnName)) {
+     * c.setHasDiscrepancy(columnInfo);
+     * }
+     * if("discrepancy".equalsIgnoreCase(columnName)) {
+     * c.setDiscrepancy(columnInfo);
+     * }
+     * if("comments".equalsIgnoreCase(columnName)) {
+     * c.setComments(columnInfo);
+     * }
+     * }
+     * seqs.add(c);
+     * }
+     *
+     * if(!manager.insertInsertRefseqs(seqs)) {
+     * throw new Exception("Error occured while inserting into INSERTREFSEQ table.");
+     * }
+     * }
+     */
     
     public void importRefseqNameType(ImportTable table) throws Exception {
         List types = new ArrayList();
@@ -223,12 +223,17 @@ public class RefseqImporter {
                 String columnInfo = (String)row.get(i);
                 //System.out.println(columnName+"\t"+columnInfo);
                 if("refid".equalsIgnoreCase(columnName)) {
-                    isNew = (String)isNewMap.get(columnInfo);
-                    //System.out.println(isNew);
-                    if(isNew.equals(NEW)) {
-                        c.setRefseqid(((Integer)idmap.get(columnInfo)).intValue());
+                    if(isNewMap == null) {
+                        isNew = NEW;
+                        c.setRefseqid(Integer.parseInt(columnInfo));
                     } else {
-                        break;
+                        isNew = (String)isNewMap.get(columnInfo);
+                        //System.out.println(isNew);
+                        if(isNew.equals(NEW)) {
+                            c.setRefseqid(((Integer)idmap.get(columnInfo)).intValue());
+                        } else {
+                            break;
+                        }
                     }
                 }
                 if("nametype".equalsIgnoreCase(columnName)) {
@@ -243,7 +248,7 @@ public class RefseqImporter {
             }
             if(isNew.equals(NEW)) {
                 names.add(c);
-               // System.out.println("add: "+c.getRefseqid());
+                // System.out.println("add: "+c.getRefseqid());
             }
         }
         

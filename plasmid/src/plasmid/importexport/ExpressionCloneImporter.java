@@ -31,7 +31,11 @@ public class ExpressionCloneImporter {
     private static final String plasmidurl = "jdbc:oracle:thin:@127.0.0.1:2483:oradb";
     private static final String plasmidusername = "plasmid";
     private static final String plasmidpassword = "orvayraddod2";
-    
+    /**
+    private static final String plasmidurl = "jdbc:oracle:thin:@127.0.0.1:2483:devoradb";
+    private static final String plasmidusername = "devplasmid";
+    private static final String plasmidpassword = "quozubvuod3";
+    */
     public static final String VER_SEQ = "Insert was fully sequenced in parent vector";
     public static final String VER_PCR = "Verification by PCR";
     public static final String VER_FLORE = "Verification by fluorescence detection in cells";
@@ -57,7 +61,7 @@ public class ExpressionCloneImporter {
         " from clones c, cloningstrategy s, flexsequence f, clonevalidation v, clonestorage cs"+
         " where c.strategyid=s.strategyid and c.cloneid=v.cloneid(+)"+
         " and c.sequenceid=f.sequenceid and c.cloneid=cs.cloneid"+
-        " and c.plasmid='M' and c.strategyid in (10)"+
+        " and c.plasmid='M' and c.strategyid in (17)"+
         " and cs.storagetype='Working Storage'";
         
         if(status != null)

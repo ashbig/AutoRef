@@ -422,17 +422,17 @@ public class CloneGeneBuilder {
             System.out.println("Building DNAINSERT with reference sequences");
             builder.buildDnainsertWithRefseq(conn, lastInsertid);
             DatabaseTransaction.commit(conn);
-     */
+ */
             //System.out.println("Truncate tables");
             //builder.truncateTables(conn);
-            //System.out.println("Building CLONEGENBANK");
-           // builder.buildCloneGenbank(conn, lastCloneid);
+            System.out.println("Building CLONEGENBANK");
+            builder.buildCloneGenbank(conn, lastCloneid);
             System.out.println("Building CLONELOCUS");
             builder.buildCloneLocus(conn, lastCloneid);
-           // System.out.println("Building CLONESYMBOL");
-           // builder.buildCloneSymbol(conn, lastCloneid);
-           // System.out.println("Building CLONEGI");
-           // builder.buildCloneGi(conn, lastCloneid);
+            System.out.println("Building CLONESYMBOL");
+            builder.buildCloneSymbol(conn, lastCloneid);
+            System.out.println("Building CLONEGI");
+            builder.buildCloneGi(conn, lastCloneid);
             
             DatabaseTransaction.commit(conn);
         } catch (Exception ex) {

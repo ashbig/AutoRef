@@ -16,6 +16,7 @@ public class Sample {
     public static final String GOOD = "G";
     public static final String BAD = "B";
     public static final String ARCHIVE_GLYCEROL = "Archive Glycerol";
+    public static final String DEEP_ARCHIVE_GLYCEROL = "Deep Archive Glycerol";
     public static final String WORKING_GLYCEROL = "Working Glycerol";
     public static final String EMPTY = "Empty";
     public static final String CULTURE = "CULTURE";

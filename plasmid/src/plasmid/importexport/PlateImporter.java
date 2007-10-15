@@ -26,6 +26,13 @@ public class PlateImporter {
     }
     
     public void importPlateAndSample(ImportTable table, Map cloneidmap) throws Exception {
+        importPlateAndSample(table, cloneidmap,Sample.WORKING_GLYCEROL);
+    }
+    public void importPlateAndSample(ImportTable table, Map cloneidmap, String sampletype) throws Exception {
+        importPlateAndSample(table, cloneidmap, sampletype, Container.COSTAR_RD);
+    }
+    
+    public void importPlateAndSample(ImportTable table, Map cloneidmap, String sampletype, String containertype) throws Exception {
         DefTableManager m = new DefTableManager();
         int containerid = m.getMaxNumber("containerheader", "containerid", DatabaseTransaction.getInstance());
         if(containerid == -1) {
@@ -53,8 +60,8 @@ public class PlateImporter {
                     if(!currentLabel.equals(lastLabel)) {
                         c = new Container();
                         c.setContainerid(containerid);
-                        c.setType(Container.COSTAR_RD);
-                        c.setCapacity(Container.getCapacity(Container.COSTAR_RD));
+                        c.setType(containertype);
+                        c.setCapacity(Container.getCapacity(containertype));
                         c.setLocation(Location.FREEZER);
                         c.setLabel(columnInfo);
                         c.setOricontainerid(columnInfo);
@@ -66,7 +73,7 @@ public class PlateImporter {
                             s.setSampleid(sampleid);
                             s.setType(Sample.EMPTY);
                             s.setStatus(Sample.GOOD);
-                            s.setPositions(j+1);
+                            s.setPositions(j+1, Container.getRow(containertype), Container.getCol(containertype));
                             s.setContainerid(containerid);
                             s.setContainerlabel(c.getLabel());
                             c.addSample(s);
@@ -81,8 +88,8 @@ public class PlateImporter {
                 if("position".equalsIgnoreCase(columnName)) {
                     int p = Integer.parseInt(columnInfo);
                     currentSample = c.getSample(p);
-                    currentSample.setType(Sample.WORKING_GLYCEROL);
-                    currentSample.setPositions(p);
+                    currentSample.setType(sampletype);
+                    currentSample.setPositions(p, Container.getRow(containertype), Container.getCol(containertype));
                     
                 }
                 if("cloneid".equalsIgnoreCase(columnName)) {

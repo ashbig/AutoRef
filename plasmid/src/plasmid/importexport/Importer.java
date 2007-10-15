@@ -11,6 +11,8 @@ import java.util.*;
 import java.sql.*;
 import plasmid.Constants;
 import plasmid.database.*;
+import plasmid.coreobject.Sample;
+import plasmid.coreobject.Container;
 
 /**
  *
@@ -78,7 +80,12 @@ public class Importer {
     //public static final String filepath = "G:\\plasmid\\plate_outside_200704\\";
     //public static final String filepath = "G:\\plasmid\\Outside_200704\\";
     //public static final String filepath = "G:\\plasmid\\BC1000_1520_2007_04\\";
-    public static final String filepath = "G:\\plasmid\\Kinase_dead_200603\\plate\\";
+    //public static final String filepath = "G:\\plasmid\\Kinase_dead_200603\\plate\\";
+    //public static final String filepath = "G:\\plasmid\\Yeast_ref_200707\\";
+    //public static final String filepath = "G:\\plasmid\\Yeast_ref_flexsequenceidimport_200707\\";
+    //public static final String filepath = "G:\\plasmid\\Aventis_2007_08\\";
+    //public static final String filepath = "G:\\plasmid\\Aventis2_2007_08_plate\\";
+    public static final String filepath = "G:\\plasmid\\ArchivePlates\\";
    
     private List tables;
     private String error;
@@ -259,6 +266,11 @@ public class Importer {
                 if(table.getTableName().trim().equalsIgnoreCase(ImportTable.PLATE)) {
                     System.out.println("Importing PLATE");
                     plateImp.importPlateAndSample(table, cimp.getIdmap());
+                    //plateImp.importSample(table, cimp.getIdmap());
+                }
+                if(table.getTableName().trim().equalsIgnoreCase(ImportTable.PLATE_384)) {
+                    System.out.println("Importing Archive PLATE");
+                    plateImp.importPlateAndSample(table, cimp.getIdmap(), Sample.DEEP_ARCHIVE_GLYCEROL, Container.PLATE_384);
                     //plateImp.importSample(table, cimp.getIdmap());
                 }
             } catch (Exception ex) {

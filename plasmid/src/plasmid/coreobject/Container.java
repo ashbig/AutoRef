@@ -99,6 +99,54 @@ public class Container {
         return 0;
     }
     
+    public static int getRow(String type) {
+        if(COSTAR_FLT.equals(type))
+            return 8;
+        if(COSTAR_RD.equals(type))
+            return 8;
+        if(GREINER.equals(type))
+            return 8;
+        if(PCR_ON_MP16.equals(type))
+            return 8;
+        if(RESERVOIR_MP16.equals(type))
+            return 1;
+        if(RESERVOIR_PYR.equals(type))
+            return 8;
+        if(RK_RIPLATE_DW.equals(type))
+            return 8;
+        if(TUBE.equals(type))
+            return 1;
+        if(MICRONIC96TUBEMP16.equals(type))
+            return 8;
+        if(PLATE_384.equals(type))
+            return 16;
+        return 0;
+    }
+    
+    public static int getCol(String type) {
+        if(COSTAR_FLT.equals(type))
+            return 12;
+        if(COSTAR_RD.equals(type))
+            return 12;
+        if(GREINER.equals(type))
+            return 12;
+        if(PCR_ON_MP16.equals(type))
+            return 12;
+        if(RESERVOIR_MP16.equals(type))
+            return 1;
+        if(RESERVOIR_PYR.equals(type))
+            return 12;
+        if(RK_RIPLATE_DW.equals(type))
+            return 12;
+        if(TUBE.equals(type))
+            return 1;
+        if(MICRONIC96TUBEMP16.equals(type))
+            return 12;
+        if(PLATE_384.equals(type))
+            return 24;
+        return 0;
+    }
+    
     public int getSize() {
         if(samples == null)
             return 0;
