@@ -276,20 +276,7 @@ else if (user.getUserGroup().equals("System Admin")) user_level = SADMIN;
         </small>
     </td>
 </tr><%}%>
-   <% if (user_level >= CUSTOMER){%>    
-<td width="10%"> &nbsp;</td>     <td class="label">
-            <small>
-            <a href="/FLEX/BrowseFlex.jsp" target="display">View Available Clones</a>
-            </small>
-        </td>
-   </tr><%}%>
-   <% if (user_level >= CUSTOMER){%>    
-<td width="10%"> &nbsp;</td>     <td class="label">
-            <small>
-            <a href="/FLEX/GetSearchTerms.do" target="display">Search FLEXGene</a>
-            </small>
-        </td>
-   </tr><%}%>
+
     <% if (user_level >= CUSTOMER){%>    
 <td width="10%"> &nbsp;</td>     <td class="label">
         <small>
