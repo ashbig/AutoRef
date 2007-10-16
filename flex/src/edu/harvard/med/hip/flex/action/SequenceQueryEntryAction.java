@@ -33,7 +33,7 @@ import edu.harvard.med.hip.flex.form.*;
  * @author  dzuo
  * @version
  */
-public class SequenceQueryEntryAction extends CollaboratorAction {
+public class SequenceQueryEntryAction extends ResearcherAction {
     
     /**
      * Process the specified HTTP request, and create the corresponding HTTP

@@ -118,21 +118,7 @@
             <br>and other model organisms
     </ul>
 
-
-<p><b>FLEXGene Database</b><br>
-    <i>Human clones searchable by Genbank accession number, GI, locus ID 
-    or gene symbol</i></p>
-<ul>
-    <li>Any user, CLICK <a href="GetSearchTerms.do">HERE</a></li> TO SEARCH UP TO 30 TERMS
-    <li>Registered users, LOG IN FOR UNLIMITED SEARCHES</li>
-    <li>Not a member?  Click  <html:link forward="register" target="_top">here</html:link> to register
-</ul>
-
-<ul>
-    <li><a href="BrowseFlex.jsp">View available clones</a></li>
-</ul>
- 
-<br><br><i><b>To request clones, please contact <a href="mailto:jason_kramer@hms.harvard.edu">Jason Kramer</a></b></i>
+<br><br><i><b>To request clones, please go to <a href="http://plasmid.med.harvard.edu/PLASMID/">PlasmID</a></b></i>
 </td>
 <td>&nbsp;&nbsp</td>
           </tr>

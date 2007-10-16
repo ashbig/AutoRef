@@ -31,7 +31,7 @@ import edu.harvard.med.hip.flex.Constants;
  *
  * @author  DZuo
  */
-public class GetSearchTermsAction extends Action {
+public class GetSearchTermsAction extends ResearcherAction {
     
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
@@ -48,7 +48,7 @@ public class GetSearchTermsAction extends Action {
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet exception occurs
      */
-    public ActionForward perform(ActionMapping mapping,
+    public ActionForward flexPerform(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
     HttpServletResponse response)
