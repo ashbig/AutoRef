@@ -209,22 +209,24 @@ public String getTitle() {        return "Upload of information for third-party 
             file_structures = readDataMappingSchema();
   // array list of containers read from 1 file         
             readDataFromFiles(file_structures );
-            
-            // make sure that no container will be submitted for the second time: check by user 
-            // container_id , mgc project is different from others  
-            checkContainerLabelsForDublicates();
-            if (i_containers == null || i_containers.size() == 0 || i_flex_sequences==null
-                    || i_flex_sequences.size() == 0)
-                return;
-              
-            fillFlexSequenceData();
-            conn = DatabaseTransaction.getInstance().requestConnection();   
-            boolean isVerifed = verifyObjectsMapToNamingTables(conn );
-            if ( ! isVerifed )
+            synchronized (this)
             {
-               throw new Exception();
+                // make sure that no container will be submitted for the second time: check by user 
+                // container_id , mgc project is different from others  
+                checkContainerLabelsForDublicates();
+                if (i_containers == null || i_containers.size() == 0 || i_flex_sequences==null
+                        || i_flex_sequences.size() == 0)
+                    return;
+
+                fillFlexSequenceData();
+                conn = DatabaseTransaction.getInstance().requestConnection();   
+                boolean isVerifed = verifyObjectsMapToNamingTables(conn );
+                if ( ! isVerifed )
+                {
+                   throw new Exception();
+                }
+                insertObjects(conn);
             }
-            insertObjects(conn);
             // prepare final messages
             ImportContainer container = null;
             Iterator iter = i_containers.values().iterator();
