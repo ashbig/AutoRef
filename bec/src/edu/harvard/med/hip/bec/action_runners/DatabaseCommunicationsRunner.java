@@ -85,10 +85,12 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
                         SAXParser parser = new SAXParser();
                         parser.setContentHandler(SAXHandler);
                         parser.setErrorHandler(SAXHandler);
+                      
                         parser.parse(new org.xml.sax.InputSource(m_input_stream));
                         ArrayList v= SAXHandler.getBioVectors();
                         for (int count = 0; count < v.size();count++)
                         {
+                            
                             ((BioVector)v.get(count)).insert(conn);
                         }
                         conn.commit();
@@ -311,6 +313,8 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
        RefSequence refsequence = new RefSequence( clone_description.getBecRefSequenceId());
        BioLinker linker5 = cloning_strategy.getLinker5();
         BioLinker linker3 = cloning_strategy.getLinker3();
+        
+        // new version : define cds start / stop based on aligment
        int cds_start = linker5.getSequence().length();
         int cds_stop = linker5.getSequence().length() +  refsequence.getCodingSequence().length();
         BaseSequence base_refsequence =  new BaseSequence(linker5.getSequence() + refsequence.getCodingSequence()+linker3.getSequence(), BaseSequence.BASE_SEQUENCE );
@@ -319,10 +323,15 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
            //check coverage
           Contig contig = new Contig();
           contig.setSequence(sequence.getText().toUpperCase());
-              
+    
+                  
+                  
        int result = contig.checkForCoverage(clone_description.getCloneId(), cds_start,  cds_stop,  base_refsequence);
-       submitSequence( conn,    sequence.getText(),  clone_description,  cds_start,  cds_stop,      result);  
-    }
+      // submitSequence( conn,    sequence.getText(),  clone_description,  cds_start,  cds_stop,      result);  
+       // new version : define cds start / stop based on aligment
+      submitSequence( conn,    sequence.getText(),  clone_description,  contig.getCdsStart(),  contig.getCdsStop(),      result);  
+      
+   }
        
         
     private void            submitSequence(Connection conn,   String sequence,
@@ -879,18 +888,18 @@ private boolean isCloneCollectionNameExists(CloneCollection collection, Connecti
         try
         {
 
-            user = AccessManager.getInstance().getUser("unix","unix");
+            user = AccessManager.getInstance().getUser("test","test");
             BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
             sysProps.verifyApplicationSettings();
             DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
             DatabaseCommunicationsRunner runner = new DatabaseCommunicationsRunner();
             runner.setUser(user);
-            File f = new File("C:\\bio\\clone_collection.xml");
-           //  File f = new File("C:\\bio\\fixed_refseq_1.xml");
+           // File f = new File("c:\\tmp\\container.xml");
+            File f = new File("C:\\bio\\Document1.txt");
            //  runner.setProcessType( -Constants.PROCESS_SUBMIT_REFERENCE_SEQUENCES);
             InputStream input = new FileInputStream(f);
             runner.setInputStream(input);
-            runner.setProcessType( -Constants.PROCESS_SUBMIT_CLONE_COLLECTION);      
+            runner.setProcessType( -Constants.PROCESS_SUBMIT_CLONE_SEQUENCES);      
             runner.run();
       
         }
