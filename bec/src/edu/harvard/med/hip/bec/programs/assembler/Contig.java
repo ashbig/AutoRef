@@ -505,6 +505,8 @@ public class Contig
             }
           
         }
+        // check here
+        m_cds_stop++;
         return elements;
     }
     protected int setCoverageStatus(SequenceElement[] start_stop)
