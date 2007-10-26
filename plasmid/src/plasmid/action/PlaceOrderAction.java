@@ -183,11 +183,7 @@ public class PlaceOrderAction extends UserAction {
         if(errors.empty()) {
             String to = user.getEmail();
             String subject = "order "+orderid;
-            String text = "Thank you for placing a clone request at PlasmID. "+
-            "Clones are sent as glycerol stocks (most U.S. orders) "+
-            "or as DNA spotted to paper (most overseas orders). "+
-            "The turn-around time is currently about five to ten business days. "+
-            "Large orders may take additional time.\n";
+            String text = "Thank you for placing a clone request at PlasmID. Clones are sent as glycerol stocks (most U.S. orders) or as purified DNA (most overseas orders). The turn-around time is currently two to four weeks (full collections may take additional time).\n";
             text += "\n"+manager.formOrderText(order);
             text += "\n"+"Please sign in at PlasmID to view order status, "+
             "track your shipment, download clone information, cancel a request, "+
