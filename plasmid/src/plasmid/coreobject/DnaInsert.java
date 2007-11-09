@@ -120,7 +120,11 @@ public class DnaInsert {
     public String getSequence() {return sequence;}
     public String getRegion() {return region;}
     public String getAnnotation() {return annotation;}
-    
+    public String getTargetseqidForNCBI() {
+        if(targetseqid == null)
+            return targetgenbank;
+        return targetseqid;
+    }
     public void setInsertid(int id) {this.insertid = id;}
     public void setOrder(int order) {this.order = order;}
     public void setSize(int i) {this.size = i;}

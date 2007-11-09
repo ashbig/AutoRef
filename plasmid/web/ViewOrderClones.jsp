@@ -87,7 +87,7 @@
         <td><bean:write name="insert" property="name"/></td>
         <td><bean:write name="insert" property="annotation"/></td>  
         <td><bean:write name="insert" property="description"/></td>
-        <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=nucleotide&val=<bean:write name="insert" property="targetseqid"/>"><bean:write name="insert" property="targetgenbank"/></a></td>
+        <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=nucleotide&val=<bean:write name="insert" property="targetseqidForNCBI"/>"><bean:write name="insert" property="targetgenbank"/></a></td>
         <td><bean:write name="insert" property="hasmutation"/></td>
         <td><bean:write name="insert" property="hasdiscrepancy"/></td>
         <td><bean:write name="insert" property="format"/></td>

@@ -142,7 +142,7 @@
     </logic:equal>
     <td class="tableinfo"><bean:write name="insert" property="name"/></td>
     <td class="tableinfo"><bean:write name="insert" property="description"/></td>
-    <td class="tableinfo"><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=nucleotide&val=<bean:write name="insert" property="targetseqid"/>"><bean:write name="insert" property="targetgenbank"/></a></td>
+    <td class="tableinfo"><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=nucleotide&val=<bean:write name="insert" property="targetseqidForNCBI"/>"><bean:write name="insert" property="targetgenbank"/></a></td>
     <td class="tableinfo"><bean:write name="insert" property="annotation"/></td>
   </tr>
 </logic:iterate>
