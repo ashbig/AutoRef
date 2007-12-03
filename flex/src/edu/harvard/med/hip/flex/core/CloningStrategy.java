@@ -343,6 +343,10 @@ public class CloningStrategy {
             return GATEWAY_EXPRESSION_pDEST_GST;
         }
         
+        if(workflowid == Workflow.TRANSFER_TO_EXP_pLENTI62_V5_Dest) {
+            return GATEWAY_EXPRESSION_pLENTI62_V5_Dest;
+        }
+        
         return 0;
     }
     
