@@ -17,6 +17,7 @@ public class CloneOrder {
     public static final String ALL = "All";
     public static final String PENDING = "Pending";
     public static final String PENDING_MTA = "Pending MTA";
+    public static final String MTA_RECEIVED = "MTA Received";
     public static final String INPROCESS = "In Process";
     public static final String SHIPPED = "Shipped";
     public static final String PARTIALLY_SHIPPED = "Partially Shipped";
@@ -26,6 +27,7 @@ public class CloneOrder {
     public static final String allstatus[] = {
         CloneOrder.PENDING, 
         CloneOrder.PENDING_MTA,
+        CloneOrder.MTA_RECEIVED,
         CloneOrder.CANCEL, 
         CloneOrder.INPROCESS, 
         CloneOrder.PARTIALLY_SHIPPED,

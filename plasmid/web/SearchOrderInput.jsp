@@ -58,6 +58,7 @@
             <html:option value="<%=CloneOrder.ALL%>"/>
             <html:option value="<%=CloneOrder.PENDING%>"/>
             <html:option value="<%=CloneOrder.PENDING_MTA%>"/>
+            <html:option value="<%=CloneOrder.MTA_RECEIVED%>"/>
             <html:option value="<%=CloneOrder.INPROCESS%>"/>
             <html:option value="<%=CloneOrder.SHIPPED%>"/>
             <html:option value="<%=CloneOrder.CANCEL%>"/>
