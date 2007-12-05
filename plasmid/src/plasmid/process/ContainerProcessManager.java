@@ -78,7 +78,8 @@ public class ContainerProcessManager {
         for(int i=0; i<samples.size(); i++) {
             Sample sample = (Sample)samples.get(i);
             Clone c = sample.getClone();
-            clones.add(c);
+            if(c != null)
+                clones.add(c);
         }
         
         Iterator iter = clones.iterator();
