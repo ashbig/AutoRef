@@ -34,6 +34,21 @@ public class ImportContainer
     private     ArrayList           m_additional_info = null;
     private     int[]           i_submitted_samples = null;
     private     ArrayList       m_authors = null;
+    
+    
+      public String toString()
+    {
+        StringBuffer seq = new StringBuffer();
+        seq.append("ID: "+m_id +"\t");
+        seq.append("Type: "+m_type+"\t");
+        seq.append("Label: "+m_label+"\t");
+        for (int count =0; count < m_additional_info.size(); count++)
+        {
+            seq.append( (PublicInfoItem) m_additional_info.get(count)+"\t");
+        }
+        return seq.toString();
+     
+    }
     /** Creates a new instance of ImportContainer */
     public ImportContainer(String      type, String label, int number_of_samples_per_container)   
     {   
@@ -162,10 +177,13 @@ public class ImportContainer
            try
            {
                sample = (ImportSample) m_samples.get(count);
-                ImportConstruct.insert(conn, projectid,  workflowid,
-                    sample.getConstructId(), Integer.parseInt( sample.getSequenceId()), 
-                    sample.getConstructType() , sample.getConstructSize() );
-                 sample.insert(conn, m_id, errors);
+               if (  sample.getType().equals(Sample.ISOLATE))
+               {
+                    ImportConstruct.insert(conn, projectid,  workflowid,
+                        sample.getConstructId(), Integer.parseInt( sample.getSequenceId()), 
+                        sample.getConstructType() , sample.getConstructSize() );
+               }
+               sample.insert(conn, m_id, errors);
            }
             catch(Exception e)
             {
@@ -226,7 +244,7 @@ public class ImportContainer
          for (int count = 0; count < m_samples.size(); count++)
          {
              sample = (ImportSample) m_samples.get(count);
-             if ( sample.getClone().getCloningStrategyId() == -1)
+             if ( sample.getClone() != null && sample.getClone().getCloningStrategyId() == -1 )
              {
                  sample.getClone().assignCloningStrategyID( cloning_strategies);
                  cloning_strategy_id = sample.getClone().getCloningStrategyId( );
@@ -234,6 +252,60 @@ public class ImportContainer
                  
              }
          }
+     }
+     
+     
+     public void sortSamplesByPosition()
+     {
+          Collections.sort(this.getSamples(), new Comparator()
+          {
+                public int compare(Object o1, Object o2) 
+                {
+                    return ((ImportSample) o1).getPosition() - ((ImportSample) o2).getPosition();
+                }
+                /** Note: this comparator imposes orderings that are
+                 * inconsistent with equals. */
+                public boolean equals(java.lang.Object obj)
+                {      return false;  }
+                // compare
+            } );
+     }
+     public  static void printContainers(HashMap containers, HashMap flex_sequences)
+     {
+         ImportContainer container = null;
+          Iterator iter =  containers.values().iterator();
+           while(iter.hasNext())
+            {
+                container = (ImportContainer) iter.next();
+                container.print(           flex_sequences);
+             }
+     }
+     
+     
+     public  void print( HashMap          i_flex_sequences)
+     {
+          ImportSample sample = null;
+        System.out.println(this.toString());
+        
+        for (int count = 0; count < m_samples.size(); count++)
+        {
+             sample = (ImportSample) m_samples.get(count);
+             System.out.println(sample.toString("\t"));
+          }
+       /*    Iterator iter = i_flex_sequences.keySet().iterator (  ) ; 
+        HashMap  old_new_sequence_id = new HashMap();
+        String flex_sequence_key = null;
+         while ( iter.hasNext (  )  ) 
+         {  
+             flex_sequence_key = (String) iter.next();
+          //   System.out.println(flex_sequence_key);
+             if ( !( i_flex_sequences.get(flex_sequence_key) instanceof ImportFlexSequence)  )
+                 continue;
+             flex_sequence =  (ImportFlexSequence)i_flex_sequences.get(flex_sequence_key);
+             flex_sequence.insert(conn, m_error_messages);
+             i_flex_sequences.put( flex_sequence_key, String.valueOf(flex_sequence.getId()));
+         }*/
+      
      }
      
     

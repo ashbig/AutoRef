@@ -70,12 +70,20 @@ public static final String      CLONE_STATUS_FAILED_BY_SEQUENCE_VALIDATION ="FAI
         m_position = position;
         m_additional_info = new ArrayList();
     }
+    
+    public ImportSample(int position, String type) 
+    {
+        m_position = position;
+        m_type = type;
+        m_additional_info = new ArrayList();
+    }
      public ImportSample() 
     {
        m_additional_info = new ArrayList();
     }
     
     public int          getPosition(){ return m_position;}
+    public String       getType(){ return m_type;}
     public int          getId() throws Exception{  if (m_id == -1)        m_id = FlexIDGenerator.getID("sampleid");return m_id;}
     public String       getSequenceId(){ return m_sequence_id;}
     public int          getConstructId() throws Exception{  if (m_construct_id == -1)        m_construct_id = FlexIDGenerator.getID("constructid"); return m_construct_id;}
@@ -133,19 +141,21 @@ public static final String      CLONE_STATUS_FAILED_BY_SEQUENCE_VALIDATION ="FAI
          return true;
     }
     
-    public String toString()
+     public String toString() {return this.toString("\n");}
+    
+    public String toString(String delim)
     {
         StringBuffer seq = new StringBuffer();
-        seq.append("ID: "+m_id +"\n");
-        seq.append("Status: "+m_status+"\n");
-        seq.append("Position: "+m_position+"\n");
-        seq.append("Construct ID: "+m_containerid+"\n");
-        seq.append("Sequence ID: "+m_sequence_id+"\n");
-        seq.append("Construct Type: "+m_construct_type+"\n");
+        seq.append("ID: "+m_id +delim);
+        seq.append("Status: "+m_status+delim);
+        seq.append("Position: "+m_position+delim);
+        seq.append("Construct ID: "+m_containerid+delim);
+        seq.append("Sequence ID: "+m_sequence_id+delim);
+        seq.append("Construct Type: "+m_construct_type+delim);
         
         for (int count =0; count < m_additional_info.size(); count++)
         {
-            seq.append( (PublicInfoItem) m_additional_info.get(count)+"\n");
+            seq.append( (PublicInfoItem) m_additional_info.get(count)+delim);
         }
         return seq.toString();
      
@@ -156,12 +166,23 @@ public static final String      CLONE_STATUS_FAILED_BY_SEQUENCE_VALIDATION ="FAI
      {
            int is_addition_info = PublicInfoItem.isAnyPublicInfoForSubmission(m_additional_info) ? 1:0;
              if (m_id == -1)        m_id = FlexIDGenerator.getID("sampleid");
-          if(m_construct_id == -1) m_construct_id =  FlexIDGenerator.getID("constructid");
-         
-           String sql = "insert into sample (sampleid, sampletype, containerid, containerposition,"
-          +"       constructid, status_gb, additionalinfo)"
-         + "values ("+ m_id +",'"+ m_type +"',"+containerid+","+m_position
-        + ","+m_construct_id + ",'"+m_status+"',"+is_addition_info+")";
+         String sql = null;
+           if ( m_type.equals( Sample.ISOLATE))
+           {
+               if(m_construct_id == -1) m_construct_id =  FlexIDGenerator.getID("constructid");
+        
+               sql = "insert into sample (sampleid, sampletype, containerid, containerposition,"
+                  +"       constructid, status_gb, additionalinfo)"
+                 + "values ("+ m_id +",'"+ m_type +"',"+containerid+","+m_position
+                + ","+m_construct_id + ",'"+m_status+"',"+is_addition_info+")";
+           }
+           else 
+           {
+              sql = "insert into sample (sampleid, sampletype, containerid, containerposition,"
+                  +"    status_gb, additionalinfo)"
+                 + "values ("+ m_id +",'"+ m_type +"',"+containerid+","+m_position
+                + ",'"+m_status+"',"+is_addition_info+")";
+           }
        
         DatabaseTransaction.executeUpdate(sql,conn);
             

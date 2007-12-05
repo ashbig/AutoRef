@@ -14,8 +14,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.9 $
- * $Date: 2007-09-19 15:42:25 $
+ * $Revision: 1.10 $
+ * $Date: 2007-12-05 16:59:18 $
  * $Author: Elena $
  *
  ******************************************************************************
@@ -57,7 +57,7 @@ import edu.harvard.med.hip.flex.infoimport.coreobjectsforimport.*;
  * Action called when requesting to view the process history of a container
  *
  * @author     $Author: Elena $
- * @version    $Revision: 1.9 $ $Date: 2007-09-19 15:42:25 $
+ * @version    $Revision: 1.10 $ $Date: 2007-12-05 16:59:18 $
  */
 
 public class ViewContainerProcessHistoryAction extends CollaboratorAction
@@ -92,7 +92,7 @@ public class ViewContainerProcessHistoryAction extends CollaboratorAction
          */
         String containerIdS = request.getParameter(Constants.CONTAINER_ID_KEY);
         String containerBarcode =
-        request.getParameter(Constants.CONTAINER_BARCODE_KEY);
+        request.getParameter(Constants.CONTAINER_BARCODE_KEY).trim();
         //containerBarcode = containerBarcode.toUpperCase();
       
    
@@ -109,7 +109,7 @@ public class ViewContainerProcessHistoryAction extends CollaboratorAction
             } 
             else if(containerBarcode!=null && containerBarcode.length() !=0)
             {
-                System.out.println("containerBarcode: "+containerBarcode);
+             //   System.out.println("containerBarcode: "+containerBarcode);
                 List containerList = Container.findContainersFromView(containerBarcode);
                 if(containerList.size() >0)
                 {

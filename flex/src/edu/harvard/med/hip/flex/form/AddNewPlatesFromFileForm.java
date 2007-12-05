@@ -52,6 +52,7 @@ public class AddNewPlatesFromFileForm    extends AddItemsForm
    private boolean isFillInCLoneTables= false;
    private boolean isGetFLEXSequenceFromNCBI = false;
    private boolean isFLEXSequenceIDGI = false;
+   private boolean isInsertControlNegativeForEmptyWell = false;
   
    private FormFile mapFile = null;
    private FormFile inputGene= null;
@@ -82,12 +83,14 @@ public class AddNewPlatesFromFileForm    extends AddItemsForm
     public boolean 		getIsCheckTargetSequenceInFLEX(){ return isCheckTargetSequenceInFLEX   ;}
     public boolean 		getIsFillInCLoneTables(){ return isFillInCLoneTables   ;}
     public boolean 		getIsGetFLEXSequenceFromNCBI (){ return isGetFLEXSequenceFromNCBI;}
-   public boolean 		getIsFLEXSequenceIDGI (){ return isFLEXSequenceIDGI;}
-  
+    public boolean 		getIsFLEXSequenceIDGI (){ return isFLEXSequenceIDGI;}
+    public boolean                 getIsInsertControlNegativeForEmptyWell(){ return isInsertControlNegativeForEmptyWell ;}
+
     public FormFile 		getMapFile(){ return mapFile    ;}
     public FormFile 		getInputGene(){ return inputGene   ;}
     public FormFile 		getInputAuthor(){ return inputAuthor   ;}
     public FormFile 		getInputAuthorConnection(){ return inputAuthorConnection;}
+ 
 
     public void             setIsPutOnQueue(boolean v){   isPutOnQueue    = v;}
     public void             setIsDefineConstructSizeBySequence(boolean v) {   isDefineConstructSizeBySequence   = v;}
@@ -95,7 +98,7 @@ public class AddNewPlatesFromFileForm    extends AddItemsForm
     public void             setIsFillInCLoneTables(boolean v){   isFillInCLoneTables   = v;}
     public void              setIsGetFLEXSequenceFromNCBI (boolean v){   isGetFLEXSequenceFromNCBI = v;}
    public void              setIsFLEXSequenceIDGI (boolean v){   isFLEXSequenceIDGI = v;}
-  
+  public void              setIsInsertControlNegativeForEmptyWell(boolean v){   isInsertControlNegativeForEmptyWell = v;}
        
    public void 		setMapFile(FormFile v){   mapFile    = v;}
     public void 		setInputGene(FormFile v){   inputGene   = v;}

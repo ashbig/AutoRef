@@ -125,7 +125,7 @@ public class AddNewPlatesFromFileAction extends WorkflowAction
                 importer.setPlatesLocation(plateLocation);   
                 importer.isGetFLEXSequenceFromNCBI(requestForm.getIsGetFLEXSequenceFromNCBI() );
                 importer.isFLEXSequenceIDGI(requestForm.getIsFLEXSequenceIDGI());
-
+                importer.isInsertControlNegativeForEmptyWell(requestForm.getIsInsertControlNegativeForEmptyWell());
 
                   if(inputSequence ==null && inputGene==null && inputAuthor==null)
                   {

@@ -32,14 +32,14 @@ public class PickColonyForm extends ProjectWorkflowForm
     private String agarPlateF1 = null;
     private String agarPlateC1 = null;
     
-    private int agarF1Location;
-    private int agarC1Location;
+    private int agarF1Location = Location.CODE_WORKBENCH;
+    private int agarC1Location = Location.CODE_WORKBENCH;
     private int [] destLocations;
     private String subProtocolName = null;
     
     private String pickingMethod = "nonInterleaved";
     private String isSeqPlates = "Yes";
-    private int colonynum = 4;
+    private int colonynum = 1;
     
     /**
      * Set the processname to the given value.
@@ -214,7 +214,9 @@ public class PickColonyForm extends ProjectWorkflowForm
         subProtocolName = null;
         pickingMethod = "nonInterleaved";
         isSeqPlates = "Yes";
-        colonynum = 4;
+        colonynum = 1;
+        agarF1Location = Location.CODE_WORKBENCH;
+        agarC1Location = Location.CODE_WORKBENCH;
     }
     
     /**

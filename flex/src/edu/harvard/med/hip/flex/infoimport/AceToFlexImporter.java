@@ -47,7 +47,7 @@ public class AceToFlexImporter extends ImportRunner
          Connection  ace_connection = null;
       
          ArrayList  clone_ids_for_sql =   prepareItemsListForSQL(5);
-         System.out.println(clone_ids_for_sql.size());
+        // System.out.println(clone_ids_for_sql.size());
          if (clone_ids_for_sql == null || clone_ids_for_sql.size() < 1)
          {
              m_error_messages.add("No clone submitted for transfer.");
@@ -274,7 +274,7 @@ public class AceToFlexImporter extends ImportRunner
             try
             {
                 clone_data = (CloneSequenceDataForFLEXSubmission) clone_data_for_submission.get(count);
-                 System.out.println("start update "+clone_data.getCloneID());
+             //    System.out.println("start update "+clone_data.getCloneID());
                     
                 
                 if ( isCloneDataHaveBeenTransfered(clone_data.getCloneID(),stmt_clone_update_status) )
