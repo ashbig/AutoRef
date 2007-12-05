@@ -8,10 +8,7 @@
 
 package edu.harvard.med.hip.flex.action;
 
-import java.util.LinkedList;
-import java.util.MissingResourceException;
-import java.util.Vector;
-import java.util.Enumeration;
+import java.util.*;
 import java.sql.*;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
@@ -141,6 +138,17 @@ public class EnterSourcePlateAction extends ResearcherAction {
             
             // Get all the locations.
             Vector locationList = Location.getLocations();
+            //rearrange by puttin 'WORKBENCH' as first
+            ArrayList locationList_ordered = new ArrayList(locationList.size());
+            for ( int count = 0; count < locationList.size(); count++)
+            {
+                if ( ((Location)locationList.get(count)).getType().intern()== Location.WORKBENCH)
+                {
+                     locationList_ordered.add(0,locationList.get(count));     
+                }
+                else
+                   locationList_ordered.add(locationList.get(count));     
+            }
             
             // Get the subprotocol name.
             SubProtocol subprotocol = getSubProtocol(form);
@@ -169,7 +177,7 @@ public class EnterSourcePlateAction extends ResearcherAction {
             storeOthersInRequest(request, form);
             request.getSession().setAttribute("EnterSourcePlateAction.newContainers", newContainers);
             request.getSession().setAttribute("EnterSourcePlateAction.sampleLineageSet", sampleLineageSet);
-            request.getSession().setAttribute("EnterSourcePlateAction.locations", locationList);
+            request.getSession().setAttribute("EnterSourcePlateAction.locations", locationList_ordered);
             request.getSession().setAttribute("EnterSourcePlateAction.items", items);
             request.getSession().setAttribute("EnterSourcePlateAction.subprotocol", subprotocol);
             request.setAttribute("workflowid", new Integer(workflowid));
