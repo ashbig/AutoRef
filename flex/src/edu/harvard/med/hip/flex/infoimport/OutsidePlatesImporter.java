@@ -168,6 +168,7 @@ private boolean         m_is_define_construct_type_by_nuclsequence = false;
 private boolean         m_is_put_on_queue = false;
 private boolean         m_is_get_flexsequence_from_ncbi = false;
 private boolean         m_is_flexsequence_gi = false;
+private boolean         m_is_insert_control_negative_for_empty_well = true;
 
 
 private String          m_sample_biotype = "LI";// from processprotocol
@@ -191,7 +192,7 @@ public void                 isPutOnQueue(boolean v){ m_is_put_on_queue = v;}
 public void              setSampleBioType(String v){ m_sample_biotype = v;}   
 public void              isGetFLEXSequenceFromNCBI(boolean v){ m_is_get_flexsequence_from_ncbi= v;}
 public void              isFLEXSequenceIDGI(boolean v) { m_is_flexsequence_gi = v;}   
-    
+public void             isInsertControlNegativeForEmptyWell(boolean v){ m_is_insert_control_negative_for_empty_well= v;}
 
 
 public String getTitle() {        return "Upload of information for third-party containers into FLEX.";    }
@@ -209,6 +210,10 @@ public String getTitle() {        return "Upload of information for third-party 
             file_structures = readDataMappingSchema();
   // array list of containers read from 1 file         
             readDataFromFiles(file_structures );
+            
+            if ( m_is_insert_control_negative_for_empty_well)
+                         fellInEmptyWells();
+          //  ImportContainer.printContainers( i_containers,i_flex_sequences);
             synchronized (this)
             {
                 // make sure that no container will be submitted for the second time: check by user 
@@ -255,6 +260,42 @@ public String getTitle() {        return "Upload of information for third-party 
       //---------------------------------------------------------------------------------//
     //                          Private Methods
     //---------------------------------------------------------------------------------//
+  private void fellInEmptyWells() throws Exception
+  {
+      ImportSample sample = null; ImportContainer cur_container  =null;
+      int prev_sample_position = 1; 
+       if (i_containers == null || i_containers.size() == 0)                return;
+      Iterator  iter = i_containers.keySet().iterator (  ) ; 
+        
+         while ( iter.hasNext (  )  ) 
+         { 
+             String key = (String)iter.next();
+             int mis_samples = 0;
+             cur_container =  (ImportContainer)i_containers.get(key);
+                cur_container.sortSamplesByPosition();
+             ArrayList control_samples = new ArrayList(); ;
+             for ( int sample_count = 0; sample_count < cur_container.getSamples().size(); sample_count++)
+             {
+                  sample = (ImportSample)cur_container.getSamples().get(sample_count);
+                //fill in samples                   
+                  if ( prev_sample_position < sample.getPosition()-1  )
+                  {
+                      for ( mis_samples = prev_sample_position + 1; mis_samples <  sample.getPosition() ; mis_samples++)
+                      {
+                          control_samples.add(new ImportSample(mis_samples, Sample.CONTROL_NEGATIVE));
+                      }
+                 }
+                 prev_sample_position=sample.getPosition();
+                  
+             }
+             for (int count = 0; count < control_samples.size(); count++)
+             {
+                 cur_container.addSample( (ImportSample) control_samples.get(count));
+             }
+        }
+  } 
+  
+  
   
     private void checkContainerLabelsForDublicates() throws Exception
     {
@@ -398,7 +439,7 @@ public String getTitle() {        return "Upload of information for third-party 
                      }
                 
             }
-             System.out.println("a");
+        //     System.out.println("a");
     }
     /*
     private HashMap    createSampleHashMap()
@@ -449,7 +490,7 @@ public String getTitle() {        return "Upload of information for third-party 
       {
           String sql = "select sequenceid, namevalue from name where nametype='GI' and namevalue in (";
           StringBuffer gis_for_sql = new StringBuffer();
-          Hashtable gis = new Hashtable(); // key - GI, value - originall key
+          Hashtable gis = new Hashtable(100); // key - GI, value - originall key
           String gi = null;ImportFlexSequence sequence = null; String key = null;
           String send_sql = null;
           // get GI for extracted sequences
@@ -543,6 +584,7 @@ public String getTitle() {        return "Upload of information for third-party 
              for (int count = 0; count < container.getSamples().size(); count++)
              {
                 sample =(ImportSample)container.getSamples().get(count) ;
+                if (! sample.getType().equals(Sample.ISOLATE)) continue;
                 sequence_id = (String) i_flex_sequences.get(sample.getSequenceId());
                 if ( sequence_id == null)
                 {
@@ -702,7 +744,7 @@ public String getTitle() {        return "Upload of information for third-party 
                             i_flex_sequences.put(key, sw);
                        else
                             i_flex_sequences.put(key, null);
-                        System.out.println("finished "+urlString);
+                      //  System.out.println("finished "+urlString);
                  
                    }
                    catch(Exception e)
@@ -843,15 +885,17 @@ public String getTitle() {        return "Upload of information for third-party 
          // insert flex_sequences 
         Iterator iter = i_flex_sequences.keySet().iterator (  ) ; 
         HashMap  old_new_sequence_id = new HashMap();
-        String flex_sequence_key = null;
+        String flex_sequence_key = null;                                                                                                                                                                                                                                                               
          while ( iter.hasNext (  )  ) 
          {  
              flex_sequence_key = (String) iter.next();
+          //   System.out.println(flex_sequence_key);
              if ( !( i_flex_sequences.get(flex_sequence_key) instanceof ImportFlexSequence)  )
                  continue;
              flex_sequence =  (ImportFlexSequence)i_flex_sequences.get(flex_sequence_key);
              flex_sequence.insert(conn, m_error_messages);
              i_flex_sequences.put( flex_sequence_key, String.valueOf(flex_sequence.getId()));
+             //System.out.println(flex_sequence_key);
          }
          setFlexSequenceIdsForSamples( );
         iter = i_containers.keySet().iterator (  ) ; 

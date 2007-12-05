@@ -191,24 +191,20 @@ public abstract class ImportRunner implements Runnable
      {
          try
          {
-             File fl = null;
-             String time_stamp = String.valueOf( System.currentTimeMillis());
-             String temp_path = FlexProperties.getInstance().getProperty("tmp");
-             
+            // File fl = null;
+            // String time_stamp = String.valueOf( System.currentTimeMillis());
+           //  String temp_path = FlexProperties.getInstance().getProperty("tmp");
+             String from =  FlexProperties.getInstance().getProperty("HIP_FROM_EMAIL_ADDRESS");
+             String msg = null;
              System.out.println("m_error_messages "+ m_error_messages.size() +" m_process_messages "+ m_process_messages.size() );
             if (m_error_messages.size() > 0)
             {
-                fl = ImportRunner.writeFile( m_error_messages.toArray(), temp_path+"ErrorMessages_"+time_stamp+".txt", "\n");
-                 System.out.println("m_error_messages "+ fl.getName() );
-       
-                Mailer.sendMessageWithAttachedFile( fl, m_user.getUserEmail(),
-                        null, "Error messages for process "+ title,   "Error messages for process "+msgText);
-             
+                msg = Algorithms.convertStringArrayToString(m_error_messages,"\n");
+                Mailer.sendMessage(m_user.getUserEmail(), from, from, title, msg);  
+         
             } 
-            fl = ImportRunner.writeFile( m_process_messages.toArray(), temp_path+"ProcessMessages_"+time_stamp+".txt", "\n");
-            Mailer.sendMessageWithAttachedFile( fl, m_user.getUserEmail(),
-                        null, title,  msgText);
-            
+            msg = Algorithms.convertStringArrayToString(m_process_messages,"\n");
+            Mailer.sendMessage(m_user.getUserEmail(), from, from, title, msg);  
                     
          }
          catch(Exception e)         {         }
