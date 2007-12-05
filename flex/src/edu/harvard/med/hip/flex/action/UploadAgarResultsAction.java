@@ -228,6 +228,11 @@ public class UploadAgarResultsAction extends ResearcherAction {
                 new Result(process,sample,Result.AGAR_PLATE_TYPE,(new Integer(found)).toString());
                 try {
                     result.insert(conn);
+                    // for PSI project update cloneid to 0
+                    if ( project.getName().intern() == Project.PROJECT_NAME_PSI && found == 0 && sample.getCloneid() > 0 ) 
+                    {
+                        sample.updatePropery( conn, "CLONEID","null", 1);
+                    }
                 } catch (FlexDatabaseException ex) {
                     errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.database.error", ex.getMessage()));
                     saveErrors(request, errors);
