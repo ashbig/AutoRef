@@ -26,6 +26,7 @@
       boolean isFillInCLoneTables = false;
       boolean   isGetFLEXSequenceFromNCBI=false;
       boolean isOtherProject = false;
+      boolean isInsertControlNegativeForEmptyWell= false;
       if(Project.PROJECT_NAME_MGC.equals(projectname))
       {
             isCheckTargetSequenceInFLEX =true;
@@ -33,7 +34,7 @@
       else  if(Project.PROJECT_NAME_ORF.equals(projectname))
       {
             isFillInCLoneTables=true;
-           
+           isInsertControlNegativeForEmptyWell=true;
             isGetFLEXSequenceFromNCBI=true;
             isCheckTargetSequenceInFLEX =true;
       }
@@ -41,6 +42,7 @@
        {
            isPutOnQueue = true;
            isDefineConstructSizeBySequence = true;
+           isInsertControlNegativeForEmptyWell= true;
            isFillInCLoneTables = true;
       }
       else
@@ -140,8 +142,14 @@
                                                                                                      </td>  </tr>
         <tr>   <td  class="prompt" >Create clone record for each sample </td>  
             <td>     <input type="radio" name="isFillInCLoneTables" value="true" <% if(isFillInCLoneTables){%>checked<%}%> >Yes
-                                                                                                                                <input type="radio" name="isFillInCLoneTables" value="false" <% if(!isFillInCLoneTables){%>checked<%}%>>No
-                                                                                                                </td>  </tr>
+ <input type="radio" name="isFillInCLoneTables" value="false" <% if(!isFillInCLoneTables){%>checked<%}%>>No
+</td>  </tr>
+
+
+    <tr>   <td  class="prompt" >Create control negative samples per each empty well </td>  
+            <td>     <input type="radio" name="isInsertControlNegativeForEmptyWell" value="true" <% if(isInsertControlNegativeForEmptyWell){%>checked<%}%> >Yes
+ <input type="radio" name="isInsertControlNegativeForEmptyWell" value="false" <% if(!isInsertControlNegativeForEmptyWell){%>checked<%}%>>No
+</td>  </tr>
         
         <tr>   <td  class="prompt">Define clone construct by last codon of target sequence </td>  
             <td>    <input type="radio" name="isDefineConstructSizeBySequence" value="true" <% if(isDefineConstructSizeBySequence){%>checked<%}%>>Yes

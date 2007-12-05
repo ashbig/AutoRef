@@ -1,5 +1,5 @@
 /**
- * $Id: Sample.java,v 1.13 2007-09-19 15:42:43 Elena Exp $
+ * $Id: Sample.java,v 1.14 2007-12-05 16:50:16 Elena Exp $
  *
  * File     	: Sample.java
  * Date     	: 04162001
@@ -672,6 +672,17 @@ public class Sample {
         sql =  "update sample set containerposition = "+ this.position +" "+
         "where sampleid= " + this.id ;
         dt.executeUpdate(sql, conn);
+    }
+    
+    public void updatePropery(Connection conn, String field_name, String field_value, int field_type) throws FlexDatabaseException
+    {
+        DatabaseTransaction dt = DatabaseTransaction.getInstance();
+        String sql =  "update sample set " +field_name +" = ";
+        if (field_type == 0) sql+="'" + field_value +"' ";
+        if (field_type == 1) sql+=  field_value ;
+        sql+=" where sampleid= " + this.id ;
+        dt.executeUpdate(sql, conn);
+     
     }
     
     /**
