@@ -261,8 +261,10 @@ public class Constants {
        public static final int         PROCESS_DELETE_TRACE_FILE_FORMAT =106;
       public static final int           PROCESS_CLEANUP_INTERMIDIATE_FILES_FROM_HARD_DRIVE =107;
       public static final int           PROCESS_SUBMIT_EREADS_AS_INTERNALS =108;
+    public static final int             PROCESS_SELECT_SEQUENCING_PRIMERS_FOR_END_READS = 109;//run sequencing for end reads
+    public static final int             PROCESS_SELECT_PLATES_FOR_END_READS_NEW_VERSION = 1010; 
  
-    // max process 103
+    // max process 110
 
     //items for display 1-40
 

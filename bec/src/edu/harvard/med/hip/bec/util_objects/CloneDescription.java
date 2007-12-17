@@ -234,7 +234,7 @@ public class CloneDescription
         
      public static CloneDescription getCloneDescription( int clone_id)throws BecDatabaseException
     {
-            String sql =  "select flexcloneid, process_status,flexsequenceid, iso.status as status, refsequenceid, iso.isolatetrackingid as isolatetrackingid , containerid, s.sampleid as sampleid"
+            String sql =  "select cloningstrategyid, flexcloneid, process_status,flexsequenceid, iso.status as status, refsequenceid, iso.isolatetrackingid as isolatetrackingid , containerid, s.sampleid as sampleid"
 + " from isolatetracking iso,  sample s, sequencingconstruct  constr , flexinfo f "
 +" where constr.constructid = iso.constructid and iso.sampleid=s.sampleid and f.isolatetrackingid=iso.isolatetrackingid "
 +" and f.flexcloneid in ("+clone_id+")   order by containerid ,refsequenceid";
@@ -245,7 +245,7 @@ public class CloneDescription
              EndReadsWrapperRunner erw = new EndReadsWrapperRunner();
             String trace_files_path = erw.getOuputBaseDir();
             ArrayList result = getClonesDescriptions(  sql,  trace_files_path,
-                       true, true, true,true, false);
+                       true, true, true,true, true);
             if ( result != null & result.size() > 0 ) return (CloneDescription)result.get(0);
             return null;
         } catch (Exception sqlE)

@@ -131,7 +131,7 @@ for (Enumeration e = BecProperties.getInstance().getStopClosedCodons().keys() ; 
      </div></td>
   </tr>
 <tr><TD colspan='2'>&nbsp;</TD></TR>
-  <tr> 
+<!--  <tr> 
     <td  bgcolor="#e4e9f8" width="50%"> <b>Vector </b> 
     </td>
     <TD bgcolor="#e4e9f8" > 
@@ -185,6 +185,7 @@ for (Enumeration e = BecProperties.getInstance().getStopClosedCodons().keys() ; 
       
       </div></td>
   </tr>
+  -->
   <tr><td colspan='2'> &nbsp; </td></tr>
   <tr> 
     <td  bgcolor="#e4e9f8"> <b>Project name:</b></td>

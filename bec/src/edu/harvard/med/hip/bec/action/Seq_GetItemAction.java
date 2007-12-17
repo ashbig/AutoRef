@@ -167,7 +167,7 @@ public class Seq_GetItemAction extends BecAction
                 {
                    
                     ArrayList pr_history = Container.getProcessHistoryItems( label);
-                    container.getCloningStrategyId();
+                    container.getCloningStrategyIdAsInt();
                     request.setAttribute("container",container) ;
                    
                     request.setAttribute("process_items",pr_history);
@@ -181,7 +181,7 @@ public class Seq_GetItemAction extends BecAction
                      //get info for the most relevant sequence 
                     UICloneSample.setCloneSequences(ui_clones, null);
                     container.setSamples(ui_clones);
-                    container.getCloningStrategyId();
+                    container.getCloningStrategyIdAsInt();
                     request.setAttribute("container",container);
                     return (mapping.findForward("display_container_details"));
                 }
@@ -215,13 +215,12 @@ public class Seq_GetItemAction extends BecAction
                     {
                         ArrayList ui_clones = container.restoreUISamples(container);
                         container.setSamples(ui_clones);
-                        container.getCloningStrategyId();
                         request.setAttribute("container",container);
                         request.setAttribute("rows", new Integer(8));
                         request.setAttribute("cols", new Integer(12));
                          return (mapping.findForward("display_isolate_ranker_report"));
                     }
-                    container.getCloningStrategyId();
+                    container.getCloningStrategyIdAsInt();
                     request.setAttribute("container",container);
                    
                     return (mapping.findForward("display_container_results_er"));

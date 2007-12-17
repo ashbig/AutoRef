@@ -22,23 +22,23 @@ import java.util.*;
  */
 public class RefSequenceParser extends DefaultHandler
 {
-     private static final String COLLECTION_START = "sequence-info";
-     private static final String REFSEQUENCE_START = "refsequence";
-     private static final String REFSEQUENCE_ID = "refsequence-id";
-     private static final String REFSEQUENCE_SPECIES = "refsequence-species";
-     private static final String REFSEQUENCE_CDS_START = "refsequence-cds-start";
-     private static final String REFSEQUENCE_CDS_STOP = "refsequence-cds-stop";
-     private static final String REFSEQUENCE_SOURCE = "refsequence-cDNAsource";
-      private static final String REFSEQUENCE_CHROMOSOME = "refsequence-chromosome";
-     private static final String REFSEQUENCE_SEQUENCE = "refsequence-sequence";
+     public static final String COLLECTION_START = "sequence-info";
+     public static final String REFSEQUENCE_START = "refsequence";
+     public static final String REFSEQUENCE_ID = "refsequence-id";
+     public static final String REFSEQUENCE_SPECIES = "refsequence-species";
+     public static final String REFSEQUENCE_CDS_START = "refsequence-cds-start";
+     public static final String REFSEQUENCE_CDS_STOP = "refsequence-cds-stop";
+     public static final String REFSEQUENCE_SOURCE = "refsequence-cDNAsource";
+      public static final String REFSEQUENCE_CHROMOSOME = "refsequence-chromosome";
+     public static final String REFSEQUENCE_SEQUENCE = "refsequence-sequence";
     
     
      
-     private static final String REFSEQUENCE_FEATURE_START ="refsequence-feature";
-    private static final String REFSEQUENCE_FEATURE_NAME_TYPE = "name_type";
-    private static final String REFSEQUENCE_FEATURE_NAME_VALUE ="name_value";
-    private static final String REFSEQUENCE_FEATURE_DESCRIPTION = "description";
-    private static final String REFSEQUENCE_FEATURE_URL = "url";
+     public static final String REFSEQUENCE_FEATURE_START ="refsequence-feature";
+    public static final String REFSEQUENCE_FEATURE_NAME_TYPE = "name_type";
+    public static final String REFSEQUENCE_FEATURE_NAME_VALUE ="name_value";
+    public static final String REFSEQUENCE_FEATURE_DESCRIPTION = "description";
+    public static final String REFSEQUENCE_FEATURE_URL = "url";
        
      private static final int REFSEQUENCE_START_STATUS = 0;
     private static final int REFSEQUENCE_ID_STATUS = 1;
@@ -266,26 +266,49 @@ public class RefSequenceParser extends DefaultHandler
           // get refseq info
           ArrayList ref_sequences = new ArrayList();
           RefSequence ref = null;
-          PublicInfoItem pinfo = null;
-          java.sql.Connection  flex_connection = edu.harvard.med.hip.bec.database.DatabaseTransactionLocal.getInstance(
+           java.sql.Connection  flex_connection = edu.harvard.med.hip.bec.database.DatabaseTransactionLocal.getInstance(
                     edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("FLEX_URL") , 
                     edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("FLEX_USERNAME"), 
                     edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("FLEX_PASSWORD")).requestConnection();
    
-   
+            writeRefSequenceFileHeader(   file_name);
           for (int count = 0; count < seq_ids.size(); count++)
           {
               ref =getRefSequenceFormFlex ( Integer.parseInt( (String)seq_ids.get(count)), flex_connection);
               if (ref != null)ref_sequences.add(ref);
+              writeRefSequence( ref,  file_name);
           }
-          FileWriter out = new FileWriter(file_name);
+        writeRefSequenceFileFooter(   file_name);
+          
+      }
+      
+          
+      public  static void writeRefSequenceFileHeader(  String file_name)throws Exception
+      {
+      
+          FileWriter out = new FileWriter(file_name );
           out.write("<?xml version='1.0' encoding='ISO-8859-1'?>");
           out.write("<!DOCTYPE web-app   \n  PUBLIC '-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN' 'http://java.sun.com/dtd/web-app_2_3.dtd'>");
           out.write("\n<"+COLLECTION_START+">");
-          for (int count = 0; count < ref_sequences.size(); count++)
-          {
-              ref = (RefSequence)ref_sequences.get(count);
-              out.write("\n\n<"+REFSEQUENCE_START+">");
+              out.flush();
+          out.close();
+      }
+       public  static void writeRefSequenceFileFooter(  String file_name)throws Exception
+      {
+      
+          FileWriter out = new FileWriter(file_name, true );
+          out.write("\n</"+COLLECTION_START+">");
+          out.flush();
+          out.close();
+      }
+          
+       
+      public static  void writeRefSequence(RefSequence ref, String file_name)throws Exception
+      {
+      PublicInfoItem pinfo = null;
+         
+          FileWriter out = new FileWriter(file_name,true);
+               out.write("\n\n<"+REFSEQUENCE_START+">");
               out.write("\n<"+REFSEQUENCE_ID+">" + ref.getId() + "</"+REFSEQUENCE_ID+">");
               out.write("\n<"+REFSEQUENCE_SPECIES+">" + ref.getSpecies() + "</"+REFSEQUENCE_SPECIES+">");
               out.write("\n<"+REFSEQUENCE_CDS_START+">" + ref.getCdsStart() + "</"+REFSEQUENCE_CDS_START+">");
@@ -308,11 +331,7 @@ public class RefSequenceParser extends DefaultHandler
              out.write("\n</"+REFSEQUENCE_START+">");
             
              out.flush();
-          
-          }
-             out.write("\n</"+COLLECTION_START+">");
-       
-          out.close();
+             out.close();
       }
       
      private  edu.harvard.med.hip.bec.coreobjects.sequence.RefSequence getRefSequenceFormFlex(int id, java.sql.Connection flex_connection)throws Exception

@@ -482,10 +482,13 @@ Format for the job_order file:
             edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
 
             runner = new PolymorphismFinderRunner();
-            runner.setInputData(Constants.ITEM_TYPE_CLONEID, "  163358	163458	163509	173104	159362	163010	163062	163124	172897	163270	163302	163398	173530	173096	163080	163493	173545	173665	173686	172940	173238	163232	173701	173753	173052	173392	173437	173856	159289	159294	173085	173477	173575	173856	159409	173384	172865	173268	173298	173814	173817	173952	173912	173022	173064		");
+            runner.setInputData(Constants.ITEM_TYPE_CLONEID, "6311 6312 6313");
+            
+            
+            runner.setProcessType( Constants.PROCESS_RUNPOLYMORPHISM_FINDER);
             runner.setUser(user);
         //    runner.setBlastableDBNames("db1 db2");
-            runner.setSpecId(118);// for bec
+            runner.setSpecId(132);// for bec
          
 
              runner.run();

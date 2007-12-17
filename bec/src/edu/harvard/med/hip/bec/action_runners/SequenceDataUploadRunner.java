@@ -62,6 +62,8 @@ public class SequenceDataUploadRunner implements Runnable
             {
                 // conncection to use for transactions
                 conn = DatabaseTransaction.getInstance().requestConnection();
+                HashMap cloning_strategies = CloningStrategy.getAllCloningStrategiesAsHash(1, true);
+         
                 int process_id = createProcessHistory(conn);
                 reader = new BufferedReader(new InputStreamReader(m_input));
 
@@ -70,7 +72,7 @@ public class SequenceDataUploadRunner implements Runnable
                     if (line.trim().startsWith(">") )
                     {
                         //process previous sequence
-                        processSequence(sequence_text.toString(), sample_id.toString(), process_id,conn);
+                        processSequence(sequence_text.toString(), sample_id.toString(), process_id,conn,cloning_strategies);
                         sequence_text = new StringBuffer();
                         sample_id = new StringBuffer();
                         //extract sample id
@@ -122,7 +124,7 @@ public class SequenceDataUploadRunner implements Runnable
 
     //***********************************
         private synchronized  void processSequence(String sequence_data, String flex_sample_id,
-                        int process_id, Connection conn)
+                        int process_id, Connection conn, HashMap cloning_strategies)
 
         {
             if (sequence_data == null || sequence_data.trim().length()==0)
@@ -131,30 +133,41 @@ public class SequenceDataUploadRunner implements Runnable
             Contig contig = null;
             int contig_quality = -1;
             CloneDescription sequence_definition = null;
+                 CloningStrategy clone_cloning_strategy = null;
             int return_value = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
              try
              {
                  //get sequence description based on flex sample id
                  sequence_definition = getSequenceDescription(flex_sample_id);
-
+                
+    
                  if (sequence_definition == null )
                  {
                      m_report.add("Cannot submit data for clone with sampleid "+flex_sample_id);
                     return;
                      //throw new BecDatabaseException("Cannot submit data for clobne with sampleid "+flex_sample_id);
                  }
+                 
                   if (sequence_definition != null && sequence_definition.getCloneId() == 0)
                  {
                      m_report.add("Cannot submit data for clone with sampleid "+flex_sample_id+".Sample is not submitted for sequencing");
                     return;
                      //throw new BecDatabaseException("Cannot submit data for clobne with sampleid "+flex_sample_id);
                  }
+                 clone_cloning_strategy = (CloningStrategy)cloning_strategies.get(new Integer(sequence_definition.getCloningStrategyId()));
+        
+                 if ( clone_cloning_strategy == null )
+                {
+                    m_report.add("Cannot process clone: "+sequence_definition.getCloneId()+". Cloning Strategy ("+sequence_definition.getCloningStrategyId()+" not found");
+                    return;
+                }
+                            
                  //create contig
                  contig = new Contig();
                  contig.setSequence(sequence_data.toUpperCase());
 
                  //analize sequence
-                 contig_quality = analizeContig(contig,sequence_definition);
+                 contig_quality = analizeContig(contig, sequence_definition, clone_cloning_strategy);
                  //insert result && sequence
                 return_value = CloneSequence.insertSequenceWithResult(
                           sequence_definition.getSampleId(),
@@ -187,7 +200,7 @@ public class SequenceDataUploadRunner implements Runnable
   private CloneDescription getSequenceDescription(String flex_sample_id)throws BecDatabaseException
   {
       CloneDescription seq_description = null;
-      String sql = "select flexcloneid, flexsequenceid, iso.status as process_status,  refsequenceid,iso.isolatetrackingid as isolatetrackingid , "
+      String sql = "select flexcloneid, flexsequenceid, iso.status as process_status,  refsequenceid, cloningstrategyid, iso.isolatetrackingid as isolatetrackingid , "
 +" containerid, s.sampleid as sampleid from isolatetracking iso,  sample s, sequencingconstruct  constr , flexinfo f "
 +" where        iso.process_status="+IsolateTrackingEngine.FINAL_STATUS_INPROCESS+" and   constr.constructid = iso.constructid and "
 +" iso.sampleid=s.sampleid and f.isolatetrackingid=iso.isolatetrackingid "
@@ -211,6 +224,7 @@ public class SequenceDataUploadRunner implements Runnable
                 seq_description.setSampleId(rs.getInt("sampleid"));
                 seq_description.setFlexSequenceId(rs.getInt( "flexsequenceid"));
                 seq_description.setCloneId(  rs.getInt("flexcloneid"));
+                seq_description.setCloningStrategyId( rs.getInt("cloningstrategyid"));
             }
            return seq_description;
         } catch (Exception sqlE)
@@ -223,9 +237,9 @@ public class SequenceDataUploadRunner implements Runnable
 
   }
 
-  private int analizeContig(Contig contig,CloneDescription clone_definition)throws Exception
+  private int analizeContig(Contig contig,CloneDescription clone_definition, CloningStrategy clone_cloning_strategy)throws Exception
   {
-       CloningStrategy container_cloning_strategy = null;
+      /* CloningStrategy container_cloning_strategy = null;
        container_cloning_strategy =(CloningStrategy) m_cloning_starategy.get(new Integer(clone_definition.getContainerId()));
        if ( container_cloning_strategy == null )
         {
@@ -237,11 +251,11 @@ public class SequenceDataUploadRunner implements Runnable
              }
              m_cloning_starategy.put(new Integer(clone_definition.getContainerId()),container_cloning_strategy);
         }
-
+*/
         //get refsequence
        RefSequence refsequence = new RefSequence( clone_definition.getBecRefSequenceId());
-       BioLinker linker5 = container_cloning_strategy.getLinker5();
-        BioLinker linker3 = container_cloning_strategy.getLinker3();
+       BioLinker linker5 = clone_cloning_strategy.getLinker5();
+        BioLinker linker3 = clone_cloning_strategy.getLinker3();
        int cds_start = linker5.getSequence().length();
         int cds_stop = linker5.getSequence().length() +  refsequence.getCodingSequence().length();
         BaseSequence base_refsequence =  new BaseSequence(linker5.getSequence() + refsequence.getCodingSequence()+linker3.getSequence(), BaseSequence.BASE_SEQUENCE );

@@ -17,7 +17,7 @@ import java.util.*;
 
 /**
  * This class represents an oligo object.
- * $Id: Oligo.java,v 1.17 2006-05-18 15:41:05 Elena Exp $
+ * $Id: Oligo.java,v 1.18 2007-12-17 18:56:17 Elena Exp $
  * @@File:	Oligo.java
 
  */
@@ -248,8 +248,8 @@ public class Oligo
         }
     } //insertOligo
 
-   public Oligo(int id, int type) throws BecDatabaseException
-    {
+   //public Oligo(int id, int type) throws BecDatabaseException
+   // {
         /*
         m_id = id;
         m_type = type;
@@ -290,7 +290,7 @@ public class Oligo
             DatabaseTransaction.closeResultSet(rs);
         }
          **/
-    } //constructor
+  // } //constructor
 
     public String toString()
     {
@@ -345,6 +345,15 @@ public class Oligo
         String sql = "select  primerid as oligoid, name , sequence, tm, type as submissiontype from commonprimer order by name";
         return getOligoByRule(sql, true);
    }
+    
+    
+   public static Oligo getCommonPrimer(int id) throws BecDatabaseException
+   {
+        String sql = "select  primerid as oligoid, name , sequence, tm, type as submissiontype from commonprimer where  primerid="+id;
+        ArrayList oligos =  getOligoByRule(sql, true);
+        return (Oligo) oligos.get(0);
+   }
+     
     //can return sets calculated ander different configs for Primer3
    public static ArrayList getByCloneId(int cloneid, int oligo_status, int primers_selection_rule)throws BecDatabaseException
    {

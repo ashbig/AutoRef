@@ -148,6 +148,75 @@ public class CloningStrategy
        if (str != null) return str.getId() ;
        else return BecIDGenerator.BEC_OBJECT_ID_NOTSET;
     }
+    
+    
+     public static HashMap getAllCloningStrategiesAsHash(int mode, boolean isCleanLinkerSequences ) throws BecDatabaseException
+    {
+         ArrayList all =  getAllCloningStrategies( mode);
+         HashMap cl_hash = new HashMap(all.size());
+         CloningStrategy cur_cloning_strategy =  null;
+         String linker_sequence = null;
+         for (int count = 0; count < all.size(); count++)
+         {
+             cur_cloning_strategy= (CloningStrategy) all.get(count);
+             if ( isCleanLinkerSequences)
+             {
+                 linker_sequence = cur_cloning_strategy.getLinker5().getSequence();
+                 linker_sequence = Algorithms.cleanChar(linker_sequence,'-');
+                 cur_cloning_strategy.getLinker5().setSequence(linker_sequence);
+                 linker_sequence = cur_cloning_strategy.getLinker3().getSequence();
+                 linker_sequence = Algorithms.cleanChar(linker_sequence,'-');
+                 cur_cloning_strategy.getLinker3().setSequence(linker_sequence);
+             }
+             cl_hash.put(  new Integer( cur_cloning_strategy.getId()) ,  cur_cloning_strategy);
+         }
+         return cl_hash;
+     }
+     public static ArrayList getAllCloningStrategies(int mode)throws BecDatabaseException
+    {
+        ResultSet rs = null; CloningStrategy strategy = null;
+        String sql = null;ArrayList cloning_strategies = new ArrayList();
+        if (mode ==0 )
+            sql= " select strategyid, name,vectorid,linker3id,linker5id,  STARTCODON , FUSIONSTOPCODON , CLOSEDSTOPCODON from cloningstrategy order by strategyid" ;
+        else if (mode ==1)
+            sql="select strategyid , s.name as strategyname, startcodon , "
++"fusionstopcodon ,  closedstopcodon , linker3id, linker5id, vectorid,"
++"(select vectorname from vector where vectorid = s.vectorid) as  vectorname," 
++"(select name   from linker where linkerid = s.linker5id) as linker5name, "
++"(select sequence from linker where linkerid = s.linker5id) as linker5sequence," 
++"(select sequence from linker where linkerid = s.linker3id) as linker3sequence," 
++" (select name from linker where linkerid = s.linker3id)  as linker3name "
++" from cloningstrategy s  order by strategyid";;
+        try
+        {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            while(rs.next())
+            {
+              strategy =  new CloningStrategy(rs.getInt("strategyid"), rs.getInt("vectorid"), rs.getInt("linker3id"),
+                rs.getInt("linker5id"),rs.getString("STARTCODON")  ,
+                rs.getString("FUSIONSTOPCODON")   ,rs.getString("CLOSEDSTOPCODON") ,
+                rs.getString("strategyname"));
+              if (mode == 1)
+              {
+                  BioVector vector = new BioVector(); vector.setName(rs.getString("vectorname")); vector.setId(strategy.getVectorId());
+                  strategy.setVector(vector);
+                   strategy.setLinker3(new BioLinker(strategy.getLinker3Id(), rs.getString("linker3name") ,rs.getString("linker3sequence") ,-1));
+                  strategy.setLinker5(new BioLinker(strategy.getLinker5Id(), rs.getString("linker5name") ,rs.getString("linker5sequence") ,-1));
+              }
+               cloning_strategies.add(strategy);
+            }
+            return cloning_strategies;
+           
+        } catch ( Exception e)
+        {
+            throw new BecDatabaseException("Error occured while restoring cloning strategies "+sql+" "+e.getMessage());
+        } finally
+        {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+    }
+     
     public static CloningStrategy getById(int id) throws BecDatabaseException
     {
         String sql = " where strategyid=" + id;
@@ -189,7 +258,7 @@ public class CloningStrategy
       try
       {
     
-      CloningStrategy cs =  CloningStrategy.getById(8);
+      CloningStrategy cs =  CloningStrategy.getById(7);
                     BioVector vector = BioVector.getVectorById( cs.getVectorId());
                     BioLinker linker3 = BioLinker.getLinkerById( cs.getLinker3Id() );
                     BioLinker linker5 = BioLinker.getLinkerById( cs.getLinker5Id() );

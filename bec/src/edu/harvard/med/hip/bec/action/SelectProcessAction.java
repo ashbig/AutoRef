@@ -87,6 +87,112 @@ public class SelectProcessAction extends BecAction
                     request.setAttribute("forwardName", new Integer(Constants.PROCESS_SELECT_PLATES_FOR_END_READS));
                     return (mapping.findForward("select_vector"));
                 }
+                //
+                case Constants.PROCESS_SELECT_SEQUENCING_PRIMERS_FOR_END_READS:
+//allows to select sequencing primers for end read sequencing
+                {
+                    ArrayList sequencing_primers = Oligo.getAllCommonPrimers();
+                    if ( sequencing_primers == null || sequencing_primers.size() == 0)
+                    {
+                          errors.add(ActionErrors.GLOBAL_ERROR,
+                            new ActionError("error.container.querry.parameter", 
+                                "There are no primers sequencing primers defined in ACE. \nPlease go to <i>Home > Cloning Project Settings > Sequencing Primer </i> and enter sequencing primers, then define what primer can be used with what vector."));
+                            saveErrors(request,errors);
+                         return (mapping.findForward("select_sequencing_primers"));
+                             
+                    }
+                    Oligo ol = new Oligo();     ol.setId(-1)   ;    ol.setName("NONE") ;
+                    sequencing_primers.add(ol);
+                    request.setAttribute(edu.harvard.med.hip.bec.UI_Constants.SEQUENCING_PRIMER_3P_ID_KEY, sequencing_primers);
+                    request.setAttribute(edu.harvard.med.hip.bec.UI_Constants.SEQUENCING_PRIMER_5P_ID_KEY, sequencing_primers);
+                   
+                    request.setAttribute("forwardName", new Integer(Constants.PROCESS_SELECT_PLATES_FOR_END_READS_NEW_VERSION));
+                    return (mapping.findForward("select_sequencing_primers"));
+                }
+                case Constants.PROCESS_SELECT_PLATES_FOR_END_READS_NEW_VERSION:
+                {
+                    int primer5_id = Integer.parseInt( (String) request.getParameter(UI_Constants.SEQUENCING_PRIMER_5P_ID_KEY));
+                    int primer3_id = Integer.parseInt( (String) request.getParameter(UI_Constants.SEQUENCING_PRIMER_3P_ID_KEY));
+           
+                     request.setAttribute("3p_primerid", String.valueOf(primer3_id));
+                     request.setAttribute("5p_primerid", String.valueOf(primer5_id));
+
+                    if ( primer5_id == -1)
+                    request.setAttribute(UI_Constants.SEQUENCING_PRIMER_5P_ID_KEY,  "None");
+                    else
+                    {
+                      Oligo primer5 = Oligo.getCommonPrimer(primer5_id);
+                      request.setAttribute(UI_Constants.SEQUENCING_PRIMER_5P_ID_KEY,  primer5.getName());
+                
+                    }
+                     if ( primer3_id == -1)
+                          request.setAttribute(UI_Constants.SEQUENCING_PRIMER_3P_ID_KEY,  "None");
+                    else
+                    {
+                      Oligo primer3 = Oligo.getCommonPrimer(primer3_id);
+                      request.setAttribute(UI_Constants.SEQUENCING_PRIMER_3P_ID_KEY,  primer3.getName());
+                      
+                    }
+                    
+                    primer5_id= ( primer5_id == -1)? 0: primer5_id;
+                    primer3_id = ( primer3_id== -1) ? 0 : -primer3_id;
+                    
+                    if ( primer5_id == 0  && primer3_id == 0)
+                    {
+                          errors.add(ActionErrors.GLOBAL_ERROR,
+                            new ActionError("error.container.querry.parameter", 
+                                "No sequencing primers have been selected."));
+                            saveErrors(request,errors);
+                             
+                            ArrayList sequencing_primers = Oligo.getAllCommonPrimers();
+                            Oligo ol = new Oligo();     ol.setId(-1)   ;    ol.setName("NONE") ;
+                            sequencing_primers.add(ol);
+                            request.setAttribute(edu.harvard.med.hip.bec.UI_Constants.SEQUENCING_PRIMER_3P_ID_KEY, sequencing_primers);
+                            request.setAttribute(edu.harvard.med.hip.bec.UI_Constants.SEQUENCING_PRIMER_5P_ID_KEY, sequencing_primers);
+
+                            request.setAttribute("forwardName", new Integer(Constants.PROCESS_SELECT_PLATES_FOR_END_READS_NEW_VERSION));
+                            return (mapping.findForward("select_sequencing_primers"));
+                    }
+                    
+                    if ( primer5_id == 0)
+                    {
+                        primer5_id = primer3_id;
+                        primer3_id = 0;
+                    }
+                    
+                    try
+                    {
+                        ArrayList plateNames = Container.findContainerLabelsForProcess(Constants.PROCESS_SELECT_PLATES_FOR_END_READS_NEW_VERSION, primer5_id,  primer3_id);
+                        request.setAttribute(Constants.PLATE_NAMES_COLLECTION, plateNames);
+
+                        request.setAttribute("process_name", getProcessTitle(forwardName));
+                        request.setAttribute("forwardName", new Integer(Constants.PROCESS_RUN_END_READS));
+                         // put primers names to request              
+                      
+                         return (mapping.findForward("select_plates_new_version"));
+                    }
+                    catch(Exception e)
+                    {
+                        errors.add(ActionErrors.GLOBAL_ERROR,
+                            new ActionError("error.container.querry.parameter", 
+                               "No cloning strategy is defined with this primers. Please select different primers."));
+                            saveErrors(request,errors);
+                             
+                            ArrayList sequencing_primers = Oligo.getAllCommonPrimers();
+                            Oligo ol = new Oligo();     ol.setId(-1)   ;    ol.setName("NONE") ;
+                            sequencing_primers.add(ol);
+                            request.setAttribute(edu.harvard.med.hip.bec.UI_Constants.SEQUENCING_PRIMER_3P_ID_KEY, sequencing_primers);
+                            request.setAttribute(edu.harvard.med.hip.bec.UI_Constants.SEQUENCING_PRIMER_5P_ID_KEY, sequencing_primers);
+
+                            request.setAttribute(edu.harvard.med.hip.bec.UI_Constants.SEQUENCING_PRIMER_3P_ID_KEY, sequencing_primers);
+                            request.setAttribute(edu.harvard.med.hip.bec.UI_Constants.SEQUENCING_PRIMER_5P_ID_KEY, sequencing_primers);
+
+                            request.setAttribute("forwardName", new Integer(Constants.PROCESS_RUN_END_READS));
+                            return (mapping.findForward("select_sequencing_primers"));
+ 
+                    }
+                }
+                        
                 case Constants.PROCESS_SELECT_PLATES_FOR_END_READS://run sequencing for end reads
                 {
                                          //get all specs for each of the three types and all plates where
@@ -100,7 +206,7 @@ public class SelectProcessAction extends BecAction
                     {
                           errors.add(ActionErrors.GLOBAL_ERROR,
                             new ActionError("error.container.querry.parameter", 
-                                "There are no primers assosiated with this vector. \nPlease contact BEC development team."));
+                                "There are no primers assosiated with this vector. \nPlease contact ACE development team."));
                             saveErrors(request,errors);
                              
                             ArrayList vectors = BioVector.getAllVectors();
@@ -124,7 +230,8 @@ public class SelectProcessAction extends BecAction
                     request.setAttribute(Constants.SPEC_TITLE_COLLECTION, spec_names);
                     request.setAttribute(Constants.SPEC_CONTROL_NAME_COLLECTION,control_names);
                     // there are isolates subject to isolateranking
-                    ArrayList plateNames = Container.findContainerLabelsForProcess(Constants.PROCESS_SELECT_PLATES_FOR_END_READS,  vector_id);
+                    
+                    ArrayList plateNames = Container.findContainerLabelsForProcess(Constants.PROCESS_SELECT_PLATES_FOR_END_READS,  vector_id, 0);
                     request.setAttribute(Constants.PLATE_NAMES_COLLECTION, plateNames);
                     
                     request.setAttribute("process_name", getProcessTitle(forwardName));
@@ -180,7 +287,7 @@ public class SelectProcessAction extends BecAction
                     { 
                         case Constants.PROCESS_SUBMIT_ASSEMBLED_SEQUENCE:
                         {
-                            file_description = "<I>You are about to submit sequence data to BEC. The <B>requested file format</b> is: <p> <i> ></i>FLEX SAMPLE ID <P> sequence in fasta format."
+                            file_description = "<I>You are about to submit sequence data to ACE. The <B>requested file format</b> is: <p> <i> ></i>FLEX SAMPLE ID <P> sequence in fasta format."
                             +"The process will take some time. The e-mail report will be sent to you upon completion."; 
                             file_title =  "Please select the sequence information file:";
                             break;
@@ -244,7 +351,7 @@ public class SelectProcessAction extends BecAction
                 case Constants.PROCESS_VIEW_OLIGO_ORDER_BY_CLONEID:
                 case Constants.PROCESS_PROCESS_OLIGO_PLATE:
                 case Constants.PROCESS_SET_CLONE_FINAL_STATUS:
-                    case Constants.PROCESS_REANALYZE_CLONE_SEQUENCE:
+                case Constants.PROCESS_REANALYZE_CLONE_SEQUENCE:
                 case Constants.PROCESS_CLEANUP_INTERMIDIATE_FILES_FROM_HARD_DRIVE:    
                      case Constants.PROCESS_RUN_ISOLATE_RUNKER://run isolate runker
                 
@@ -355,7 +462,9 @@ public class SelectProcessAction extends BecAction
             case Constants.PROCESS_CREATE_REPORT:return "";
             case Constants.PROCESS_UPLOAD_PLATES:return "Upload Plates ";
             case Constants.PROCESS_SELECT_VECTOR_FOR_END_READS :return "Request End Reads Sequencing -> Select Vector";
-            case Constants.PROCESS_SELECT_PLATES_FOR_END_READS: return "Request End Reads Sequencing -> Select Primers and Plates";
+            case  Constants.PROCESS_SELECT_SEQUENCING_PRIMERS_FOR_END_READS: return "Request End Reads Sequencing -> Select Sequencing Primers";
+             
+              case Constants.PROCESS_SELECT_PLATES_FOR_END_READS: return "Request End Reads Sequencing -> Select Primers and Plates";
             case Constants.PROCESS_RUN_ISOLATE_RUNKER: return "Run Isolate Ranker";
             case Constants.PROCESS_SUBMIT_ASSEMBLED_SEQUENCE: return "Submit Sequence Data for Set of Clones";
            
@@ -406,6 +515,7 @@ public class SelectProcessAction extends BecAction
             case Constants.PROCESS_REANALYZE_CLONE_SEQUENCE:return"Reanalyze Clone Sequence"; 
             case  Constants.PROCESS_GET_TRACE_FILE_NAMES :return"Get Trace File Names";
               case Constants.PROCESS_CLEANUP_INTERMIDIATE_FILES_FROM_HARD_DRIVE  : return "Clean-up hard drive ";  
+              
               default: return "";
           }
    }
@@ -418,7 +528,10 @@ public class SelectProcessAction extends BecAction
             case Constants.PROCESS_CREATE_REPORT:return "";
             case Constants.PROCESS_UPLOAD_PLATES:return "Home > Process > Upload Plates";
             case Constants.PROCESS_SELECT_VECTOR_FOR_END_READS :return "Home > Process > Read Manipulation > Request End Reads Sequencing";
-            case Constants.PROCESS_SELECT_PLATES_FOR_END_READS: return "Home > Process > Read Manipulation > Request End Reads Sequencing";
+             case  Constants.PROCESS_SELECT_SEQUENCING_PRIMERS_FOR_END_READS: return "Home > Process > Read Manipulation > Request End Reads Sequencing";
+ 
+              
+              case Constants.PROCESS_SELECT_PLATES_FOR_END_READS: return "Home > Process > Read Manipulation > Request End Reads Sequencing";
              case Constants.PROCESS_RUN_ISOLATE_RUNKER: return "Home > Process > Evaluate Clones > Run Isolate Ranker";
             case Constants.PROCESS_SUBMIT_ASSEMBLED_SEQUENCE: return "Submit Sequence data for set of clones";
             case Constants.PROCESS_SUBMIT_EREADS_AS_INTERNALS: return "Home > Process > Read Manipulation > Submit low quality end reads";    
@@ -472,7 +585,8 @@ public class SelectProcessAction extends BecAction
           
    }
        
-         
+  
+      
 
     
 }

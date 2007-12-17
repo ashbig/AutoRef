@@ -70,10 +70,10 @@ Container container = (Container)request.getAttribute("container") ;
 <tr> <td><strong>Plate ID: </strong></td><td>       <%= container.getId() %>    </td>  </tr>
 <tr>     <td><strong>Plate Type: </strong></td>    <td>       <%= container.getType() %>    </td>  </tr>
  <tr><td><strong>Cloning Strategy: </strong></td><td> 
-    <% if ( container.getCloningStrategyId() != BecIDGenerator.BEC_OBJECT_ID_NOTSET){%> 
-      <a href="<%= redirection %>Seq_GetItem.do?forwardName=<%= Constants.CLONING_STRATEGY_DEFINITION_INT %>&amp;ID=<%= container.getCloningStrategyId() %>">
-	    <%= container.getCloningStrategyId() %></A>
-	    <%} else {%> &nbsp; <%}%>    </td></tr>
+    &nbsp;
+        <% if ( container.getCloningStrategyIdAsInt() != BecIDGenerator.BEC_OBJECT_ID_MULTIPAL_VALUES )
+     {%> <a href="<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION")  %>Seq_GetItem.do?forwardName=<%= Constants.CLONING_STRATEGY_DEFINITION_INT %>&amp;ID=<%= container.getCloningStrategyIdAsInt() %>">
+	    <%= container.getCloningStrategyIdAsInt() %></A><%}%> </td></tr>
 </table><P><P></P></P>
 
 	

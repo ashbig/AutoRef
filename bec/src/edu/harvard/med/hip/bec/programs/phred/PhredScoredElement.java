@@ -52,8 +52,22 @@ public class PhredScoredElement
         last_base = ( last_base > elements.size() - 1) ? elements.size() - 1 : last_base;
         int score = 0; int base_number = 0;
         PhredScoredElement element = null;
+        // for those reads that start late reasign first_base to first non_zero base
+        for (int base_count = 0; base_count < last_base; base_count++)
+        {
+            element = ( PhredScoredElement ) elements.get(base_count);
+            System.out.println(element.getScore());
+            if (element.getScore() == 0 ) continue;
+            else 
+            { 
+                first_base = base_count; 
+                last_base += base_count; 
+                break;
+            }
+        }
         for (int base_count = first_base; base_count < last_base; base_count++)
         {
+            
             element = ( PhredScoredElement ) elements.get(base_count);
             if ( element.getChar() != 'N' || element.getChar() != 'n')
             {

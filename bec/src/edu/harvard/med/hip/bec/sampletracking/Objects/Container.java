@@ -1,6 +1,6 @@
 //Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
 /**
- * $Id: Container.java,v 1.35 2006-07-10 13:55:53 Elena Exp $
+ * $Id: Container.java,v 1.36 2007-12-17 18:58:42 Elena Exp $
  *
  * File     	: Container.java
 
@@ -51,7 +51,7 @@ public class Container
     private String      m_label = null;
     private ArrayList   m_samples = new ArrayList();
     private int         m_status = -1;
-    private int         m_cloning_strategy_id =  BecIDGenerator.BEC_OBJECT_ID_NOTSET;
+    private ArrayList    m_cloning_strategy_ids = null; //BecIDGenerator.BEC_OBJECT_ID_NOTSET;
     private int         m_project_id =  BecIDGenerator.BEC_OBJECT_ID_NOTSET;
     /**
      * Constructor.
@@ -64,7 +64,7 @@ public class Container
     public Container(int id) throws BecUtilException, BecDatabaseException
     {
         m_id = id;
-        
+        m_cloning_strategy_ids = new ArrayList();
   
           String sql = "select  containerid,  containertype,  label, status,project_id "+
             "from containerheader where containerid = "+id;
@@ -116,6 +116,8 @@ public class Container
         else
             m_id = id;
         m_project_id = project_id;
+         m_cloning_strategy_ids = new ArrayList();
+  
     }
     
     /**
@@ -246,41 +248,91 @@ public class Container
        
     }
     
-     public static ArrayList findContainerLabelsForProcess(int process_code, int param_id) throws    BecDatabaseException
+     public static ArrayList findContainerLabelsForProcess(int process_code, int param1_id, int param2_id) throws    BecDatabaseException
     {
         //define isolatetracking id statuses for the process
         String istr_status = null;
-        String sql = null;
-        String sqlCheckVector = null;
+        String sql = null;int[] permitted_cloning_strategyids =null;
+        String sqlCheckVector = null; StringBuffer temp = null;
         switch (process_code)
         {
             case Constants.PROCESS_SELECT_PLATES_FOR_END_READS:
             {
-                sql = "select distinct label,containerid from containerheader where containerid in "
-                + " (select containerid from sample where sampleid in "
-                + " (select sampleid from isolatetracking where status in ("+IsolateTrackingEngine.PROCESS_STATUS_SUBMITTED_FOR_ER+")))";
-                sqlCheckVector = "select vectorid from cloningstrategy where strategyid =("
-        +" select configid from processconfig where configtype="+ Spec.CLONINGSTRATEGY_SPEC_INT +" and processid = "
-+" (select processid from process_object where objecttype="+ Constants.PROCESS_OBJECT_TYPE_CONTAINER +"  and objectid=";
+                temp = new StringBuffer();
+                temp.append("select distinct label,containerid from containerheader where containerid in ");
+                temp.append(" (select containerid from sample where sampleid in ");
+                temp.append( " (select sampleid from isolatetracking where status in (");
+                temp.append(IsolateTrackingEngine.PROCESS_STATUS_SUBMITTED_FOR_ER);
+                temp.append(")))");
+                sql = temp.toString(); temp = new StringBuffer();
+               
+                temp.append( "select vectorid from cloningstrategy where strategyid =(");
+        temp.append(" select configid from processconfig where configtype=");
+        temp.append( Spec.CLONINGSTRATEGY_SPEC_INT );
+        temp.append(" and processid = ");
+        temp.append(" (select processid from process_object where objecttype=");
+        temp.append( Constants.PROCESS_OBJECT_TYPE_CONTAINER );temp.append("  and objectid=");
+                 sqlCheckVector = temp.toString();
+               
                 break;
             }
             case Constants.PROCESS_RUN_ISOLATE_RUNKER:
             {
+                 temp = new StringBuffer();
+               
+                 temp.append( "select distinct label,containerid from containerheader where status <> ");
+                 temp.append(CONTAINER_STATUS_FINISHED); temp.append(" and containerid in ");
+                 temp.append( " (select containerid from sample where sampleid in ");
+                 temp.append( " (select sampleid from isolatetracking where status not in  (");
+                 temp.append( IsolateTrackingEngine.PROCESS_STATUS_SUBMITTED_FOR_ER );
+                 temp.append( ","+IsolateTrackingEngine.PROCESS_STATUS_SUBMITTED_FOR_FULLSEQUENCING );
+                 temp.append( ","+IsolateTrackingEngine.PROCESS_STATUS_ER_INITIATED );
+                 temp.append( ","+IsolateTrackingEngine.PROCESS_STATUS_ER_PHRED_RUN  );
+                 temp.append( ")))");
+                 sql = temp.toString();
+                break;
+            }
+            case Constants.PROCESS_SELECT_PLATES_FOR_END_READS_NEW_VERSION:
+            {
+                temp = new StringBuffer();
+               
+               temp.append(" select distinct strategyid as id from cloningstrategy where vectorid in ");
+               temp.append(" (select distinct vectorid from vectorprimer where ");
+               temp.append("(primerid="); temp.append(Math.abs(param1_id)); temp.append(" and orientation =");
+               int orientation = param1_id > 0 ? 1 : -1 ;
+               temp.append( orientation); temp.append( "))");
+               if (param2_id != 0) 
+               {
+                   orientation = param2_id > 0 ? 1 : -1 ;
+                   temp.append( " and  vectorid in  (select vectorid from vectorprimer where (primerid=");
+                   temp.append( Math.abs(param2_id)); temp.append(" and orientation = " );
+                   temp.append(orientation) ; temp.append("))");
+               }
+               temp.append(" order by  strategyid desc  "); 
+               
+               permitted_cloning_strategyids = getCloningStrategyIds(temp.toString());
                 
-                 sql = "select distinct label,containerid from containerheader where status <> "+CONTAINER_STATUS_FINISHED+" and containerid in "
-+ " (select containerid from sample where sampleid in "
-+ " (select sampleid from isolatetracking where status not in  ("
-+ IsolateTrackingEngine.PROCESS_STATUS_SUBMITTED_FOR_ER 
-+ ","+IsolateTrackingEngine.PROCESS_STATUS_SUBMITTED_FOR_FULLSEQUENCING 
-+ ","+IsolateTrackingEngine.PROCESS_STATUS_ER_INITIATED 
-+ ","+IsolateTrackingEngine.PROCESS_STATUS_ER_PHRED_RUN  + ")))";
+               if ( permitted_cloning_strategyids == null)
+                   throw new BecDatabaseException("No cloning strategy is defined with this primers. Please select different primers.");
+               temp = new StringBuffer();
+               
+               temp.append(  " select objectid , configid, label from processconfig p, process_object o, containerheader cc ");
+temp.append(  "where configtype=");
+temp.append(Spec.CLONINGSTRATEGY_SPEC_INT );
+temp.append(" and p.processid=o.processid and cc.containerid=o.objectid  and o.processid in ");
+temp.append(  " (select processid from process_object where objectid in ");
+temp.append(  " (select containerid from sample where sampleid in ");
+temp.append(  " (select sampleid from isolatetracking where status in (");
+temp.append(IsolateTrackingEngine.PROCESS_STATUS_SUBMITTED_FOR_ER);
+temp.append(")))) order by objectid");
+                 sql = temp.toString();
                 break;
             }
         }
         if (sql == null) return null;
         ArrayList container_labels = new ArrayList();
         
-        String label = null;
+        String label = null;String prev_label = null;
         ResultSet rs = null;ResultSet rsCheckParam = null;
         Container container = null;
         try
@@ -297,12 +349,29 @@ public class Container
                     rsCheckParam = t.executeQuery(sqlCheckVector +rs.getInt("containerid") + "))");
                     if ( rsCheckParam.next() )
                     {
-                        if (param_id == rsCheckParam.getInt("vectorid") ) container_labels.add(   label  );
+                        if (param1_id == rsCheckParam.getInt("vectorid") ) container_labels.add(   label  );
                     }
                 }
-                else if(process_code ==  Constants.PROCESS_RUN_ISOLATE_RUNKER)
+                else if(process_code ==  Constants.PROCESS_RUN_ISOLATE_RUNKER )
                 {
                     container_labels.add(   label  );
+                }
+                else if (  process_code == Constants.PROCESS_SELECT_PLATES_FOR_END_READS_NEW_VERSION)
+                {
+                    int strategyid = rs.getInt("configid");
+                    if ( !label.equals(prev_label))
+                    {
+                        container_labels.add(   label  );
+                    }
+                    if ( container_labels.size() > 0  &&
+                         (   permitted_cloning_strategyids.length  < strategyid 
+                         ||   permitted_cloning_strategyids[strategyid] != strategyid )
+                            && container_labels.get(container_labels.size()-1).equals(label))
+                    {
+                         container_labels.remove(container_labels.size()-1);
+                    }
+                    
+                    prev_label= label;
                 }
             }
             return container_labels;
@@ -317,6 +386,34 @@ public class Container
        
     }
     
+     /////////////////////////////////////////////////////
+     
+     private static  int[]  getCloningStrategyIds( String sql) throws BecDatabaseException
+     {
+         int[] ids = null; int id = -1;
+        ResultSet rs = null;
+        try
+        {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            
+            while(rs.next())
+            {
+                id =  rs.getInt("id");
+                if ( ids == null) ids = new int[id + 1];
+                ids[id]= id;
+            }
+            return ids;
+        } catch (Exception sqlE)
+        {
+            throw new BecDatabaseException("Error occured while extracting data from database\nSQL: "+sqlE.getMessage());
+        } finally
+        {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+       
+     }
+     ////////////////////////////////////////////////////////
      
     public static ArrayList  findAllContainerLabelsByProject() throws    BecDatabaseException
     {
@@ -433,13 +530,19 @@ public class Container
     }
     
    
-    public int getCloningStrategyId()throws BecDatabaseException
+    public int getCloningStrategyIdAsInt()throws BecDatabaseException
     {
-        if (m_cloning_strategy_id!=-1) return m_cloning_strategy_id;
+        if ( m_cloning_strategy_ids.size() > 0 )
+        {
+            if( m_cloning_strategy_ids.size() == 1) 
+                return  ((Integer)m_cloning_strategy_ids.get(0)).intValue();
+            else return BecIDGenerator.BEC_OBJECT_ID_MULTIPAL_VALUES;
+        }
         else
         {
-            String sql = "select configid from processconfig where CONFIGTYPE = 6 and processid = "
-+"(select processid from process_object where objectid="+m_id+" and objecttype=0)";
+            String sql = "select distinct cloningstrategyid from sequencingconstruct where constructid in" +
+                    "(select constructid from isolatetracking where sampleid in" +
+                    "(select sampleid from sample where containerid =  "+m_id+"))";
             RowSet rs = null;
           
             try
@@ -449,10 +552,12 @@ public class Container
 
                 while(rs.next())
                 {
-
-                    m_cloning_strategy_id = rs.getInt("configid");
+                     m_cloning_strategy_ids.add(new Integer( rs.getInt("cloningstrategyid")));
                 }
-                return m_cloning_strategy_id;
+                 if ( m_cloning_strategy_ids.size() == 1) 
+                     return  ((Integer)m_cloning_strategy_ids.get(0)).intValue();
+                 else return BecIDGenerator.BEC_OBJECT_ID_MULTIPAL_VALUES;
+       
            } catch (Exception sqlE)
             {
                 throw new BecDatabaseException("Error occured while getting cloning strategy for container with id: "+m_id+"\n"+sqlE.getMessage()+"\nSQL: "+sql);
@@ -466,7 +571,7 @@ public class Container
     }
     
     
-    public static int getCloningStrategyId(int id)throws BecDatabaseException
+  /*  public static int getCloningStrategyId(int id)throws BecDatabaseException
     {
         int cloning_strategy = -1;
         String sql = "select configid from processconfig where CONFIGTYPE = 6 and processid = "
@@ -496,12 +601,13 @@ public class Container
      
     }
     
-    
-    public static CloningStrategy getCloningStrategy(int id)throws BecDatabaseException
+    */
+   /* public static CloningStrategy getCloningStrategy(int id)throws BecDatabaseException
     {
         int cloning_strategy = getCloningStrategyId(id);
         return  CloningStrategy.getById(cloning_strategy);
-    }
+    }*
+    *
     /**
      * Get the data from Sample table.
      *
@@ -1300,8 +1406,10 @@ public class Container
               BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
                 sysProps.verifyApplicationSettings();
             DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
-                ArrayList pr_history = Container.findAllContainerLabelsByProject( );
-               // ArrayList pr_history = Container.getProcessHistoryItems( "BSA000768");          
+
+            
+            ArrayList plateNames = Container.findContainerLabelsForProcess(Constants.PROCESS_SELECT_PLATES_FOR_END_READS_NEW_VERSION, 49811,  0);
+                   // ArrayList pr_history = Container.getProcessHistoryItems( "BSA000768");          
         }
         catch(Exception e)
         {

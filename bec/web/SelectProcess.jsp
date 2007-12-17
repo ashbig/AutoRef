@@ -47,7 +47,7 @@ else if (forwardName!= null && forwardName instanceof Integer ) forwardName_int 
   <tr class ='headerRow'>     <td  height="25" > End reads manipulation</td>  </tr>
   <tr class='evenRowColoredFontNotBold'> 
     <td height="29">&nbsp; 
-      <input  checked type="radio" name="forwardName" value="<%= Constants.PROCESS_SELECT_VECTOR_FOR_END_READS   %>" >
+      <input  checked type="radio" name="forwardName" value="<%= Constants.PROCESS_SELECT_SEQUENCING_PRIMERS_FOR_END_READS%>" > <!--PROCESS_SELECT_VECTOR_FOR_END_READS   %>" >-->
       Request end read sequencing (settings required)</td>
   </tr>
   <tr class='evenRowColoredFontNotBold'> 

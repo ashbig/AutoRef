@@ -28,7 +28,7 @@ public class BioLinker
   private int       m_framestart = -1;
     
     /** Creates a new instance of BioVector */
-    protected BioLinker(int id, String name, String seq, int framestart)
+    public BioLinker(int id, String name, String seq, int framestart)
     { 
         m_id=id;
         m_name=name;
@@ -42,6 +42,9 @@ public class BioLinker
     public String getName()    { return m_name;}
     public String getSequence()    { return m_sequence;}
     public int      getFrameStart(){ return m_framestart;}
+    
+    public void setSequence(String v)    {  m_sequence = v;}
+   
     
     public static ArrayList getAllLinkers()throws BecDatabaseException
     {

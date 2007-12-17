@@ -20,4 +20,9 @@ public class UI_Constants
     public static final String PROJECT_NAME = "PROJECT_NAME";
     public static final String PROJECT_DESCRIPTION = "PROJECT_DESCRIPTION";
     public static final String PROJECT_ID = "PROJECT_ID";
+    
+    
+     public static final String SEQUENCING_PRIMER_5P_ID_KEY = "5P_PRIMER";
+      public static final String SEQUENCING_PRIMER_3P_ID_KEY = "3P_PRIMER";
+  
 }

@@ -224,13 +224,13 @@ public class IsolateRankerRunner extends ProcessRunner
             edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
 
         ProcessRunner runner = new IsolateRankerRunner();
-        runner.setInputData(Constants.ITEM_TYPE_PLATE_LABELS, " 20051117_SEQ_RP112  ");
+        runner.setInputData(Constants.ITEM_TYPE_PLATE_LABELS, "VCXXG002580-1.012-1 VCXXG002580-2.012-1 VCXXG002581-1.012-1 VCXXG002581-2.012-1 VCXXG002582-1.012-1 VCXXG002582-2.012-1 VCXXG002583-1.012-1 VCXXG002583-2.012-1 VCXXG002584-1.012-1 VCXXG002584-2.012-1 ");
       //  runner.setContainerLabels(master_container_labels );
         runner.setProcessType( Constants.PROCESS_RUN_ISOLATE_RUNKER );
-        Spec spec_f = Spec.getSpecById(91, Spec.FULL_SEQ_SPEC_INT);
-         ((IsolateRankerRunner)runner).setCutoffValuesSpec( (FullSeqSpec)Spec.getSpecById(2, Spec.FULL_SEQ_SPEC_INT));
+       // Spec spec_f = Spec.getSpecById(91, Spec.FULL_SEQ_SPEC_INT);
+         ((IsolateRankerRunner)runner).setCutoffValuesSpec( (FullSeqSpec)Spec.getSpecById(90, Spec.FULL_SEQ_SPEC_INT));
         ((IsolateRankerRunner)runner).setPenaltyValuesSpec( (EndReadsSpec)Spec.getSpecById(1, Spec.END_READS_SPEC_INT));
-       runner.setUser(  AccessManager.getInstance().getUser("unix","unix"));
+       runner.setUser(  AccessManager.getInstance().getUser("htaycher123","htaycher"));
         runner.run();
         }catch(Exception e){}
         System.exit(0);

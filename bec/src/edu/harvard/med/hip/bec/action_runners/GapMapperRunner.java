@@ -74,40 +74,43 @@ import java.util.*;
 
    public void run_process()
     {
-        System.out.println(  m_isTryMode +" "+ m_spec_id +" "+ m_isRunLQRFinderForContigs 
-        +" "+ m_vector_file_name +" "+ m_quality_trimming_phd_score+" "+  m_quality_trimming_phd_first_base 
-        +" "+  m_quality_trimming_phd_last_base +" "+ m_use_lqreads_for_assembly +" "+ m_delete_lqreads );
          Connection conn = null;
          int process_id = -1;
          PreparedStatement pst_check_prvious_process_complition = null;
          PreparedStatement pst_insert_process_object = null;
          StretchCollection stretch_collection = null;
          SlidingWindowTrimmingSpec       trimming_spec = null;
-         Hashtable clone_startagies = new Hashtable();
          CloningStrategy cloning_strategy = null;
          boolean isReportWasCreated = false;
          boolean isFirstCycle = true;
          int clone_id = -1;
          String time_stamp = String.valueOf( System.currentTimeMillis());
-         
+         CloneDescription clone_description = null;
          try
         {
             // get spec
             trimming_spec = (SlidingWindowTrimmingSpec)Spec.getSpecById(m_spec_id);
             conn = DatabaseTransaction.getInstance().requestConnection();
             ArrayList clone_ids = Algorithms.splitString( m_items);
-            
+            HashMap cloning_strategies = CloningStrategy.getAllCloningStrategiesAsHash(1, true);
             String   report_file_name = getReportFileName(time_stamp);
            
             for (int count_clones = 0; count_clones < clone_ids.size(); count_clones++)
             {
                 clone_id = Integer.parseInt((String) clone_ids.get(count_clones));
+                clone_description = CloneDescription.getCloneDescription( clone_id);
+        
+                if ( clone_description == null) 
+                {
+                    m_error_messages.add("Clone "+clone_id+" does not exist.");
+                    continue ;
+                }
                 //we need to get linkers to prevent definition of lqrs outside intresting regions
-                if ( m_process_type == Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE)
-                       cloning_strategy = getCloningStrategy(clone_id, clone_startagies);
+               // if ( m_process_type == Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE)
+                    //   cloning_strategy = getCloningStrategy(clone_id, clone_startagies);
                 try// by stretch collection
                 {
-                    stretch_collection = findStretches(clone_id, trimming_spec, cloning_strategy);
+                    stretch_collection = findStretches(clone_description, trimming_spec, cloning_strategies);
                         
                     if (stretch_collection != null && stretch_collection.getStretches() != null && stretch_collection.getStretches().size() > 0)
                     {
@@ -251,29 +254,38 @@ import java.util.*;
            }
 
     }
-    private StretchCollection findStretches( int clone_id,
+    private StretchCollection findStretches(  CloneDescription clone_description,
             SlidingWindowTrimmingSpec       trimming_spec,
-            CloningStrategy cloning_strategy)throws Exception
+            HashMap cloning_strategies)throws Exception
     {
         StretchCollection stretch_collection = null;
+        CloningStrategy clone_cloning_strategy = (CloningStrategy)cloning_strategies.get(new Integer(clone_description.getCloningStrategyId()));
+        
+        if ( clone_cloning_strategy== null)
+        {
+            m_error_messages.add("Cannot process clone: "+clone_description.getCloneId()+". Cloning Strategy ("+clone_description.getCloningStrategyId()+" not found");
+            return null;
+        }
         if ( m_process_type == Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE)
         {
-             stretch_collection = getLQRForClone( clone_id,   trimming_spec, cloning_strategy);
+             stretch_collection = getLQRForClone( clone_description,   trimming_spec, clone_cloning_strategy);
         }
         else if (m_process_type == Constants.PROCESS_FIND_GAPS)
         {
             GapMapper mapper = new GapMapper();
-            mapper.setCloneId(clone_id);
+           // mapper.setCloneId(clone_id);
+            mapper.setCloneDescription(clone_description);
             mapper.setQualityTrimmingScore (m_quality_trimming_phd_score);
             mapper.setQualityTrimmingLastBase(m_quality_trimming_phd_last_base);
             mapper.setQualityTrimmingFirstBase (m_quality_trimming_phd_first_base);
             mapper.setIsUseLQReadsForAssembly(  m_use_lqreads_for_assembly );
             mapper.setIsDeleteLQReads( m_delete_lqreads);
-   
+            mapper.setCloningStrategy(clone_cloning_strategy);
             mapper.setVectorFileName(m_vector_file_name );
        
             mapper.setTrimmingSpec( trimming_spec);
             mapper.setIsRunLQR(m_isRunLQRFinderForContigs);
+            
             mapper.run();
             stretch_collection = mapper.getStretchCollection();
             if ( mapper.getErrorMessages() != null && mapper.getErrorMessages().size() > 0)
@@ -290,21 +302,21 @@ import java.util.*;
     }
 
     private StretchCollection     getLQRForClone
-            (int clone_id,
+            (CloneDescription clone_description,
             SlidingWindowTrimmingSpec trimming_spec,
             CloningStrategy cloning_strategy)
             throws Exception
     {
-            CloneDescription clone_description = CloneDescription.getCloneDescription( clone_id);
+           // CloneDescription clone_description = CloneDescription.getCloneDescription( clone_id);
             Stretch lqr = null;
-            CloneSequence clone_sequence = CloneSequence.getOneByCloneId(clone_id);
+            CloneSequence clone_sequence = CloneSequence.getOneByCloneId(clone_description.getCloneId());
             StretchCollection  stretch_collection = null;
             if ( clone_sequence != null && clone_description != null) //sequence assembled , checking for lqr
             {
                 //check weather this collection was already created
                 if( !m_isTryMode && StretchCollection.getByCloneSequenceIdAndSpecId(clone_sequence.getId(), trimming_spec.getId()) != null )
                 {
-                     m_error_messages.add("LQR collection for clone id: "+clone_id +" already exists.");
+                     m_error_messages.add("LQR collection for clone id: "+clone_description.getCloneId() +" already exists.");
                      return null;
                 }
                  
@@ -339,7 +351,7 @@ import java.util.*;
             }
             else
             {
-                m_error_messages.add("Cannot find clone sequence for clone id: "+clone_id);
+                m_error_messages.add("Cannot find clone sequence for clone id: "+clone_description.getCloneId());
             }
             return stretch_collection;
     }
@@ -562,19 +574,19 @@ import java.util.*;
              runner.setUser( AccessManager.getInstance().getUser("htaycher123","me"));
      //        runner.setInputData( Constants.ITEM_TYPE_CLONEID,"   156910 156501 157232 150786 150278 144316 172674 157051 157233 155049 153408 150441 157958 154010 149955 155723 147626 172494 157895 147503 150954	   ");            
           
-              runner.setInputData( Constants.ITEM_TYPE_CLONEID,"  149955 155049");
+              runner.setInputData( Constants.ITEM_TYPE_CLONEID,"  2330");
 
              
-             runner.setProcessType(Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE);
-             ((GapMapperRunner)runner).setIsTryMode(true);
+             runner.setProcessType(Constants.PROCESS_FIND_GAPS);
+             ((GapMapperRunner)runner).setIsTryMode(false);
               ((GapMapperRunner)runner).setSpecId(32);// 32 for yp3
              ((GapMapperRunner)runner).setVectorFileName("vector_empty.txt");
-              ((GapMapperRunner)runner).setIsRunLQR(true);
+              ((GapMapperRunner)runner).setIsRunLQR(false);
               ((GapMapperRunner)runner).setQualityTrimmingScore (0);
     ((GapMapperRunner)runner).setQualityTrimmingLastBase (0);
     ((GapMapperRunner)runner).setQualityTrimmingFirstBase (0);
-  ((GapMapperRunner)runner).setNumberOfBasesCoveredByForwardER(250);
-  ((GapMapperRunner)runner).setNumberOfBasesCoveredByReverseER(250);
+  ((GapMapperRunner)runner).setNumberOfBasesCoveredByForwardER(50);
+  ((GapMapperRunner)runner).setNumberOfBasesCoveredByReverseER(50);
              runner.run();
              //run gap mapper
          /*   

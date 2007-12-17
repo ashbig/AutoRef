@@ -293,27 +293,52 @@ public class CloneCollectionParser extends DefaultHandler
           if (item_type != edu.harvard.med.hip.bec.Constants.ITEM_TYPE_PLATE_LABELS) return;
           ArrayList labels =  edu.harvard.med.hip.bec.util.Algorithms.splitString(item_value);
            ArrayList samples = null;
-           SampleInfo sample = null ;
-           int construct_id = 0;
-           boolean isCloseConstruct = false;
-         
+           
            java.sql.Connection  flex_connection = edu.harvard.med.hip.bec.database.DatabaseTransactionLocal.getInstance(
                     edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("FLEX_URL") , 
                     edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("FLEX_USERNAME"), 
                     edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("FLEX_PASSWORD")).requestConnection();
    
-          FileWriter out = new FileWriter(file_name);
-          out.write("<?xml version='1.0' encoding='ISO-8859-1'?>");
-          out.write("<!DOCTYPE web-app   \n  PUBLIC '-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN' 'http://java.sun.com/dtd/web-app_2_3.dtd'>");
-          out.write("\n<"+CLONE_COLLECTIONS_START+">");
+          writeCollectionFileHeader( file_name);
         
           for (int count = 0; count < labels.size(); count++)
           {
               samples =  getSampleInfoFromFLEX((String) labels.get(count),   flex_connection) ;
-              for (int c_sample = 0; c_sample < samples.size(); c_sample++)
+              writeCollectionFile( samples,  (String) labels.get(count),  file_name,
+                 project_id, cloningstrategyid,  user_id);
+            
+          }
+          writeCollectionFileFooter( file_name);
+          
+      }
+      
+      
+      public static void writeCollectionFileHeader(String file_name) throws Exception
+      {
+          FileWriter out = new FileWriter(file_name);
+          out.write("<?xml version='1.0' encoding='ISO-8859-1'?>");
+          out.write("<!DOCTYPE web-app   \n  PUBLIC '-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN' 'http://java.sun.com/dtd/web-app_2_3.dtd'>");
+          out.write("\n<"+CLONE_COLLECTIONS_START+">");
+          out.flush();
+          out.close();
+          
+      }
+      
+      
+        public static void writeCollectionFile(ArrayList samples, String collection_name, String file_name,
+                int project_id,int cloningstrategyid,
+                  int user_id )
+                  throws Exception
+      {
+            SampleInfo sample = null ;
+           int construct_id = 0;
+           boolean isCloseConstruct = false;
+         
+        FileWriter out = new FileWriter(file_name, true);
+        for (int c_sample = 0; c_sample < samples.size(); c_sample++)
              {
                  if ( c_sample == 0)    
-                     out.write("\n\n<"+CLONE_COLLECTION_START+"  "+ CLONE_COLLECTION_USERID +"='"+ user_id +"' "+CLONE_COLLECTION_NAME+"='"+(String) labels.get(count)+"' "+CLONE_COLLECTION_PROJECT_ID+"='"+project_id+"'>");
+                     out.write("\n\n<"+CLONE_COLLECTION_START+"  "+ CLONE_COLLECTION_USERID +"='"+ user_id +"' "+CLONE_COLLECTION_NAME+"='"+collection_name+"' "+CLONE_COLLECTION_PROJECT_ID+"='"+project_id+"'>");
          
                 sample = (SampleInfo)samples.get(c_sample);
                 if ( sample.isControl())
@@ -343,13 +368,72 @@ public class CloneCollectionParser extends DefaultHandler
                
              out.write("\n</"+CLONE_COLLECTION_START+">");
              out.flush();
-          }
-             out.write("\n</"+CLONE_COLLECTIONS_START+">");
-       
+          
           out.close();
           
       }
       
+        
+        
+        
+    public static void writeCollectionFile(ArrayList collections, String file_name,
+                int user_id )              throws Exception
+   {
+       SampleForCloneCollection sample = null ;
+       ConstructForCloneCollection construct = null;
+       CloneCollection plate = null;
+         int user_id_per_collection = -1;
+        FileWriter out = new FileWriter(file_name, true);
+        for (int c_collection = 0; c_collection < collections.size(); c_collection++)
+        {
+           plate=( CloneCollection) collections.get(c_collection);
+           user_id_per_collection = plate.getId();
+           if ( user_id_per_collection ==-1) user_id_per_collection=user_id;
+           out.write("\n\n<"+CLONE_COLLECTION_START+"  "+ CLONE_COLLECTION_USERID +"='"+ user_id_per_collection +"' "+CLONE_COLLECTION_NAME+"='"+plate.getName()+"' "+CLONE_COLLECTION_PROJECT_ID+"='"+plate.getProjectId()+"' "+ CLONE_COLLECTION_TYPE+"='"+plate.getType()+"'>");
+           for (int c_sample = 0; c_sample < plate.getSamples().size(); c_sample++)
+           {
+               sample = (SampleForCloneCollection)plate.getSamples().get(c_sample);
+               if ( sample.getType().equals(""))
+               {
+                    out.write( "\n<"+SAMPLE_START +" "+  SAMPLE_ID +"='"+ sample.getId()+"' "+SAMPLE_CLONEID+"='0' "+SAMPLE_WELL+"='"+ edu.harvard.med.hip.bec.sampletracking.objects.Container.convertPositionFrom_int_to_alphanumeric(sample.getPosition())+"'	"+SAMPLE_TYPE+"='"+sample.getType()+"'	/>"); 
+
+               }
+               else
+               {
+                   throw new Exception("Wrong collection");
+               }
+           }
+           for (int c_construct = 0; c_construct < plate.getConstructs().size(); c_construct++)
+           {
+             construct =(ConstructForCloneCollection)plate.getConstructs().get(c_construct);
+             
+              out.write( "\n <"+CONSTRUCT_START+" " +
+                    CONSTRUCT_ID +"='"+ construct.getId() +"' "+
+                    CONSTRUCT_FORMAT +"= '"+construct.getFormat() +"' " +
+                    CONSTRUCT_CS_ID +"='" + construct.getCloningStrategyId()+"' " +
+                    CONSTRUCT_REFSEQUENCEID +"= '" + construct.getRefSequenceId() +"'>");
+               for (int c_sample_construct = 0; c_sample_construct < construct.getSamples().size(); c_sample_construct++)
+               {
+                    sample = (SampleForCloneCollection)construct.getSamples().get(c_sample_construct);
+                    out.write( "\n<"+SAMPLE_START +" "+  SAMPLE_ID +"='"+ sample.getId()+"' "+SAMPLE_CLONEID+"='"+sample.getCloneId()+"' "+SAMPLE_WELL+"='"+ edu.harvard.med.hip.bec.sampletracking.objects.Container.convertPositionFrom_int_to_alphanumeric(sample.getPosition())+"'	"+SAMPLE_TYPE+"='"+sample.getType()+"'	/>"); 
+               }
+              
+               out.write( " \n</"+CONSTRUCT_START+">");
+           }
+            out.write("\n</"+CLONE_COLLECTION_START+">");
+             out.flush();
+        }
+          
+          out.close();
+          
+      }
+      public static void writeCollectionFileFooter(String file_name) throws Exception
+      {
+        FileWriter out = new FileWriter(file_name, true);
+        out.write("\n</"+CLONE_COLLECTIONS_START+">");
+        out.flush();
+          out.close();
+      }
     private  ArrayList getSampleInfoFromFLEX(String platename,  java.sql.Connection flex_connection) throws Exception
     {
         ArrayList samples = new ArrayList();
@@ -399,6 +483,9 @@ public class CloneCollectionParser extends DefaultHandler
         edu.harvard.med.hip.bec.database.DatabaseTransactionLocal.closeResultSet(rs);
         return samples;
     }
+    
+    
+    
      class SampleInfo
     {
         private int i_sampleid  = -1;

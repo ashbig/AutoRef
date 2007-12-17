@@ -13,7 +13,7 @@
 <%@ page import="edu.harvard.med.hip.bec.sampletracking.mapping.*" %>
 <%@ page import="edu.harvard.med.hip.bec.sampletracking.objects.*" %>
 <%@ page import="edu.harvard.med.hip.bec.coreobjects.endreads.*" %>
-
+<%@ page import="edu.harvard.med.hip.bec.util.*" %>
 <html>
 <LINK REL=StyleSheet HREF="application_styles.css" TYPE="text/css" MEDIA=screen>
 
@@ -75,9 +75,10 @@
   
   <tr> 
     <td><strong>Cloning Strategy:</strong></td>
-    <td> 
-      <a href="<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION")  %>Seq_GetItem.do?forwardName=<%= Constants.CLONING_STRATEGY_DEFINITION_INT %>&amp;ID=<%= container.getCloningStrategyId() %>">
-	    <%= container.getCloningStrategyId() %></A>
+    <td> &nbsp;
+        <% if ( container.getCloningStrategyIdAsInt() != BecIDGenerator.BEC_OBJECT_ID_MULTIPAL_VALUES )
+     {%> <a href="<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION")  %>Seq_GetItem.do?forwardName=<%= Constants.CLONING_STRATEGY_DEFINITION_INT %>&amp;ID=<%= container.getCloningStrategyIdAsInt() %>">
+	    <%= container.getCloningStrategyIdAsInt() %></A><%}%>
     </td>
   </tr>
   

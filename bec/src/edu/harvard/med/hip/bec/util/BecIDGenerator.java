@@ -1,6 +1,6 @@
 //Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
 /**
- * $Id: BecIDGenerator.java,v 1.3 2006-05-18 15:43:35 Elena Exp $
+ * $Id: BecIDGenerator.java,v 1.4 2007-12-17 18:59:05 Elena Exp $
  *
  * File     	: BecIDGenerator.java
  * Date     	: 04182001
@@ -24,6 +24,7 @@ public class BecIDGenerator
 {
     
     public static final int BEC_OBJECT_ID_NOTSET = -1;
+    public static final int BEC_OBJECT_ID_MULTIPAL_VALUES = -2;
     /**
      * This is a static method to get the primary key for the given table
      * from the database.

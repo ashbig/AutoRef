@@ -75,9 +75,10 @@ public class RunProcessAction extends BecAction
                     String     fusion_stop_codon =  (String)request.getParameter("fusion_stop_codon");//get from form
                     String    closed_stop_codon =  (String)request.getParameter("closed_stop_codon");//get from form
                     
-                    int     vectorid = Integer.parseInt( (String)request.getParameter(Constants.VECTOR_ID_KEY));//get from form
+                  /*  int     vectorid = Integer.parseInt( (String)request.getParameter(Constants.VECTOR_ID_KEY));//get from form
                     int     linker3id = Integer.parseInt( (String) request.getParameter("3LINKERID"));//get from form
                     int     linker5id = Integer.parseInt( (String)request.getParameter("5LINKERID"));//get from form
+                  */
                     int     put_plate_for_step = Integer.parseInt( (String) request.getParameter("nextstep")); //get from form
                     int     project_id = Integer.parseInt((String) request.getParameter(UI_Constants.PROJECT_ID)); //get from form
                     //validate input
@@ -93,9 +94,11 @@ public class RunProcessAction extends BecAction
                       
                      runner = new PlateUploadRunner();
                      runner.setInputData(Constants.ITEM_TYPE_PLATE_LABELS,  container_labels);
-                    ((PlateUploadRunner)runner).setVectorId(vectorid );
+                 /*
+                  ((PlateUploadRunner)runner).setVectorId(vectorid );
                     ((PlateUploadRunner)runner).setLinker3Id(linker3id);
                     ((PlateUploadRunner)runner).setLinker5Id(linker5id);
+                  **/
                     ((PlateUploadRunner)runner).setStartCodon(start_codon);
                     ((PlateUploadRunner)runner).setFusionStopCodon(fusion_stop_codon);
                     ((PlateUploadRunner)runner).setClosedStopCodon(closed_stop_codon);

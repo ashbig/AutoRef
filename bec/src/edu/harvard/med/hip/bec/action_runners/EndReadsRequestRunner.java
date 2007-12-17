@@ -256,14 +256,17 @@ import edu.harvard.med.hip.bec.sampletracking.objects.*;
         try
         {
           ArrayList master_container_ids = new ArrayList();
-              int forward_primer_id = 1 ;
-            int reverse_primer_id = -1;
+              int forward_primer_id = 25759 ;
+            int reverse_primer_id = -25760;
 
             ProcessRunner runner = new EndReadsRequestRunner();
-            runner.setInputData(Constants.ITEM_TYPE_PLATE_LABELS, "YMG000488" );
-            if ( forward_primer_id != -1) ((EndReadsRequestRunner)runner).setForwardPrimerId( forward_primer_id );
-            if ( reverse_primer_id != -1)((EndReadsRequestRunner)runner).setRevercePrimerId(reverse_primer_id);
-            runner.setUser(AccessManager.getInstance().getUser("htaycher345","htaycher"));
+           // runner.setInputData(Constants.ITEM_TYPE_PLATE_LABELS, "YMG000488" );
+         //   if ( forward_primer_id != -1)
+                ((EndReadsRequestRunner)runner).setForwardPrimerId( forward_primer_id );
+         //   if ( reverse_primer_id != -1)
+                ((EndReadsRequestRunner)runner).setRevercePrimerId(reverse_primer_id);
+            runner.setUser(AccessManager.getInstance().getUser("htaycher345","me"));
+            runner.setProcessType(Constants.PROCESS_SELECT_PLATES_FOR_END_READS_NEW_VERSION);
             runner.run();
 
         }catch(Exception e){}

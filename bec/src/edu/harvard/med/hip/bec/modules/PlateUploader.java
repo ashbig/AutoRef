@@ -44,8 +44,14 @@ public class PlateUploader
     //private int       m_vector_id = -1;
     //private int       m_linker3_id = -1;
     //private int       m_linker5_id = -1;
+    private String      m_start_codon  = null;
+    private String       m_fusion_stop_codon = null;
+    private String       m_close_stop_codon = null;
+    
+    
+    
     private int       m_array_type = -1;
-    private int         m_cloning_strategy_id = -1;
+    private ArrayList m_cloning_strategy_ids = null;
     private ArrayList m_error_messages = null;
     private ArrayList m_container_ids = null;
     private int         m_project_id =  BecIDGenerator.BEC_OBJECT_ID_NOTSET;
@@ -73,61 +79,78 @@ public class PlateUploader
         m_plate_names = plate_names;
         m_array_type = mode;
         m_plate_sabmitted_for = isltrstatus;//initial status for isolate ranking
-        m_cloning_strategy_id = cloning_strategy_id;
+        m_cloning_strategy_ids = new ArrayList(); 
+        m_cloning_strategy_ids.add(new Integer(cloning_strategy_id));
         m_error_messages = new ArrayList();
         m_container_ids = new ArrayList();
         m_project_id=project_id;
          m_messages_uploaded_plates = new ArrayList();
          m_messages_failed_plates = new ArrayList();
     }
+   
+   public PlateUploader(ArrayList plate_names, int mode, 
+    int isltrstatus   ,int project_id)
+    {
+        m_plate_names = plate_names;
+        m_array_type = mode;
+        m_plate_sabmitted_for = isltrstatus;//initial status for isolate ranking
+        m_error_messages = new ArrayList();
+        m_container_ids = new ArrayList();
+        m_project_id=project_id;
+         m_messages_uploaded_plates = new ArrayList();
+         m_messages_failed_plates = new ArrayList();
+           m_cloning_strategy_ids = new ArrayList(); 
+    }
     
+    public void         setStartCodon( String s){ m_start_codon  = s;}
+    public void         setFusionStopCodon( String s){ m_fusion_stop_codon= s;}
+    public void         setCloseStopCodon(String s){ m_close_stop_codon = s;}
+      
+   
     public ArrayList getErrors(){ return m_error_messages;}
     public ArrayList getContainerIds(){ return m_container_ids;}
     public ArrayList getPassPlateNames(){ return m_messages_uploaded_plates ;}
     public ArrayList getFailedPlateNames(){ return m_messages_failed_plates ;}
+    public ArrayList       getProcessClonningStrategyIDs(){ return m_cloning_strategy_ids;}
     
     public void  upload(Connection conn)
     {
    //get all reference sequences from bec: to prevent multipal upload of the same sequence
         //Hashtable refsequences = getAllRefSequences(m_bec_connection);
-         Connection  flex_connection = null;
-         Connection  bec_connection = conn;
+         Connection  flex_connection = null;Hashtable  cloning_strategies_map =null;
+         Connection  bec_connection = conn; 
         try
         {
+             String flex_url =    BecProperties.getInstance().getProperty("FLEX_URL") ;
+             String flex_username =          BecProperties.getInstance().getProperty("FLEX_USERNAME"); 
+             String flex_password =          BecProperties.getInstance().getProperty("FLEX_PASSWORD");
              flex_connection = DatabaseTransactionLocal.getInstance(
-                    BecProperties.getInstance().getProperty("FLEX_URL") , 
-                    BecProperties.getInstance().getProperty("FLEX_USERNAME"), 
-                    BecProperties.getInstance().getProperty("FLEX_PASSWORD")).requestConnection();
+                    flex_url ,    flex_username,  flex_password).requestConnection();
             // bec_connection = DatabaseTransaction.getInstance().requestConnection();
+        
         }
         catch(Exception e)
         {
             m_error_messages.add("Cannot open connection to database "+e.getMessage());
-          
-        }
-         
-        
-        for (int count = 0 ; count < m_plate_names.size(); count++)
-        {
-            uploadPlate( (String) m_plate_names.get(count) , flex_connection, bec_connection);
-           
+            return;
         }
         try
+        {  cloning_strategies_map = mapFLEXCloneingStrategiesToACECloningStrategies(flex_connection);  }
+         catch(Exception e)        {            m_error_messages.add( e.getMessage());            return;        }
+         
+        for (int count = 0 ; count < m_plate_names.size(); count++)
         {
-            flex_connection.close();
-            //bec_connection.close();
-     
+            uploadPlate( (String) m_plate_names.get(count) , flex_connection, bec_connection, cloning_strategies_map);
         }
+        try
+        {            flex_connection.close();}
         catch(Exception e)
-        {
-            m_error_messages.add("Cannot close connection to database "+e.getMessage());
-           
-        }
+        {m_error_messages.add("Cannot close connection to database "+e.getMessage());}
     }
     
     //function uploads data for one plate into BEC
     private  synchronized   void uploadPlate( String platename, Connection flex_connection, 
-                                            Connection bec_connection)
+                     Connection bec_connection, Hashtable cloning_strategies_map)
     {
         //hash for flex sequences
         try
@@ -158,12 +181,21 @@ public class PlateUploader
               // get all needed info from flex
 
               // get all related sample info from flex
+              //!!! for new version  - extract clonning strategy per sample
               ArrayList samples = getSampleInfoFromFLEX( platename,  flex_sequence_ids,  flex_connection);
+              // this sequence: 
+              // (a) checks if cloning strategy per sample exists in ACE
+              // (b) reassigne sample strategyid to ACE strategyid
+              // (c) sets m_cloning_strategy_id per process if all plates go with the same strategy id
+              checkCloningStrategyPerClone(samples, cloning_strategies_map);
+              
               // check for sequence duplicates in BEC
               checkForSequencePresenceInBEC(flex_sequence_ids,bec_connection,flex_connection);
               //get new for BEC sequences from FLEX
                getMissingFlexSequences(flex_sequence_ids, flex_connection,bec_connection);
-
+  
+//!!! for new version  - verify clonning strategy per sample
+            
                int plate_id = insertPlateInfo(platename, samples, flex_sequence_ids,bec_connection);
                
                //commit plate info into bec
@@ -182,6 +214,111 @@ public class PlateUploader
     
     
     //*******************************************************************************
+    
+    public Hashtable   mapFLEXCloneingStrategiesToACECloningStrategies(Connection flex_connection)
+                        throws Exception
+    {
+            Hashtable map_ace_cloning_strategies= new Hashtable();
+            Hashtable flex_cloneing_strategies = getFLEXCloningStrategies(flex_connection);   
+            ArrayList ace_cloning_strategies = CloningStrategy.getAllCloningStrategies(1);
+            CloningStrategy cl_strategy = null; String key = null;
+            CloningStrategy flex_cl_strategy = null; 
+            for (int count = 0; count < ace_cloning_strategies.size(); count++)
+            {
+                cl_strategy= (CloningStrategy) ace_cloning_strategies.get(count);
+                key = cl_strategy.getVector().getName() +"_"+ cl_strategy.getLinker5().getName()+"_"+ cl_strategy.getLinker3().getName();
+                key = key.toUpperCase();
+      // System.out.println(key);
+                flex_cl_strategy = (CloningStrategy)flex_cloneing_strategies.get(key);
+                if (  flex_cl_strategy != null)
+                {
+                    // put only for the requested codons
+                    if (cl_strategy.getStartCodon().equalsIgnoreCase(m_start_codon) &&
+                            cl_strategy.getFusionStopCodon().equalsIgnoreCase(m_fusion_stop_codon) &&
+                              cl_strategy.getClosedStopCodon().equalsIgnoreCase(m_close_stop_codon))
+                    {
+                        map_ace_cloning_strategies.put(new Integer(flex_cl_strategy.getId()), new Integer(cl_strategy.getId()));
+                    }
+                }
+            }
+            return map_ace_cloning_strategies; 
+    }
+     private Hashtable  getFLEXCloningStrategies(Connection flex_connection)throws Exception
+     {
+         String sql = "select strategyid, strategyname, vectorname, linkerid_5p, "
++" (select linkername from linker where linkerid=linkerid_5p) as linker_5p_name, "
++" (select linkersequence from linker where linkerid=linkerid_5p) as linker_5p_sequence, "
++" linkerid_3p,  (select linkername from linker where linkerid=linkerid_3p) as linker_3p_name , "
++"  (select linkersequence from linker where linkerid=linkerid_3p) as linker_3p_sequence "
++"  from cloningstrategy order by strategyid";
+        BioVector vector = null; String key = null;
+        Hashtable flex_cloneing_strategies = new Hashtable();
+        ResultSet rs = null;CloningStrategy flex_strategy = null;
+        try {
+            rs =  rs = DatabaseTransactionLocal.executeQuery(sql,flex_connection);
+           
+            while (rs.next()) 
+            {
+                flex_strategy = new CloningStrategy(rs.getInt("strategyid"), -1, 
+                    rs.getInt("linkerid_3p"), rs.getInt("linkerid_5p"), 
+                    "","","",rs.getString("strategyname"));
+                flex_strategy.setLinker5(new BioLinker(rs.getInt("linkerid_5p"), rs.getString("linker_5p_name").trim(),  rs.getString("linker_5p_sequence").trim(), -1));
+                flex_strategy.setLinker3(new BioLinker(rs.getInt("linkerid_3p"), rs.getString("linker_3p_name").trim(),  rs.getString("linker_3p_sequence").trim(), -1));
+                vector = new BioVector(); vector.setName(rs.getString("vectorname").trim());
+                flex_strategy.setVector( vector );
+                key = flex_strategy.getVector().getName() +"_"+ flex_strategy.getLinker5().getName()+"_"+ flex_strategy.getLinker3().getName();
+                flex_cloneing_strategies.put(key.toUpperCase(), flex_strategy);
+            }
+            return flex_cloneing_strategies;
+        } catch (Exception ex)
+        {
+               throw new Exception("Error occured while getting cloning strategy information from FLEX: "+ex.getMessage());
+       
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+      
+     }
+      
+     
+        // (a) checks if cloning strategy per sample exists in ACE
+              // (b) reassigne sample strategyid to ACE strategyid
+              // (c) sets m_cloning_strategy_id per process if all plates go with the same strategy id
+         
+    
+     private void    checkCloningStrategyPerClone(ArrayList samples, 
+             Hashtable cloning_strategies_map )
+            throws Exception
+     {
+         boolean isNoMissingClonningStrategy = false;
+         Integer sample_cloning_strategy_id = null;
+         int ace_cloning_strategy_id = -1;
+         SampleInfo sample = null;
+         for (int count = 0; count < samples.size() ; count++)
+         {
+             sample = (SampleInfo) samples.get(count);
+             Integer temp = (Integer) cloning_strategies_map.get( new Integer(sample.getCloningStrategyID()));
+             if (temp != null) 
+             {
+                 ace_cloning_strategy_id = temp.intValue();
+                 sample.setCloningStrategyID(ace_cloning_strategy_id);
+                 //-----------------------------------------------------------
+                 // deal with cloning strategy per process that will be used as process spec
+    // first assigment
+                 sample_cloning_strategy_id = new Integer( sample.getCloningStrategyID());
+                 if ( !m_cloning_strategy_ids.contains(sample_cloning_strategy_id)) 
+                     m_cloning_strategy_ids.add(sample_cloning_strategy_id);
+               //---------------------------------------------------------------------
+             }
+             else
+             {
+                  m_error_messages.add("cannot find cloning strategy for clone : "+ sample.getCloneId()
+                  +", start codon - " +  m_start_codon +", stop fusion - "+ m_fusion_stop_codon 
+                          + ", stop closed - "+ m_close_stop_codon);
+             }
+         }
+         if(isNoMissingClonningStrategy) throw new Exception("Cannot find Cloning Strategy(is), please check error messages and creat reuiered Cloning Strategies.");
+     }
     
     //returns list of existing cloneids from plate
     private String duplicatedClones(String platename, Connection flex_connection,
@@ -232,14 +369,19 @@ public class PlateUploader
         int plate_id  = -1;
         SampleInfo sample ;
      
-         String sql = "select sampleid, sampletype, containerid,"+
+      /*   String sql = "select sampleid, sampletype, containerid,"+
         " containerposition as position, cd.constructtype as format, cd.constructid as constructid, cd.sequenceid as sequenceid, c.cloneid as CLONEID "+
         " from clonesequencing c, sample s, constructdesign cd"+
         " where s.containerid =  (select containerid from containerheader " +
         " where label='" + platename +"')"+
         " and c.sequencingsampleid(+)=s.sampleid"+
         " and s.constructid=cd.constructid(+)"+
-        " order by containerposition";
+        " order by containerposition"; */
+        String sql = "select sampleid, sampletype, containerid,  containerposition as position, "
+                +" cd.constructtype as format, cd.constructid as constructid, cd.sequenceid as sequenceid, "
++"  c.cloneid as CLONEID , strategyid   from clonesequencing c, sample s, constructdesign cd , clones cl "
++"  where s.cloneid = cl.cloneid  and s.containerid =  (select containerid from containerheader "
++"where label='" + platename +"') and c.sequencingsampleid(+)=s.sampleid and s.constructid=cd.constructid(+) order by containerposition";
         ResultSet rs = null;
         try
         {
@@ -252,7 +394,6 @@ public class PlateUploader
                 sample.setId ( rs.getInt("sampleid") );
                 sample.setPlateId( rs.getInt("containerid") );
                 sample.setPosition ( rs.getInt("position") );
-                
                 sample.setType ( rs.getString("sampletype") );
                 //not control
                 if ( !sample.isControl() )
@@ -272,6 +413,7 @@ public class PlateUploader
                 {
                    // if (cloneid == 0) throw new BecDatabaseException("No cloneid is detected for sample position "+sample.getPosition ());
                     sample.setCloneId (cloneid);
+                    sample.setCloningStrategyID(rs.getInt("strategyid"));
                 }
                 else
                 {
@@ -345,9 +487,9 @@ public class PlateUploader
     {
         RefSequence fl = null;
         
-        for (Enumeration enum = flex_sequences.keys(); enum.hasMoreElements() ;)
+        for (Enumeration e = flex_sequences.keys(); e.hasMoreElements() ;)
         {
-            Object key = enum.nextElement();
+            Object key = e.nextElement();
             
             if ( flex_sequences.get(key) instanceof Integer &&  ((Integer)flex_sequences.get(key)).intValue() == -1)
             { 
@@ -490,7 +632,8 @@ public class PlateUploader
                                             sample_info.getSequenceId(),
                                             flex_sequence_ids, 
                                             bec_connection,
-                                            m_cloning_strategy_id);
+                                            sample_info.getCloningStrategyID());
+                                            //m_cloning_strategy_id);
                     istr.setConstructId( constructid );
                 }
             
@@ -632,6 +775,7 @@ public class PlateUploader
         private int i_constructid = -1;
         private int i_sequenceid = -1;
         private int i_format = -1;
+        private int i_cloningstrategyid  = -1;
         
         public SampleInfo(){}
         
@@ -644,6 +788,7 @@ public class PlateUploader
         public int getConstructId (){ return i_constructid  ;}
         public int getSequenceId (){ return i_sequenceid  ;}
         public int getFormat (){ return i_format  ;}
+        public int  getCloningStrategyID(){ return i_cloningstrategyid;}
         
         public void setId (int v){  i_sampleid   = v;}
         public void setPlateId (int v){  i_plateid = v;}
@@ -663,6 +808,7 @@ public class PlateUploader
             else
                 i_format = Construct.FORMAT_OPEN;
         }
+        public void setCloningStrategyID(int v){ i_cloningstrategyid = v;}
         
         public boolean isEmpty()    {        return (i_type.equals("EMPTY"));    }
         public boolean isControl()    {        return (i_type.startsWith("CONTROL"));} 
@@ -768,18 +914,22 @@ public class PlateUploader
         ArrayList plates = new ArrayList();
     
       //  plates.add("YGS000360-2");
-        plates.add("MGS000206-5");
+        plates.add("EDN003394");
        // plates.add("YGS000360-3");
        // plates.add("YGS000360-4");
         Connection conn=null;
         try
         {
+                 BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
+        sysProps.verifyApplicationSettings();
              conn = DatabaseTransaction.getInstance().requestConnection();
-         PlateUploader pb = new PlateUploader( plates, PLATE_NAMES, 3, IsolateTrackingEngine.PROCESS_STATUS_SUBMITTED_FOR_ER,1);
-            pb.upload( conn);
-    //     PlateUploader pb = new PlateUploader( plates, PLATE_NAMES, 1,  4, 5, IsolateTrackingEngine.PROCESS_STATUS_SUBMITTED_FOR_ER);
+             
+         PlateUploader pb = new PlateUploader( plates, PLATE_NAMES,  IsolateTrackingEngine.PROCESS_STATUS_SUBMITTED_FOR_ER,24);
+         pb.setCloseStopCodon("NON");pb.setFusionStopCodon("GGA");pb.setStartCodon("NON");
+         pb.upload( conn);
+            //     PlateUploader pb = new PlateUploader( plates, PLATE_NAMES, 1,  4, 5, IsolateTrackingEngine.PROCESS_STATUS_SUBMITTED_FOR_ER);
      //    pb.upload();
-        //    conn.commit();
+         
             
         }catch(Exception e){DatabaseTransaction.rollback(conn);}
         System.exit(0);

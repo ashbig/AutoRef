@@ -25,19 +25,20 @@ import java.io.*;
 // work on clone base
 public class GapMapper
 {
-    private int                         m_clone_id = -1;
+   // private int                         m_clone_id = -1;
     private ArrayList                   m_error_messages = null;
-    private CloningStrategy             m_cloning_startegy = null;
+   // private CloningStrategy             m_cloning_startegy = null;
     private StretchCollection           m_stretch_collection = null;
     private SlidingWindowTrimmingSpec       m_trimming_spec = null;
     private boolean                         m_isRunLQRFinderForContigs = false;
     private String                      m_vector_file_name = null;
-    private int         m_quality_trimming_phd_score = 0;
-    private int         m_quality_trimming_phd_first_base = 0;
-    private int         m_quality_trimming_phd_last_base = 0;
-    private int         m_use_lqreads_for_assembly = 0;
-    private int         m_delete_lqreads = 0;
-       
+    private int                         m_quality_trimming_phd_score = 0;
+    private int                         m_quality_trimming_phd_first_base = 0;
+    private int                         m_quality_trimming_phd_last_base = 0;
+    private int                         m_use_lqreads_for_assembly = 0;
+    private int                         m_delete_lqreads = 0;
+    private CloneDescription            m_clone_description =    null;
+    private CloningStrategy            m_cloning_strategy =    null;
    
     
    // private int                     m_min_contig_avg_score = 20;
@@ -48,7 +49,9 @@ public class GapMapper
         m_error_messages = new ArrayList();
     }
     
-    public void                 setCloneId(int v){ m_clone_id = v;}
+    //public void         setCloneId(int v){ m_clone_id = v;}
+    public void         setCloneDescription(CloneDescription v ){ m_clone_description = v;}
+    public void         setCloningStrategy( CloningStrategy v ){ m_cloning_strategy = v;}
     public void         setVectorFileName(String v){m_vector_file_name = v;}
     public void         setQualityTrimmingScore (int v){ m_quality_trimming_phd_score = v;}
     public void         setQualityTrimmingLastBase (int v){ m_quality_trimming_phd_last_base = v;}
@@ -60,30 +63,30 @@ public class GapMapper
     public void                 setIsRunLQR(boolean v){m_isRunLQRFinderForContigs = v;}
     public ArrayList            getErrorMessages(){ return m_error_messages; }
     public StretchCollection    getStretchCollection(){ return   m_stretch_collection ;}
-     public void                 setTrimmingSpec(SlidingWindowTrimmingSpec   v){    m_trimming_spec = v;}
+    public void                 setTrimmingSpec(SlidingWindowTrimmingSpec   v){    m_trimming_spec = v;}
   
     public void                 run()
     {
         //get refsequence & linker information
         try
         {
-            int clone_id = m_clone_id;
+           // int clone_id = m_clone_id;
             int refsequence_start = 0;
-            CloneDescription clone_description = CloneDescription.getCloneDescription( clone_id);
+           /* CloneDescription clone_description = CloneDescription.getCloneDescription( clone_id);
             if ( clone_description== null) 
             {
                 m_error_messages.add("Clone "+clone_id+" does not exist.");
                 return ;
-            }
-             if ( clone_description.getCloneStatus() == IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH ) 
+            }*/
+             if ( m_clone_description.getCloneStatus() == IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH ) 
             {
-                m_error_messages.add("Clone "+clone_id+" does not match exspected sequence: Gap Mapper run aborted.");
+                m_error_messages.add("Clone "+m_clone_description.getCloneId()+" does not match exspected sequence: Gap Mapper run aborted.");
                 return ;
             }
-            if ( !isCallForGapMapperRelevant(clone_description) ) return;
+       //     if ( !isCallForGapMapperRelevant(clone_description) ) return;
                  
             //refsequence includes linker sequences 
-            BaseSequence clone_refsequence  = getRefsequence(clone_description);
+            BaseSequence clone_refsequence  = getRefsequence();
             // build refsequence file
             PhredPhrap pp = new PhredPhrap();
             pp.setVectorFileName(m_vector_file_name);
@@ -94,33 +97,33 @@ public class GapMapper
             pp.setIsDeleteLQReads( m_delete_lqreads);
    
                 //delete all .phd files from previous processing
-            FileOperations.deleteAllFilesFormDirectory(clone_description.getReadFilePath() + File.separator +"phd_dir");
+            FileOperations.deleteAllFilesFormDirectory(m_clone_description.getReadFilePath() + File.separator +"phd_dir");
       
-            pp.createFakeTraceFile( clone_refsequence.getText(), clone_refsequence.getId(), 18,clone_description.getReadFilePath() , "refsequence");
+            pp.createFakeTraceFile( clone_refsequence.getText(), clone_refsequence.getId(), 18,m_clone_description.getReadFilePath() , "refsequence");
             //run phrap assembler
-            pp.run(clone_description.getReadFilePath() , "refseqassembly"+clone_refsequence.getId()+".fasta.screen.ace.1" );
+            pp.run(m_clone_description.getReadFilePath() , "refseqassembly"+clone_refsequence.getId()+".fasta.screen.ace.1" );
             
             //parse phrap output extrcting exact read data
             PhredPhrapParser pparser = new PhredPhrapParser();
             //find gaps & contigs
-            String refseq_read_name = clone_description.getReadFilePath() +File.separator+ "contig_dir"+File.separator+"refseqassembly"+clone_refsequence.getId()+".fasta.screen.ace.1";
+            String refseq_read_name = m_clone_description.getReadFilePath() +File.separator+ "contig_dir"+File.separator+"refseqassembly"+clone_refsequence.getId()+".fasta.screen.ace.1";
             CloneAssembly clone_assembly = pparser.parseAllData( refseq_read_name );
   //it should be only one contig
             if ( clone_assembly == null || clone_assembly.getContigs()== null )
             {
-                m_error_messages.add("Gap Mapper failed: no assembly was build for clone id "+clone_description.getCloneId());
+                m_error_messages.add("Gap Mapper failed: no assembly was build for clone id "+m_clone_description.getCloneId());
                 return;
             }
             else if ( clone_assembly != null && clone_assembly.getContigs().size() > 1)
             {
-                m_error_messages.add("Gap Mapper failed: more than one contig("+ clone_assembly.getContigs().size() +" contigs) build for clone id "+clone_description.getCloneId());
-                ArrayList not_assembled_reads = getNamesOfNotAssembledReads(clone_description, clone_assembly);
+                m_error_messages.add("Gap Mapper failed: more than one contig("+ clone_assembly.getContigs().size() +" contigs) build for clone id "+m_clone_description.getCloneId());
+                ArrayList not_assembled_reads = getNamesOfNotAssembledReads(m_clone_description, clone_assembly);
                 if ( not_assembled_reads != null && not_assembled_reads.size() > 0 ) 
                     m_error_messages.addAll(not_assembled_reads);
                 return;
             }
-            int linker5_length = m_cloning_startegy.getLinker5().getSequence().length();
-            int linker3_length = m_cloning_startegy.getLinker3().getSequence().length();
+            int linker5_length = m_cloning_strategy.getLinker5().getSequence().length();
+            int linker3_length = m_cloning_strategy.getLinker3().getSequence().length();
     
             ReadInAssembly read = null;
             boolean isContigComplement = false;
@@ -138,7 +141,7 @@ public class GapMapper
                         contig_count++;
                         continue;
                     }
-                    String scores = PhredPhrap.getScoresFromPhdFile(read.getName(), clone_description.getReadFilePath() + File.separator + "phd_dir");
+                    String scores = PhredPhrap.getScoresFromPhdFile(read.getName(), m_clone_description.getReadFilePath() + File.separator + "phd_dir");
                     int[] scores_as_array =  Algorithms.getConvertStringToIntArray( scores, " ") ;
                     //take into acount that phrap gives sense reading of the read in output while scores
                     // are in original direction
@@ -169,9 +172,9 @@ public class GapMapper
                   // ArrayList stretches = recalculateStretches(gaps, contigs);
                     m_stretch_collection = new StretchCollection();
                     m_stretch_collection.setType ( StretchCollection.TYPE_COLLECTION_OF_GAPS_AND_CONTIGS);
-                    m_stretch_collection.setRefSequenceId (  clone_description.getBecRefSequenceId());
-                    m_stretch_collection.setIsolatetrackingId ( clone_description.getIsolateTrackingId());
-                    m_stretch_collection.setCloneId (clone_description.getCloneId());
+                    m_stretch_collection.setRefSequenceId (  m_clone_description.getBecRefSequenceId());
+                    m_stretch_collection.setIsolatetrackingId ( m_clone_description.getIsolateTrackingId());
+                    m_stretch_collection.setCloneId (m_clone_description.getCloneId());
                     m_stretch_collection.setStretches( stretches);
                       
                 }
@@ -181,7 +184,7 @@ public class GapMapper
         catch(Exception e)
         {
           //  System.out.println(e.getMessage());
-            m_error_messages.add ("Cannot define contigs for clone "+ m_clone_id);
+            m_error_messages.add ("Cannot define contigs for clone "+ m_clone_description.getCloneId());
         }
     }
     
@@ -245,26 +248,28 @@ public class GapMapper
         return true;  
     }
   
-    private BaseSequence getRefsequence(CloneDescription clone_description)throws Exception
+    private BaseSequence getRefsequence( )throws Exception
     {
         
-        BioLinker linker3 =  null;  BioLinker linker5 = null;
+       // BioLinker linker3 =  null;  BioLinker linker5 = null;
         BaseSequence clone_refsequence = null;
        
-        m_cloning_startegy = Container.getCloningStrategy(clone_description.getContainerId());
+        /*m_cloning_startegy = CloningStrategy.getById( clone_description.getCloningStrategyId());
         if (m_cloning_startegy != null)
          {
              linker3 = BioLinker.getLinkerById( m_cloning_startegy.getLinker3Id() );
              m_cloning_startegy.setLinker3(linker3);
              linker5 = BioLinker.getLinkerById( m_cloning_startegy.getLinker5Id() );
              m_cloning_startegy.setLinker5(linker5);
-         }
-         RefSequence refsequence = new RefSequence( clone_description.getBecRefSequenceId());
-         if (refsequence != null && linker3 != null && linker5 != null)   
+         }*/
+         RefSequence refsequence = new RefSequence( m_clone_description.getBecRefSequenceId());
+        // if (refsequence != null && linker3 != null && linker5 != null) 
+         if ( refsequence != null && m_cloning_strategy.getLinker3().getSequence()!= null &&
+                 m_cloning_strategy.getLinker5().getSequence() != null )
          {
             clone_refsequence =  new BaseSequence(refsequence.getCodingSequence(), BaseSequence.BASE_SEQUENCE );
-            clone_refsequence.setId(clone_description.getFlexSequenceId());
-            clone_refsequence.setText( linker5.getSequence() + clone_refsequence.getText()+linker3.getSequence());
+            clone_refsequence.setId(m_clone_description.getFlexSequenceId());
+            clone_refsequence.setText( m_cloning_strategy.getLinker5().getSequence() + clone_refsequence.getText()+m_cloning_strategy.getLinker3().getSequence());
          }
          return clone_refsequence ;
 

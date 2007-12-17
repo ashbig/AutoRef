@@ -131,7 +131,8 @@ public class TraceFileProcessingRunner extends ProcessRunner
      //-------------------------------------------
      private void       createRenamingFile()throws Exception
      {
-          String renaming_file_name =   m_inputdir + File.separator +m_renaming_file_name + System.currentTimeMillis() + ".txt" ;
+           String renaming_file_name =   m_inputdir + File.separator +m_renaming_file_name + System.currentTimeMillis() + ".txt" ;
+        
          
           //print input mail file
          // File mappint_file = new File(m_input);
@@ -443,8 +444,20 @@ public class TraceFileProcessingRunner extends ProcessRunner
                  }
                  else
                  {
+                      conn = DatabaseTransaction.getInstance().requestConnection();
+                     if( BecProperties.getInstance().getProperty( "INTERNAL_READS_NOT_DESIGNED_NONE_HIP") != null
+                              && BecProperties.getInstance().getProperty( "INTERNAL_READS_NOT_DESIGNED_NONE_HIP").equals("1") )
+                     {
+                          sql="select label, flexsequenceid,  flexcloneid, position, 'INTERNAL', "
+            +" flexsequencingplateid as containerid from flexinfo f, isolatetracking i, sample s ,containerheader c "
+ +" where i.isolatetrackingid=f.isolatetrackingid and i.sampleid=s.sampleid "
++" and c.containerid=s.containerid and label in ("+label+")"; 
+
+                     }
+                     else
+                         
                      // if this is not hip version internal reads names are read from OPLATE
-                     conn = DatabaseTransaction.getInstance().requestConnection();
+                    
                      sql="select label, flexsequenceid, cloneid as flexcloneid,  position, 'PRIMER', s.oligocontainerid as containerid "
                      +" from oligosample s, oligocontainer c,  flexinfo f "
                      +" where s.oligocontainerid = c.oligocontainerid and f.flexcloneid = s.cloneid and label in ("+label+")";
@@ -550,23 +563,23 @@ public class TraceFileProcessingRunner extends ProcessRunner
               BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
         sysProps.verifyApplicationSettings();
       edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadTraceFileFormats();
-      ProcessRunner runner =  new EndReadsWrapperRunner();
+ /*     ProcessRunner runner =  new EndReadsWrapperRunner();
         runner.setInputData( edu.harvard.med.hip.bec.Constants.ITEM_TYPE_PLATE_LABELS, "DGS002288-1");
-         runner.setUser( AccessManager.getInstance().getUser("htaycher123","me"));
-    runner.setProcessType(Constants.PROCESS_RUN_END_READS_WRAPPER);
+         runner.setUser( AccessManager.getInstance().getUser("tester","hip"));
+    runner.setProcessType(Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRANSFER);
         runner.run();
 
-      /*
+      /*/
       ProcessRunner runner = new TraceFileProcessingRunner();
 runner.setProcessType(Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRANSFER);
-((TraceFileProcessingRunner)runner).setReadType(Constants.READ_TYPE_ENDREAD);//m_read_type= read_type;}
+((TraceFileProcessingRunner)runner).setReadType(Constants.READ_TYPE_INTERNAL);//m_read_type= read_type;}
 //runner.setSequencingFacility(SequencingFacilityFileName.SEQUENCING_FACILITY_KOLODNER);
-((TraceFileProcessingRunner)runner).setInputDirectory("C:\\bio\\plate_dump");
 //runner.setOutputDirectory( "C:\\bio\\original_files");
-((TraceFileProcessingRunner)runner).setRenamingFile(new  FileInputStream("C:\\bio\\map_jsa1714.txt"));
-((TraceFileProcessingRunner)runner).setFormatName("RZPD internal under 100");
-     runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
-       ((TraceFileProcessingRunner)runner).setDelete("NO");
+((TraceFileProcessingRunner)runner).setRenamingFile(new  FileInputStream("O:\\plate_mapping\\used mapping files\\map_11002_03_31045.txt"));
+((TraceFileProcessingRunner)runner).setFormatName("Sanger Internal Repeats");
+     runner.setUser( AccessManager.getInstance().getUser("tester","hip"));
+     ((TraceFileProcessingRunner)runner).setInputDirectory("c:\\tmp");
+     //   ((TraceFileProcessingRunner)runner).setDelete("NO");
            
        
                 
@@ -582,8 +595,7 @@ runner.setProcessType(Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRAN
           //                runner.setProcessType(Constants.PROCESS_INITIATE_TRACEFILES_TRANSFER);
          //        runner.setUser(  AccessManager.getInstance().getUser("htaycher345","htaycher"));
     runner.run();
-       *
-       **/
+       
  
          }catch(Exception e){}
          System.exit(0);

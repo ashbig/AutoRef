@@ -88,15 +88,14 @@ public class AssemblyRunner extends ProcessRunner
             Connection conn = null;
             ArrayList process_clones = new ArrayList();
             ArrayList sequences = new ArrayList();
-            m_error_messages = new ArrayList();
+          //  m_error_messages = new ArrayList();
             boolean isLastRecord = true;
             RefSequence refsequence = null;BaseSequence base_refsequence = null;
-            BioLinker   linker5 = null; int cds_start = 0; int cds_stop = 0;
-            BioLinker   linker3 = null;
+             int cds_start = 0; int cds_stop = 0;
             ArrayList sequence_definition = null;
             String sql = null;
             ArrayList sql_groups_of_items = null;
-             CloneDescription clone_definition = null;
+             CloneDescription clone_definition = null;CloningStrategy clone_cloning_strategy = null;
              int[] isolate_status = getIsolateStatus();// statuses for isolate - first pass; second - failed
             int cur_containerid = -1;
             int count_of_clones = 0;
@@ -106,14 +105,15 @@ public class AssemblyRunner extends ProcessRunner
                 // conncection to use for transactions
                 conn = DatabaseTransaction.getInstance().requestConnection();
                 int process_id = createProcessHistory(conn);
-               if (m_assembly_mode == FULL_SEQUENCE_ASSEMBLY) distributeInternalReads();
+                if (m_assembly_mode == FULL_SEQUENCE_ASSEMBLY) distributeInternalReads();
                 
           //process only sequences  that are exspected
                 sql_groups_of_items =  prepareItemsListForSQL();
                 if ( sql_groups_of_items == null ) return;
                  EndReadsWrapperRunner erw = new EndReadsWrapperRunner();
-                 String trace_files_path = erw.getOuputBaseDir();
-                   
+                String trace_files_path = erw.getOuputBaseDir();
+                HashMap cloning_strategies = CloningStrategy.getAllCloningStrategiesAsHash(1, true);
+           
                for (int count = 0; count < sql_groups_of_items.size(); count++)
                {
                     
@@ -124,19 +124,17 @@ public class AssemblyRunner extends ProcessRunner
                     for (int clone_count = 0; clone_count < sequence_definition.size(); clone_count ++)
                     {
                         clone_definition= ( CloneDescription)sequence_definition.get(clone_count);
+                        clone_cloning_strategy = (CloningStrategy)cloning_strategies.get(new Integer(clone_definition.getCloningStrategyId()));
+      
                         //get linker info
                         try
                         {
-                            if ((linker5 == null || linker3 == null) || clone_definition.getContainerId() != cur_containerid )
+                            if ( clone_cloning_strategy == null )
                             {
-                                CloningStrategy container_cloning_strategy = Container.getCloningStrategy(clone_definition.getContainerId());
-                                if (container_cloning_strategy != null)
-                                 {
-                                     linker3 = BioLinker.getLinkerById( container_cloning_strategy.getLinker3Id() );
-                                     linker5 = BioLinker.getLinkerById( container_cloning_strategy.getLinker5Id() );
-                                 }
-                                cur_containerid =  clone_definition.getContainerId() ;
+                                m_error_messages.add("Cannot process clone: "+clone_definition.getCloneId()+". Cloning Strategy ("+clone_definition.getCloningStrategyId()+" not found");
+                                continue;
                             }
+                            
 
                         //get refsequence if needed
                             if (base_refsequence == null || base_refsequence.getId() != clone_definition.getBecRefSequenceId())
@@ -156,9 +154,9 @@ public class AssemblyRunner extends ProcessRunner
                                     System.out.println("Sequence too long. Clone "+clone_definition.getCloneId() +" "+clone_definition.getFlexSequenceId());
                                     continue;
                                 }
-                                cds_start = linker5.getSequence().length();
-                                cds_stop = linker5.getSequence().length() +  base_refsequence.getText().length();
-                                base_refsequence.setText( linker5.getSequence() + base_refsequence.getText()+linker3.getSequence());
+                                cds_start = clone_cloning_strategy.getLinker5().getSequence().length();
+                                cds_stop = clone_cloning_strategy.getLinker5().getSequence().length() +  base_refsequence.getText().length();
+                                base_refsequence.setText( clone_cloning_strategy.getLinker5().getSequence() + base_refsequence.getText()+clone_cloning_strategy.getLinker3().getSequence());
 
                             }
                 
@@ -413,7 +411,7 @@ public class AssemblyRunner extends ProcessRunner
             {
                 case Constants.ITEM_TYPE_CLONEID:
                 {
-                     return "select flexcloneid, flexsequenceid,  refsequenceid, iso.isolatetrackingid as isolatetrackingid , containerid, s.sampleid as sampleid"
+                     return "select flexcloneid, flexsequenceid, cloningstrategyid,  refsequenceid, iso.isolatetrackingid as isolatetrackingid , containerid, s.sampleid as sampleid"
 + " from isolatetracking iso,  sample s, sequencingconstruct  constr , flexinfo f "
 +" where constr.constructid = iso.constructid and iso.sampleid=s.sampleid and f.isolatetrackingid=iso.isolatetrackingid "
 +" and status in ("+ status +") and flexcloneid in (  "+sql_items + ") order by containerid ,refsequenceid";
@@ -421,7 +419,7 @@ public class AssemblyRunner extends ProcessRunner
                 }
                 case  Constants.ITEM_TYPE_PLATE_LABELS:
                 {
-                   return "select flexcloneid, flexsequenceid,  refsequenceid, iso.isolatetrackingid as isolatetrackingid , containerid, s.sampleid as sampleid"
+                   return "select flexcloneid, flexsequenceid,  cloningstrategyid, refsequenceid, iso.isolatetrackingid as isolatetrackingid , containerid, s.sampleid as sampleid"
 + " from isolatetracking iso,  sample s, sequencingconstruct  constr , flexinfo f "
 +" where constr.constructid = iso.constructid and iso.sampleid=s.sampleid and f.isolatetrackingid=iso.isolatetrackingid "
 +" and status in ("+ status +") and containerid in ( select containerid from containerheader where Upper(label) in "
@@ -433,7 +431,7 @@ public class AssemblyRunner extends ProcessRunner
          else if( m_assembly_mode ==  FULL_SEQUENCE_ASSEMBLY )
          {
 
-            return  "select flexcloneid, flexsequenceid,  refsequenceid, iso.isolatetrackingid as isolatetrackingid , containerid, s.sampleid as sampleid"
+            return  "select flexcloneid, flexsequenceid, cloningstrategyid, refsequenceid, iso.isolatetrackingid as isolatetrackingid , containerid, s.sampleid as sampleid"
 + " from isolatetracking iso,  sample s, sequencingconstruct  constr , flexinfo f "
 +" where  constr.constructid = iso.constructid and iso.sampleid=s.sampleid and f.isolatetrackingid=iso.isolatetrackingid "
 +" and f.flexcloneid in ("+sql_items +") order by containerid ,refsequenceid";
@@ -462,6 +460,7 @@ public class AssemblyRunner extends ProcessRunner
                 seq_desc.setSampleId(rs.getInt("sampleid"));
                 seq_desc.setFlexSequenceId(rs.getInt( "flexsequenceid"));
                 seq_desc.setCloneId(  rs.getInt("flexcloneid"));
+                seq_desc.setCloningStrategyId(rs.getInt("cloningstrategyid"));
 
                 if (seq_desc.getSampleId() != -1)
                 {
@@ -668,19 +667,19 @@ public static void main(String args[])
     try
     {
         
-        /*
+        
             BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
         sysProps.verifyApplicationSettings();
         edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
 
      User user = AccessManager.getInstance().getUser("htaycher123","me");
       runner = new AssemblyRunner();
-               runner.setInputData(Constants.ITEM_TYPE_CLONEID,"21102 21103");  
+               runner.setInputData(Constants.ITEM_TYPE_CLONEID,"2330");  
     runner.setUser(user);
             runner.setProcessType(Constants.PROCESS_RUN_ASSEMBLER_FOR_ALL_READS);
            ((AssemblyRunner)runner).setAssemblyMode(AssemblyRunner.FULL_SEQUENCE_ASSEMBLY);
         ((AssemblyRunner)runner).setResultType( String.valueOf(IsolateTrackingEngine.PROCESS_STATUS_ER_PHRED_RUN));
-        ((AssemblyRunner)runner).setVectorFileName( "vector_empty.seq");
+        ((AssemblyRunner)runner).setVectorFileName( "vector_empty.txt");
         ((AssemblyRunner)runner).setQualityTrimmingScore ( 0);
         ((AssemblyRunner)runner).setQualityTrimmingLastBase (1000);
         ((AssemblyRunner)runner).setQualityTrimmingFirstBase ( 0);
@@ -693,7 +692,7 @@ public static void main(String args[])
         runner.setInputData( edu.harvard.med.hip.bec.Constants.ITEM_TYPE_PLATE_LABELS, "VCXXG002290-3.012-1");
          runner.setUser(user);
         runner.run();
-      **/
+      
         
         ArrayList reads = new ArrayList();
         reads.add ("10");reads.add ("100");reads.add ("20");
@@ -707,7 +706,8 @@ public static void main(String args[])
                     }
                     public boolean equals(java.lang.Object obj)    {      return false;  }
                 } );
-                System.out.println(String.valueOf(reads.get(0)));
+      **/
+                System.out.println("a");
     }catch(Exception e){}
     System.exit(0);
 }

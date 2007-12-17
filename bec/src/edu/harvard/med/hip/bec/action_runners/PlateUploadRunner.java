@@ -45,9 +45,11 @@ public class PlateUploadRunner extends ProcessRunner
 
 
   //  private ArrayList   m_master_container_labels = null;//get from form
-    private int         m_vector_id = -1;//get from form
+/*
+ private int         m_vector_id = -1;//get from form
     private int         m_linker3_id = -1;
     private int         m_linker5_id = -1;
+ **/
     private int         m_isolate_status = -1;
     private int         m_plate_info_type = -1;
     private ArrayList   m_error_messages = null;
@@ -57,9 +59,11 @@ public class PlateUploadRunner extends ProcessRunner
     private int         m_project_id = -1;
 
   //  public void         setContainerLabels(ArrayList v)    { m_master_container_labels = v;}
+   /*
     public void         setVectorId(int vectorid )    { m_vector_id = vectorid;}
     public void         setLinker3Id(int linker3id)    { m_linker3_id = linker3id;}
     public void         setLinker5Id(int linker5id)    { m_linker5_id = linker5id;}
+    **/
     public void         setNextStep(int put_plate_for_step)    { m_isolate_status = put_plate_for_step;}
     public void         setPlateInfoType(int plate_info_type){m_plate_info_type = PlateUploader.PLATE_NAMES;}
      public  void        setStartCodon(String v){m_start_codon = v;}
@@ -83,7 +87,8 @@ public class PlateUploadRunner extends ProcessRunner
             // conncection to use for transactions
             conn = DatabaseTransaction.getInstance().requestConnection();
             //request object
-            int cloning_startegy_id ;
+        /*
+         int cloning_startegy_id ;
            //get clonningstategy, if it does not exist - create new
             cloning_startegy_id = CloningStrategy.getCloningStrategyIdByVectorLinkerInfo( m_vector_id , m_linker3_id ,  m_linker5_id,m_start_codon ,m_fusion_stop_codon ,m_close_stop_codon );
              if (cloning_startegy_id == BecIDGenerator.BEC_OBJECT_ID_NOTSET )
@@ -93,10 +98,14 @@ public class PlateUploadRunner extends ProcessRunner
                 conn.commit();
                 cloning_startegy_id = str.getId();
             }
-
+*/
 
               //upload plates
-            pb = new PlateUploader( master_container_labels, m_plate_info_type, cloning_startegy_id, m_isolate_status, m_project_id);
+         //   pb = new PlateUploader( master_container_labels, m_plate_info_type, cloning_startegy_id, m_isolate_status, m_project_id);
+            pb = new PlateUploader( master_container_labels, m_plate_info_type,  m_isolate_status, m_project_id);
+            pb.setStartCodon( m_start_codon );
+            pb.setFusionStopCodon( m_fusion_stop_codon);
+            pb.setCloseStopCodon(m_close_stop_codon );
             pb.upload(conn);
             m_error_messages.addAll(pb.getErrors());
             //if at least one plate was uploaded create request
@@ -110,8 +119,11 @@ public class PlateUploadRunner extends ProcessRunner
                                             processes,
                                             Constants.TYPE_OBJECTS);
                   //create specs array for the process
-                ArrayList specids = new ArrayList();
-                specids.add(new Integer(cloning_startegy_id));
+                 ArrayList specids = new ArrayList();
+                 for (int count_c = 0; count_c < pb.getProcessClonningStrategyIDs().size() ; count_c++)
+                 {
+                    specids.add( ( Integer ) pb.getProcessClonningStrategyIDs().get(count_c));
+                 }
               //  specids.add(new Integer(m_reverse_primerid));
                 // Process object create
                 ProcessExecution process = new ProcessExecution( BecIDGenerator.BEC_OBJECT_ID_NOTSET,
@@ -173,14 +185,18 @@ public class PlateUploadRunner extends ProcessRunner
         sysProps.verifyApplicationSettings();
        edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
          runner.setUser( AccessManager.getInstance().getUser("htaycher123","me"));
-                 runner.setInputData(Constants.ITEM_TYPE_PLATE_LABELS, "BaxXG002930-2.012-1 ");
-                    ((PlateUploadRunner)runner).setVectorId(75 );
-                     ((PlateUploadRunner)runner).setLinker3Id(74);
-                     ((PlateUploadRunner)runner).setLinker5Id(73);
-                     ((PlateUploadRunner)runner).setStartCodon("ATG");
-                     ((PlateUploadRunner)runner).setFusionStopCodon("TTG");
-                     ((PlateUploadRunner)runner).setClosedStopCodon("TAG");
+        
+                 runner.setInputData(Constants.ITEM_TYPE_PLATE_LABELS, "EDN003394");
+                    /*
+                     ((PlateUploadRunner)runner).setVectorId(15 );
+                     ((PlateUploadRunner)runner).setLinker3Id(10);
+                     ((PlateUploadRunner)runner).setLinker5Id(9);
+                     **/
+                     ((PlateUploadRunner)runner).setStartCodon("NON");
+                     ((PlateUploadRunner)runner).setFusionStopCodon("GGA");
+                     ((PlateUploadRunner)runner).setClosedStopCodon("NON");
                      ((PlateUploadRunner)runner).setPlateInfoType(PlateUploader.PLATE_NAMES);
+                     ((PlateUploadRunner)runner).setProjectId(24);
                      runner.setProcessType(Constants.PROCESS_UPLOAD_PLATES);
                     runner.run();
 
