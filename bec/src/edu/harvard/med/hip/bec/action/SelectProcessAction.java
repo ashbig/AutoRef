@@ -463,8 +463,9 @@ public class SelectProcessAction extends BecAction
             case Constants.PROCESS_UPLOAD_PLATES:return "Upload Plates ";
             case Constants.PROCESS_SELECT_VECTOR_FOR_END_READS :return "Request End Reads Sequencing -> Select Vector";
             case  Constants.PROCESS_SELECT_SEQUENCING_PRIMERS_FOR_END_READS: return "Request End Reads Sequencing -> Select Sequencing Primers";
-             
-              case Constants.PROCESS_SELECT_PLATES_FOR_END_READS: return "Request End Reads Sequencing -> Select Primers and Plates";
+            case  Constants.PROCESS_SELECT_PLATES_FOR_END_READS_NEW_VERSION: return "Request End Reads Sequencing -> Select Plates"; 
+            
+            case Constants.PROCESS_SELECT_PLATES_FOR_END_READS: return "Request End Reads Sequencing -> Select Primers and Plates";
             case Constants.PROCESS_RUN_ISOLATE_RUNKER: return "Run Isolate Ranker";
             case Constants.PROCESS_SUBMIT_ASSEMBLED_SEQUENCE: return "Submit Sequence Data for Set of Clones";
            
@@ -529,6 +530,7 @@ public class SelectProcessAction extends BecAction
             case Constants.PROCESS_UPLOAD_PLATES:return "Home > Process > Upload Plates";
             case Constants.PROCESS_SELECT_VECTOR_FOR_END_READS :return "Home > Process > Read Manipulation > Request End Reads Sequencing";
              case  Constants.PROCESS_SELECT_SEQUENCING_PRIMERS_FOR_END_READS: return "Home > Process > Read Manipulation > Request End Reads Sequencing";
+ case  Constants.PROCESS_SELECT_PLATES_FOR_END_READS_NEW_VERSION: return "Home > Process > Read Manipulation > Request End Reads Sequencing";
  
               
               case Constants.PROCESS_SELECT_PLATES_FOR_END_READS: return "Home > Process > Read Manipulation > Request End Reads Sequencing";
