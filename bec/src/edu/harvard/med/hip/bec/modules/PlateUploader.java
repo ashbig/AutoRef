@@ -534,7 +534,9 @@ public class PlateUploader
             {
                 String species = rs.getString("SPECIES");
                ref_sequence.setSpecies( DatabaseToApplicationDataLoader.getSpeciesId(species) );
-               
+                
+                if ( ref_sequence.getSpecies() == DatabaseToApplicationDataLoader.SPECIES_NOT_SET)
+                    throw new Exception("Species definition does not exist in ACE: species - " + species);
                 ref_sequence.setCdsStart(rs.getInt("CDSSTART") );
                 ref_sequence.setCdsStop( rs.getInt("CDSSTOP") );
                 ref_sequence.setGCcontent(rs.getInt("GCCONTENT"));
