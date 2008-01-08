@@ -65,47 +65,51 @@ public class PlaceOrderAction extends Action {
         // get the parameters specified by the customer
         ActionErrors errors = new ActionErrors();
         
-        Enumeration names = request.getParameterNames();
-        String str = "cmd=_notify-validate";
-        String invoice = "";
-        while(names.hasMoreElements()) {
-            String name =  (String)names.nextElement();
-            String value = request.getParameter(name);
-            
-            if("invoice".equals(name))
-                invoice = value;
-            str = str + "&" + name + "=" + URLEncoder.encode(value, "ISO-8859-1" ) ;
-        }
-        
-        /* Extract form data */
-        URL u = new URL("https://www.sandbox.paypal.com/cgi-bin/webscr") ;
-        URLConnection uc = u.openConnection();
-        uc.setDoOutput(true);
-        uc.setRequestProperty("Content-Type", "application/x-www-form-urlencoded" ) ;
-        PrintWriter pw = new PrintWriter(uc.getOutputStream());
-        pw.println(str);
-        pw.close();
-        
-        BufferedReader in = new BufferedReader(
-        new InputStreamReader(uc.getInputStream()));
-        String ipnres = in.readLine();
-        in.close();
-        
-        CloneOrder order = (CloneOrder)request.getSession().getAttribute(Constants.CLONEORDER);
-        int orderid = Integer.parseInt(invoice);
-        OrderProcessManager manager = new OrderProcessManager();
-        User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
-        if (ipnres.equals("VERIFIED" )) {
-            boolean b = manager.updateOrderStatus(orderid, CloneOrder.PENDING);
-            if(b) {
-                manager.sendOrderEmail(order, user.getEmail());
-            } else {
-                manager.sendOrderFailEmail(order, user.getEmail());
+        try {
+            Enumeration names = request.getParameterNames();
+            String str = "cmd=_notify-validate";
+            String invoice = "";
+            while(names.hasMoreElements()) {
+                String name =  (String)names.nextElement();
+                String value = request.getParameter(name);
+                
+                if("invoice".equals(name))
+                    invoice = value;
+                str = str + "&" + name + "=" + URLEncoder.encode(value, "ISO-8859-1" ) ;
             }
-        }
-        if (ipnres.equals("INVALID" )) {
-            boolean b = manager.updateOrderStatus(orderid, CloneOrder.INVALIDE_PAYMENT);
-            manager.sendOrderInvalidePaymentEmail(order, user.getEmail());
+            
+            /* Extract form data */
+            URL u = new URL("https://www.sandbox.paypal.com/cgi-bin/webscr") ;
+            URLConnection uc = u.openConnection();
+            uc.setDoOutput(true);
+            uc.setRequestProperty("Content-Type", "application/x-www-form-urlencoded" ) ;
+            PrintWriter pw = new PrintWriter(uc.getOutputStream());
+            pw.println(str);
+            pw.close();
+            
+            BufferedReader in = new BufferedReader(
+            new InputStreamReader(uc.getInputStream()));
+            String ipnres = in.readLine();
+            in.close();
+            
+            CloneOrder order = (CloneOrder)request.getSession().getAttribute(Constants.CLONEORDER);
+            int orderid = Integer.parseInt(invoice);
+            OrderProcessManager manager = new OrderProcessManager();
+            User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
+            if (ipnres.equals("VERIFIED" )) {
+                boolean b = manager.updateOrderStatus(orderid, CloneOrder.PENDING);
+                if(b) {
+                    manager.sendOrderEmail(order, user.getEmail());
+                } else {
+                    manager.sendOrderFailEmail(order, user.getEmail());
+                }
+            }
+            if (ipnres.equals("INVALID" )) {
+                boolean b = manager.updateOrderStatus(orderid, CloneOrder.INVALIDE_PAYMENT);
+                manager.sendOrderInvalidePaymentEmail(order, user.getEmail());
+            }
+        } catch (Exception ex) {
+            System.out.println(ex);
         }
         
         return (mapping.findForward("success"));
