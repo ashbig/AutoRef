@@ -167,6 +167,13 @@
       <forward  name="success"  path="/ViewOrderHistory.do"/>
     </action>
     
+    <action     path="/CancelOrderPaypal"
+                type="plasmid.action.CancelOrderPaypalAction"
+               name="checkoutForm"
+              input="/ChoosePayment.jsp">
+      <forward  name="success"  path="/ViewOrderDetail.jsp"/>
+    </action>
+    
     <action     path="/ChangeOrderStatus"
                 type="plasmid.action.ChangeOrderStatusAction"
                name="changeOrderStatusForm"

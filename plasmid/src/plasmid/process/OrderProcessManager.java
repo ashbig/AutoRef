@@ -1112,6 +1112,17 @@ public class OrderProcessManager {
         }
     }
     
+    public void sendOrderCancelEmail(CloneOrder order, String email) {
+        String subject = "order "+order.getOrderid();
+        String text = "Your order "+order.getOrderid()+" has been cancelled. Please contact us at plasmidhelp@hms.harvard.edu for any questions. Thanks for using PlasmID.\n";
+        
+        try {
+            Mailer.sendMessage(email,Constants.EMAIL_FROM,Constants.EMAIL_FROM,subject,text);
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
+    }
+    
     public void sendOrderEmail(CloneOrder order, String email) {
         String subject = "order "+order.getOrderid();
         String text = "Thank you for placing a clone request at PlasmID. Clones are sent as glycerol stocks (most U.S. orders) or as purified DNA (most overseas orders). The turn-around time is currently two to four weeks (full collections may take additional time).\n";
