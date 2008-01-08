@@ -714,6 +714,56 @@ public class OrderProcessManager {
         return order;
     }
     
+    public CloneOrder getCloneOrder(int orderid) {
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        CloneOrderManager manager = null;
+        CloneOrder order = null;
+        
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            
+            manager = new CloneOrderManager(conn);
+            order = manager.queryCloneOrder(null, orderid);
+        } catch (Exception ex) {
+            if(Constants.DEBUG) {
+                System.out.println(manager.getErrorMessage());
+                System.out.println(ex);
+            }
+            DatabaseTransaction.closeConnection(conn);
+            return null;
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
+        }
+        return order;
+    }
+    
+    public String findEmail (int userid) {
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        UserManager manager = null;
+        String email = null;
+        
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            
+            manager = new UserManager(conn);
+            email = manager.findUserEmailById(userid);
+        } catch (Exception ex) {
+            if(Constants.DEBUG) {
+                System.out.println(manager.getErrorMessage());
+                System.out.println(ex);
+            }
+            DatabaseTransaction.closeConnection(conn);
+            return null;
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
+        }
+        return email;
+    }
+    
     public void writeCloneList(List clones, PrintWriter out, boolean isWorkingStorage) {
         writeCloneList(clones, out, isWorkingStorage, true);
     }

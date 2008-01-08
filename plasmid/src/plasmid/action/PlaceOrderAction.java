@@ -92,21 +92,22 @@ public class PlaceOrderAction extends Action {
             String ipnres = in.readLine();
             in.close();
             
-            CloneOrder order = (CloneOrder)request.getSession().getAttribute(Constants.CLONEORDER);
             int orderid = Integer.parseInt(invoice);
             OrderProcessManager manager = new OrderProcessManager();
-            User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
+            CloneOrder order = manager.getCloneOrder(orderid);
+            String email = manager.findEmail(order.getUserid());
+            
             if (ipnres.equals("VERIFIED" )) {
                 boolean b = manager.updateOrderStatus(orderid, CloneOrder.PENDING);
                 if(b) {
-                    manager.sendOrderEmail(order, user.getEmail());
+                    manager.sendOrderEmail(order, email);
                 } else {
-                    manager.sendOrderFailEmail(order, user.getEmail());
+                    manager.sendOrderFailEmail(order, email);
                 }
             }
             if (ipnres.equals("INVALID" )) {
                 boolean b = manager.updateOrderStatus(orderid, CloneOrder.INVALIDE_PAYMENT);
-                manager.sendOrderInvalidePaymentEmail(order, user.getEmail());
+                manager.sendOrderInvalidePaymentEmail(order, email);
             }
         } catch (Exception ex) {
             System.out.println(ex);
