@@ -475,7 +475,7 @@ public class CloneImporter {
         }
         
         if(!manager.insertCloneInsertsWithoutInsertInfo(cs)) {
-            throw new Exception("Error occured while inserting into CLONECOLLECTION table");
+            throw new Exception("Error occured while inserting into CLONEINSERT table");
         }
     }
 }

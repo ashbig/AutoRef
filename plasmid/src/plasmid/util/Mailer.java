@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.6 $
- * $Date: 2007-07-09 14:46:31 $
+ * $Revision: 1.7 $
+ * $Date: 2008-01-08 15:29:06 $
  * $Author: dzuo $
  *
  ******************************************************************************
@@ -49,7 +49,7 @@ import javax.mail.internet.*;
  * Utility class to send simple messages.
  *
  * @author     $Author: dzuo $
- * @version    $Revision: 1.6 $ $Date: 2007-07-09 14:46:31 $
+ * @version    $Revision: 1.7 $ $Date: 2008-01-08 15:29:06 $
  */
 
 public class Mailer {
@@ -141,6 +141,8 @@ public class Mailer {
             if((ex = mex.getNextException()) !=null) {
                 ex.printStackTrace();
             }
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
     
@@ -341,7 +343,7 @@ public class Mailer {
         //Mailer.sendMessage("dongmeizuo@hotmail.com", FROM, "test", "test");
         try {
             //Mailer.sendMessage("waaaybac@waaaybacks.com", FROM, "test", "test");
-            Mailer.sendMessage("dzuo@hms.harvard.edu", FROM, null, "test", "test");
+            Mailer.sendMessage("dzuo@hms.harvard.edu", FROM, null, "test", "test",null);
             //Mailer.sendMessage("jmunoz@3rdmill.com","dongmei_zuo@hms.harvard.edu", "test","Testing 12 3");
             //Mailer.sendMessages("dzuo@hms.harvard.edu", FROM, ccs, "test", "test",fileCol);
         } catch (Exception ex) {

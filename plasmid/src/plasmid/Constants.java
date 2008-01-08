@@ -31,6 +31,7 @@ public class Constants {
     public static final String PROTOCOLS = "Protocols";
     public static final String RESULTTYPES = "Result Types";
     public static final String EMAIL_FROM = "plasmidhelp@hms.harvard.edu";
+   // public static final String EMAIL_FROM = "dzuo@hms.harvard.edu";
     
     public static final String WORKLIST_FILE_PATH = FlexProperties.getInstance().getProperty("worklist");
     public static final String USER_WORKLIST_FILE_PATH = FlexProperties.getInstance().getProperty("userworklist");
@@ -86,6 +87,13 @@ public class Constants {
     public static final String BATCH_ORDER_PLASMIDID = "PlasmID Clone ID";
     public static final String BATCH_ORDER_FLEXID = "FLEXGene Clone ID";   
     public static final String BATCH_ORDER_CLONES = "Batch Order Clones";
+    
+    public static final String PO = "PO";
+    public static final String PAYPAL = "Credit Card";
+    
+    public static final int SHIPFEE_DOM = 10;
+    public static final int SHIPFEE_INT = 15;
+    public static final String COUNTRY_USA = "USA";
     
     /** Creates a new instance of Constants */
     public Constants() {

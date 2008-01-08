@@ -18,7 +18,7 @@ import plasmid.database.DatabaseTransaction;
  */
 public class LinkoutFileGenerator {
     public static final String HEADER = "?xml version=\"1.0\"?>\n<!DOCTYPE LinkSet PUBLIC \"-//NLM//DTD LinkOut 1.0//EN\"\n\"http://www.ncbi.nlm.nih.gov/entrez/linkout/doc/LinkOut.dtd\"";
-    public static final String BASEURL = "[<!ENTITY base.url \"http://plasmid.hms.harvard.edu/PLASMID/RefseqSearchContinue.do?cdna=true&amp;shrna=true&amp;genomicfragment=true&amp;tfbindsite=true&amp;genome=true&amp;pagesize=50\">]";
+    public static final String BASEURL = "[<!ENTITY base.url \"http://plasmid.med.harvard.edu/PLASMID/RefseqSearchContinue.do?cdna=true&amp;shrna=true&amp;genomicfragment=true&amp;tfbindsite=true&amp;genome=true&amp;pagesize=50\">]";
     public static final String PRIVIDERID = "6200";
     public static final String HUMAN_HTML = "Homo%20sapiens";
     public static final String HUMAN = "Homo sapiens";
@@ -108,7 +108,8 @@ public class LinkoutFileGenerator {
     public List getHumanGenes() throws Exception {
         String sql = "select distinct geneid from clonegene where cloneid in"+
         " (select cloneid from clone where domain='Homo sapiens'"+
-        " and restriction <> 'HIP only')";
+        " and restriction <> 'HIP only'"+
+        " and status='"+Clone.AVAILABLE+"')";
         List genes = new ArrayList();
         DatabaseTransaction t = null;
         ResultSet rs = null;
@@ -133,7 +134,8 @@ public class LinkoutFileGenerator {
         " from clone c, clonegene g"+
         " where c.cloneid=g.cloneid"+
         " and c.domain='"+species+"'"+
-        " and c.restriction <> 'HIP only'";
+        " and c.restriction <> 'HIP only'"+
+        " and c.status='"+Clone.AVAILABLE+"'";
         List genes = new ArrayList();
         DatabaseTransaction t = null;
         ResultSet rs = null;
@@ -158,7 +160,8 @@ public class LinkoutFileGenerator {
         " from clone c, clonegenbank g"+
         " where c.cloneid=g.cloneid"+
         " and c.domain='"+species+"'"+
-        " and c.restriction <> 'HIP only'";
+        " and c.restriction <> 'HIP only'"+
+        " and c.status='"+Clone.AVAILABLE+"'";
         List genes = new ArrayList();
         DatabaseTransaction t = null;
         ResultSet rs = null;
@@ -183,7 +186,8 @@ public class LinkoutFileGenerator {
         " from clone c, clonegi g"+
         " where c.cloneid=g.cloneid"+
         " and c.domain='"+species+"'"+
-        " and c.restriction <> 'HIP only'";
+        " and c.restriction <> 'HIP only'"+
+        " and c.status='"+Clone.AVAILABLE+"'";
         List genes = new ArrayList();
         DatabaseTransaction t = null;
         ResultSet rs = null;

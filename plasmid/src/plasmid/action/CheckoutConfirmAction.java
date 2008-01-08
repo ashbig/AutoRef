@@ -59,7 +59,6 @@ public class CheckoutConfirmAction extends UserAction {
         // get the parameters specified by the customer
         ActionErrors errors = new ActionErrors();
         
-        String ponumber = ((CheckoutForm)form).getPonumber();
         String shippingto = ((CheckoutForm)form).getShippingto();
         String billingto = ((CheckoutForm)form).getBillingto();
         String addressline1 = ((CheckoutForm)form).getAddressline1();
@@ -78,8 +77,6 @@ public class CheckoutConfirmAction extends UserAction {
         String billingfax = ((CheckoutForm)form).getBillingfax();
         request.getSession().removeAttribute("viewCartForm");
         
-        if(ponumber == null || ponumber.trim().length()<1)
-            errors.add("ponumber", new ActionError("error.ponumber.required"));
         if(shippingto == null || shippingto.trim().length()<1)
             errors.add("shippingto", new ActionError("error.shippingto.required"));
         if(billingto == null || billingto.trim().length()<1)
@@ -117,7 +114,7 @@ public class CheckoutConfirmAction extends UserAction {
             shoppingcart = new ArrayList();
             request.getSession().setAttribute(Constants.CART, shoppingcart);
             return (mapping.findForward("success_empty"));
-        } 
+        }
         
         Calendar c = Calendar.getInstance();
         String time = c.getTime().toString();
@@ -145,6 +142,33 @@ public class CheckoutConfirmAction extends UserAction {
             new ActionError("error.general", error));
             saveErrors(request, errors);
             return (new ActionForward(mapping.getInput()));
+        }
+        
+        int orderid = CloneOrderManager.getNextOrderid();
+        if(orderid<0) {
+            if(Constants.DEBUG)
+                System.out.println("Cannot get orderid from database.");
+            
+            errors.add(ActionErrors.GLOBAL_ERROR,
+            new ActionError("error.database.error","Cannot get orderid from database."));
+            return (mapping.findForward("error"));
+        }
+        ((CheckoutForm)form).setOrderid(orderid);
+        ((CheckoutForm)form).setPaymentmethod(Constants.PO);
+          
+        String accountNumber = ((CheckoutForm)form).getAccountNumber(); 
+        double shippingCost = ((CheckoutForm)form).getCostForShipping();  
+        double clonePrice = ((CheckoutForm)form).getCostOfClones();
+        double collectionPrice = ((CheckoutForm)form).getCostOfCollections();
+        if(accountNumber==null || accountNumber.trim().length()<1) {
+            if(country.equals(Constants.COUNTRY_USA)) {
+                shippingCost = 10;
+            } else {
+                shippingCost = 15;
+            }
+            double totalCost = clonePrice+collectionPrice+shippingCost;
+            ((CheckoutForm)form).setTotalPrice(totalCost);
+            ((CheckoutForm)form).setCostForShipping(shippingCost);
         }
         
         if(errors.empty()) {

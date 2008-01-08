@@ -51,6 +51,8 @@ public class CheckoutForm extends ActionForm {
     private String fax;
     private String billingfax;
     private String isBatch = "N";
+    private int orderid;
+    private String paymentmethod;
     
     /** Creates a new instance of CheckoutForm */
     public CheckoutForm() {
@@ -90,6 +92,8 @@ public class CheckoutForm extends ActionForm {
     public String getFax() {return fax;}
     public String getBillingfax() {return billingfax;}
     public String getIsBatch() {return isBatch;}
+    public int getOrderid() {return orderid;}
+    public String getPaymentmethod() {return paymentmethod;}
     
     // public void setUsername(String s) {this.username = s;}
     // public void setEmail(String s) {this.email = s;}
@@ -125,6 +129,8 @@ public class CheckoutForm extends ActionForm {
     public void setFax(String s) {this.fax = s;}
     public void setBillingfax(String s) {this.billingfax = s;}
     public void setIsBatch(String s) {this.isBatch = s;}
+    public void setOrderid(int id) {this.orderid = id;}
+    public void setPaymentmethod(String s) {this.paymentmethod = s;}
     
     /**
      * Reset all properties to their default values.
@@ -133,7 +139,7 @@ public class CheckoutForm extends ActionForm {
      * @param request The servlet request we are processing
      */
     public void reset(ActionMapping mapping, HttpServletRequest request) {
-        saveInfo = false;
+        //saveInfo = false;
     }
     
     /**

@@ -85,7 +85,10 @@ public class Importer {
     //public static final String filepath = "G:\\plasmid\\Yeast_ref_flexsequenceidimport_200707\\";
     //public static final String filepath = "G:\\plasmid\\Aventis_2007_08\\";
     //public static final String filepath = "G:\\plasmid\\Aventis2_2007_08_plate\\";
-    public static final String filepath = "G:\\plasmid\\ArchivePlates\\";
+    //public static final String filepath = "G:\\plasmid\\ArchivePlates\\";
+    //public static final String filepath = "G:\\plasmid\\kerneyluna_for_import_Aug2007\\";
+    //public static final String filepath = "G:\\plasmid\\ORFeome_HIP_Nov_2007\\";
+    public static final String filepath = "G:\\plasmid\\PSI_vector\\";
    
     private List tables;
     private String error;
@@ -155,6 +158,7 @@ public class Importer {
         PlateImporter plateImp = new PlateImporter(conn);
         for(int i=0; i<tables.size(); i++) {
             ImportTable table = (ImportTable)tables.get(i);
+            System.out.println("table: "+table.getTableName());
             
             try {
                 if(table.getTableName().trim().equalsIgnoreCase(ImportTable.VECTOR)) {

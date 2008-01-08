@@ -187,6 +187,14 @@
               input="/Checkout.jsp">
       <forward  name="success"  path="/CheckoutConfirm.jsp"/>
     </action>
+      
+    <action     path="/ChoosePayment"
+                type="plasmid.action.ChoosePaymentAction"
+               name="checkoutForm"
+              input="/CheckoutConfirm.jsp">
+      <forward  name="success"  path="/ViewOrderDetail.jsp"/>
+      <forward  name="success_paypal"  path="/ChoosePayment.jsp"/>
+    </action>
     
     <action     path="/ConfirmLogout"
                 type="plasmid.action.ConfirmLogoutAction"
@@ -359,7 +367,7 @@
     <action     path="/PlaceOrder"
                 type="plasmid.action.PlaceOrderAction"
                name="checkoutForm"
-              input="/CheckoutConfirm.jsp">
+              input="/ChoosePayment.jsp">
       <forward  name="success"  path="/ViewOrderDetail.jsp"/>
     </action>
     

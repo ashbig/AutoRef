@@ -17,6 +17,8 @@ public class CloneOrder {
     public static final String ALL = "All";
     public static final String PENDING = "Pending";
     public static final String PENDING_MTA = "Pending MTA";
+    public static final String PENDING_PAYMENT = "Pending for payment";
+    public static final String INVALIDE_PAYMENT = "Invalid payment";
     public static final String MTA_RECEIVED = "MTA Received";
     public static final String INPROCESS = "In Process";
     public static final String SHIPPED = "Shipped";
@@ -181,19 +183,15 @@ public class CloneOrder {
     }
     
     public String getShipping() {
-        if(this.shippingaccount == null || this.shippingaccount.length() == 0) {
-            return this.TBD;
-        } else {
             return (new Double(this.costforshipping)).toString();
-        }
     }
     
     public String getTotalPriceString() {
-        if(this.shippingaccount == null || this.shippingaccount.length() == 0) {
-            return this.price + " Plus Shipping Charge";
-        } else {
+        //if(this.shippingaccount == null || this.shippingaccount.length() == 0) {
+        //    return this.price + " Plus Shipping Charge";
+        //} else {
             return (new Double(this.price)).toString();
-        }
+       // }
     }
     
     public double calculateTotalPrice() {

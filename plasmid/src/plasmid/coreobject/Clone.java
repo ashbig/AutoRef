@@ -249,4 +249,78 @@ public class Clone implements Serializable {
         StringConvertor cs = new StringConvertor();
         return cs.convertFromListToString(namesByType);
     }
+    
+    public String getTargetGenbankString() {
+        String genbank = "";
+        for(int i=0; i<inserts.size(); i++) {
+            DnaInsert insert = (DnaInsert)inserts.get(i);
+            genbank += insert.getTargetgenbank();
+        }
+        return genbank;
+    }
+    
+    public String getTargetGiString() {
+        String genbank = "";
+        for(int i=0; i<inserts.size(); i++) {
+            DnaInsert insert = (DnaInsert)inserts.get(i);
+            genbank += insert.getTargetseqid();
+        }
+        return genbank;
+    }
+    
+    public int getInsertsize() {
+        int size = 0;
+        for(int i=0; i<inserts.size(); i++) {
+            DnaInsert insert = (DnaInsert)inserts.get(i);
+            size += insert.getSize();
+        }
+        return size;
+    }
+    
+    public String getCloneDescription() {
+        String desc = "";
+        for(int i=0; i<inserts.size(); i++) {
+            DnaInsert insert = (DnaInsert)inserts.get(i);
+            desc += insert.getDescription();
+        }
+        return desc;
+    }
+    
+    public String getGeneSymbol() {
+        String desc = "";
+        for(int i=0; i<inserts.size(); i++) {
+            DnaInsert insert = (DnaInsert)inserts.get(i);
+            desc += insert.getName();
+        }
+        return desc;
+        
+    }
+    
+    public String getGeneID() {
+        String desc = "";
+        for(int i=0; i<inserts.size(); i++) {
+            DnaInsert insert = (DnaInsert)inserts.get(i);
+            desc += insert.getGeneid();
+        }
+        return desc;
+    }
+    
+    public String getInsertFormat() {
+        List formats = new ArrayList();
+        for(int i=0; i<inserts.size(); i++) {
+            DnaInsert insert = (DnaInsert)inserts.get(i);
+            formats.add(insert.getFormat());
+        }
+        StringConvertor cs = new StringConvertor();
+        return cs.convertFromListToString(formats);
+    }
+    
+    public String getInsertseqs() {
+        String desc = "";
+        for(int i=0; i<inserts.size(); i++) {
+            DnaInsert insert = (DnaInsert)inserts.get(i);
+            desc += insert.getSequence();
+        }
+        return desc;  
+    }
 }

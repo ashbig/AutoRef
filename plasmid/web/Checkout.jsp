@@ -40,10 +40,6 @@
   <tr> 
     <td width="12%" height="24" class="formlabel">Order Date:</td>
     <td width="40%" class="text"><bean:write name="date"/></td>
-    <td width="12%" class="formlabel">*PO Number:</td>
-    <td width="36%" class="text">
-        <html:text maxlength="50" property="ponumber" size="40"/>
-    </td>
   </tr>
 </table>
 <p class="text">*If you don't see your country on the list, 
@@ -148,7 +144,7 @@ is not allowed to be shipped outside of USA.
     <td align="right" class="tablebody">$<bean:write name="checkoutForm" property="costOfCollections"/></td>
   </tr> 
   <tr> 
-    <td class="tableheader">Total price (without shipping charge):</td>
+    <td class="tableheader">Total price (before shipping charge):</td>
     <td align="right" colspan="2" class="tablebody">$<bean:write name="checkoutForm" property="totalPrice"/></td>
   </tr>
 </table>

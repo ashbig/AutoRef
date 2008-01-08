@@ -25,16 +25,35 @@ public class CloneOrderManager extends TableManager {
         super(conn);
     }
     
+    public static int getNextOrderid() {
+        int id = -1;
+        String sql = "select orderid.nextval from dual";
+        ResultSet rs = null;
+        try {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            if(rs.next()) {
+                id = rs.getInt(1);
+            }
+        } catch (Exception ex) {
+            System.out.println(ex+ "Cannot get order id.");
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+        return id;
+    }
+    
     public int addCloneOrder(CloneOrder order, User user) {
         if(order == null)
             return -1;
         
         DefTableManager m = new DefTableManager();
-        int orderid = m.getMaxNumber("cloneorder", "orderid");
-        if(orderid == -1) {
-            handleError(new Exception(m.getErrorMessage()), "Cannot get orderid from cloneorder.");
-            return -1;
-        }
+        /**
+         * int orderid = m.getMaxNumber("cloneorder", "orderid");
+         * if(orderid == -1) {
+         * handleError(new Exception(m.getErrorMessage()), "Cannot get orderid from cloneorder.");
+         * return -1;
+         * }*/
         
         String sql = "insert into cloneorder"+
         " (orderdate,orderstatus,ponumber,shippingto,billingto,"+
@@ -63,7 +82,7 @@ public class CloneOrderManager extends TableManager {
             stmt.setDouble(11, order.getCostforshipping());
             stmt.setDouble(12, order.getPrice());
             stmt.setInt(13, user.getUserid());
-            stmt.setInt(14, orderid);
+            stmt.setInt(14, order.getOrderid());
             stmt.setString(15, order.getShippingmethod());
             stmt.setString(16, order.getShippingaccount());
             stmt.setString(17, order.getTrackingnumber());
@@ -79,7 +98,7 @@ public class CloneOrderManager extends TableManager {
             }
             for(int i=0; i<items.size(); i++) {
                 OrderClones item = (OrderClones)items.get(i);
-                stmt2.setInt(1,  orderid);
+                stmt2.setInt(1,  order.getOrderid());
                 int cloneid = item.getCloneid();
                 if(cloneid <= 0) {
                     stmt2.setString(2, null);
@@ -98,7 +117,7 @@ public class CloneOrderManager extends TableManager {
             DatabaseTransaction.closeStatement(stmt2);
         }
         
-        return orderid;
+        return order.getOrderid();
     }
     
     public int addBatchCloneOrder(CloneOrder order, User user) {
@@ -166,7 +185,7 @@ public class CloneOrderManager extends TableManager {
             DatabaseTransaction.closeResultSet(rs);
         }
     }
-            
+    
     /**
      * Query database to get all the clones for a given order id.
      *

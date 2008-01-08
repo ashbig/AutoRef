@@ -1040,6 +1040,49 @@ public class OrderProcessManager {
         return sf.toString();
     }
     
+    public void sendOrderFailEmail(CloneOrder order, String email) {
+        String subject = "order "+order.getOrderid();
+        String text = "Your order "+order.getOrderid()+" was not processed successfully. Please contact us at plasmidhelp@hms.harvard.edu to solve the problem.\n";
+        
+        try {
+            Mailer.sendMessage(email,Constants.EMAIL_FROM,Constants.EMAIL_FROM,subject,text);
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
+    }
+    
+    public void sendOrderInvalidePaymentEmail(CloneOrder order, String email) {
+        String subject = "order "+order.getOrderid();
+        String text = "Your order "+order.getOrderid()+" was not processed successfully. Your payment was not valid. Please contact us at plasmidhelp@hms.harvard.edu to solve the problem.\n";
+        
+        try {
+            Mailer.sendMessage(email,Constants.EMAIL_FROM,Constants.EMAIL_FROM,subject,text);
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
+    }
+    
+    public void sendOrderEmail(CloneOrder order, String email) {
+        String subject = "order "+order.getOrderid();
+        String text = "Thank you for placing a clone request at PlasmID. Clones are sent as glycerol stocks (most U.S. orders) or as purified DNA (most overseas orders). The turn-around time is currently two to four weeks (full collections may take additional time).\n";
+        text += "\n"+formOrderText(order);
+        text += "\n"+"Please sign in at PlasmID to view order status, "+
+        "track your shipment, download clone information, cancel a request, "+
+        "or view detailed information about the clones, "+
+        "including growth conditions for the clones.\n\n"+
+        "Thank you,\n"+
+        "The DF/HCC DNA Resource Core\n"+
+        "http://dnaseq.med.harvard.edu\n"+
+        "http://plasmid.med.harvard.edu/PLASMID/\n\n"+
+        "If you have further questions, please contact us at plasmidhelp@hms.harvard.edu\n";
+        
+        try {
+            Mailer.sendMessage(email,Constants.EMAIL_FROM,subject,text);
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
+    }
+    
     public List getCloneOrders(String orderids, String orderDateFrom, String orderDateTo,
     String shippingDateFrom, String shippingDateTo, String status, String lastnames,
     String organization, String sort) {
@@ -1239,10 +1282,10 @@ public class OrderProcessManager {
     
     public static boolean isRestricted(Clone clone, User user) {
         List restrictions = new ArrayList();
-        restrictions.add(Clone.NO_RESTRICTION);       
+        restrictions.add(Clone.NO_RESTRICTION);
         if(user != null) {
-            List ress = UserManager.getUserRestrictions(user);    
-            restrictions.addAll(ress);        
+            List ress = UserManager.getUserRestrictions(user);
+            restrictions.addAll(ress);
         }
         String restriction = ((CloneInfo)clone).getRestriction();
         

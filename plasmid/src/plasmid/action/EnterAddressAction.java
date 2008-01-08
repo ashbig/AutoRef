@@ -60,7 +60,7 @@ public class EnterAddressAction extends UserAction {
         
         List countryList = OrderProcessManager.getCountryList();
         request.getSession().setAttribute("countryList", countryList);
- 
+        
         UserAddress shipping = null;
         UserAddress billing = null;
         try {
@@ -103,10 +103,18 @@ public class EnterAddressAction extends UserAction {
             ((CheckoutForm)form).setBillingphone(billing.getPhone());
             ((CheckoutForm)form).setBillingfax(billing.getFax());
         }
-
+        
+        double shippingCost = 0.0;
+        double clonePrice = ((CheckoutForm)form).getCostOfClones();
+        double collectionPrice = ((CheckoutForm)form).getCostOfCollections();
+        double totalCost = clonePrice+collectionPrice+shippingCost;
+        ((CheckoutForm)form).setTotalPrice(totalCost);
+        ((CheckoutForm)form).setCostForShipping(shippingCost);
+        
         ((CheckoutForm)form).setPonumber(user.getPonumber());
         ((CheckoutForm)form).setCountry("USA");
         ((CheckoutForm)form).setBillingcountry("USA");
+        ((CheckoutForm)form).setSaveInfo(false);
         return (mapping.findForward("success"));
     }
     

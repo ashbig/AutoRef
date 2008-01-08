@@ -25,7 +25,6 @@
 
 <p class="text">Please confirm the following information (use back button to make changes):</P>
 <html:errors/>
-      <html:form action="PlaceOrder.do">
 <table width="100%" border="0">
   <tr> 
     <td width="12%" class="formlabel">Name:</td>
@@ -40,10 +39,6 @@
   <tr> 
     <td width="12%" height="24" class="formlabel">Order Date:</td>
     <td width="40%" class="text"><bean:write name="date"/></td>
-    <td width="12%" class="formlabel">PO Number:</td>
-    <td width="36%" class="text">
-        <bean:write name="checkoutForm" property="ponumber"/>
-    </td>
   </tr>
   <tr> 
     <td width="12%" height="24" class="formlabel">Shipping Method:</td>
@@ -141,14 +136,34 @@
     <td class="tablebody"><bean:write name="checkoutForm" property="numOfCollections"/></td>
     <td align="right" class="tablebody">$<bean:write name="checkoutForm" property="costOfCollections"/></td>
   </tr> 
+   <tr> 
+    <td class="tablebody">Shipping:</td>
+    <td class="tablebody"><bean:write name="checkoutForm" property="numOfCollections"/></td>
+    <td align="right" class="tablebody">$<bean:write name="checkoutForm" property="costForShipping"/></td>
+  </tr> 
   <tr> 
-    <td class="tableheader">Total price (without shipping charge):</td>
+    <td class="tableheader">Total price:</td>
     <td align="right" colspan="2" class="tablebody">$<bean:write name="checkoutForm" property="totalPrice"/></td>
   </tr>
 </table>
-<html:hidden property="saveInfo"/>
-  <html:submit value="Place Order"/>
-    </html:form>
+
+<html:form action="ChoosePayment.do">
+<table>
+<tr>
+<td width="30%" class="formlabel">Please choose payment method:</td>
+<td width="30%" class="text"><html:radio property="paymentmethod" value="<%=Constants.PO%>"/><%=Constants.PO%></td>
+<td width="30%" class="text"><html:radio property="paymentmethod" value="<%=Constants.PAYPAL%>"/><%=Constants.PAYPAL%></td>
+<td></td>
+</tr>
+<tr>
+ <td class="formlabel">*PO Number (if choose payment by PO):</td>
+    <td class="text">
+        <html:text maxlength="50" property="ponumber" size="40"/>
+    </td>
+</tr>
+</table>
+<html:submit value="Place Order"/>
+</html:form>
 
     </td>
   </tr>
