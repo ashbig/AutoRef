@@ -1,6 +1,6 @@
 //Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
 /**
- * $Id: Container.java,v 1.36 2007-12-17 18:58:42 Elena Exp $
+ * $Id: Container.java,v 1.37 2008-01-08 16:34:53 Elena Exp $
  *
  * File     	: Container.java
 
@@ -420,7 +420,7 @@ temp.append(")))) order by objectid");
         //define isolatetracking id statuses for the process
         String sql = null;
      
-        sql = "select  label, project_id from containerheader order by project_id, label";
+        sql = "select  label, project_id from containerheader where status = -1 order by project_id, label";
         
         ArrayList container_labels = new ArrayList();
         ArrayList container_labels_per_project = null;
