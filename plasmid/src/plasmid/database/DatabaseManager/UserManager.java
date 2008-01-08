@@ -259,7 +259,7 @@ public class UserManager extends TableManager {
         
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        String email;
+        String email = null;
         try {
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, userid);
