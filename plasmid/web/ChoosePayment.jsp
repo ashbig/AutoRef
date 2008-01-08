@@ -29,7 +29,7 @@
 <input type="hidden" name="invoice" value="<bean:write name="checkoutForm" property="orderid"/>">
 <input type="hidden" name="no_shipping" value="1">
 <input type="hidden" name="business" value="dzuo_1198005536_biz@hms.harvard.edu">
-<input type="hidden" name="item_name" value="Order: <bean:write name="checkoutForm" property="orderid"/>">
+<input type="hidden" name="item_name" value="PlasmID Order: <bean:write name="checkoutForm" property="orderid"/>">
 <input type="hidden" name="currency_code" value="USD">
 <input type="hidden" name="amount" value="<bean:write name="checkoutForm" property="totalPrice"/>">
 <input type="hidden" name="return" value="http://dev.plasmid.med.harvard.edu/PLASMID/ViewOrderDetail.jsp">

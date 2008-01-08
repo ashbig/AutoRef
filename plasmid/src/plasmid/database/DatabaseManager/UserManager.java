@@ -123,12 +123,15 @@ public class UserManager extends TableManager {
         return userid;
     }
    
-    public int findUser(String email) {
+    public User findUser(String email) {
         if(email == null)
-            return -1;
+            return null;
         
-        int userid = -1;
-        String sql = "select userid from userprofile where upper(email)=upper(?)";
+        User user = null;
+        String sql = "select userid,firstname,lastname,email,phone,"+
+        " ponumber,institution,department,dateadded,datemod,modifier,"+
+        " piname,usergroup,isinternal,piemail,password"+
+        " from userprofile where upper(email)=upper(?)";
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
@@ -136,7 +139,23 @@ public class UserManager extends TableManager {
             stmt.setString(1, email);
             rs = DatabaseTransaction.executeQuery(stmt);
             if(rs.next()) {
-                userid = rs.getInt(1);
+                int userid = rs.getInt(1);
+                String firstname = rs.getString(2);
+                String lastname = rs.getString(3);
+                String phone = rs.getString(5);
+                String ponumber = rs.getString(6);
+                String institution = rs.getString(7);
+                String department = rs.getString(8);
+                String dateadded = rs.getString(9);
+                String datemod = rs.getString(10);
+                String modifier = rs.getString(11);
+                String pi = rs.getString(12);
+                String usergroup = rs.getString(13);
+                String isinternal = rs.getString(14);
+                String piemail = rs.getString(15);
+                String password = rs.getString(16);
+                
+                user = new User(userid,firstname,lastname,email,phone,ponumber, institution,department,dateadded,datemod,modifier, pi,usergroup, password,isinternal,piemail);
             }
         } catch (Exception ex) {
             handleError(ex, "Database error occured.");
@@ -144,7 +163,7 @@ public class UserManager extends TableManager {
             DatabaseTransaction.closeResultSet(rs);
             DatabaseTransaction.closeStatement(stmt);
         }
-        return userid;
+        return user;
     }
     
     public boolean piExist(String firstname, String lastname, String email) {
