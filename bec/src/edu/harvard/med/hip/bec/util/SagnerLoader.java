@@ -14,6 +14,16 @@ import edu.harvard.med.hip.bec.coreobjects.sequence.*;
 import edu.harvard.med.hip.bec.programs.parsers.CloneCollectionElements.*;
 import java.io.*;
 import java.util.*;
+
+import java.sql.*;
+import java.util.*;
+import sun.jdbc.rowset.*;
+import javax.sql.*;
+
+import  edu.harvard.med.hip.bec.bioutil.*;
+import  edu.harvard.med.hip.bec.coreobjects.sequence.*;
+
+import edu.harvard.med.hip.bec.database.*;
 /**
  *
  * @author htaycher
@@ -24,31 +34,126 @@ public class SagnerLoader
     /** Creates a new instance of SagnerLoader */
     public static void main(String args[])
     {
-        String in_file_name ="Z:\\HTaycher\\HIP projects\\Sagner\\entry_info_31045.txt";
+        String rename_all_bat = "O:\\plate_mapping\\rename_all";
+        String destination = "d:\\traces_uploaded\\";
+        
+        String db_name="O:\\blast_db\\ORFEOME\\genes";
+        creatBlastableDB( db_name);
+        
+      /*   try
+        {
+            BufferedWriter out  =   new BufferedWriter(new FileWriter("O:\\plate_mapping\\totalfiles.txt" ));
+            File dir_file = new File("o:\\traces_uploaded");
+            String[] traces_name = dir_file.list();
+            for(int count = 0; count < traces_name.length; count++)
+            {
+                out.write(traces_name[count]+"\n");
+                out.flush();
+            }
+            out.close();
+        }
+        catch(Exception e){}
+      */
+        
+      //+writeTracesNames(rename_all_bat+"11001.bat","O:\\temp_traces\\11001", "pDONR223","M13R");
+       //+writeTracesNames(rename_all_bat+"004.bat","O:\\temp_traces\\sanger004", "d:\\temp_traces\\sanger004\\", destination,"pDONR223","M13R");
+      //  +writeTracesNames(rename_all_bat+"31045.bat","O:\\temp_traces\\31045", "pDONR223","M13R");
+      //   writeTracesNames(rename_all_bat+"003.bat","O:\\temp_traces\\sanger003",  "d:\\temp_traces\\sanger003\\", destination,"pDONR223","M13R");
+     //writeTracesNames(rename_all_bat+"002.bat","O:\\temp_traces\\sanger002",  "d:\\temp_traces\\sanger002\\", destination,"pDONR223","M13R");
+      
+
+// writeTracesNames(rename_all_bat+"001.bat","O:\\temp_traces\\sanger001",  "d:\\temp_traces\\sanger001\\", destination,"pDONR223","M13R");
+     
+  //writeTracesNames(rename_all_bat+"11002.bat","O:\\temp_traces\\11002", "d:\\temp_traces\\11002\\", destination,"pDONR223","M13R");
+  //    writeTracesNames(rename_all_bat+"11003.bat","O:\\temp_traces\\11003", "d:\\temp_traces\\11003\\", destination,"pDONR223","M13R");
+        
+      /*  String in_file_name ="Z:\\HTaycher\\HIP projects\\Sagner\\10000-1200.txt";
         String[] plate_indexes = {"_1","_2","_3","_4"}; 
-            int species_id = 3;
-            int userid = 2;
-            int project_id = 6;
+            int species_id = 2;
+            int userid = 1;
+            int project_id = 2;
             int format = 0;
-            int cloningstrategyid = 7;
+            int cloningstrategyid = 2;
             String plate_type = "96 WELL PLATE";
             try
             {
         writeXMLFiles( in_file_name,  plate_indexes, 
              species_id,  userid,  project_id,  format,  cloningstrategyid, plate_type) ;   
             }
-            catch(Exception e){}
+            catch(Exception e)
+            {
+            System.out.println(e.getMessage());
+            }
+       */
+            
     }
     
     
+    
+    public static void writeTracesNames(String rename_all_bat,String dir, String origin,
+            String destination,String forward_primer, String rev_primer)
+    {
+        String line = null;
+        String file_names = dir+"\\renaming_traces_1"+System.currentTimeMillis()+".bat";
+        try
+        {
+            BufferedWriter out  =   new BufferedWriter(new FileWriter(rename_all_bat ));
+           File dir_file = new File(dir);
+            String[] traces_name = dir_file.list();
+            int rec_count = 0; int count ;
+            for(count = 0; count < traces_name.length; count++)
+            {
+                line = traces_name[count];
+        //     System.out.println(line);
+                //31044_3_E9.p1kpDONR223_1
+              //  int index_second_ = line.indexOf('_');
+                line=line.replaceFirst("\\.","_");
+    //     System.out.println(line);
+                String[] items= line.split("_");
+                if ( items[2].length()==2) 
+                    items[2]=items[2].charAt(0)+"0"+items[2].charAt(1);
+              
+                //31045_1_D1.q1kaM13R.scf 31045_1_D1.q1kM13R.scf
+                //31045_1_D1.p1kapDONR223_1.scf
+                int forw_index = items[3].indexOf(forward_primer);
+                int index_rev = items[3].indexOf(rev_primer);
+                if( forw_index ==3) 
+                    items[3]= items[3].replaceFirst(forward_primer,"_F");
+                else if ( index_rev ==3 )
+                {
+                   items[3]= items[3].replaceFirst(rev_primer,"_R");
+                }
+                else
+                {
+                   
+                    if (items.length == 5 )
+                    {
+                         items[3]="I_"+count;
+                    }
+                    else
+                         items[3]="I_"+count+".scf";
+                }
+                line = Algorithms.convertArrayToString(items,"_");
+                out.write("cp "+origin+traces_name[count]+" "+ destination + line+"\n");
+                rec_count++;
+                out.flush();
+            }
+           System.out.println( dir+" "+ count +" "+rec_count);
+            out.close();
+        }
+        catch(Exception e){}
+      
+        
+    }
     //Plate_Name	Plate_Position	RefSeq_AccNo	Gene_ID	Gene_Symbol	Gene_function	ReferenceSequence
     public static void writeXMLFiles(String in_file_name, String[] plate_indexes, 
             int species_id, int user_id, int project_id, int format, int cloningstrategyid,
             String plate_type)
              throws Exception
     {
-        String ref_file_name = in_file_name+"_refseq.xml";
-        String file_name =in_file_name+"_plates.xml";
+        long timestamp=System.currentTimeMillis();
+        String ref_file_name = in_file_name+"_refseq"+timestamp+".xml";
+        String file_name =in_file_name+"_plates"+timestamp+".xml";
         Hashtable refsequences = readSequences(in_file_name, species_id);
         ArrayList plates = readPlateInfo(in_file_name, plate_type, format, project_id,cloningstrategyid, refsequences);
         plates = duplicatePlates(plate_indexes, plates);
@@ -87,29 +192,90 @@ public class SagnerLoader
         PublicInfoItem p_info = null;
         String line = null;
         BufferedReader in  =   new BufferedReader(new InputStreamReader(new FileInputStream(in_file_name)));
+      
         while((line = in.readLine()) != null)
         {
-            items = line.split("\t");//edu.harvard.med.hip.flex.util.Algorithms.splitString(line,"\t",true, -1);
+   
+            items = line.trim().split("\t");//edu.harvard.med.hip.flex.util.Algorithms.splitString(line,"\t",true, -1);
+    System.out.println(line);      
             refsequence= new RefSequence();
             refsequence.setCdsStart(1);
-            refsequence.setText(items[6]);
+           
+            // cut last base and replace it to 'c'
+            String sequence_text = items[6];
+   
+            sequence_text = sequence_text.substring(0, sequence_text.length()-1)+"C";
+             refsequence.setText(sequence_text);
             refsequence.setCdsStop(refsequence.getText().length());
             refsequence.setSpecies(species_id);
             refsequence.setId(BecIDGenerator.getID("userrefseqid"));
             
-            p_info = new PublicInfoItem( "GENBANK_ACCESSION", items[2], null, null);
-            refsequence.addPublicInfo(p_info);
-            p_info = new PublicInfoItem( "GENE_ID", items[3], null, null);
-            refsequence.addPublicInfo(p_info);
-            p_info = new PublicInfoItem( "GENE_SYMBOL", items[4], null, null);
-            refsequence.addPublicInfo(p_info);
-            p_info = new PublicInfoItem( "FUNCTION", items[5], null, null);
-            refsequence.addPublicInfo(p_info);
+            if( items[2].trim().length()>0)
+            {p_info = new PublicInfoItem( "GENBANK_ACCESSION", items[2], null, null);
+            refsequence.addPublicInfo(p_info);}
+            if( items[3].trim().length()>0)
+            {p_info = new PublicInfoItem( "GENE_ID", items[3], null, null);
+            refsequence.addPublicInfo(p_info);}
+           if( items[4].trim().length()>0)
+            { p_info = new PublicInfoItem( "GENE_SYMBOL", items[4], null, null);
+            refsequence.addPublicInfo(p_info);}
+           if( items[5].trim().length()>0)
+            { p_info = new PublicInfoItem( "FUNCTION", items[5], null, null);
+            refsequence.addPublicInfo(p_info);}
             refsequences.put( items[2],refsequence);
+           
+            
         }
         return refsequences;
     }
 
+    
+   public static void creatBlastableDB(String db_name)
+   {
+        int refseq_id  = -1; String refseq_cds = null;BufferedWriter out  = null;
+        RefSequence refseq = null; int add_number = 200;int flex_refseq_id = 0;
+        int start_count = 0;
+         try
+         {
+             
+            while( start_count < 30921)
+            {
+                 String sql = "select distinct flexsequenceid, refsequenceid from sequencingconstruct s, "
++ " flexinfo f, isolatetracking i where s.constructid = i.isolatetrackingid and i.isolatetrackingid=f.isolatetrackingid "
+                +" and f.flexsequenceid > "+start_count+" and flexsequenceid < " + (start_count+add_number) +" order by flexsequenceid";
+ 
+                if ( start_count == 0)
+                     out  =   new BufferedWriter(new FileWriter(db_name ));
+                else 
+                     out  =   new BufferedWriter(new FileWriter(db_name, true ));
+start_count +=add_number-1;
+ 
+                DatabaseTransaction t = DatabaseTransaction.getInstance();
+                RowSet rs = t.executeQuery(sql);
+                 while(rs.next())
+                {
+                     flex_refseq_id  = rs.getInt("flexsequenceid");
+                     refseq_id  = rs.getInt("refsequenceid");
+                     
+                      refseq = new RefSequence(refseq_id, false);
+                        refseq_cds = refseq.getCodingSequence();
+                        refseq_cds = SequenceManipulation.convertToFasta(refseq_cds);
+                        out.write(">"+flex_refseq_id);
+                        out.write(refseq_cds);
+                        out.write(System.getProperty("line.separator"));
+                        out.flush();
+                    
+                }
+               
+                out.close();
+            }
+         }
+         catch (Exception e)
+         {
+             System.out.println(e.getMessage());
+         }
+       
+   }
     private static ArrayList        readPlateInfo(
             String in_file_name, String plate_type,
             int format,  int   project_id,
