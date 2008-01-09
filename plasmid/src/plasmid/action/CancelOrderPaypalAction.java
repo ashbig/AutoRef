@@ -61,24 +61,15 @@ public class CancelOrderPaypalAction  extends Action {
         ActionErrors errors = new ActionErrors();
         
         try {
-            Enumeration names = request.getParameterNames();
-            String invoice = "";
-            while(names.hasMoreElements()) {
-                String name =  (String)names.nextElement();
-                String value = request.getParameter(name);
-                
-                if("invoice".equals(name)) {
-                    invoice = value;
-                    break;
-                }
-            }
-            
-            int orderid = Integer.parseInt(invoice);
+            CloneOrder order = (CloneOrder)request.getSession().getAttribute(Constants.CLONEORDER);
+            User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
+
             OrderProcessManager manager = new OrderProcessManager();
-            CloneOrder order = manager.getCloneOrder(orderid);
-            String email = manager.findEmail(order.getUserid());
-            boolean b = manager.updateOrderStatus(orderid, CloneOrder.CANCEL);
-            manager.sendOrderCancelEmail(order, email);
+            boolean b = manager.updateOrderStatus(order.getOrderid(), CloneOrder.CANCEL);
+            order.setStatus(CloneOrder.CANCEL);
+            request.getSession().setAttribute("ordermessage", "You order has been cancelled.");
+            //request.getSession().setAttribute(Constants.CLONEORDER, order);
+            manager.sendOrderCancelEmail(order, user.getEmail());
         } catch (Exception ex) {
             System.out.println(ex);
         }
