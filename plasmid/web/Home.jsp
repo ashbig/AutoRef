@@ -32,12 +32,12 @@
         <p align="left" class="homepageText3">What's New?</p>
         <ul>
           <li> 
-            <div align="left">Sequence-verified, genome-scale ORF collection for the bacterial pathogen F. tularensis (See <a href="http://www.ncbi.nlm.nih.gov/sites/entrez?Db=pubmed&Cmd=ShowDetailView&TermToSearch=17593976&ordinalpos=1&itool=EntrezSystem2.PEntrez.Pubmed.Pubmed_ResultsPanel.Pubmed_RVDocSum">Murthy et al. 2007</a>) (HIP/HMS)
+            <div align="left">Credit Card Payments now accepted! You can now use either a purchase order (PO) number or a credit card to pay for your request
             </div>
           </li>
           <li> 
-            <div align="left">Sequence-verified, genome-scale ORF collections also include Y. pestis and V. cholerae (HIP/HMS)
-</div>
+            <div align="left">Sequence-verified, genome-scale ORF collections for F. tularensis, Y. pestis and V. cholerae (HIP/HMS) 
+            </div>
           </li>
           <li> 
             <div align="left">Human kinase collection now includes clones in entry vectors for recombinational cloning and <a href="http://plasmid.med.harvard.edu/PLASMID/GetCollection.do?collectionName=HIP%20human%20kinase%20collection%20(pJP1520,%20complete%20set)">clones in a mammalian expression vector</a> (HIP/HMS)

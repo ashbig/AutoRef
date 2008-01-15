@@ -22,7 +22,13 @@
 	</td>
     <td width="83%" align="left" valign="top">
 	<jsp:include page="checkoutTitle.jsp" />
+<p class="text"><i>
+<b>Pay Using a Credit Card at PayPal</b><br>
 
+Please note that you do not need to create a PayPal account to pay by credit card:  see the bottom right-hand side of the PayPal page for a link to pay by credit card without signing in or registering.
+
+Click the following button to pay by PayPal (you will then be returned to PlasmID to complete your request).
+</p>
 <html:errors/>
 <form action="https://www.sandbox.paypal.com/us/cgi-bin/webscr" method="post">
 <input type="hidden" name="cmd" value="_xclick">
