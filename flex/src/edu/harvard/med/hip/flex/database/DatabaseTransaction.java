@@ -12,8 +12,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.20 $
- * $Date: 2008-01-23 18:23:04 $
+ * $Revision: 1.21 $
+ * $Date: 2008-01-23 18:32:42 $
  * $Author: dzuo $
  *
  ******************************************************************************
@@ -34,9 +34,7 @@
 |<---            this code is formatted to fit into 80 columns             --->|
 |<---            this code is formatted to fit into 80 columns             --->|
  */
-
 package edu.harvard.med.hip.flex.database;
-
 
 import java.sql.*;
 import java.util.*;
@@ -56,26 +54,24 @@ import sun.jdbc.rowset.*;
  * DatabaseTransaction is implemented as a singleton.
  *
  * @author     $Author: dzuo $
- * @version    $Revision: 1.20 $ $Date: 2008-01-23 18:23:04 $
+ * @version    $Revision: 1.21 $ $Date: 2008-01-23 18:32:42 $
  */
-
 public class DatabaseTransaction {
-    
+
     // singleton instance.
     private static DatabaseTransaction instance = null;
-    
     // the datasource to get the pooled connections from
     private static DataSource ds = null;
-    
+
     // Private constructor method. Autocommit is set to false.
     protected DatabaseTransaction(DataSource ds) {
         this.ds = ds;
     } // end constructor
-    
+
     public static void init(DataSource ds) {
         instance = new DatabaseTransaction(ds);
     }
-    
+
     /**
      * This class is implemented as a Singleton.
      * Returns a <code>DatabaseTransaction</code> object.
@@ -83,16 +79,15 @@ public class DatabaseTransaction {
      * @return A <code>DatabaseTransaction</code> object.
      */
     public static DatabaseTransaction getInstance()
-    throws FlexDatabaseException {
+            throws FlexDatabaseException {
         if (instance == null) {
             throw new FlexDatabaseException("Pool not initialized.");
         }
-        
+
         return instance;
-        
+
     } // end getInstance()
-    
-    
+
     /**
      * Requests a Connection from the pool.
      *
@@ -104,21 +99,20 @@ public class DatabaseTransaction {
      * @throws FlexDatabaseException
      */
     public Connection requestConnection(boolean autoCommit)
-    throws FlexDatabaseException {
+            throws FlexDatabaseException {
         Connection conn = null;
         try {
             conn = ds.getConnection();
             conn.setAutoCommit(autoCommit);
             return conn;
-        } catch(SQLException sqlE) {
+        } catch (SQLException sqlE) {
             DatabaseTransaction.closeConnection(conn);
-            throw new FlexDatabaseException("Cannot get Connection.\n"+sqlE.getMessage());
-            
+            throw new FlexDatabaseException("Cannot get Connection.\n" + sqlE.getMessage());
+
         }
-        
+
     } // end requestConnection()
-    
-    
+
     /**
      * Requests a Connection from the pool with autocommit turned off.
      *
@@ -130,12 +124,11 @@ public class DatabaseTransaction {
      * @throws FlexDatabaseException
      */
     public Connection requestConnection() throws FlexDatabaseException {
-        
+
         return requestConnection(false);
-        
+
     } // end requestConnection()
-    
-    
+
     /**
      * Executes an update, insert or delete.  The return value is the number
      * of rows affected.
@@ -143,15 +136,14 @@ public class DatabaseTransaction {
      * @throws FlexDatabaseException
      */
     public static int executeUpdate(PreparedStatement ps)
-    throws FlexDatabaseException{
+            throws FlexDatabaseException {
         try {
             return ps.executeUpdate();
-        } catch(SQLException sqlE) {
-            throw new FlexDatabaseException(sqlE.getMessage()+"\nSQL: "+ps);
+        } catch (SQLException sqlE) {
+            throw new FlexDatabaseException(sqlE.getMessage() + "\nSQL: " + ps);
         }
     } // end executeUpdate()
-    
-    
+
     /**
      * executes an update, insert or delete with the given query string and
      * database connection.  Returns the number of rows affected
@@ -162,22 +154,21 @@ public class DatabaseTransaction {
      * @return number or rows affected.
      */
     public static int executeUpdate(String sql, Connection conn)
-    throws FlexDatabaseException {
+            throws FlexDatabaseException {
         int retVal = 0;
         Statement stmt = null;
         try {
             stmt = conn.createStatement();
             retVal = stmt.executeUpdate(sql);
         } catch (Exception e) {
-            throw new FlexDatabaseException(e.getMessage()+"\nSQL: "+sql);
+            throw new FlexDatabaseException(e.getMessage() + "\nSQL: " + sql);
         } finally {
             closeStatement(stmt);
         }
         return retVal;
-        
+
     } // end executeUpdate()
-    
-    
+
     /**
      * Executes a sql statement and returns a Row set object with the results
      * from the query.
@@ -197,17 +188,17 @@ public class DatabaseTransaction {
         Statement stmt = null;
         ResultSet rs = null;
         try {
-            
+
             conn = requestConnection();
             crs = new CachedRowSet();
             stmt = conn.createStatement();
-            
+
             rs = stmt.executeQuery(sql);
             crs.populate(rs);
-            
-            
+
+
         } catch (SQLException e) {
-            throw new FlexDatabaseException(e.getMessage()+"\nSQL: "+sql);
+            throw new FlexDatabaseException(e.getMessage() + "\nSQL: " + sql);
         } finally {
             // release database resources
             closeResultSet(rs);
@@ -216,9 +207,7 @@ public class DatabaseTransaction {
         }
         return crs;
     } //end executeSQL
-    
-    
-    
+
     /**
      * This method executes the requested prepared statement.
      *
@@ -229,25 +218,24 @@ public class DatabaseTransaction {
      * @throws  FlexDatabaseException.
      */
     public static CachedRowSet executeQuery(PreparedStatement stmt)
-    throws FlexDatabaseException{
+            throws FlexDatabaseException {
         CachedRowSet crs = null;
         ResultSet results = null;
         try {
             crs = new CachedRowSet();
             results = stmt.executeQuery();
             crs.populate(results);
-            
-            
-            
+
+
+
         } catch (SQLException e) {
-            throw new FlexDatabaseException(e.getMessage()+"\nSQL: "+stmt);
+            throw new FlexDatabaseException(e.getMessage() + "\nSQL: " + stmt);
         } finally {
             closeResultSet(results);
         }
         return crs;
     } // end executeQuery()
-    
-    
+
     /**
      * Set the parameters for the <code>PreparedStatement</code> object.
      *
@@ -258,22 +246,22 @@ public class DatabaseTransaction {
      * @throws FlexDatabaseException
      */
     public static void setupPreparedStatement(PreparedStatement stmt,
-    Hashtable h) throws FlexDatabaseException {
-        String type = (String)h.get("type");
-        int index = ((Integer)h.get("index")).intValue();
+            Hashtable h) throws FlexDatabaseException {
+        String type = (String) h.get("type");
+        int index = ((Integer) h.get("index")).intValue();
         Object value = h.get("value");
-        
+
         try {
-            if(type.equals("double")) {
-                stmt.setDouble(index, ((Double)value).doubleValue());
-            } else if(type.equals("int")) {
-                stmt.setInt(index, ((Integer)value).intValue());
+            if (type.equals("double")) {
+                stmt.setDouble(index, ((Double) value).doubleValue());
+            } else if (type.equals("int")) {
+                stmt.setInt(index, ((Integer) value).intValue());
             } else if (type.equals("boolean")) {
-                stmt.setBoolean(index, ((Boolean)value).booleanValue());
+                stmt.setBoolean(index, ((Boolean) value).booleanValue());
             } else if (type.equals("string")) {
-                stmt.setString(index, (String)value);
+                stmt.setString(index, (String) value);
             } else if (type.equals("date")) {
-                stmt.setDate(index, (java.sql.Date.valueOf((String)value)));
+                stmt.setDate(index, (java.sql.Date.valueOf((String) value)));
             } else {
                 throw new FlexDatabaseException("No such parameter defined.");
             }
@@ -281,22 +269,21 @@ public class DatabaseTransaction {
             throw new FlexDatabaseException(e.getMessage());
         }
     }
-    
+
     /**
      * Closes the given <code>Statement</code> ignoring all exceptions.
      *
      * @param conn The <code>Connection</code> to close.
      */
     public static void closeConnection(Connection conn) {
-        try{
+        try {
             conn.close();
-            
-        } catch(Throwable t) {
+
+        } catch (Throwable t) {
             t.printStackTrace();
         }
     }
-    
-    
+
     /**
      * Closes a statment ignoring all exceptions.
      *
@@ -305,9 +292,10 @@ public class DatabaseTransaction {
     public static void closeStatement(Statement stmt) {
         try {
             stmt.close();
-        } catch(Throwable t){}
+        } catch (Throwable t) {
+        }
     }
-    
+
     /**
      * Closes a <code>ResultSet</code> ignoring all exceptions.
      *
@@ -316,9 +304,10 @@ public class DatabaseTransaction {
     public static void closeResultSet(ResultSet rs) {
         try {
             rs.close();
-        } catch(Throwable t){}
+        } catch (Throwable t) {
+        }
     }
-    
+
     /**
      * Commits a connection ignoring all exceptions.
      *
@@ -327,21 +316,22 @@ public class DatabaseTransaction {
     public static void commit(Connection conn) {
         try {
             conn.commit();
-        } catch(Throwable t) {}
+        } catch (Throwable t) {
+        }
     }
-    
-    
+
     /**
      * Rolls back a connection ignoring all exceptions.
      *
      * @param conn The <code>Connection</code> to close.
      */
-    public static void rollback(Connection conn)  {
+    public static void rollback(Connection conn) {
         try {
             conn.rollback();
-        } catch(Throwable t) {}
+        } catch (Throwable t) {
+        }
     }
-    
+
     /**
      * Makes a string ready for oracle by replacing the ' with ''.
      * 
@@ -356,74 +346,95 @@ public class DatabaseTransaction {
         StringBuffer stringBuff = new StringBuffer(string);
         int quoteIndex = 0;
         int curIndex = 0;
-        
+
         quoteIndex = string.indexOf("'");
-        while (quoteIndex !=-1) {
+        while (quoteIndex != -1) {
             int offset = quoteIndex + curIndex++;
             stringBuff.insert(offset, "'");
-            quoteIndex = string.indexOf("'",quoteIndex+1);
+            quoteIndex = string.indexOf("'", quoteIndex + 1);
         }
         return stringBuff.toString();
     }
-    
-    public static void main(String args[]) throws FlexDatabaseException, SQLException{
+
+    public static CachedRowSet executeQuery(String sql, Connection conn) throws FlexDatabaseException {
+
+        CachedRowSet crs = null;
+        Statement stmt = null;
         ResultSet rs = null;
-        
+        try {
+
+            crs = new CachedRowSet();
+            stmt = conn.createStatement();
+
+            rs = stmt.executeQuery(sql);
+            crs.populate(rs);
+
+
+        } catch (SQLException e) {
+            throw new FlexDatabaseException(e.getMessage() + "\nSQL:" + sql);
+        } finally {
+            // release database resources
+            closeResultSet(rs);
+            closeStatement(stmt);
+        // closeConnection(conn);
+        }
+        return crs;
+    } //end executeSQL
+
+    public static void main(String args[]) throws FlexDatabaseException, SQLException {
+        ResultSet rs = null;
+
         DatabaseTransaction dt = null;
         Connection conn1 = null;
         Connection conn2 = null;
         PreparedStatement ps1 = null;
         PreparedStatement ps2 = null;
-        
-        
-        
+
+
+
         // test execute sql
-        
-        
+
+
         dt = DatabaseTransaction.getInstance();
-        for (int i = 0 ; i < 300 ; i++) {
+        for (int i = 0; i < 300; i++) {
             try {
                 String sql1 = "select * from userprofile where username='jmunoz'";
                 String sql2 = "select * from userprofile where username='jmunoz'";
                 System.out.println("i: " + i);
-                edu.harvard.med.hip.flex.process.Process.findProcess(new edu.harvard.med.hip.flex.core.Container(200),new edu.harvard.med.hip.flex.process.Protocol(8));
+                edu.harvard.med.hip.flex.process.Process.findProcess(new edu.harvard.med.hip.flex.core.Container(200), new edu.harvard.med.hip.flex.process.Protocol(8));
                 //new edu.harvard.med.hip.flex.process.Researcher(100);
                 conn1 = dt.requestConnection();
-                
-                
+
+
                 ps1 = conn1.prepareStatement(sql1);
                 DatabaseTransaction.executeQuery(ps1);
-                
+
                 conn2 = dt.requestConnection();
                 ps2 = conn2.prepareStatement(sql2);
                 DatabaseTransaction.executeQuery(ps2);
-                
-                
-            } catch(FlexDatabaseException fde) {
+
+
+            } catch (FlexDatabaseException fde) {
                 fde.printStackTrace();
-            } catch(edu.harvard.med.hip.flex.core.FlexCoreException core) {
+            } catch (edu.harvard.med.hip.flex.core.FlexCoreException core) {
                 core.printStackTrace();
-                
-            }
-            catch(SQLException sqlE) {
+
+            } catch (SQLException sqlE) {
                 sqlE.printStackTrace();
-            }
-            finally {
+            } finally {
                 DatabaseTransaction.closeResultSet(rs);
                 DatabaseTransaction.closeStatement(ps2);
                 DatabaseTransaction.closeConnection(conn1);
                 DatabaseTransaction.closeStatement(ps1);
                 DatabaseTransaction.closeConnection(conn2);
-                
+
             }
         }
-        
-        
+
+
         System.out.println("End of Main");
         System.exit(0);
-    } // end main()
-    
-    
+    } // end main()  
 } // end class DatabaseTransaction
 
 /*
