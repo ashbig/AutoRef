@@ -335,8 +335,9 @@ public class DataFileReader
        ImportClone row_clone = setCloneProperties(records_out);
        ImportClone temp_clone = (ImportClone)m_clones.get( row_clone.getUserId());
        if ( i_is_CreateCloneObjectPerSample && 
-               row_clone!= null && temp_clone != null
-               ) temp_clone.reasignCloneProperties( row_clone) ;
+               row_clone!= null    ) 
+       {    sample.setClone( row_clone) ;}
+     
   }
   
   private  String              setAdditionalInfo( ColumnValue[] records_of_row, 

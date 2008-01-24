@@ -244,7 +244,9 @@ public class ImportContainer
          for (int count = 0; count < m_samples.size(); count++)
          {
              sample = (ImportSample) m_samples.get(count);
+            
              if ( sample.getClone() != null && sample.getClone().getCloningStrategyId() == -1 )
+             
              {
                  sample.getClone().assignCloningStrategyID( cloning_strategies);
                  cloning_strategy_id = sample.getClone().getCloningStrategyId( );
