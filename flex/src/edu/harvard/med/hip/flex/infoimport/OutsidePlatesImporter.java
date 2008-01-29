@@ -914,8 +914,7 @@ public String getTitle() {        return "Upload of information for third-party 
                 container.insert(conn, m_error_messages, m_project_id, m_workflow_id,
                         project_code, m_sample_biotype);
          }
-         
-        createProcessRecords( conn,  i_containers.values(),  m_protocol_id,  m_project_id ,   m_workflow_id   );
+                 createProcessRecords( conn,  i_containers.values(),  m_protocol_id,  m_project_id ,   m_workflow_id   );
        
     }
     

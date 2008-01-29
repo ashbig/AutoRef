@@ -203,6 +203,9 @@ public abstract class ImportRunner implements Runnable
                 Mailer.sendMessage(m_user.getUserEmail(), from, from, title, msg);  
          
             } 
+             
+                 System.out.println(msg );
+         
             msg = Algorithms.convertStringArrayToString(m_process_messages,"\n");
             Mailer.sendMessage(m_user.getUserEmail(), from, from, title, msg);  
                     

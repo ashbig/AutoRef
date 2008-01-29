@@ -1,5 +1,5 @@
 /**
- * $Id: Protocol.java,v 1.48 2007-09-19 15:44:57 Elena Exp $
+ * $Id: Protocol.java,v 1.49 2008-01-29 20:02:25 Elena Exp $
  *
  * File     : FlexProcessException.java
  * Date     : 04162001
@@ -49,6 +49,8 @@ public class Protocol {
     public static final String GENERATE_DNA_PLATES="Generate DNA plates";
     public static final String GENERATE_GLYCEROL_PLATES=
     "Generate glycerol plates";
+     public static final String GENERATE_GLYCEROL_PLATES_FROM_PLATES_WITH_CLONES=
+    "Generate glycerol plates from plates with clone IDs";
     public static final String GENERATE_SEQUENCING_PCR_PLATES=
     "Generate sequencing PCR plates";
     public static final String GENERATE_SEQUENCING_DNA_PLATES =
@@ -145,7 +147,9 @@ public class Protocol {
     public static final String GENERATE_LR_PLATE = "Generate LR reaction plate";
     
     public static final String PLATE_CONDENSATION = "384 well plate condensation";
-    
+     public static final String CREATE_CULTURE_FROM_TEMPLATE =
+                    "Generate culture block from template plate";
+
     private int id;
     private String processcode;
     private String processname;
@@ -173,7 +177,7 @@ public class Protocol {
         String sql = "select protocolid, processcode, processname " +
         "from processprotocol " +
         "where protocolid = " + id;
-   System.out.println(sql);     
+  // System.out.println(sql);     
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         // only one result should be returned if any
         //Vector protocolVect = t.executeSql(sql);

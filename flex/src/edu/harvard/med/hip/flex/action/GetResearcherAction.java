@@ -208,12 +208,13 @@ public class GetResearcherAction extends ResearcherAction{
             }
             
             // Commit the changes to the database.
-            DatabaseTransaction.commit(conn);
+        //     why here???    DatabaseTransaction.commit(conn);
             //DatabaseTransaction.rollback(conn);
-            
-            int strategyid = CloningStrategy.getStrategyid(project.getId(), workflow.getId());            
-            //insert into summary table if it is the glycerol stock plate.
-            if(Protocol.GENERATE_GLYCEROL_PLATES.equals(protocol.getProcessname())) {
+           //insert into summary table if it is the glycerol stock plate.
+            if(Protocol.GENERATE_GLYCEROL_PLATES.equals(protocol.getProcessname()))
+            {
+                   int strategyid = CloningStrategy.getStrategyid(project.getId(), workflow.getId());  
+         
                 List containerids = new ArrayList();
                 List seqContainers = new ArrayList();
                 for(int i=0; i<newContainers.size(); i++) {
@@ -248,10 +249,44 @@ public class GetResearcherAction extends ResearcherAction{
                     ThreadedExpressionSummaryTablePopulator p = new ThreadedExpressionSummaryTablePopulator(newContainerids, strategyid);
                     new Thread(p).start();
                 } else {
+                    
+                    
                     SummaryTablePopulator populator = new SummaryTablePopulator();
                     ThreadedRearrayedSeqPlatesHandler handler = new ThreadedRearrayedSeqPlatesHandler(seqContainers, researcher.getBarcode(), b, populator, containerids, strategyid, CloneInfo.MASTER_CLONE);
                     new Thread(handler).start();
                 }
+            }
+            
+            
+             if(Protocol.GENERATE_GLYCEROL_PLATES_FROM_PLATES_WITH_CLONES.equals(protocol.getProcessname()))
+             {
+                List containerids = new ArrayList();
+                List seqContainers = new ArrayList();
+                for(int i=0; i<newContainers.size(); i++) 
+                {
+                    Container newContainer = (Container)newContainers.elementAt(i);
+                    
+                    if(newContainer.getLabel().substring(1,3).equals("GS")) {
+                        containerids.add(new Integer(newContainer.getId()));
+                    } else {
+                        seqContainers.add(newContainer);
+                    }
+                }
+                
+                String isMappingFile = ((GetResearcherBarcodeForm)form).getIsMappingFile();
+                boolean isMappingFileRequested = ("Yes".equals(isMappingFile)) ?  true: false;
+                
+                SummaryTablePopulatorPlateWithClones populator = new SummaryTablePopulatorPlateWithClones();
+                populator.setSequencingContainers(seqContainers);
+                populator.setResercherBarcode(researcher.getBarcode());
+                populator.isMappingFile(isMappingFileRequested);
+                populator.setGLysterolContainers(newContainers);
+                populator.setStorageType(StorageType.WORKING);
+                populator.setStorageForm(StorageForm.GLYCEROL);
+                Thread new_thread = new Thread(populator);    
+                new_thread.start();
+                   
+                
             }
             
             if(Protocol.CREATE_TRANSFECTION.equals(protocol.getProcessname())) {
@@ -274,6 +309,11 @@ public class GetResearcherAction extends ResearcherAction{
             request.getSession().removeAttribute("PerimeterRearrayInputAction.files");
             request.getSession().removeAttribute("PerimeterRearrayInputAction.emails");
             
+            
+            
+               // Commit the changes to the database.
+            DatabaseTransaction.commit(conn);
+         
             return (mapping.findForward("success"));
         } catch (Exception ex) {
             DatabaseTransaction.rollback(conn);

@@ -100,10 +100,11 @@
             <tr>
                 <td class="prompt">New sample type:</td>
                 <td><select name="sampleType">
-                        <option value="AD"/> DNA archive storage plate
                         <option value="DN" selected> DNA plate
-                                                    <option value="GS"/> Glycerol plate
-                        
+                        <option value="GP"/> Glycerol PSI original plate
+                        <option value="GS"/> Glycerol plate
+                        <option value="AD"/> DNA archive storage plate
+                     
                         <option value="AG"/> Glycerol archive storage plate
                         <option value="BP"/> BP reaction plate
                         <option value="CR"/> Infusion reaction plate

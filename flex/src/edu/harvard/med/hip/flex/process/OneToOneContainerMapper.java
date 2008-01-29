@@ -151,7 +151,9 @@ public class OneToOneContainerMapper implements ContainerMapper {
             }
             
             Container newContainer = new Container(newContainerType, null, newBarcode, container.getThreadid());
-            getSamples(container);
+         //   getSamples(container);
+             container.restoreSampleWithoutSeq();
+  
             mappingSamples(container, newContainer, protocol);
             newContainers.addElement(newContainer);
         }
@@ -219,7 +221,6 @@ public class OneToOneContainerMapper implements ContainerMapper {
                 }
             } else if(Sample.ISOLATE.equals(s.getType())) {
                 type = getCultureSampleType(container, s, protocol);
-                
                 if(type == null) {
                     type = Sample.getType(protocol.getProcessname());
                 }
@@ -238,7 +239,9 @@ public class OneToOneContainerMapper implements ContainerMapper {
             Sample newSample = new Sample(type, s.getPosition(), newContainer.getId(), s.getConstructid(), s.getOligoid(), Sample.GOOD);
             //if (!Protocol.GENERATE_CRE_PLATE.equals(protocol.getProcessname())) {
             newSample.setCloneid(s.getCloneid());
-            //}
+            if (newSample.getType().equals( Sample.EMPTY ) && s.getCloneid() != 0)
+            { newSample.setCloneid(0);}
+            
             newContainer.addSample(newSample);
             sampleLineageSet.addElement(new SampleLineage(s.getId(), newSample.getId()));
         }
@@ -321,15 +324,29 @@ public class OneToOneContainerMapper implements ContainerMapper {
     
     protected void getSamples(Container container) throws FlexDatabaseException {
         container.restoreSampleWithoutSeq();
+       
     }
     
     public static void main(String [] args) {
-        ContainerMapper mapper = new OneToOneContainerMapper();
-        String containerType = mapper.getContainerType("generate DNA plates");
         
-        if("96 WELL PLATE".equals(containerType))
-            System.out.println("Testing static method getContainerType - OK");
-        else
-            System.out.println("Testing static method getContainerType - ERROR");
+           Vector containers = new Vector();
+    try
+                   
+    {
+        Container container = new Container(20738);
+        container.restoreSample();
+        containers.add(container);
+            Project project = new Project(22);
+            Workflow workflow = new Workflow(61);
+          Protocol protocol = new Protocol(70);
+        ContainerMapper mapper = new OneToOneContainerMapper();
+        mapper.doMapping( containers,  protocol,  project, workflow);
+        String containerType = mapper.getContainerType("generate DNA plates");
+    }
+    catch(Exception e){}
+    //    if("96 WELL PLATE".equals(containerType))
+    //        System.out.println("Testing static method getContainerType - OK");
+    //    else
+      //      System.out.println("Testing static method getContainerType - ERROR");
     }
 }

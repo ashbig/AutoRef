@@ -207,7 +207,11 @@ public class SelectProtocolAction extends FlexAction {
                 String currentDate = date.getDateString();
                 request.setAttribute("receiveDate", currentDate);
                 return (mapping.findForward("success_recieve_plates"));
-            } else if(Protocol.GENERATE_GLYCEROL_PLATES.equals(processname)) {
+            } 
+            else if(
+                    Protocol.GENERATE_GLYCEROL_PLATES.equals(processname) ||
+                    Protocol.GENERATE_GLYCEROL_PLATES_FROM_PLATES_WITH_CLONES.equals(processname) )
+            {
                 return (mapping.findForward("success_glycerol"));
             } else {
                 return (mapping.findForward("success"));

@@ -1,5 +1,5 @@
 /**
- * $Id: Sample.java,v 1.14 2007-12-05 16:50:16 Elena Exp $
+ * $Id: Sample.java,v 1.15 2008-01-29 20:00:31 Elena Exp $
  *
  * File     	: Sample.java
  * Date     	: 04162001
@@ -320,6 +320,10 @@ public class Sample {
         if(Protocol.GENERATE_GLYCEROL_PLATES.equals(processname))
             return ISOLATE;
         
+        if ( Protocol.GENERATE_GLYCEROL_PLATES_FROM_PLATES_WITH_CLONES.equals(processname))
+            return ISOLATE;
+        
+        
         if(Protocol.GENERATE_AGAR_PLATES.equals(processname))
             return AGAR;
         
@@ -336,6 +340,8 @@ public class Sample {
             return AGAR;
         
         if(Protocol.PICK_COLONY.equals(processname))
+            return ISOLATE;
+         if(Protocol.CREATE_CULTURE_FROM_TEMPLATE.equals(processname))
             return ISOLATE;
         
         if(Protocol.CREATE_CULTURE_FROM_MGC.equals(processname))
