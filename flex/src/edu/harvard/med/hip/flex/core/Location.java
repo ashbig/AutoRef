@@ -1,5 +1,5 @@
 /**
- * $Id: Location.java,v 1.1 2003-03-07 17:44:51 dzuo Exp $
+ * $Id: Location.java,v 1.2 2008-01-29 14:42:13 Elena Exp $
  *
  * File     	: Location.java
  * Date     	: 04262001
@@ -39,6 +39,11 @@ public class Location {
     private String type;
     private String description;
     
+    
+    public String toString()
+    {
+        return this.id+" "+this.type;
+    }
     /**
      * default constructor
      */
@@ -164,7 +169,7 @@ public class Location {
      */
     public static Vector getLocations() throws FlexDatabaseException {
         Vector locations = new Vector();
-        String sql = "select * from containerlocation";
+        String sql = "select * from containerlocation order by locationtype";
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         ResultSet rs = t.executeQuery(sql);
         try {
