@@ -32,6 +32,10 @@
         <p align="left" class="homepageText3">What's New?</p>
         <ul>
           <li> 
+            <div align="left"><b><a href="http://plasmid.med.harvard.edu/PLASMID/GetCollection.do?collectionName=PSI">First sequence-verified PSI plasmids available
+            </a></b></div>
+          </li>
+          <li> 
             <div align="left">Credit Card Payments now accepted! You can now use either a purchase order (PO) number or a credit card to pay for your request
             </div>
           </li>
