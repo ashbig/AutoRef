@@ -38,7 +38,7 @@ import com.jscape.inet.sftp.*;
  * @author  DZuo
  */
 public class DownloadClonesAction extends UserAction {
-    
+    // test for CVS 
     /** Does the real work for the perform method which must be overriden by the
      * Child classes.
      *
