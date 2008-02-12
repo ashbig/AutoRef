@@ -415,9 +415,10 @@ sql += " from cloningstrategy s, vector v where v.vectorid=s.vectorid order by s
                  for (int jj =  0; jj < display_items.size(); jj++ )
                  {
                      items = (ArrayList)display_items.get(jj);
-                     if ( String.valueOf(items.get(2)).equalsIgnoreCase("NON") ) items.set(2, "Natural");
+                      if ( String.valueOf(items.get(2)).equalsIgnoreCase("NON") ) items.set(2, "Natural");
                      if ( String.valueOf(items.get(4)).equalsIgnoreCase("NON"))  items.set(4, "Natural");
                  }
+               
                  break;
            }
             case Constants.PROCESS_ADD_TRACE_FILE_NAME_FORMAT:
@@ -676,7 +677,7 @@ item_value = "<div align=center><a href=\'"+ BecProperties.getInstance().getProp
                if( sequence == null || sequence.trim().length()< 1)    throw new Exception ("Empty linker sequence") ;
                sequence= sequence.toUpperCase().trim();name= name.trim();
                boolean res = SequenceManipulation.isValidDNASequence( Algorithms.replaceChar(sequence, '-', '\u0000' ));
-               System.out.println("Is sequence ok "+res);
+              // System.out.println("Is sequence ok "+res);
                if ( !res)throw new Exception ("Wrong linker sequence. Please verify.") ;
              
                if ( ! isLinkerExist(name,  sequence))
@@ -1031,7 +1032,12 @@ item_value = "<div align=center><a href=\'"+ BecProperties.getInstance().getProp
                 BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
         sysProps.verifyApplicationSettings();
         edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
-/*
+
+       DirectDatabaseCommunicationsAction. prepareDisplayItems( Constants.PROCESS_ADD_NEW_CLONINGSTRATEGY,  null); 
+                            ArrayList biolinkers = BioLinker.getAllLinkers();
+                            ArrayList vectors = BioVector.getAllVectors();
+                         
+        /*
         TraceFileNameFormat format = new TraceFileNameFormat();
 format.setFormatName ( "abc");  //FORMAT_NAME> 
 format.setFileNameReadingDirection( TraceFileNameFormat.READING_LEFT_TO_RIGHT);
