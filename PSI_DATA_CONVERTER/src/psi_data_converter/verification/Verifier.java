@@ -17,8 +17,21 @@ import java.util.*;
  */
 public abstract class Verifier 
 {
-     protected String          m_file_name ;
+    
+    
+    public enum ENUM_MATH {
+        NONE, PLUS, MINUS, MULTIPLY, DEVIDE};
+    public enum ENUM_REPLACE_TYPE{
+        REPLACE_STRING, REPLACE_WITH_CALCULATION_INT
+    }  ;  
+        
+        //public changeNumber()
+    
+    protected String          m_file_name ;
    
+     
+     
+     
     /** Creates a new instance of Verifier */
     public Verifier(String  file_name    ) 
     { 
@@ -61,7 +74,15 @@ public abstract class Verifier
                 items = line.split("\t");
                 sbuf = new StringBuffer();
                 if (!isInsertAnotherColumnValue && apendtext != null)// insert
-                            sbuf.append(line +"\t"+ apendtext);
+                {
+                    if (line.lastIndexOf("\t") == line.length() - 1)
+                    {
+                        sbuf.append(line +  apendtext);
+                    }
+                    else
+                        sbuf.append(line +"\t"+ apendtext);
+                }
+                            
                 else
                 {
                     for (int count = 0; count < items.length; count++)
@@ -117,7 +138,23 @@ public abstract class Verifier
     
     
      public void         replaceStrings(
-            String header, List <String[]> old_new_values)throws Exception
+            String header, List <String[]> old_new_values )throws Exception
+     {
+          replaceStrings(    header,  old_new_values,   0,  ENUM_MATH.NONE, ENUM_REPLACE_TYPE.REPLACE_STRING);
+  
+     }
+     
+      public void         replaceIntStringsValue(
+            String header,  int change_value,  ENUM_MATH action )throws Exception
+     {
+         replaceStrings(     header, null, change_value,   action,  ENUM_REPLACE_TYPE.REPLACE_WITH_CALCULATION_INT);
+     }
+    
+  
+     public void         replaceStrings(
+            String header, List <String[]> old_new_values,
+             int change_value,  ENUM_MATH action,
+             ENUM_REPLACE_TYPE replacetype)throws Exception
     {
         BufferedReader output = null ; 
         BufferedWriter input = null;
@@ -138,11 +175,26 @@ public abstract class Verifier
             {
                 items = line.split("\t");
               
-                for ( String[] old_new_value : old_new_values )
+                switch ( replacetype )
                 {
-                    if ( items[column_line].equalsIgnoreCase(old_new_value[1]))
+                    case REPLACE_STRING: 
                     {
-                        items[column_line] = old_new_value[0];
+               
+                        for ( String[] old_new_value : old_new_values )
+                        {
+                            if ( items[column_line].equalsIgnoreCase(old_new_value[1]))
+                            {
+                                items[column_line] = old_new_value[0];
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                    case REPLACE_WITH_CALCULATION_INT:
+                    {
+                        int old_value = Integer.parseInt( items[column_line] );
+                        items[column_line] = String.valueOf( calculateNewInt( old_value,  change_value,   action));
+                        break;
                     }
                 }
                 line = putStringArrayInString(items, "\t", false);
@@ -193,5 +245,18 @@ public abstract class Verifier
           return sbuf.toString();
      
        
+     }
+     
+     private int         calculateNewInt(int old_value, int change_value,  ENUM_MATH action)
+     {
+         switch (action)
+         {
+             case PLUS: return old_value + change_value;
+             case MINUS:  return old_value - change_value;
+             case  MULTIPLY:  return old_value * change_value;
+             case DEVIDE:  return old_value / change_value;
+             default: return -1;
+             
+         }
      }
 }

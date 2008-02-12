@@ -21,6 +21,54 @@ public class CloneInfoVerificator extends Verifier
     /** Creates a new instance of CloneInfoVerificator */
     public CloneInfoVerificator(String fname) { super(fname);    }
     
+    public void            checkCDSCoordinates( ArrayList er_messages, String cds_start_header, 
+            String cds_stop_header, String cloneid)
+    throws Exception
+    {
+        int cds_start_column_num = -1;
+        int cds_stop_column_num = -1;
+        int clone_id = -1;
+      //  String column_name = ImportFlexSequence.PROPERTY_NAME_SPECIES;
+        BufferedReader output = null ; 
+        String line ; String[] items;
+        // read author info and stor author 
+        int cds_start ; int cds_stop;
+        try
+        {
+            output = new BufferedReader(new FileReader(m_file_name));
+            line = output.readLine();// read header
+            cds_start_column_num = defineColumnNumber(line, cds_start_header);
+            cds_stop_column_num = defineColumnNumber(line, cds_stop_header);
+            clone_id = defineColumnNumber(line, cloneid);
+            if (cds_start_column_num < 0 || cds_stop_column_num < 0 || clone_id < 0 )
+            {
+                er_messages.add("Cannot define cds stop/start column number "+m_file_name);
+                return ;
+            }
+            while ( (line = output.readLine() ) != null)
+            {
+                items = line.split("\t");
+                cds_stop = Integer.parseInt(items[cds_stop_column_num]);
+                cds_start = Integer.parseInt(items[cds_start_column_num]);
+                if ( (cds_stop - cds_start) % 3 != 2 )
+                {
+                    er_messages.add("Clone "+ items[clone_id]+"has problem with cds start/stop: " + cds_stop+" "+cds_start);
+                }
+            }
+            output.close();
+        }
+        catch(Exception e)
+        {
+            throw new Exception ("Cannot verify cds start , cds stop " + m_file_name);
+        }
+        finally
+        {
+            if (output != null) output.close();
+        }
+        
+    }
+    
+    
     
      public ArrayList    getCloningStrategyInfo(ArrayList er_messages,
              String linker5_header, String vector_header, String linker3_header)throws Exception

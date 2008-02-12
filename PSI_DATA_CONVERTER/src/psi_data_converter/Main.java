@@ -36,23 +36,29 @@ public class Main {
             ArrayList<String> er_messages = new ArrayList();
         
             Main tester = new Main();
-         //   tester.unzipFiles( subprop,  er_messages );
-            boolean isDeleteOriginal = false;
-        //    tester.concatenateFiles( subprop,  er_messages , isDeleteOriginal);
-           // tester.transferAuthorFile( subprop,  er_messages );
-            //tester.creatCloneAuthorFile( subprop,  er_messages );
-              String file_name =  subprop.getProperty("FILES_OUTPUT_DIR") +File.separator+"logger.txt";
+             String file_name =  subprop.getProperty("FILES_OUTPUT_DIR") +File.separator+"logger.txt";
        
-             FileManager. writeFile(er_messages,  file_name,  "", true);
-      
-           // tester.vefifyGeneInfo( subprop,  er_messages );
-           // tester.insertValuesCloneInfo( subprop,  er_messages );
+           tester.unzipFiles( subprop,  er_messages );
+            boolean isDeleteOriginal = true;
+            tester.concatenateFiles( subprop,  er_messages , isDeleteOriginal);
+            tester.transferAuthorFile( subprop,  er_messages );
+            tester.creatCloneAuthorFile( subprop,  er_messages );
+             
+         
+            tester.vefifyGeneInfo( subprop,  er_messages );
+   
+            tester.insertValuesCloneInfo( subprop,  er_messages );
 
-           // tester.checkCloningStrategies( subprop,  er_messages );
+            tester.checkCloningStrategies( subprop,  er_messages );
             tester.replaceLinkerValues( subprop,  er_messages );
-          //  tester.checkCDSCoordinates();
-           // tester.alterField();
-            FileManager. writeFile(er_messages,  file_name,  "", true);
+            tester.checkCDSCoordinates(subprop, er_messages);
+              String outputdir =  subprop.getProperty("FILES_OUTPUT_DIR") ;
+              CloneInfoVerificator cinfo = new CloneInfoVerificator(outputdir+File.separator+ subprop.getProperty("FILE_CLONE_INFO_NAME").trim() +".txt");
+              String header =  subprop.getProperty("CLONE_INFO_CDS_STOP") ;
+  
+              cinfo.replaceIntStringsValue( header, 3,  Verifier.ENUM_MATH.PLUS );
+            
+              FileManager. writeFile(er_messages,  file_name,  "", true);
             for(String item : er_messages)
             {
                 System.out.println(item);
@@ -213,4 +219,34 @@ public ArrayList replaceLinkerValues(SubmissionProperties subprop, ArrayList<Str
         {            er_messages.add("Cannot create clone author file " + e.getMessage());        }
         return  er_messages;
 } 
+
+
+ public ArrayList checkCDSCoordinates(SubmissionProperties subprop, ArrayList<String> er_messages )
+ { 
+      String outputdir =  subprop.getProperty("FILES_OUTPUT_DIR") ;
+      CloneInfoVerificator cinfo = new CloneInfoVerificator(outputdir+File.separator+ subprop.getProperty("FILE_CLONE_INFO_NAME").trim() +".txt");
+      try
+      {
+           cinfo.checkCDSCoordinates( er_messages, subprop.getProperty("CLONE_INFO_CDS_START"),
+                   subprop.getProperty("CLONE_INFO_CDS_STOP"), 
+                   subprop.getProperty("CLONE_ID")  ); 
+       }
+        catch (Exception e)
+        {            er_messages.add("Cannot create clone author file " + e.getMessage());        }
+        return  er_messages;
+ }
+ 
+ public ArrayList  alterField(SubmissionProperties subprop, ArrayList<String> er_messages )
+ { 
+      String outputdir =  subprop.getProperty("FILES_OUTPUT_DIR") ;
+       CloneInfoVerificator cinfo = new CloneInfoVerificator(outputdir+File.separator+ subprop.getProperty("FILE_CLONE_INFO_NAME").trim() +".txt");
+       String linker_file =  subprop.getProperty("LINKERS_FILE_LOCATION") ;
+      try
+      {
+            //cinfo.alterField( subprop.getProperty("CLONE_INFO_CDS_STOP"),  "+"  , 3  ); 
+        }
+        catch (Exception e)
+        {            er_messages.add("Cannot create clone author file " + e.getMessage());        }
+        return  er_messages;
+ }
 }
