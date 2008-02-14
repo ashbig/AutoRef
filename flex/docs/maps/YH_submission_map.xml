@@ -14,8 +14,7 @@
   
     <file_column key="1" header="Final_GI" object="FLEXSEQUENCE"
               property_name ="SEARCHID"
- <!--             property_instruction ="http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&amp;retmode=xml&amp;id=" /> -->
-    
+     
                property_instruction ="http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&amp;retmode=xml&amp;id=" /> 
    
     
@@ -30,21 +29,21 @@
 
 <!--  name of this property hardcoded , do not change -->
 
-    <file_column header="CloningStrategy" object="SAMPLE" object_property_type="NAMEPROPERTY" isSubmit="0" property_name="CLONING_STRATEGYID"/>
+    <file_column header="CloningStrategy" object="CLONE" object_property_type="NAMEPROPERTY" isSubmit="0" property_name="CLONING_STRATEGYID"/>
   
   
   <!-- count properties must start from 0 and use incremental count, moreover name of this property hardcoded -->
-    <file_column header="CloneStorageWorking" object="SAMPLE" object_property_type="NAMEPROPERTY" isSubmit="0" property_name ="CLONE_STORAGE_TYPE_0">
+    <file_column header="CloneStorageWorking" object="CLONE" object_property_type="NAMEPROPERTY" isSubmit="0" property_name ="CLONE_STORAGE_TYPE_0">
         <column_translation file_value="Working" translated_value="Working Storage" />
     </file_column>
     
-      <file_column header="CloneStorage" object="SAMPLE" object_property_type="NAMEPROPERTY" isSubmit="0" property_name ="CLONE_STORAGE_TYPE_1">
+      <file_column header="CloneStorage" object="CLONE" object_property_type="NAMEPROPERTY" isSubmit="0" property_name ="CLONE_STORAGE_TYPE_1">
             <column_translation file_value="Original" translated_value="Original Storage" />
         </file_column>
 
 <!--  name of this property hardcoded , do not change -->
  
-    <file_column header="CloneStorageForm" object="SAMPLE" object_property_type="NAMEPROPERTY" isSubmit="0" property_name ="CLONE_STORAGE_FORM">
+    <file_column header="CloneStorageForm" object="CLONE" object_property_type="NAMEPROPERTY" isSubmit="0" property_name ="CLONE_STORAGE_FORM">
             <column_translation file_value="Glycerol" translated_value="GLYCEROL"  />
     </file_column>
 </file_map>

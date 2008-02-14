@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE web-app
+     PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<file_maps>
+<file_map file_type="FILE_TYPE_ONE_FILE_SUBMISSION" max_number_of_column_per_property="2">
+    
+    
+    
+    
+<file_column header="Plate" object="CONTAINER" property_name="LABEL"  />
+<file_column header="Position" object="SAMPLE" property_name="POSITION" />
+<file_column header="CLONE_ID" object="FLEXSEQUENCE"   property_name="USER_ID" />
+
+<!--  name of this property hardcoded , do not change -->
+    
+     <file_column header="ConstructSizeClass" object="SAMPLE" property_name ="CONSTRUCT_SIZE" />
+<!--  name of this property hardcoded , do not change -->
+    <file_column header="CloneStatus" object="SAMPLE" object_property_type="NAMEPROPERTY" property_name ="CLONE_STATUS" isSubmit="0"/>
+<!--  name of this property hardcoded , do not change -->
+   <file_column header="CloneType" object="SAMPLE" object_property_type="NAMEPROPERTY" property_name ="CLONE_TYPE" isSubmit="0"/>
+
+<!--  name of this property hardcoded , do not change -->
+
+
+<file_column header="CloningStrategy" object="CLONE" object_property_type="NAMEPROPERTY" isSubmit="0" property_name="CLONING_STRATEGYID"/>
+  
+  
+<!-- count properties must start from 0 and use incremental count, moreover name of this property hardcoded -->
+<file_column header="CloneStorageWorking" object="CLONE" object_property_type="NAMEPROPERTY" isSubmit="0" property_name ="CLONE_STORAGE_TYPE_0">
+        <column_translation file_value="Working" translated_value="Working Storage" />
+</file_column>
+    
+<file_column header="CloneStorage" object="CLONE" object_property_type="NAMEPROPERTY" isSubmit="0" property_name ="CLONE_STORAGE_TYPE_1">
+            <column_translation file_value="Original" translated_value="Original Storage" />
+</file_column>
+
+<!--  name of this property hardcoded , do not change -->
+ 
+<file_column header="CloneStorageForm" object="CLONE" object_property_type="NAMEPROPERTY" isSubmit="0" property_name ="CLONE_STORAGE_FORM">
+            <column_translation file_value="Glycerol" translated_value="GLYCEROL"  />
+</file_column>
+
+
+<file_column header="Sequence" object="FLEXSEQUENCE" property_name="TEXT"/>	
+<file_column header="CDS Start" object="FLEXSEQUENCE" property_name="CDS_START"/>	
+<file_column header="CDS Stop" object="FLEXSEQUENCE" property_name="CDS_STOP"/>
+<file_column header="Species" object="FLEXSEQUENCE" property_name="SPECIES"/>	
+    
+<file_column header="Gene" object="FLEXSEQUENCE"   property_name="GENE_NAME" object_property_type="NAMEPROPERTY"/>
+<file_column header="SYNONYM" object="FLEXSEQUENCE"   property_name="SYNONYM" object_property_type="NAMEPROPERTY"/>
+<file_column header="GENE_ID" object="FLEXSEQUENCE"   property_name="GENE_ID" object_property_type="NAMEPROPERTY"/>
+<file_column header="GI_PROTEIN" object="FLEXSEQUENCE"   property_name="P_GI" object_property_type="NAMEPROPERTY"/>
+
+<file_column header="PRODUCT" object="FLEXSEQUENCE"   property_name="PRODUCT" object_property_type="NAMEPROPERTY"/>
+ <file_column header="GENBANK_ACCESSION" object="FLEXSEQUENCE"   property_name="GENBANK_ACCESSION" object_property_type="NAMEPROPERTY"/>
+<file_column header="GENOME_LOCATION" object="FLEXSEQUENCE"   property_name="GENOME_LOCATION" object_property_type="NAMEPROPERTY"/>
+<file_column header="STRAND" object="FLEXSEQUENCE"   property_name="STRAND" object_property_type="NAMEPROPERTY"/>
+
+				
+				
+						
+
+</file_map>
+</file_maps>
+
+
+
+  					
+
+
+
+
