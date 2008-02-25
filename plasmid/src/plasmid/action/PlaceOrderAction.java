@@ -111,6 +111,9 @@ public class PlaceOrderAction extends Action {
             CloneOrder order = manager.getCloneOrder(orderid);
             String email = manager.findEmail(order.getUserid());
             
+            //debug
+            manager.sendOrderEmail(order, "dongmei_zuo@hms.harvard.edu");
+            
             if(CloneOrder.PENDING_PAYMENT.equals(order.getStatus())) {
                 if (ipnres.equals("VERIFIED" )) {
                     boolean isok = checkData(payment_gross,receiver_email,payment_status,txn_id,order);

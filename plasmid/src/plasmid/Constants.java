@@ -95,6 +95,8 @@ public class Constants {
     public static final int SHIPFEE_INT = 15;
     public static final String COUNTRY_USA = "USA";
     
+    public static final String PAYPALEMAIL = "janice_williamson@hms.harvard.edu";
+    
     /** Creates a new instance of Constants */
     public Constants() {
     }
