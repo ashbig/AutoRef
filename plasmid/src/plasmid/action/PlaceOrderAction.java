@@ -69,14 +69,28 @@ public class PlaceOrderAction extends Action {
             Enumeration names = request.getParameterNames();
             String str = "cmd=_notify-validate";
             String invoice = "";
+            String payment_gross = "";
+            String receiver_email = "";
+            String payment_status = "";
+            String txn_id = "";
+            
             while(names.hasMoreElements()) {
                 String name =  (String)names.nextElement();
                 String value = request.getParameter(name);
-                
+                System.out.println(name+":"+value);
                 if("invoice".equals(name))
                     invoice = value;
+                if("payment_gross".equals(name))
+                    payment_gross = value;
+                if("receiver_email".equals(name))
+                    receiver_email = value;
+                if("payment_status".equals(name))
+                    payment_status = value;
+                if("txn_id".equals(name))
+                    txn_id = value;
                 str = str + "&" + name + "=" + URLEncoder.encode(value, "ISO-8859-1" ) ;
             }
+            
             
             /* Extract form data */
             URL u = new URL("https://www.sandbox.paypal.com/cgi-bin/webscr") ;
@@ -97,22 +111,37 @@ public class PlaceOrderAction extends Action {
             CloneOrder order = manager.getCloneOrder(orderid);
             String email = manager.findEmail(order.getUserid());
             
-            if (ipnres.equals("VERIFIED" )) {
-                boolean b = manager.updateOrderStatus(orderid, CloneOrder.PENDING);
-                if(b) {
-                    manager.sendOrderEmail(order, email);
-                } else {
-                    manager.sendOrderFailEmail(order, email);
+            if(CloneOrder.PENDING_PAYMENT.equals(order.getStatus())) {
+                if (ipnres.equals("VERIFIED" )) {
+                    boolean isok = checkData(payment_gross,receiver_email,payment_status,txn_id,order);
+                    if(isok) {
+                        boolean b = manager.updateOrderStatus(orderid, CloneOrder.PENDING);
+                        if(b) {
+                            manager.sendOrderEmail(order, email);
+                        } else {
+                            manager.sendOrderFailEmail(order, email);
+                        }
+                    }
+                }
+                if (ipnres.equals("INVALID" )) {
+                    boolean b = manager.updateOrderStatus(orderid, CloneOrder.INVALIDE_PAYMENT);
+                    manager.sendOrderInvalidePaymentEmail(order, email);
                 }
             }
-            if (ipnres.equals("INVALID" )) {
-                boolean b = manager.updateOrderStatus(orderid, CloneOrder.INVALIDE_PAYMENT);
-                manager.sendOrderInvalidePaymentEmail(order, email);
-            }
+            request.getSession().setAttribute(Constants.CLONEORDER, order);
         } catch (Exception ex) {
             System.out.println(ex);
         }
         
         return (mapping.findForward("success"));
+    }
+    
+    public boolean checkData(String payment_gross,String receiver_email,String payment_status,String txn_id,CloneOrder order) {
+        double gross = Double.parseDouble(payment_gross);
+        double total = Double.parseDouble(order.getTotalPriceString());
+        if(gross == total && receiver_email.equals(Constants.PAYPALEMAIL) && payment_status.equals("Completed")) {
+            return true;
+        }
+        return false;
     }
 }
