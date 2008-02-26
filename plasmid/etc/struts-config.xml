@@ -375,7 +375,7 @@
                 type="plasmid.action.PlaceOrderAction"
                name="checkoutForm"
               input="/ChoosePayment.jsp">
-      <forward  name="success"  path="/ViewOrderDetail.jsp"/>
+      <forward  name="success"  path="/Home.jsp"/>
     </action>
     
     <action    path="/Plate96To384Input"

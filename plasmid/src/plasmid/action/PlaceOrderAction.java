@@ -131,7 +131,6 @@ public class PlaceOrderAction extends Action {
                     manager.sendOrderInvalidePaymentEmail(order, email);
                 }
             }
-            request.getSession().setAttribute(Constants.CLONEORDER, order);
         } catch (Exception ex) {
             System.out.println(ex);
         }
