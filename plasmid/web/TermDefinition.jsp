@@ -14,7 +14,7 @@
       explanation of terms.</td>
   </tr>
 </table>
-<table width="100%" border="0">
+<table width="100%" border="0" valign="top">
   <tr> 
     <td width="18%" class="tablebody">TABLE HEADER TERM</td>
     <td width="80%" class="mainbodytext"><div align="center" class="tablebody">Definition</div></td>
