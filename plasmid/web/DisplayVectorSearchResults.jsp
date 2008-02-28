@@ -120,6 +120,9 @@
     <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.WBGENEID%>">
     <td><a target="_blank" href="http://www.wormbase.org/db/gene/gene?name=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
     </logic:equal>
+    <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.TAIR%>">
+    <td><a target="_blank" href="http://arabidopsis.org/servlets/TairObject?type=locus&name=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
+    </logic:equal>        
     <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.BANUMBER%>">
     <td><bean:write name="insert" property="geneid"/></td>
     </logic:equal>
