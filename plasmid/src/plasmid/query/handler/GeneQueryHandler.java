@@ -36,6 +36,7 @@ public abstract class GeneQueryHandler {
     public static final String FTNUMBER = RefseqNameType.FTNUMBER;
     public static final String FBID = RefseqNameType.FBID;
     public static final String WBGENEID = RefseqNameType.WBGENEID;
+    public static final String TAIRID = RefseqNameType.TAIR;
     public static final String PLASMIDCLONEID = Constants.CLONE_SEARCH_PLASMIDCLONEID;
     public static final String OTHERCLONEID = Constants.CLONE_SEARCH_OTHERCLONEID;
     public static final String GENETEXT = "Gene Text Exact Match";

@@ -33,7 +33,8 @@ public class StaticQueryHandlerFactory {
             return new DirectGiQueryHandler(terms);
         else if(GeneQueryHandler.PA.equals(type) || GeneQueryHandler.SGD.equals(type) 
         || GeneQueryHandler.VCNUMBER.equals(type) || GeneQueryHandler.FTNUMBER.equals(type)
-        || GeneQueryHandler.FBID.equals(type) || GeneQueryHandler.WBGENEID.equals(type))
+        || GeneQueryHandler.FBID.equals(type) || GeneQueryHandler.WBGENEID.equals(type)
+        || GeneQueryHandler.TAIRID.equals(type))
             return new PAQueryHandler(terms);
         else if(GeneQueryHandler.PRO_GENBANK.equals(type))
             return new PAGenbankQueryHandler(terms);
