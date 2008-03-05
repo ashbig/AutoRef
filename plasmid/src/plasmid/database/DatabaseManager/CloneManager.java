@@ -882,7 +882,7 @@ public class CloneManager extends TableManager {
                     GrowthCondition g = getRecommendedGrowth(stmt5, cloneid);
                     c.setRecommendedGrowthCondition(g);
                 }
-                
+
                 if (isWorkingStorage) {
                     stmt4.setInt(1, cloneid);
                     stmt4.setString(2, Sample.WORKING_GLYCEROL);
@@ -894,10 +894,18 @@ public class CloneManager extends TableManager {
             handleError(ex, "Error occured while query clones by cloneid: " + currentCloneid);
             return null;
         } finally {
-            DatabaseTransaction.closeStatement(stmt4);
-            DatabaseTransaction.closeStatement(stmt2);
-            DatabaseTransaction.closeStatement(stmt3);
-            DatabaseTransaction.closeStatement(stmt5);
+            if (stmt4 != null) {
+                DatabaseTransaction.closeStatement(stmt4);
+            }
+            if (stmt2 != null) {
+                DatabaseTransaction.closeStatement(stmt2);
+            }
+            if (stmt3 != null) {
+                DatabaseTransaction.closeStatement(stmt3);
+            }
+            if (stmt5 != null) {
+                DatabaseTransaction.closeStatement(stmt5);
+            }
         }
         return infos;
     }

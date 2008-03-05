@@ -77,9 +77,13 @@ public class CloneOrder {
     protected List batches;
     
     protected String comments;
+    protected String piinstitution;
+    protected String pidepartment;
     
     /** Creates a new instance of CloneOrder */
     public CloneOrder() {
+        this.items = new ArrayList();
+        this.batches = new ArrayList();
     }
     
     public CloneOrder(int orderid,String orderDate, String status, String ponumber,String shippingTo,String billingTo,
@@ -101,6 +105,9 @@ public class CloneOrder {
         this.price = price;
         this.userid = userid;
         this.isBatch = "N";
+        
+        this.items = new ArrayList();
+        this.batches = new ArrayList();
     }
     
     public int getOrderid() {return orderid;}
@@ -231,5 +238,21 @@ public class CloneOrder {
             return true;
         
         return false;
+    }
+
+    public String getPiinstitution() {
+        return piinstitution;
+    }
+
+    public void setPiinstitution(String piinstitution) {
+        this.piinstitution = piinstitution;
+    }
+
+    public String getPidepartment() {
+        return pidepartment;
+    }
+
+    public void setPidepartment(String pidepartment) {
+        this.pidepartment = pidepartment;
     }
 }

@@ -27,6 +27,7 @@ public class SearchOrderForm extends ActionForm {
     private String lastName;
     private String organization;
     private String sort;
+    private String cloneProvider;
     
     /** Creates a new instance of SearchOrderForm */
     public SearchOrderForm() {
@@ -51,4 +52,12 @@ public class SearchOrderForm extends ActionForm {
     public void setLastName(String s) {this.lastName = s;}
     public void setOrganization(String s) {this.organization = s;}
     public void setSort(String s) {this.sort = s;}
+
+    public String getCloneProvider() {
+        return cloneProvider;
+    }
+
+    public void setCloneProvider(String cloneProvider) {
+        this.cloneProvider = cloneProvider;
+    }
 }

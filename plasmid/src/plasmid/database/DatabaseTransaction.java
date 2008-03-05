@@ -1,39 +1,3 @@
-/*
- * File : DatabaseTransaction.java
- * Classes : DatabaseTransaction
- *
- * Description :
- *
- *    A high level API for accessing a pooled data source.
- *
- * Author : Juan Munoz (jmunoz@3rdmill.com)
- *
- * See COPYRIGHT file for copyright information
- *
- *
- * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2005-04-01 18:56:54 $
- * $Author: dzuo $
- *
- ******************************************************************************
- *
- * Revision history (Started on May 22, 2001) :
- *
- *    Add entries here when updating the code. Remember to date and insert
- *    your 3 letters initials.
- *
- *    May-22-2001 : JMM - Class created.
- *
- *    Feb-21-2002: DZ - Modified the API to use Java's DataSource class for
- *                  connection pooling to get rid of poolman.
- */
-
-/*
-|<---            this code is formatted to fit into 80 columns             --->|
-|<---            this code is formatted to fit into 80 columns             --->|
-|<---            this code is formatted to fit into 80 columns             --->|
- */
 
 package plasmid.database;
 
@@ -53,89 +17,70 @@ import sun.jdbc.rowset.*;
  * The DatabaseTransaction class basically servers as a wrapper
  * around JDBC.
  *
- * DatabaseTransaction is implemented as a singleton.
+ * ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ * //////////  This version of DatabaseTransaction is used only for local code developing and testing /////////////////
+ * ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
  *
- * @author     $Author: dzuo $
- * @version    $Revision: 1.1 $ $Date: 2005-04-01 18:56:54 $
+ * @author     $Author: dz4 $
+ * @version    $Revision: 1.2 $ $Date: 2008-03-05 19:26:12 $
  */
 
-public class DatabaseTransaction {
-    
-    // singleton instance.
-    private static DatabaseTransaction instance = null;
-    
-    // the datasource to get the pooled connections from
-    private static DataSource ds = null;
-    
-    // Private constructor method. Autocommit is set to false.
-    protected DatabaseTransaction(DataSource ds) {
-        this.ds = ds;
-    } // end constructor
-    
-    public static void init(DataSource ds) {
-        instance = new DatabaseTransaction(ds);
+public class DatabaseTransaction {    ///////// need to change DatabaseTransaction2 ///////////
+
+    public static Connection connection = null;
+/**
+    private String url = "jdbc:oracle:thin:@127.0.0.1:2483:devoradb";
+    private String username = "devplasmid";
+    private String password = "quozubvuod3";
+*/
+    private String url = "jdbc:oracle:thin:@127.0.0.1:2483:oradb";
+    private String username = "plasmid";
+    private String password = "orvayraddod2";
+
+    /** Creates new DatabaseManager */
+    public DatabaseTransaction() {
     }
-    
+
     /**
-     * This class is implemented as a Singleton.
-     * Returns a <code>DatabaseTransaction</code> object.
+     * Create new DatabaseManager by providing the url, username and password.
      *
-     * @return A <code>DatabaseTransaction</code> object.
+     * @param url The url of the database instance.
+     * @param username The username of the database user.
+     * @param password The password of the database user.
+     *
+     * @return The DatabaseManager object.
      */
-    public static DatabaseTransaction getInstance()
-    throws DatabaseException {
-        if (instance == null) {
-            throw new DatabaseException("Pool not initialized.");
-        }
-        
-        return instance;
-        
-    } // end getInstance()
-    
-    
+    public DatabaseTransaction(String url, String username, String password) {
+        this.url = url;
+        this.username = username;
+        this.password = password;
+    }
+
+
+    public static DatabaseTransaction getInstance(){
+        return new DatabaseTransaction();
+    }
+
+
     /**
-     * Requests a Connection from the pool.
+     * Connect to the database.
      *
-     * @param   autoCommit <code>boolean</code> whether or not the connection
-     *          should use autocommit.  True for autocommit, false otherwise.
-     *
-     * @return A <code>Connection</code> object from the pool.
-     *
-     * @throws DatabaseException
-     */
-    public Connection requestConnection(boolean autoCommit)
-    throws DatabaseException {
-        Connection conn = null;
-        try {
-            conn = ds.getConnection();
-            conn.setAutoCommit(autoCommit);
-            return conn;
-        } catch(SQLException sqlE) {
-            DatabaseTransaction.closeConnection(conn);
-            throw new DatabaseException("Cannot get Connection.\n"+sqlE.getMessage());
-            
-        }
-        
-    } // end requestConnection()
-    
-    
-    /**
-     * Requests a Connection from the pool with autocommit turned off.
-     *
-     * @param   autoCommit boolean whether or not the connection should use
-     *          autocommit.  True for autocommit, false otherwise.
-     *
-     * @return A Connection object from the pool.
-     *
-     * @throws DatabaseException
+     * @return Connection object.
      */
     public Connection requestConnection() throws DatabaseException {
-        
-        return requestConnection(false);
-        
-    } // end requestConnection()
-    
-    
+        try {
+            DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
+            connection = DriverManager.getConnection(url, username, password);
+            connection.setAutoCommit(false);
+            return connection;
+        }
+        catch( SQLException e ) {
+            DatabaseTransaction.closeConnection(connection);
+            throw new DatabaseException("Cannot get Connection.\n" + e.getMessage());
+        }
+    }
+
+
     /**
      * Executes an update, insert or delete.  The return value is the number
      * of rows affected.
@@ -150,8 +95,8 @@ public class DatabaseTransaction {
             throw new DatabaseException(sqlE.getMessage()+"\nSQL: "+ps);
         }
     } // end executeUpdate()
-    
-    
+
+
     /**
      * executes an update, insert or delete with the given query string and
      * database connection.  Returns the number of rows affected
@@ -174,10 +119,10 @@ public class DatabaseTransaction {
             closeStatement(stmt);
         }
         return retVal;
-        
+
     } // end executeUpdate()
-    
-    
+
+
     /**
      * Executes a sql statement and returns a Row set object with the results
      * from the query.
@@ -197,28 +142,28 @@ public class DatabaseTransaction {
         Statement stmt = null;
         ResultSet rs = null;
         try {
-            
+
             conn = requestConnection();
             crs = new CachedRowSet();
             stmt = conn.createStatement();
-            
+
             rs = stmt.executeQuery(sql);
             crs.populate(rs);
-            
-            
+
+
         } catch (SQLException e) {
             throw new DatabaseException(e.getMessage()+"\nSQL: "+sql);
         } finally {
             // release database resources
             closeResultSet(rs);
             closeStatement(stmt);
-            closeConnection(conn);
+ //           closeConnection(conn);
         }
         return crs;
     } //end executeSQL
-    
-    
-    
+
+
+
     /**
      * This method executes the requested prepared statement.
      *
@@ -236,9 +181,7 @@ public class DatabaseTransaction {
             crs = new CachedRowSet();
             results = stmt.executeQuery();
             crs.populate(results);
-            
-            
-            
+
         } catch (SQLException e) {
             throw new DatabaseException(e.getMessage()+"\nSQL: "+stmt);
         } finally {
@@ -246,8 +189,8 @@ public class DatabaseTransaction {
         }
         return crs;
     } // end executeQuery()
-    
-    
+
+
     /**
      * Set the parameters for the <code>PreparedStatement</code> object.
      *
@@ -262,7 +205,7 @@ public class DatabaseTransaction {
         String type = (String)h.get("type");
         int index = ((Integer)h.get("index")).intValue();
         Object value = h.get("value");
-        
+
         try {
             if(type.equals("double")) {
                 stmt.setDouble(index, ((Double)value).doubleValue());
@@ -281,7 +224,7 @@ public class DatabaseTransaction {
             throw new DatabaseException(e.getMessage());
         }
     }
-    
+
     /**
      * Closes the given <code>Statement</code> ignoring all exceptions.
      *
@@ -290,13 +233,13 @@ public class DatabaseTransaction {
     public static void closeConnection(Connection conn) {
         try{
             conn.close();
-            
+
         } catch(Throwable t) {
             t.printStackTrace();
         }
     }
-    
-    
+
+
     /**
      * Closes a statment ignoring all exceptions.
      *
@@ -305,9 +248,12 @@ public class DatabaseTransaction {
     public static void closeStatement(Statement stmt) {
         try {
             stmt.close();
-        } catch(Throwable t){}
+        } catch(Throwable t){
+
+            t.printStackTrace();
+        }
     }
-    
+
     /**
      * Closes a <code>ResultSet</code> ignoring all exceptions.
      *
@@ -315,10 +261,13 @@ public class DatabaseTransaction {
      */
     public static void closeResultSet(ResultSet rs) {
         try {
-            rs.close();
-        } catch(Throwable t){}
+			if(rs != null)
+            	rs.close();
+        } catch(Throwable t){
+            t.printStackTrace();
+        }
     }
-    
+
     /**
      * Commits a connection ignoring all exceptions.
      *
@@ -327,10 +276,12 @@ public class DatabaseTransaction {
     public static void commit(Connection conn) {
         try {
             conn.commit();
-        } catch(Throwable t) {}
+        } catch(Throwable t) {
+            t.printStackTrace();
+        }
     }
-    
-    
+
+
     /**
      * Rolls back a connection ignoring all exceptions.
      *
@@ -339,15 +290,17 @@ public class DatabaseTransaction {
     public static void rollback(Connection conn)  {
         try {
             conn.rollback();
-        } catch(Throwable t) {}
+        } catch(Throwable t) {
+            t.printStackTrace();
+        }
     }
-    
+
     /**
      * Makes a string ready for oracle by replacing the ' with ''.
-     * 
-     * All info entered by the user should be passed to this method 
+     *
+     * All info entered by the user should be passed to this method
      * before going to the dabase.
-     * 
+     *
      * @param string String to convert.
      *
      * @return String ready for oracle insert or where clause.
@@ -356,7 +309,7 @@ public class DatabaseTransaction {
         StringBuffer stringBuff = new StringBuffer(string);
         int quoteIndex = 0;
         int curIndex = 0;
-        
+
         quoteIndex = string.indexOf("'");
         while (quoteIndex !=-1) {
             int offset = quoteIndex + curIndex++;
@@ -365,43 +318,66 @@ public class DatabaseTransaction {
         }
         return stringBuff.toString();
     }
-    
+
+
+
+    //////////////////////////////////////////////////////////////////////////////////////////////
+
     public static void main(String args[]) throws DatabaseException, SQLException{
+
         ResultSet rs = null;
-        
-        DatabaseTransaction dt = null;
+        ResultSet rs2 = null;
         Connection conn1 = null;
         Connection conn2 = null;
         PreparedStatement ps1 = null;
         PreparedStatement ps2 = null;
-        
-        
-        
-        // test execute sql
-        
-        
-        dt = DatabaseTransaction.getInstance();
-        for (int i = 0 ; i < 300 ; i++) {
-            try {
 
-            }
-            finally {
-                DatabaseTransaction.closeResultSet(rs);
-                DatabaseTransaction.closeStatement(ps2);
-                DatabaseTransaction.closeConnection(conn1);
-                DatabaseTransaction.closeStatement(ps1);
-                DatabaseTransaction.closeConnection(conn2);
-                
-            }
+        // test execute sql
+        DatabaseTransaction manager = DatabaseTransaction.getInstance();
+
+
+
+        try {
+            String sql1 = "select usergroup from userprofile where username='hweng'";
+
+
+            conn1 = manager.requestConnection();
+
+
+            ps1 = conn1.prepareStatement(sql1);
+            rs = DatabaseTransaction.executeQuery(ps1);
+            while(rs.next())
+                System.out.println("usergroup: " + rs.getString(1));
+
+
+            rs2 = manager.executeQuery("select name from project");
+            while(rs2.next())
+                System.out.println("project: "+rs.getString(1));
+
+        } catch(DatabaseException fde) {
+            fde.printStackTrace();
         }
-        
-        
+        catch(SQLException sqlE) {
+            sqlE.printStackTrace();
+        }
+        finally {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeResultSet(rs2);
+            DatabaseTransaction.closeStatement(ps1);
+            DatabaseTransaction.closeConnection(conn1);
+
+
+
+        }
+
+
+
         System.out.println("End of Main");
         System.exit(0);
     } // end main()
-    
-    
-} // end class DatabaseTransaction
+
+
+} // end class DatabaseTransaction2
 
 /*
 |<---            this code is formatted to fit into 80 columns             --->|

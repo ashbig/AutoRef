@@ -18,6 +18,8 @@ public class OrderClones {
     private String plate;
     private String well;
     
+    private Clone clone;
+    
     /** Creates a new instance of OrderClones */
     public OrderClones() {
     }
@@ -42,4 +44,12 @@ public class OrderClones {
     public void setQuantity(int i) {this.quantity = i;}
     public void setPlate(String s) {this.plate = s;}
     public void setWell(String s) {this.well = s;}
+
+    public Clone getClone() {
+        return clone;
+    }
+
+    public void setClone(Clone clone) {
+        this.clone = clone;
+    }
 }

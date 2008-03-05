@@ -44,9 +44,10 @@ public class SearchOrderInputAction extends InternalUserAction{
         String lastNameString = ((SearchOrderForm)form).getLastName();
         String organization = ((SearchOrderForm)form).getOrganization();
         String sort = ((SearchOrderForm)form).getSort();
+        String cloneProvider = ((SearchOrderForm)form).getCloneProvider();
         
         OrderProcessManager manager = new OrderProcessManager();
-        List orders = manager.getCloneOrders(orderidString, orderDateFrom, orderDateTo, shippingDateFrom, shippingDateTo, status, lastNameString, organization, sort);
+        List orders = manager.getCloneOrders(orderidString, orderDateFrom, orderDateTo, shippingDateFrom, shippingDateTo, status, lastNameString, organization, sort, cloneProvider);
         
         if(orders == null) {
             errors.add(ActionErrors.GLOBAL_ERROR,

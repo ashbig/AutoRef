@@ -53,6 +53,7 @@ public class Constants {
     public static final String BUTTON_DISPLAY = "Search";
     public static final String AND = "And";
     public static final String OR = "Or";
+    public static final String NA = "Not Applicable";
     
     public static final String ASSAY = VectorProperty.ASSAY;
     public static final String CLONING = VectorProperty.CLONING;
@@ -69,6 +70,7 @@ public class Constants {
     public static final String BUTTON_DOWNLOAD_CONTAINERS = "Download Container Information";
     public static final String BUTTON_CANCEL_ORDER = "Cancel";
     public static final String BUTTON_CREATE_INVOICE = "Create Invoice";
+    public static final String BUTTON_GENERATE_REPORT = "Generate Report";
     
     public static final int DOWNLOADTHRESHOLD = 1000;
     
@@ -94,6 +96,9 @@ public class Constants {
     public static final int SHIPFEE_DOM = 10;
     public static final int SHIPFEE_INT = 15;
     public static final String COUNTRY_USA = "USA";
+    
+    public static final String PSI = "PSI";
+    public static final String PSI_CESG = "Center for Eukaryotic Structural Genomics";
     
     public static final String PAYPALEMAIL = "janice_williamson@hms.harvard.edu";
     

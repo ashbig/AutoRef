@@ -92,6 +92,16 @@
         </html:select>
     </td>
   </tr>
+  <tr>
+    <td class="formlabel">Clone provider:</td>
+    <td colspan="4">
+        <html:select styleClass="itemtext" property="cloneProvider">
+            <html:option value="<%=Constants.ALL%>"/>
+            <html:option value="<%=Constants.PSI%>"/>
+            <html:option value="<%=Constants.PSI_CESG%>"/>
+        </html:select>
+    </td>
+  </tr>
   <tr></tr>
   <tr>
     <td>&nbsp;</td>

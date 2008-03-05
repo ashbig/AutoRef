@@ -40,16 +40,33 @@ public class ChangeOrderStatusAction extends InternalUserAction {
         List status = ((ChangeOrderStatusForm)form).getStatusList();
         List orderid = ((ChangeOrderStatusForm)form).getOrderidList();
         String button = ((ChangeOrderStatusForm)form).getOrderListButton();
+        User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
         
         OrderProcessManager manager = new OrderProcessManager();
         
         if(Constants.BUTTON_CREATE_INVOICE.equals(button)) {
             StringConvertor sv = new StringConvertor();
-            List l = manager.getCloneOrders(sv.convertFromListToString(orderid), null, null, null, null, null, null, null, null);
+            List l = manager.getCloneOrders(sv.convertFromListToString(orderid), null, null, null, null, null, null, null, null, Constants.ALL);
             response.setContentType("application/x-msexcel");
             response.setHeader("Content-Disposition", "attachment;filename=Invoice.xls");
             PrintWriter out = response.getWriter();
             manager.printInvoice(out, l);
+            out.close();
+            return null;
+        }
+        
+        if(Constants.BUTTON_GENERATE_REPORT.equals(button)) {
+            StringConvertor sv = new StringConvertor();
+            List l = manager.getCloneOrders(sv.convertFromListToString(orderid), null, null, null, null, null, null, Constants.ALL, null, Constants.ALL, true);
+            for(int i=0; i<l.size(); i++) {
+                CloneOrder co = (CloneOrder)l.get(i);
+                List clones = manager.getOrderClones(co.getOrderid(), user, false, co.getIsBatch());
+                co.setItems(clones);
+            }
+            response.setContentType("application/x-msexcel");
+            response.setHeader("Content-Disposition", "attachment;filename=Report.xls");
+            PrintWriter out = response.getWriter();
+            manager.printReport(out, l);
             out.close();
             return null;
         }

@@ -129,7 +129,8 @@
   <tr>
     <td align="middle" colspan="6">
         <html:submit property="orderListButton" styleClass="itemtext" value="Process Orders"/>&nbsp;&nbsp;
-        <html:submit property="orderListButton" styleClass="itemtext" value="<%=Constants.BUTTON_CREATE_INVOICE%>"/>
+        <html:submit property="orderListButton" styleClass="itemtext" value="<%=Constants.BUTTON_CREATE_INVOICE%>"/>&nbsp;&nbsp;
+        <html:submit property="orderListButton" styleClass="itemtext" value="<%=Constants.BUTTON_GENERATE_REPORT%>"/>&nbsp;&nbsp;
     </td>
   </tr>
 </table>

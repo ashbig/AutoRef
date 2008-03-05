@@ -38,9 +38,9 @@ Click the following button to pay by PayPal (you will then be returned to PlasmI
 <input type="hidden" name="item_name" value="PlasmID Order: <bean:write name="checkoutForm" property="orderid"/>">
 <input type="hidden" name="currency_code" value="USD">
 <input type="hidden" name="amount" value="<bean:write name="checkoutForm" property="totalPrice"/>">
-<input type="hidden" name="return" value="http://dev.plasmid.med.harvard.edu/PLASMID/ViewOrderDetail.jsp">
-<input type="hidden" name="notify_url" value="http://dev.plasmid.med.harvard.edu/PLASMID/PlaceOrder.do">
-<input type="hidden" name="cancel_return" value="http://dev.plasmid.med.harvard.edu/PLASMID/CancelOrderPaypal.do">
+<input type="hidden" name="return" value="http://128.103.32.179:8080/PLASMID/ViewOrderDetail.jsp">
+<input type="hidden" name="notify_url" value="http://128.103.32.179:8080/PLASMID/PlaceOrder.do">
+<input type="hidden" name="cancel_return" value="http://128.103.32.179:8080/PLASMID/CancelOrderPaypal.do">
 <input type="image" src="http://www.paypal.com/en_US/i/btn/x-click-but01.gif" name="submit" alt="Make payments with PayPal - it's fast, free and secure!">
 </form>
 

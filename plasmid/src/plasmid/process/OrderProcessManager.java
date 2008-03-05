@@ -1143,10 +1143,16 @@ public class OrderProcessManager {
             System.out.println(ex);
         }
     }
+      
+    public List getCloneOrders(String orderids, String orderDateFrom, String orderDateTo,
+    String shippingDateFrom, String shippingDateTo, String status, String lastnames,
+    String organization, String sort, String provider) {
+          return getCloneOrders(orderids, orderDateFrom, orderDateTo, shippingDateFrom, shippingDateTo, status, lastnames, organization, sort, provider, false);
+    }  
     
     public List getCloneOrders(String orderids, String orderDateFrom, String orderDateTo,
     String shippingDateFrom, String shippingDateTo, String status, String lastnames,
-    String organization, String sort) {
+    String organization, String sort, String provider, boolean isPI) {
         DatabaseTransaction t = null;
         Connection conn = null;
         StringConvertor sc = new StringConvertor();
@@ -1200,7 +1206,7 @@ public class OrderProcessManager {
             if(Constants.SORTBY_USERNAME.equals(sort)) {
                 sortby = "lastname";
             }
-            List cloneorders = manager.queryCloneOrders(orderidList, orderDateFrom, orderDateTo, shippingDateFrom, shippingDateTo, status, lastnameList, groups, isMember, sortby);
+            List cloneorders = manager.queryCloneOrders(orderidList, orderDateFrom, orderDateTo, shippingDateFrom, shippingDateTo, status, lastnameList, groups, isMember, sortby, provider,isPI);
             return cloneorders;
         } catch(Exception ex) {
             DatabaseTransaction.rollback(conn);
@@ -1218,6 +1224,27 @@ public class OrderProcessManager {
         for(int i=0; i<orders.size(); i++) {
             CloneOrder order = (CloneOrder)orders.get(i);
             out.println(order.getName()+"\t"+order.getNumofclones()+"\t"+order.getNumofcollection()+"\t$"+order.getPrice()+"\t"+order.getPonumber()+"\t"+order.getShippingdate()+"\t"+order.getOrderid()+"\tBill To: "+order.getBillingTo()+", "+order.getBillingAddress().replaceAll("\n", " ")+"\t"+order.getPiname()+"\t"+order.getPiemail());
+        }
+    }
+    
+    public void printReport(PrintWriter out, List orders) {
+        out.println("Order ID\tOrder Date\tClone ID\tSpecies Specific ID\tGene Symbol\tGene Name\tStatus\t# Clones\t# Collections\tShipping Information\tUser\tUser Email\tPI Name\tPI Institution\tPI Department\tPI Email");
+        for(int i=0; i<orders.size(); i++) {
+            CloneOrder order = (CloneOrder)orders.get(i);
+            List items = order.getItems();
+            boolean isItem = false;
+            for(int j=0; j<items.size(); j++) {
+                CloneInfo clone = (CloneInfo)items.get(j);
+                if(j == 0) {
+                    out.println(order.getOrderid()+"\t"+order.getOrderDate()+"\t"+clone.getName()+"\t"+clone.getGeneID()+"\t"+clone.getGeneSymbol()+"\t"+clone.getCloneDescription()+"\t"+order.getStatus()+"\t"+order.getNumofclones()+"\t"+order.getNumofcollection()+"\t"+order.getShippingTo()+", "+order.getShippingAddress().replaceAll("\n", " ")+"\t"+order.getName()+"\t"+order.getEmail()+"\t"+order.getPiname()+"\t"+order.getPiinstitution()+"\t"+order.getPidepartment()+"\t"+order.getPiemail());
+                    isItem = true;
+                } else {
+                    out.println("\t\t"+clone.getName()+"\t"+clone.getGeneID()+"\t"+clone.getGeneSymbol()+"\t"+clone.getCloneDescription()+"\t\t\t\t\t\t\t\t\t\t");
+               }
+            }
+            if(!isItem) {  
+                    out.println(order.getOrderid()+"\t"+order.getOrderDate()+"\t\t\t\t\t"+order.getStatus()+"\t"+order.getNumofclones()+"\t"+order.getNumofcollection()+"\t"+order.getShippingTo()+", "+order.getShippingAddress().replaceAll("\n", " ")+"\t"+order.getName()+"\t"+order.getEmail()+"\t"+order.getPiname()+"\t"+order.getPiinstitution()+"\t"+order.getPidepartment()+"\t"+order.getPiemail());
+            }
         }
     }
     
