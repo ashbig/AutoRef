@@ -52,7 +52,7 @@ public class PlateUploadRunner extends ProcessRunner
  **/
     private int         m_isolate_status = -1;
     private int         m_plate_info_type = -1;
-    private ArrayList   m_error_messages = null;
+    //private ArrayList   m_error_messages = null;
     private String     m_start_codon = null;
     private String      m_fusion_stop_codon = null;
     private String      m_close_stop_codon = null;
@@ -184,9 +184,9 @@ public class PlateUploadRunner extends ProcessRunner
             BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
         sysProps.verifyApplicationSettings();
        edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
-         runner.setUser( AccessManager.getInstance().getUser("htaycher123","me"));
+         runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
         
-                 runner.setInputData(Constants.ITEM_TYPE_PLATE_LABELS, "EDN003394");
+                 runner.setInputData(Constants.ITEM_TYPE_PLATE_LABELS, "EGS003623-1");
                     /*
                      ((PlateUploadRunner)runner).setVectorId(15 );
                      ((PlateUploadRunner)runner).setLinker3Id(10);
@@ -196,7 +196,7 @@ public class PlateUploadRunner extends ProcessRunner
                      ((PlateUploadRunner)runner).setFusionStopCodon("GGA");
                      ((PlateUploadRunner)runner).setClosedStopCodon("NON");
                      ((PlateUploadRunner)runner).setPlateInfoType(PlateUploader.PLATE_NAMES);
-                     ((PlateUploadRunner)runner).setProjectId(24);
+                     ((PlateUploadRunner)runner).setProjectId(22);
                      runner.setProcessType(Constants.PROCESS_UPLOAD_PLATES);
                     runner.run();
 
