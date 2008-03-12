@@ -121,7 +121,8 @@ public class TranslationTable
           String[] tr_table = null;
           String table_name = null;
           Hashtable temp_table = new Hashtable();
-          for (Enumeration e_prop = prop.keys() ; e_prop.hasMoreElements() ;)
+          Enumeration e_prop = prop.keys() ;
+          while(e_prop.hasMoreElements() )
           {
                original_key = (String) e_prop.nextElement();//N.AAs ;N.Starts ;N.Base1; N.Base2; N.Base3
   //     System.out.println(original_key) ;    
@@ -134,22 +135,29 @@ public class TranslationTable
                {
                    tr_table = new String[5 + 1];
                    temp_table.put( table_name, tr_table);
+                      //  System.out.println(table_name);
+              
                }
                tr_table[ getEntryIndex(key.substring(key.indexOf('.') + 1 )) ] = prop.getProperty(original_key);
           }
           TranslationTable new_table = null;
-           for (Enumeration e_prop = temp_table.keys() ; e_prop.hasMoreElements() ;)
+           e_prop = temp_table.keys() ;
+           while ( e_prop.hasMoreElements() )
           {
                key = (String) e_prop.nextElement();
                tr_table= (String[] )temp_table.get(key);
                try
                {
+                  // System.out.println(key);
                    new_table = new  TranslationTable(key, tr_table[0], tr_table[1],
                         tr_table[2], tr_table[3], tr_table[4] );
                    i_tanslation_tables.put(key, new_table);
-         //          System.out.println( new_table.toString());
+                 // System.out.println( new_table.toString());
                }
-               catch(Exception e ){ throw new Exception (e.getMessage());}
+               catch(Exception e )
+               { 
+                   throw new Exception (e.getMessage());
+               }
                
           }
 // build tables

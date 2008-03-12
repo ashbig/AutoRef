@@ -231,6 +231,8 @@ public class DataFileReader
           { setAuthorProperties(records_out); break;}
              case FileStructure.FILE_TYPE_AUTHOR_CONNECTION:
           {setOneToManyConnector( records_out,m_additional_info); break;}
+          case FileStructure.FILE_TYPE_REFERENCE_SEQUENCE_INFO:
+          { setFlexSequenceProperties(   records_out); break;}
        
            
           case FileStructure.FILE_TYPE_VECTOR_INFO:

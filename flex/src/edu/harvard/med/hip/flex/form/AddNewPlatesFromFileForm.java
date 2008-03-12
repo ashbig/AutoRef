@@ -60,6 +60,7 @@ public class AddNewPlatesFromFileForm    extends AddItemsForm
    private FormFile inputAuthorConnection = null;
   
    private String       researcherBarcode = null;
+   private int          submissionType = OutsidePlatesImporter.SUBMISSION_TYPE_NOTE_KNOWN;
    
    
    
@@ -85,7 +86,8 @@ public class AddNewPlatesFromFileForm    extends AddItemsForm
     public boolean 		getIsGetFLEXSequenceFromNCBI (){ return isGetFLEXSequenceFromNCBI;}
     public boolean 		getIsFLEXSequenceIDGI (){ return isFLEXSequenceIDGI;}
     public boolean                 getIsInsertControlNegativeForEmptyWell(){ return isInsertControlNegativeForEmptyWell ;}
-
+    public int                  getSubmissionType(){ return submissionType;}
+    
     public FormFile 		getMapFile(){ return mapFile    ;}
     public FormFile 		getInputGene(){ return inputGene   ;}
     public FormFile 		getInputAuthor(){ return inputAuthor   ;}
@@ -104,7 +106,8 @@ public class AddNewPlatesFromFileForm    extends AddItemsForm
     public void 		setInputGene(FormFile v){   inputGene   = v;}
     public void 		setInputAuthor(FormFile v){   inputAuthor   = v;}
     public void 		setInputAuthorConnection(FormFile v){  inputAuthorConnection = v;}
-
+     public void                 setSubmissionType(int v){  submissionType = v;}
+   
     
     public void         setWorkflowname(String name)    {        m_workflowname = name;    }
     public String       getWorkflowname()    {        return m_workflowname;    }

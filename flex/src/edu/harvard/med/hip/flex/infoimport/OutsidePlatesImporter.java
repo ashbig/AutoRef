@@ -153,6 +153,13 @@ import org.apache.xerces.parsers.SAXParser;
  */
 public class OutsidePlatesImporter extends ImportRunner
 {
+    
+    public static final int   SUBMISSION_TYPE_ONE_FILE = 1;
+    public static final int   SUBMISSION_TYPE_PSI = 2;
+    public static final int   SUBMISSION_TYPE_REFSEQUENCE_LOCATION_FILES = 3;
+    public static final int   SUBMISSION_TYPE_MGC = 4;
+    public static final int   SUBMISSION_TYPE_NOTE_KNOWN = 5;
+    
     private     int     m_project_id = -1;
     private     int     m_workflow_id = -1;
     private     int     m_protocol_id = -1;
@@ -169,7 +176,7 @@ private boolean         m_is_put_on_queue = false;
 private boolean         m_is_get_flexsequence_from_ncbi = false;
 private boolean         m_is_flexsequence_gi = false;
 private boolean         m_is_insert_control_negative_for_empty_well = true;
-
+private int             m_submission_type = SUBMISSION_TYPE_ONE_FILE;
 
 private String          m_sample_biotype = "LI";// from processprotocol
     
@@ -181,7 +188,9 @@ public void              setPlatesLocation(int v){ m_plate_location = v;}
 public  void             setProjectId(int v)   {     m_project_id = v;}
 public    void          setWorkFlowId(int v ){    m_workflow_id = v;}
 public void             setProtocolId(int v){ m_protocol_id= v;}
-    
+public void             setSubmissionType(int v){ m_submission_type = v;}
+
+
 public void            isCheckInFLEXDatabase(boolean v){ m_is_check_flex_sequences_against_FLEX_database = v;}
 public void            setNumberOfWellsInContainer(int v){m_number_of_samples_per_container = v;}
 public void              setMGCFileName(String v){ m_mgc_file_name = v;}
@@ -251,6 +260,10 @@ public String getTitle() {        return "Upload of information for third-party 
         }
         finally
          {
+            for (int c = 0; c < m_error_messages.size();c++)
+            {
+                 System.out.println( (String) m_error_messages.get(c));
+            }
             sendEmails("New plates upload into FLEX","New plates upload into FLEX");
          }
     
@@ -309,7 +322,7 @@ public String getTitle() {        return "Upload of information for third-party 
          String labels_ids = labels.toString();
         labels_ids = labels_ids.substring(0, labels_ids.length()-1);
          String sql = null ;         ResultSet rs = null; 
-         if (m_project_id == Project.MGC_PROJECT)
+         if (m_submission_type == this.SUBMISSION_TYPE_MGC)
          {
              sql = "select oricontainer as label from mgccontainer where oricontainer in (" +
             labels_ids +")";
@@ -339,12 +352,17 @@ public String getTitle() {        return "Upload of information for third-party 
     }
     private void    readDataFromFiles( FileStructure[]  file_structures) throws Exception
     {
-         if (file_structures[FileStructure.FILE_TYPE_ONE_FILE_SUBMISSION] == null)
+         if ( m_submission_type == this.SUBMISSION_TYPE_PSI)
          {
              readDataForPSI(file_structures); 
          }
+         else if ( m_submission_type == this.SUBMISSION_TYPE_REFSEQUENCE_LOCATION_FILES)
+         {
+             readDataFromTwoFilesJoinedByRefSequenceID(file_structures);
+         }
         //    readDataFromFilesMultipalFileSubmission 
-         else
+         else if ( m_submission_type == this.SUBMISSION_TYPE_ONE_FILE ||
+                 m_submission_type == this.SUBMISSION_TYPE_MGC)
              readDataFromFilesOneFileSubmission(file_structures);
           
     }
@@ -473,10 +491,10 @@ public String getTitle() {        return "Upload of information for third-party 
           
          freader.setNumberOfWellsInContainer(m_number_of_samples_per_container);
          freader.isCreateCloneObjectPerSample(m_is_fillin_clones_records);
-         freader.readFileIntoSetOfObjects( (InputStream)m_file_input_data.get(FileStructure.STR_FILE_TYPE_ONE_FILE_SUBMISSION), true,
-
-         FileStructure.FILE_TYPE_ONE_FILE_SUBMISSION, 
-               true, true,file_structures[ FileStructure.FILE_TYPE_ONE_FILE_SUBMISSION]);//, null) ;
+         freader.readFileIntoSetOfObjects( 
+                 (InputStream)m_file_input_data.get(FileStructure.STR_FILE_TYPE_ONE_FILE_SUBMISSION), true,
+                FileStructure.FILE_TYPE_ONE_FILE_SUBMISSION, 
+                true, true,file_structures[ FileStructure.FILE_TYPE_ONE_FILE_SUBMISSION]);//, null) ;
          i_containers = freader.getContainers();
          i_flex_sequences = freader.getFlexSequences();
          if ( freader.getErrorMesages().size() > 0 )
@@ -484,7 +502,41 @@ public String getTitle() {        return "Upload of information for third-party 
           
     }
     
-  
+    private void    readDataFromTwoFilesJoinedByRefSequenceID( FileStructure[]  file_structures) throws Exception
+    {
+         DataFileReader freader = new DataFileReader();
+          
+         freader.setNumberOfWellsInContainer(m_number_of_samples_per_container);
+         freader.isCreateCloneObjectPerSample(m_is_fillin_clones_records);
+         
+           String fkey = FileStructure.STR_FILE_TYPE_REFERENCE_SEQUENCE_INFO;
+          InputStream refseq_in_stream = (InputStream)m_file_input_data.get(fkey); 
+          freader.readFileIntoSetOfObjects( 
+                   refseq_in_stream, true,
+                   FileStructure.FILE_TYPE_REFERENCE_SEQUENCE_INFO, 
+                   true, true,
+                   file_structures[ FileStructure.FILE_TYPE_REFERENCE_SEQUENCE_INFO]);//, null) ;
+          
+           i_flex_sequences = new HashMap(freader.getFlexSequences());
+          
+         
+         
+            freader.readFileIntoSetOfObjects( 
+                       (InputStream)m_file_input_data.get(FileStructure.STR_FILE_TYPE_ONE_FILE_SUBMISSION), 
+                        true,
+                        FileStructure.FILE_TYPE_ONE_FILE_SUBMISSION, 
+                        true, true,file_structures[ FileStructure.FILE_TYPE_ONE_FILE_SUBMISSION]);//, null) ;
+            i_containers = freader.getContainers();
+         
+           if ( freader.getErrorMesages().size() > 0 )
+                m_error_messages.addAll(freader.getErrorMesages());
+            
+            //now connect 
+         
+        
+   
+          
+    }
      // check by GI only    
       private void        checkFlexSequencesInFLEXDatabase() throws Exception
       {
@@ -571,7 +623,7 @@ public String getTitle() {        return "Upload of information for third-party 
          Iterator iter = null;
          boolean is_verified_seq_ids = true;
          Hashtable mgc_ids = null; String[] mgs_id_per_sequence = null;
-         if ( m_project_id  == Project.MGC_PROJECT)
+         if ( m_submission_type == this.SUBMISSION_TYPE_MGC)
          {
              mgc_ids = getMGCSequenceIDs();
          }
@@ -594,7 +646,7 @@ public String getTitle() {        return "Upload of information for third-party 
                 sample.setSequenceId(sequence_id);
                     // for MGC project only we need to assign MGC_ID and IMAGE_ID to the samples
                 
-                if ( m_project_id  == Project.MGC_PROJECT)
+                if ( m_submission_type == this.SUBMISSION_TYPE_MGC)
                 {
                      mgs_id_per_sequence = ( String[]) mgc_ids.get(sequence_id);
                      if ( mgs_id_per_sequence != null )
@@ -908,7 +960,7 @@ public String getTitle() {        return "Upload of information for third-party 
              container =  (ImportContainer)i_containers.get(container_key);
              container.setLocation(m_plate_location);
              container.setType(m_plate_type);
-             if (m_project_id == Project.MGC_PROJECT)
+             if (m_submission_type == this.SUBMISSION_TYPE_MGC)
                  container.insertMGC(conn, m_error_messages,m_mgc_file_name);
              else
                 container.insert(conn, m_error_messages, m_project_id, m_workflow_id,

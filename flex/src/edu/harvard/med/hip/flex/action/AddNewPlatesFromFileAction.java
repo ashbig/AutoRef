@@ -73,7 +73,7 @@ public class AddNewPlatesFromFileAction extends WorkflowAction
                         request.setAttribute("workflowid", new Integer(Workflow.MGC_PLATE_HANDLE_WORKFLOW));
                         request.setAttribute("processname", Protocol.UPLOAD_CONTAINERS_FROM_FILE);
                         request.setAttribute("processid", new Integer(protocol.getId()));
-
+                        request.setAttribute("submissintype", new Integer(OutsidePlatesImporter.SUBMISSION_TYPE_MGC));
                        return (mapping.findForward("submit_mgc_plates"));
                  
               }
@@ -113,7 +113,8 @@ public class AddNewPlatesFromFileAction extends WorkflowAction
                 importer.setWorkFlowId(workflow_id);
                 importer.setProtocolId(protocol_id);
               
-                
+                int submission_type = requestForm.getSubmissionType();
+             System.out.println("Submission type "+submission_type);
                 importer.setNumberOfWellsInContainer( requestForm.getNumberOfWells());
                 importer.isCheckInFLEXDatabase(requestForm.getIsCheckTargetSequenceInFLEX());
                 importer.isFillInClonesTables(isFillInCLoneTables);
@@ -126,14 +127,12 @@ public class AddNewPlatesFromFileAction extends WorkflowAction
                 importer.isGetFLEXSequenceFromNCBI(requestForm.getIsGetFLEXSequenceFromNCBI() );
                 importer.isFLEXSequenceIDGI(requestForm.getIsFLEXSequenceIDGI());
                 importer.isInsertControlNegativeForEmptyWell(requestForm.getIsInsertControlNegativeForEmptyWell());
-
-                  if(inputSequence ==null && inputGene==null && inputAuthor==null)
-                  {
-                         importer.setInputData(FileStructure.STR_FILE_TYPE_ONE_FILE_SUBMISSION, inputFile.getInputStream());
-                  }
-                  else
+                
+                 switch  (submission_type)
+               {
+                   case  OutsidePlatesImporter.SUBMISSION_TYPE_PSI:
                    {
-                    if ( inputSequence== null || inputFile == null  )
+                      if ( inputSequence== null || inputFile == null  )
                             throw new Exception("You need to submit sequence information file and plate mapping information file. Check input");
                        importer.setInputData(FileStructure.STR_FILE_TYPE_PLATE_MAPPING, inputFile.getInputStream());
                       importer.setInputData(FileStructure.STR_FILE_TYPE_SEQUENCE_INFO, inputSequence.getInputStream());
@@ -143,13 +142,34 @@ public class AddNewPlatesFromFileAction extends WorkflowAction
                           throw new Exception("Problem with submitted files: check for files that contain author info!");
                       if ( inputAuthor!= null) importer.setInputData(FileStructure.STR_FILE_TYPE_AUTHOR_INFO, inputAuthor.getInputStream());
                       if ( inputAuthorConnection != null) importer.setInputData(FileStructure.STR_FILE_TYPE_AUTHOR_CONNECTION, inputAuthorConnection.getInputStream());
+                    //runner.setInputData(FileStructure.STR_FILE_TYPE_PUBLICATION_CONNECTION, in_stream_clone_publication);
+                   //    runner.setInputData(FileStructure.STR_FILE_TYPE_PUBLICATION_INFO,in_stream_publication_info );
+
+
+                       break;
+                   }
+                    case  OutsidePlatesImporter.SUBMISSION_TYPE_MGC:
+                    case  OutsidePlatesImporter.SUBMISSION_TYPE_ONE_FILE:
+                    {
+                        importer.setInputData(FileStructure.STR_FILE_TYPE_ONE_FILE_SUBMISSION, inputFile.getInputStream());
+                        break;
+                    }
+                  case  OutsidePlatesImporter.SUBMISSION_TYPE_REFSEQUENCE_LOCATION_FILES:
+                  {
+                        if ( inputSequence== null || inputFile == null  )
+                                        throw new Exception("You need to submit sequence information file and plate mapping information file. Check input.");
+                        importer.setInputData(FileStructure.STR_FILE_TYPE_ONE_FILE_SUBMISSION, inputFile.getInputStream());
+                        importer.setInputData(FileStructure.STR_FILE_TYPE_REFERENCE_SEQUENCE_INFO, inputSequence.getInputStream());
+                    break;
                   }
-                  java.lang.Thread t = new java.lang.Thread(importer);
-                  t.start();
-                     return mapping.findForward("confirm_add_plates");
             }
-            default: return null;
-            }
+            importer.setSubmissionType(submission_type);
+            java.lang.Thread t = new java.lang.Thread(importer);
+            t.start();
+             return mapping.findForward("confirm_add_plates");
+          }
+        default: return null;
+        }
            
         } 
         catch (Exception e)

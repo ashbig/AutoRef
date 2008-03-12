@@ -195,7 +195,10 @@ public class ConstantsImport
             FileStructure.STR_FILE_TYPE_LINKER_INFO,
             FileStructure.STR_FILE_TYPE_INPUT_FOR_NAME_TABLE,
            FileStructure.STR_FILE_TYPE_CLONING_STRATEGY ,
-           FileStructure.STR_FILE_TYPE_AUTHOR_CONNECTION
+           FileStructure.STR_FILE_TYPE_AUTHOR_CONNECTION,
+          FileStructure.STR_FILE_TYPE_PUBLICATION_INFO,
+          FileStructure.STR_FILE_TYPE_PUBLICATION_CONNECTION,
+          FileStructure.STR_FILE_TYPE_REFERENCE_SEQUENCE_INFO
      };
      //database mapping
    /*   public static HashMap database_dictionary_tables_map = null;

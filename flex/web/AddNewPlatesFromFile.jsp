@@ -27,9 +27,11 @@
       boolean   isGetFLEXSequenceFromNCBI=false;
       boolean isOtherProject = false;
       boolean isInsertControlNegativeForEmptyWell= false;
-      if(Project.PROJECT_NAME_MGC.equals(projectname))
+      int submissionType = OutsidePlatesImporter.SUBMISSION_TYPE_NOTE_KNOWN;
+       if(Project.PROJECT_NAME_MGC.equals(projectname))
       {
             isCheckTargetSequenceInFLEX =true;
+            submissionType = OutsidePlatesImporter.SUBMISSION_TYPE_MGC;
       }
       else  if(Project.PROJECT_NAME_ORF.equals(projectname))
       {
@@ -37,13 +39,15 @@
            isInsertControlNegativeForEmptyWell=true;
             isGetFLEXSequenceFromNCBI=true;
             isCheckTargetSequenceInFLEX =true;
-      }
+             submissionType = OutsidePlatesImporter.SUBMISSION_TYPE_ONE_FILE;
+       }
       else if(Project.PROJECT_NAME_PSI.equals(projectname))
        {
            isPutOnQueue = true;
            isDefineConstructSizeBySequence = true;
            isInsertControlNegativeForEmptyWell= true;
            isFillInCLoneTables = true;
+           submissionType = OutsidePlatesImporter.SUBMISSION_TYPE_PSI;
       }
       else
       {
@@ -175,29 +179,49 @@
         </table>
        
         </td></tr>
+          <tr><td colspan=2>&nbsp;</td></tr>
+       
+        <tr><td colspan=2>    <h3>Submission instructions:</h3></td></tr>
+        <tr><td  colspan=2>
+                <table border=0  bgcolor=e5f6ff width="100%">
+                    <% if ( submissionType == OutsidePlatesImporter.SUBMISSION_TYPE_NOTE_KNOWN) {%> 
+                    <tr>
+                        <td class="prompt">Select submission type:</td>
+                        <td ><select name="submissionType">
+                                <option value="<%= OutsidePlatesImporter.SUBMISSION_TYPE_ONE_FILE%> ">All data in one file
+                                <option value="<%= OutsidePlatesImporter.SUBMISSION_TYPE_REFSEQUENCE_LOCATION_FILES %>">Reference sequence and plate mapping in different files
+                                <option value="<%= OutsidePlatesImporter.SUBMISSION_TYPE_PSI%>">PSI schema
+                        </select></td>
+                    </tr><%}
+                    else
+                    {%>    <input type="hidden" name="submissionType" value="<%= submissionType %>">     <%}%>
+                    
+                    
+                    <tr>
+                        <td class="prompt">Upload map file:</td>
+                        <td><html:file property="mapFile" /></td>
+                        <logic:equal name="projectname"  value="<%= Project.PROJECT_NAME_PSI %>" >
+                            <td>[<a target="_blank" href="/FLEX/<bean:message key="add.map.psi.sample.jsp"/>">sample file</a>]</td>
+                            <td>[<a target="_blank"  href="/FLEX/<bean:message key="add.map.mfiles.psi.sample.jsp"/>">sample file</a>]</td>
+                        </logic:equal>
+                        <logic:equal name="projectname"  value="<%= Project.PROJECT_NAME_MGC %>" >
+                            <td>[<a target="_blank"  href="/FLEX/<bean:message key="add.map.mgc.sample.jsp"/>">sample file</a>]</td>
+                        </logic:equal>
+                        <logic:equal name="projectname"  value="<%= Project.PROJECT_NAME_ORF %>" >
+                            <td>[<a target="_blank"  href="/FLEX/<bean:message key="add.map.orf.sample.jsp"/>">sample file</a>]</td>
+                        </logic:equal>
+                        <% if (isOtherProject){ %>
+                        <td>[<a target="_blank"  href="/FLEX/<bean:message key="add.map.yh.sample.jsp"/>">sample file</a>]</td>
+                        <%}%>
+                        
+                        
+                </tr></table>
+        </td></tr>
      <tr><td colspan=2>&nbsp;</td></tr>
        
         <tr><td colspan=2>    <h3>Input files:</h3></td></tr>
-  <tr><td colspan=2>     <table border=0  bgcolor=e5f6ff width="100%">
-    <tr>
-        <td class="prompt">Upload map file:</td>
-        <td><html:file property="mapFile" /></td>
-        <logic:equal name="projectname"  value="<%= Project.PROJECT_NAME_PSI %>" >
-            <td>[<a target="_blank" href="/FLEX/<bean:message key="add.map.psi.sample.jsp"/>">sample file</a>]</td>
-            <td>[<a target="_blank"  href="/FLEX/<bean:message key="add.map.mfiles.psi.sample.jsp"/>">sample file</a>]</td>
-        </logic:equal>
-         <logic:equal name="projectname"  value="<%= Project.PROJECT_NAME_MGC %>" >
-            <td>[<a target="_blank"  href="/FLEX/<bean:message key="add.map.mgc.sample.jsp"/>">sample file</a>]</td>
-        </logic:equal>
-         <logic:equal name="projectname"  value="<%= Project.PROJECT_NAME_ORF %>" >
-            <td>[<a target="_blank"  href="/FLEX/<bean:message key="add.map.orf.sample.jsp"/>">sample file</a>]</td>
-        </logic:equal>
-         <% if (isOtherProject){ %>
-            <td>[<a target="_blank"  href="/FLEX/<bean:message key="add.map.yh.sample.jsp"/>">sample file</a>]</td>
-        <%}%>
-        
-       
-    </tr>
+  <tr><td  colspan=2>
+      <table border=0  bgcolor=e5f6ff width="100%">
     <tr>
         <td class="prompt">Upload plate information file:</td>
         <td><html:file property="inputFile" /></td>
@@ -226,18 +250,23 @@
      
      </td>
     </tr>
-          <logic:equal name="projectname"  value="<%= Project.PROJECT_NAME_PSI %>" >
+       <!--   <llogic:equal name="projectname"  value="< %= Project.PROJECT_NAME_PSI %>" > -->
+       <% if (submissionType == OutsidePlatesImporter.SUBMISSION_TYPE_NOTE_KNOWN
+                ||
+                submissionType == OutsidePlatesImporter.SUBMISSION_TYPE_PSI){%>
                 <tr>
                     <td  class="prompt">Upload sequence information file :</td>
                     <td><html:file property="inputFile1" /></td><td>
                     [<a target="_blank"   href="/FLEX/<bean:message key="add.sequence.sample.jsp"/>">sample file </a>]</td>
                 </tr>
-                <tr>
+              
+               <tr>
                     <td class="prompt">Upload gene information file:</td>
                     <td><html:file property="inputGene" /></td><td>
                     [<a target="_blank"   href="/FLEX/<bean:message key="add.gene.sample.jsp"/>">sample file </a>]</td>
                 </tr>
                 <tr>    <td class="prompt" colspan=2>&nbsp;</td></tr>
+          
                 <tr>    <td class="prompt" colspan=2>Upload author information:</td></tr>
                 <tr>
                     <td class="prompt">Author information file:</td>
@@ -249,7 +278,8 @@
                     <td><html:file property="inputAuthorConnection" /></td><td>
                     [<a target="_blank"   href="/FLEX/<bean:message key="add.author.connector.sample.jsp"/>">sample file</a>]</td>
                 </tr>
-           </logic:equal>     
+                  <%}%>
+          <!-- <//logic:equal>  -->   
 </table></td></tr>
  <tr><td colspan=2>&nbsp;</td></tr>
        

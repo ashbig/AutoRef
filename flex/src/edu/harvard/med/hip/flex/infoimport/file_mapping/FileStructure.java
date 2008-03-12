@@ -59,6 +59,10 @@ public class FileStructure
     public static final int FILE_TYPE_INPUT_FOR_NAME_TABLE=9;
     public static final int FILE_TYPE_CLONING_STRATEGY = 10;
     public static final int FILE_TYPE_AUTHOR_CONNECTION = 11;
+     public static final int FILE_TYPE_PUBLICATION_CONNECTION = 12;
+      public static final int FILE_TYPE_PUBLICATION_INFO = 13;
+      public static   final   int FILE_TYPE_REFERENCE_SEQUENCE_INFO=     14;
+  
     // used internaly , file of this type cannot be submitted
     public static final int FILE_TYPE_OBJECT_ANNOTATIONS = -10;
     
@@ -76,6 +80,9 @@ public class FileStructure
      public static   final   String   STR_FILE_TYPE_INPUT_FOR_NAME_TABLE=      "FILE_TYPE_INPUT_FOR_NAME_TABLE";
      public static   final   String   STR_FILE_TYPE_CLONING_STRATEGY=      "FILE_TYPE_CLONING_STRATEGY";
     public static   final   String   STR_FILE_TYPE_AUTHOR_CONNECTION=      "FILE_TYPE_AUTHOR_CONNECTION";
+    public static   final   String   STR_FILE_TYPE_PUBLICATION_INFO=         "FILE_TYPE_PUBLICATION_INFO";
+    public static   final   String   STR_FILE_TYPE_PUBLICATION_CONNECTION=      "FILE_TYPE_PUBLICATION_CONNECTION";
+   public static   final   String   STR_FILE_TYPE_REFERENCE_SEQUENCE_INFO=      "FILE_TYPE_REFERENCE_SEQUENCE_INFO";
    
     
     /** Creates a new instance of FileStructure */
