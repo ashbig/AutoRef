@@ -28,6 +28,9 @@
           <td height="15" class="lftsubtxt">- <a href="SearchClone.jsp" class="leftsubnavtext">by 
             clone identifier</a></td>
         </tr>
+        <tr> 
+          <td height="15" class="lftsubtxt">- <a href="PrepareAdvancedSearch.do" class="leftsubnavtext">PSI-MR search</a></td>
+        </tr>
       </table></td>
   </tr>
   <tr> 
