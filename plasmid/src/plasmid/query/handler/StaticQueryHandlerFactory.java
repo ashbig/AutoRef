@@ -7,6 +7,8 @@
 package plasmid.query.handler;
 
 import java.util.List;
+import plasmid.coreobject.CloneNameType;
+import plasmid.coreobject.CloneProperty;
 
 /**
  *
@@ -62,6 +64,15 @@ public class StaticQueryHandlerFactory {
             return new AuthorNameQueryHandler(terms);
         else if(GeneQueryHandler.PMIDMATCH.equals(type))
             return new PmidQueryHandler(terms);
+        else if(CloneProperty.PROTEIN_EXPRESSED.equals(type)
+                ||CloneProperty.SOLUBLE_PROTEIN.equals(type) 
+                ||CloneProperty.PROTEIN_PURIFIED.equals(type))
+            return new ClonePropertyQueryHandler(type, terms);
+        else if(CloneNameType.PDB_ID.equals(type)
+                ||CloneNameType.TARGETDB_ID.equals(type))
+            return new CloneNameWithTypeQueryHandler(type, terms);
+        else if(CloneNameType.PDB_ID_ALL.equals(type))
+            return new CloneNameWithTypeWildcardQueryHandler(CloneNameType.PDB_ID, terms);
         else {
             RefseqNameQueryHandler h = new RefseqNameQueryHandler(terms);
             h.setNametype(type);

@@ -3,34 +3,29 @@
  *
  * Created on March 17, 2006, 11:00 AM
  */
-
 package plasmid.action;
 
 import java.util.*;
 import java.io.*;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionServlet;
-import org.apache.struts.util.MessageResources;
 
 import plasmid.database.DatabaseManager.DefTableManager;
 import plasmid.form.*;
 import plasmid.Constants;
+import plasmid.coreobject.CloneProperty;
 
 /**
  *
  * @author  DZuo
  */
 public class PrepareAdvancedSearchAction extends PlasmidAction {
+
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
      * response (or forward to another web component that will create it).
@@ -47,19 +42,19 @@ public class PrepareAdvancedSearchAction extends PlasmidAction {
      * @exception ServletException if a servlet exception occurs
      */
     public ActionForward plasmidPerform(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
+
         ActionErrors errors = new ActionErrors();
         List species = DefTableManager.getVocabularies("species", "genusspecies");
         species.add(0, Constants.ALL);
-        
-        ((AdvancedSearchForm)form).resetParams();
+         
+        ((AdvancedSearchForm) form).resetParams();
         request.setAttribute("species", species);
         
-        ViewCartForm f = (ViewCartForm)request.getSession().getAttribute("viewCartForm");
-        if(f != null)
+        ViewCartForm f = (ViewCartForm) request.getSession().getAttribute("viewCartForm");
+        if (f != null) {
             f.setIsBatch(null);
-        
+        }
+
         return (mapping.findForward("success"));
     }
-    
 }

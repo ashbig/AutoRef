@@ -1,6 +1,7 @@
 <%@ page language="java" %>
 <%@ page errorPage="ProcessError.do"%>
 <%@ page import="plasmid.Constants" %> 
+<%@ page import="plasmid.coreobject.CloneProperty" %> 
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -131,6 +132,105 @@
     <td>&nbsp;</td>
     <td>&nbsp;</td>
     <td>&nbsp;</td>
+  </tr>
+  <tr> 
+    <td colspan="3" class="tableheader">For PSI only</td>
+  </tr>
+  <tr> 
+    <td width="15%" class="formlabel">PDB ID</td>
+    <td width="15%">
+        <html:select property="pdbidOp" styleClass="itemtext">
+          <html:option value="<%=Constants.OPERATOR_EQUALS %>"/>
+        </html:select>
+    </td>
+    <td width="36%">
+        <html:text styleClass="itemtext" property="pdbid" size="50"/>
+    </td>
+    <td class="itemtext">
+        (use * to include all)
+    </td>
+    <!--
+    <td width="18%">
+          <html:radio property="pmidAndOr" value="and"/>
+          <html:radio property="pmidAndOr" value="or"/>
+    </td>
+    -->
+  </tr>
+  <tr> 
+    <td width="15%" class="formlabel">TargetDB ID</td>
+    <td width="15%">
+        <html:select property="targetidOp" styleClass="itemtext">
+          <html:option value="<%=Constants.OPERATOR_EQUALS %>"/>
+        </html:select>
+    </td>
+    <td width="36%">
+        <html:text styleClass="itemtext" property="targetid" size="50"/>
+    </td>
+    <!--
+    <td width="18%">
+          <html:radio property="pmidAndOr" value="and"/>
+          <html:radio property="pmidAndOr" value="or"/>
+    </td>
+    -->
+  </tr>
+  <tr> 
+    <td colspan="2" class="formlabel">Protein Express Result</td>
+    <td width="36%">
+        <html:select property="proteinExpress" styleClass="itemtext">
+            <html:option value="">-- Select Result --</html:option>
+          <html:option value="<%=CloneProperty.NOT_TESTED %>"/>
+          <html:option value="<%=CloneProperty.NOT_APP %>"/>
+          <html:option value="<%=CloneProperty.NOT_FOUND %>"/>
+          <html:option value="<%=CloneProperty.PROTEIN_CONFIRMED %>"/>
+        </html:select>
+    </td>
+    <!--
+    <td width="18%">
+          <html:radio property="pmidAndOr" value="and"/>
+          <html:radio property="pmidAndOr" value="or"/>
+    </td>
+    -->
+  </tr>
+  <tr>
+    <td colspan="2" class="formlabel">Protein Soluble Result</td>
+    <td width="36%">
+        <html:select property="proteinSoluble" styleClass="itemtext">
+            <html:option value="">-- Select Result --</html:option>
+          <html:option value="<%=CloneProperty.NOT_TESTED %>"/>
+          <html:option value="<%=CloneProperty.NOT_APP %>"/>
+          <html:option value="<%=CloneProperty.NOT_SOLUBLE %>"/>
+          <html:option value="<%=CloneProperty.SOLUBLE %>"/>
+        </html:select>
+    </td>
+    <!--
+    <td width="18%">
+          <html:radio property="pmidAndOr" value="and"/>
+          <html:radio property="pmidAndOr" value="or"/>
+    </td>
+    -->
+  </tr>
+  <tr>
+    <td colspan="2" class="formlabel">Protein Purification Result</td>
+    <td width="36%">
+        <html:select property="proteinPurified" styleClass="itemtext">
+            <html:option value="">-- Select Result --</html:option>
+          <html:option value="<%=CloneProperty.NOT_TESTED %>"/>
+          <html:option value="<%=CloneProperty.NOT_APP %>"/>
+          <html:option value="<%=CloneProperty.NOT_PURIFIED %>"/>
+          <html:option value="<%=CloneProperty.PURIFIED %>"/>
+        </html:select>
+    </td>
+    <!--
+    <td width="18%">
+          <html:radio property="pmidAndOr" value="and"/>
+          <html:radio property="pmidAndOr" value="or"/>
+    </td>
+    -->
+  </tr>
+  <tr> 
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
     <td>&nbsp;</td>
   </tr>
   <tr> 
@@ -142,7 +242,7 @@
 </table>
       </html:form></td>
   </tr>
-</table>
+</table> 
 <jsp:include page="footer.jsp" /></body>
 </html>
 

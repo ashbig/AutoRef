@@ -11,6 +11,21 @@ package plasmid.coreobject;
  * @author  DZuo
  */
 public class CloneProperty {
+    public static final String PROTEIN_EXPRESSED = "ProteinExpressed";
+    public static final String SOLUBLE_PROTEIN = "SolubleProtein";
+    public static final String PROTEIN_PURIFIED = "ProteinPurified";
+    
+    public static final int CAT_PSI = 1;
+    
+    public static final String NOT_TESTED = "Not_Tested";
+    public static final String NOT_APP = "Not_Applicable";
+    public static final String NOT_FOUND = "Tested_Not_Found";
+    public static final String PROTEIN_CONFIRMED = "Protein_Confirmed";
+    public static final String NOT_SOLUBLE = "Tested_Not_Soluble";
+    public static final String SOLUBLE = "Protein_Soluble";
+    public static final String NOT_PURIFIED = "Tested_Not_Purified";
+    public static final String PURIFIED = "Protein_Purified";
+    
     private int cloneid;
     private String type;
     private String value;

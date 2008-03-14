@@ -14,6 +14,9 @@ public class CloneNameType {
     public static final String HIP_CLONE_ID = "HIP Clone ID";        
     public static final String HIP_MASTER_CLONE_ID = "HIP Master Clone ID";  
     public static final String ORIGINAL_CLONE_ID = "Original Clone ID"; 
+    public static final String TARGETDB_ID = "TargetDB ID";
+    public static final String PDB_ID = "PDB ID";
+    public static final String PDB_ID_ALL = "PDB ID ALL";
     
     private String clonetype;
     private String nametype;

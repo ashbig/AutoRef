@@ -101,6 +101,7 @@ public class Constants {
     public static final String PSI_CESG = "Center for Eukaryotic Structural Genomics";
     
     public static final String PAYPALEMAIL = "janice_williamson@hms.harvard.edu";
+    public static final String SEARCH_WILDCARD = "*";
     
     /** Creates a new instance of Constants */
     public Constants() {

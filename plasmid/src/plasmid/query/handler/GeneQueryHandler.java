@@ -48,6 +48,7 @@ public abstract class GeneQueryHandler {
     public static final String AUTHORTEXT = "Author Name Exact Match";
     public static final String AUTHORCONTAIN = "Author Name Contain";
     public static final String PMIDMATCH = "PMID Exact Match";
+    public static final String CLONEPROPERTY = "Clone Property";
     
     protected Map found;
     protected Map totalFoundCloneids;

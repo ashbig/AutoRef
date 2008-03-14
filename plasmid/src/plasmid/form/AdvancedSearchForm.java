@@ -6,15 +6,12 @@
 
 package plasmid.form;
 
-import javax.servlet.http.HttpServletRequest;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionMapping;
 
 import java.util.*;
 
 import plasmid.Constants;
+import plasmid.coreobject.CloneProperty;
 
 /**
  *
@@ -36,8 +33,15 @@ public class AdvancedSearchForm extends ActionForm {
     private String pmid;
     private String pmidOp;
     private boolean pmidAndOr;
+    private String pdbid;
+    private String pdbidOp;
+    private String targetid;
+    private String targetidOp;
     
     private String species;
+    private String proteinExpress;
+    private String proteinSoluble;
+    private String proteinPurified;
     
     public String getGeneName() {return geneName;}
     public void setGeneName(String s) {this.geneName = s;}
@@ -103,5 +107,61 @@ public class AdvancedSearchForm extends ActionForm {
         pmid=null;
         pmidOp=Constants.OPERATOR_EQUALS;
         species = Constants.ALL;
+    }
+
+    public String getProteinExpress() {
+        return proteinExpress;
+    }
+
+    public void setProteinExpress(String proteinExpress) {
+        this.proteinExpress = proteinExpress;
+    }
+
+    public String getProteinSoluble() {
+        return proteinSoluble;
+    }
+
+    public void setProteinSoluble(String proteinSoluble) {
+        this.proteinSoluble = proteinSoluble;
+    }
+
+    public String getProteinPurified() {
+        return proteinPurified;
+    }
+
+    public void setProteinPurified(String proteinPurified) {
+        this.proteinPurified = proteinPurified;
+    }
+
+    public String getPdbid() {
+        return pdbid;
+    }
+
+    public void setPdbid(String pdbid) {
+        this.pdbid = pdbid;
+    }
+
+    public String getPdbidOp() {
+        return pdbidOp;
+    }
+
+    public void setPdbidOp(String pdbidOp) {
+        this.pdbidOp = pdbidOp;
+    }
+
+    public String getTargetid() {
+        return targetid;
+    }
+
+    public void setTargetid(String targetid) {
+        this.targetid = targetid;
+    }
+
+    public String getTargetidOp() {
+        return targetidOp;
+    }
+
+    public void setTargetidOp(String targetidOp) {
+        this.targetidOp = targetidOp;
     }
 }
