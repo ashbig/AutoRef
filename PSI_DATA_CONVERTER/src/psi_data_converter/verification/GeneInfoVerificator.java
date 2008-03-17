@@ -67,6 +67,15 @@ public class GeneInfoVerificator extends Verifier
         }
         
     }
-    
+     public ArrayList getSpeciesNames(List<String[]> records, int species_column)
+     {
+         ArrayList species_names = new ArrayList();
+         for (  String[] record : records)
+         {
+             if ( !species_names.contains( record[species_column]))
+                 species_names.add(record[species_column]);
+         }
+         return species_names;
+     }
     
 }

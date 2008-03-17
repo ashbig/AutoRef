@@ -154,10 +154,11 @@ public class FileManager {
     }
     
     
-    public static void writeFile(List<String> fdata, String file_name, String header, boolean isAppend)throws IOException
+    public static void writeFile(List<String> fdata, String file_name,
+            String header, boolean isAppend) throws IOException
     {
         BufferedWriter fout = new BufferedWriter(new FileWriter ( file_name, isAppend));
-        
+        if ( header != null){fout.write( header );fout.write("\n");}
         for (String item : fdata)
         {
             fout.write( item.trim() );fout.write("\n");
@@ -168,11 +169,13 @@ public class FileManager {
     }
     
     
-     public static List             readFileIntoStringArray(String  filename, int[] column_numbers , boolean isHeader) throws Exception
+     public static List             readFileIntoStringArray(String  filename, int[] column_numbers ,
+             boolean isHeader) throws Exception
     {
             return    readFileIntoStringArray(  filename,  column_numbers, "\t", isHeader);
      }
-    public static List             readFileIntoStringArray(String filename, int[] column_numbers, String delim, boolean isHeader)throws Exception
+    public static List             readFileIntoStringArray(String filename, int[] column_numbers, 
+            String delim, boolean isHeader)throws Exception
     {
         List file_values = new ArrayList();
         BufferedReader input = null ; int count = 0;
@@ -204,5 +207,60 @@ public class FileManager {
              if (input != null) input.close();
         }
         
+    }
+    
+    
+    
+    
+    
+     public static int  deleteEmptyEntries(String file_name, int column_to_check_for_empty_value,
+             String definition_of_empty_value, List er_messages) throws Exception
+    {
+        ArrayList none_empty_records = readNonEmptyRecords( file_name,  column_to_check_for_empty_value,
+              definition_of_empty_value);
+        if (none_empty_records != null && none_empty_records.size() > 1)
+        {
+            String header = (String) none_empty_records.get(0);
+            none_empty_records.remove(0);
+            writeFile(none_empty_records,  file_name,  header, false);
+            return 1;
+        }
+        else
+        {
+            er_messages.add("File "+ file_name +" does not have none empty records.");
+            return 0;
+        }
+      
+     }
+    
+    public static ArrayList readNonEmptyRecords(String file_name,
+            int column_to_check_for_empty_value,
+             String definition_of_empty_value) throws Exception
+    {
+        String[] items ;
+        BufferedReader output = null ; 
+        String line ; ArrayList records = new ArrayList();
+        // read author info and stor author 
+        try
+        {
+            output = new BufferedReader(new FileReader(file_name));
+            records.add( output.readLine()) ;// read header
+            while ( (line = output.readLine() ) != null)
+            {
+                items = line.split("\t");
+                if (! items[column_to_check_for_empty_value].equalsIgnoreCase(definition_of_empty_value))
+                    records.add(line);
+            }
+            output.close();
+            return records;
+        }
+        catch(Exception e)
+        {
+            throw new Exception ("Cannot read file to check for empty records" +  file_name);
+        }
+        finally
+        {
+            if (output != null) output.close();
+        }
     }
 }

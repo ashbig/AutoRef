@@ -28,17 +28,17 @@ public abstract class Verifier
         //public changeNumber()
     
     protected String          m_file_name ;
-   
+    public    String          getFileName(){ return m_file_name;}
      
      
-     
+      public Verifier(){}
     /** Creates a new instance of Verifier */
     public Verifier(String  file_name    ) 
     { 
         m_file_name =  file_name ; 
     }
     
-    public int defineColumnNumber(String line, String header)
+    public static int defineColumnNumber(String line, String header)
     {
         String[] items = line.split("\t");
         for (int count = 0; count <   items.length; count++)
@@ -47,6 +47,44 @@ public abstract class Verifier
         }
         return -1;
     }
+    
+    
+    public boolean      verifyVocabularyField(List<String[]> records, 
+            String column_header,  String header, String[] field_voc,
+             boolean isCaseSensitive, ArrayList<String> er_messages)
+    {
+        int column_number =  defineColumnNumber(column_header,  header);
+        return verifyVocabularyField(records,  column_number,  field_voc ,isCaseSensitive, er_messages);
+    }
+    
+     public boolean      verifyVocabularyField(List<String[]> records, 
+            int column_number,  String[] field_voc, boolean isCaseSensitive ,
+             ArrayList<String> er_messages)
+    {
+         String field_value ; boolean isFieldVerified = false;
+         boolean result = true;
+         for( String[] record : records )
+         {
+             field_value = record[column_number];
+             isFieldVerified = false;
+             for ( String v_value : field_voc )
+             {
+                 if ( ( ! isCaseSensitive &&   field_value.equals(v_value))
+                 ||  (  isCaseSensitive && field_value.equalsIgnoreCase(v_value)))
+                 {
+                     isFieldVerified = true;
+                     break;
+                 }
+             }
+             if ( ! isFieldVerified ) 
+             {
+                 result = false;
+                 er_messages.add("Field value wrong: "+isFieldVerified+" record: "+record.toString());
+             }
+         }
+        return result;
+    }
+    
     
     public void         insertString(
             String apendtext, String header, 
@@ -230,7 +268,7 @@ public abstract class Verifier
     }
      
      
-     private String         putStringArrayInString(String[] tmp, String delim, boolean isDelimAfterLast)
+     public static  String         putStringArrayInString(String[] tmp, String delim, boolean isDelimAfterLast)
      {
           StringBuffer sbuf = new StringBuffer() ;
           for (int count = 0; count < tmp.length; count++)
@@ -259,4 +297,144 @@ public abstract class Verifier
              
          }
      }
+     
+     public HashMap<String,String> readDataIntoHash(String file_name, String key_column_name ,
+             String value_column_name , boolean isRaiseFlagIfDuplicates)
+             throws Exception
+     {
+          BufferedReader output = null ; 
+          HashMap<String,String> result = new HashMap();
+         String line ;  String[] items ; int key_column = -1 ;
+        int value_column = -1;
+        // read author info and stor author 
+        try
+        {
+            output = new BufferedReader(new FileReader(file_name));
+            line = output.readLine();//header
+            key_column = defineColumnNumber(line,  key_column_name);
+            value_column = defineColumnNumber(line,  value_column_name);
+      
+            if ( key_column < 0  || value_column < 0) 
+                throw new Exception("Cannot define key or value columns");
+            
+            while ( (line = output.readLine() ) != null)
+            {
+                items = line.split("\t");
+                if (isRaiseFlagIfDuplicates && result.containsKey(items[key_column]))
+                    throw new Exception("Dublicate  key: "+items[key_column]);
+                result.put(items[key_column], items[value_column]);
+            }
+            output.close();
+            return result;
+        }
+        catch(Exception e)
+        {
+            throw new Exception ("Cannot read file " + file_name  );
+        }
+        finally
+        {
+            if (output != null) output.close();
+        }
+     }
+     
+     
+     public boolean verifyAllCloneIDDescribed(List<String[]> records, int cloneid_column_number,
+             HashMap<String,String> clone_ids)
+     {
+         if ( records.size() != clone_ids.size()) return false;
+         for( String[] record : records)
+         {
+             if( clone_ids.get(record[cloneid_column_number]) == null)
+                    return false;
+         }
+         return true;
+     }
+     
+     
+     
+     public void         replaceStrings(
+            List<String[]> records, String file_header, String column_header,
+             List <String[]> old_new_values , ArrayList<String> er_messages )
+     {
+          replaceStrings(   records, file_header,  column_header, old_new_values, 
+                  0,  ENUM_MATH.NONE, ENUM_REPLACE_TYPE.REPLACE_STRING, er_messages);
+  
+     }
+     
+      public void         replaceIntStringsValue(
+            List<String[]> records,  String file_header, String column_header, 
+              int change_value,  ENUM_MATH action, ArrayList<String> er_messages )
+     {
+         replaceStrings(    records,  file_header,  column_header, null, 
+                 change_value,   action,  ENUM_REPLACE_TYPE.REPLACE_WITH_CALCULATION_INT,
+                 er_messages);
+     }
+    
+  
+     public void         replaceStrings(
+             List<String[]> records, String file_header, String column_header, 
+             List <String[]> old_new_values,
+             int change_value,  ENUM_MATH action,
+             ENUM_REPLACE_TYPE replacetype, ArrayList<String> er_messages)
+    {
+      
+        int number_of_update_column =  defineColumnNumber(file_header,  column_header);
+        if ( number_of_update_column < 0  ) 
+        {
+            er_messages.add("Cannot define column number");
+            return;
+        }
+            
+        for (String[] record : records )     
+        {
+                switch ( replacetype )
+                {
+                    case REPLACE_STRING: 
+                    {
+               
+                        for ( String[] old_new_value : old_new_values )
+                        {
+                            if ( record [number_of_update_column].equalsIgnoreCase(old_new_value[1]))
+                            {
+                                record[number_of_update_column] = old_new_value[0];
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                    case REPLACE_WITH_CALCULATION_INT:
+                    {
+                        int old_value = Integer.parseInt( record[number_of_update_column] );
+                        record[number_of_update_column] = String.valueOf( calculateNewInt( old_value,  change_value,   action));
+                        break;
+                    }
+                }
+            }
+      
+    }
+     
+     
+       public static  void         appendString( String apendtext,  List<String[]> records)
+       {
+           for ( String[] record : records)
+           {
+               record [record.length - 1] += apendtext;
+           }
+       }
+ 
+     public static  void  appendValueOfColumn( int column_number,  List<String[]> records, 
+             String delim, boolean isDelim)
+       {
+         String apendtext ="";
+           for ( String[] record : records)
+           {
+               if ( isDelim)apendtext=delim;
+               apendtext += record[column_number];
+               record [record.length - 1] += apendtext;
+               apendtext="";
+           }
+       }
+    
+  
+    
 }
