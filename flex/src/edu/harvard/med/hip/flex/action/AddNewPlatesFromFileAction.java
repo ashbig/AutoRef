@@ -98,6 +98,9 @@ public class AddNewPlatesFromFileAction extends WorkflowAction
  FormFile inputGene= requestForm.getInputGene();
  FormFile inputAuthor= requestForm.getInputAuthor();
  FormFile inputAuthorConnection= requestForm.getInputAuthorConnection();
+ FormFile inputPublication= requestForm.getInputPublication();
+ FormFile inputPublicationConnection= requestForm.getInputPublicationConnection();
+
  request.setAttribute("forwardName", String.valueOf(forwardName));
 
  int project_id = requestForm.getProjectid();
@@ -142,10 +145,8 @@ public class AddNewPlatesFromFileAction extends WorkflowAction
                           throw new Exception("Problem with submitted files: check for files that contain author info!");
                       if ( inputAuthor!= null) importer.setInputData(FileStructure.STR_FILE_TYPE_AUTHOR_INFO, inputAuthor.getInputStream());
                       if ( inputAuthorConnection != null) importer.setInputData(FileStructure.STR_FILE_TYPE_AUTHOR_CONNECTION, inputAuthorConnection.getInputStream());
-                    //runner.setInputData(FileStructure.STR_FILE_TYPE_PUBLICATION_CONNECTION, in_stream_clone_publication);
-                   //    runner.setInputData(FileStructure.STR_FILE_TYPE_PUBLICATION_INFO,in_stream_publication_info );
-
-
+                      if ( inputPublication!= null) importer.setInputData(FileStructure.STR_FILE_TYPE_PUBLICATION_INFO,inputPublication.getInputStream());
+                      if ( inputPublicationConnection!= null) importer.setInputData(FileStructure.STR_FILE_TYPE_PUBLICATION_CONNECTION, inputPublicationConnection.getInputStream());
                        break;
                    }
                     case  OutsidePlatesImporter.SUBMISSION_TYPE_MGC:

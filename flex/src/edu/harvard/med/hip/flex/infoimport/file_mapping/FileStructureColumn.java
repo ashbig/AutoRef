@@ -33,6 +33,7 @@ public class FileStructureColumn
     public static final String       OBJECT_TYPE_CLONING_STRATEGY = "CLONING_STRATEGY";
     public static final String       OBJECT_TYPE_AUTHOR = "AUTHOR";
     public static final String       OBJECT_TYPE_CLONE = "CLONE";
+    public static final String       OBJECT_TYPE_PUBLICATION="PUBLICATION";
    
      // intermediate property not set to additional properties
     public static final String   PROPERTY_NAME_USER_ID = "USER_ID";

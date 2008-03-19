@@ -183,6 +183,7 @@ private String          m_sample_biotype = "LI";// from processprotocol
 private     HashMap          i_containers = null;
 private     HashMap          i_flex_sequences = null;
 private     HashMap          i_authors = null;
+private     HashMap         i_publications= null;
 
 public void              setPlatesLocation(int v){ m_plate_location = v;} 
 public  void             setProjectId(int v)   {     m_project_id = v;}
@@ -256,7 +257,7 @@ public String getTitle() {        return "Upload of information for third-party 
         {
             DatabaseTransaction.rollback(conn);
              System.out.println(e.getMessage());
-            m_error_messages.add("Cannot upload new plates from files.\n"+e.getMessage());
+            m_error_messages.add("Can not upload new plates from files.\n"+e.getMessage());
         }
         finally
          {
@@ -404,12 +405,64 @@ public String getTitle() {        return "Upload of information for third-party 
                 true, true,file_structures[ FileStructure.FILE_TYPE_AUTHOR_CONNECTION]);//, null) ;
                 assignAuthorInformation( freader);
             }
-           //readGeneInfo( freader,  file_structures);
-           // read authors 
-         //  readAuthorInformation( freader,  file_structures);
+           if ( file_structures[ FileStructure.FILE_TYPE_PUBLICATION_INFO] != null &&
+                   file_structures[ FileStructure.FILE_TYPE_PUBLICATION_CONNECTION] != null)
+            {
+               FileStructure fst = file_structures[ FileStructure.FILE_TYPE_PUBLICATION_INFO];
+               freader.readFileIntoSetOfObjects( (InputStream)m_file_input_data.get(FileStructure.STR_FILE_TYPE_PUBLICATION_INFO), true,
+                    FileStructure.FILE_TYPE_PUBLICATION_INFO, 
+                    true, true, fst        );//, null) ;
+               i_publications = freader.getPublications();
+               freader.resetAdditionalInfo(); 
+               fst = file_structures[ FileStructure.FILE_TYPE_PUBLICATION_CONNECTION];
+               freader.readFileIntoSetOfObjects( (InputStream)m_file_input_data.get(FileStructure.STR_FILE_TYPE_PUBLICATION_CONNECTION), true,
+                    FileStructure.FILE_TYPE_PUBLICATION_CONNECTION, 
+                true, true,fst);//, null) ;
+                assignPublicationInformation( freader);
+            }
     }
     
-    
+     private void           assignPublicationInformation(DataFileReader freader)
+    {
+        // read authors 
+            HashMap publications = null; HashMap publications_connectors = null;
+            DataConnectorObject primary_key_connector_object = null;
+            DataConnectorObject f_key_connector_object = null;
+            ArrayList f_keys = null; ArrayList publications_annotations_per_owner = null;
+            ImportSample sample = null; ImportContainer cur_container  =null;
+            ImportClone clone = null;
+            
+             publications= freader.getPublications();
+             publications_connectors = freader.getAdditionalInfo();
+               
+               // assign publications to objects owner can be container, sample, clone in the future
+                if ( publications_connectors != null  && publications_connectors.size() > 0)
+                {
+                    Iterator iter = publications_connectors.keySet().iterator();
+                    while( iter.hasNext())
+                    {
+                        primary_key_connector_object = (DataConnectorObject)iter.next();
+                        f_keys =(ArrayList) publications_connectors.get(primary_key_connector_object);
+                        publications_annotations_per_owner = new ArrayList();
+                        for (int count_key = 0; count_key < f_keys.size(); count_key++)
+                        {
+                            f_key_connector_object = (DataConnectorObject)f_keys.get(count_key);
+                            ImportPublication publication = (ImportPublication) publications.get( f_key_connector_object.getId());
+                            if (primary_key_connector_object.getType().intern() == FileStructureColumn.OBJECT_TYPE_SAMPLE)
+                            {
+                                sample = (ImportSample) freader.getSamples().get(primary_key_connector_object.getId());
+                            }
+                            else if (primary_key_connector_object.getType().intern() == FileStructureColumn.OBJECT_TYPE_CLONE)
+                            {
+                                clone = (ImportClone) freader.getClones().get(primary_key_connector_object.getId());
+                                if (clone != null)clone.addPublication(publication);
+                            }
+                           }
+                     }
+                
+            }
+        //     System.out.println("a");
+    }
     
     private void           assignAuthorInformation(DataFileReader freader)
     {
@@ -667,7 +720,7 @@ public String getTitle() {        return "Upload of information for third-party 
             
          }
        if ( !is_verified_seq_ids ) 
-           throw new Exception("Cannot define sequence for samples");
+           throw new Exception("Can not define sequence for sample");
    }
    
    // hash of MGC ids: key  - sequence id from database, element String[], where Str[0] - MGC ID,
@@ -771,7 +824,7 @@ public String getTitle() {        return "Upload of information for third-party 
            }
            catch(Exception e)
            {
-               m_error_messages.add("Cannot get  set parser feuture "+e.getMessage());
+               m_error_messages.add("Can not parse  file "+e.getMessage());
            }
          
            
@@ -801,7 +854,7 @@ public String getTitle() {        return "Upload of information for third-party 
                    }
                    catch(Exception e)
                    {
-                       m_error_messages.add("Cannot get  sequence from internet"+e.getMessage());
+                       m_error_messages.add("Can not get  sequence from NCBI "+e.getMessage());
                    }
                    
                }

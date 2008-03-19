@@ -245,19 +245,15 @@ public class FileMapParser extends DefaultHandler
           parser.setContentHandler(SAXHandler);
         parser.setErrorHandler(SAXHandler);
          String fn = "C:\\tmp\\ORF_submission_map.xml";
-      
+    fn= "Z:\\HTaycher\\HIP projects\\PSI\\submission\\submitted_plates\\NYSGXRC\\map\\NYSGXRC_old_PSIMapMFilesInfoFile.xml";
+     
         File f = new File(fn);
          f.exists();
  System.out.println(" file "+f.exists());   
           InputSource in = new InputSource(new FileInputStream(fn));
           String featureURI = "http://xml.org/sax/features/string-interning";
            parser.setFeature(featureURI, true);
-       //   parser.parse(in);
-        
-           //          file_structures = SAXHandler.getFileStructures();
-          // parser.parse("C:\\Projects\\FLEX\\flex\\docs\\mgc_submission_map.xml");
-       //  file_structures = SAXHandler.getFileStructures();
-        parser.parse("C:\\Projects\\FLEX\\flex\\docs\\PSI-submission_map.xml");
+          parser.parse(fn);
           file_structures = SAXHandler.getFileStructures();
      
   }

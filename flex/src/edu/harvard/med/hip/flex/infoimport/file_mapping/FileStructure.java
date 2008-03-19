@@ -59,8 +59,9 @@ public class FileStructure
     public static final int FILE_TYPE_INPUT_FOR_NAME_TABLE=9;
     public static final int FILE_TYPE_CLONING_STRATEGY = 10;
     public static final int FILE_TYPE_AUTHOR_CONNECTION = 11;
-     public static final int FILE_TYPE_PUBLICATION_CONNECTION = 12;
-      public static final int FILE_TYPE_PUBLICATION_INFO = 13;
+      public static final int FILE_TYPE_PUBLICATION_INFO = 12;
+       public static final int FILE_TYPE_PUBLICATION_CONNECTION = 13;
+    
       public static   final   int FILE_TYPE_REFERENCE_SEQUENCE_INFO=     14;
   
     // used internaly , file of this type cannot be submitted

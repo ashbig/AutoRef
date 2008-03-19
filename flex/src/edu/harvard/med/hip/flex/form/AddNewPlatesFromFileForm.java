@@ -58,7 +58,9 @@ public class AddNewPlatesFromFileForm    extends AddItemsForm
    private FormFile inputGene= null;
    private FormFile inputAuthor= null;
    private FormFile inputAuthorConnection = null;
-  
+    private FormFile inputPublication= null;
+   private FormFile inputPublicationConnection = null;
+ 
    private String       researcherBarcode = null;
    private int          submissionType = OutsidePlatesImporter.SUBMISSION_TYPE_NOTE_KNOWN;
    
@@ -92,6 +94,8 @@ public class AddNewPlatesFromFileForm    extends AddItemsForm
     public FormFile 		getInputGene(){ return inputGene   ;}
     public FormFile 		getInputAuthor(){ return inputAuthor   ;}
     public FormFile 		getInputAuthorConnection(){ return inputAuthorConnection;}
+    public FormFile 		getInputPublication(){ return inputPublication;}
+    public FormFile 		getInputPublicationConnection (){ return inputPublicationConnection;}
  
 
     public void             setIsPutOnQueue(boolean v){   isPutOnQueue    = v;}
@@ -107,7 +111,9 @@ public class AddNewPlatesFromFileForm    extends AddItemsForm
     public void 		setInputAuthor(FormFile v){   inputAuthor   = v;}
     public void 		setInputAuthorConnection(FormFile v){  inputAuthorConnection = v;}
      public void                 setSubmissionType(int v){  submissionType = v;}
-   
+   public void                     setInputPublication(FormFile v){  inputPublication =v;}
+    public void 		setInputPublicationConnection (FormFile v){  inputPublicationConnection =v;}
+ 
     
     public void         setWorkflowname(String name)    {        m_workflowname = name;    }
     public String       getWorkflowname()    {        return m_workflowname;    }

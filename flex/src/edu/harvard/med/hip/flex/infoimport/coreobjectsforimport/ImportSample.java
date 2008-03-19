@@ -561,6 +561,7 @@ PreparedStatement stmt_updateSequenceTable = conn.prepareStatement(sql_updateSeq
                  PublicInfoItem.insertPublicInfo(  conn, "cloneNAME", 
                   clone.getPublicInfo(), clone.getId(), "CLONEID",                true, new ArrayList()) ;
                  clone.insertAuthor(conn);
+                 clone.insertPublications(conn);
             }
         }
         catch(Exception e)

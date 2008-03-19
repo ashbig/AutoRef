@@ -36,6 +36,8 @@ public class DataFileReader
      private HashMap         m_containers = null; // by label
     private HashMap          m_flex_sequences = null; // by id 
     private HashMap          m_authors = null; // by id 
+    private HashMap          m_publications = null; // by id 
+  
     private HashMap          m_clones = null; // by id 
      private HashMap         m_containers_additional_info = null; // by label
  //   private HashMap         m_flex_sequences_additional_info = null; // by id 
@@ -62,6 +64,8 @@ public class DataFileReader
    
     public ArrayList        getArrayOfObjects(){ return m_some_data;}
     public HashMap          getAuthors(){ return m_authors;}
+     public HashMap          getPublications(){ return m_publications;}
+   
     public void            resetAdditionalInfo(){  m_additional_info = new HashMap();}
   
     
@@ -156,7 +160,7 @@ public class DataFileReader
         catch(Exception e)
         {
             in.close();reader.close();
-            throw new Exception("Cannot read file " +file_type +" line "+line);
+            throw new Exception("Can not read file " +file_type +" line "+line);
         }
  
     
@@ -231,6 +235,15 @@ public class DataFileReader
           { setAuthorProperties(records_out); break;}
              case FileStructure.FILE_TYPE_AUTHOR_CONNECTION:
           {setOneToManyConnector( records_out,m_additional_info); break;}
+           case FileStructure.FILE_TYPE_PUBLICATION_INFO:
+          { setPublicationProperties(records_out); break;}
+           
+           case FileStructure.FILE_TYPE_PUBLICATION_CONNECTION:
+          {
+              setOneToManyConnector( records_out,m_additional_info);
+              break;
+           }
+      
           case FileStructure.FILE_TYPE_REFERENCE_SEQUENCE_INFO:
           { setFlexSequenceProperties(   records_out); break;}
        
@@ -404,7 +417,7 @@ public class DataFileReader
      }
      catch(Exception e)
      {
-         throw new Exception("Cannot read sequence "+ records_out);
+         throw new Exception("Can not read sequence "+ records_out);
      }
    }
    
@@ -983,7 +996,7 @@ public class DataFileReader
           if ( isCheckSequenceTotalNumberCodons &&  (row_sequence.getCDSStop() - row_sequence.getCDSStart() + 1) % 3 != 0)
               throw new Exception ("Wrong sequence text ");
           if (sequence_id == null) 
-              throw new Exception ("Cannot id sequence ");
+              throw new Exception ("Can not get sequence id. ");
         
           m_flex_sequences.put( sequence_id, row_sequence);
       return sequence_id;
@@ -1037,10 +1050,44 @@ public class DataFileReader
           }
  
        }
-       m_authors.put(key, row_author);
+       if ( row_author != null ) m_authors.put(key, row_author);
        return row_author;
      }
      
+  
+    private  ImportPublication    setPublicationProperties(ColumnValue[] records_of_row )
+    throws Exception
+  {
+      ImportPublication row_publication = null; String key = null;
+      String temp_object_type = null;String temp_property_name = null;
+      String temp_column_value = null;
+      if ( m_publications == null) m_publications = new HashMap();
+      
+      for ( int count = 0; count < records_of_row.length; count++)
+     {
+          if ( records_of_row[count].isEmptyField()) continue;
+          temp_object_type = records_of_row[count].getObjectType() ;
+          temp_property_name = records_of_row[count].getObjectProperty();
+          temp_column_value = records_of_row[count].getColumnValue().trim();
+          if (row_publication == null ) row_publication = new ImportPublication( );
+          if ( temp_object_type.intern() == FileStructureColumn.OBJECT_TYPE_PUBLICATION)
+          {
+             if (temp_property_name.intern() == ImportPublication.PUBLICATION_TITLE )
+              {  
+                 row_publication.setTitle(temp_column_value);           
+             }
+             else if (temp_property_name.intern() == ImportPublication.PUBLICATION_PBMEDID )
+              { 
+                 key = temp_column_value; row_publication.setPubMedID(temp_column_value); 
+             }
+          }
+ 
+       }
+       m_publications.put(key, row_publication);
+       return row_publication;
+     }
+    
+    
      private  void              setOneToManyConnector( ColumnValue[] records_of_row, 
           HashMap hash_info     )
         throws Exception

@@ -278,6 +278,19 @@
                     <td><html:file property="inputAuthorConnection" /></td><td>
                     [<a target="_blank"   href="/FLEX/<bean:message key="add.author.connector.sample.jsp"/>">sample file</a>]</td>
                 </tr>
+                 <tr>    <td class="prompt" colspan=2>&nbsp;</td></tr>
+          
+                <tr>    <td class="prompt" colspan=2>Upload publication information:</td></tr>
+               <tr>
+                    <td class="prompt">Publication information file:</td>
+                    <td><html:file property="inputPublication" /></td><td>
+                    [<a target="_blank"   href="/FLEX/<bean:message key="add.publication.sample.jsp"/>">sample file</a>]</td>
+                </tr>
+                  <tr>
+                    <td class="prompt">Publication to clone connection file:</td>
+                    <td><html:file property="inputPublicationConnection" /></td><td>
+                    [<a target="_blank"   href="/FLEX/<bean:message key="add.publication.connector.sample.jsp"/>">sample file</a>]</td>
+                </tr>
                   <%}%>
           <!-- <//logic:equal>  -->   
 </table></td></tr>

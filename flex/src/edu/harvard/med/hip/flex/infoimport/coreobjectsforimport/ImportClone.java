@@ -50,7 +50,9 @@ public static final String      CLONE_STATUS_FAILED_BY_SEQUENCE_VALIDATION ="FAI
   
     private ArrayList   m_additional_info = null;
     private ArrayList   m_authors = null;
+    private ArrayList   m_publications = null;
    
+    
     private String         m_sequence_text = null;
     private String             i_clone_type = CloneSample.MASTER;
     private String              i_clone_status = CLONE_STATUS_IN_PROCESS;
@@ -74,6 +76,7 @@ public static final String      CLONE_STATUS_FAILED_BY_SEQUENCE_VALIDATION ="FAI
     public String       getStatus(   ){  return     i_clone_status ;}
     public ArrayList    getPublicInfo() { return m_additional_info;}
     public ArrayList    getAuthors(){ return m_authors;}
+    public ArrayList    getPublications(){ return m_publications;}
     public String       getVectorName(){ return   i_vector_name ;}
     public String       get5LinkerName(){  return     i_5_linker_name ;}
     public String       get3LinkerName(){ return      i_3_linker_name ;}
@@ -93,6 +96,8 @@ public static final String      CLONE_STATUS_FAILED_BY_SEQUENCE_VALIDATION ="FAI
     public void         setType( String v  ){      i_clone_type  = v;}
     public void         setStatus( String v  ){       i_clone_status  = v;}
     public void         addAuthor(ImportAuthor v){ if(m_authors==null) m_authors= new ArrayList(); m_authors.add(v);}
+    public void         addPublication(ImportPublication v){ if(m_publications==null) m_publications= new ArrayList(); m_publications.add(v);}
+   
     public void         addPublicInfoItems(ArrayList v)
     {
         PublicInfoItem p_info = null;
@@ -204,10 +209,29 @@ public static final String      CLONE_STATUS_FAILED_BY_SEQUENCE_VALIDATION ="FAI
                 for (int count = 0; count < m_authors.size(); count++)
                 {
                     author = (ImportAuthor) m_authors.get(count);
+                    if ( author == null) continue;
                     if ( author.getId() == -1) author.insert(conn);
                     // insert connector
                      sql = 	"insert into CLONEAUTHOR  (CLONEID  ,AUTHORID ,AUTHORTYPE) "+
                       " values ("+m_id+","+author.getId()+",'"+author.getType() +"')";
+                      DatabaseTransaction.executeUpdate(sql,conn);
+                }
+            }
+      }
+      
+      public void       insertPublications(Connection conn) throws Exception
+      {
+            ImportPublication publication = null;
+            String sql = null;
+            if ( m_publications != null && m_publications.size() > 0)
+            {
+                for (int count = 0; count < m_publications.size(); count++)
+                {
+                    publication = (ImportPublication) m_publications.get(count);
+                    if ( publication.getId() == -1) publication.insert(conn);
+                    // insert connector
+                     sql = 	"insert into CLONEpublication  (CLONEID  ,publicationid) "+
+                      " values ("+m_id+","+publication.getId() +")";
                       DatabaseTransaction.executeUpdate(sql,conn);
                 }
             }
