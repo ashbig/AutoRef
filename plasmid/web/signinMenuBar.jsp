@@ -25,7 +25,7 @@
   <tr>
     <td width="64%" align="center" valign="top" class="homepageLink"><a href="http://dnaseq.med.harvard.edu" target="_blank">DF/HCC 
       DNA Resource Core</a></td>
-    <td height="26" valign="baseline" class="countrytext">&nbsp;</td>
+    <td>&nbsp;</td>
   </tr>
   <tr>
     <td colspan="3">&nbsp;</td>
