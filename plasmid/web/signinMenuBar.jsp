@@ -36,9 +36,4 @@
     </logic:notPresent> 
       | <a target="_blank" href="FAQ.jsp" class="countrytext">FAQ</a></td>
   </tr>
-  <tr>
-    <td width="64%" align="center" valign="top" class="homepageLink"><a href="http://www.nigms.nih.gov/Initiatives/PSI/" target="_blank">Protein Structure Initiative
-      - Materials Repository (PSI-MR)</a></td>
-    <td height="26" valign="baseline" class="countrytext"> &nbsp;</td>
-  </tr>
 </table>
