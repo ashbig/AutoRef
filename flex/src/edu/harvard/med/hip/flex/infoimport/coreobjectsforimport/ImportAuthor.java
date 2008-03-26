@@ -47,7 +47,7 @@ public class ImportAuthor
      private String          m_www = null;
      private String          m_description = null;
      private String         m_name  = null;
-     private String         m_type = null;
+     private String         m_type = "Academic Institute";
     /** Creates a new instance of ImportAuthor */
     public ImportAuthor() {
     }
