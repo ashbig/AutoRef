@@ -57,16 +57,16 @@
     </td>
   </tr>
   <tr>
-    <td width="50%" align="left" valign="top"><span class="alert">&nbsp;<!--Please register 
-      and sign in.<br>
-      Sign-in status affects what you can view and request.<br><br>--></span>
-    <span class="text">Click <a href="cloning_strategies.htm" target="_blank">here</a> to view the cloning methods used for the plasmids in the repository
-    </span></td>
+    <td width="50%" align="left" valign="top">
+        <img src="credit_card_promo.jpg"/>
+    </td>
     <td height="75">
     <p class="homepageLink">
     PlasmID is a central repository for plasmid clone collection and distribution.<br>
     To view the collection, please go to "Plasmid Request". <br>
     Registration is not required to view the collection.
+    </p>
+    <p class="text">Click <a href="cloning_strategies.htm" target="_blank">here</a> to view the cloning methods used for the plasmids in the repository
     </p>
         <!--<html:form action="Logon.do"><table bgcolor="#CCCCCC" width="350" border="0">
         <tr> 

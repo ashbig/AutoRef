@@ -151,8 +151,8 @@
 <table>
 <tr>
 <td width="30%" class="formlabel">Please choose payment method:</td>
+<td width="30%" class="text"><html:radio property="paymentmethod" value="<%=Constants.PAYPAL%>"/><img src="credit_card.jpg"/></td>
 <td width="30%" class="text"><html:radio property="paymentmethod" value="<%=Constants.PO%>"/><%=Constants.PO%></td>
-<td width="30%" class="text"><html:radio property="paymentmethod" value="<%=Constants.PAYPAL%>"/><%=Constants.PAYPAL%></td>
 <td></td>
 </tr>
 <tr>
