@@ -40,7 +40,12 @@ public abstract class Verifier
     
     public static int defineColumnNumber(String line, String header)
     {
-        String[] items = line.split("\t");
+        String[] items = null;
+        if ( line.contains(":"))items = line.split(":");
+        else items = line.split("\t");
+        
+        if ( items.length == 1) items =  line.split("\t");
+        header = header.trim();
         for (int count = 0; count <   items.length; count++)
         {
             if ( items[count].equalsIgnoreCase(header)) return  count;
@@ -53,7 +58,7 @@ public abstract class Verifier
             String column_header,  String header, String[] field_voc,
              boolean isCaseSensitive, ArrayList<String> er_messages)
     {
-        int column_number =  defineColumnNumber(column_header,  header);
+        int column_number =  defineColumnNumber(header, column_header);
         return verifyVocabularyField(records,  column_number,  field_voc ,isCaseSensitive, er_messages);
     }
     
@@ -65,6 +70,9 @@ public abstract class Verifier
          boolean result = true;
          for( String[] record : records )
          {
+             if ( column_number >= record.length)
+             {  er_messages.add("Cannot verify " + record.toString()); continue;}
+     
              field_value = record[column_number];
              isFieldVerified = false;
              for ( String v_value : field_voc )

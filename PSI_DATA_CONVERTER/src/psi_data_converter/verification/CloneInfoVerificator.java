@@ -21,22 +21,26 @@ import psi_data_converter.util.*;
  */
 public class CloneInfoVerificator extends Verifier
 {
-    public HashMap pr_soluble_values;
+  /*  public HashMap pr_soluble_values;
     public HashMap pr_expressed_values ;
     public HashMap pr_purified_values ;
     {
-         SubmissionProperties subprop = SubmissionProperties.getInstance();
+          SubmissionProperties subprop = SubmissionProperties.getInstance();
          String tmp =  subprop.getProperty("PR_EXPRESSED") ;
-         String[] record = tmp.split("\t");
-         for ( String item: record){ pr_expressed_values.put(item, item);}
+         String[] record = tmp.split(":");
+          pr_expressed_values= new HashMap(record.length);
+     
+         for ( String item: record)         { pr_expressed_values.put(item, item);}
          
-         tmp =  subprop.getProperty("PR_SOLUBLE") ;record = tmp.split("\t");
+         tmp =  subprop.getProperty("PR_SOLUBLE") ;record = tmp.split(":");
+         pr_soluble_values= new HashMap(record.length);
          for ( String item: record){ pr_soluble_values.put(item, item);}
          
-         tmp =  subprop.getProperty("PR_PURIFIED") ;record = tmp.split("\t");
+         tmp =  subprop.getProperty("PR_PURIFIED") ;record = tmp.split(":");
+         pr_purified_values= new HashMap(record.length);
          for ( String item: record){ pr_purified_values.put(item, item);}
        
-    }
+    }*/
     
     
     /** Creates a new instance of CloneInfoVerificator */
@@ -54,7 +58,8 @@ public class CloneInfoVerificator extends Verifier
         int cds_start_column_num = defineColumnNumber(file_header, cds_start_header);
         int     cds_stop_column_num = defineColumnNumber(file_header, cds_stop_header);
         int     clone_id = defineColumnNumber(file_header, cloneid);
-         if (cds_start_column_num < 0 || cds_stop_column_num < 0 || clone_id < 0 )
+         if (cds_start_column_num < 0 || cds_stop_column_num < 0 || clone_id < 0 
+                )
         {
             er_messages.add("Cannot define cds stop/start column number "+m_file_name);
             return ;
@@ -73,6 +78,11 @@ public class CloneInfoVerificator extends Verifier
         int cds_stop; int cds_start; 
         for ( String[] items: records)
         {
+            if (cds_start_column_num > items.length-1 || cds_stop_column_num > items.length-1                )
+            {
+                er_messages.add("Clone information was not properly read "+m_file_name);
+                return ;
+            }
             cds_stop = Integer.parseInt(items[cds_stop_column_num]);
             cds_start = Integer.parseInt(items[cds_start_column_num]);
             if ( (cds_stop - cds_start) % 3 != 2 )

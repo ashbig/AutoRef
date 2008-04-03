@@ -30,13 +30,13 @@ public class PlateMapperVerifier  extends Verifier
         try
         {
             input = new BufferedWriter(new FileWriter(file_name));
-            input.write(header);
+            if ( header != null) input.write(header+"\n");
             for ( String clone_id : clone_ids.keySet())  
             {
-                input.write( clone_id +"\t" + psi_site_description.get(clone_ids.get(clone_id)));
+                input.write( clone_id +"\t" + psi_site_description.get(clone_ids.get(clone_id))+"\n");
                 for( String author: additional_authors)
                 {
-                    input.write(clone_id +"\t" + author );
+                    input.write(clone_id +"\t" + author +"\n");
                 }
             }
             input.flush();

@@ -31,6 +31,7 @@ public class FileManager {
         String line ; String file_header = null;
         try
         {
+            new_file_header= new_file_header.replaceAll(":","\t");
             File cur_dir = new File(outputdir);
             NameTypeFileFilter ffilter = new NameTypeFileFilter(file_name_type);
             File[] cur_dir_files = cur_dir.listFiles(ffilter);
@@ -80,6 +81,64 @@ public class FileManager {
         }
     }
     
+    
+    
+    
+     public static String             concatenateFiles(ArrayList er_messages,
+            ArrayList<String> file_names,
+            boolean isDeleteOriginal) throws Exception
+    {
+        BufferedReader output = null;BufferedWriter input = null;
+        String line ;  String cur_appending_file_name ="" ;
+        
+            if ( file_names == null || file_names.size() ==0) return "";
+            if ( file_names.size() == 1) return file_names.get(0);
+            
+        try
+        {
+            input = new BufferedWriter(new FileWriter(file_names.get(0), true));
+        }
+        catch(Exception e)
+        {           
+            er_messages.add ("Cannot open file " +  file_names.get(0) + e.getMessage());  
+            return "";
+        }  
+        try
+        {
+            file_names.remove(0);
+            for ( String cur_file_name : file_names)
+            {
+                cur_appending_file_name = cur_file_name;
+                output = new BufferedReader(new FileReader(cur_file_name));
+                while ( (line = output.readLine() ) != null)
+                {
+                   input.write(line); input.write("\n");//System.getProperty("line.separator"));
+                }
+                input.flush();
+                output.close();
+                if ( isDeleteOriginal )
+                {
+                    File cfile = new File(cur_file_name);cfile.delete();
+                }
+            }
+        }
+        catch(Exception e)
+        {
+            er_messages.add ("Cannot concatenate file " +  cur_appending_file_name + e.getMessage());
+        }
+        finally
+        {
+            if (input!= null)input.close();
+            if (output != null) output.close();    
+        }
+       
+        return file_names.get(0);
+        
+        
+    }
+    
+     
+     
      public static void createCloneAuthorFile(String authorfile_name, String location_fn, 
              String cloneauthor_fn, String fheader) throws Exception
     {
