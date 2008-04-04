@@ -143,6 +143,9 @@
     <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.BANUMBER%>">
     <td class="tableinfo"><bean:write name="insert" property="geneid"/></td>
     </logic:equal>
+    <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.LOCUS_TAG%>">
+    <td class="tableinfo"><a target="_blank" href="http://www.ncbi.nlm.nih.gov/sites/entrez?db=gene&cmd=&term=<bean:write name="insert" property="geneid"/>&go=Go"><bean:write name="insert" property="geneid"/></a></td>
+   </logic:equal>
     <td class="tableinfo"><bean:write name="insert" property="name"/></td>
     <td class="tableinfo"><bean:write name="insert" property="description"/></td>
     <td class="tableinfo"><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=nucleotide&val=<bean:write name="insert" property="targetseqidForNCBI"/>"><bean:write name="insert" property="targetgenbank"/></a></td>

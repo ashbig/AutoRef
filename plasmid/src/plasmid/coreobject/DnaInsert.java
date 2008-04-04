@@ -34,7 +34,8 @@ public class DnaInsert {
     public static final String VC1 = "Vibrio cholerae (unspecified strain)";
     public static final String BA = "Bacillus anthracis str. Ames";
     public static final String ARABIDOPSIS = "Arabidopsis thaliana Columbia";
-
+    public static final String TM = "Thermotoga maritima";
+    
     private int insertid;
     private int order;
     private int size;
@@ -169,6 +170,8 @@ public class DnaInsert {
             return RefseqNameType.BANUMBER;
         if(ARABIDOPSIS.equals(species)) 
             return RefseqNameType.TAIR;
+        if(TM.equals(species))
+            return RefseqNameType.LOCUS_TAG;
         if(RefseqNameType.GENEID != null)
             return RefseqNameType.GENEID;
         return "";

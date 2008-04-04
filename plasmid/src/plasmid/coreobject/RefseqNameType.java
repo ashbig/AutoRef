@@ -28,6 +28,7 @@ public class RefseqNameType {
     public static final String WBGENEID = "WB Gene ID";
     public static final String BANUMBER = "Locus Tag (BA number)";
     public static final String TAIR = "TAIR ID";
+    public static final String LOCUS_TAG = "Locus Tag";
     
     private String species;
     private String refseqtype;

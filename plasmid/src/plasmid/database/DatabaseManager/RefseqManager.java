@@ -43,7 +43,7 @@ public class RefseqManager extends TableManager {
                 stmt.setInt(5, c.getCdsstart());
                 stmt.setInt(6, c.getCdsstop());
                 stmt.setString(7, c.getSpecies());
-                
+                //System.out.println(c.getRefseqid()+"\t"+c.getDescription()+"\t"+c.getSpecies());
                 DatabaseTransaction.executeUpdate(stmt);
             }
             DatabaseTransaction.closeStatement(stmt);

@@ -154,6 +154,9 @@
     <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.TAIR%>">
     <td><a target="_blank" href="http://arabidopsis.org/servlets/TairObject?type=locus&name=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
    </logic:equal>
+    <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.LOCUS_TAG%>">
+    <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/sites/entrez?db=gene&cmd=&term=<bean:write name="insert" property="geneid"/>&go=Go"><bean:write name="insert" property="geneid"/></a></td>
+   </logic:equal>
     <td><bean:write name="insert" property="name"/></td>
     <td><bean:write name="insert" property="annotation"/></td>
     <td><bean:write name="insert" property="description"/></td>
@@ -239,6 +242,9 @@
     <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.BANUMBER%>">
     <td><bean:write name="insert" property="geneid"/></td>
     </logic:equal>
+    <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.LOCUS_TAG%>">
+    <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/sites/entrez?db=gene&cmd=&term=<bean:write name="insert" property="geneid"/>&go=Go"><bean:write name="insert" property="geneid"/></a></td>
+   </logic:equal>
     <td><bean:write name="insert" property="name"/></td>
     <td><bean:write name="insert" property="annotation"/></td>  
     <td><bean:write name="insert" property="description"/></td>
