@@ -23,6 +23,15 @@
     <td width="83%" align="left" valign="top">
 	<jsp:include page="checkoutTitle.jsp" />
 
+<p class="mainbodytexthead">
+    <b>Pay Using a Credit Card </b>
+</p>
+<p class="mainbodytexthead">
+You DO NOT need to create a PayPal account to pay by credit card: see the bottom right-hand side of the PayPal page for a link to pay by credit card WITHOUT signing in or registering.
+</p> 
+<p class="mainbodytexthead">
+Click the button to pay by credit card through the PayPal site. You will be returned to PlasmID to complete your request. 
+</p>
 <p class="text">Please confirm the following information (use back button to make changes):</P>
 <html:errors/>
 <table width="100%" border="0">

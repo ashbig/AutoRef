@@ -154,7 +154,7 @@ public class CheckoutConfirmAction extends UserAction {
             return (mapping.findForward("error"));
         }
         ((CheckoutForm)form).setOrderid(orderid);
-        ((CheckoutForm)form).setPaymentmethod(Constants.PO);
+        ((CheckoutForm)form).setPaymentmethod(Constants.PAYPAL);
           
         String accountNumber = ((CheckoutForm)form).getAccountNumber(); 
         double shippingCost = ((CheckoutForm)form).getCostForShipping();  

@@ -25,14 +25,23 @@
 
 <html:errors/>
 
-<p class="text"><i>
-There are two options for covering the cost of shipment.  (1) Include a FedEx account number at check-out. (2) If you don't provide a FedEx account number, we will add a standard shipping charge at check-out ($10.00 for domestic; $15.00 for international).<br>
-
-There are two options for paying for your request.  (1) Include a purchase order (PO) number at check-out.  (2) During check-out, use a credit card through PayPal (you do not need to register with PayPal to use a credit card).<br>
-
-You can save your cart and return to check-out another time (remember to sign in to see your saved cart).
-If you have any questions, please contact <a href="mailto:plasmidhelp@hms.harvard.edu">PlasmID help</a>.
-</i></p>
+<p class="mainbodytexthead">
+              Shipping Options:
+              <ol class="mainbodytexthead">
+                  <li>Include a FedEx account number at check-out and we will charge your account.</li>
+                  <li>If you don't provide a FedEx account number, we will apply a standard shipping charge at check-out.</li>
+                  <ul>  
+                      <li>$10.00 for domestic orders</li>
+                      <li>$15.00 for international orders</li>
+                  </ul>
+              </ol>
+</p>
+<p class="mainbodytexthead">
+          <i>If you do not want to complete your order now, you can save your cart and return to check-out another time (remember to sign in to see your saved cart).</i>
+</p>
+<p class="mainbodytexthead">
+              If you have any questions, please contact <a href="mailto:plasmidhelp@hms.harvard.edu">PlasmID help</a>.   
+</p>
 
 <html:form action="EnterAddress.do">
 
