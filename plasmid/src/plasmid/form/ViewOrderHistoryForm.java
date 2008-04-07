@@ -34,7 +34,8 @@ public class ViewOrderHistoryForm extends ActionForm {
      * @param request The servlet request we are processing
      */
     public void reset(ActionMapping mapping, HttpServletRequest request) {
-        status = CloneOrder.ALL;
+       // status = CloneOrder.ALL;
+        status = CloneOrder.PENDING;
     } 
         
     /**
