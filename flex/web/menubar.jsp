@@ -8,7 +8,7 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 
-<% User user = (User)session.getAttribute(Constants.USER_KEY);
+<!--< % User user = (User)session.getAttribute(Constants.USER_KEY);
 int user_level = 0;
 int CUSTOMER = 0;
 int COLLABORATOR = 1;
@@ -22,7 +22,8 @@ else if (user.getUserGroup().equals("Workflow Admin")) user_level = WADMIN;
 else if (user.getUserGroup().equals("System Admin")) user_level = SADMIN;
 
 
-%>
+%>-->
+<%@ include file="define_user_access_level.jsp" %>
 <html>
 <head>
     <LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
@@ -222,92 +223,16 @@ else if (user.getUserGroup().equals("System Admin")) user_level = SADMIN;
                 
                 
 <% if (user_level >= RESEARCHER){%>    
-            	<tr><td>&nbsp;</tr></td>
-                <TR><TD><B>MGC Project</b>
-                <table  border="0">
-            
-  <% if (user_level >= WADMIN){%>    
-<td width="10%"> &nbsp;</td>     <td class="label">
-              <small>
-            <a href="/FLEX/AddNewPlatesFromFile.do?forwardName=1" target="display">Import MGC Master List</a>
-            </small>
-        </td>
-   </tr><%}%>
-  <% if (user_level >= WADMIN){%>    
-<td width="10%"> &nbsp;</td>     <td class="label">
-        <small>
-        <a href="/FLEX/GetProjects.do?forwardName=MGC_REQUEST_IMPORT" target="display">Import MGC Request</a>
-        </small>
-    </td>
-</tr><%}%>
-  <% if (user_level >= RESEARCHER){%>    
-<td width="10%"> &nbsp;</td>     <td class="label">
-        <small>
-        <a href="/FLEX/GetProjects.do?forwardName=MGC_PLATE_HANDLE" target="display">MGC Plate Handle</a>
-        </small>
-    </td>
-</tr><%}%>
- <!-- <% if (user_level >= RESEARCHER){%>    
-<td width="10%"> &nbsp;</td>     <td class="label">
-            <small>
-            <a href="/FLEX/MgcPBSelectFile.jsp" target="display">Print New MGC Plates</a>
-            </small>
-        </td>
-   </tr><%}%>-->
-           
-
-                </table><%}%>
-                </td></tr>
-   <% if (user_level >= WADMIN){%>    
-	<tr><td>&nbsp;</tr></td>
-                <TR><TD><B> <a href="/FLEX/AddItems.jsp" target="display">Add</a></b>        </td>
-   </tr><%}%>               
+<TR><TD class="label"> <a href="/FLEX/menu_MGCProject.jsp" target="display">MGC Project</a></td>   </tr><%}%>
+                
+<% if (user_level >= WADMIN){%>    
+<TR><TD class="label"> <a href="/FLEX/AddItems.jsp" target="display">Add</a></td></tr><%}%>               
               
- <% if (user_level >= CUSTOMER){%>    
-           	<tr><td>&nbsp;</tr></td>
-                <TR><TD><B>Query</b>
-                <table  border="0">
-            
-   <% if (user_level >= COLLABORATOR){%>    
-<td width="10%"> &nbsp;</td>     <td class="label">
+ <% if (user_level >= CUSTOMER){%>
+ <TR><TD class="label"> <a href="/FLEX/menu_Query.jsp" target="display">Query</a></td></tr><%}%>               
+<% if (user_level == CUSTOMER){%>    
+ <tr><td class="label"><small><a href="/FLEX/Help.jsp" target="display">Help</a>          </small>
 
-       <small>
-        <a href="/FLEX/SequenceQueryEntry.jsp" target="display">Query FLEXGene</a>
-        </small>
-    </td>
-</tr><%}%>
-   <% if (user_level >= RESEARCHER){%>    
-<td width="10%"> &nbsp;</td>     <td class="label">
-            <small>
-            <a href="/FLEX/BrowseFlex.jsp" target="display">View Available Clones</a>
-            </small>
-        </td>
-   </tr><%}%>
-   <% if (user_level >= RESEARCHER){%>    
-<td width="10%"> &nbsp;</td>     <td class="label">
-            <small>
-            <a href="/FLEX/GetSearchTerms.do" target="display">Search FLEXGene</a>
-            </small>
-        </td>
-   </tr><%}%>
-    <% if (user_level >= CUSTOMER){%>    
-<td width="10%"> &nbsp;</td>     <td class="label">
-        <small>
-        <a href="/FLEX/GetAllSearchRecords.do" target="display">My Search History</a>
-        </small>
-    </td>
-</tr><%}%>
-           
-
-                </table><%}%>
-                </td></tr>
-                <tr><td>&nbsp;</tr></td>
-     <% if (user_level == CUSTOMER){%>    
-           <tr>
-                <td class="label">
-                    <small>
-                    <a href="/FLEX/Help.jsp" target="display">Help</a>
-                    </small>
                 </td>
             </tr><%}%>
 
