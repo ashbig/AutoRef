@@ -15,36 +15,41 @@
 <LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
 </head>
 <body>
+<%@ include file="define_user_access_level.jsp" %>
 
     <h2><bean:message key="flex.name"/> :  Add items</h2>
 <hr>
 <html:errors/>
 
 <p>
-<html:form action="/AddItems.do"  method="POST">
 <p><b>Please select one of the following:</b></p>
 
+    <p><div alighn="center"> <b>Add new items</b></div></p>
       
-    <dl>    <dd>    <html:radio property="forwardName" value="<%= String.valueOf(ConstantsImport.PROCESS_IMPORT_INTO_NAMESTABLE) %>">Add new Name Type(s)    </html:radio>
-    </dd>
-    <dd>
-    <html:radio property="forwardName" value="<%= String.valueOf(ConstantsImport.PROCESS_IMPORT_LINKERS) %>">Add new Linker(s)    </html:radio>    </dd>
-    <dd>    <html:radio property="forwardName" value="<%= String.valueOf(ConstantsImport.PROCESS_IMPORT_VECTORS) %>">Add new Vector(s)    </html:radio>    </dd>  
-    <dd>
-    <html:radio property="forwardName" value="<%= String.valueOf(ConstantsImport.PROCESS_IMPORT_CLONING_STRATEGIES) %>">Add new Cloning Strategy    </html:radio>   
-   <!-- <html:radio property="forwardName" value="<%= String.valueOf(ConstantsImport.PROCESS_IMPORT_OUTSIDE_CONTAINERS_INTO_FLEX) %>">     </html:radio>  --> 
+    <ul> 
+        <% if (user_level >=  SADMIN ){%> 
+        <li><a href="/FLEX/AddResearcher.jsp" target="display">Add New Researcher</a> </li><%}%>
+        <li><a href="/FLEX/AddItems.do?forwardName=<%= String.valueOf(ConstantsImport.PROCESS_IMPORT_INTO_NAMESTABLE) %>" >Add new Name Type(s)  </a> </li>
+        <li><a href="/FLEX/AddItems.do?forwardName=<%= String.valueOf(ConstantsImport.PROCESS_IMPORT_LINKERS) %>">Add new Linker(s)   </a> </li>
+        <li><a href="/FLEX/AddItems.do?forwardName=<%= String.valueOf(ConstantsImport.PROCESS_IMPORT_VECTORS) %>">Add new Vector(s)  </a> </li>
+        <li><a href="/FLEX/AddItems.do?forwardName=<%= String.valueOf(ConstantsImport.PROCESS_IMPORT_CLONING_STRATEGIES) %>">Add new Cloning Strategy    </a> </li>  
+         
+        <P></p>
+        <% if (user_level >= SADMIN){%> 
+        <li><a href="/FLEX/GetProjects.do?forwardName=IMPORT_SEQUENCES" target="display">Import Sequence Requests</a></li><%}%>
+        <% if (user_level >= WADMIN ){%> 
+        <li><a href="/FLEX/GetProjects.do?forwardName=APPROVE_SEQUENCES" target="display">Approve sequences</a></li><%}%>
+         <% if (user_level >= RESEARCHER){%>
+        <li><a href="/FLEX/CustomerRequest.do" target="display">Request Genes</a></li><%}%>
+        
+    </ul>
+   
+<p>
+     <p><div alighn="center"> <b>Change plate status</b></div></p>
+     <ul> 
+<li><a href="/FLEX/AddItems.do?forwardName=<%= String.valueOf(ConstantsImport.PROCESS_PUT_PLATES_FOR_SEQUENCING) %>">Notify FLEX what plates were sequenced    </a> </li>  
 
-</dd>
-    <p>
-    <dd>
-    <html:submit property="submit" value="Continue"/>
-    <html:reset/>
-    </dd>
-    </dl>
-  
-     
-
-</html:form>
+</ul>
 
 </body>
 </html:html>

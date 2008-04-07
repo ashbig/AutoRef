@@ -133,13 +133,19 @@ public class ContainerInfoExporter {
                 if(status)
                     out.print(sample.getStatus()+"\t");
                 
-                if(result) {
-                    try {
-                        Process process = Process.findProcess(executionid);
-                        Result res = Result.findResult(sample,process);
-                        out.print(res.getValue()+"\t");
-                    } catch (Exception ex) {
-                        out.print("\t");
+                if(result)
+                {
+                    //catch for MGC plates
+                    if ( executionid < 0) out.print("\t");
+                    else
+                    {
+                        try {
+                            Process process = Process.findProcess(executionid);
+                            Result res = Result.findResult(sample,process);
+                            out.print(res.getValue()+"\t");
+                        } catch (Exception ex) {
+                            out.print("\t");
+                        }
                     }
                 }
                 

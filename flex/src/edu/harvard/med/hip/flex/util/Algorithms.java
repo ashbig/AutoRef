@@ -299,7 +299,16 @@ public class Algorithms {
             return false;
         }
     }
-    
+      public static String      convertArrayToSQLString(ArrayList items)
+    {
+        StringBuffer sql_labels= new StringBuffer(); 
+        for (int count = 0; count < items.size(); count++)
+        {
+            sql_labels.append("'"+ (String) items.get(count)+"'");
+            if ( count != items.size() - 1 )                sql_labels.append(",");
+        }
+        return sql_labels.toString();
+    }
     
     
     //////////////////////////////////////////////////////////////////////
@@ -310,8 +319,9 @@ public class Algorithms {
         
         try {
             
-    int s = Algorithms.convertWellFromA8_12toInt("A01");
-     System.out.println(s);
+    //int s = Algorithms.convertWellFromA8_12toInt("A01");
+            Algorithms.splitString("\t\t", null);
+     System.exit(0);
     /*     PrintWriter output = new PrintWriter(new BufferedWriter(new FileWriter(outputFile)));
 
             BufferedReader in = new BufferedReader((new FileReader(inputFile)));

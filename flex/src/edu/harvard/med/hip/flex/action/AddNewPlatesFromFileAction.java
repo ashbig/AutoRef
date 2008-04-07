@@ -117,7 +117,6 @@ public class AddNewPlatesFromFileAction extends WorkflowAction
                 importer.setProtocolId(protocol_id);
               
                 int submission_type = requestForm.getSubmissionType();
-             System.out.println("Submission type "+submission_type);
                 importer.setNumberOfWellsInContainer( requestForm.getNumberOfWells());
                 importer.isCheckInFLEXDatabase(requestForm.getIsCheckTargetSequenceInFLEX());
                 importer.isFillInClonesTables(isFillInCLoneTables);

@@ -67,20 +67,25 @@ public class AddItemsAction extends WorkflowAction {
     ActionForm form,
     HttpServletRequest request,
     HttpServletResponse response)
-    throws ServletException, IOException {
+    throws ServletException, IOException
+    {
+             
         ActionErrors errors = new ActionErrors();
         AddItemsForm requestForm= ((AddItemsForm)form);
         int forwardName = requestForm.getForwardName();
         FormFile inputFile = ((AddItemsForm)form).getInputFile();
         User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
-       ItemsImporter imp = new ItemsImporter();
-       imp.setUser(user);
-          String map_name= null;                
+        ItemsImporter imp = new ItemsImporter();
+        imp.setUser(user);
+        String map_name= null;   
         try 
         {
              request.setAttribute("forwardName", String.valueOf(forwardName));
-             if ( forwardName > 0)
-                return (mapping.findForward("add_items"));
+           
+              if ( forwardName > 0)
+              {
+                  return (mapping.findForward("add_items"));
+              }
              else 
              {
                  ConstantsImport.fillInNames();
@@ -109,7 +114,7 @@ public class AddItemsAction extends WorkflowAction {
                          map_name= FlexProperties.getInstance().getProperty("flex.repository.basedir")+
                                  
                                  FlexProperties.getInstance().getProperty("ADD_LINKER_MAP");
-            imp.setDataFilesMappingSchema(map_name);
+                        imp.setDataFilesMappingSchema(map_name);
                          imp.setProcessType(ConstantsImport.PROCESS_IMPORT_LINKERS) ;
                          imp.setInputData(FileStructure.STR_FILE_TYPE_LINKER_INFO, inputFile.getInputStream());
                          imp.run();
@@ -127,6 +132,23 @@ public class AddItemsAction extends WorkflowAction {
                             imp.run();
                             return (mapping.findForward("confirm_add_items"));
                      }
+                    case -ConstantsImport.PROCESS_PUT_PLATES_FOR_SEQUENCING:
+                     {
+                         String seq_facility  = ((AddItemsForm)form).getFacilityName();
+                         String  container_labels = ((AddItemsForm)form).getPlateLabels();//get from form
+        
+                         
+                         ArrayList containers = Algorithms.splitString(container_labels.trim(), null);
+                         if (containers == null || containers.size() == 0 )
+                        {
+                           errors.add(ActionErrors.GLOBAL_ERROR,  new ActionError("error.container.querry.parameter", "Please enter plate labels"));
+                            saveErrors(request,errors);
+                            return new ActionForward(mapping.getInput());
+                        }
+                        String plate_names = putPlatesForSequencing(containers, seq_facility);
+                        request.setAttribute("plate_names", plate_names);
+                        return (mapping.findForward("confirm_add_items"));
+                     }
                    
                      default: return null;
                  }
@@ -141,7 +163,69 @@ public class AddItemsAction extends WorkflowAction {
         }
     }
     
+    private  String  putPlatesForSequencing(ArrayList container_labels, 
+            String sequencing_facility_name) throws Exception
+    {
+        ArrayList messages = new ArrayList();
+        String sql_plate_labels =edu.harvard.med.hip.flex.util.Algorithms.convertArrayToSQLString(container_labels);
+        
+        String sql_not_submitted_plates = 
+                "select  label from containerheader where containerid in"
++" (select distinct containerid from sample where sampleid in "
++" (select sequencingsampleid from clonesequencing where sequencingsampleid in" 
++" (select sampleid from sample where containerid in "
++" (select containerid from containerheader where  label in ( "+ sql_plate_labels + " )))))";
+
+
+        String sql_insert = "insert into clonesequencing select sequencingid.nextval, 'IN PROCESS', '"
+                +sequencing_facility_name +"', sysdate, null, sampleid, cloneid from sample where sampletype = 'ISOLATE'"
+                +" and containerid in (select containerid from containerheader where label in (";//+sql_labels +  "))";
+        
+        sun.jdbc.rowset.CachedRowSet crs = null;
+           ArrayList temp = new ArrayList();
+          
+        try 
+        {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            crs = t.executeQuery(sql_not_submitted_plates);
+            while(crs.next()) 
+            {
+                temp.add(crs.getString("label"));
+            }
+        } catch (SQLException sqlE) {
+            throw new FlexDatabaseException("Error occured while checking for previously submitted plates\n"+sql_not_submitted_plates);
+        } finally {
+            DatabaseTransaction.closeResultSet(crs);
+        }
+        
+        
+        // now get not processed plates
+        ArrayList not_processed_plates = new ArrayList();
+        for ( int count = 0; count < container_labels.size(); count++)
+        {
+            if ( !temp.contains( container_labels.get(count) ) )
+                not_processed_plates.add(container_labels.get(count));
+        }
+        if (not_processed_plates.size()==0)
+              return "All plates ("+sql_plate_labels+") have been processed before";
+   
+        sql_plate_labels =Algorithms.convertArrayToSQLString(not_processed_plates);
+        Connection conn = null; 
+        try
+        {
+            conn = DatabaseTransaction.getInstance().requestConnection();
+            sql_insert +=sql_plate_labels+  "))";
+            DatabaseTransaction.executeUpdate(sql_insert,conn);
+             return "FLEX is notified that plates \n"+ sql_plate_labels +" have been sequenced." ;
+        } catch (Exception sqlE) {
+            throw new FlexDatabaseException("Error occured while notifing FLEX that plates were sequenced\n"+sql_insert);
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
+        }
+    }
+     
     
+  
 }
 
 

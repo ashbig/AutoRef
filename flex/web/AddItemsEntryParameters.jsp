@@ -29,6 +29,9 @@
        <logic:equal  name="forwardName"  value="<%= String.valueOf(ConstantsImport.PROCESS_IMPORT_LINKERS) %>">
             <bean:message key="flex.name"/> : <bean:message key="add.linker.title"/> 
         </logic:equal>
+          <logic:equal  name="forwardName"  value="<%= String.valueOf(ConstantsImport.PROCESS_PUT_PLATES_FOR_SEQUENCING) %>">
+            <bean:message key="flex.name"/> : <bean:message key="put.plates.forsequencing.title"/> 
+        </logic:equal>
 </h2>
 
 <hr>
@@ -108,7 +111,22 @@
 </html:form>
 </logic:equal>
 
+  <logic:equal name="forwardName"  value="<%= String.valueOf(ConstantsImport.PROCESS_PUT_PLATES_FOR_SEQUENCING) %>">
+<!--add cloningstrategy -->
+<p><html:form action="/AddItems.do" enctype="multipart/form-data"> 
+<input type="hidden" name="forwardName"  value="<%= -ConstantsImport.PROCESS_PUT_PLATES_FOR_SEQUENCING%>" >   
+<table>
+    <tr>
+        <td class="prompt"><bean:message key="put.plates.forsequencing.prompt"/></td>
+        <td><textarea rows=10  name="plateLabels"></textarea></td>
 
+    </tr>
+    <tr><td  class="prompt">Please enter sequencing facility name</td><td><html:text  property="facilityName" size="50"/></td></tr>
+
+</table>
+    <div align="center"><html:submit/></div>
+</html:form>
+</logic:equal>
 
 <p>
 

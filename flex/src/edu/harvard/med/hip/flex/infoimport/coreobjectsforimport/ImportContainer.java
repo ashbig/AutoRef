@@ -171,6 +171,7 @@ public class ImportContainer
         }
         
         ImportSample sample = null;
+        Hashtable construct_ids = new Hashtable(); int construct_id = 0;
         //foreach sample, insert record into containercell and sample table
         for (int count = 0; count < m_samples.size(); count++)
         {
@@ -179,9 +180,18 @@ public class ImportContainer
                sample = (ImportSample) m_samples.get(count);
                if (  sample.getType().equals(Sample.ISOLATE))
                {
-                    ImportConstruct.insert(conn, projectid,  workflowid,
-                        sample.getConstructId(), Integer.parseInt( sample.getSequenceId()), 
-                        sample.getConstructType() , sample.getConstructSize() );
+                   if (construct_ids.get(sample.getSequenceId()+":"+sample.getConstructType()) != null)
+                   {
+                       construct_id =((Integer) construct_ids.get(sample.getSequenceId()+":"+sample.getConstructType())).intValue() ;
+                       sample.setConstructId( construct_id );
+                   }
+                   else
+                   {
+                        ImportConstruct.insert(conn, projectid,  workflowid,
+                            sample.getConstructId(), Integer.parseInt( sample.getSequenceId()), 
+                            sample.getConstructType() , sample.getConstructSize() );
+                         construct_ids.put(sample.getSequenceId()+":"+sample.getConstructType(), new Integer(sample.getConstructId()));
+                   }
                }
                sample.insert(conn, m_id, errors);
            }

@@ -165,7 +165,7 @@ public class ConstantsImport
         public static final int     PROCESS_IMPORT_LINKERS = 3;
         public static final int     PROCESS_IMPORT_INTO_NAMESTABLE = 4;
         public static final int     PROCESS_IMPORT_CLONING_STRATEGIES = 5;
-        
+        public static final int     PROCESS_PUT_PLATES_FOR_SEQUENCING = 6;
       
  
    //   submission item type

@@ -33,7 +33,8 @@ public class AddItemsForm extends ActionForm
     private int forwardName = ConstantsImport.PROCESS_IMPORT_INTO_NAMESTABLE;
     private FormFile inputFile = null;
     private FormFile inputFile1 = null;
-    
+    private String   plateLabels = null;
+    private String   facilityName = null;
    
     
     public int getForwardName() {
@@ -50,8 +51,12 @@ public class AddItemsForm extends ActionForm
     public void setInputFile1(FormFile v) {        this.inputFile1 = v;    }
     public FormFile getInputFile1() {        return inputFile1;    }
    
+     public void        setPlateLabels (String v){ plateLabels = v;}
+     public String      getPlateLabels (){ return  plateLabels ;}
     
-    
+      public void        setFacilityName (String v){ facilityName = v;}
+     public String      getFacilityName (){ return  facilityName ;}
+   
  
     /**
      * Validate the properties that have been set from this HTTP request,
@@ -67,12 +72,20 @@ public class AddItemsForm extends ActionForm
                                  HttpServletRequest request) {
 
         ActionErrors errors = new ActionErrors();
-        if ( forwardName < 0 )
+        if ( forwardName < 0 && forwardName != -ConstantsImport.PROCESS_PUT_PLATES_FOR_SEQUENCING)
         {
             if (inputFile.getFileName() == null || inputFile.getFileName().trim().length() < 1)
                 errors.add("mgcCloneFile", new ActionError("error.mgcCloneFile.required"));
         }
-       
+        else if ( forwardName == -ConstantsImport.PROCESS_PUT_PLATES_FOR_SEQUENCING)
+        {
+            if ( plateLabels == null || plateLabels.trim().length() < 1
+                    || facilityName == null || facilityName.trim().length() < 1)
+            {
+                errors.add("mgcCloneFile", new ActionError("error.empty.fields.putplatesforsequencing.wrong"));
+            }
+          }
+        if ( errors.size() > 0 ) forwardName = -forwardName;
         return errors;
     }        
     
