@@ -42,6 +42,7 @@ public class AdvancedSearchForm extends ActionForm {
     private String proteinExpress;
     private String proteinSoluble;
     private String proteinPurified;
+    private String psicenter;
     
     public String getGeneName() {return geneName;}
     public void setGeneName(String s) {this.geneName = s;}
@@ -163,5 +164,13 @@ public class AdvancedSearchForm extends ActionForm {
 
     public void setTargetidOp(String targetidOp) {
         this.targetidOp = targetidOp;
+    }
+
+    public String getPsicenter() {
+        return psicenter;
+    }
+
+    public void setPsicenter(String psicenter) {
+        this.psicenter = psicenter;
     }
 }
