@@ -13,25 +13,16 @@
 <html>
 <head>
     <style type="text/css">
-dt { font-weight: bold; font-size:small;}
-dd { font-weight: bold; font-size:small;}
-dl.margins-removed
-{
-margin: 0;
-padding: 0;
-}
+dt { font-weight: bold; font-size:small;text-indent: 0.5em;}
+dd { font-weight: bold; font-size:small;text-indent: -1em; text-align: left;white-space: nowrap}
 
-.margins-removed dt
-{
-margin: 0;
-padding: 0;
-}
-
-.margins-removed dd
-{
-margin: 0 0 1em 0;
-padding: 0;
-}
+ul {
+	list-style: none;
+	margin-left: 0;
+	padding-left: 1em;
+	text-indent: 1em;
+	}
+    
 </style>
     <LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
 </head>
@@ -72,7 +63,7 @@ padding: 0;
          <%}%>
      
  <% if (user_level >= RESEARCHER){%>    
- <dt> View</dt>
+ <dt>View</dt>
  <dd><a href="/FLEX/ContainerScan.jsp?forwardName=<%= Constants.VIEW_CONTAINER %>&amp;title=Container Details" target="display">Container Details</a></dd>
 <dd><a href="/FLEX/GetProjects.do?forwardName=<%= Constants.NEW_PLATE_LABELS%>" target="display">Print Submitted Plates</a></dd>
 <dd><a href="/FLEX/ViewItems.do?forwardName=<%= Constants.VIEW_LINKERS%>" target="display">Linker</a></dd>
@@ -88,7 +79,7 @@ padding: 0;
           
               
  <% if (user_level >= CUSTOMER){%>
- <dt> <a href="/FLEX/menu_Query.jsp" target="display">Query</a></dt><%}%>               
+ <dt><a href="/FLEX/menu_Query.jsp" target="display">Query</a></dt><%}%>               
 <% if (user_level == CUSTOMER){%>    
  <dt><a href="/FLEX/Help.jsp" target="display">Help</a>          </dt><%}%>
 
