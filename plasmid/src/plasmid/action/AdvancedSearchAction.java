@@ -321,25 +321,27 @@ public class AdvancedSearchAction extends Action {
                 }
             }
 
-            searchListAuthor = new ArrayList();
-            if (psicenter.equals(Constants.ALL)) {
-                searchListAuthor.add(Constants.PSI);
-            } else {
-                searchListAuthor.add(psicenter);
-            }
+            if (psicenter != null) {
+                searchListAuthor = new ArrayList();
+                if (psicenter.equals(Constants.ALL)) {
+                    searchListAuthor.add(Constants.PSI);
+                } else {
+                    searchListAuthor.add(psicenter);
+                }
 
-            handler = StaticQueryHandlerFactory.makeGeneQueryHandler(GeneQueryHandler.AUTHORTEXT, searchListAuthor);
+                handler = StaticQueryHandlerFactory.makeGeneQueryHandler(GeneQueryHandler.AUTHORTEXT, searchListAuthor);
 
-            if (handler == null) {
-                errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.query.notfound"));
-                saveErrors(request, errors);
-                return (mapping.findForward("error"));
-            }
+                if (handler == null) {
+                    errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.query.notfound"));
+                    saveErrors(request, errors);
+                    return (mapping.findForward("error"));
+                }
 
-            foundSet = manager.processAdvancedQuery(foundSet, handler, restrictions, species);
+                foundSet = manager.processAdvancedQuery(foundSet, handler, restrictions, species);
 
-            if (foundSet.size() == 0) {
-                return (mapping.findForward("empty"));
+                if (foundSet.size() == 0) {
+                    return (mapping.findForward("empty"));
+                }
             }
         } catch (Exception ex) {
             if (Constants.DEBUG) {
