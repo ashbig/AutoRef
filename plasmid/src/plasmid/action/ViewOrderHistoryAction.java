@@ -59,6 +59,11 @@ public class ViewOrderHistoryAction extends UserAction {
         User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
         String status = ((ViewOrderHistoryForm)form).getStatus();
         
+        if(user.getIsinternal().equals(User.INTERNAL)) {
+            status = CloneOrder.PENDING;
+        } else {
+            status = CloneOrder.ALL;
+        }
         if(CloneOrder.ALL.equals(status))
             status = null;
         
