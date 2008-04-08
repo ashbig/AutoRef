@@ -88,8 +88,13 @@ public class Importer {
     //public static final String filepath = "G:\\plasmid\\ArchivePlates\\";
     //public static final String filepath = "G:\\plasmid\\kerneyluna_for_import_Aug2007\\";
     //public static final String filepath = "G:\\plasmid\\ORFeome_HIP_Nov_2007\\";
-    public static final String filepath = "G:\\plasmid\\PSI_vector\\";
-   
+    //public static final String filepath = "G:\\plasmid\\PSI_vector\\";
+    //public static final String filepath = "G:\\plasmid\\PSI_200801\\";
+    //public static final String filepath = "G:\\plasmid\\ORFeome_Mar_2008\\";
+    //public static final String filepath = "G:\\plasmid\\PSI_200803\\";
+    //public static final String filepath = "G:\\plasmid\\donnelly_vector_mar_2008\\";
+    public static final String filepath = "G:\\plasmid\\PSI_200804\\";
+    
     private List tables;
     private String error;
     
@@ -289,6 +294,7 @@ public class Importer {
             }
         }
         
+                //DatabaseTransaction.rollback(conn);
         DatabaseTransaction.commit(conn);
         DatabaseTransaction.closeConnection(conn);
         return true;

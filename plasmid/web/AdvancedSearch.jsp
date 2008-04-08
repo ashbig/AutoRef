@@ -128,6 +128,8 @@
     </td>
     -->
   </tr>
+  
+  <logic:equal name="psi" value="1">
   <tr> 
     <td>&nbsp;</td>
     <td>&nbsp;</td>
@@ -227,6 +229,21 @@
     </td>
     -->
   </tr>
+  <tr>
+    <td colspan="2" class="formlabel">Plasmids provided by</td>
+    <td width="36%">
+        <html:select property="psicenter" styleClass="itemtext">
+          <html:options name="psicenters"/>
+        </html:select>
+    </td>
+    <!--
+    <td width="18%">
+          <html:radio property="pmidAndOr" value="and"/>
+          <html:radio property="pmidAndOr" value="or"/>
+    </td>
+    -->
+  </tr>
+  </logic:equal>
   <tr> 
     <td>&nbsp;</td>
     <td>&nbsp;</td>

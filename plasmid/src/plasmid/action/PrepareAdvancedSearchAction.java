@@ -50,9 +50,12 @@ public class PrepareAdvancedSearchAction extends PlasmidAction {
         List psicenters = DefTableManager.getVocabularies("psisite","name");
         psicenters.add(0, Constants.ALL);
         
+        int psi = ((AdvancedSearchForm) form).getPsi();
+        
         ((AdvancedSearchForm) form).resetParams();
         request.setAttribute("species", species);
         request.setAttribute("psicenters", psicenters);
+        request.setAttribute("psi", (new Integer(psi)).toString());
         
         ViewCartForm f = (ViewCartForm) request.getSession().getAttribute("viewCartForm");
         if (f != null) {

@@ -29,7 +29,7 @@
             clone identifier</a></td>
         </tr>
         <tr> 
-          <td height="15" class="lftsubtxt">- <a href="PrepareAdvancedSearch.do" class="leftsubnavtext">PSI-MR search</a></td>
+          <td height="15" class="lftsubtxt">- <a href="PrepareAdvancedSearch.do?psi=1" class="leftsubnavtext">PSI-MR search</a></td>
         </tr>
       </table></td>
   </tr>
