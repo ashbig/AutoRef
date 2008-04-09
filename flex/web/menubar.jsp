@@ -52,7 +52,7 @@ ul {
 <dd><a href="/FLEX/ExpressionCloneEntry.jsp" target="display">Expression Clones</a></dd><%}%>
   <% if (user_level >= RESEARCHER){%>    
 <dd><a href="/FLEX/GetProjects.do?forwardName=PLATE_CONDENSATION" target="display">Plate Condensation</a></dd><%}%>
-  <% if (user_level >= SADMIN){%>    
+  <% if (user_level >= WADMIN){%>    
 <dd><a href="/FLEX/ACEtoFLEXImporterInput.jsp" target="display">ACE to FLEX data transfer</a></dd><%}%>           
 <%}%>
 <% if (user_level >= COLLABORATOR){%>  
