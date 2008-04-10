@@ -263,6 +263,11 @@ public class Constants {
       public static final int           PROCESS_SUBMIT_EREADS_AS_INTERNALS =108;
     public static final int             PROCESS_SELECT_SEQUENCING_PRIMERS_FOR_END_READS = 109;//run sequencing for end reads
     public static final int             PROCESS_SELECT_PLATES_FOR_END_READS_NEW_VERSION = 1010; 
+    public static final int             PROCESS_ADD_NEW_LINKER_FROM_FILE  =111; 
+    public static final int             PROCESS_ADD_NAME_TYPE_FROM_FILE  =113;
+   public static final int             PROCESS_ADD_SPECIES_DEFINITION_FROM_FILE =114; 
+   public static final int             PROCESS_ADD_NEW_CLONINGSTRATEGY_FROM_FILE=115;
+ public static final int             PROCESS_ADD_NEW_VECTOR_FROM_FLAT_FILES=116;
  
     // max process 110
 
