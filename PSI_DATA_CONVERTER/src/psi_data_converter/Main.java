@@ -44,14 +44,18 @@ public class Main
             Main tester = new Main();
              
             String isUnzip = subprop.getProperty("IS_UNZIP");
-            if (isUnzip.equals(1) )
+            if (isUnzip.equals("1") )
             {
                 tester.unzipFiles( subprop,  er_messages );
                 boolean isDeleteOriginal = false;
                 tester.concatenateFiles( subprop,  er_messages , isDeleteOriginal);
             }
             
-            tester.processFiles(subprop,  er_messages, messages_missing_data_report);
+             String isProcess = subprop.getProperty("IS_PROCESS");
+            if (isProcess.equals("1") )
+            {
+           tester.processFiles(subprop,  er_messages, messages_missing_data_report);
+            }
            /* String file_name =  subprop.getProperty("FILES_OUTPUT_DIR") +File.separator+"logger.txt";
             FileManager. writeFile(er_messages,  file_name,  "", true);
             for(String item : er_messages)
@@ -162,14 +166,18 @@ public class Main
          {
              fields_to_verify_items_index[count++]=Verifier.defineColumnNumber(header, item);
          }
+        
           for ( String[] record : records )
          {
              for ( int index : fields_to_verify_items_index)
              {
-                 if ( record[index].equalsIgnoreCase(empty_field_definition))
+                  try
+         {
+                 if ( record.length > index   && record[index].equalsIgnoreCase(empty_field_definition))
                  {
                      messages_missing_data_report.add("No "+column_headers[index]+" provided for clone: "+ record[clone_ids_column_number]);
                  }
+                  }catch(Exception e){System.out.println(index+" "+record);}
              }
          }
             
@@ -275,6 +283,11 @@ public class Main
             }
             ArrayList<String> additional_authors = new ArrayList();
             additional_authors.add(subprop.getProperty("PSI_AUTHOR"));
+            if ( subprop.getProperty("PSI_AUTHOR_1") != null)
+                 additional_authors.add(subprop.getProperty("PSI_AUTHOR_1"));
+            if ( subprop.getProperty("PSI_AUTHOR_2") != null)
+                 additional_authors.add(subprop.getProperty("PSI_AUTHOR_2"));
+           
             plver.writeTempAuthorFile(psi_site_description, clone_ids,
                     clone_author_tmp_file ,
                     null,//subprop.getProperty("FILE_CLONE_CLONEAUTHOR_NAME_HEADER") ,
@@ -336,6 +349,8 @@ public void insertValuesCloneInfo(SubmissionProperties subprop,
     
         // append clone storage
         Verifier.appendString( "\t"+subprop.getProperty("CLONE_INFO_APPEND_TEXT_1") , records);
+        Verifier.appendString( "\t"+subprop.getProperty("CLONE_INFO_APPEND_TEXT_2") , records);
+        Verifier.appendString( "\t"+subprop.getProperty("CLONE_INFO_APPEND_TEXT_3") , records);
         // duplicate column
         String file_header = subprop.getProperty("FILE_CLONE_INFO_HEADER_ORIGINAL");
         int column_number = Verifier.defineColumnNumber(file_header, subprop.getProperty("CLONE_INFO_VALUE_CLONEID"));
@@ -384,7 +399,9 @@ private void appendValueFromFile(String library_file_location,
            {
                
                 if ( library_items.get( record [column_number]) != null)
-                { record [record.length - 1] += "\t" + library_items.get( record [column_number]);}
+                { 
+                    record [record.length - 1] += "\t" + library_items.get( record [column_number]);
+                }
                 else
                 { record [record.length - 1] += "\tNA";}
            }

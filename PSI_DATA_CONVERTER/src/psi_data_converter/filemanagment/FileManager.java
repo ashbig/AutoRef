@@ -251,7 +251,7 @@ public class FileManager {
                 file_values.add(row_values);count = 0;
                 for (int column_number : column_numbers)
                 {
-                    row_values[count++] = items[column_number];
+                    row_values[count++] = items[column_number].trim();
                 }
             }
             input.close();

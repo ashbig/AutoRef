@@ -330,7 +330,7 @@ public abstract class Verifier
                 items = line.split("\t");
                 if (isRaiseFlagIfDuplicates && result.containsKey(items[key_column]))
                     throw new Exception("Dublicate  key: "+items[key_column]);
-                result.put(items[key_column], items[value_column]);
+                result.put(items[key_column].trim(), items[value_column].trim());
             }
             output.close();
             return result;
@@ -402,7 +402,7 @@ public abstract class Verifier
                
                         for ( String[] old_new_value : old_new_values )
                         {
-                            if ( record [number_of_update_column].equalsIgnoreCase(old_new_value[1]))
+                            if ( record [number_of_update_column].trim().equalsIgnoreCase(old_new_value[1]))
                             {
                                 record[number_of_update_column] = old_new_value[0];
                                 break;
