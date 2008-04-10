@@ -28,7 +28,7 @@ import edu.harvard.med.hip.flex.Constants;
  *
  * @author htaycher
  */
-public class ACEtoFLEXImporterAction extends AdminAction
+public class ACEtoFLEXImporterAction extends ResearcherAction
 {
     public ActionForward flexPerform(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
