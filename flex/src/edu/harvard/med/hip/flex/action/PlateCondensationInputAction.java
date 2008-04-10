@@ -3,7 +3,6 @@
  *
  * Created on November 28, 2005, 1:28 PM
  */
-
 package edu.harvard.med.hip.flex.action;
 
 import java.util.*;
@@ -34,7 +33,7 @@ import edu.harvard.med.hip.flex.workflow.*;
  * @author  DZuo
  */
 public class PlateCondensationInputAction extends ResearcherAction {
-    
+
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
      * response (or forward to another web component that will create it).
@@ -51,59 +50,63 @@ public class PlateCondensationInputAction extends ResearcherAction {
      * @exception ServletException if a servlet exception occurs
      */
     public ActionForward flexPerform(ActionMapping mapping,
-    ActionForm form,
-    HttpServletRequest request,
-    HttpServletResponse response)
-    throws ServletException, IOException {
+            ActionForm form,
+            HttpServletRequest request,
+            HttpServletResponse response)
+            throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
-        int projectid = ((PlateCondensationForm)form).getProjectid();
-        boolean isPartial = ((PlateCondensationForm)form).getIsPartial();
-        String srcLabels = ((PlateCondensationForm)form).getSrcLabels();
-        String researcherBarcode = ((PlateCondensationForm)form).getResearcherBarcode();
-        boolean isWorking = ((PlateCondensationForm)form).getIsWorking();
-        String destStorageType = ((PlateCondensationForm)form).getDestStorageType();
-        String destStorageForm = ((PlateCondensationForm)form).getDestStorageForm();
-        String destContainerType = ((PlateCondensationForm)form).getDestPlateType();
-        
+        int projectid = ((PlateCondensationForm) form).getProjectid();
+        boolean isPartial = ((PlateCondensationForm) form).getIsPartial();
+        String srcLabels = ((PlateCondensationForm) form).getSrcLabels();
+        String researcherBarcode = ((PlateCondensationForm) form).getResearcherBarcode();
+        boolean isWorking = ((PlateCondensationForm) form).getIsWorking();
+        String destStorageType = ((PlateCondensationForm) form).getDestStorageType();
+        String destStorageForm = ((PlateCondensationForm) form).getDestStorageForm();
+        String destContainerType = ((PlateCondensationForm) form).getDestPlateType();
+        boolean isVector = ((PlateCondensationForm) form).isIsVector();
+
         List srcLabelList = Algorithms.splitString(srcLabels.trim(), null);
-        
+
         PlateCondensationManager manager = new PlateCondensationManager();
-       
-        if(!isPartial && !manager.checkMultiplication(srcLabelList, PlateCondensationManager.MULTIPLICATION)) {
-            errors.add("srcLabels", new ActionError("error.general", "Number of source plates is not muitiple of "+PlateCondensationManager.MULTIPLICATION));
+
+        if (!isPartial && !manager.checkMultiplication(srcLabelList, PlateCondensationManager.MULTIPLICATION)) {
+            errors.add("srcLabels", new ActionError("error.general", "Number of source plates is not muitiple of " + PlateCondensationManager.MULTIPLICATION));
             saveErrors(request, errors);
             return (new ActionForward(mapping.getInput()));
         }
-        
+
         List containers = null;
         try {
             containers = manager.restoreSrcContainers(srcLabelList);
-            if(containers == null)
+            if (containers == null) {
                 throw new Exception("Error occured while query database for containers.");
+            }
         } catch (Exception ex) {
-            errors.add("srcLabels", new ActionError("error.general", "Cannot get container records from database. "+ex));
+            errors.add("srcLabels", new ActionError("error.general", "Cannot get container records from database. " + ex));
             saveErrors(request, errors);
             return (new ActionForward(mapping.getInput()));
         }
-        
+
         List samples = new ArrayList();
-        for(int i=0; i<containers.size(); i++) {
-            CloneContainer c = (CloneContainer)containers.get(i);
+        for (int i = 0; i < containers.size(); i++) {
+            CloneContainer c = (CloneContainer) containers.get(i);
             samples.addAll(c.getSamples());
         }
-        
-        if(!manager.checkVector(samples)) {
-            errors.add("srcLabels", new ActionError("error.general", "The samples on the source plates are not in the same type of vectors."));
-            saveErrors(request, errors);
-            return (new ActionForward(mapping.getInput()));
+
+        if (isVector) {
+            if (!manager.checkVector(samples)) {
+                errors.add("srcLabels", new ActionError("error.general", "The samples on the source plates are not in the same type of vectors."));
+                saveErrors(request, errors);
+                return (new ActionForward(mapping.getInput()));
+            }
         }
-        
-        if(!manager.checkCloneType(samples)) {
+
+        if (!manager.checkCloneType(samples)) {
             errors.add("srcLabels", new ActionError("error.general", "The samples on the source plates are not in the same clone type."));
             saveErrors(request, errors);
             return (new ActionForward(mapping.getInput()));
         }
-        
+
         // Validate the researcher barcode.
         Researcher r = null;
         try {
@@ -113,41 +116,42 @@ public class PlateCondensationInputAction extends ResearcherAction {
             saveErrors(request, errors);
             return (new ActionForward(mapping.getInput()));
         }
-        
+
         String sampleType = null;
-        if(StorageForm.GLYCEROL.equals(destStorageForm))
+        if (StorageForm.GLYCEROL.equals(destStorageForm)) {
             sampleType = Sample.ISOLATE;
-        else
+        } else {
             sampleType = Sample.DNA;
-        
+        }
+
         List destContainers = null;
         try {
             destContainers = manager.condensePlates(projectid, containers, destContainerType, sampleType, isWorking);
         } catch (Exception ex) {
-            errors.add("srcLabels", new ActionError("error.general", "Cannot condense containers. "+ex));
+            errors.add("srcLabels", new ActionError("error.general", "Cannot condense containers. " + ex));
             saveErrors(request, errors);
             return (new ActionForward(mapping.getInput()));
         }
-        
+
         Workflow workflow = new Workflow(-1, null, null);
         Project p = new Project(projectid, null, null, null, null);
         Protocol protocol = null;
         try {
             protocol = new Protocol(Protocol.PLATE_CONDENSATION);
         } catch (Exception ex) {
-            errors.add("srcLabels", new ActionError("error.general", "Cannot get protocol with name: "+Protocol.PLATE_CONDENSATION));
+            errors.add("srcLabels", new ActionError("error.general", "Cannot get protocol with name: " + Protocol.PLATE_CONDENSATION));
             saveErrors(request, errors);
             return (new ActionForward(mapping.getInput()));
         }
-        
+
         try {
             manager.persistData(p, workflow, protocol, r, containers, destContainers, destStorageType, destStorageForm, isWorking);
         } catch (Exception ex) {
-            errors.add("srcLabels", new ActionError("error.general", "Error occured: "+ex));
+            errors.add("srcLabels", new ActionError("error.general", "Error occured: " + ex));
             saveErrors(request, errors);
             return (new ActionForward(mapping.getInput()));
         }
-        
+
         List containerMaps = manager.getContainerMaps();
         request.setAttribute("containerMaps", containerMaps);
         return (mapping.findForward("success"));

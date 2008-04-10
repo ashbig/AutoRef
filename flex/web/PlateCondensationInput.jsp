@@ -68,6 +68,10 @@
         <td><html:checkbox property="isWorking"/></td>
     </tr>
     <tr>
+        <td class="prompt">Check here if you allow different vectors in the same plate:</td>
+        <td><html:checkbox property="isVector"/></td>
+    </tr>
+    <tr>
         <td class="prompt">Enter researcher ID:</td>
         <td><html:password size="30" property="researcherBarcode"/></td>
     </tr>

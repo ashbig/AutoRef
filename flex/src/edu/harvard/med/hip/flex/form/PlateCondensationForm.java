@@ -21,6 +21,7 @@ public class PlateCondensationForm extends ActionForm {
     private String srcLabels;
     private boolean isPartial = false;
     private boolean isWorking = true;
+    private boolean isVector = false;
     private String researcherBarcode;
     private String destStorageType;
     private String destStorageForm;
@@ -81,6 +82,15 @@ public class PlateCondensationForm extends ActionForm {
         srcLabels = null;
         isPartial = false;
         isWorking = true;
+        isVector = false;
         researcherBarcode = null;
+    }
+
+    public boolean isIsVector() {
+        return isVector;
+    }
+
+    public void setIsVector(boolean isVector) {
+        this.isVector = isVector;
     }
 }
