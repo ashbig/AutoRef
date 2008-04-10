@@ -3,7 +3,6 @@
  *
  * Created on June 8, 2005, 10:54 AM
  */
-
 package plasmid.action;
 
 import java.util.*;
@@ -34,7 +33,7 @@ import plasmid.form.ChangeOrderStatusForm;
  * @author  DZuo
  */
 public class ViewOrderHistoryAction extends UserAction {
-    
+
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
      * response (or forward to another web component that will create it).
@@ -51,47 +50,51 @@ public class ViewOrderHistoryAction extends UserAction {
      * @exception ServletException if a servlet exception occurs
      */
     public ActionForward userPerform(ActionMapping mapping,
-    ActionForm form,
-    HttpServletRequest request,
-    HttpServletResponse response)
-    throws ServletException, IOException {
+            ActionForm form,
+            HttpServletRequest request,
+            HttpServletResponse response)
+            throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
-        User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
-        String status = ((ViewOrderHistoryForm)form).getStatus();
-        
-        if(user.getIsinternal().equals(User.INTERNAL)) {
-            status = CloneOrder.PENDING;
-        } else {
-            status = CloneOrder.ALL;
+        User user = (User) request.getSession().getAttribute(Constants.USER_KEY);
+        String status = ((ViewOrderHistoryForm) form).getStatus();
+        int start = ((ViewOrderHistoryForm) form).getStart();
+
+        if (start == 0) {
+            if (user.getIsinternal().equals(User.INTERNAL)) {
+                status = CloneOrder.PENDING;
+            } else {
+                status = CloneOrder.ALL;
+            }
         }
-        if(CloneOrder.ALL.equals(status))
+        if (CloneOrder.ALL.equals(status)) {
             status = null;
-        
+        }
+
         OrderProcessManager manager = new OrderProcessManager();
         List orders = manager.getAllOrders(user, status);
-        
-        response.setHeader("pragma", "No-Cache"); 
+
+        response.setHeader("pragma", "No-Cache");
         response.setHeader("Expires", "-1");
-        response.setHeader("Cache-Control","no-cache");
-        response.setDateHeader("Expires",0);
-        
-        if(orders == null) {
+        response.setHeader("Cache-Control", "no-cache");
+        response.setDateHeader("Expires", 0);
+
+        if (orders == null) {
             errors.add(ActionErrors.GLOBAL_ERROR,
-            new ActionError("error.general", "Cannot get order history."));
-            saveErrors(request,errors);
+                    new ActionError("error.general", "Cannot get order history."));
+            saveErrors(request, errors);
             return mapping.findForward("error");
         }
-        
-        if(orders.size() == 0) {
+
+        if (orders.size() == 0) {
             return mapping.findForward("success_empty");
         }
-        
+
         ChangeOrderStatusForm f = new ChangeOrderStatusForm();
         f.initiateLists(orders);
         request.getSession().setAttribute("changeOrderStatusForm", f);
         request.setAttribute(Constants.ORDERS, orders);
-        
-        if(User.INTERNAL.equals(user.getIsinternal())) {
+
+        if (User.INTERNAL.equals(user.getIsinternal())) {
             return mapping.findForward("success");
         } else {
             return mapping.findForward("success_outside");

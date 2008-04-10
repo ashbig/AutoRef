@@ -27,7 +27,7 @@
     <td width="83%" align="left" valign="top">
 	<jsp:include page="orderHistoryTitle.jsp" />
 
-<html:form action="ViewOrderHistory.do">
+<html:form action="ViewOrderHistory.do?start=1">
 <table width="100%" border="0">
   <tr>
     <td width="14%" class="formlabel">Choose order status:</td>

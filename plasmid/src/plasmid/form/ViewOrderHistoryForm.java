@@ -19,6 +19,7 @@ import plasmid.coreobject.CloneOrder;
  */
 public class ViewOrderHistoryForm extends ActionForm {
     private String status = CloneOrder.ALL;
+    private int start = 0;
     
     /** Creates a new instance of ViewOrderHistoryForm */
     public ViewOrderHistoryForm() {
@@ -56,5 +57,13 @@ public class ViewOrderHistoryForm extends ActionForm {
         //    errors.add("ponumber", new ActionError("error.ponumber.required"));
 
         return errors;     
+    }
+
+    public int getStart() {
+        return start;
+    }
+
+    public void setStart(int start) {
+        this.start = start;
     }
 }
