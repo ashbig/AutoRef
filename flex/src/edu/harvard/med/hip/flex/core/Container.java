@@ -1,5 +1,5 @@
 /**
- * $Id: Container.java,v 1.10 2008-04-14 19:56:00 dz4 Exp $
+ * $Id: Container.java,v 1.11 2008-04-14 20:34:17 dz4 Exp $
  *
  * File     	: Container.java
  * Date     	: 04162001
@@ -271,7 +271,7 @@ public class Container
         return containerList;
     }
   
-    public static List findContainers(String label, boolean isLocation, boolean isSample) throws FlexCoreException {
+    public static List findContainersForLabel(String label, boolean isLocation, boolean isSample) throws FlexCoreException {
         List labels = new ArrayList();
         labels.add(label);
         return findContainers(labels, isLocation, isSample);
