@@ -93,7 +93,7 @@ public class PlateCondensationInputAction extends ResearcherAction {
             samples.addAll(c.getSamples());
         }
 
-        if (isVector) {
+        if (!isVector) {
             if (!manager.checkVector(samples)) {
                 errors.add("srcLabels", new ActionError("error.general", "The samples on the source plates are not in the same type of vectors."));
                 saveErrors(request, errors);

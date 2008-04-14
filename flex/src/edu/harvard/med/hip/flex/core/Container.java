@@ -1,5 +1,5 @@
 /**
- * $Id: Container.java,v 1.9 2007-09-19 15:42:44 Elena Exp $
+ * $Id: Container.java,v 1.10 2008-04-14 19:56:00 dz4 Exp $
  *
  * File     	: Container.java
  * Date     	: 04162001
@@ -39,7 +39,6 @@ import edu.harvard.med.hip.flex.util.*;
 import edu.harvard.med.hip.flex.file.*;
 import edu.harvard.med.hip.flex.workflow.*;
 import edu.harvard.med.hip.flex.process.ProcessObject;
-import edu.harvard.med.hip.flex.process.Protocol;
 
 import sun.jdbc.rowset.*;
 
@@ -56,6 +55,8 @@ public class Container
     protected int threadid = -1;
     protected ArrayList         m_additional_info = null;
     protected boolean           m_is_additional_info = false;
+    
+    public static final String DAUGHTER_BARCODE_SEPARATER = "_";
     
     /**
      * Constructor.
@@ -269,9 +270,96 @@ public class Container
         }
         return containerList;
     }
+  
+    public static List findContainers(String label, boolean isLocation, boolean isSample) throws FlexCoreException {
+        List labels = new ArrayList();
+        labels.add(label);
+        return findContainers(labels, isLocation, isSample);
+    }
     
-    
-    
+    public static List findContainers(List labels, boolean isLocation, boolean isSample) throws FlexCoreException {
+        String sql = "select containerid,containertype,locationid,threadid,additionalinfo"+
+                " from containerheader where upper(label)=?";
+        String sql2 = "select locationtype,locationdescription"+
+                " from containerlocation where locationid=?";
+        String sql3 = "select sampleid, sampletype, containerposition,constructid,"+
+                " oligoid, status_gb, cloneid, additionalinfo"+
+                " from sample where containerid=?";
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        PreparedStatement stmt2 = null;
+        PreparedStatement stmt3 = null;
+        ResultSet rs = null;
+        ResultSet rs2 = null;
+        ResultSet rs3 = null;
+        
+        List containers = new ArrayList();
+        
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            stmt = conn.prepareStatement(sql);
+            for(int i=0; i<labels.size(); i++) {
+                String label = (String)labels.get(i);
+                stmt.setString(1, label.toUpperCase());
+                rs = DatabaseTransaction.executeQuery(stmt);
+                if(rs.next()) {
+                    int containerid = rs.getInt(1);
+                    String type = rs.getString(2);
+                    int locationid = rs.getInt(3);
+                    int threadid = rs.getInt(4);
+                    int additional = rs.getInt(5);
+                    Container c = new Container(containerid,type,null,label);
+                    c.setThreadid(threadid);
+                    
+                    if(isLocation) {
+                        stmt2 = conn.prepareStatement(sql2);
+                        stmt2.setInt(1, locationid);
+                        rs2 = DatabaseTransaction.executeQuery(stmt2);
+                        if(rs2.next()) {
+                            String locationtype = rs2.getString(1);
+                            String locationdesc = rs2.getString(2);
+                            Location l = new Location(locationid,locationtype,locationdesc);
+                            c.setLocation(l);
+                        }
+                        DatabaseTransaction.closeResultSet(rs2);
+                        DatabaseTransaction.closeStatement(stmt2);
+                    }
+                    
+                    if(isSample) {
+                        stmt3 = conn.prepareStatement(sql3);
+                        stmt3.setInt(1, containerid);
+                        rs3 = DatabaseTransaction.executeQuery(stmt3);
+                        while(rs3.next()) {
+                            int sampleid = rs3.getInt(1);
+                            String sampletype = rs3.getString(2);
+                            int pos = rs3.getInt(3);
+                            int constructid = rs3.getInt(4);
+                            int oligoid = rs3.getInt(5);
+                            String status = rs3.getString(6);
+                            int cloneid = rs3.getInt(7);
+                            int additionalinfo = rs3.getInt(8);
+                            Sample s = new Sample(sampleid,sampletype,pos,containerid,constructid,oligoid,status);
+                            s.setCloneid(cloneid);
+                            c.addSample(s);
+                        }
+                        DatabaseTransaction.closeResultSet(rs3);
+                        DatabaseTransaction.closeStatement(stmt3);
+                    }
+                    containers.add(c);
+                }
+                DatabaseTransaction.closeResultSet(rs);
+            }
+            DatabaseTransaction.closeStatement(stmt);
+            return containers;
+        } catch (Exception ex) {
+            throw new FlexCoreException("Error occured while querying database: "+ex.getMessage());
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
+        }
+    }
+   
     public boolean getIsPublicInfo() { return m_is_additional_info ;}
     public ArrayList getPublicInfo(){ return m_additional_info ;}
     public void setIsPublicInfo(boolean v) { this.m_is_additional_info = v;}
@@ -315,6 +403,94 @@ public class Container
             return (projectCode+processcode+fmt.format(threadid));
         else
             return (projectCode+processcode+fmt.format(threadid)+subthreadid);
+    }
+   
+    public String getRoot() {        
+        String root = this.getLabel();
+        int index = this.getLabel().indexOf(this.DAUGHTER_BARCODE_SEPARATER);
+        if(index != -1) {
+            root = this.getLabel().substring(0, index);
+        }
+        return root;
+    }
+    
+    public String getDaughterBarcode(int maxsubid) throws FlexDatabaseException {
+        String root = this.getRoot();
+        
+        if(maxsubid>0)
+            return root+this.DAUGHTER_BARCODE_SEPARATER+(maxsubid+1);
+        
+        int maxid = Container.getMaxsubidByRoot(root);
+        return root+this.DAUGHTER_BARCODE_SEPARATER+(maxid+1);
+    }
+    
+    public static int getMaxsubidByRoot(String root) throws FlexDatabaseException {
+        String sql = "select maxsubid from containerlabelmap where rootlabel=?";
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        int maxid = 0;
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, root);
+            rs = DatabaseTransaction.executeQuery(stmt);
+            if(rs.next()) {
+                maxid = rs.getInt(1);
+            }
+            return maxid;
+        } catch (Exception ex) {
+            throw new FlexDatabaseException("Cannot get maxsubid for rootlabel="+root+"\n"+ex.getMessage());
+        } finally {
+            DatabaseTransaction.closeStatement(stmt);
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeConnection(conn);
+        }
+    }
+    
+    public int getSubid() {       
+        int index = this.getLabel().indexOf(this.DAUGHTER_BARCODE_SEPARATER);
+        int id = 0;
+        if(index != -1)
+            id = Integer.parseInt(this.getLabel().substring(index+1));
+        return id;
+    }
+    
+    public static void updateContainerlabelmap(String root, int id, Connection conn) throws FlexDatabaseException {
+        String sql = "select * from containerlabelmap where rootlabel=?";
+        String sql2 = "update containerlabelmap set maxsubid=? where rootlabel=?";
+        String sql3 = "insert into containerlabelmap(rootlabel,maxsubid) values(?,?)";
+        
+        PreparedStatement stmt = null;
+        PreparedStatement stmt2 = null;
+        PreparedStatement stmt3 = null;
+        ResultSet rs = null;
+        
+        try {
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, root);
+            rs = DatabaseTransaction.executeQuery(stmt);
+            if(rs.next()) {
+                stmt2 = conn.prepareStatement(sql2);
+                stmt2.setInt(1, id);
+                stmt2.setString(2, root);
+                DatabaseTransaction.executeUpdate(stmt2);
+            } else {
+                stmt3 = conn.prepareStatement(sql3);
+                stmt3.setString(1, root);
+                stmt3.setInt(2, id);
+                DatabaseTransaction.executeUpdate(stmt3);
+            }
+        } catch (Exception ex) {
+            throw new FlexDatabaseException(ex.getMessage());
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+            DatabaseTransaction.closeStatement(stmt2);
+            DatabaseTransaction.closeStatement(stmt3);
+        }
     }
     
     /**

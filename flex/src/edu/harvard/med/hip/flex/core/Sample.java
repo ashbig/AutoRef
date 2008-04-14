@@ -1,5 +1,5 @@
 /**
- * $Id: Sample.java,v 1.15 2008-01-29 20:00:31 Elena Exp $
+ * $Id: Sample.java,v 1.16 2008-04-14 19:56:16 dz4 Exp $
  *
  * File     	: Sample.java
  * Date     	: 04162001
@@ -408,6 +408,9 @@ public class Sample {
         
         if(Protocol.GENERATE_LR_PLATE.equals(processname)) 
             return LR;
+        
+        if(Protocol.GENERATE_MULTIPLE_GLYCEROL.equals(processname))
+            return ISOLATE;
         
         return type;
     }

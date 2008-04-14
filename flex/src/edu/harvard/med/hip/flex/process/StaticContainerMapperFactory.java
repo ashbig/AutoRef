@@ -40,6 +40,8 @@ public class StaticContainerMapperFactory {
                 || Protocol.CREATE_CULTURE_FROM_TEMPLATE.equals(processname)
                 ) {
              return new OneToOneNewContainerMapper();
+        } else if(Protocol.GENERATE_MULTIPLE_GLYCEROL.equals(processname)) {
+            return new OneToManyDirectContainerMapper();
         } else {
             return new OneToOneContainerMapper();
         }

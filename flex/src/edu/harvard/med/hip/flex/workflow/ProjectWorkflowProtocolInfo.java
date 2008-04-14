@@ -94,7 +94,6 @@ public class ProjectWorkflowProtocolInfo {
          Project p = null;String name = null; String description = null; String version =null;
          DatabaseTransaction t = DatabaseTransaction.getInstance();
          ResultSet rs = t.executeQuery(sql);
-System.out.println(sql);
 
             try
             {                   

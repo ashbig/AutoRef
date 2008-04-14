@@ -1,5 +1,5 @@
 /**
- * $Id: Protocol.java,v 1.49 2008-01-29 20:02:25 Elena Exp $
+ * $Id: Protocol.java,v 1.50 2008-04-14 19:57:10 dz4 Exp $
  *
  * File     : FlexProcessException.java
  * Date     : 04162001
@@ -150,6 +150,7 @@ public class Protocol {
      public static final String CREATE_CULTURE_FROM_TEMPLATE =
                     "Generate culture block from template plate";
 
+     public static final String GENERATE_MULTIPLE_GLYCEROL = "Generate multiple copies of glycerol stock";
     private int id;
     private String processcode;
     private String processname;
