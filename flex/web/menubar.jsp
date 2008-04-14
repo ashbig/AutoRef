@@ -59,13 +59,15 @@ li {
      <% if (user_level >= RESEARCHER){%>      
      <li><a href="/FLEX/SetReceiveDate.do" target="display">Receive Oligo Orders</a></li><%}%>
      <% if (user_level >= RESEARCHER){%>      
-     <li><a href="/FLEX/GetProjects.do?forwardName=CREATE_PROCESS_PLATES" target="display">Create Process Plates</a></dd><%}%>
+     <li><a href="/FLEX/GetProjects.do?forwardName=CREATE_PROCESS_PLATES" target="display">Create Process Plates</a></li><%}%>
      <% if (user_level >= RESEARCHER){%>      
      <li><a href="/FLEX/GetProjects.do?forwardName=ENTER_RESULT" target="display">Enter Process Results</a></li><%}%>
      <% if (user_level >= WADMIN){%>    
      <li><a href="/FLEX/RearraySelection.jsp" target="display">Rearray</a></li><%}%>
      <% if (user_level >= RESEARCHER){%>    
      <li><a href="/FLEX/ExpressionCloneEntry.jsp" target="display">Expression Clones</a></li><%}%>
+     <% if (user_level >= RESEARCHER){%>    
+     <li><a href="/FLEX/GenerateMultipleGlycerolInput.jsp" target="display">Create Multiple Glycerol Stocks</a></li><%}%>   
      <% if (user_level >= RESEARCHER){%>    
      <li><a href="/FLEX/GetProjects.do?forwardName=PLATE_CONDENSATION" target="display">Plate Condensation</a></li><%}%>
      <% if (user_level >= WADMIN){%>    
