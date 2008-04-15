@@ -26,9 +26,9 @@
     <ul>      
         
         
-        <% if (user_level >= COLLABORATOR){%>    
+        <% if (user_level >= RESEARCHER){%>    
         <li> <a href="/FLEX/SequenceQueryEntry.jsp" target="display">Query FLEXGene</a></li><%}%>
-        <% if (user_level >= CUSTOMER){%> 
+        <% if (user_level >= RESEARCHER){%> 
         <li> <a href="/FLEX/BrowseFlex.jsp" target="display">View Available Clones</a></li>
         <li>            <a href="/FLEX/GetSearchTerms.do" target="display">Search FLEXGene</a></li>
         <li><a href="/FLEX/GetAllSearchRecords.do" target="display">My Search History</a></li>

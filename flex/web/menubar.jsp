@@ -100,7 +100,7 @@ li {
                 
           
               
- <% if (user_level >= CUSTOMER){%>
+ <% if (user_level >= RESEARCHER){%>
  <li><a href="/FLEX/menu_Query.jsp" target="display">Query</a></li><%}%>               
 <% if (user_level == CUSTOMER){%>    
  <li><a href="/FLEX/Help.jsp" target="display">Help</a>          </li><%}%>
