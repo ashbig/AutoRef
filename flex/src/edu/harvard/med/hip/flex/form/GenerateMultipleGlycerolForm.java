@@ -44,7 +44,7 @@ public class GenerateMultipleGlycerolForm extends ActionForm {
         }
         
         if(num<1) {
-            errors.add("num", new ActionError("error.invalid.number", num));  
+            errors.add("num", new ActionError("error.invalid.number"));  
         }
         
         if(researcherBarcode == null || researcherBarcode.trim().length() < 1) {
