@@ -74,7 +74,7 @@ public class OneToOneContainerMapper implements ContainerMapper {
         while (enu.hasMoreElements()) {
             Container container = (Container) enu.nextElement();
 
-            int daughterbarcodeid = 0;
+            int daughterbarcodeid = 1;
             for (int n = 0; n < getNumOfDest(); n++) {
                 String newBarcode = null;
 

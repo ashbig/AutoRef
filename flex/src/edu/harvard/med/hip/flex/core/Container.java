@@ -1,5 +1,5 @@
 /**
- * $Id: Container.java,v 1.11 2008-04-14 20:34:17 dz4 Exp $
+ * $Id: Container.java,v 1.12 2008-04-15 20:07:42 dz4 Exp $
  *
  * File     	: Container.java
  * Date     	: 04162001
@@ -417,7 +417,7 @@ public class Container
     public String getDaughterBarcode(int maxsubid) throws FlexDatabaseException {
         String root = this.getRoot();
         
-        if(maxsubid>0)
+        if(maxsubid>1)
             return root+this.DAUGHTER_BARCODE_SEPARATER+(maxsubid+1);
         
         int maxid = Container.getMaxsubidByRoot(root);
@@ -430,7 +430,7 @@ public class Container
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        int maxid = 0;
+        int maxid = 1;
         try {
             t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();

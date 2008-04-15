@@ -146,7 +146,7 @@ public class GenerateMultipleGlycerolAction extends ResearcherAction {
             
             DatabaseTransaction.commit(conn);
             
-            request.setAttribute("containers", newContainers);
+            request.getSession().setAttribute("EnterSourcePlateAction.newContainers", newContainers);
         } catch (Exception ex) {
             DatabaseTransaction.rollback(conn);
             request.setAttribute(Action.EXCEPTION_KEY, new Exception(ex.getMessage()));

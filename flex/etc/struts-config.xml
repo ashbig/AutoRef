@@ -1494,7 +1494,7 @@
                scope="request"
                validate="true"
                input="/GenerateMultipleGlycerolInput.jsp">
-      <forward  name="success"   path="/PrintBarcodeWithoutSession.jsp"/>
+      <forward  name="success"   path="/PrintBarcode.jsp"/>
     </action>  
      
     <!-- The standard administrative actions available with Struts -->
