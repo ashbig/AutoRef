@@ -208,7 +208,7 @@ public class AddItemsAction extends ResearcherAction {
                System.out.println("add "+(String)container_labels.get(count));  
             }
         }
-        
+System.out.println(not_processed_plates.size()+ " add "+sql_plate_labels);          
         if (not_processed_plates.size()==0)
         {
               return "All plates ("+sql_plate_labels+") have been processed before";
@@ -221,6 +221,8 @@ public class AddItemsAction extends ResearcherAction {
             conn = DatabaseTransaction.getInstance().requestConnection();
             sql_insert +=sql_plate_labels+  "))";
             DatabaseTransaction.executeUpdate(sql_insert,conn);
+            System.out.println(sql_insert);          
+ 
              return "FLEX is notified that plates \n"+ sql_plate_labels +" have been sequenced." ;
         } catch (Exception sqlE) {
             throw new FlexDatabaseException("Error occured while notifing FLEX that plates were sequenced\n"+sql_insert);
