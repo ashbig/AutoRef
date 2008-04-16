@@ -146,7 +146,7 @@ public class AddItemsAction extends ResearcherAction {
                             return new ActionForward(mapping.getInput());
                         }
                         String plate_names = putPlatesForSequencing(containers, seq_facility);
-                        request.setAttribute("plate_names", plate_names);
+                        if ( plate_names != null) request.setAttribute("plate_names", plate_names);
                         return (mapping.findForward("confirm_add_items"));
                      }
                    
@@ -205,13 +205,11 @@ public class AddItemsAction extends ResearcherAction {
             if ( !temp.contains( (String)container_labels.get(count) ) )
             {
                 not_processed_plates.add(container_labels.get(count));
-               System.out.println("add "+(String)container_labels.get(count));  
-            }
+             }
         }
-System.out.println(not_processed_plates.size()+ " add "+sql_plate_labels);          
         if (not_processed_plates.size()==0)
         {
-              return "All plates ("+sql_plate_labels+") have been processed before";
+              return null;
         }
    
         sql_plate_labels =Algorithms.convertArrayToSQLString(not_processed_plates);
@@ -222,8 +220,8 @@ System.out.println(not_processed_plates.size()+ " add "+sql_plate_labels);
             sql_insert +=sql_plate_labels+  "))";
             DatabaseTransaction.executeUpdate(sql_insert,conn);
             System.out.println(sql_insert);          
- 
-             return "FLEX is notified that plates \n"+ sql_plate_labels +" have been sequenced." ;
+            conn.commit();
+             return  sql_plate_labels ;
         } catch (Exception sqlE) {
             throw new FlexDatabaseException("Error occured while notifing FLEX that plates were sequenced\n"+sql_insert);
         } finally {
