@@ -168,7 +168,6 @@ public class AddItemsAction extends WorkflowAction {
     {
         ArrayList messages = new ArrayList();
         String sql_plate_labels =edu.harvard.med.hip.flex.util.Algorithms.convertArrayToSQLString(container_labels);
-        
         String sql_not_submitted_plates = 
                 "select  label from containerheader where containerid in"
 +" (select distinct containerid from sample where sampleid in "
@@ -198,14 +197,17 @@ public class AddItemsAction extends WorkflowAction {
             DatabaseTransaction.closeResultSet(crs);
         }
         
-        
         // now get not processed plates
         ArrayList not_processed_plates = new ArrayList();
         for ( int count = 0; count < container_labels.size(); count++)
         {
-            if ( !temp.contains( container_labels.get(count) ) )
+            if ( !temp.contains( (String)container_labels.get(count) ) )
+            {
                 not_processed_plates.add(container_labels.get(count));
+               System.out.println("add "+(String)container_labels.get(count));  
+            }
         }
+        
         if (not_processed_plates.size()==0)
               return "All plates ("+sql_plate_labels+") have been processed before";
    
