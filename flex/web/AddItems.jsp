@@ -29,11 +29,12 @@
     <ul> 
         <% if (user_level >=  SADMIN ){%> 
         <li><a href="/FLEX/AddResearcher.jsp" target="display">Add New Researcher</a> </li><%}%>
+        <% if (user_level >= RESEARCHER){%>
         <li><a href="/FLEX/AddItems.do?forwardName=<%= String.valueOf(ConstantsImport.PROCESS_IMPORT_INTO_NAMESTABLE) %>" >Add new Name Type(s)  </a> </li>
         <li><a href="/FLEX/AddItems.do?forwardName=<%= String.valueOf(ConstantsImport.PROCESS_IMPORT_LINKERS) %>">Add new Linker(s)   </a> </li>
         <li><a href="/FLEX/AddItems.do?forwardName=<%= String.valueOf(ConstantsImport.PROCESS_IMPORT_VECTORS) %>">Add new Vector(s)  </a> </li>
         <li><a href="/FLEX/AddItems.do?forwardName=<%= String.valueOf(ConstantsImport.PROCESS_IMPORT_CLONING_STRATEGIES) %>">Add new Cloning Strategy    </a> </li>  
-         
+         <%}%>
         <P></p>
         <% if (user_level >= SADMIN){%> 
         <li><a href="/FLEX/GetProjects.do?forwardName=IMPORT_SEQUENCES" target="display">Import Sequence Requests</a></li><%}%>
@@ -45,11 +46,13 @@
     </ul>
    
 <p>
+     <% if (user_level >= RESEARCHER){%>
      <p><div alighn="center"> <b>Change plate status</b></div></p>
      <ul> 
 <li><a href="/FLEX/AddItems.do?forwardName=<%= String.valueOf(ConstantsImport.PROCESS_PUT_PLATES_FOR_SEQUENCING) %>">Notify FLEX what plates were sequenced    </a> </li>  
 
 </ul>
+<%}%>
 
 </body>
 </html:html>

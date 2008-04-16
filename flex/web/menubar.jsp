@@ -48,7 +48,7 @@ li {
   <hr>
 <ul>
     <li><p><a href="/FLEX/overview.jsp" target="display">Home</a>  </li>
-<% if (user_level >= WADMIN){%>    
+<% if (user_level >= RESEARCHER){%>    
 <li> <a href="/FLEX/AddItems.jsp" target="display">Add</a></li><%}%>     
 
  <% if (user_level >= RESEARCHER){%> 
