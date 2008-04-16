@@ -65,13 +65,8 @@
      
           <logic:equal  name="forwardName"  value="<%= String.valueOf(-ConstantsImport.PROCESS_PUT_PLATES_FOR_SEQUENCING) %>">
             <bean:message key="flex.name"/> : 
-            <logic:present  name="plateLabels">
-                <bean:message key="put.plates.forsequencing.notification"/> 
-                <bean:message key="plateLabels"/>
-            </logic:present>
-            <logic:notPresent  name="plateLabels">
-                All plates have been processed before
-            </logic:notPresent>
+            <bean:message key="put.plates.forsequencing.notification"/> 
+                <%= request.getAttribute( "container_labels") %>
         </logic:equal>
  
 

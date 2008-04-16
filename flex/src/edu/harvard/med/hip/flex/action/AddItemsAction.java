@@ -146,7 +146,7 @@ public class AddItemsAction extends ResearcherAction {
                             return new ActionForward(mapping.getInput());
                         }
                         String plate_names = putPlatesForSequencing(containers, seq_facility);
-                        if ( plate_names != null) request.setAttribute("plate_names", plate_names);
+                        request.setAttribute("container_labels", container_labels);
                         return (mapping.findForward("confirm_add_items"));
                      }
                    
@@ -219,7 +219,6 @@ public class AddItemsAction extends ResearcherAction {
             conn = DatabaseTransaction.getInstance().requestConnection();
             sql_insert +=sql_plate_labels+  "))";
             DatabaseTransaction.executeUpdate(sql_insert,conn);
-            System.out.println(sql_insert);          
             conn.commit();
              return  sql_plate_labels ;
         } catch (Exception sqlE) {
