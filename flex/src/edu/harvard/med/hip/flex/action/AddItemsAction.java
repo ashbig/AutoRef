@@ -46,7 +46,7 @@ import edu.harvard.med.hip.flex.infoimport.file_mapping.*;
  * @author  dzuo
  * @version
  */
-public class AddItemsAction extends WorkflowAction {
+public class AddItemsAction extends Action {
     
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
@@ -161,6 +161,7 @@ public class AddItemsAction extends WorkflowAction {
             request.setAttribute(Action.EXCEPTION_KEY, e);
             return (mapping.findForward("error"));
         }
+        
     }
     
     private  String  putPlatesForSequencing(ArrayList container_labels, 
@@ -209,7 +210,9 @@ public class AddItemsAction extends WorkflowAction {
         }
         
         if (not_processed_plates.size()==0)
+        {
               return "All plates ("+sql_plate_labels+") have been processed before";
+        }
    
         sql_plate_labels =Algorithms.convertArrayToSQLString(not_processed_plates);
         Connection conn = null; 
