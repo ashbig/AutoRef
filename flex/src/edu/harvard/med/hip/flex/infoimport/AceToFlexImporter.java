@@ -46,7 +46,7 @@ public class AceToFlexImporter extends ImportRunner
          Connection  flex_connection = null;
          Connection  ace_connection = null;
       
-         ArrayList  clone_ids_for_sql =   prepareItemsListForSQL(5);
+         ArrayList  clone_ids_for_sql =   prepareItemsListForSQL();
         // System.out.println(clone_ids_for_sql.size());
          if (clone_ids_for_sql == null || clone_ids_for_sql.size() < 1)
          {
@@ -149,7 +149,8 @@ public class AceToFlexImporter extends ImportRunner
                      if ( clone_discreapncies != null && clone_discreapncies.size() > 0 )
                      {
                          clone_discreapncies = DiscrepancyDescription.assembleDiscrepancyDefinitions(clone_discreapncies);
-                         String[] ob=  (String[] ) DiscrepancyDescription.detailedDiscrepancyreport(clone_discreapncies,  new String[3]);
+                         String[] str_arr = new String[3];
+                         String[] ob=  (String[] )  DiscrepancyDescription.detailedDiscrepancyreport(clone_discreapncies, str_arr );
                          clone_description.setMLinker5(ob[0]);
                          clone_description.setIsDiscrepancy(true);
                          clone_description.setMutCDS(ob[1]);
@@ -293,7 +294,7 @@ public class AceToFlexImporter extends ImportRunner
                 stmt_insert_clone_sequence_details.setInt(1, sequenceid);
                 
                 stmt_insert_clone_sequence_details.setString(2,clone_data.getMutCDS());//resultexpect
-                String matchexpect = clone_data.isDiscrepancies() ? "Y": "N";
+                String matchexpect = clone_data.isDiscrepancies() ? "N": "Y";
                 stmt_insert_clone_sequence_details.setString(3,matchexpect);//matchexpect
                 stmt_insert_clone_sequence_details.setString(4,"");//genechange
                 stmt_insert_clone_sequence_details.setString(5,clone_data.getMLinker5());//linker5p
@@ -341,9 +342,9 @@ public class AceToFlexImporter extends ImportRunner
                  stmt_update_clone_name.setInt(2, clone_data.getCloneID());
                  DatabaseTransaction.executeUpdate(stmt_update_clone_name);
                  
-                 System.out.println("to update "+clone_data.getCloneID());
+               //  System.out.println("to update "+clone_data.getCloneID());
                  conn.commit();
-                System.out.println("updated "+clone_data.getCloneID());
+               // System.out.println("updated "+clone_data.getCloneID());
                  
                  m_process_messages.add("Clone data for Clone ID "+clone_data.getCloneID()+" were transfered into FLEX.\n");
             }
@@ -586,12 +587,9 @@ public class AceToFlexImporter extends ImportRunner
     {
         try
         {
-               
-          
-           
+            
         ImportRunner runner = new AceToFlexImporter();
-        runner.setInputData(ConstantsImport.ITEM_TYPE_CLONEID, " 154245 ");//154431  154512  154516  154520  154454  154245  154532  154269");
-            //  runner.setContainerLabels(master_container_labels );
+        runner.setInputData(ConstantsImport.ITEM_TYPE_CLONEID, " 268620 268622 268624   " );     //  runner.setContainerLabels(master_container_labels );
         runner.setProcessType( ConstantsImport.PROCESS_DATA_TRANSFER_ACE_TO_FLEX );
        // Spec spec_f = Spec.getSpecById(91, Spec.FULL_SEQ_SPEC_INT);
         User user = new User("htaycher", "hip_informatics@hms.harvard.edu", "");
