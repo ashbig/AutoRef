@@ -1,5 +1,5 @@
 /**
- * $Id: Container.java,v 1.12 2008-04-15 20:07:42 dz4 Exp $
+ * $Id: Container.java,v 1.13 2008-04-16 13:17:59 dz4 Exp $
  *
  * File     	: Container.java
  * Date     	: 04162001
@@ -56,7 +56,7 @@ public class Container
     protected ArrayList         m_additional_info = null;
     protected boolean           m_is_additional_info = false;
     
-    public static final String DAUGHTER_BARCODE_SEPARATER = "_";
+    public static final String DAUGHTER_BARCODE_SEPARATER = ":";
     
     /**
      * Constructor.
