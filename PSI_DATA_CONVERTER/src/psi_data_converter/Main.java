@@ -132,7 +132,7 @@ public class Main
                    {
                        updated_records.add( Verifier.putStringArrayInString(record,"\t", false));
                    }
-                   header = subprop.getProperty("FILE_CLONE_INFO_HEADER");
+                   header = subprop.getProperty("FILE_CLONE_INFO_HEADER_ORIGINAL")+subprop.getProperty("FILE_CLONE_INFO_HEADER_NEW");
                    header = header.replaceAll(":","\t");
                    FileManager. writeFile(updated_records,  file_name,  header, false);
              }
@@ -670,14 +670,14 @@ public List<String[]>         verifyCloneInfoFile(SubmissionProperties subprop,
        try
        {
            // clean provided files from empty entries
-            ArrayList<String> cloneauthor = FileManager.readNonEmptyRecords(cloneauthor_fn, 1, empty_field_definition);
-           ArrayList<String> authorinfo = FileManager.readNonEmptyRecords(authorfile_name, 0, empty_field_definition);
-         
-           
-           
-           
-           FileManager.createCloneAuthorFile(authorfile_name, location_fn, 
-               cloneauthor_fn,  subprop.getProperty("FILE_CLONE_CLONEAUTHOR_HEADER").trim());
+           File ft = new File(cloneauthor_fn);
+           if ( ft.exists())
+           {
+                ArrayList<String> cloneauthor = FileManager.readNonEmptyRecords(cloneauthor_fn, 1, empty_field_definition);
+                ArrayList<String> authorinfo = FileManager.readNonEmptyRecords(authorfile_name, 0, empty_field_definition);
+                FileManager.createCloneAuthorFile(authorfile_name, location_fn, 
+                    cloneauthor_fn,  subprop.getProperty("FILE_CLONE_CLONEAUTHOR_HEADER").trim());
+           }
         }
         catch (Exception e)
         {            er_messages.add("Cannot create clone author file " + e.getMessage());        }
