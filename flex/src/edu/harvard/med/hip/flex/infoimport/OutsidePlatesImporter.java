@@ -17,96 +17,7 @@ where
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.
  */
-/* sql changes to FLEX database
- *
-CREATE TABLE CONTAINERHEADER_NAMETYPE
- (NAMETYPE VARCHAR2(50) NOT NULL
- ,DISPLAYTITLE VARCHAR2(200)
- );
 
-CREATE TABLE SAMPLE_NAMETYPE
- (NAMETYPE VARCHAR2(50) NOT NULL
- ,DISPLAYTITLE VARCHAR2(200)
- );
-
-CREATE TABLE SAMPLE_NAME
- (SAMPLEID NUMBER(10,0) NOT NULL
- ,NAMETYPE VARCHAR2(50) NOT NULL
- ,NAMEVALUE VARCHAR2(500) NOT NULL
- ,NAMEURL VARCHAR2(500)
- ,DESCRIPTION VARCHAR2(500)
- );
-
-alter TABLE CONTAINERHEADER
- add ADDITIONALINFO NUMBER(1) DEFAULT 0 NOT NULL;
-
-CREATE TABLE CONTAINERHEADER_NAME
- (CONTAINERID NUMBER(10,0) NOT NULL
- ,NAMETYPE VARCHAR2(50) NOT NULL
- ,NAMEVALUE VARCHAR2(200) NOT NULL
- ,NAMEURL VARCHAR2(500)
- ,DESCRIPTION VARCHAR2(240)
- );
-
-alter TABLE SAMPLE
- add ADDITIONALINFO NUMBER(1) DEFAULT 0 NOT NULL;
-
- 
-
-ALTER TABLE CONTAINERHEADER_NAMETYPE
- ADD (CONSTRAINT OCE_PK PRIMARY KEY 
-  (NAMETYPE));
-
-ALTER TABLE SAMPLE_NAMETYPE
- ADD (CONSTRAINT SNT_PK PRIMARY KEY 
-  (NAMETYPE));
-
-ALTER TABLE SAMPLE_NAME
- ADD (CONSTRAINT SAE_PK PRIMARY KEY 
-  (SAMPLEID
-  ,NAMETYPE));
-
-ALTER TABLE CONTAINERHEADER_NAME
- ADD (CONSTRAINT OCN_PK PRIMARY KEY 
-  (CONTAINERID
-  ,NAMETYPE));
-
-ALTER TABLE CONTAINERHEADER
- ADD (CONSTRAINT AVCON_1180642153_ADDIT_000 CHECK (ADDITIONALINFO IN (0, 1)))
-;  
-
-
-ALTER TABLE SAMPLE
- ADD (CONSTRAINT AVCON_1180642153_ADDIT_001 CHECK (ADDITIONALINFO IN (0, 1)))
-;
-
-ALTER TABLE SAMPLE_NAME ADD (CONSTRAINT
- SAE_SNT_FK FOREIGN KEY 
-  (NAMETYPE) REFERENCES SAMPLE_NAMETYPE
-  (NAMETYPE))
-;
-ALTER TABLE SAMPLE_NAME ADD (CONSTRAINT
- SAE_SAMPLE_FK FOREIGN KEY 
-  (SAMPLEID) REFERENCES SAMPLE
-  (SAMPLEID) ON DELETE CASCADE);
-
-ALTER TABLE CONTAINERHEADER_NAME ADD (CONSTRAINT
- OCN_OCE_FK FOREIGN KEY 
-  (NAMETYPE) REFERENCES CONTAINERHEADER_NAMETYPE
-  (NAMETYPE))
-
-
-;
-ALTER TABLE CONTAINERHEADER_NAME ADD (CONSTRAINT
- OCN_CHEADER_FK FOREIGN KEY 
-  (CONTAINERID) REFERENCES CONTAINERHEADER
-  (CONTAINERID) ON DELETE CASCADE);
-
-  
- *
- *alter constructdesign 
- *add protocol - UPLOAD_CONTAINERS_FROM_FILE
-*/
 
 package edu.harvard.med.hip.flex.infoimport;
 
@@ -219,7 +130,7 @@ public String getTitle() {        return "Upload of information for third-party 
             // read in data mapping schema
             file_structures = readDataMappingSchema();
   // array list of containers read from 1 file         
-            readDataFromFiles(file_structures );
+           readDataFromFiles(file_structures );
             
             if ( m_is_insert_control_negative_for_empty_well)
                          fellInEmptyWells();
@@ -261,10 +172,7 @@ public String getTitle() {        return "Upload of information for third-party 
         }
         finally
          {
-            for (int c = 0; c < m_error_messages.size();c++)
-            {
-                 System.out.println( (String) m_error_messages.get(c));
-            }
+           
             sendEmails("New plates upload into FLEX","New plates upload into FLEX");
          }
     
@@ -406,7 +314,9 @@ public String getTitle() {        return "Upload of information for third-party 
                 assignAuthorInformation( freader);
             }
            if ( file_structures[ FileStructure.FILE_TYPE_PUBLICATION_INFO] != null &&
-                   file_structures[ FileStructure.FILE_TYPE_PUBLICATION_CONNECTION] != null)
+                   file_structures[ FileStructure.FILE_TYPE_PUBLICATION_CONNECTION] != null
+                   && m_file_input_data.get(FileStructure.STR_FILE_TYPE_PUBLICATION_INFO) != null
+                   && m_file_input_data.get(FileStructure.STR_FILE_TYPE_PUBLICATION_CONNECTION) != null)
             {
                FileStructure fst = file_structures[ FileStructure.FILE_TYPE_PUBLICATION_INFO];
                freader.readFileIntoSetOfObjects( (InputStream)m_file_input_data.get(FileStructure.STR_FILE_TYPE_PUBLICATION_INFO), true,
@@ -551,7 +461,17 @@ public String getTitle() {        return "Upload of information for third-party 
          i_containers = freader.getContainers();
          i_flex_sequences = freader.getFlexSequences();
          if ( freader.getErrorMesages().size() > 0 )
+         {
+             String error_messages = "";
              m_error_messages.addAll(freader.getErrorMesages());
+          
+             for (String er: m_error_messages)
+             {
+                 error_messages +="\n" + er;
+             }
+             throw new Exception ("Cannot process files: "+error_messages);
+         }
+         
           
     }
     
@@ -581,14 +501,18 @@ public String getTitle() {        return "Upload of information for third-party 
                         true, true,file_structures[ FileStructure.FILE_TYPE_ONE_FILE_SUBMISSION]);//, null) ;
             i_containers = freader.getContainers();
          
-           if ( freader.getErrorMesages().size() > 0 )
-                m_error_messages.addAll(freader.getErrorMesages());
-            
-            //now connect 
-         
-        
-   
-          
+            if ( freader.getErrorMesages().size() > 0)
+            {
+                String error_messages = "";
+                 m_error_messages.addAll(freader.getErrorMesages());
+
+                 for (String er: m_error_messages)
+                 {
+                     error_messages +="\n" + er;
+                 }
+                 throw new Exception ("Cannot process files: "+error_messages);
+            }
+    
     }
      // check by GI only    
       private void        checkFlexSequencesInFLEXDatabase() throws Exception
@@ -1019,7 +943,7 @@ public String getTitle() {        return "Upload of information for third-party 
                 container.insert(conn, m_error_messages, m_project_id, m_workflow_id,
                         project_code, m_sample_biotype);
          }
-                 createProcessRecords( conn,  i_containers.values(),  m_protocol_id,  m_project_id ,   m_workflow_id   );
+                createProcessRecords( conn,  i_containers.values(),  m_protocol_id,  m_project_id ,   m_workflow_id   );
        
     }
     
@@ -1079,7 +1003,11 @@ public String getTitle() {        return "Upload of information for third-party 
             {
                 sequence = (ImportFlexSequence ) temp;
                 if ( !species_names.contains(sequence.getSpesies()))
+                {
                     species_names.add(sequence.getSpesies());
+                    if (sequence.getSpesies()==null)
+                        System.out.println(sequence.getId());
+                }
                 for (int p_count = 0; p_count < sequence.getPublicInfo(). size(); p_count++)
                 {
                     p_item = (PublicInfoItem ) sequence.getPublicInfo().get(p_count);

@@ -24,8 +24,8 @@ public abstract class ImportRunner implements Runnable
 {
   
        //------------------------------------------------------------------
-    protected ArrayList   m_error_messages = null;
-     protected ArrayList   m_process_messages = null;
+    protected ArrayList <String>  m_error_messages = null;
+     protected ArrayList <String>  m_process_messages = null;
    
     protected String      m_items = null;
     protected String      m_processed_items = null;
@@ -37,6 +37,8 @@ public abstract class ImportRunner implements Runnable
     private   String        m_process_title = null;
     private   String        m_input_files_data_schema = null;
     private   InputStream   m_instream_input_files_data_schema = null;
+    
+    private     Connection  m_conn = null;
     /** Creates a new instance of ProcessRunner */
     public ImportRunner()
     {
@@ -46,7 +48,9 @@ public abstract class ImportRunner implements Runnable
     public  void        setUser(User v){m_user=v;}
     public  void        setResearcher( Researcher v)       { m_researcher = v;}
     public  void        setProcessType(int process_id)    {        m_process_type = process_id;    }
- 
+    public void         setConnection(Connection conn){m_conn = conn;}
+    public Connection         getConnection( ){ return m_conn ;}
+    
     public void       setInputData(int type,String item_ids)
      {
          m_items_type = type;
@@ -111,6 +115,8 @@ public abstract class ImportRunner implements Runnable
          return    prepareItemsListForSQL(m_items_type, m_items, item_increment);
      
        }
+      
+       
        
        public ArrayList prepareItemsListForSQL(int item_increment)
        {
@@ -200,15 +206,13 @@ public abstract class ImportRunner implements Runnable
             if (m_error_messages.size() > 0)
             {
                 msg = Algorithms.convertStringArrayToString(m_error_messages,"\n");
+                System.out.println(msg);
                 Mailer.sendMessage(m_user.getUserEmail(), from, from, title, msg);  
-         
             } 
-             
-                 System.out.println(msg );
-         
             msg = Algorithms.convertStringArrayToString(m_process_messages,"\n");
+             System.out.println(msg);
             Mailer.sendMessage(m_user.getUserEmail(), from, from, title, msg);  
-                    
+         
          }
          catch(Exception e)         {         }
       }
