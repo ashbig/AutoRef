@@ -159,13 +159,16 @@ public class ConstantsImport
       //constants for new imports
     
     //   processes
-       public static final int     PROCESS_DATA_TRANSFER_ACE_TO_FLEX = 0;
-       public static final int     PROCESS_IMPORT_OUTSIDE_CONTAINERS_INTO_FLEX = 1;
-       public static final int     PROCESS_IMPORT_VECTORS = 2;
+        public static final int     PROCESS_DATA_TRANSFER_ACE_TO_FLEX = 0;
+        public static final int     PROCESS_IMPORT_OUTSIDE_CONTAINERS_INTO_FLEX = 1;
+        public static final int     PROCESS_IMPORT_VECTORS = 2;
         public static final int     PROCESS_IMPORT_LINKERS = 3;
         public static final int     PROCESS_IMPORT_INTO_NAMESTABLE = 4;
         public static final int     PROCESS_IMPORT_CLONING_STRATEGIES = 5;
         public static final int     PROCESS_PUT_PLATES_FOR_SEQUENCING = 6;
+        public static final int     PROCESS_DATA_TRANSFER_FLEX_TO_PLASMID_IMPORT = 7;
+        public static final int     PROCESS_DATA_TRANSFER_FLEX_TO_PLASMID_CREATE_FILES = 8;
+        public static final int     PROCESS_DATA_TRANSFER_FLEX_TO_PLASMID_DIRECT_IMPORT = 9;
       
  
    //   submission item type
@@ -173,6 +176,7 @@ public class ConstantsImport
        public static final int     ITEM_TYPE_CLONEID = 1;
        public static final int     ITEM_TYPE_FLEXSEQUENCE_ID = 2;
        public static final int     ITEM_TYPE_SAMPLE_ID = 3;
+       public static final int     ITEM_TYPE_FILE_PATH = 4;
       
        
        //configuration 
