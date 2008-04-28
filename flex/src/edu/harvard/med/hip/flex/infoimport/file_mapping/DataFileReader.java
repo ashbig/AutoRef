@@ -131,7 +131,7 @@ public class DataFileReader
         
             while((line = in.readLine()) != null) 
             {
-                 if (isTrimLine) line = line.trim();
+                  if (isTrimLine) line = line.trim();
                  if (  isFirstHeader && isFirstLine ) 
                  {
                     String[] header_content = line.split(ConstantsImport.TAB_DELIMETER);//Algorithms.splitString(line, ConstantsImport.TAB_DELIMETER, false, -1);
@@ -149,6 +149,7 @@ public class DataFileReader
                      else
                      {
                          // one row cannot define more than one object of the particular type
+                     
                          processRow(header_struct, row_content, mapping_file_structure.getType());//,object_type);
                      }
                  } 
@@ -181,7 +182,7 @@ public class DataFileReader
         RecordDescription current_column_structure_description = null;
         for ( int count = 0; count < header_content.length; count++)
         {
-            current_column = (FileStructureColumn) mapping_file_structure.getColumns().get(header_content[count].toUpperCase());
+            current_column = (FileStructureColumn) mapping_file_structure.getColumns().get(header_content[count].toUpperCase().trim());
             if ( current_column == null) continue;
             if (current_column.getObjectPropertyOrder() < 0 )
             {
@@ -213,6 +214,8 @@ public class DataFileReader
   private  void          processRow(Collection header_struct, String[] row_content ,
           int file_type) throws Exception
   {
+   
+      
       int number_of_object_property_value = header_struct.size();
       RecordDescription object_property_value_description = null;
       ColumnValue[]  records_out = constructRecordsOut( header_struct,  row_content);
@@ -404,6 +407,7 @@ public class DataFileReader
   {
      try
      {
+         
        String flex_sequence_id = setFlexSequenceProperties( records_out);
        if ( i_samples_hash == null ) createSampleHashMap();
        ImportSample   sample= (ImportSample) i_samples_hash.get( flex_sequence_id );
@@ -812,11 +816,12 @@ public class DataFileReader
                 {
                   row_sample.setCloneType(temp_column_value);
                 }
+              
                 else if ( temp_property_name.intern() == ImportSample.SAMPLE_CLONING_STRATEGYID)
                 {
                   row_sample.setCloningStrategyId( Integer.parseInt(temp_column_value));
-                }
-            **/
+                }*/
+            
               else
               {
                   p_info= new PublicInfoItem(temp_property_name, temp_column_value);
@@ -980,18 +985,17 @@ public class DataFileReader
           {
               row_sequence.setCDSStart(1);
               row_sequence.setCDSStop(row_sequence.getSequenceText().length()  );
-            
-              if (row_sequence.getSequenceText().length() % 3 != 0)
-              {
-                   p_info =  PublicInfoItem.getPublicInfoByName(ImportFlexSequence.PROPERTY_NAME_IS_CHECK_CDS, row_sequence.getPublicInfo());
-                   if (  p_info != null && p_info.getValue().intern() == ImportFlexSequence.PROPERTY_VALUE_NOTCHECK_CDS)
-                        isCheckSequenceTotalNumberCodons = false;
-                   else
-                //  System.out.println("sequence length: "+ row_sequence.getSequenceText().length() +" gene id: "+PublicInfoItem.getPublicInfoByName( "GENE_ID", row_sequence.getPublicInfo()));
-                      throw new Exception ("Wrong sequence text "+row_sequence.getSequenceText().length());
-              }
-                  
+         
           }
+        if (row_sequence.getSequenceText().length() % 3 != 0)
+      {
+           p_info =  PublicInfoItem.getPublicInfoByName(ImportFlexSequence.PROPERTY_NAME_IS_CHECK_CDS, row_sequence.getPublicInfo());
+           if (  p_info != null && p_info.getValue().intern() == ImportFlexSequence.PROPERTY_VALUE_NOTCHECK_CDS)
+                isCheckSequenceTotalNumberCodons = false;
+           else
+        //  System.out.println("sequence length: "+ row_sequence.getSequenceText().length() +" gene id: "+PublicInfoItem.getPublicInfoByName( "GENE_ID", row_sequence.getPublicInfo()));
+              throw new Exception ("Wrong sequence text "+row_sequence.getSequenceText().length());
+      }
 
           if ( isCheckSequenceTotalNumberCodons &&  (row_sequence.getCDSStop() - row_sequence.getCDSStart() + 1) % 3 != 0)
               throw new Exception ("Wrong sequence text ");
