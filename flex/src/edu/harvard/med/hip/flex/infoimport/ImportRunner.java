@@ -24,8 +24,8 @@ public abstract class ImportRunner implements Runnable
 {
   
        //------------------------------------------------------------------
-    protected ArrayList <String>  m_error_messages = null;
-     protected ArrayList <String>  m_process_messages = null;
+    protected ArrayList  m_error_messages = null;
+     protected ArrayList  m_process_messages = null;
    
     protected String      m_items = null;
     protected String      m_processed_items = null;

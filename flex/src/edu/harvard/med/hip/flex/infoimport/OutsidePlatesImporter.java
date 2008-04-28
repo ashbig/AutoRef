@@ -465,9 +465,9 @@ public String getTitle() {        return "Upload of information for third-party 
              String error_messages = "";
              m_error_messages.addAll(freader.getErrorMesages());
           
-             for (String er: m_error_messages)
+             for (int count = 0; count < m_error_messages.size(); count++)
              {
-                 error_messages +="\n" + er;
+                 error_messages +="\n" + (String) m_error_messages.get(count);
              }
              throw new Exception ("Cannot process files: "+error_messages);
          }
@@ -506,9 +506,9 @@ public String getTitle() {        return "Upload of information for third-party 
                 String error_messages = "";
                  m_error_messages.addAll(freader.getErrorMesages());
 
-                 for (String er: m_error_messages)
+                 for (int count = 0; count < m_error_messages.size(); count++)
                  {
-                     error_messages +="\n" + er;
+                     error_messages +="\n" + (String) m_error_messages.get(count);
                  }
                  throw new Exception ("Cannot process files: "+error_messages);
             }

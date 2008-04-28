@@ -49,11 +49,14 @@ public class ItemsImporter  extends ImportRunner
     
     public void run_process() 
     {
-        Connection  conn = null;
+        Connection conn = null;
        
          try
         {
-           conn = DatabaseTransaction.getInstance().requestConnection();   
+             if ( this.getConnection() == null)
+             { conn = DatabaseTransaction.getInstance().requestConnection(); }
+             else 
+             { conn = this.getConnection();}
              switch (m_process_type)
             {
                 case ConstantsImport.PROCESS_IMPORT_VECTORS: uploadVectors(conn);

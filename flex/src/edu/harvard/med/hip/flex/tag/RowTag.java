@@ -234,8 +234,8 @@ public class RowTag extends org.apache.struts.taglib.html.BaseHandlerTag {
     public int doStartTag() throws JspException {
         
         // Continue processing this page
-       // return (EVAL_BODY_TAG);
-        return (EVAL_BODY_AGAIN);
+        return (EVAL_BODY_TAG);
+      //  return (EVAL_BODY_AGAIN);
         
     }
     /**
