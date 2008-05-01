@@ -249,6 +249,7 @@ public class FileManager {
                 items = line.split("\t");
                 row_values = new String[column_numbers.length];
                 file_values.add(row_values);count = 0;
+                if ( items.length < column_numbers.length) continue;
                 for (int column_number : column_numbers)
                 {
                     row_values[count++] = items[column_number].trim();
@@ -321,5 +322,22 @@ public class FileManager {
         {
             if (output != null) output.close();
         }
+    }
+    
+    public static void main(String[] args) 
+    {
+       psi_data_converter.util.SubmissionProperties     subprop = 
+               psi_data_converter.util.SubmissionProperties.getInstance();
+         
+           String outputdir =  subprop.getProperty("FILES_OUTPUT_DIR") ;
+       psi_data_converter.verification.CloneInfoVerificator cinfo = 
+               new psi_data_converter.verification.CloneInfoVerificator(outputdir+File.separator+ subprop.getProperty("FILE_CLONE_INFO_NAME").trim() +".txt");
+       String linker_file =  subprop.getProperty("LINKERS_FILE_LOCATION") ;
+      List linker_values = null;
+       int[] column_values = {0, 1};
+  try
+  {
+       FileManager.readFileIntoStringArray(linker_file,column_values, true);
+    }catch(Exception e){}
     }
 }

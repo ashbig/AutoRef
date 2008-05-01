@@ -43,6 +43,120 @@ public class Main
           
             Main tester = new Main();
              
+               String clone_info_file_name="Z:\\HTaycher\\HIP projects\\PSI\\submission\\submitted_plates\\JCSG\\dump\\tmp\\total_clone_info.txt";
+               String gene_info_file_name="Z:\\HTaycher\\HIP projects\\PSI\\submission\\submitted_plates\\JCSG\\dump\\tmp\\total_gene_info.txt";
+               String clone_location_file_name = "Z:\\HTaycher\\HIP projects\\PSI\\submission\\submitted_plates\\JCSG\\dump\\tmp\\total_clone_location.txt";
+               String damaged_plate_labels="Z:\\HTaycher\\HIP projects\\PSI\\submission\\submitted_plates\\JCSG\\dump\\tmp\\damagedplates.txt";
+            String processed_plates="Z:\\HTaycher\\HIP projects\\PSI\\submission\\submitted_plates\\JCSG\\dump\\tmp\\processed_plates.txt";
+                   String not_to_process_plate_labels="Z:\\HTaycher\\HIP projects\\PSI\\submission\\submitted_plates\\JCSG\\dump\\tmp\\not_to_process_plate_labels.txt";
+       
+            String isCheckForGoodClones = subprop.getProperty("IS_CHECK_FOR_GOOD_CLONES");
+             String isCopyRecordsGoodClones = subprop.getProperty("IS_COPY_RECORDS_FOR_GOOD_CLONES");
+          if ( isCheckForGoodClones.equals("1"))
+          {
+                 
+    /*             
+HashMap<String,String>  cloneids_location =  Verifier.readDataIntoHash(clone_location_file_name, subprop.getProperty("FILE_CLONE_LOCATION_CLONEID") ,  subprop.getProperty("FILE_CLONE_LOCATION_CLONEID") ,true);
+
+HashMap<String,String>  cloneids_geneinfo =  Verifier.readDataIntoHash(gene_info_file_name, subprop.getProperty("CLONE_INFO_VALUE_CLONEID") ,  subprop.getProperty("CLONE_INFO_VALUE_CLONEID") ,true);
+
+HashMap<String,String>  cloneids_cloneinfo =  Verifier.readDataIntoHash(clone_info_file_name, subprop.getProperty("CLONE_INFO_VALUE_CLONEID") ,  subprop.getProperty("CLONE_INFO_VALUE_CLONEID") ,true);
+  
+for ( String clone_id : cloneids_location.keySet())  
+{
+    if (!cloneids_geneinfo.containsKey(clone_id) )
+        System.out.println(clone_id);
+    if (!cloneids_cloneinfo.containsKey(clone_id) )
+        System.out.println(clone_id);
+    
+  
+}
+cloneids_location=null;cloneids_geneinfo=null;cloneids_cloneinfo=null;
+     **/
+         int[] header_items_index={0,3};
+               int[]  check_fileds_index={1};
+             // ArrayList<String> empty_clones =  tester.verifyColumnInfoNoneEmpty( clone_info_file_name, header_items_index,       check_fileds_index,       subprop );
+             //  System.out.println(empty_clones.size());
+                 String no_NTSeq="Z:\\HTaycher\\HIP projects\\PSI\\submission\\submitted_plates\\JCSG\\dump\\tmp\\no_NT_seq.txt";
+            
+              ArrayList<String> empty_clones =tester.getProcessedPlatesLabels(no_NTSeq);
+               ArrayList<String> damagedPlates = tester.writeDamagedPlatesRecords(subprop,empty_clones,clone_location_file_name);
+                 FileManager.writeFile(damagedPlates, damaged_plate_labels, "no sequence", true) ;
+
+//check for double entries per well
+              ArrayList<String> double_entry_clones =  tester.verifyDoubleEntryRecords( clone_location_file_name,        subprop );
+              System.out.println(double_entry_clones.size());
+              
+              for (String cs : double_entry_clones)
+              {
+                  System.out.println(cs);
+              }
+               
+               ArrayList<String> damagedPlates_double_entry =tester.writeDamagedPlatesRecords(subprop,double_entry_clones,clone_location_file_name);
+               damagedPlates.addAll( damagedPlates_double_entry);
+               damagedPlates_double_entry.add(0,"double entry plates");
+             
+               FileManager.writeFile(damagedPlates_double_entry, damaged_plate_labels, "no sequence", true) ;
+             
+               
+               damagedPlates.addAll( tester.getProcessedPlatesLabels(processed_plates));
+               // get damaged plates that do not have all records
+                String no_entry_clones_fn="Z:\\HTaycher\\HIP projects\\PSI\\submission\\submitted_plates\\JCSG\\dump\\tmp\\only_in_location.txt";
+       
+               ArrayList<String> no_entry_clones =  tester.getProcessedPlatesLabels(no_entry_clones_fn);
+               ArrayList<String> damagedPlates_no_entry_clones =tester.writeDamagedPlatesRecords(subprop,no_entry_clones,clone_location_file_name);
+                FileManager.writeFile(damagedPlates_no_entry_clones, damaged_plate_labels, "no entry", true) ;
+             
+               damagedPlates.addAll( damagedPlates_no_entry_clones);
+               ArrayList no_d_damagedPlates = new ArrayList();
+                 for (String cs : damagedPlates)
+              {
+                  if ( ! no_d_damagedPlates.contains( cs))
+                      no_d_damagedPlates.add(cs);
+                  
+              }  
+               FileManager.writeFile(no_d_damagedPlates, damaged_plate_labels, "", false) ;
+  
+            }
+              
+
+            if (isCopyRecordsGoodClones.equals("1") )
+                
+            {
+                String all_plates_fl_name="Z:\\HTaycher\\HIP projects\\PSI\\submission\\submitted_plates\\JCSG\\dump\\tmp\\all_plates.txt";
+                ArrayList<String> allPlates =  tester.getProcessedPlatesLabels(all_plates_fl_name);
+                ArrayList<String> not_to_process_pl =  tester.getProcessedPlatesLabels(damaged_plate_labels);
+                 ArrayList<String> goodPlates = new ArrayList();
+                 for ( String pl: allPlates)
+                 {
+                     if ( !not_to_process_pl.contains(pl) )
+                     {
+                         goodPlates.add(pl);
+                         System.out.println(pl);
+                     }
+                 }
+                 
+                
+                //write set of good 
+                String file_name_good_clones=null; allPlates = new ArrayList();
+                for ( int count =0; count < goodPlates.size(); count++)
+                {
+                    if (count != 0 && ( count % 20 ==0 || count == goodPlates.size()-1))
+                    {
+                        file_name_good_clones="Z:\\HTaycher\\HIP projects\\PSI\\submission\\submitted_plates\\JCSG\\dump\\tmp\\clones_to_process_"+count+".txt";
+                        tester.writeClonesFromGoodPlates(allPlates, file_name_good_clones,clone_location_file_name, subprop);
+                        tester.getRecordsForGoodClones( subprop,
+                             file_name_good_clones ,  clone_info_file_name, 
+                            gene_info_file_name,  clone_location_file_name,"Clone_ID", count);
+                         allPlates = new ArrayList();
+                         
+                     //    System.out.println("Writing: "+file_name_good_clones);
+                       
+                    }
+                    allPlates.add(goodPlates.get(count));
+                }
+               
+            }
             String isUnzip = subprop.getProperty("IS_UNZIP");
             if (isUnzip.equals("1") )
             {
@@ -54,7 +168,7 @@ public class Main
              String isProcess = subprop.getProperty("IS_PROCESS");
             if (isProcess.equals("1") )
             {
-           tester.processFiles(subprop,  er_messages, messages_missing_data_report);
+                    tester.processFiles(subprop,  er_messages, messages_missing_data_report);
             }
            /* String file_name =  subprop.getProperty("FILES_OUTPUT_DIR") +File.separator+"logger.txt";
             FileManager. writeFile(er_messages,  file_name,  "", true);
@@ -141,12 +255,21 @@ public class Main
             //can be not needed
             if ( ! subprop.getProperty("IS_CHANGER_CDS_STOP_VALUE") .equals(0))
             {
+              if ( ! subprop.getProperty("IS_CHANGER_ATTACH_STOP_CODON") .equals(0))
+              {
+                    int column_num = Verifier.defineColumnNumber(subprop.getProperty("FILE_CLONE_INFO_HEADER_ORIGINAL"),  subprop.getProperty("CLONE_INFO_NTSEQ"));
+                    for ( String[] item : records )
+                    {
+                    item[column_num] = item[column_num]+subprop.getProperty("CLONE_INFO_NTSEQ");
+                    }
+              }
               String outputdir =  subprop.getProperty("FILES_OUTPUT_DIR") ;
               CloneInfoVerificator cinfo = new CloneInfoVerificator(outputdir+File.separator+ subprop.getProperty("FILE_CLONE_INFO_NAME").trim() +".txt");
               header =  subprop.getProperty("CLONE_INFO_CDS_STOP") ;
               int change_value = Integer.valueOf(subprop.getProperty("IS_CHANGER_CDS_STOP_VALUE") );
               cinfo.replaceIntStringsValue( header, 3,  Verifier.ENUM_MATH.PLUS );
             
+             
             }
              
             
@@ -288,9 +411,13 @@ public class Main
             if ( subprop.getProperty("PSI_AUTHOR_2") != null)
                  additional_authors.add(subprop.getProperty("PSI_AUTHOR_2"));
            
+             String cloneauthor_fn = subprop.getProperty("FILES_OUTPUT_DIR") + File.separator + subprop.getProperty("FILE_CLONE_CLONEAUTHOR_NAME").trim()+".txt";
+           File flo = new File(cloneauthor_fn);
+           String header=subprop.getProperty("FILE_CLONE_CLONEAUTHOR_HEADER");
+           if (flo.exists())header=null;
             plver.writeTempAuthorFile(psi_site_description, clone_ids,
                     clone_author_tmp_file ,
-                    null,//subprop.getProperty("FILE_CLONE_CLONEAUTHOR_NAME_HEADER") ,
+                    header,//subprop.getProperty("FILE_CLONE_CLONEAUTHOR_HEADER") ,
                     additional_authors, true);
             return clone_ids;
          }
@@ -325,14 +452,14 @@ public class Main
                      //verify that all clones from PlateMapping are here
                     if ( clone_ids != null)
                     {
-                         boolean isAllCloneID = gver.verifyAllCloneIDDescribed(records, 0, clone_ids);
+                         boolean isAllCloneID = gver.verifyAllCloneIDDescribed(records, 0, clone_ids,er_messages );
                          if (! isAllCloneID )
                             er_messages.add("Not all cloneID described in gene info file.");
                     }
                      ArrayList species = gver.getSpeciesNames(records, 1);
                      header= subprop.getProperty("NEW_SPECIES_HEADER").trim();
                      String file_name=outputdir + File.separator+ subprop.getProperty("NEW_SPECIES_FILE_NAME").trim();
-                     FileManager. writeFile(species,  file_name,  header, false);
+                     FileManager. writeFile(species,  file_name,  header, true);
                  }
                 
              }
@@ -343,6 +470,286 @@ public class Main
             return records;
            
      }
+     
+  //----------------------------------------------------------------
+     //process set of plates where not all clones have sequences
+public ArrayList<String> verifyColumnInfoNoneEmpty(String clone_info_file_name,int[] header_items_index,
+        int[] check_fileds_index,             SubmissionProperties subprop )
+    { 
+// process verify clones information
+    //    gene information : create list of species
+    ArrayList<String>  empty_clones = new ArrayList();
+             List<String[]> records = null; String file_name;
+             String outputdir =  subprop.getProperty("FILES_OUTPUT_DIR") ;
+             ArrayList errors = new ArrayList();
+             String empty_field_definition = subprop.getProperty("EMPTY_FIELD_DEFINITION");
+         
+             try
+             {
+                records =   FileManager.readFileIntoStringArray(clone_info_file_name, header_items_index,"\t", true);
+                 if ( records != null || records.size() > 0)
+                 {
+                      for( String[] record : records )
+                      {
+                          for ( int count = 0; count < check_fileds_index.length; count++)
+                          {
+                              if ( record[check_fileds_index[count]].equalsIgnoreCase(empty_field_definition))
+                              {
+                                  errors.add(record[0]+"\t"+check_fileds_index[count] +" empty");
+                                  empty_clones.add(record[0]);
+                              }
+                          }
+                           
+                     }
+                                 //verify that all clones from PlateMapping are here
+                      file_name=outputdir + File.separator+ "EmptyFields.txt";
+                     FileManager. writeFile(errors,  file_name,  "Empty fields", true);
+                 }
+                
+             }
+             catch(Exception e)
+             {
+                 errors.add("Cannot read gene info file");
+             }
+                 return empty_clones;
+            
+     }
+
+public  void          getRecordsForGoodClones(SubmissionProperties subprop,
+        String file_name_good_clones , String clone_info_file_name, String gene_info_file_name,
+        String clone_location_file_name,                String header, int count)
+{
+    // read in clone id file
+    try
+    {
+        HashMap<String,String>  cloneids =  Verifier.readDataIntoHash(file_name_good_clones, header ,  header ,true);
+        
+        String header_clone_id=subprop.getProperty("CLONE_INFO_VALUE_CLONEID");
+        String filename_output=subprop.getProperty("FILES_OUTPUT_DIR")+File.separator+subprop.getProperty("FILE_CLONE_INFO_NAME")+count+".txt";
+         getRecordsForCloneIds(clone_info_file_name, filename_output,  cloneids ,
+         header_clone_id, true) ;
+         
+         header_clone_id=subprop.getProperty("FILE_CLONE_GENEINFO_CLONEID_HEADER");
+         filename_output=subprop.getProperty("FILES_OUTPUT_DIR")+File.separator+subprop.getProperty("FILE_CLONE_GENEINFO_NAME")+count+".txt";
+       
+        getRecordsForCloneIds(gene_info_file_name, filename_output,   cloneids ,
+         header_clone_id, true) ;
+        
+         header_clone_id=subprop.getProperty("FILE_CLONE_LOCATION_CLONEID");
+         filename_output=subprop.getProperty("FILES_OUTPUT_DIR")+File.separator+subprop.getProperty("FILE_CLONE_LOCATION_NAME")+count+".txt";
+       
+        getRecordsForCloneIds(clone_location_file_name, filename_output,   cloneids ,
+         header_clone_id, true) ;
+    }
+    catch(Exception e)
+    {
+        System.out.println("Cannot create new files");
+    }
+}
+
+
+private  void getRecordsForCloneIds(String filename,String filename_output, HashMap<String,String>  cloneids ,
+        String header_clone_id, boolean isHeader) throws Exception
+    {
+         String[] items ;
+        BufferedReader output = null ;  BufferedWriter in = null ; 
+        String line ; ArrayList authors = new ArrayList();
+        String cloneid = null; int key_column = -1;
+        // read author info and stor author 
+        try
+        {
+            output = new BufferedReader(new FileReader(filename));
+            in = new BufferedWriter(new FileWriter(filename_output));
+            if ( isHeader)
+            {
+                line = output.readLine();//header
+                in.write(line+"\n");
+                key_column = Verifier.defineColumnNumber(line,  header_clone_id);
+            }
+            if ( key_column == -1) 
+                throw new Exception ("Cannot define cloneid header");
+            while ( (line = output.readLine() ) != null)
+            {
+                items = line.split("\t");
+                if ( key_column >= items.length)
+                     throw new Exception ("Problem with file format");
+                cloneid = items[key_column];
+                System.out.println(cloneid); 
+                if( cloneids.keySet().contains(cloneid) )
+                    in.write(line+"\n");
+                }
+            output.close();
+            in.close();
+        }
+        catch(Exception e)
+        {
+            throw new Exception ("Cannot read author info file " );
+        }
+        finally
+        {
+            if (output != null) output.close();
+        }
+    }
+    
+private ArrayList<String> getProcessedPlatesLabels(String file_name_processed_plates)
+throws Exception
+{
+    ArrayList<String>     result = new ArrayList();
+    String line = null;
+    try
+        {
+            BufferedReader output = new BufferedReader(new FileReader(file_name_processed_plates));
+            while ( (line = output.readLine() ) != null)
+            {
+                result.add(line);
+            }
+            output.close();
+            return result;
+    }
+    catch(Exception e){throw new Exception (e.getMessage());}
+}
+public  ArrayList<String>          writeDamagedPlatesRecords(  SubmissionProperties subprop,
+        ArrayList<String> damaged_clohne_ids,String  clone_location_file_name)throws Exception
+{
+        ArrayList<String>     damagedPlates = new ArrayList();
+        String outputdir =  subprop.getProperty("FILES_OUTPUT_DIR") ;
+        PlateMapperVerifier plver = new PlateMapperVerifier();
+        String plate = null;
+        String PSI_site_info_file_name = subprop.getProperty("PSI_DESCRIPTION_FILE_LOCATION") ;
+        try
+        {
+            HashMap<String,String> clone_ids = plver.readDataIntoHash(clone_location_file_name, 
+                    subprop.getProperty("FILE_CLONE_LOCATION_CLONEID"),
+                        subprop.getProperty("FILE_CLONE_LOCATION_PLATE_NAME") , true);
+            ArrayList errors = new ArrayList();     
+            for ( String clone_id : damaged_clohne_ids)  
+            {
+                if ( clone_ids.get(clone_id) != null)
+                {
+                    errors.add("Plate: "+clone_ids.get(clone_id) +" "+ clone_id);
+                    plate = (String)clone_ids.get(clone_id);
+                    if (! damagedPlates.contains(plate))
+                    {
+                        damagedPlates.add(plate);
+                    }
+                }
+            }
+            String file_name=outputdir + File.separator+ "damagedPlates.txt";
+            FileManager. writeFile(errors,  file_name,  "platename", true);
+            return damagedPlates;
+        }
+        catch(Exception e)
+        {
+            throw new Exception (e.getMessage());
+           
+        }
+}
+
+private ArrayList<String> verifyDoubleEntryRecords(String  clone_location_file_name,
+        SubmissionProperties  subprop )throws Exception
+{
+       BufferedReader output = null ;  String[] items ;
+        String line ; HashMap items_ext = new HashMap();ArrayList<String > result = new ArrayList();
+        String cloneid = null; int key_column = -1;
+        String  header_clone_id=subprop.getProperty("FILE_CLONE_LOCATION_CLONEID");
+        String plate = subprop.getProperty("FILE_CLONE_LOCATION_PLATE_NAME");
+        String well = subprop.getProperty("FILE_CLONE_LOCATION_WELL");
+        boolean isHeader= true;int clone_id_column = -1;int plate_column= -1;int well_column=-1;
+      
+        // read author info and stor author 
+        try
+        {
+            output = new BufferedReader(new FileReader(clone_location_file_name));
+            if ( isHeader)
+            {
+                line = output.readLine();//header
+                clone_id_column = Verifier.defineColumnNumber(line,  header_clone_id);
+                plate_column = Verifier.defineColumnNumber(line,  plate);
+                well_column=Verifier.defineColumnNumber(line,  well);
+            }
+            if ( clone_id_column == -1 || plate_column==-1) 
+                throw new Exception ("Cannot define cloneid header");
+        
+            while ( (line = output.readLine() ) != null)
+            {
+                items = line.split("\t");
+                if ( key_column >= items.length)
+                     throw new Exception ("Problem with file format");
+                cloneid = items[clone_id_column];
+                if(  items_ext.keySet().contains(items[plate_column]+"_"+items[well_column]) )
+                {
+                    result.add(cloneid);
+                }
+                 else
+                 {
+                    items_ext.put(items[plate_column]+"_"+items[well_column], cloneid);
+                 }
+            }
+            output.close();
+            return result;
+        }
+        catch(Exception e)
+        {
+            throw new Exception ( e.getMessage() );
+        }
+        finally
+        {
+            if (output != null) output.close(); 
+        }
+}
+
+private void writeClonesFromGoodPlates(ArrayList<String> goodPlates,
+        String file_name_good_clones,String clone_location_file_name,
+        SubmissionProperties subprop)throws Exception
+{
+        String[] items ;
+        BufferedReader output = null ;  BufferedWriter in = null ; 
+        String line ; ArrayList authors = new ArrayList();
+        String cloneid = null; int key_column = -1;
+        String  header_clone_id=subprop.getProperty("FILE_CLONE_LOCATION_CLONEID");
+        String plate = subprop.getProperty("FILE_CLONE_LOCATION_PLATE_NAME");
+        boolean isHeader= true;int clone_id_column = -1;int plate_column= -1;
+        // read author info and stor author 
+        try
+        {
+            output = new BufferedReader(new FileReader(clone_location_file_name));
+            in = new BufferedWriter(new FileWriter(file_name_good_clones));
+            if ( isHeader)
+            {
+                line = output.readLine();//header
+                in.write("Clone_ID\n");
+                clone_id_column = Verifier.defineColumnNumber(line,  header_clone_id);
+                plate_column = Verifier.defineColumnNumber(line,  plate);
+            }
+            if ( clone_id_column == -1 || plate_column==-1) 
+                throw new Exception ("Cannot define cloneid header");
+        
+            while ( (line = output.readLine() ) != null)
+            {
+                items = line.split("\t");
+                if ( key_column >= items.length)
+                     throw new Exception ("Problem with file format");
+                cloneid = items[clone_id_column];
+                plate = items[plate_column];
+                if( goodPlates.contains(plate) )
+                {
+                    in.write(cloneid+"\n");
+                }
+            }
+            output.close();
+            in.close();
+        }
+        catch(Exception e)
+        {
+            throw new Exception ("Cannot read author info file " );
+        }
+        finally
+        {
+            if (output != null) output.close();
+            if (in != null) in.close();
+        }
+}
+     //------------------------------------------------------------------ 
 public void insertValuesCloneInfo(SubmissionProperties subprop, 
         List<String[]> records, ArrayList<String> er_messages )
 { 
@@ -463,9 +870,9 @@ public List<String[]>         verifyCloneInfoFile(SubmissionProperties subprop,
             if ( clone_ids != null)
             {
                  int cloneid_column_numer = Verifier.defineColumnNumber(header, subprop.getProperty("CLONE_ID") );
-                        boolean isAllCloneID = cinfo.verifyAllCloneIDDescribed(records, cloneid_column_numer, clone_ids);
+                 boolean isAllCloneID = cinfo.verifyAllCloneIDDescribed(records, cloneid_column_numer, clone_ids,er_messages);
                  if (! isAllCloneID )
-                    er_messages.add("Not all cloneID described in gene info file.");
+                    er_messages.add("Not all cloneID described in clone info file.");
             }
      // verify CDS coordinats
          cinfo.checkCDSCoordinates( er_messages, subprop.getProperty("CLONE_INFO_CDS_START"),
@@ -482,7 +889,7 @@ public List<String[]>         verifyCloneInfoFile(SubmissionProperties subprop,
         String file_name2= outputdir + File.separator+subprop.getProperty("NEW_CLONSTR_FILE_NAME").trim();
         try
         {
-            FileManager. writeFile(cloningstrategies,  file_name2,  header2, false);
+            FileManager. writeFile(cloningstrategies,  file_name2,  header2, true);
         }
         catch(Exception e){er_messages.add("Cannot write cloning strategies info: "+e.getMessage());}
         
