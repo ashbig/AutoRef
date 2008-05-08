@@ -266,6 +266,42 @@ public class FileOperations
              System.out.println("Cannot delete files "+e.getMessage());
          }
      }
+    
+    
+    public static String readFromFile(InputStream input, ArrayList<String[]> items, boolean isFirstLine)throws Exception
+     {
+         BufferedReader in = null;
+         String header = null;
+         String line = null;
+         String[] tmp  = null;
+         try 
+        {
+            in = new BufferedReader(new InputStreamReader(input));
+        
+            while((line = in.readLine()) != null) 
+            {
+                 if (  isFirstLine )    { isFirstLine = false;  header = line.trim().toUpperCase();   continue; }
+                 if (  ! line.trim().equals("") )
+                 {    
+                     line = line.trim();
+                     tmp = line.split("\t");
+                     for (String item: tmp)
+                     {
+                         item=item.trim();
+                     }
+                     items.add( tmp);    
+                 } 
+            }
+            in.close();            input.close();
+            return header;
+        }
+        catch(Exception e)
+        {
+            if (in != null) try{in.close();}catch(Exception e1){};
+            throw new Exception( e.getMessage() );
+        }
+     }
+     
     //__________________________________________________________________________
     public static void main(String args[])
     
