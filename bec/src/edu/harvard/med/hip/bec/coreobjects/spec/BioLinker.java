@@ -32,7 +32,8 @@ public class BioLinker
     { 
         m_id=id;
         m_name=name;
-        m_sequence=seq;
+        if (seq.trim().length() == 0) m_sequence="";
+        else m_sequence=seq;
         m_framestart = framestart;
     }
     

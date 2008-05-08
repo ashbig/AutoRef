@@ -227,11 +227,21 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
             readVectorFeature( vectors);
        
        // submit into ACE
+       //get all vectors from ACE to verify 
+       ArrayList<BioVector> all_vectors = BioVector.getAllVectors();
+       HashMap<String,BioVector> hash_all_vectors = new HashMap<String,BioVector>(all_vectors.size());
+       for (BioVector vect: all_vectors){hash_all_vectors.put(vect.getName().toUpperCase(), vect);}
+           
        Iterator ir = vectors.values().iterator();
        while( ir.hasNext())
        {
            cur_vector=(BioVector)ir.next();
-           cur_vector.insert(conn);
+           if ( hash_all_vectors.get(cur_vector.getName().toUpperCase()) == null)
+           {    cur_vector.insert(conn);}
+           else
+           {
+               m_error_messages.add("Vector with name "+cur_vector.getName()+" has been submitted before.");
+           }
        }
     
    }
@@ -301,13 +311,29 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
              else 
                  continue;
          }
-         if (item.length != 2 ) continue;
+         if (item.length != 2 ) 
+         {
+             m_error_messages.add("Cannot add new linker: "+Algorithms.convertArrayToString(item,"\t"));
+             continue;
+         }
          name = item[0]; sequence=item[1].toUpperCase();
          sequence = Algorithms.replaceChar(sequence,'-', '\u0000');
          if( name == null || name.length() < 1 ||  sequence == null || sequence.length()< 1)
-             continue;
+         {
+             m_error_messages.add("Cannot add new linker: "+Algorithms.convertArrayToString(item,"\t"));
+              continue;
+         }
+             
+            
        
-         if( SequenceManipulation.isValidDNASequence( sequence ))
+         boolean isSequenceOK =  SequenceManipulation.isValidDNASequence( sequence );
+         if (!isSequenceOK)
+         {
+             m_error_messages.add("Cannot add new linker: "+Algorithms.convertArrayToString(item,"\t"));
+             continue;
+         }
+             
+         if(isSequenceOK)
          {
                sql = "INSERT INTO linker (linkerid, name, sequence) "
 + " select vectorid.nextval,'"+name+"','"+sequence+"' FROM dual "
@@ -440,6 +466,7 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
        DatabaseTransaction.executeUpdate(sql, conn); 
        DatabaseToApplicationDataLoader.addSpecies( new SpeciesDefinition(id , speciesname,speciesid));
        m_additional_info += "\nNew species definition added: " +speciesname;
+       speciesid=null;
      }     
     }
    

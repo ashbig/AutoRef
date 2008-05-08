@@ -176,6 +176,19 @@ public class BioVector
               
         String sql = "select vectorid, vectorname, source, vectortype, "
         +" vectorfilename, vectorfilepath from vector where vectorid = "+id;
+        return getByRule(sql);
+    }
+    
+     public static BioVector getVectorByName(String vectorname)throws BecDatabaseException
+    {
+              
+        String sql = "select vectorid, vectorname, source, vectortype, "
+        +" vectorfilename, vectorfilepath from vector where vectorname = '"+vectorname.trim()+"'";
+        return getByRule(sql);
+    }
+    
+    private static  BioVector    getByRule(String sql )throws BecDatabaseException
+    {
         RowSet rs = null;
         BioVector vect = null;
         try
@@ -195,7 +208,7 @@ public class BioVector
             return vect;
         } catch (Exception e)
         {
-            throw new BecDatabaseException("Error occured while initializing feature with id: "+id+"\n"+sql);
+            throw new BecDatabaseException("Error occured while retriving vector data: \n"+sql);
         } finally
         {
             DatabaseTransaction.closeResultSet(rs);

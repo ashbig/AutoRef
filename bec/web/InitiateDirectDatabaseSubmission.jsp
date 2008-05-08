@@ -57,7 +57,7 @@ st.append("<tr><td>This page allows you to upload the<i> vector information </i>
 st.append("The <b>vector element</b> is described by the following properties:  name,   source,   type (1 for destination vector, 0 for master vector),");
 st.append(" filename, filepath. ");
 st.append("Each vector can be described by a set of features. <b>Feature </b> description contains:  feature name ('recombination site'), feature property (1 for added, 0  for remain, -1 for lost when insert is integrated), feature description. ");
-st.append("</td></tr> <tr>   <td  bgColor='#b8c6ed'>Please select the vector information file:");
+st.append("</td></tr> <tr>   <td  bgColor='#b8c6ed'>Please select the vector information file: ");
 st.append(" <input type='file' name='fileName' id='fileName' value=''>");
 st.append("     [<a href='"+redirection +"help/help_vector_xml_format.html'>sample template file</a>]");
 st.append("     [<a href='"+ redirection+"help/help_vector_submission.html'>sample file</a>]</td></tr>");
@@ -197,7 +197,7 @@ break;}
 StringBuffer st = new StringBuffer();        //settings database
       int new_forwardName=0;
       boolean isSubmitFromFile=false;
- if( forwardName_int == Constants.PROCESS_ADD_NEW_LINKER  
+ if( forwardName_int == -Constants.PROCESS_ADD_NEW_LINKER  
         || forwardName_int ==  -Constants.PROCESS_ADD_NEW_VECTOR  
         || forwardName_int ==  -Constants.PROCESS_ADD_NAME_TYPE  
         || forwardName_int ==  -Constants.PROCESS_ADD_SPECIES_DEFINITION  
@@ -209,25 +209,21 @@ switch( forwardName_int)
 {
     case   -Constants.PROCESS_ADD_NEW_VECTOR:  
     {
-st.append(" <tr>   <td  bgColor='#b8c6ed'>Please submit new vectors from flat files:</td></tr>");
-st.append(" <tr>   <td  bgColor='#b8c6ed'>Please select the vector information file:<input type='file' name='fileName' id='fileName' value=''>");
+st.append(" <tr>   <td  ><b>Information submission for new vectors from flat files</b></td></tr>");
+st.append(" <tr>   <td  bgColor='#b8c6ed'>Please select the vector information file: <input type='file' name='fileName' id='fileName' value=''>");
 st.append("     [<a href='"+redirection +"help/VectorInfoFile.html'>sample template file</a>]</td></tr>");
-st.append(" <tr>   <td  bgColor='#b8c6ed'>Please select the vector feature information file:<input type='file' name='fileName' id='fileName' value=''>");
+st.append(" <tr>   <td  bgColor='#b8c6ed'>Please select the vector feature information file: <input type='file' name='fileName_2' id='fileName' value=''>");
 st.append("     [<a href='"+redirection +"help/VectorFeaturesInfoFile.html'>sample template file</a>]</td></tr>");
-
-       
-       st.append("  <i>Note: Do not change file header, append new linker information to the end of the file, not duplicates will be submited.</i></td></tr>");
-
-
-       new_forwardName= -Constants.PROCESS_ADD_NEW_VECTOR_FROM_FILE ;
+st.append("  <tr>   <td  > <b>Note:</b> <i> Do not change file header, append new linker information to the end of the file, not duplicates will be submited.</i></td></tr>");
+       new_forwardName= -Constants.PROCESS_ADD_NEW_VECTOR_FROM_FLAT_FILES ;
        break;
     }
    case -Constants.PROCESS_ADD_NEW_LINKER  : 
        {
-st.append(" <tr>   <td  bgColor='#b8c6ed'>Please select the linker information file:");
+st.append(" <tr>   <td  bgColor='#b8c6ed'>Please select the linker information file: ");
 st.append(" <input type='file' name='fileName' id='fileName' value=''>");
-st.append("     [<a href='"+redirection +"help/LinkerInfoFile.html'>sample template file</a>]");
-st.append("  <i>Note: Do not change file header, append new linker information to the end of the file, not duplicates will be submited.</i></td></tr>");
+st.append("     [<a href='"+redirection +"help/LinkerInfoFile.html'>sample template file</a>]</td></tr>");
+st.append("   <tr>   <td ><b>Note:</b> <i>Do not change file header, append new linker information to the end of the file, not duplicates will be submited.</i></td></tr>");
 
 
        new_forwardName= -Constants.PROCESS_ADD_NEW_LINKER_FROM_FILE ;
@@ -235,10 +231,10 @@ st.append("  <i>Note: Do not change file header, append new linker information t
        }
    case -Constants.PROCESS_ADD_NAME_TYPE  : 
        {
-st.append(" <tr>   <td  bgColor='#b8c6ed'>Please submit new nametypes from file:");
+st.append(" <tr>   <td  bgColor='#b8c6ed'>Please submit new nametypes from file: ");
 st.append(" <input type='file' name='fileName' id='fileName' value=''>");
-st.append("     [<a href='"+redirection +"help/help_name_file_format.html'>sample template file</a>]</td></tr>");
-st.append(" <tr>   <td > <i>Note: Do not change file header, append new nametypes to the end of the file, not duplicates will be submited.</i></td></tr>");
+st.append("     [<a href='"+redirection +"help/NameInfoFile.html'>sample template file</a>]</td></tr>");
+st.append(" <tr>   <td > <b>Note:</b><i> Do not change file header, append new nametypes to the end of the file, no duplicates will be submited.</i></td></tr>");
 
 
        new_forwardName= -Constants.PROCESS_ADD_NAME_TYPE_FROM_FILE ;
@@ -246,20 +242,20 @@ st.append(" <tr>   <td > <i>Note: Do not change file header, append new nametype
        }
    case -Constants.PROCESS_ADD_SPECIES_DEFINITION  :
    {
-   st.append(" <tr>   <td  bgColor='#b8c6ed'>Please submit new species definitions from file:");
+   st.append(" <tr>   <td  bgColor='#b8c6ed'>Please submit new species definitions from file: ");
 st.append(" <input type='file' name='fileName' id='fileName' value=''>");
 st.append("     [<a href='"+redirection +"help/help_species_definitions.html'>sample template file</a>]</td></tr>");
-st.append(" <tr>   <td > <i>Note: Do not change file header, append new species to the end of the file, not duplicates will be submited.</i></td></tr>");
+st.append(" <tr>   <td >  <b>Note:</b> <i> Do not change file header, append new species to the end of the file, no duplicates will be submited.</i></td></tr>");
 
        new_forwardName= -Constants.PROCESS_ADD_SPECIES_DEFINITION_FROM_FILE ;
        break;
        }
    case -Constants.PROCESS_ADD_NEW_CLONINGSTRATEGY:
        {
-           st.append(" <tr>   <td  bgColor='#b8c6ed'>Please select the cloning strategy information file:");
+           st.append(" <tr>   <td  bgColor='#b8c6ed'>Please select the cloning strategy information file: ");
 st.append(" <input type='file' name='fileName' id='fileName' value=''>");
 st.append("     [<a href='"+redirection +"help/ClonStrInfoFile.html'>sample template file</a>]</td></tr>");
-st.append(" <tr>   <td > <i>Note: Do not change file header, append new cloning strategy information to the end of the file, not duplicates will be submited. ");
+st.append(" <tr>   <td > <b>Note:</b> <i> Do not change file header, append new cloning strategy information to the end of the file, no duplicates will be submited. ");
 st.append("      Make sure that all linkers and vector have been submitted to ACE, vector and linker names in cloning strategy definition MUST be exactly the same. </i></td></tr>");
 
        new_forwardName= -Constants.PROCESS_ADD_NEW_CLONINGSTRATEGY_FROM_FILE ;
@@ -268,7 +264,7 @@ st.append("      Make sure that all linkers and vector have been submitted to AC
        }
             
    }}
-System.out.println(st.toString());
+
 %>
 
 </head>

@@ -159,6 +159,11 @@ public class DirectDatabaseCommunicationsAction extends BecAction
                case -Constants.PROCESS_SUBMIT_REFERENCE_SEQUENCES  :
                case - Constants.PROCESS_SUBMIT_CLONE_SEQUENCES:
                case -Constants.PROCESS_SUBMIT_CLONE_COLLECTION  : 
+                case -Constants.PROCESS_ADD_NEW_LINKER_FROM_FILE:
+                case -Constants.PROCESS_ADD_NAME_TYPE_FROM_FILE :
+                case -Constants.PROCESS_ADD_SPECIES_DEFINITION_FROM_FILE :
+                case -Constants.PROCESS_ADD_NEW_CLONINGSTRATEGY_FROM_FILE:
+                case -Constants.PROCESS_ADD_NEW_VECTOR_FROM_FLAT_FILES:
                {
                     FormFile requestFile = ((SubmitDataFileForm)form).getFileName();
                     if(requestFile == null)
@@ -167,9 +172,25 @@ public class DirectDatabaseCommunicationsAction extends BecAction
                         saveErrors(request,errors);
                         return new ActionForward(mapping.getInput());
                     }
-                    processJobParsingFile(requestFile.getInputStream(), forwardName, request, user);
+                    if (   forwardName == -Constants.PROCESS_ADD_NEW_VECTOR_FROM_FLAT_FILES)
+                    {
+                        FormFile rf_VectorFeatures = ((SubmitDataFileForm)form).getFileName_2();
+                        if(rf_VectorFeatures == null)
+                         {
+                            errors.add("filename", new ActionError("error.query.nofile"));
+                            saveErrors(request,errors);
+                            return new ActionForward(mapping.getInput());
+                        }
+                        InputStream[] instr = new InputStream[1];
+                        instr[0] = rf_VectorFeatures.getInputStream();
+                        processJobParsingFile(requestFile.getInputStream(), forwardName, request, user,instr);
+                        return mapping.findForward("processing");
+                    }
+                    processJobParsingFile(requestFile.getInputStream(), forwardName, request, user, null);
                     return mapping.findForward("processing");
                }
+                
+                
                case Constants.PROCESS_VIEW_ALL_NAME_TYPE  : 
                case Constants.PROCESS_VIEW_ALL_SPECIES_DEFINITION  :
                case Constants.PROCESS_VIEW_ALL_PROJECT_DEFINITION  :       
@@ -590,17 +611,20 @@ item_value = "<div align=center><a href=\'"+ BecProperties.getInstance().getProp
   }
   
   
-     private  void  processJobParsingFile(InputStream input, int forwardName,  HttpServletRequest request, User user)
+     private  void  processJobParsingFile(InputStream input, int forwardName,  
+             HttpServletRequest request, User user, InputStream[] input_2)
      {
          switch (forwardName)
         {
+            case -Constants.PROCESS_ADD_NEW_LINKER_FROM_FILE:
+            case -Constants.PROCESS_ADD_NAME_TYPE_FROM_FILE :
+            case -Constants.PROCESS_ADD_SPECIES_DEFINITION_FROM_FILE :
+            case -Constants.PROCESS_ADD_NEW_CLONINGSTRATEGY_FROM_FILE:
             case -Constants.PROCESS_ADD_NEW_VECTOR  :
-            
-           case -Constants.PROCESS_SUBMIT_REFERENCE_SEQUENCES  :
-           
-           case -Constants.PROCESS_SUBMIT_CLONE_SEQUENCES:
-           
-           case -Constants.PROCESS_SUBMIT_CLONE_COLLECTION  : 
+            case -Constants.PROCESS_SUBMIT_REFERENCE_SEQUENCES  :
+            case -Constants.PROCESS_SUBMIT_CLONE_SEQUENCES:
+            case -Constants.PROCESS_SUBMIT_CLONE_COLLECTION  :
+             case -Constants.PROCESS_ADD_NEW_VECTOR_FROM_FLAT_FILES:
            {
                request.setAttribute(Constants.ADDITIONAL_JSP,"Report will be send to you by e-mail." );
               break;
@@ -612,6 +636,8 @@ item_value = "<div align=center><a href=\'"+ BecProperties.getInstance().getProp
         ProcessRunner runner = new DatabaseCommunicationsRunner();
         runner.setUser(user);
         ((DatabaseCommunicationsRunner)runner).setInputStream(input);
+        if ( input_2 != null)
+            ((DatabaseCommunicationsRunner)runner).setInputStreamArray(input_2);
         runner.setProcessType( forwardName);
         Thread t = new Thread(runner);                    t.start();
      }
@@ -672,10 +698,10 @@ item_value = "<div align=center><a href=\'"+ BecProperties.getInstance().getProp
                name = (String)request.getParameter("linkername");
                sequence = (String)request.getParameter("linkersequence") ;
                if( name != null) name = name.trim();
-               if ( sequence != null) sequence=sequence.trim();
+               if ( sequence != null) sequence=sequence.trim().toUpperCase();
                if ( name == null || name.trim().length()< 1 )       throw new Exception ("Empty linker name") ;
                if( sequence == null || sequence.trim().length()< 1)    throw new Exception ("Empty linker sequence") ;
-               sequence= sequence.toUpperCase().trim();name= name.trim();
+               
                boolean res = SequenceManipulation.isValidDNASequence( Algorithms.replaceChar(sequence, '-', '\u0000' ));
               // System.out.println("Is sequence ok "+res);
                if ( !res)throw new Exception ("Wrong linker sequence. Please verify.") ;
@@ -851,7 +877,7 @@ item_value = "<div align=center><a href=\'"+ BecProperties.getInstance().getProp
         }
     }
     
-    private boolean isNameTypeExist(String  name_type) throws Exception
+    public static boolean isNameTypeExist(String  name_type) throws Exception
     {
         String sql = "select * from nametype where nametype='"+ name_type + "'";
         //System.out.println( sql +" "+isEntryExist( sql));
@@ -869,19 +895,19 @@ item_value = "<div align=center><a href=\'"+ BecProperties.getInstance().getProp
         return isEntryExist( sql);   
     }
     
-     private boolean isLinkVectorPrimerExist(int vectorid , int primerid , 
+    public static boolean isLinkVectorPrimerExist(int vectorid , int primerid , 
                         int primerposition, int primerorientation )throws Exception
      {
          String sql = "select * from vectorprimer where  vectorid="+vectorid+" and primerid ="+primerid+" and position ="+primerposition+" and orientation="+primerorientation;
          return isEntryExist( sql);  
      }
-    private boolean isLinkerExist(String name,  String sequence)throws Exception
+    public static boolean isLinkerExist(String name,  String sequence)throws Exception
     {
         sequence = Algorithms.replaceChar(sequence,'-', '\u0000');
         String sql = "select * from linker where name ='"+ name + "' or sequence ='"+ sequence + "'";
         return isEntryExist( sql);   
     }
-    private boolean isEntryExist(String sql)throws Exception
+    public static boolean isEntryExist(String sql)throws Exception
     {
         ResultSet rs = null; 
         try
@@ -971,17 +997,22 @@ item_value = "<div align=center><a href=\'"+ BecProperties.getInstance().getProp
             case Constants.PROCESS_ADD_NEW_CONNECTION_VECTOR_LINKER:                        return"Link Vector with Sequencing Primer";
             case Constants.PROCESS_ADD_TRACE_FILE_NAME_FORMAT:                         return"Add Trace File Name Format";
             case Constants.PROCESS_VERIFY_TRACE_FILE_FORMAT: return "Verify New Trace File Name Format";
-            case -Constants.PROCESS_ADD_NEW_VECTOR  :return "Request to Add Vector ";
+            case -Constants.PROCESS_ADD_NEW_VECTOR_FROM_FLAT_FILES:
+             case -Constants.PROCESS_ADD_NEW_VECTOR  :return "Request to Add Vector ";
             case -Constants.PROCESS_SUBMIT_REFERENCE_SEQUENCES  :return "Request for Reference Sequence Submission";
             case -Constants.PROCESS_SUBMIT_CLONE_SEQUENCES:return "Request for Clone Sequence Upload";
             case -Constants.PROCESS_SUBMIT_CLONE_COLLECTION  :return"Request for Clone Collection Submission";
             case -Constants.PROCESS_ADD_NEW_CONNECTION_VECTOR_LINKER:return"Request to Add Link between Vector and Sequencing Primer";
             case -Constants.PROCESS_ADD_NEW_COMMON_PRIMER  :return"Request to Add Sequencing Primer ";
-            case -Constants.PROCESS_ADD_NEW_LINKER  : return"Request to Add Linker ";
-            case -Constants.PROCESS_ADD_NAME_TYPE  :           return"Request to Add Annotation Type ";
-            case -Constants.PROCESS_ADD_SPECIES_DEFINITION  :           return "Request to Add Species Definition";
+            case -Constants.PROCESS_ADD_NEW_LINKER_FROM_FILE:
+             case -Constants.PROCESS_ADD_NEW_LINKER  : return"Request to Add Linker ";
+            case -Constants.PROCESS_ADD_NAME_TYPE_FROM_FILE :
+             case -Constants.PROCESS_ADD_NAME_TYPE  :           return"Request to Add Annotation Type ";
+           case -Constants.PROCESS_ADD_SPECIES_DEFINITION_FROM_FILE :
+             case -Constants.PROCESS_ADD_SPECIES_DEFINITION  :           return "Request to Add Species Definition";
             case -Constants.PROCESS_ADD_PROJECT_DEFINITION  : return "Request to Add Project Definition";
-            case -Constants.PROCESS_ADD_NEW_CLONINGSTRATEGY:return "Request to Cloning Strategy";
+            case -Constants.PROCESS_ADD_NEW_CLONINGSTRATEGY_FROM_FILE:
+             case -Constants.PROCESS_ADD_NEW_CLONINGSTRATEGY:return "Request to Cloning Strategy";
             case -Constants.PROCESS_ADD_TRACE_FILE_NAME_FORMAT:return "Request to Add Trace File Name Format ";
              
              default: return "";  
@@ -993,32 +1024,48 @@ item_value = "<div align=center><a href=\'"+ BecProperties.getInstance().getProp
          switch(process_id)
          {
              case Constants.PROCESS_DELETE_TRACE_FILE_FORMAT:return "Home > Trace Files > Create Name Format";
+             
              case -Constants.PROCESS_ADD_NEW_LINKER  :
+             case -Constants.PROCESS_ADD_NEW_LINKER_FROM_FILE:
              case Constants.PROCESS_ADD_NEW_LINKER  :  return "Home > Cloning Project Settings > Add Linker"; 
-           case -Constants.PROCESS_ADD_NAME_TYPE  : 
+           
+              case -Constants.PROCESS_ADD_NAME_TYPE_FROM_FILE :
+             case -Constants.PROCESS_ADD_NAME_TYPE  : 
              case Constants.PROCESS_ADD_NAME_TYPE  :return"Home > Cloning Project Settings > Annotation Type";
-            case -Constants.PROCESS_ADD_SPECIES_DEFINITION  :  
+            
+               case -Constants.PROCESS_ADD_SPECIES_DEFINITION_FROM_FILE :
+               case -Constants.PROCESS_ADD_SPECIES_DEFINITION  :  
              case Constants.PROCESS_ADD_SPECIES_DEFINITION  : return"Home > Cloning Project Settings > Species Definition"; 
-            case -Constants.PROCESS_ADD_PROJECT_DEFINITION  :
+            
+             case -Constants.PROCESS_ADD_PROJECT_DEFINITION  :
              case Constants.PROCESS_ADD_PROJECT_DEFINITION  : return"Home > Cloning Project Settings > Project Definition"; 
-            case Constants.PROCESS_ADD_NEW_VECTOR  : return"Home > Cloning Project Settings > Vector Information"; 
-            case Constants.PROCESS_SUBMIT_REFERENCE_SEQUENCES  :return"Home > Process > Upload Plate Information > Submit Reference Sequence Information"; 
+            
+             case Constants.PROCESS_ADD_NEW_VECTOR  : return"Home > Cloning Project Settings > Vector Information"; 
+               case -Constants.PROCESS_ADD_NEW_VECTOR_FROM_FLAT_FILES:
+              case -Constants.PROCESS_ADD_NEW_VECTOR  :return "Home > Cloning Project Settings > Add Vector"; 
+           
+             case Constants.PROCESS_SUBMIT_REFERENCE_SEQUENCES  :return"Home > Process > Upload Plate Information > Submit Reference Sequence Information"; 
             case Constants.PROCESS_SUBMIT_CLONE_SEQUENCES:return"Home > Process > Upload Clone Sequences";
             case Constants.PROCESS_SUBMIT_CLONE_COLLECTION  : return"Home > Process > Upload Plate Information > Submit Clone Collection";
             case Constants.PROCESS_ADD_NEW_COMMON_PRIMER :return"Home > Cloning Project Settings > Sequencing Primer";
-           case -Constants.PROCESS_ADD_NEW_CLONINGSTRATEGY:
+           
+            case -Constants.PROCESS_ADD_NEW_CLONINGSTRATEGY_FROM_FILE:
+               case -Constants.PROCESS_ADD_NEW_CLONINGSTRATEGY:
              case Constants.PROCESS_ADD_NEW_CLONINGSTRATEGY:return"Home > Cloning Project Settings > Add Cloning Strategy"; 
-            case Constants.PROCESS_ADD_NEW_CONNECTION_VECTOR_LINKER: return"Home > Cloning Project Settings > Link Vector with Sequencing Primer";
-            case -Constants.PROCESS_ADD_TRACE_FILE_NAME_FORMAT: 
+            
+             case Constants.PROCESS_ADD_NEW_CONNECTION_VECTOR_LINKER: return"Home > Cloning Project Settings > Link Vector with Sequencing Primer";
+            
+             case -Constants.PROCESS_ADD_TRACE_FILE_NAME_FORMAT: 
              case Constants.PROCESS_ADD_TRACE_FILE_NAME_FORMAT: return"Home > Trace Files > Add Trace File Name Format";
-            case Constants.PROCESS_VERIFY_TRACE_FILE_FORMAT: return "Home > Cloning Project Settings > Add Trace File Name Format";
-            case -Constants.PROCESS_ADD_NEW_VECTOR  :return "Home > Cloning Project Settings > Add Vector"; 
+            
+             case Constants.PROCESS_VERIFY_TRACE_FILE_FORMAT: return "Home > Cloning Project Settings > Add Trace File Name Format";
             case -Constants.PROCESS_SUBMIT_REFERENCE_SEQUENCES  :return "Home > Process > Upload Plate Information > Submit Reference Sequence Information"; 
             case -Constants.PROCESS_SUBMIT_CLONE_SEQUENCES:return "Home > Process > Upload Clone Sequence";
             case -Constants.PROCESS_SUBMIT_CLONE_COLLECTION  :return"Home > Process > Upload Plate Information > Submit Clone Collection";
             case -Constants.PROCESS_ADD_NEW_CONNECTION_VECTOR_LINKER:return"Request to Add Connection between Vector and Sequencing Primer";
-            case -Constants.PROCESS_ADD_NEW_COMMON_PRIMER  :return"Home > Cloning Project Settings > Sequencing Primer ";
-              
+             
+             case -Constants.PROCESS_ADD_NEW_COMMON_PRIMER  :return"Home > Cloning Project Settings > Sequencing Primer ";
+             
              default: return "";  
          }
      }
