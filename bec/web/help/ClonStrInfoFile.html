@@ -1,16 +1,26 @@
 <body>
 <pre>
-
-STRATEGY_NAME	VECTOR_NAME	FIVE_PRIME_LINKER_NAME	THREE_PRIME_LINKER_NAME	TYPE
-DKFZo001	pDONR201	5p pENTR201/221	3p pENTR201/221	entry plasmid
-DKFZo010	pENTR/D-TOPO	5p pENTR/D-TOPO	3p pENTR/D-TOPO	entry plasmid
-DKFZo006	pDONR221	5p pENTR201/221	3p pENTR201/221	entry plasmid
-DKFZo004	pDONR221	5p pENTR221	3p DKFZ 2	entry plasmid
-DKFZo003	pDONR221	5p pENTR221	3p DKFZ 1	entry plasmid
-DKFZo005	pDONR221	5p pENTR221	3p DKFZ 3	entry plasmid
-DKFZo008	pDONR221	5p pENTR221	3p DKFZ 5	entry plasmid
-DKFZo007	pDONR221	5p pENTR221	3p DKFZ 4	entry plasmid
-DKFZo009	pDONR221	5p pENTR221	3p DKFZ 6	entry plasmid
-NIH_MGC	pENTR223.1	5p NIH_MGC	3p NIH_MGC_425	entry plasmid
+ 
+     Start of Delete section
+    Create a copy of this file as text file (extension .txt).
+    
+    Delete "delete section" from your file: header MUST be first line of the file.
+    You can append information for the new strategies(s) to the existing file.
+    No duplicates will be submitted: two strategies are considered to 
+    be duplicates if they have the same (case sensitive) name OR identical parameters.
+    Please be aware that 'DKFZo001 1' and 'DKFZo001     1' will be considered as 
+    two different strategies: number of white spaces inside item definition is important.
+    Vector & linkers MUST be submitted to ACE beforehand.
+      
+    
+    Submission file format:<!-- format -->
+    Header: STRATEGY_NAME (\t) VECTOR_NAME (\t) FIVE_PRIME_LINKER_NAME	(\t) THREE_PRIME_LINKER_NAME	(\t) FIRST_CODON (\t) FUSION_STOP_CODON (\t)  CLOSED_STOP_CODON
+    Entry: Strategy Name (\t) Vector Name (\t) 5p' linker name	(\t) 3p' linker name (\t) Start Codon (\t) Fusion stop codon (\t)  Closed stop codon
+    
+        
+    End of Delete section
+STRATEGY_NAME	VECTOR_NAME	FIVE_PRIME_LINKER_NAME	THREE_PRIME_LINKER_NAME	FIRST_CODON FUSION_STOP_CODON   CLOSED_STOP_CODON
+DKFZo001 1	pDONR201	5p pENTR201/221	3p pENTR201/221	ATG TTG Natural
+NIH_MGC	pENTR223.1	5p NIH_MGC	3p NIH_MGC_425	ATG NON Empty
 </pre>
 </body>
