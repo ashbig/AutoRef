@@ -265,8 +265,8 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
                  {
                      isHeader = !isHeader;
                      if ( vf.length < 4 ) throw new Exception ("Submission file has wrong format.");
-                     if (! vf[0].equalsIgnoreCase("vector_name")||   ! vf[1].equalsIgnoreCase("feature_type")
-                     || ! vf[2].equalsIgnoreCase("name") || ! vf[3].equalsIgnoreCase("description"))
+                     if (! vf[0].equalsIgnoreCase("vector_name")||   ! vf[2].equalsIgnoreCase("feature_type")
+                     || ! vf[1].equalsIgnoreCase("feature_name") || ! vf[3].equalsIgnoreCase("description"))
                          throw new Exception ("Submission file has wrong header.");
                      else 
                          continue;
