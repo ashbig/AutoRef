@@ -34,6 +34,9 @@ import edu.harvard.med.hip.bec.sampletracking.objects.*;
 import edu.harvard.med.hip.bec.coreobjects.endreads.*;
 import  edu.harvard.med.hip.bec.util_objects.*;
 import edu.harvard.med.hip.bec.programs.assembler.*;
+import  edu.harvard.med.hip.bec.file.*;
+import edu.harvard.med.hip.bec.action.*;
+import edu.harvard.med.hip.bec.bioutil.*;
 /**
  *
  * @author  htaycher
@@ -41,13 +44,17 @@ import edu.harvard.med.hip.bec.programs.assembler.*;
 public class DatabaseCommunicationsRunner  extends ProcessRunner
 {
     private InputStream                 m_input_stream = null;
+    private InputStream[]                m_input_stream_array = null;
      // first step in collection processing
     private int                         m_collection_processing_first_step = IsolateTrackingEngine.PROCESS_STATUS_SUBMITTED_FOR_ER;
     
     
     public void     setInputStream(InputStream i){ m_input_stream = i;}
+     public void     setInputStreamArray(InputStream[] i){ m_input_stream_array = i;}
+     
     public String getTitle() 
     {  
+       
         switch (m_process_type)
         {
             case -Constants.PROCESS_ADD_NEW_VECTOR  :
@@ -67,8 +74,16 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
            {
                return "Request for clones sequence submission";
            }
+            case -Constants.PROCESS_ADD_NEW_LINKER_FROM_FILE:return "Request for new linker addition";
+            case -Constants.PROCESS_ADD_NAME_TYPE_FROM_FILE :return "Request for new name type addition";
+            case -Constants.PROCESS_ADD_SPECIES_DEFINITION_FROM_FILE :return "Request for species definition addition";
+            case -Constants.PROCESS_ADD_NEW_CLONINGSTRATEGY_FROM_FILE:return "Request for new cloning strategy(s) addition";
+            case -Constants.PROCESS_ADD_NEW_VECTOR_FROM_FLAT_FILES:return "Request for new vector addition";
+         
+          
             default : return "";
          }
+      
     }
    
    public void run_process()
@@ -112,12 +127,53 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
                        uploadCloneSequences(conn);
                         break;
                     }
+                    case -Constants.PROCESS_ADD_NEW_LINKER_FROM_FILE:
+                    {
+                         addNewLinkerFromFile(conn);conn.commit();
+                          break;
+                    }
+                    case -Constants.PROCESS_ADD_NAME_TYPE_FROM_FILE :
+                    {
+                         addNewNameFromFile(conn);conn.commit();
+                         break;
+                    }
+                    case -Constants.PROCESS_ADD_SPECIES_DEFINITION_FROM_FILE :
+                    {
+                         addNewSpeciesDefinitionFromFile( conn);  conn.commit(); 
+                         break;
+                    }
+                    case -Constants.PROCESS_ADD_NEW_CLONINGSTRATEGY_FROM_FILE:
+                    {
+                         addNewCloningStrategyFromFile(conn);
+                         conn.commit(); break;
+                    }
+                    case -Constants.PROCESS_ADD_NEW_VECTOR_FROM_FLAT_FILES:
+                    {
+                         addNewVectorFromFile(conn);
+                         conn.commit();
+                         break;
+                    }
          
                  }
          } 
         catch(Exception e)  
         {
+            m_additional_info=null;
             m_error_messages.add(e.getMessage());
+            switch (m_process_type)
+            {
+                case -Constants.PROCESS_ADD_NEW_VECTOR  :
+                case -Constants.PROCESS_ADD_NEW_LINKER_FROM_FILE:
+                case -Constants.PROCESS_ADD_NAME_TYPE_FROM_FILE :
+                case -Constants.PROCESS_ADD_SPECIES_DEFINITION_FROM_FILE :
+                case -Constants.PROCESS_ADD_NEW_CLONINGSTRATEGY_FROM_FILE:
+                case -Constants.PROCESS_ADD_NEW_VECTOR_FROM_FLAT_FILES:
+                case -Constants.PROCESS_SUBMIT_REFERENCE_SEQUENCES  :
+                {
+                    DatabaseTransaction.rollback(conn);
+                }
+            }
+           
         }
         finally
         {
@@ -127,6 +183,266 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
     }
     
    //-------------------------------------------------------------------
+    private synchronized void                     addNewVectorFromFile(Connection conn)throws Exception
+   {
+       ArrayList<String[]> vector_items = new ArrayList();
+       boolean isHeader = true;
+    //    ArrayList  vector_items = new ArrayList();
+       HashMap<String, BioVector> vectors = new HashMap();
+       //HashMap vectors = new HashMap();
+       FileOperations.readFromFile( m_input_stream,  vector_items, !isHeader);
+       BioVector cur_vector = null;
+       int count_1 = 0;
+       //vector_name	vector_source	vector_type	description
+
+       for (String[] vector : vector_items)
+       //for ( int count = 0; count <vector_items.size() ;count++)
+        {
+         //  String[] vector = (String[]) vector_items.get(count);
+         if ( isHeader )//process header
+         {
+             isHeader = !isHeader;
+             if ( vector.length < 3 ) throw new Exception ("Submission file has wrong format.");
+             if (! vector[0].equalsIgnoreCase("vector_name")||   ! vector[1].equalsIgnoreCase("vector_source")
+             || ! vector[2].equalsIgnoreCase("vector_type"))
+                 throw new Exception ("Submission file has wrong header.");
+             else 
+                 continue;
+            
+         }
+         if (vector.length < 3  ) 
+         {
+             m_error_messages.add("Cannot submit vector: "+Algorithms.convertArrayToString(vector,"\t"));
+             continue;
+         }
+         cur_vector = new BioVector();cur_vector.setName( vector[0]);
+         cur_vector.setSource(vector[1]);
+         int vector_type = 0;
+         if ( vector[2].equalsIgnoreCase("master")) vector_type=1;
+         if ( vector[2].equalsIgnoreCase("expression")) vector_type=2;
+         cur_vector.setType( vector_type);
+         vectors.put(cur_vector.getName(), cur_vector);
+       }
+       if ( vectors != null && vectors.size() > 0 )
+            readVectorFeature( vectors);
+       
+       // submit into ACE
+       Iterator ir = vectors.values().iterator();
+       while( ir.hasNext())
+       {
+           cur_vector=(BioVector)ir.next();
+           cur_vector.insert(conn);
+       }
+    
+   }
+    
+    
+    private synchronized void                     readVectorFeature(HashMap vectors)throws Exception//(HashMap<String, BioVector>  vectors)throws Exception
+   {
+      ArrayList<String[]> vector_items = new ArrayList();
+       BioVector cur_vector = null;BioVectorFeature bf = null;boolean isHeader = true;
+       if ( m_input_stream_array.length > 0)
+       {
+           
+            FileOperations.readFromFile( m_input_stream_array[0],  vector_items, !isHeader);
+        //vector_name	feature_type	name	description
+
+           for (String[] vf : vector_items)
+            //for (int ii = 0; ii < vector_items.size(); ii++)
+            {
+              //  vf = (String[]) vector_items.get(ii);
+                 if ( isHeader )//process header
+                 {
+                     isHeader = !isHeader;
+                     if ( vf.length < 4 ) throw new Exception ("Submission file has wrong format.");
+                     if (! vf[0].equalsIgnoreCase("vector_name")||   ! vf[1].equalsIgnoreCase("feature_type")
+                     || ! vf[2].equalsIgnoreCase("name") || ! vf[3].equalsIgnoreCase("description"))
+                         throw new Exception ("Submission file has wrong header.");
+                     else 
+                         continue;
+
+                 }
+                 if (vf.length < 4 ) 
+                 {
+                     m_error_messages.add("Cannot submit vector feature: "+Algorithms.convertArrayToString(vf,"\t"));
+                    continue;
+                 }
+                 bf = new BioVectorFeature();bf.setName( vf[2]);
+                 bf.setType( Integer.parseInt( vf[1]));bf.setDescription( vf[3]);
+                 cur_vector = (BioVector)vectors.get(vf[0]);
+                 if (cur_vector != null) 
+                 {
+                    cur_vector.addFeature(bf);
+                 }
+                 
+       }
+       }
+     
+   }
+   private synchronized void                     addNewLinkerFromFile(Connection conn)throws Exception
+   {
+    // ArrayList  items = new ArrayList();
+     ArrayList<String[]> items = new ArrayList();
+     FileOperations.readFromFile( m_input_stream,  items, false);
+     String name = null; String sequence = null;
+     String sql = null; int count = 0;
+     for (String[] item : items)
+    // String[] item = null;
+    // for (int ii = 0; ii < items.size(); ii++)
+     {
+    //     item = (String[])items.get(ii);
+         if ( count == 0 )//process header
+         {
+             count++;
+             if ( item.length != 2 ) throw new Exception ("Submission file has wrong format.");
+             if (! item[0].equalsIgnoreCase("LINKER_NAME")||
+                     ! item[1].equalsIgnoreCase("LINKER_SEQUENCE"))
+                 m_error_messages.add("Submission file has wrong header.");
+             else 
+                 continue;
+         }
+         if (item.length != 2 ) continue;
+         name = item[0]; sequence=item[1].toUpperCase();
+         sequence = Algorithms.replaceChar(sequence,'-', '\u0000');
+         if( name == null || name.length() < 1 ||  sequence == null || sequence.length()< 1)
+             continue;
+       
+         if( SequenceManipulation.isValidDNASequence( sequence ))
+         {
+               sql = "INSERT INTO linker (linkerid, name, sequence) "
++ " select vectorid.nextval,'"+name+"','"+sequence+"' FROM dual "
++ " WHERE not exists (select * from linker where  name ='"+name+"' or sequence ='"+sequence+"' )";
+                   DatabaseTransaction.executeUpdate(sql, conn);
+              m_additional_info += "\nNew linker: linker name " +name+ "   linker sequence: " + sequence;
+        }
+     }
+   }
+   
+   
+   private synchronized void                     addNewCloningStrategyFromFile(Connection conn)throws Exception
+   {
+      ArrayList<String[]> items = new ArrayList();
+      boolean isHeader = true; 
+      FileOperations.readFromFile( m_input_stream,  items, !isHeader);
+    String sql = null; 
+     String     start_codon =null;
+      String     fusion_stop_codon =null;
+     for (String[] item : items )
+     {
+          if (isHeader )
+         {
+             isHeader = !isHeader;
+             if (item.length != 7 || ! item[0].equalsIgnoreCase("STRATEGY_NAME")||
+        
+            ! item[1].equalsIgnoreCase("VECTOR_NAME") || ! item[2].equalsIgnoreCase("FIVE_PRIME_LINKER_NAME")
+            || ! item[3].equalsIgnoreCase("THREE_PRIME_LINKER_NAME") || ! item[4].equalsIgnoreCase("FIRST_CODON")
+            || ! item[5].equalsIgnoreCase("FUSION_STOP_CODON") || ! item[6].equalsIgnoreCase("CLOSED_STOP_CODON")
+            )
+                 m_error_messages.add ("Submission file has wrong header.");
+             else 
+                 continue;
+         }
+         if (item.length != 7 )
+         {
+             m_error_messages.add("\nWrong cloning strategy data: "+ Algorithms.convertArrayToString(item," "));
+             continue;
+         }
+         String fusion_last_codon = item[5].equalsIgnoreCase("Natural")?"NON":item[5].toUpperCase();
+          String first_codon = item[4].equalsIgnoreCase("Natural")?"NON":item[4].toUpperCase();
+        BioLinker bl = BioLinker.getLinkerByName(item[2]);
+        int bl_5_id = -1;int bl_3_id =-1;
+        if ( bl != null)  bl_5_id = bl.getId();
+        bl = BioLinker.getLinkerByName(item[3]);
+        if(bl != null) bl_3_id =  bl.getId();
+        BioVector vec =null;
+        try
+        {
+             vec = BioVector.getVectorByName(item[1]);
+        }
+        catch(Exception e){}
+        if (bl_5_id == -1 || bl_3_id == -1 || vec == null)
+        {
+            String mess = "\nWrong cloning strategy data: ( ";
+            if ( vec == null) m_items +="check vector name ";
+            if (bl_5_id == -1) m_items+="check 5p linker name ";
+            if (bl_3_id == -1) m_items+="check 3p linker name ";
+            m_items+= ") "+Algorithms.convertArrayToString(item," ");
+            m_error_messages.add(mess);
+            continue;
+        }
+       
+             sql =  "insert into cloningstrategy (strategyid, name, vectorid,linker5id, "
+ +"linker3id,STARTCODON  ,FUSIONSTOPCODON   ,CLOSEDSTOPCODON  ) "
++" select  strategyid.nextval,'"+ item[0]+"', "+vec.getId() +","+bl_5_id+"," +bl_3_id
++",'"+first_codon+"','"+ fusion_last_codon +"','"+ item[6].toUpperCase()+"' from dual WHERE not exists "
++" (select * from cloningstrategy  where VECTORID ="+vec.getId() +" and LINKER3ID  ="+
+  bl_3_id+" and LINKER5ID ="+bl_5_id+" and STARTCODON='"+first_codon
++ "' and FUSIONSTOPCODON  ='"+fusion_last_codon +"' and CLOSEDSTOPCODON ='"+item[6].toUpperCase()+"'"
++"       or name ='"+item[0]+"')";
+            DatabaseTransaction.executeUpdate(sql, conn);
+           
+            m_additional_info +="\n New Cloning Strategy Submitted: "+ Algorithms.convertArrayToString(item," ");
+        }
+     
+   }
+   
+   
+    private synchronized void        addNewNameFromFile(Connection conn)throws Exception 
+   {
+      ArrayList<String[]> items = new ArrayList();
+     FileOperations.readFromFile( m_input_stream,  items, true);
+     String name_type_current = null;String sql=null;
+     for ( String[] name_type : items)
+    // for ( int ii = 0; ii < items.size();ii++)
+     {
+        // String[] name_type= ((String[]) items.get(ii));
+         name_type_current= name_type[0].toUpperCase();
+         if (  name_type_current.equals("")  ) continue;
+        {
+           sql="insert into nametype (nametype) select '"+name_type_current+
+                   "' from dual where not exists (select * from nametype where nametype='"+name_type_current+"')";
+           DatabaseTransaction.executeUpdate(sql, conn);
+           
+          m_additional_info +="\nNew name type(s) added: "+ name_type_current+";";
+          DatabaseTransaction.commit(conn);
+        }
+         
+     }
+   }
+   
+   
+    private synchronized void        addNewSpeciesDefinitionFromFile(Connection conn)throws Exception
+  
+   {
+       ArrayList<String[]> items = new ArrayList();
+     FileOperations.readFromFile( m_input_stream,  items, true);
+      String speciesname =null;String speciesid =null;//String[] item = null;
+      String sql = null;
+     for (String[] item : items )
+     // for ( int ii = 0; ii < items.size(); ii++)
+     {
+    //   String[] item = (String[]) items.get(ii);
+        speciesname=item[0]; if(item.length == 2) speciesid=item[1].toUpperCase();
+        if( speciesname == null || speciesname.length()< 1) continue;
+        int id = BecIDGenerator.getID("speciesid");
+       if( speciesid != null )
+       {
+           sql = "insert into SPECIESDEFINITION (speciesid, speciesname,idname) "
++" select speciesid.nextval,'"+speciesname+"','"+speciesid+"' from dual "
++" where not exists (select * from SPECIESDEFINITION where speciesname='"+speciesname+"')";
+       }
+       else
+       {
+           sql = " insert into SPECIESDEFINITION (speciesid, speciesname ) "
++" select speciesid.nextval,'"+speciesname+"'  from dual "
++" where not exists (select * from SPECIESDEFINITION where speciesname='"+speciesname+"')";
+       }
+       DatabaseTransaction.executeUpdate(sql, conn); 
+       DatabaseToApplicationDataLoader.addSpecies( new SpeciesDefinition(id , speciesname,speciesid));
+       m_additional_info += "\nNew species definition added: " +speciesname;
+     }     
+    }
+   
    private synchronized void        uploadReferenceSequences(Connection conn)throws Exception
    {
         PreparedStatement pst_insert_temp_sequenceid = conn.prepareStatement("insert into temp_sequence_id (usersequenceid, appssequenceid) values(?,?)");
@@ -140,6 +456,8 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
         ArrayList seq= SAXHandler.getRefSequences();
 
         int userid = -1;RefSequence refseq = null;
+        
+        
         for (int count = 0; count < seq.size();count++)
         {
             refseq = (RefSequence)seq.get(count);
@@ -357,7 +675,8 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
         }
         catch(Exception e)
         {
-            throw new BecDatabaseException("Can not insert sequence fro clone "+ clone_description.getCloneId());
+              DatabaseTransaction.rollback(conn);
+            throw new BecDatabaseException("Can not insert sequence for clone "+ clone_description.getCloneId());
         }
     }
     
@@ -368,7 +687,7 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
     
     
     //--------------------------------------
-   private synchronized void uploadCloneCollections(Connection conn)
+   private synchronized void uploadCloneCollections(Connection conn) throws Exception
    {
         ArrayList clone_collection= null;
         CloneCollectionParser SAXHandler = new CloneCollectionParser();
@@ -888,18 +1207,29 @@ private boolean isCloneCollectionNameExists(CloneCollection collection, Connecti
         try
         {
 
-            user = AccessManager.getInstance().getUser("test","test");
+            user = AccessManager.getInstance().getUser("htaycher123","me");
             BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
             sysProps.verifyApplicationSettings();
             DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
             DatabaseCommunicationsRunner runner = new DatabaseCommunicationsRunner();
+            
+            
             runner.setUser(user);
            // File f = new File("c:\\tmp\\container.xml");
-            File f = new File("C:\\bio\\Document1.txt");
+            File f = new File("C:\\bio\\test\\new_linker.txt");
+              f = new File("C:\\bio\\test\\test_nametype.txt");
+              f = new File("C:\\bio\\test\\test_strategy.txt");
+               f = new File("C:\\bio\\test\\test_species.txt");
+               f = new File("Z:\\PSI_ACE_FLEX\\Data_for_ACE_submission\\NEW_FLEXGene_import_vector_table.txt");
+              File ff = new File("Z:\\PSI_ACE_FLEX\\Data_for_ACE_submission\\NEW_FLEXGene_vector_feature.txt");
            //  runner.setProcessType( -Constants.PROCESS_SUBMIT_REFERENCE_SEQUENCES);
             InputStream input = new FileInputStream(f);
+            InputStream input_ff = new FileInputStream(ff);
+            InputStream[] fff = new InputStream[1];
+            fff[0]=input_ff;
+            runner.setInputStreamArray(fff);
             runner.setInputStream(input);
-            runner.setProcessType( -Constants.PROCESS_SUBMIT_CLONE_SEQUENCES);      
+            runner.setProcessType( -Constants.PROCESS_ADD_NEW_VECTOR_FROM_FLAT_FILES);      
             runner.run();
       
         }
