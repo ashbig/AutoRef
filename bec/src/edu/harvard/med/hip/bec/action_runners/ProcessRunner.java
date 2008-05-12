@@ -112,6 +112,12 @@ public abstract class ProcessRunner implements Runnable
                case -Constants.PROCESS_SUBMIT_REFERENCE_SEQUENCES  :
                case - Constants.PROCESS_SUBMIT_CLONE_SEQUENCES:
                case -Constants.PROCESS_SUBMIT_CLONE_COLLECTION  : 
+                     case -Constants.PROCESS_ADD_NEW_LINKER_FROM_FILE  :
+                case -Constants.PROCESS_ADD_NAME_TYPE_FROM_FILE  :
+                case -Constants.PROCESS_ADD_NEW_CLONINGSTRATEGY_FROM_FILE  :
+                case -Constants.PROCESS_ADD_NEW_VECTOR_FROM_FLAT_FILES  :
+                case -Constants.PROCESS_ADD_SPECIES_DEFINITION_FROM_FILE  :
+             
                     {((DatabaseCommunicationsRunner)this).run_process(); break;}
                case Constants.PROCESS_RUN_PRIMER3:
                     {((PrimerDesignerRunner)this).run_process(); break;}
@@ -199,7 +205,13 @@ public abstract class ProcessRunner implements Runnable
                 case Constants.PROCESS_RUN_DECISION_TOOL :  //run decision tool
                 case Constants.PROCESS_PROCESS_OLIGO_PLATE :  
                 
-                case -Constants.PROCESS_ADD_NEW_VECTOR      :    
+                case -Constants.PROCESS_ADD_NEW_VECTOR      : 
+                      case -Constants.PROCESS_ADD_NEW_LINKER_FROM_FILE  :
+                case -Constants.PROCESS_ADD_NAME_TYPE_FROM_FILE  :
+                case -Constants.PROCESS_ADD_NEW_CLONINGSTRATEGY_FROM_FILE  :
+                case -Constants.PROCESS_ADD_NEW_VECTOR_FROM_FLAT_FILES  :
+                case -Constants.PROCESS_ADD_SPECIES_DEFINITION_FROM_FILE  :
+             
              //   case -Constants.PROCESS_SUBMIT_REFERENCE_SEQUENCES      :    
                // case -Constants.PROCESS_SUBMIT_CLONE_COLLECTION      :    
              //   case -Constants.PROCESS_SUBMIT_CLONE_SEQUENCES       :    
@@ -277,6 +289,11 @@ public abstract class ProcessRunner implements Runnable
                 case -Constants.PROCESS_SUBMIT_CLONE_COLLECTION   :    
                 case -Constants.PROCESS_SUBMIT_CLONE_SEQUENCES   : 
                case -Constants.PROCESS_ADD_NEW_VECTOR  :
+                case -Constants.PROCESS_ADD_NEW_LINKER_FROM_FILE  :
+                case -Constants.PROCESS_ADD_NAME_TYPE_FROM_FILE  :
+                case -Constants.PROCESS_ADD_NEW_CLONINGSTRATEGY_FROM_FILE  :
+                case -Constants.PROCESS_ADD_NEW_VECTOR_FROM_FLAT_FILES  :
+                case -Constants.PROCESS_ADD_SPECIES_DEFINITION_FROM_FILE  :
                 
                     result=false;
            }
