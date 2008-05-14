@@ -734,7 +734,9 @@ sql = "update  result set resultvalueid = null, resulttype = "+Result.RESULT_TYP
         String sql ="select Upper(label) as item from containerheader where Upper(label) in ("+sql_items
         +" ) and containerid not in (select containerid from sample where sampleid in "
         + "(select sampleid from isolatetracking where process_status  in ("
-        +IsolateTrackingEngine.FINAL_STATUS_ACCEPTED+","+IsolateTrackingEngine.FINAL_STATUS_REJECTED+")))";
+        +IsolateTrackingEngine.FINAL_STATUS_ACCEPTED+","
+                +IsolateTrackingEngine.FINAL_STATUS_ACCEPTED_LINKER_NOT_VERIFIED +","
+                +IsolateTrackingEngine.FINAL_STATUS_REJECTED+")))";
         String active_plates = getActiveItems( sql, 1);
         ArrayList arr_active_plates= Algorithms.splitString(active_plates);
          

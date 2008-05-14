@@ -334,6 +334,7 @@ additional_jsp_buffer.append( "<tr class='headerRow'><td colspan =2>Process Spec
 additional_jsp_buffer.append( "<tr class='strong'> <td>"+line_padding+"Clone status:</td><td><SELECT NAME='CLONE_FINAL_STATUS' id='CLONE_FINAL_STATUS'> ");
 additional_jsp_buffer.append( "<OPTION VALUE=" + IsolateTrackingEngine.FINAL_STATUS_INPROCESS +">"+IsolateTrackingEngine.getCloneFinalStatusAsString(IsolateTrackingEngine.FINAL_STATUS_INPROCESS));
 additional_jsp_buffer.append( "<OPTION VALUE=" + IsolateTrackingEngine.FINAL_STATUS_ACCEPTED +">"+IsolateTrackingEngine.getCloneFinalStatusAsString(IsolateTrackingEngine.FINAL_STATUS_ACCEPTED));
+additional_jsp_buffer.append( "<OPTION VALUE=" + IsolateTrackingEngine.FINAL_STATUS_ACCEPTED_LINKER_NOT_VERIFIED +">"+IsolateTrackingEngine.getCloneFinalStatusAsString(IsolateTrackingEngine.FINAL_STATUS_ACCEPTED_LINKER_NOT_VERIFIED));
 additional_jsp_buffer.append( "<OPTION VALUE=" + IsolateTrackingEngine.FINAL_STATUS_REJECTED +">"+IsolateTrackingEngine.getCloneFinalStatusAsString(IsolateTrackingEngine.FINAL_STATUS_REJECTED));
 
 additional_jsp_buffer.append("</SELECT></td> </tr>");

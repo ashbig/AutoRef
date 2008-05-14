@@ -91,6 +91,7 @@ public class CloneManipulationRunner extends ProcessRunner
                             try
                             {
                                 current_items=(String)sql_groups_of_items.get(count);
+      System.out.println(sql+current_items+"))");
                                  DatabaseTransaction.executeUpdate(sql+current_items+"))", conn);
                                  process_messages.append("The following clones have been updated "+Algorithms.replaceChar(current_items, ',', ' '));
 
@@ -102,6 +103,7 @@ public class CloneManipulationRunner extends ProcessRunner
                                  }
                                  if ( m_IsCreateDistributionFile &&
                                  (  m_clone_final_status == IsolateTrackingEngine.FINAL_STATUS_ACCEPTED ||
+                                         m_clone_final_status == IsolateTrackingEngine.FINAL_STATUS_ACCEPTED_LINKER_NOT_VERIFIED ||
                                         m_clone_final_status == IsolateTrackingEngine.FINAL_STATUS_REJECTED))
                                  {
                                     if ( count == sql_groups_of_items.size()-1)
@@ -111,6 +113,8 @@ public class CloneManipulationRunner extends ProcessRunner
                                  }
                                  //clean up hraddrive
                                   if (   m_clone_final_status == IsolateTrackingEngine.FINAL_STATUS_ACCEPTED ||
+                                           m_clone_final_status == IsolateTrackingEngine.FINAL_STATUS_ACCEPTED_LINKER_NOT_VERIFIED ||
+                                      
                                         m_clone_final_status == IsolateTrackingEngine.FINAL_STATUS_REJECTED)
                                  {
 
@@ -417,7 +421,7 @@ return clone_data_in_xml_format.toString() ;
         try
         {
 
-            user = AccessManager.getInstance().getUser("htaycher123","me");
+            user = AccessManager.getInstance().getUser("htaycher123","htaycher");
             BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
             sysProps.verifyApplicationSettings();
             DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
@@ -426,7 +430,7 @@ return clone_data_in_xml_format.toString() ;
             runner.setInputData(Constants.ITEM_TYPE_CLONEID, "505 ");
             runner.setProcessType(Constants.PROCESS_SET_CLONE_FINAL_STATUS);
             runner.setCloneFinalStatus(IsolateTrackingEngine.FINAL_STATUS_REJECTED);
-            runner.setIsCreateDistributionFile(true);
+            runner.setIsCreateDistributionFile(false);
             runner.run();
 
         }

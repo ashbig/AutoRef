@@ -91,7 +91,7 @@ public class IsolateTrackingEngine
     public static final int            FINAL_STATUS_ACCEPTED = 2;
     public static final int            FINAL_STATUS_REJECTED = 3;
     public static final int            FINAL_STATUS_NOT_APPLICABLE = 4;
-    
+    public static final int            FINAL_STATUS_ACCEPTED_LINKER_NOT_VERIFIED = 5;
     
     
     
@@ -236,6 +236,7 @@ public class IsolateTrackingEngine
           {
               case IsolateTrackingEngine.FINAL_STATUS_INPROCESS : return "In process";
               case IsolateTrackingEngine.FINAL_STATUS_ACCEPTED: return "Accepted";
+              case IsolateTrackingEngine.FINAL_STATUS_ACCEPTED_LINKER_NOT_VERIFIED: return "Accepted, linker not verified";
               case IsolateTrackingEngine.FINAL_STATUS_REJECTED : return "Rejected";
               case IsolateTrackingEngine.FINAL_STATUS_NOT_APPLICABLE: return "N/A";
               default:return "Not known";
