@@ -205,7 +205,7 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
              if ( vector.length < 3 ) throw new Exception ("Submission file has wrong format.");
              if (! vector[0].equalsIgnoreCase("vector_name")||   ! vector[1].equalsIgnoreCase("vector_source")
              || ! vector[2].equalsIgnoreCase("vector_type"))
-                 throw new Exception ("Submission file has wrong header.");
+                 throw new Exception ("Submission file (vetor definition)  has wrong header.");
              else 
                  continue;
             
@@ -267,7 +267,7 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
                      if ( vf.length < 4 ) throw new Exception ("Submission file has wrong format.");
                      if (! vf[0].equalsIgnoreCase("vector_name")||   ! vf[2].equalsIgnoreCase("feature_type")
                      || ! vf[1].equalsIgnoreCase("feature_name") || ! vf[3].equalsIgnoreCase("description"))
-                         throw new Exception ("Submission file has wrong header.");
+                         throw new Exception ("Submission file (vector features) has wrong header.");
                      else 
                          continue;
 
@@ -277,8 +277,8 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
                      m_error_messages.add("Cannot submit vector feature: "+Algorithms.convertArrayToString(vf,"\t"));
                     continue;
                  }
-                 bf = new BioVectorFeature();bf.setName( vf[2]);
-                 bf.setType( Integer.parseInt( vf[1]));bf.setDescription( vf[3]);
+                 bf = new BioVectorFeature();bf.setName( vf[1]);
+                 bf.setType( Integer.parseInt( vf[2]));bf.setDescription( vf[3]);
                  cur_vector = (BioVector)vectors.get(vf[0]);
                  if (cur_vector != null) 
                  {
