@@ -125,8 +125,8 @@ public class AceToFlexImporter extends ImportRunner
             rs = DatabaseTransaction.executeQuery(sql,ace_connection);
             while(rs.next())
             {
-                if (  rs.getInt("process_status") !=     IsolateTrackingEngine.FINAL_STATUS_ACCEPTED
-       && rs.getInt("process_status") != IsolateTrackingEngine.FINAL_STATUS_REJECTED)
+                if (  rs.getInt("process_status") ==     IsolateTrackingEngine.FINAL_STATUS_NOT_APPLICABLE
+       || rs.getInt("process_status") == IsolateTrackingEngine.FINAL_STATUS_INPROCESS)
                 {
                     m_error_messages.add("Data for clone ID "+rs.getInt("cloneid")+" cannot be transfered, because clone final status "+ IsolateTrackingEngine.getCloneFinalStatusAsString( rs.getInt("process_status")));
                     continue;
