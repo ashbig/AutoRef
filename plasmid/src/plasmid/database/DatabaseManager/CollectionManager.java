@@ -209,7 +209,7 @@ public class CollectionManager extends TableManager {
                 }
                 
                 CloneManager m = new CloneManager(conn);
-                Map clones = m.queryAvailableClonesByCloneid(cloneids, true, true, isCloneStorage);
+                Map clones = m.queryClonesByCloneid(cloneids, true, true, isCloneStorage);
                 if(clones == null) {
                     throw new Exception("Cannot get clones from database.");
                 }
