@@ -142,7 +142,7 @@ public class CollectionManager extends TableManager {
         String sql3 = "select p.name, p.filename, p.description"+
         " from protocol p, collectionprotocol cp"+
         " where p.name=cp.protocolname and cp.collectionname='"+name+"'";
-        String sql4 = "select cloneid from clonecollection where name='"+name+"' and status='"+Clone.AVAILABLE+"'";
+        String sql4 = "select cloneid from clonecollection where name='"+name+"'";
         
         DatabaseTransaction t = null;
         Connection conn = null;
@@ -209,7 +209,7 @@ public class CollectionManager extends TableManager {
                 }
                 
                 CloneManager m = new CloneManager(conn);
-                Map clones = m.queryClonesByCloneid(cloneids, true, true, isCloneStorage);
+                Map clones = m.queryAvailableClonesByCloneid(cloneids, true, true, isCloneStorage);
                 if(clones == null) {
                     throw new Exception("Cannot get clones from database.");
                 }

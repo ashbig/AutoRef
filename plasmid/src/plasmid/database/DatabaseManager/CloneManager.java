@@ -54,7 +54,7 @@ public class CloneManager extends TableManager {
                 stmt.setString(14, c.getSpecialtreatment());
                 stmt.setString(15, c.getSource());
                 stmt.setString(16, c.getDescription());
-                
+               // System.out.println(c.getVectorname()+","+c.getRestriction());
                 DatabaseTransaction.executeUpdate(stmt);
             }
             DatabaseTransaction.closeStatement(stmt);
