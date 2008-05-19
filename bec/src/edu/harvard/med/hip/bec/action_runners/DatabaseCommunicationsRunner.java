@@ -351,9 +351,7 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
       boolean isHeader = true; 
       FileOperations.readFromFile( m_input_stream,  items, !isHeader);
     String sql = null; 
-     String     start_codon =null;
-      String     fusion_stop_codon =null;
-     for (String[] item : items )
+      for (String[] item : items )
      {
           if (isHeader )
          {
@@ -375,6 +373,8 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
          }
          String fusion_last_codon = item[5].equalsIgnoreCase("Natural")?"NON":item[5].toUpperCase();
           String first_codon = item[4].equalsIgnoreCase("Natural")?"NON":item[4].toUpperCase();
+            String fusion_stop_codon = item[6].equalsIgnoreCase("Natural")?"NON":item[6].toUpperCase();
+       
         BioLinker bl = BioLinker.getLinkerByName(item[2]);
         int bl_5_id = -1;int bl_3_id =-1;
         if ( bl != null)  bl_5_id = bl.getId();
@@ -400,7 +400,7 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
              sql =  "insert into cloningstrategy (strategyid, name, vectorid,linker5id, "
  +"linker3id,STARTCODON  ,FUSIONSTOPCODON   ,CLOSEDSTOPCODON  ) "
 +" select  strategyid.nextval,'"+ item[0]+"', "+vec.getId() +","+bl_5_id+"," +bl_3_id
-+",'"+first_codon+"','"+ fusion_last_codon +"','"+ item[6].toUpperCase()+"' from dual WHERE not exists "
++",'"+first_codon+"','"+ fusion_last_codon +"','"+ fusion_stop_codon+"' from dual WHERE not exists "
 +" (select * from cloningstrategy  where VECTORID ="+vec.getId() +" and LINKER3ID  ="+
   bl_3_id+" and LINKER5ID ="+bl_5_id+" and STARTCODON='"+first_codon
 + "' and FUSIONSTOPCODON  ='"+fusion_last_codon +"' and CLOSEDSTOPCODON ='"+item[6].toUpperCase()+"'"
