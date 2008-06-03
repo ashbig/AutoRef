@@ -99,6 +99,12 @@ public class PlateImporter {
                         currentSample.setCloneid(((Integer)cloneidmap.get(columnInfo)).intValue());
                     }
                 }
+                if("oricontainerid".equalsIgnoreCase(columnName)) {
+                    if(columnInfo != null) {
+                        String OriginalLabel = columnInfo.trim();
+                        c.setOricontainerid(OriginalLabel);
+                    }
+                }
             }
         }
         

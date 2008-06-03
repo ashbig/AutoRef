@@ -117,13 +117,29 @@ public class InsertImporter {
                     c.setRegion(columnInfo);
                 }
                 if("refseqid".equalsIgnoreCase(columnName)) {
-                    Integer refseqid = null;
+                    int refseqid = 0;
                     
-                    if(columnInfo != null)
-                        refseqid = (Integer)refseqidmap.get(columnInfo);
+                    if(columnInfo != null) {
+                        if(refseqidmap != null) {
+                            Integer seqid = (Integer)refseqidmap.get(columnInfo);
+                            if(seqid != null) 
+                                refseqid = seqid.intValue();
+                        }
+                        if(refseqid == 0) {
+                            try {
+                                RefseqManager man = new RefseqManager(manager.getConnection());
+                                refseqid = man.findRefseq(RefseqNameType.GI, columnInfo);
+                            } catch (Exception ex) {
+                                throw new Exception("Error occured while trying to find matching reference sequence: "+columnInfo+" from database.");
+                            }
+                        }
+                        if(refseqid == 0) {
+                            throw new Exception("Cannot find matching reference sequence: "+columnInfo+".");
+                        }
+                    }
                     
-                    if(refseqid != null) {
-                        c.setRefseqid(((Integer)refseqid).intValue());
+                    if(refseqid > 0) {
+                        c.setRefseqid(refseqid);
                     }
                 }
             }

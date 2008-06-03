@@ -13,79 +13,51 @@
 </head>
 
 <body>
-<jsp:include page="homeTitle.jsp" />
-<table width="100%" border="0" cellspacing="3" cellpadding="3">
-  <tr> 
-    <td width="50%" height="275" align="left" valign="top">
-	     <!-- ImageReady Slices (monday_3.ai) -->
-      <IMG SRC="monday_4.gif" WIDTH=376 HEIGHT=275 BORDER=0 ALT="" USEMAP="#monday_4_Map"> 
-      <MAP NAME="monday_4_Map">
-        <AREA SHAPE="rect" ALT="" COORDS="99,91,277,119" HREF="http://plasmid.med.harvard.edu/PLASMID/Submission.jsp">
-        <AREA SHAPE="rect" ALT="" COORDS="72,180,304,208" HREF="http://plasmid.med.harvard.edu/PLASMID/collection_overview.jsp" target="_blank">
-        <AREA SHAPE="rect" ALT="" COORDS="86,136,290,163" HREF="http://plasmid.med.harvard.edu/PLASMID/OrderOverview.jsp">
-      </MAP> 
-      <!-- End ImageReady Slices -->  
-      </td>
-    <td width="50%" height="275"> 
- 	 <!-- Begin "New in the Repository" Blockquote -->
-	 <blockquote> 
-        <p align="left" class="homepageText3">What's New?</p>
-        <ul>
-          <li> 
-            <div align="left"><b><a href="http://plasmid.med.harvard.edu/PLASMID/GetCollection.do?collectionName=PSI">First sequence-verified PSI plasmids available
-            </a></b></div>
-          </li>
-          <li> 
-            <div align="left">Credit Card Payments now accepted! You can now use either a purchase order (PO) number or a credit card to pay for your request
-            </div>
-          </li>
-          <li> 
-            <div align="left">Sequence-verified, genome-scale ORF collections for F. tularensis, Y. pestis and V. cholerae (HIP/HMS) 
-            </div>
-          </li>
-          <li> 
-            <div align="left">Human kinase collection now includes clones in entry vectors for recombinational cloning and <a href="http://plasmid.med.harvard.edu/PLASMID/GetCollection.do?collectionName=HIP%20human%20kinase%20collection%20(pJP1520,%20complete%20set)">clones in a mammalian expression vector</a> (HIP/HMS)
-</div>
-          </li>
-          <li> 
-            <div align="left">Harvard  Institute of Proteomics named site of the Materials Repository of the <a href="http://www.nigms.nih.gov/Initiatives/PSI/">Protein Structure Initiative</a>, funded by <a href="http://www.nigms.nih.gov/">NIGMS/NIH</a> for  storage and distribution of more than 100,000 plasmid clones for protein expression
-</div>
-          </li>
-        </ul>
-      </blockquote>
-	   <!-- End "New in the Repository" Blockquote -->
-    </td>
+<jsp:include page="homeTitle.jsp" /><table width="973" height="603" border="0">
+  <tr>
+    <td width="550" height="300"><table width="532" height="259" border="0" align="center" bgcolor="#EFEFEF" id="form">
+      <tr>
+        <td width="526" height="112"><p align="center"><span class="mainbodytext">Plasmid Information Database (PlasmID) is a central repository for plasmid clone collections and distribution based at the <a href="http://www.hip.harvard.edu/" target="_blank">Harvard Institute of Proteomics (HIP)</a>. We are also the <a href="http://www.hip.harvard.edu/PSIMR/index.htm" target="_blank" class="style1">Protein Structure Initiative (PSI) Material Repository</a>.&nbsp;        
+          </span>
+        <p align="center"><span class="mainbodytext"><img src="HMS_logo.jpg" width="66" height="63">&nbsp;<img src="psilogo.jpg" width="150" height="63">&nbsp;<img src="DFHCC_logo_square.jpg" width="64" height="63"><br>
+            </span>
+        <p align="center" class="mainbodytext">To see an overview and to search for plasmids, please go to <a href="OrderOverview.jsp">Plasmid Request</a> or find a list of our large collections <a href="collection_overview.jsp" target="_blank">here</a>. </p>
+        <p align="center" class="mainbodytext">To find more information on how to deposit clones with our repository, please go to <a href="Submission.jsp">Plasmid Submission</a>.</p>
+        <p align="center" class="mainbodytext">Click <a href="cloning_strategies.htm" target="_blank">here</a> to view the cloning methods used for the plasmids in the repository.          </p>
+          <p align="center" class="mainbodytext">Registration is not required to view the collection. </p></td>
+      </tr>
+    </table></td>
+    <td width="490"><img src="monday_4.gif" width="431" height="270" border="0" alt="" usemap="#monday_4_Map" />
+      <map name="monday_4_Map" id="monday_4_Map">
+        <area shape="rect" alt="" coords="110,87,314,114" href="Submission.jsp" />
+        <area shape="rect" alt="" coords="81,175,346,201" href="collection_overview.jsp" target="_blank" />
+        <area shape="rect" alt="" coords="96,132,330,157" href="OrderOverview.jsp" />
+    </map></td>
   </tr>
   <tr>
-    <td width="50%" align="left" valign="top">
-        <img src="credit_card_promo.jpg"/>
-    </td>
-    <td height="75">
-    <p class="homepageLink">
-    PlasmID is a central repository for plasmid clone collection and distribution.<br>
-    To view the collection, please go to "Plasmid Request". <br>
-    Registration is not required to view the collection.
-    </p>
-    <p class="text">Click <a href="cloning_strategies.htm" target="_blank">here</a> to view the cloning methods used for the plasmids in the repository
-    </p>
-        <!--<html:form action="Logon.do"><table bgcolor="#CCCCCC" width="350" border="0">
-        <tr> 
-            <td width="12%" valign="baseline" class="formlabel">Email:</td>
-            <td width="28%">
-                <html:text property="email" styleClass="text" size="30"/>
-            </td>    
-            <td valign="baseline" class="text"><html:submit styleClass="text" value="Login"/></td>
-        </tr>
-        <tr> 
-            <td width="12%" valign="baseline" class="formlabel">Password:</td>
-            <td width="28%">
-                <html:password property="password" styleClass="text" size="30" maxlength="20"/>        
-            </td>
-            <td valign="baseline" class="text"><a href="FindPassword.jsp">Find Password</a></td>
-        </tr>
-        </table>
-        </html:form>-->
-    </td>
+    <td colspan="2"><table width="697" border="5" align="center" bordercolor="#999999" id="gray">
+      <tr>
+        <td width="679" height="234"><p align="center" class="homepageText3">What's New? </p>
+          <ul type= circles>
+            <li class="mainbodytext"><a href="http://www.hip.harvard.edu/PSIMR/PSIMR%20News/EmptyVectors.html" target="_blank">Empty vectors</a> for cell free and bacterial expression from University of Wisconsin (CESG) now available!</li>
+         
+            <li class="mainbodytext"><a href="http://www.hip.harvard.edu/PSIMR/PSIMR News/pMHTdelta238.html" target="_blank">TEV protease</a> plasmid now available!</li>
+            <li class="mainbodytext">PSI CloneIDs now link to data in<a href="http://targetdb.rcsb.org/" target="_blank"> TargetDB</a>, <a href="http://pepcdb.rcsb.org/" target="_blank">PepcDB</a>, <a href="http://kb.psi-structuralgenomics.org/KB/" target="_blank">PSI Structural Genomics Knowledgebase</a> and <a href="http://www.topsan.org/WikiHome" target="_blank">TOPSAN</a></li>
+            <li class="mainbodytext">New<a href="PrepareAdvancedSearch.do?psi=1" target="_self"> PSI specific searches</a> available. Search by TargetDB ID, PDB ID, protein expression, solubility or purification or by PSI site.</li>
+         
+            <li class="mainbodytext"><a href="GetCollection.do?collectionName=PSI">Over 700 sequence-verified PSI plasmids available.</a></li>
+          
+            <li class="mainbodytext">Credit Card Payments now accepted! You can now use either a credit card or purchase order (PO) number to pay for your request.</li>
+            
+            <li class="mainbodytext">Sequence-verified, genome-scale ORF collections for F. tularensis, Y. pestis and V. cholerae (HIP/HMS).</li>
+          
+            <li class="mainbodytext">Human kinase collection now includes clones in entry vectors for recombinational cloning and <a href="GetCollection.do?collectionName=HIP%20human%20kinase%20collection%20(pJP1520,%20complete%20set)">clones in a mammalian expression vector</a> (HIP/HMS)</li>
+          
+            <li class="mainbodytext">Harvard  Institute of Proteomics named site of the Materials Repository of the <a href="http://www.nigms.nih.gov/Initiatives/PSI/">Protein Structure Initiative</a>, funded by <a href="http://www.nigms.nih.gov/">NIGMS/NIH</a> for  storage and distribution of more than 100,000 plasmid clones for protein expression.</li>
+            <br>
+          </ul></td>
+      </tr>
+    </table></td>
   </tr>
 </table>
 <table width="100%" border="0" cellspacing="1" cellpadding="4">

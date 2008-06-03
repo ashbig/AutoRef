@@ -93,7 +93,16 @@ public class Importer {
     //public static final String filepath = "G:\\plasmid\\ORFeome_Mar_2008\\";
     //public static final String filepath = "G:\\plasmid\\PSI_200803\\";
     //public static final String filepath = "G:\\plasmid\\donnelly_vector_mar_2008\\";
-    public static final String filepath = "G:\\plasmid\\PSI_200804\\";
+    //public static final String filepath = "G:\\plasmid\\PSI_200804\\";
+    //public static final String filepath = "G:\\plasmid\\TRC_2008_05\\Ref_1\\";
+    //public static final String filepath = "G:\\plasmid\\TRC_2008_05\\Ref_2\\";
+    //public static final String filepath = "G:\\plasmid\\TRC_2008_05\\Ref_3\\";
+    //public static final String filepath = "G:\\plasmid\\TRC_2008_05\\Ref_4\\";
+    //public static final String filepath = "G:\\plasmid\\TRC_2008_05\\Ref_5\\";
+    //public static final String filepath = "G:\\plasmid\\TRC_2008_05\\Ref_6\\";
+    //public static final String filepath = "G:\\plasmid\\TRC_2008_05\\Ref_7\\";
+    //public static final String filepath = "G:\\plasmid\\import files CESG vector clones\\";
+    public static final String filepath = "G:\\plasmid\\TRC_2008_05\\CloneBatch1\\";
     
     private List tables;
     private String error;
