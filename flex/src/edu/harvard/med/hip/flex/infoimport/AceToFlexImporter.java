@@ -296,7 +296,7 @@ public class AceToFlexImporter extends ImportRunner
                 stmt_insert_clone_sequence_details.setString(2,clone_data.getMutCDS());//resultexpect
                 String matchexpect = clone_data.isDiscrepancies() ? "N": "Y";
                 stmt_insert_clone_sequence_details.setString(3,matchexpect);//matchexpect
-                stmt_insert_clone_sequence_details.setString(4,"");//genechange
+                stmt_insert_clone_sequence_details.setString(4,clone_data.getMutCDS());//genechange
                 stmt_insert_clone_sequence_details.setString(5,clone_data.getMLinker5());//linker5p
                 stmt_insert_clone_sequence_details.setString(6, clone_data.getMutLinker3());//linker3p
                 stmt_insert_clone_sequence_details.setInt(7,clone_data.getCDSStart());//cdsstart
