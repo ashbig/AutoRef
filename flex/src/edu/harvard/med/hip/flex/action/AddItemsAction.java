@@ -74,14 +74,16 @@ public class AddItemsAction extends ResearcherAction {
         AddItemsForm requestForm= ((AddItemsForm)form);
         int forwardName = requestForm.getForwardName();
         FormFile inputFile = ((AddItemsForm)form).getInputFile();
-        User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
-        ItemsImporter imp = new ItemsImporter();
+         User user = ((User)request.getSession().getAttribute(Constants.USER_KEY));
+          ItemsImporter imp = new ItemsImporter();
         imp.setUser(user);
         String map_name= null;   
         try 
         {
              request.setAttribute("forwardName", String.valueOf(forwardName));
-           
+             AccessManager manager = AccessManager.getInstance();
+             user.setUserEmail( manager.getEmail(user.getUsername()));
+      
               if ( forwardName > 0)
               {
                   return (mapping.findForward("add_items"));

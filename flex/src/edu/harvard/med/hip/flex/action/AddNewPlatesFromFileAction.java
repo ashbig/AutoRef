@@ -55,6 +55,9 @@ public class AddNewPlatesFromFileAction extends WorkflowAction
         
          try 
          {
+            AccessManager manager = AccessManager.getInstance();
+            user.setUserEmail( manager.getEmail(user.getUsername()));
+      
             switch (forwardName)
             {
                 case ConstantsImport.PROCESS_IMPORT_OUTSIDE_CONTAINERS_INTO_FLEX:
@@ -152,7 +155,7 @@ public class AddNewPlatesFromFileAction extends WorkflowAction
                     case  OutsidePlatesImporter.SUBMISSION_TYPE_ONE_FILE:
                     {
                         importer.setInputData(FileStructure.STR_FILE_TYPE_ONE_FILE_SUBMISSION, inputFile.getInputStream());
-                        break;
+                         break;
                     }
                   case  OutsidePlatesImporter.SUBMISSION_TYPE_REFSEQUENCE_LOCATION_FILES:
                   {
