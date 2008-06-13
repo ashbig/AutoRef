@@ -29,7 +29,7 @@
   </tr>
   <tr>
     <td colspan="3">&nbsp;</td>
-    <td width="64%" align="center" valign="top" class="homepageLink"><a href="http://www.nigms.nih.gov/Initiatives/PSI/" target="_blank">Protein Structure Initiative
+    <td width="64%" align="center" valign="top" class="homepageLink"><a href="http://www.hip.harvard.edu/PSIMR/index.htm" target="_blank">Protein Structure Initiative
       - Materials Repository (PSI-MR)</a></td>
     <td height="26" valign="baseline" class="countrytext"> 
     <logic:present name="<%=Constants.USER_KEY%>" scope="session"> 
