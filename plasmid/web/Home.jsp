@@ -39,9 +39,9 @@
       <tr>
         <td width="679" height="234"><p align="center" class="homepageText3">What's New? </p>
           <ul type= circles>
-            <li class="mainbodytext"><a href="http://www.hip.harvard.edu/PSIMR/PSIMR%20News/EmptyVectors.html" target="_blank">Empty vectors</a> for cell free and bacterial expression from University of Wisconsin (CESG) now available!</li>
+            <li class="mainbodytext"><a href="http://www.hip.harvard.edu/PSIMR/PSIMRNews/EmptyVectors.html" target="_blank">Empty vectors</a> for cell free and bacterial expression from University of Wisconsin (CESG) now available!</li>
          
-            <li class="mainbodytext"><a href="http://www.hip.harvard.edu/PSIMR/PSIMR News/pMHTdelta238.html" target="_blank">TEV protease</a> plasmid now available!</li>
+            <li class="mainbodytext"><a href="http://www.hip.harvard.edu/PSIMR/PSIMRNews/pMHTdelta238.html" target="_blank">TEV protease</a> plasmid now available!</li>
             <li class="mainbodytext">PSI CloneIDs now link to data in<a href="http://targetdb.rcsb.org/" target="_blank"> TargetDB</a>, <a href="http://pepcdb.rcsb.org/" target="_blank">PepcDB</a>, <a href="http://kb.psi-structuralgenomics.org/KB/" target="_blank">PSI Structural Genomics Knowledgebase</a> and <a href="http://www.topsan.org/WikiHome" target="_blank">TOPSAN</a></li>
             <li class="mainbodytext">New<a href="PrepareAdvancedSearch.do?psi=1" target="_self"> PSI specific searches</a> available. Search by TargetDB ID, PDB ID, protein expression, solubility or purification or by PSI site.</li>
          
