@@ -15,30 +15,31 @@
 <body>
 <jsp:include page="homeTitle.jsp" /><table width="973" height="603" border="0">
   <tr>
-    <td width="550" height="300"><table width="532" height="259" border="0" align="center" bgcolor="#EFEFEF" id="form">
+    <td width="550" height="300"><table width="578" height="259" border="0" align="center" bgcolor="#EFEFEF" id="form">
       <tr>
-        <td width="526" height="112"><p align="center"><span class="mainbodytext">Plasmid Information Database (PlasmID) is a central repository for plasmid clone collections and distribution based at the <a href="http://www.hip.harvard.edu/" target="_blank">Harvard Institute of Proteomics (HIP)</a>. We are also the <a href="http://www.hip.harvard.edu/PSIMR/index.htm" target="_blank" class="style1">Protein Structure Initiative (PSI) Material Repository</a>.&nbsp;        
-          </span>
-        <p align="center"><span class="mainbodytext"><img src="HMS_logo.jpg" width="66" height="63">&nbsp;<img src="psilogo.jpg" width="150" height="63">&nbsp;<img src="DFHCC_logo_square.jpg" width="64" height="63"><br>
-            </span>
-        <p align="center" class="mainbodytext">To see an overview and to search for plasmids, please go to <a href="OrderOverview.jsp">Plasmid Request</a> or find a list of our large collections <a href="collection_overview.jsp" target="_blank">here</a>. </p>
-        <p align="center" class="mainbodytext">To find more information on how to deposit clones with our repository, please go to <a href="Submission.jsp">Plasmid Submission</a>.</p>
-        <p align="center" class="mainbodytext">Click <a href="cloning_strategies.htm" target="_blank">here</a> to view the cloning methods used for the plasmids in the repository.          </p>
-          <p align="center" class="mainbodytext">Registration is not required to view the collection. </p></td>
+        <td width="572" height="112"><p align="center"><span class="mainbodytext">Plasmid Information Database (PlasmID) is a central repository for plasmid clone collections and distribution based at the <a href="http://www.hip.harvard.edu/" target="_blank">Harvard Institute of Proteomics (HIP)</a>. We are also the <a href="http://www.hip.harvard.edu/PSIMR/index.htm" target="_blank" class="style1">Protein Structure Initiative (PSI) Material Repository</a>.&nbsp;        
+        </span>
+        <p align="center"><span class="mainbodytext"><a href="hms.harvard.edu"><img src="HMS_logo.jpg" width="66" height="63"></a>&nbsp;<a href="www.hip.harvard.edu/PSIMR" target="_blank"><img src="psilogo.jpg" width="150" height="63"></a>&nbsp;<a href="www.dfhcc.harvard.edu" target="_blank"><img src="DFHCC_logo_square.jpg" width="64" height="63"></a><br>
+        </span>
+        <p align="center" class="mainbodytext">To search for plasmids, please go to <a href="OrderOverview.jsp">Plasmid Request</a>  
+          or find a list of our large collections <a href="collection_overview.jsp" target="_blank">here</a>. </p>
+        <p align="center" class="mainbodytext">For  more information on how to deposit clones with our repository,<br>please go to <a href="Submission.jsp">Plasmid Submission</a>.</p>
+        <p align="center" class="mainbodytext">Click <a href="http://www.hip.harvard.edu/PSIMR/DepositorAgreement/MTAdetails.html" target="_blank">here</a> for  information about the terms and conditions for receiving plasmids from the repository. </p>
+        <p align="center" class="mainbodytext">Click <a href="cloning_strategies.htm" target="_blank">here</a> to view the cloning methods used to create many of the  plasmids           </p>        </td>
       </tr>
     </table></td>
-    <td width="490"><img src="monday_4.gif" width="431" height="270" border="0" alt="" usemap="#monday_4_Map" />
+    <td width="490"><img src="monday_4.gif" width="410" height="270" border="0" alt="" usemap="#monday_4_Map" />
       <map name="monday_4_Map" id="monday_4_Map">
-        <area shape="rect" alt="" coords="110,87,314,114" href="Submission.jsp" />
-        <area shape="rect" alt="" coords="81,175,346,201" href="collection_overview.jsp" target="_blank" />
-        <area shape="rect" alt="" coords="96,132,330,157" href="OrderOverview.jsp" />
+        <area shape="rect" alt="" coords="91,132,313,157" href="OrderOverview.jsp" />
+        <area shape="rect" alt="" coords="77,175,329,201" href="collection_overview.jsp" target="_blank" />
+        <area shape="rect" alt="" coords="104,87,298,114" href="Submission.jsp" />
     </map></td>
   </tr>
   <tr>
     <td colspan="2"><table width="697" border="5" align="center" bordercolor="#999999" id="gray">
       <tr>
-        <td width="679" height="234"><p align="center" class="homepageText3">What's New? </p>
-          <ul type= circles>
+        <td width="679" height="234"><h1 align="center">What's New? </h1>
+        <ul type= circles>
             <li class="mainbodytext"><a href="http://www.hip.harvard.edu/PSIMR/PSIMRNews/EmptyVectors.html" target="_blank">Empty vectors</a> for cell free and bacterial expression from University of Wisconsin (CESG) now available!</li>
          
             <li class="mainbodytext"><a href="http://www.hip.harvard.edu/PSIMR/PSIMRNews/pMHTdelta238.html" target="_blank">TEV protease</a> plasmid now available!</li>
