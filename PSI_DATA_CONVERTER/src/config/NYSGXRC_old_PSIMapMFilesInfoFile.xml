@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE web-app
+     PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<file_maps>
+
+<!--
+Unique_Clone_ID	Plate_Label	Plate_Well	PSI_Abbreviation
+-->
+
+<file_map file_type="FILE_TYPE_PLATE_MAPPING">
+    <file_column header="Unique_Clone_ID" object="SAMPLE" object_property_type="NAMEPROPERTY" 
+                 property_name="USER_ID" key="1"/>
+    <file_column header="Plate_Label" object="CONTAINER"   property_name="LABEL"/>	
+    <file_column header="Plate_Well" object="SAMPLE" property_name="POSITION"/>
+    <!-- <file_column header="PSI_Abbreviation" object="CONTAINER" 
+    property_name="PSI" object_property_type="NAMEPROPERTY"  /> -->
+    <file_column header="FORMAT" object="SAMPLE" property_name ="CONSTRUCT_TYPE" />
+    
+    
+    <connector primary_key_header="UniqueCloneID" foreign_file_type = "FILE_TYPE_SEQUENCE_INFO" foreign_key_header="UniqueCloneID"/>	
+    <connector primary_key_header="UniqueCloneID" foreign_file_type = "FILE_TYPE_GENE_INFO" foreign_key_header="UniqueCloneID"/>	
+	
+</file_map>
+
+
+<!--
+
+Unique_Clone_ID
+Vector
+PDB_ID
+NT_Seq
+CDS_start
+CDS_stop
+5p_Linker
+3p_Linker
+Protein_Expressed
+Soluble_Protein
+Protein_Purified
+mutationsNT
+mutationsAA
+Relative_Length
+Host
+Comments
+CloneStatus
+CloneStorage
+CloneStorageForm
+UserIDForRefSequence
+UserIDForCloneProperties
+VectorMTA
+CloneType
+IS_CHECK_CDS
+-->
+
+<file_map file_type="FILE_TYPE_SEQUENCE_INFO">
+    <file_column key="1" header="Unique_Clone_ID" object="FLEXSEQUENCE" object_property_type="NAMEPROPERTY"  property_name="USER_ID" isSubmit="0"/>	
+     
+    
+	<file_column header="NT_Seq" object="FLEXSEQUENCE" property_name="TEXT"/>	
+	<file_column header="CDS_start" object="FLEXSEQUENCE" property_name="CDS_START"/>	
+	<file_column header="CDS_stop" object="FLEXSEQUENCE" property_name="CDS_STOP"/>
+	<file_column header="5p_Linker" object="CLONE" object_property_type="NAMEPROPERTY" isSubmit="0" property_name="FIVE_PRIME_LINKER"/>
+	<file_column header="3p_Linker" object="CLONE" object_property_type="NAMEPROPERTY" isSubmit="0" property_name="THREE_PRIME_LINKER"/>
+	<file_column header="Vector" object="CLONE" object_property_type="NAMEPROPERTY" isSubmit="0" property_name="VECTOR"/>
+
+	<file_column header="Protein_Expressed" object="CLONE"   property_name="P_EXPRESSED" object_property_type="NAMEPROPERTY"/>
+	<file_column header="Soluble_Protein" object="CLONE"   property_name="P_SOLUBLE" object_property_type="NAMEPROPERTY"/>
+	<file_column header="Protein_Purified" object="CLONE"   property_name="P_PURIFIED" object_property_type="NAMEPROPERTY"/>
+	
+	
+	<file_column header="PDB_ID" object="FLEXSEQUENCE"   property_name="P_ID" object_property_type="NAMEPROPERTY"/>
+	<file_column header="mutationsNT" object="FLEXSEQUENCE"   property_name="MUTATION_NT" object_property_type="NAMEPROPERTY"/>
+	<file_column header="mutationsAA" object="FLEXSEQUENCE"   property_name="MUTATION_AA" object_property_type="NAMEPROPERTY"/>
+	<file_column header="Relative_Length" object="FLEXSEQUENCE"   property_name="RELATIVE_LENGTH" object_property_type="NAMEPROPERTY"/>
+	<file_column header="Host" object="CLONE"   property_name="HOST" object_property_type="NAMEPROPERTY"/>
+	
+   	<file_column header="Comments" object="FLEXSEQUENCE"   property_name="COMMENT" object_property_type="NAMEPROPERTY"/>
+      
+      <!-- added by program -->
+      
+ 
+      <!-- for clones tables -->
+      	<!--  name of this property hardcoded , do not change -->
+      	    <file_column header="CloneStatus" object="CLONE" object_property_type="NAMEPROPERTY" property_name ="CLONE_STATUS" isSubmit="0"/>
+      	<!--  name of this property hardcoded , do not change -->
+      	   <file_column header="CloneType" object="CLONE" object_property_type="NAMEPROPERTY" property_name ="CLONE_TYPE" isSubmit="0"/>
+      	
+      	  
+      	  
+      	  <!-- count properties must start from 0 and use incremental count, moreover name of this property hardcoded -->
+      	    
+      	      <file_column header="CloneStorage" object="CLONE" object_property_type="NAMEPROPERTY" isSubmit="0" property_name ="CLONE_STORAGE_TYPE_0">
+      	            <column_translation file_value="Original" translated_value="Original Storage" />
+      	        </file_column>
+      	
+      	<!--  name of this property hardcoded , do not change -->
+      	 
+      	    <file_column header="CloneStorageForm" object="CLONE" object_property_type="NAMEPROPERTY" isSubmit="0" property_name ="CLONE_STORAGE_FORM">
+      	            <column_translation file_value="DNA" translated_value="DNA"  />
+      	             <column_translation file_value="GLYCEROL" translated_value="GLYCEROL"  />
+    </file_column>
+	<file_column  header="UserIDForRefSequence" object="FLEXSEQUENCE" object_property_type="NAMEPROPERTY"  property_name="PSI_USER_ID" />	
+	<file_column header="UserIDForCloneProperties" object="CLONE"   property_name="USER_ID" object_property_type="NAMEPROPERTY"/>
+	<file_column header="VectorMTA" object="CLONE"   property_name="VECTORMTA" object_property_type="NAMEPROPERTY"/>
+	 <file_column header="IS_CHECK_CDS" object="FLEXSEQUENCE"   property_name="IS_CHECK_CDS" object_property_type="NAMEPROPERTY" isSubmit="0"/>
+	
+	<connector primary_key_header="UniqueCloneID" foreign_file_type = "FILE_TYPE_PLATE_MAPPING" foreign_key_header="UniqueCloneID"/>	
+	<connector primary_key_header="UniqueCloneID" foreign_file_type = "FILE_TYPE_GENE_INFO" foreign_key_header="UniqueCloneID"/>	
+
+</file_map>	
+							 	
+<!--
+Unique_Clone_ID
+functional_category
+insert_source
+genus_species
+tax_ID
+targetDB_ID
+Gene_symbol
+gi_number
+nucleotide_accession
+genPept_accession
+TAIR
+-->
+<file_map file_type="FILE_TYPE_GENE_INFO">
+    <file_column key="1" header="Unique_Clone_ID" object="FLEXSEQUENCE" object_property_type="NAMEPROPERTY"  property_name="USER_ID" isSubmit="0"/>	
+    <file_column header="genus_species" object="FLEXSEQUENCE" property_name="SPECIES"/>	
+    <file_column header="tax_ID" object="FLEXSEQUENCE" object_property_type="NAMEPROPERTY"  property_name="TAXID"/>	
+    <file_column header="insert_source" object="FLEXSEQUENCE" object_property_type="NAMEPROPERTY"   property_name="INSERT_SOURCE"/>							
+    <file_column header="targetDB_ID" object="FLEXSEQUENCE" object_property_type="NAMEPROPERTY"   property_name="TARGETDB_ID"/>							
+    <file_column header="gi_number" object="FLEXSEQUENCE" object_property_type="NAMEPROPERTY"   property_name="GI"/>							
+    <file_column header="nucleotide_accession" object="FLEXSEQUENCE" object_property_type="NAMEPROPERTY"   property_name="GENBANK_ACCESSION"/>							
+    <file_column header="genPept_accession" object="FLEXSEQUENCE" object_property_type="NAMEPROPERTY"   property_name="P_ACCESSION_NUMBER"/>							
+    <file_column header="functional_category" object="FLEXSEQUENCE" object_property_type="NAMEPROPERTY"   property_name="FUNCTION"/>							
+    <file_column header="Gene_symbol" object="FLEXSEQUENCE" object_property_type="NAMEPROPERTY"   property_name="GENE_SYMBOL"/>							
+	<file_column header="TAIR" object="FLEXSEQUENCE" object_property_type="NAMEPROPERTY"   property_name="TAIR"/>							
+
+     <connector primary_key_header="Unique_Clone_ID" foreign_file_type = "FILE_TYPE_PLATE_MAPPING" foreign_key_header="UniqueCloneID"/>	
+    <connector primary_key_header="Unique_Clone_ID" foreign_file_type = "FILE_TYPE_GENE_INFO" foreign_key_header="UniqueCloneID"/>	
+
+</file_map>
+
+<!--
+AuthorName	AuthorFN	AuthorLN	Tel	Fax	Email	Institution	Address	www	description	type
+-->
+
+<file_map file_type="FILE_TYPE_AUTHOR_INFO">
+    <file_column key="1" header="AuthorName" object="AUTHOR"   property_name="USER_ID"/>	
+    <file_column  header="AuthorFN" object="AUTHOR"   property_name="SUBMITTER_FNNAME"/>	
+    
+    <file_column  header="AuthorLN" object="AUTHOR"   property_name="SUBMITTER_LNNAME"/>	
+    <file_column header="Tel" object="AUTHOR"   property_name="SUBMITTER_TEL"/>
+    <file_column header="Fax" object="AUTHOR"   property_name="SUBMITTER_FAX"/>
+    <file_column header="Email" object="AUTHOR"   property_name="SUBMITTER_EMAIL"/>
+    <file_column header="Institution" object="AUTHOR"   property_name="SUBMITTER_ORGANIZATION_NAME"/>
+    <file_column header="Address" object="AUTHOR"   property_name="SUBMITTER_ADDRESS"/>
+    <file_column header="www" object="AUTHOR"   property_name="SUBMITTER_WWW"/>
+    <file_column header="description" object="AUTHOR"   property_name="SUBMITTER_DESCRIPTION"/>
+    <file_column header="type" object="AUTHOR"   property_name="SUBMITTER_TYPE"/>
+     
+
+     <connector primary_key_header="AuthorName" foreign_file_type = "FILE_TYPE_AUTHOR_CONNECTION" foreign_key_header="AuthorName"/>	
+  
+</file_map>
+
+
+<!-- Unique_Clone_ID	Author_Name -->
+<!-- clone can have more than one author (person or organization) in addition to PSI site -->
+<file_map file_type="FILE_TYPE_AUTHOR_CONNECTION">
+    <file_column header="Author_Name" object="AUTHOR" object_property_type="NAMEPROPERTY"  property_name="AUTHOR_ID"/>	
+    <file_column header="Unique_Clone_ID" object="CLONE" object_property_type="NAMEPROPERTY" 
+                 property_name="USER_ID" />
+  <!--  <file_column key="1" header="UniqueCloneID" object="CONTAINER" object_property_type="NAMEPROPERTY" 
+                 property_name="USER_ID" />-->
+    <connector primary_key_header="UniqueCloneID" foreign_file_type = "FILE_TYPE_PLATE_MAPPING" foreign_key_header="UniqueCloneID"/>	
+  
+</file_map>
+
+
+<!-- PubMed_ID	Title -->
+<file_map file_type="FILE_TYPE_PUBLICATION_INFO">
+    <file_column key="1" header="PubMed_ID" object="PUBLICATION"   property_name="PUBMED_ID"/>	
+    <file_column  header="Title" object="PUBLICATION"   property_name="TITLE"/>	
+    
+    <connector primary_key_header="PubMedID" foreign_file_type = "FILE_TYPE_PUBLICATION_CONNECTION" foreign_key_header="PubMedID"/>	
+  
+</file_map>
+
+<!-- Unique_Clone_ID	PubMed_ID-->
+
+<!-- clone can have more than one publication (person or organization) in addition to PSI site -->
+<file_map file_type="FILE_TYPE_PUBLICATION_CONNECTION">
+    <file_column header="PubMed_ID" object="PUBLICATION" object_property_type="NAMEPROPERTY"  property_name="PUBMED_ID"/>	
+    <file_column header="Unique_Clone_ID" object="CLONE" object_property_type="NAMEPROPERTY" 
+                 property_name="USER_ID" />
+    <connector primary_key_header="UniqueCloneID" foreign_file_type = "FILE_TYPE_PLATE_MAPPING" foreign_key_header="UniqueCloneID"/>	
+  
+</file_map>
+
+
+</file_maps>
+
+
