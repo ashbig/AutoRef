@@ -58,7 +58,7 @@ public abstract class Verifier
             String column_header,  String header, String[] field_voc,
              boolean isCaseSensitive, ArrayList<String> er_messages)
     {
-        int column_number =  defineColumnNumber(header, column_header);
+        int column_number =  defineColumnNumber(header, column_header.trim());
         return verifyVocabularyField(records,  column_number,  field_voc ,isCaseSensitive, er_messages);
     }
     
@@ -206,7 +206,6 @@ public abstract class Verifier
         BufferedWriter input = null;
         String tmpfile = m_file_name+"tmp.txt";
         String line ;  String[] items ; int column_line = -1 ;
-        int number_of_insert_column_value = -1;
         // read author info and stor author 
         try
         {
@@ -306,13 +305,13 @@ public abstract class Verifier
          }
      }
      
-     public HashMap<String,String> readDataIntoHash(String file_name, String key_column_name ,
+     public static HashMap<String,String> readDataIntoHash(String file_name, String key_column_name ,
              String value_column_name , boolean isRaiseFlagIfDuplicates)
              throws Exception
      {
           BufferedReader output = null ; 
           HashMap<String,String> result = new HashMap();
-         String line ;  String[] items ; int key_column = -1 ;
+         String line=null ;  String[] items ; int key_column = -1 ;
         int value_column = -1;
         // read author info and stor author 
         try
@@ -331,12 +330,14 @@ public abstract class Verifier
                 if (isRaiseFlagIfDuplicates && result.containsKey(items[key_column]))
                     throw new Exception("Dublicate  key: "+items[key_column]);
                 result.put(items[key_column].trim(), items[value_column].trim());
+                
             }
             output.close();
             return result;
         }
         catch(Exception e)
         {
+            System.out.println(line);
             throw new Exception ("Cannot read file " + file_name  );
         }
         finally
@@ -347,15 +348,20 @@ public abstract class Verifier
      
      
      public boolean verifyAllCloneIDDescribed(List<String[]> records, int cloneid_column_number,
-             HashMap<String,String> clone_ids)
+             HashMap<String,String> clone_ids,  ArrayList<String> errors)
      {
-         if ( records.size() != clone_ids.size()) return false;
+       //  if ( records.size() != clone_ids.size()) return false;
+         boolean result = true;
          for( String[] record : records)
          {
              if( clone_ids.get(record[cloneid_column_number]) == null)
-                    return false;
+             {
+                 errors.add("CloneID "+record[cloneid_column_number]+" not described in gene info file.");
+                 result=false;
+             }
+                   
          }
-         return true;
+         return result;
      }
      
      

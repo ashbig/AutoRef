@@ -27,6 +27,8 @@ public class FileManager {
             boolean isDeleteOriginal) throws Exception
     {
         boolean isFirstLine = true;
+        
+     System.out.println(file_name_type);
         BufferedReader output = null;BufferedWriter input = null;
         String line ; String file_header = null;
         try
@@ -220,7 +222,8 @@ public class FileManager {
         if ( header != null){fout.write( header );fout.write("\n");}
         for (String item : fdata)
         {
-            fout.write( item.trim() );fout.write("\n");
+             fout.write( item.trim() );fout.write("\n");
+             fout.flush();
         }
         fout.flush();
         fout.close();

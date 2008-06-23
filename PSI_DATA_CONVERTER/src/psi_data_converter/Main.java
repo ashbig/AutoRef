@@ -42,37 +42,45 @@ public class Main
              subprop = SubmissionProperties.getInstance();
           
             Main tester = new Main();
-             
-               String clone_info_file_name="Z:\\HTaycher\\HIP projects\\PSI\\submission\\submitted_plates\\JCSG\\dump\\tmp\\total_clone_info.txt";
+          String clone_info_file_name="Z:\\HTaycher\\HIP projects\\PSI\\submission\\submitted_plates\\JCSG\\dump\\tmp\\total_clone_info.txt";
                String gene_info_file_name="Z:\\HTaycher\\HIP projects\\PSI\\submission\\submitted_plates\\JCSG\\dump\\tmp\\total_gene_info.txt";
                String clone_location_file_name = "Z:\\HTaycher\\HIP projects\\PSI\\submission\\submitted_plates\\JCSG\\dump\\tmp\\total_clone_location.txt";
+            
+          /*   
+               String clone_info_file_name="Z:\\HTaycher\\HIP projects\\PSI\\submission\\submitted_plates\\JCSG\\dump\\clone_info_3.txt";
+               String gene_info_file_name="Z:\\HTaycher\\HIP projects\\PSI\\submission\\submitted_plates\\JCSG\\dump\\clone_gene_info_3.txt";
+               String clone_location_file_name = "Z:\\HTaycher\\HIP projects\\PSI\\submission\\submitted_plates\\JCSG\\dump\\clone_location_3.txt";
+            */
                String damaged_plate_labels="Z:\\HTaycher\\HIP projects\\PSI\\submission\\submitted_plates\\JCSG\\dump\\tmp\\damagedplates.txt";
             String processed_plates="Z:\\HTaycher\\HIP projects\\PSI\\submission\\submitted_plates\\JCSG\\dump\\tmp\\processed_plates.txt";
                    String not_to_process_plate_labels="Z:\\HTaycher\\HIP projects\\PSI\\submission\\submitted_plates\\JCSG\\dump\\tmp\\not_to_process_plate_labels.txt";
-       
+                           
+                        
             String isCheckForGoodClones = subprop.getProperty("IS_CHECK_FOR_GOOD_CLONES");
              String isCopyRecordsGoodClones = subprop.getProperty("IS_COPY_RECORDS_FOR_GOOD_CLONES");
           if ( isCheckForGoodClones.equals("1"))
           {
                  
-    /*             
+                
 HashMap<String,String>  cloneids_location =  Verifier.readDataIntoHash(clone_location_file_name, subprop.getProperty("FILE_CLONE_LOCATION_CLONEID") ,  subprop.getProperty("FILE_CLONE_LOCATION_CLONEID") ,true);
 
 HashMap<String,String>  cloneids_geneinfo =  Verifier.readDataIntoHash(gene_info_file_name, subprop.getProperty("CLONE_INFO_VALUE_CLONEID") ,  subprop.getProperty("CLONE_INFO_VALUE_CLONEID") ,true);
 
 HashMap<String,String>  cloneids_cloneinfo =  Verifier.readDataIntoHash(clone_info_file_name, subprop.getProperty("CLONE_INFO_VALUE_CLONEID") ,  subprop.getProperty("CLONE_INFO_VALUE_CLONEID") ,true);
   
-for ( String clone_id : cloneids_location.keySet())  
-{
-    if (!cloneids_geneinfo.containsKey(clone_id) )
-        System.out.println(clone_id);
-    if (!cloneids_cloneinfo.containsKey(clone_id) )
-        System.out.println(clone_id);
+HashMap<String,String> bigest ;
+bigest = cloneids_location.size() > cloneids_geneinfo.size() ? cloneids_location : cloneids_geneinfo;
+bigest = bigest.size() > cloneids_geneinfo.size() ? bigest : cloneids_geneinfo;
     
+    
+for ( String clone_id : bigest.keySet())  
+{
+   System.out.println(cloneids_geneinfo.get(clone_id) +" "+ cloneids_cloneinfo.get(clone_id)+" "+cloneids_location.get(clone_id));
+     
   
 }
 cloneids_location=null;cloneids_geneinfo=null;cloneids_cloneinfo=null;
-     **/
+     
          int[] header_items_index={0,3};
                int[]  check_fileds_index={1};
              // ArrayList<String> empty_clones =  tester.verifyColumnInfoNoneEmpty( clone_info_file_name, header_items_index,       check_fileds_index,       subprop );
@@ -141,10 +149,12 @@ cloneids_location=null;cloneids_geneinfo=null;cloneids_cloneinfo=null;
                 String file_name_good_clones=null; allPlates = new ArrayList();
                 for ( int count =0; count < goodPlates.size(); count++)
                 {
-                    if (count != 0 && ( count % 20 ==0 || count == goodPlates.size()-1))
+                    if (count != 0 ||
+                            (count==0 && count == goodPlates.size()-1) && ( count % 19 ==0 || count == goodPlates.size()-1))
                     {
                         file_name_good_clones="Z:\\HTaycher\\HIP projects\\PSI\\submission\\submitted_plates\\JCSG\\dump\\tmp\\clones_to_process_"+count+".txt";
-                        tester.writeClonesFromGoodPlates(allPlates, file_name_good_clones,clone_location_file_name, subprop);
+                        tester.writeClonesFromGoodPlates(goodPlates, file_name_good_clones,clone_location_file_name, subprop);
+                       
                         tester.getRecordsForGoodClones( subprop,
                              file_name_good_clones ,  clone_info_file_name, 
                             gene_info_file_name,  clone_location_file_name,"Clone_ID", count);
@@ -176,6 +186,7 @@ cloneids_location=null;cloneids_geneinfo=null;cloneids_cloneinfo=null;
             {
                 System.out.println(item);
             }*/
+             System.out.println("finished");     
         }
         catch (Exception e){}
         finally
@@ -185,7 +196,7 @@ cloneids_location=null;cloneids_geneinfo=null;cloneids_cloneinfo=null;
              // write No data provided report 
             file_name =  subprop.getProperty("FILES_OUTPUT_DIR") +File.separator+"no_data_report.txt";
             try{ FileManager. writeFile(messages_missing_data_report,  file_name,  "", true);}catch(Exception e){}
-           
+      
             
             for(String item : er_messages)
             {
@@ -198,16 +209,20 @@ cloneids_location=null;cloneids_geneinfo=null;cloneids_cloneinfo=null;
          ArrayList<String>    messages_missing_data_report)
         throws Exception
     {
-            
-    
+           
              String empty_field_definition = subprop.getProperty("EMPTY_FIELD_DEFINITION");
             
              String clone_author_tmp_file = subprop.getProperty("FILES_OUTPUT_DIR") +File.separator+"clone_author_"+System.currentTimeMillis()+".txt";
              HashMap<String, String> clone_ids = verifyPlateMappingFile(subprop, clone_author_tmp_file, er_messages);
+              if (!subprop.getProperty("IS_CHECK_CDS").equals("1")) 
+             {
+                     insertValuesLocationInfo( subprop,   er_messages );
+              }
           
              //process author files
            // tester.transferAuthorFile( subprop,  er_messages );
-            creatCloneAuthorFile( subprop,  empty_field_definition, er_messages );
+             //           now all not mentioned in clone_author added from Submission properties
+  //          creatCloneAuthorFile( subprop,  empty_field_definition, er_messages );
             //append clone_author_tmp_file to clone author file
             String cloneauthor_fn = subprop.getProperty("FILES_OUTPUT_DIR") + File.separator + subprop.getProperty("FILE_CLONE_CLONEAUTHOR_NAME").trim()+".txt";
             ArrayList<String> file_names = new ArrayList();
@@ -238,43 +253,53 @@ cloneids_location=null;cloneids_geneinfo=null;cloneids_cloneinfo=null;
              replaceLinkerValues( subprop,  records, er_messages );
              insertValuesCloneInfo( subprop, records, er_messages );
          
-             List<String> updated_records = new ArrayList();
-             try
-             {
-                   String file_name =  subprop.getProperty("FILES_OUTPUT_DIR") +File.separator+ subprop.getProperty("FILE_CLONE_INFO_NAME").trim() +".txt";
-                   for (String[] record : records)
-                   {
-                       updated_records.add( Verifier.putStringArrayInString(record,"\t", false));
-                   }
-                   header = subprop.getProperty("FILE_CLONE_INFO_HEADER_ORIGINAL")+subprop.getProperty("FILE_CLONE_INFO_HEADER_NEW");
-                   header = header.replaceAll(":","\t");
-                   FileManager. writeFile(updated_records,  file_name,  header, false);
-             }
-             catch(Exception e)
-             { er_messages.add("Cannot write updated clone info file");}
-            //can be not needed
-            if ( ! subprop.getProperty("IS_CHANGER_CDS_STOP_VALUE") .equals(0))
+               //can be not needed
+            if ( subprop.getProperty("IS_CHANGER_CDS_STOP_VALUE") .equals(1))
             {
               if ( ! subprop.getProperty("IS_CHANGER_ATTACH_STOP_CODON") .equals(0))
               {
                     int column_num = Verifier.defineColumnNumber(subprop.getProperty("FILE_CLONE_INFO_HEADER_ORIGINAL"),  subprop.getProperty("CLONE_INFO_NTSEQ"));
                     for ( String[] item : records )
                     {
-                    item[column_num] = item[column_num]+subprop.getProperty("CLONE_INFO_NTSEQ");
+                    item[column_num] = item[column_num]+subprop.getProperty("ATTACHED_STOP_CODON");
                     }
               }
               String outputdir =  subprop.getProperty("FILES_OUTPUT_DIR") ;
               CloneInfoVerificator cinfo = new CloneInfoVerificator(outputdir+File.separator+ subprop.getProperty("FILE_CLONE_INFO_NAME").trim() +".txt");
-              header =  subprop.getProperty("CLONE_INFO_CDS_STOP") ;
-              int change_value = Integer.valueOf(subprop.getProperty("IS_CHANGER_CDS_STOP_VALUE") );
-              cinfo.replaceIntStringsValue( header, 3,  Verifier.ENUM_MATH.PLUS );
-            
-             
+             String  column_header =  subprop.getProperty("CLONE_INFO_CDS_STOP") ;
+              String add_value = subprop.getProperty("IS_CHANGER_CDS_STOP_VALUE");
+              int change_value = Integer.valueOf( add_value );
+            //  cinfo.replaceIntStringsValue( header, 3,  Verifier.ENUM_MATH.PLUS );
+               cinfo.replaceIntStringsValue( records,  subprop.getProperty("FILE_CLONE_INFO_HEADER_ORIGINAL"),  column_header, 
+               change_value,  Verifier.ENUM_MATH.PLUS ,   er_messages );
             }
+              header = subprop.getProperty("FILE_CLONE_INFO_HEADER_ORIGINAL")+subprop.getProperty("FILE_CLONE_INFO_HEADER_NEW");
+              String file_name =  subprop.getProperty("FILES_OUTPUT_DIR") +File.separator+ subprop.getProperty("FILE_CLONE_INFO_NAME").trim() +".txt";
              
-            
+              dumpInFile( subprop,             records ,  header,  file_name, er_messages);
+          
     }
     
+    
+    
+    private void        dumpInFile(SubmissionProperties subprop,
+           List<String[]> records , String header,String file_name,
+           ArrayList<String> er_messages)
+    {
+         List<String> updated_records = new ArrayList();
+         try
+         {
+               //String file_name =  subprop.getProperty("FILES_OUTPUT_DIR") +File.separator+ subprop.getProperty("FILE_CLONE_INFO_NAME").trim() +".txt";
+               for (String[] record : records)
+               {
+                   updated_records.add( Verifier.putStringArrayInString(record,"\t", false));
+               }
+               header = header.replaceAll(":","\t");
+               FileManager. writeFile(updated_records,  file_name,  header, false);
+         }
+         catch(Exception e)
+         { er_messages.add("Cannot write updated clone info file");}
+    }
     public void    writeIsDataMissingReport(
             ArrayList<String> messages_missing_data_report,
             List<String[]> records, String header,
@@ -327,31 +352,31 @@ cloneids_location=null;cloneids_geneinfo=null;cloneids_cloneinfo=null;
         String outputdir =  subprop.getProperty("FILES_OUTPUT_DIR") ;
         try
         {
-           File ft =  new File(outputdir + File.separator + subprop.getProperty("FILE_CLONE_INFO_NAME").trim() +".txt");
-           ft.delete();
-           ft =  new File(outputdir + File.separator + subprop.getProperty("FILE_CLONE_LOCATION_NAME").trim() +".txt");
-           ft.delete();
-           ft =  new File(outputdir + File.separator + subprop.getProperty("FILE_CLONE_GENEINFO_NAME").trim()  +".txt");
-           ft.delete();
+           File ft =  new File(outputdir + File.separator + subprop.getProperty("FILE_CLONE_LOCATION_NAME").trim() +".txt");
+           if ( ft.exists() ) ft.delete();
+           ft =  new File(outputdir + File.separator + subprop.getProperty("FILE_CLONE_INFO_NAME").trim() +".txt");
+           if ( ft.exists() ) ft.delete();
+        ft =  new File(outputdir + File.separator + subprop.getProperty("FILE_CLONE_GENEINFO_NAME").trim()  +".txt");
+          if ( ft.exists() ) ft.delete();
             ft =  new File(outputdir + File.separator + subprop.getProperty("FILE_CLONE_AUTHOR_NAME").trim()  +".txt");
-           ft.delete();
+           if ( ft.exists() )ft.delete();
             ft =  new File(outputdir + File.separator + subprop.getProperty("FILE_CLONE_CLONEAUTHOR_NAME").trim()  +".txt");
-           ft.delete();
+          if ( ft.exists() ) ft.delete();
             ft =  new File(outputdir + File.separator + subprop.getProperty("FILE_CLONE_PUBLICATION_NAME").trim()  +".txt");
-           ft.delete();
+          if ( ft.exists() ) ft.delete();
            ft =  new File(outputdir + File.separator + subprop.getProperty("FILE_CLONE_CLONEPUBLICATION_NAME").trim()  +".txt");
-           ft.delete();
+          if ( ft.exists() ) ft.delete();
            
            
-             FileManager.concatenateFiles(er_messages,outputdir, subprop.getProperty("FILE_CLONE_INFO_NAME").trim() , subprop.getProperty("FILE_CLONE_INFO_HEADER").trim() , isDeleteOriginal);
+             FileManager.concatenateFiles(er_messages,outputdir, subprop.getProperty("FILE_CLONE_INFO_NAME").trim() , subprop.getProperty("FILE_CLONE_INFO_HEADER_ORIGINAL").trim() , isDeleteOriginal);
              FileManager.concatenateFiles(er_messages,outputdir, subprop.getProperty("FILE_CLONE_LOCATION_NAME").trim() , subprop.getProperty("FILE_CLONE_LOCATION_HEADER").trim() , isDeleteOriginal);
             FileManager.concatenateFiles(er_messages,outputdir, subprop.getProperty("FILE_CLONE_GENEINFO_NAME").trim() , subprop.getProperty("FILE_CLONE_GENEINFO_HEADER").trim(), isDeleteOriginal );
            FileManager.concatenateFiles(er_messages,outputdir, subprop.getProperty("FILE_CLONE_AUTHOR_NAME").trim() , subprop.getProperty("FILE_CLONE_AUTHOR_NAME_HEADER").trim(), isDeleteOriginal );
-          FileManager.concatenateFiles(er_messages,outputdir, subprop.getProperty("FILE_CLONE_CLONEAUTHOR_NAME").trim() , subprop.getProperty("FILE_CLONE_CLONEAUTHOR_NAME_HEADER").trim(), isDeleteOriginal );
           FileManager.concatenateFiles(er_messages,outputdir, subprop.getProperty("FILE_CLONE_PUBLICATION_NAME").trim() , subprop.getProperty("FILE_CLONE_PUBLICATION_NAME_HEADER").trim(), isDeleteOriginal );
           FileManager.concatenateFiles(er_messages,outputdir, subprop.getProperty("FILE_CLONE_CLONEPUBLICATION_NAME").trim() , subprop.getProperty("FILE_CLONE_CLONEPUBLICATION_NAME_HEADER").trim(), isDeleteOriginal );
          
-        
+            FileManager.concatenateFiles(er_messages,outputdir, subprop.getProperty("FILE_CLONE_CLONEAUTHOR_NAME").trim() , subprop.getProperty("FILE_CLONE_CLONEAUTHOR_NAME_HEADER").trim(), isDeleteOriginal );
+      
         
         
         }
@@ -418,7 +443,7 @@ cloneids_location=null;cloneids_geneinfo=null;cloneids_cloneinfo=null;
             plver.writeTempAuthorFile(psi_site_description, clone_ids,
                     clone_author_tmp_file ,
                     header,//subprop.getProperty("FILE_CLONE_CLONEAUTHOR_HEADER") ,
-                    additional_authors, true);
+                    additional_authors, true,true);
             return clone_ids;
          }
         catch (Exception e)
@@ -750,6 +775,30 @@ private void writeClonesFromGoodPlates(ArrayList<String> goodPlates,
         }
 }
      //------------------------------------------------------------------ 
+public void insertValuesLocationInfo(SubmissionProperties subprop, 
+         ArrayList<String> er_messages )
+{ 
+    try
+    {
+       String  header = subprop.getProperty("FILE_CLONE_LOCATION_HEADER");
+        String[] header_items = header.split(":");
+        int[] header_items_index = new int[header_items.length ]   ;
+        for ( int count = 0; count < header_items.length; count++){ header_items_index[count]=count;}
+          String clone_location_file_name = subprop.getProperty("FILES_OUTPUT_DIR")+File.separator+ 
+                  subprop.getProperty("FILE_CLONE_LOCATION_NAME").trim() +".txt";
+              
+        List<String[]>        records =   FileManager.readFileIntoStringArray(clone_location_file_name, header_items_index,"\t", true);
+        Verifier.appendString( "\t"+ subprop.getProperty("CLONE_INFO_FORMAT_TYPE"), records);
+        header +=  subprop.getProperty("FILE_CLONE_LOCATION_HEADER_NEW_ADDITION_FOR_FORMAT");
+        
+        dumpInFile( subprop,  records ,  header, clone_location_file_name,  er_messages);
+    }
+    catch(Exception e)
+    {
+        er_messages.add(e.getMessage());
+    }
+         
+}
 public void insertValuesCloneInfo(SubmissionProperties subprop, 
         List<String[]> records, ArrayList<String> er_messages )
 { 
@@ -778,7 +827,16 @@ public void insertValuesCloneInfo(SubmissionProperties subprop,
                              subprop.getProperty("PSI_VECTOR_TYPE_HEADER_VECTOR_TYPE"),
                                subprop.getProperty("CLONE_INFO_VECTOR_HEADER")
                              , cinfo, records, file_header, er_messages);
-           
+          
+           if (subprop.getProperty("IS_CHECK_CDS").equals("1")) 
+           {
+                Verifier.appendString( "\tY" , records);
+                     }
+           else 
+           {
+                Verifier.appendString( "\tN", records);
+             }
+
          
 }
 

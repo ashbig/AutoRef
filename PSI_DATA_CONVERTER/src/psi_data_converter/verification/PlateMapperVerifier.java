@@ -23,7 +23,7 @@ public class PlateMapperVerifier  extends Verifier
             HashMap<String,String> clone_ids, 
             String file_name, String header,
             ArrayList<String> additional_authors,
-            boolean isAppend) throws Exception
+            boolean isAppend, boolean isNewLine) throws Exception
     {
          BufferedWriter input = null;
          // read author info and stor author 
@@ -31,9 +31,11 @@ public class PlateMapperVerifier  extends Verifier
         {
             input = new BufferedWriter(new FileWriter(file_name));
             if ( header != null) input.write(header+"\n");
+            if ( isNewLine)input.write("\n");
             for ( String clone_id : clone_ids.keySet())  
             {
-                input.write( clone_id +"\t" + psi_site_description.get(clone_ids.get(clone_id))+"\n");
+                if ( psi_site_description.get(clone_ids.get(clone_id)) != null)
+                    input.write( clone_id +"\t" + psi_site_description.get(clone_ids.get(clone_id))+"\n");
                 for( String author: additional_authors)
                 {
                     input.write(clone_id +"\t" + author +"\n");
