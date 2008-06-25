@@ -267,7 +267,10 @@
                     type="edu.harvard.med.hip.flex.form.AddNewPlatesFromFileForm"/>
 
     <form-bean      name="generateMultipleGlycerolForm"
-                    type="edu.harvard.med.hip.flex.form.GenerateMultipleGlycerolForm"/> 
+                    type="edu.harvard.med.hip.flex.form.GenerateMultipleGlycerolForm"/>
+                    
+    <form-bean      name="reportRunForm"
+                    type="edu.harvard.med.hip.flex.form.ReportRunForm"/>
  </form-beans>
 
   <!-- ========== Global Forward Definitions ============================== -->
@@ -1471,8 +1474,7 @@
         type="edu.harvard.med.hip.flex.action.AddItemsAction">
             <forward name="add_items" path="/AddItemsEntryParameters.jsp"/>
             <forward name="confirm_add_items" path="/AddItemsConfirm.jsp"/>
-           
-                           
+                            
 </action>
 
  <!-- add new items-->
@@ -1495,6 +1497,14 @@
                validate="true"
                input="/GenerateMultipleGlycerolInput.jsp">
       <forward  name="success"   path="/PrintBarcode.jsp"/>
+    </action>  
+     <!-- run report-->
+    <action    path="/ReportRun"
+               type="edu.harvard.med.hip.flex.action.ReportRunAction"
+               name="reportRunForm"
+               scope="request"
+               validate="true">
+      <forward  name="success"   path="/AddItemsConfirm.jsp"/>
     </action>  
      
     <!-- The standard administrative actions available with Struts -->
