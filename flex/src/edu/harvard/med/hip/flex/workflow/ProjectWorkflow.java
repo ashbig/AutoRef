@@ -39,11 +39,13 @@ public class ProjectWorkflow extends Workflow {
         this.code = code;
     }
     public void           setCode(String v){ code = v;}
-    public ProjectWorkflow(String code, int workflowid, String name, String description) 
+    public ProjectWorkflow(String code, int workflowid, String name, 
+            String description, WORKFLOW_TYPE workflowtype) 
     {
-        super(workflowid,  name,  description );
+        super(workflowid,  name,  description ,workflowtype);
         this.code = code;
     }
+    
     /**
      * Constructor.
      *

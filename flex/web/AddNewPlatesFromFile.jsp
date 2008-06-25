@@ -189,7 +189,7 @@
                         <td class="prompt">Select submission type:</td>
                         <td ><select name="submissionType">
                                 <option value="<%= OutsidePlatesImporter.SUBMISSION_TYPE_ONE_FILE%>">All data in one file
-                                <option value="<%= OutsidePlatesImporter.SUBMISSION_TYPE_REFSEQUENCE_LOCATION_FILES %>">Reference sequence and plate mapping in different files
+                                <option value="<%= OutsidePlatesImporter.SUBMISSION_TYPE_REFSEQUENCE_LOCATION_FILES%>">Reference sequence and plate mapping in different files
                                 <option value="<%= OutsidePlatesImporter.SUBMISSION_TYPE_PSI%>">PSI schema
                         </select></td>
                     </tr><%}

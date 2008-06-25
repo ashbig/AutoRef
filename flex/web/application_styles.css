@@ -1,0 +1,61 @@
+<!--Copyright 2003 - 2005, 2006 President and Fellows of Harvard College. All Rights Reserved.-->
+
+/* styles for status */
+h3.rejected {color: red}
+h3.accepted {color: green}
+
+/* styles for prompts */
+EM, TD.prompt, TD.label {font-style: normal; color: black; font-weight: bold}
+
+/* styles for navigation */
+body.nav {background: #7a8a9a}
+table.nav {background: white}
+div.nav {margin: .3em .3em .3em .3em}
+
+/* styles for tables */
+tr.headerRow {background: #1145A6; caption-side: center; color: white; font-weight: bold }
+navRow {background: #9bbad6}
+highlightRow {background: #9bbad6}
+
+
+td.coloredFont { color: "#000080"; font-weight: bold }
+
+tr.oddRow {background: #b8c6ed}
+tr.evenRow {background: #e4e9f8}
+tr.oddRowColoredFont {background: #b8c6ed;  color: #000080; font-weight: bold}
+tr.evenRowColoredFont {background: #e4e9f8;  color: #000080; font-weight: bold}
+
+tr.evenRowColoredFontNotBold {background: #DCE8FC;  color: #000080}
+
+tr.strong {font-weight: bold }
+
+
+borders_1  {"border:solid 2px magen"}
+borders_2  {"border:solid 1px #060"} 
+borders_3  {"border:dotted 2px magen"}
+borders_4  {"border:dotted 1px #060"}
+borders_5  {"border:solid 2px red"}
+borders_6  {"border:dashed 2px blue"}
+borders_7  {"border:dotted 1px green"}
+borders_8  {"border:solid 2px black"}
+borders_9  {"border:dashed 1px green"}
+borders_10  {"border:solid 2px magen"}
+
+
+.clone_rank =  {	background-color:#9999CC;
+background-color: #99FFFF;}
+background-color: #9999FF;}
+background-color: #99CCFF;}
+
+.black {	background-color: #999999;}
+.brown {	background-color: #ffe4c4;}
+.control {	background-color: #CCCCFF;}
+.empty {	background-color: #CCCCCC;}
+.nosample {	background-color: white;}
+.notanalized {	background-color: white;}
+.nomatch {	background-color: #ADFF2F;}
+
+.red {	background-color: #9999CC;}
+.green {	background-color: #99FFFF;}
+.yellow {	background-color: #9999FF;}
+.orange {	background-color: #99CCFF;}

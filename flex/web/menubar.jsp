@@ -44,7 +44,7 @@ li {
 
 
 <body bgcolor="#9bbad6">
-  <div align="center"><center><h3><bean:message key="flex.name"/></h3>    </div>
+  <div align="center">center><h3><bean:message key="flex.name"/></h3>    </div>
   <hr>
 <ul>
     <li><p><a href="/FLEX/overview.jsp" target="display">Home</a>  </li>
@@ -83,15 +83,17 @@ li {
      <%}%>
  </ul>
    
- <% if (user_level >= RESEARCHER){%>    
- <li>View</li>
- <ul> 
+ <% if (user_level >= RESEARCHER){%>   
+ <li> <a href="/FLEX/ViewItemsMenuPage.jsp" target="display">View</a></li><%}%>     
+
+ <!--<li>View</li>
+  <ul> 
      <li><a href="/FLEX/ContainerScan.jsp?forwardName=<%= Constants.VIEW_CONTAINER %>&amp;title=Container Details" target="display">Container Details</a></li>
      <li><a href="/FLEX/GetProjects.do?forwardName=<%= Constants.NEW_PLATE_LABELS%>" target="display">Print Submitted Plates</a></li>
      <li><a href="/FLEX/ViewItems.do?forwardName=<%= Constants.VIEW_LINKERS%>" target="display">Linker</a></li>
      <li><a href="/FLEX/ViewItems.do?forwardName=<%= Constants.VIEW_VECTORS%>" target="display">Vectors</a></li>
      <li><a href="/FLEX/ViewItems.do?forwardName=<%= Constants.VIEW_CLONINGSTRATEGIES%>" target="display">Cloning Strategies</a></li>
-     <%}%>
+     < } %>-->
      
  </ul>           
                 

@@ -41,6 +41,11 @@
             <bean:message key="flex.name"/> : <bean:message key="add.items.plates.from.thirdparty"/> 
         </logic:equal>
       
+
+
+ <logic:equal name="forwardName"  value="<%= String.valueOf(ConstantsImport.PROCESS_DATA_RUN_REPORT) %>">
+            <bean:message key="flex.name"/> : <bean:message key="run.report.title"/>  
+     </logic:equal>
   </h2>
     <hr>
     <html:errors/>
@@ -69,7 +74,9 @@
                 <%= request.getAttribute( "container_labels") %>
         </logic:equal>
  
-
+     <logic:equal name="forwardName"  value="<%= String.valueOf( ConstantsImport.PROCESS_DATA_RUN_REPORT) %>">
+            <bean:message key="flex.name"/> : <bean:message key="add.report.notificaton"/>  
+     </logic:equal>
     
     </body>
 </html>

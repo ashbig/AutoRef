@@ -13,7 +13,6 @@ import java.util.*;
 import java.sql.*;
 import edu.harvard.med.hip.flex.process.Protocol;
 import edu.harvard.med.hip.flex.database.*;
-import edu.harvard.med.hip.flex.Constants;
 /**
  *
  * @author  dzuo
@@ -24,6 +23,14 @@ public class Workflow {
     protected String name;
     protected String description;
     protected Vector flow;
+    protected WORKFLOW_TYPE    m_workflow_type;
+    
+    public enum WORKFLOW_TYPE
+    {
+        REGULAR,
+        REARRAY,
+        TRANSFER_TO_EXPRESSION;
+    };
     
     public static final int COMMON_WORKFLOW = 1;
     public static final int STANDARD_WORKFLOW = 6;
@@ -59,12 +66,13 @@ public class Workflow {
     public static final int IMPORT_EXTERNAL_CLONE = 31;
     public static final int MGC_GATEWAY_CLOSED = 32;
     public static final int REARRAY_EXP_WORKING = 34;
-    public static final int TRANSFER_TO_EXP_JP1520 = 35;
+    
     public static final int GATEWAY_WITH_EGEL = 36;
     public static final int GATEWAY_WITH_INFUSION = 37;
     public static final int GATEWAY_LONG_PRIMER_WITH_EGEL = 45;
     public static final int MGC_GATEWAY_INFUSION_FUSION = 46;
-    
+    /*
+     * public static final int TRANSFER_TO_EXP_JP1520 = 35;
     public static final int TRANSFER_TO_EXP_PLP_DS_3xFlag = 38;
     public static final int TRANSFER_TO_EXP_PLP_DS_3xMyc = 39;
     public static final int TRANSFER_TO_EXP_pCITE_GST = 40;
@@ -73,7 +81,7 @@ public class Workflow {
     public static final int TRANSFER_TO_EXP_pLDNT7_nFLAG = 43;
     public static final int TRANSFER_TO_EXP_pDEST_GST = 44;
     public static final int TRANSFER_TO_EXP_pLENTI62_V5_Dest = 59;
-    
+    */
     /** Creates new Workflow */
     public Workflow() {
         flow = new Vector();
@@ -190,6 +198,7 @@ public class Workflow {
             this.description = w.getDescription();
             this.name = w.getName();
             this.flow = w.getFlow();
+            m_workflow_type= w.getWorkflowType();
             return;
         }
         
@@ -249,10 +258,11 @@ public class Workflow {
      * @param description The workflow description.
      * @return The Workflow object.
      */
-    public Workflow(int id, String name, String description) {
+    public Workflow(int id, String name, String description, WORKFLOW_TYPE workflow_type) {
         this.id = id;
         this.name = name;
         this.description = description;
+        m_workflow_type=workflow_type;
     }
     
     /**
@@ -260,9 +270,7 @@ public class Workflow {
      *
      * @return The workflow id.
      */
-    public int getId() {
-        return id;
-    }
+    public int getId() {        return id;    }
     
     /**
      * Return the next protocol name for the given protocol name.
@@ -323,28 +331,24 @@ public class Workflow {
      *
      * @return The name of the workflow.
      */
-    public String getName() {
-        return name;
-    }
+    public String getName() {        return name;    }
     
     /**
      * Return the workflow description.
      *
      * @return The workflow description.
      */
-    public String getDescription() {
-        return description;
-    }
+    public String getDescription() {        return description;    }
     
     /**
      * Return the entire workflow.
      *
      * @return The entire workflow.
      */
-    public Vector getFlow() {
-        return flow;
-    }
+    public Vector getFlow() {        return flow;    }
     public void             setFlow(Vector v) { flow = v;    }
+    public void             setWorkflowType(String workflow_type){m_workflow_type=WORKFLOW_TYPE.valueOf(workflow_type);}
+    public WORKFLOW_TYPE           getWorkflowType(){ return m_workflow_type;}
     
     public static Vector getAllWorkflows() throws FlexDatabaseException {
         
@@ -365,7 +369,8 @@ public class Workflow {
                 int workflowid = rs.getInt("WORKFLOWID");
                 String name = rs.getString("NAME");
                 String description = rs.getString("DESCRIPTION");
-                Workflow w = new Workflow(workflowid, name, description);
+                WORKFLOW_TYPE workflow_type = WORKFLOW_TYPE.valueOf(rs.getString("workflowtype"));
+                Workflow w = new Workflow(workflowid, name, description,workflow_type);
                 workflows.addElement(w);
             }
         } catch(SQLException sqlE) {

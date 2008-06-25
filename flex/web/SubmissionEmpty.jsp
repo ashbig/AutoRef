@@ -12,7 +12,7 @@
 <body>
 <h2><bean:message key="flex.name"/> : Cloning Request : Confirm Selection</h2>
 <hr>
-<html:erros/>
+<html:errors/>
 <p>
 No sequence has been submitted.
 </body>
