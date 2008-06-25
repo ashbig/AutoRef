@@ -227,7 +227,7 @@ public class EnterExpressionResultAction extends ResearcherAction {
             CloneContainer.update(conn, cloneidList, statusList, commentsList);
             
             Project p = new Project(-1, "NA", null, null);
-            Workflow workflow = new Workflow(-1, "NA", null);
+            Workflow workflow = new Workflow(-1, "NA", null,null);
             Protocol protocol = new Protocol(Protocol.ENTER_EXPRESSION_RESULT_CODE,null,null,null);
             Researcher r = ((EnterResultForm)form).getResearcherObject();
             

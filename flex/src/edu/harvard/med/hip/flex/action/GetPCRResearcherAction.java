@@ -69,9 +69,18 @@ public class GetPCRResearcherAction extends ResearcherAction {
         
         boolean isClosedOnly = false;
         boolean isOpenOnly = false;
-        if ( projectid == Project.YEAST || workflowid == Workflow.CONVERT_FUSION_TO_CLOSE || projectid == Project.YP || projectid == Project.FT || workflowid == Workflow.MGC_GATEWAY_CLOSED || projectid == Project.Yersinia_pseudotuberculosis || projectid == Project.YEAST_DBD)    isClosedOnly = true;
-        if (projectid == Project.PSEUDOMONAS || projectid == Project.KINASE || workflowid == Workflow.CONVERT_CLOSE_TO_FUSION || projectid == Project.VC || projectid == Project.KINASE_MUT || projectid == Project.Bacillus_anthracis || projectid == Project.NIDDK || workflowid == Workflow.MGC_GATEWAY_INFUSION_FUSION) isOpenOnly = true;
-        
+      //  if ( projectid == Project.YEAST || workflowid == Workflow.CONVERT_FUSION_TO_CLOSE || projectid == Project.YP || projectid == Project.FT || workflowid == Workflow.MGC_GATEWAY_CLOSED || projectid == Project.Yersinia_pseudotuberculosis || projectid == Project.YEAST_DBD)  
+      //      isClosedOnly = true;
+      //  if (projectid == Project.PSEUDOMONAS || projectid == Project.KINASE || workflowid == Workflow.CONVERT_CLOSE_TO_FUSION || projectid == Project.VC || projectid == Project.KINASE_MUT || projectid == Project.Bacillus_anthracis || projectid == Project.NIDDK || workflowid == Workflow.MGC_GATEWAY_INFUSION_FUSION) 
+      //      isOpenOnly = true;
+        String  key =""+ projectid+ProjectWorkflowProtocolInfo.PWP_SEPARATOR+"-1"+ProjectWorkflowProtocolInfo.PWP_SEPARATOR
+                    +"-1"+ProjectWorkflowProtocolInfo.PWP_SEPARATOR+"PROJECT_OPEN";
+        String  return_value =  ProjectWorkflowProtocolInfo.getInstance().getPWPProperties().get( key);
+         if (return_value != null)  isClosedOnly = true;
+         key =""+ projectid +ProjectWorkflowProtocolInfo.PWP_SEPARATOR+"-1"+ProjectWorkflowProtocolInfo.PWP_SEPARATOR
+                    +"-1"+ProjectWorkflowProtocolInfo.PWP_SEPARATOR+"PROJECT_CLOSED";
+         return_value =  ProjectWorkflowProtocolInfo.getInstance().getPWPProperties().get( key);
+         if (return_value != null)isOpenOnly = true;  
         
         // Validate the researcher barcode.
         try {

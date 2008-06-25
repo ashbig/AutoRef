@@ -112,7 +112,7 @@ public class GenerateMultipleGlycerolAction extends ResearcherAction {
             }
 
             Project project = new Project(-1, null, null, null);
-            Workflow workflow = new Workflow(-1, null, null);
+            Workflow workflow = new Workflow(-1, null, null,null);
             Protocol protocol = new Protocol(Protocol.GENERATE_MULTIPLE_GLYCEROL);
             ContainerMapper mapper = StaticContainerMapperFactory.makeContainerMapper(Protocol.GENERATE_MULTIPLE_GLYCEROL);
             ((OneToManyDirectContainerMapper) mapper).setNumOfDest(num);

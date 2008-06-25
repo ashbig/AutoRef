@@ -93,7 +93,7 @@ public class EnterSrcPlatesAction extends ResearcherAction {
             
             //map the container to the new container
             Project project = new Project(projectid);
-            Workflow workflow = new Workflow(workflowid, workflowname, null);
+            Workflow workflow = new Workflow(workflowid);//new Workflow(workflowid, workflowname, null);
             Protocol protocol = new Protocol(Protocol.CREATE_EXP_DNA_CODE, "XD", Protocol.CREATE_EXP_DNA, null);
             
             ContainerMapper mapper = StaticContainerMapperFactory.makeContainerMapper(protocol.getProcessname());

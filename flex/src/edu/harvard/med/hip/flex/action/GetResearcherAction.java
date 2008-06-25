@@ -30,6 +30,7 @@ import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.form.GetResearcherBarcodeForm;
 import edu.harvard.med.hip.flex.process.Process;
 import edu.harvard.med.hip.flex.workflow.*;
+import static edu.harvard.med.hip.flex.workflow.Workflow.WORKFLOW_TYPE;
 import edu.harvard.med.hip.flex.util.*;
 import edu.harvard.med.hip.flex.special_projects.*;
 
@@ -213,7 +214,7 @@ public class GetResearcherAction extends ResearcherAction{
            //insert into summary table if it is the glycerol stock plate.
             if(Protocol.GENERATE_GLYCEROL_PLATES.equals(protocol.getProcessname()))
             {
-                   int strategyid = CloningStrategy.getStrategyid(project.getId(), workflow.getId());  
+                int strategyid = CloningStrategy.getStrategyid(project.getId(), workflow.getId());  
          
                 List containerids = new ArrayList();
                 List seqContainers = new ArrayList();
@@ -231,26 +232,19 @@ public class GetResearcherAction extends ResearcherAction{
                 if("Yes".equals(isMappingFile)) {
                     b = true;
                 }
-                
-                if(workflowid == Workflow.TRANSFER_TO_EXP_JP1520 
-                || workflowid == Workflow.TRANSFER_TO_EXP_PLP_DS_3xFlag 
-                || workflowid == Workflow.TRANSFER_TO_EXP_PLP_DS_3xMyc
-                || workflowid == Workflow.TRANSFER_TO_EXP_pCITE_GST 
-                || workflowid == Workflow.TRANSFER_TO_EXP_pDEST17 
-                || workflowid == Workflow.TRANSFER_TO_EXP_pBY011
-                || workflowid == Workflow.TRANSFER_TO_EXP_pLDNT7_nFLAG
-                || workflowid == Workflow.TRANSFER_TO_EXP_pDEST_GST
-                || workflowid == Workflow.TRANSFER_TO_EXP_pLENTI62_V5_Dest) {
-                    List newContainerids = new ArrayList();
+                if(workflow.getWorkflowType()== WORKFLOW_TYPE.TRANSFER_TO_EXPRESSION) 
+                {
+                     List newContainerids = new ArrayList();
                     for(int i=0; i<newContainers.size(); i++) {
                         Container newContainer = (Container)newContainers.elementAt(i);
                         newContainerids.add(new Integer(newContainer.getId()));
                     }
+                    //change class to allow processing of clones in different vectors into the same expression vector
                     ThreadedExpressionSummaryTablePopulator p = new ThreadedExpressionSummaryTablePopulator(newContainerids, strategyid);
                     new Thread(p).start();
-                } else {
-                    
-                    
+                } 
+                else 
+                {
                     SummaryTablePopulator populator = new SummaryTablePopulator();
                     ThreadedRearrayedSeqPlatesHandler handler = new ThreadedRearrayedSeqPlatesHandler(seqContainers, researcher.getBarcode(), b, populator, containerids, strategyid, CloneInfo.MASTER_CLONE);
                     new Thread(handler).start();

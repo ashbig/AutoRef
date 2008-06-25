@@ -89,10 +89,21 @@ public class EnterSrcForSequencingConfirmAction extends ResearcherAction {
             containers.add(c);
         }
         
-        Project project = new Project(projectid, projectname, null, null, null);
-        Workflow workflow = new Workflow(workflowid, workflowname, null);
+  /*      Project project = new Project(projectid, projectname, null, null, null);
+        Workflow workflow = new Workflow(workflowid, workflowname, null,null);
         Protocol protocol = (Protocol)(request.getSession().getAttribute("SelectProtocolAction.protocol"));
-        
+  */
+        Project project ;Workflow workflow;Protocol protocol ;
+        try {
+             project = new Project(projectid);
+            workflow = new Workflow(workflowid);
+            protocol = (Protocol)(request.getSession().getAttribute("SelectProtocolAction.protocol"));
+      
+        } catch (Exception ex) {
+            request.setAttribute(Action.EXCEPTION_KEY, ex);
+            return mapping.findForward("error");
+        }
+         
         int threadid;
         try {
             threadid = FlexIDGenerator.getID("threadid");

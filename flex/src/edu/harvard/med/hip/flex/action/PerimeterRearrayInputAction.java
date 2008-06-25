@@ -133,7 +133,7 @@ public class PerimeterRearrayInputAction extends ResearcherAction {
         
         try {
             Project project = new Project(projectid);
-            Workflow workflow = new Workflow(workflowid, workflowname, null);
+            Workflow workflow = (Workflow) ProjectWorkflowProtocolInfo.getInstance().getWorkflows().get(String.valueOf(workflowid));
             Protocol protocol = new Protocol(Protocol.CREATE_TRANSFECTION);
             
             PerimeterRearrayMapper mapper = new PerimeterRearrayMapper();

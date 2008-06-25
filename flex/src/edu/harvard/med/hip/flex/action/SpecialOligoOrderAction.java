@@ -59,7 +59,8 @@ public class SpecialOligoOrderAction extends WorkflowAction {
             Project project = new Project(projectid);
             Workflow workflow = new Workflow(workflowid);
             OligoPlateManager om = new OligoPlateManager(conn, project, workflow, 94, isFullPlate, true, small, medium, large, null);
-            
+            om.setOpenClose(project, workflow);
+           /*
             if("fusion".equals(format)) {
                 om.setIsSetOpenClose(true);
                 om.setIsOpenOnly(true);
@@ -67,7 +68,7 @@ public class SpecialOligoOrderAction extends WorkflowAction {
             if("close".equals(format)) {
                 om.setIsSetOpenClose(true);
                 om.setIsCloseOnly(true);
-            }
+            }*/
             
             om.orderOligo();
         } catch (Exception ex) {

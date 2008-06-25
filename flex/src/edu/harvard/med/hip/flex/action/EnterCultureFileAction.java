@@ -144,12 +144,16 @@ public class EnterCultureFileAction extends ResearcherAction {
         }
 
         UploadCultureResultForm newForm = new UploadCultureResultForm();
+        
         newForm.setContainer(container);
         newForm.setResearcher(researcher);
         newForm.setFormFile(cultureFile);
         newForm.reset(container);
+  
         ArrayList resultList = converter.getResultList();
         int n=0;
+       
+             
         for(int i=0; i<resultList.size(); i++) {
             Sample s = null;
             try {
@@ -159,6 +163,7 @@ public class EnterCultureFileAction extends ResearcherAction {
             }
             
             if(s != null) {
+              //  System.out.println(n+" "+s.getId()+" "+s.getCloneid()+" "+s.getPosition());
                 newForm.setResult(n, (String)resultList.get(i));
                 n++;
             }
