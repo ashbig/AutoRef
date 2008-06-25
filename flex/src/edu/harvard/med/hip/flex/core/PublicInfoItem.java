@@ -202,7 +202,7 @@ public class PublicInfoItem
     }
     
     
-   public ArrayList    sorPublicInfo(ArrayList  public_info)
+   public static ArrayList    sorPublicInfo(ArrayList  public_info)
   {
       Collections.sort( public_info , new Comparator() 
             {
@@ -223,7 +223,23 @@ public class PublicInfoItem
      return public_info;
   }
    
-   
+    public static String    toString(ArrayList<PublicInfoItem>  public_info,
+            boolean isURL, boolean isDescription )
+   {
+        StringBuffer result = new StringBuffer();
+        for ( PublicInfoItem pb: public_info)
+        {
+            if ( pb.isSubmit()   )
+            {
+                result.append(pb.getName()+":");
+                result.append(pb.getValue());
+                if ( isDescription )result.append("/Description:"+pb.getDescription());
+                if ( isURL )result.append("/URL:"+pb.getUrl());
+                result.append("|");
+            }
+        }
+        return result.toString();
+    }
     public static ArrayList restorePublicInfo(int owner_id, int owner_type) throws Exception
      {
          

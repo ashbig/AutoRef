@@ -40,9 +40,7 @@ public class ACEtoFLEXImporterAction extends ResearcherAction
         {
             input = mgcCloneFile.getInputStream();
             String clone_data = readFileIntoString(input);
-          System.out.println(clone_data);
             String username = ((User)request.getSession().getAttribute(Constants.USER_KEY)).getUsername();
-            System.out.println(username);
             ImportInformationRunner import_info = new ImportInformationRunner(clone_data, username);
             Thread t = new Thread(import_info);
             t.start();

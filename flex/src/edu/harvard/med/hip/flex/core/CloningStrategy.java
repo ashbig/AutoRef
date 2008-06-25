@@ -7,6 +7,7 @@
 package edu.harvard.med.hip.flex.core;
 
 import edu.harvard.med.hip.flex.workflow.*;
+import static edu.harvard.med.hip.flex.workflow.Workflow.WORKFLOW_TYPE;
 import edu.harvard.med.hip.flex.database.*;
 import java.util.*;
 import java.sql.*;
@@ -229,26 +230,62 @@ public class CloningStrategy {
     
     }
     
-    public static List getAllCloningStrategies() 
+    public static List<CloningStrategy> getAllCloningStrategies() 
     {
         String sql = "select strategyid, strategyname, vectorname, linkerid_5p, "
 +"(select linkername from linker where linkerid=linkerid_5p) as linker_5p_name, linkerid_3p, "
 +" (select linkername from linker where linkerid=linkerid_3p) as linker_3p_name, type "
  +" from cloningstrategy order by strategyid";
-        List l = new ArrayList();
-        DatabaseTransaction t = null;
+        return getAllCloningStrategies(sql, false,false);
+    }
+    
+    public static List<CloningStrategy> getAllCloningStrategies(boolean isLinkerSequence) 
+    {
+        String sql = "select strategyid, strategyname, vectorname, linkerid_5p, "
++"(select linkername from linker where linkerid=linkerid_5p) as linker_5p_name,(select linkersequence from linker where linkerid=linkerid_5p) as linker_5p_sequence, linkerid_3p, "
++" (select linkername from linker where linkerid=linkerid_3p) as linker_3p_name, (select linkersequence from linker where linkerid=linkerid_3p) as linker_3p_sequence, type "
+ +" from cloningstrategy order by strategyid";
+        return getAllCloningStrategies(sql, isLinkerSequence, false);
+    }
+     public static List<CloningStrategy> getAllCloningStrategies(boolean isLinkerSequence,boolean isVectorDetails) 
+    {
+        String sql = "select strategyid, strategyname, vectorname, linkerid_5p, "
++"(select linkername from linker where linkerid=linkerid_5p) as linker_5p_name,(select linkersequence from linker where linkerid=linkerid_5p) as linker_5p_sequence, linkerid_3p, "
++" (select linkername from linker where linkerid=linkerid_3p) as linker_3p_name, (select linkersequence from linker where linkerid=linkerid_3p) as linker_3p_sequence, type "
+ +" from cloningstrategy order by strategyid";
+        return getAllCloningStrategies(sql, isLinkerSequence, isVectorDetails);
+    }
+    
+    
+    
+     public static List<CloningStrategy> getAllCloningStrategies(String sql, boolean isLinkerSequence, boolean isVectorDetails) 
+    {
+       
+        List<CloningStrategy> l = new ArrayList<CloningStrategy>();
+        DatabaseTransaction t = null;String lsequence_5p = ""; String lsequence_3p = "";
         ResultSet rs = null;
         try {
             t = DatabaseTransaction.getInstance();
             rs = t.executeQuery(sql);
             while (rs.next()) 
             {
+                if ( isLinkerSequence )
+                {
+                    lsequence_5p=rs.getString("linker_5p_sequence");
+                    lsequence_3p=rs.getString("linker_3p_sequence");
+                }
                 CloningStrategy c = new CloningStrategy(rs.getInt("strategyid"), 
                         rs.getString("strategyname"),
                         new CloneVector(rs.getString("vectorname")), 
-                        new CloneLinker(rs.getInt("linkerid_5p"), rs.getString("linker_5p_name"),""),
-                        new CloneLinker(rs.getInt("linkerid_3p"), rs.getString("linker_3p_name"),""),
+                        new CloneLinker(rs.getInt("linkerid_5p"), rs.getString("linker_5p_name"),lsequence_5p),
+                        new CloneLinker(rs.getInt("linkerid_3p"), rs.getString("linker_3p_name"),lsequence_3p),
                         rs.getString("type"));
+                if ( isVectorDetails)
+                {
+                    CloneVector vector = c.getClonevector();
+                    vector.restore( vector.getName());
+                    c.setClonevector(vector);
+                }
                 l.add(c);
             }
         } catch (Exception ex) {
@@ -285,66 +322,27 @@ public class CloningStrategy {
         return l;
     }
     
-    public static int getStrategyid(int projectid, int workflowid) {
-        if(workflowid == Workflow.CREATOR_WORKFLOW || workflowid == Workflow.DNA_TEMPLATE_CREATOR
-        || workflowid == Workflow.MGC_CREATOR_WORKFLOW || workflowid == Workflow.CONVERT_CLOSE_TO_FUSION
-        || workflowid == Workflow.CONVERT_FUSION_TO_CLOSE) 
-            return CREATOR;
-        
-        if(workflowid == Workflow.STANDARD_WORKFLOW || workflowid == Workflow.PSEUDOMONAS_WORKFLOW
-        || workflowid == Workflow.MGC_GATEWAY_WORKFLOW || workflowid == Workflow.GATEWAY_WORKFLOW
-        || workflowid == Workflow.MGC_GATEWAY_CLOSED || workflowid == Workflow.GATEWAY_WITH_EGEL
-        || workflowid == Workflow.GATEWAY_LONG_PRIMER_WITH_EGEL) {
-            //if(projectid == Project.HUMAN || projectid == Project.BREASTCANCER || projectid == Project.KINASE) 
-            //    return HUMAN_GATEWAY;
-           // if(projectid == Project.PSEUDOMONAS)
-             //   return PSEUDOMONAS_GATEWAY;
-           // if(projectid == Project.YP || projectid == Project.YEAST || projectid == Project.FT || projectid == Project.AVENTIS)
-                return YP_GATEWAY;
-        }
-        
-        if(workflowid == Workflow.GATEWAY_WITH_INFUSION || workflowid == Workflow.MGC_GATEWAY_INFUSION_FUSION) {
-           // return GATEWAY_PGW;
-            return GATEWAY_PGW_2;
-        }
-        
-        if(workflowid ==  Workflow.TRANSFER_TO_EXP_JP1520) {
-            return CREATOR_EXPRESSION_JP1520;
-        }
-        
-        if(workflowid == Workflow.TRANSFER_TO_EXP_PLP_DS_3xFlag) {
-            return CREATOR_EXPRESSION_PLP_DS_3xFlag;
-        }
-        
-        if(workflowid == Workflow.TRANSFER_TO_EXP_PLP_DS_3xMyc) {
-            return CREATOR_EXPRESSION_PLP_DS_3xMyc;
-        }
-        
-        if(workflowid == Workflow.TRANSFER_TO_EXP_pCITE_GST) {
-            if(projectid == Project.ORFEOME_pENTR223)
-                return GATEWAY_EXPRESSION_pENTR223_pCITE_GST;
+    public static int getStrategyid(int projectid, int workflowid ) throws Exception
+    {
+        Workflow cur_wf =new Workflow(workflowid);
+        if(cur_wf != null && cur_wf.getWorkflowType()== WORKFLOW_TYPE.TRANSFER_TO_EXPRESSION)
+        {
             
-            return GATEWAY_pCITE_GST;
-        }
-        
-        if(workflowid == Workflow.TRANSFER_TO_EXP_pDEST17) {
-            return GATEWAY_pDEST17;
-        }
-        
-        if(workflowid == Workflow.TRANSFER_TO_EXP_pBY011) {
-            return GATEWAY_EXPRESSION_pBY011;
-        }
-        
-        if(workflowid == Workflow.TRANSFER_TO_EXP_pLDNT7_nFLAG) {
-            return CREATOR_EXPRESSION_pLDNT7_nFLAG;
-        }
-        
-        if(workflowid == Workflow.TRANSFER_TO_EXP_pDEST_GST) {
-            return GATEWAY_EXPRESSION_pDEST_GST;
-        }
-        
-        if(workflowid == Workflow.TRANSFER_TO_EXP_pLENTI62_V5_Dest) {
-            return GATEWAY_EXPRESSION_pLENTI62_V5_Dest;
+            String return_value ;
+            String key =""+ projectid+ProjectWorkflowProtocolInfo.PWP_SEPARATOR+workflowid+ProjectWorkflowProtocolInfo.PWP_SEPARATOR
+                    +"-1"+ProjectWorkflowProtocolInfo.PWP_SEPARATOR+"CLONING_STRATEGY_ID";
+            return_value= ProjectWorkflowProtocolInfo.getInstance().getPWPProperties().get( key);
+            if (return_value==null)
+            {
+               key ="-1"+ProjectWorkflowProtocolInfo.PWP_SEPARATOR+workflowid+ProjectWorkflowProtocolInfo.PWP_SEPARATOR
+                        +"-1"+ProjectWorkflowProtocolInfo.PWP_SEPARATOR+"CLONING_STRATEGY_ID";
+               return_value =  ProjectWorkflowProtocolInfo.getInstance().getPWPProperties().get(key);
+            }
+             if (return_value!=null)
+            {
+                try {return Integer.parseInt(return_value);}catch(Exception e){ return 0;}
+            }
+          
         }
         
         return 0;
@@ -395,4 +393,9 @@ public class CloningStrategy {
          }
       
     }
+    
+    
+    
+    
+     
 }

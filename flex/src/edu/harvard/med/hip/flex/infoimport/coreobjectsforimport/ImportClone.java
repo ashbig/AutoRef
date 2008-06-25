@@ -62,11 +62,19 @@ public static final String      CLONE_STATUS_FAILED_BY_SEQUENCE_VALIDATION ="FAI
     private String          i_5_linker_name = null;
     private String          i_3_linker_name = null;
     
+    
+    //for report
+    private ImportCloneSequence     i_clone_sequence = null;
+    private String                  i_clone_name=null;
+    private String                  i_clone_comment=null;
+    private int                     i_master_clone_id =-1;
+    private int                     i_clone_construct_id = -1;
   
     /** Creates a new instance of ImportClone */
     public ImportClone() {m_additional_info = new ArrayList();
     }
     
+    public int          getIdAsIs()  { return m_id;}
     public int          getId() throws Exception{  if (m_id == -1)        m_id = FlexIDGenerator.getID("sampleid");return m_id;}
    public String           getUserId(){ return m_user_id;}
     public String       getSequenceText(){ return m_sequence_text;}
@@ -80,7 +88,15 @@ public static final String      CLONE_STATUS_FAILED_BY_SEQUENCE_VALIDATION ="FAI
     public String       getVectorName(){ return   i_vector_name ;}
     public String       get5LinkerName(){  return     i_5_linker_name ;}
     public String       get3LinkerName(){ return      i_3_linker_name ;}
-     
+    
+    
+    //for report
+    public ImportCloneSequence             getCloneSequence(){ return i_clone_sequence;} 
+    public void             setCloneSequence(ImportCloneSequence s){  i_clone_sequence = s;} 
+   
+  
+    
+    ///////////////////////////////////////////////////////
     
     public void         setSequenceText(String v){ m_sequence_text = v;}
     public          void        addPublicInfo(PublicInfoItem v)

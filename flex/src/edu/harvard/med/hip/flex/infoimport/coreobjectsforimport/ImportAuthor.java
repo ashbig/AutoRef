@@ -52,6 +52,23 @@ public class ImportAuthor
     public ImportAuthor() {
     }
     
+    public String toString()
+    {
+        StringBuffer sf = new StringBuffer();
+         if (  m_name  != null) sf.append("AuthorName:"+m_name+";");
+       if (  m_type  != null) sf.append("AuthorType:"+m_type+";");
+       if (  m_f_name  != null) sf.append("AuthorFirstName:"+m_f_name+";");
+       if (  m_l_name  != null) sf.append("AuthorLastName:"+m_l_name+";");
+       if (  m_tel  != null) sf.append("AuthorTelephone:"+m_tel+";");
+      if (  m_fax  != null) sf.append("AuthorFAX:"+m_fax+";");
+      if (  m_email  != null) sf.append("AuthorEMail:"+m_email+";");
+      if (  m_address  != null) sf.append("AuthorAddress:"+m_address+";");
+      if (  m_www  != null) sf.append("AuthorWWW:"+m_www+";");
+      if (  m_description  != null) sf.append("AuthorDescription:"+m_description+";");
+      
+        return sf.toString();
+    }
+    
      public void        setName(String v){ m_name = v;}
      public void        setFNName(String v){  m_f_name = v;}
      public void        setFLName  (String v){  m_l_name = v;}

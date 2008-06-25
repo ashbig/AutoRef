@@ -36,6 +36,10 @@ public class ImportPublication
     public ImportPublication() {
     }
     
+    public String       toString()
+    {
+         return m_pubmedid +":"+  m_title ;
+    }
      public void        setId(int v){ m_id = v;}
      public void        setPubMedID(String v){ m_pubmedid = v;}
      public void        setTitle(String v){  m_title = v;}
