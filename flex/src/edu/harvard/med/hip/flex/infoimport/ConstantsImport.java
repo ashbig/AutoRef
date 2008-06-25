@@ -159,6 +159,8 @@ public class ConstantsImport
       //constants for new imports
     
     //   processes
+        public static final int     PROCESS_DATA_RUN_REPORT = -1000;
+      
         public static final int     PROCESS_DATA_TRANSFER_ACE_TO_FLEX = 0;
         public static final int     PROCESS_IMPORT_OUTSIDE_CONTAINERS_INTO_FLEX = 1;
         public static final int     PROCESS_IMPORT_VECTORS = 2;

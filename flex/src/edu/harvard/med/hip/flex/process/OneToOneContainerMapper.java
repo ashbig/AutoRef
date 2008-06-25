@@ -16,6 +16,7 @@ import edu.harvard.med.hip.flex.process.Result;
 import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.util.*;
 import edu.harvard.med.hip.flex.workflow.*;
+import static edu.harvard.med.hip.flex.workflow.Workflow.WORKFLOW_TYPE;
 
 /**
  *
@@ -65,13 +66,15 @@ public class OneToOneContainerMapper implements ContainerMapper {
      * @exception FlexDatabaseException.
      */
     public Vector doMapping(Vector containers, Protocol protocol, Project project,
-            Workflow workflow) throws FlexDatabaseException {
+            Workflow workflow) throws FlexDatabaseException
+    {
         String newContainerType = getContainerType(protocol.getProcessname());
-        Vector newContainers = new Vector();
+        Vector newContainers = new Vector();String key=null;
         String projectCode = getProjectCode(project, workflow);
 
         Enumeration enu = containers.elements();
-        while (enu.hasMoreElements()) {
+        while (enu.hasMoreElements())
+        {
             Container container = (Container) enu.nextElement();
 
             int daughterbarcodeid = 1;
@@ -81,73 +84,62 @@ public class OneToOneContainerMapper implements ContainerMapper {
                 //For diluting oligo plate, we need to get the new label in a different way.
                 if (Protocol.DILUTE_OLIGO_PLATE.equals(protocol.getProcessname())) {
                     newBarcode = projectCode + DAUGHTER_OLIGO_PLATE + container.getLabel().substring(2);
-                } else if (Protocol.CREATE_CULTURE_FROM_MGC.equals(protocol.getProcessname()) ||
+                } 
+                else if (Protocol.CREATE_CULTURE_FROM_MGC.equals(protocol.getProcessname()) ||
                         Protocol.CREATE_GLYCEROL_FROM_CULTURE.equals(protocol.getProcessname()) ||
-                        Protocol.CREATE_DNA_FROM_MGC_CULTURE.equals(protocol.getProcessname())) {
+                        Protocol.CREATE_DNA_FROM_MGC_CULTURE.equals(protocol.getProcessname())) 
+                {
                     newBarcode = projectCode + protocol.getProcesscode() + container.getLabel().substring(3);
-                } else if (Protocol.GENERATE_CRE_PLATE.equals(protocol.getProcessname()) || Protocol.GENERATE_LR_PLATE.equals(protocol.getProcessname())) {
+                } 
+                else if (Protocol.GENERATE_CRE_PLATE.equals(protocol.getProcessname()) 
+                        || Protocol.GENERATE_LR_PLATE.equals(protocol.getProcessname())) 
+                {
                     newBarcode = Container.getLabel(projectCode, protocol.getProcesscode(), container.getThreadid(), getSubThread(container));
-
-                    if (workflow.getId() == Workflow.TRANSFER_TO_EXP_JP1520) {
-                        newBarcode = newBarcode + ".006";
+                    if ( workflow.getWorkflowType() == WORKFLOW_TYPE.TRANSFER_TO_EXPRESSION)
+                    {
+                        key = "-1"+ProjectWorkflowProtocolInfo.PWP_SEPARATOR+
+                                workflow.getId()+ProjectWorkflowProtocolInfo.PWP_SEPARATOR+
+                                "-1"+ProjectWorkflowProtocolInfo.PWP_SEPARATOR +"VECTOR_ID";
+                        String label_postfix = ProjectWorkflowProtocolInfo.getInstance().getPWPProperties().get(key);
+                       
+                        StringBuilder sb= new StringBuilder("0000");int nlength=4;
+                        if (label_postfix.length() > 4 ) 
+                        {
+                            sb= new StringBuilder("000000");
+                            nlength=6;
+                        }
+                        
+                        sb.replace(nlength-label_postfix.length(),  sb.length(), label_postfix);
+                        newBarcode += "." + sb.toString();
+                
                     }
-                    if (workflow.getId() == Workflow.TRANSFER_TO_EXP_PLP_DS_3xFlag) {
-                        newBarcode = newBarcode + ".010";
-                    }
-                    if (workflow.getId() == Workflow.TRANSFER_TO_EXP_PLP_DS_3xMyc) {
-                        newBarcode = newBarcode + ".011";
-                    }
-                    if (workflow.getId() == Workflow.TRANSFER_TO_EXP_pCITE_GST) {
-                        newBarcode = newBarcode + ".012";
-                    }
-                    if (workflow.getId() == Workflow.TRANSFER_TO_EXP_pDEST17) {
-                        newBarcode = newBarcode + ".014";
-                    }
-                    if (workflow.getId() == Workflow.TRANSFER_TO_EXP_pBY011) {
-                        newBarcode = newBarcode + ".003";
-                    }
-                    if (workflow.getId() == Workflow.TRANSFER_TO_EXP_pLDNT7_nFLAG) {
-                        newBarcode = newBarcode + ".017";
-                    }
-                    if (workflow.getId() == Workflow.TRANSFER_TO_EXP_pDEST_GST) {
-                        newBarcode = newBarcode + ".020";
-                    }
-                    if (workflow.getId() == Workflow.TRANSFER_TO_EXP_pLENTI62_V5_Dest) {
-                        newBarcode = newBarcode + ".141";
-                    }
-                } else if (Protocol.GENERATE_GLYCEROL_PLATES.equals(protocol.getProcessname()) &&
-                        (workflow.getId() == Workflow.TRANSFER_TO_EXP_JP1520 || workflow.getId() == Workflow.TRANSFER_TO_EXP_PLP_DS_3xFlag || workflow.getId() == Workflow.TRANSFER_TO_EXP_PLP_DS_3xMyc || workflow.getId() == Workflow.TRANSFER_TO_EXP_pCITE_GST || workflow.getId() == Workflow.TRANSFER_TO_EXP_pDEST17 || workflow.getId() == Workflow.TRANSFER_TO_EXP_pBY011 || workflow.getId() == Workflow.TRANSFER_TO_EXP_pLDNT7_nFLAG || workflow.getId() == Workflow.TRANSFER_TO_EXP_pDEST_GST || workflow.getId() == Workflow.TRANSFER_TO_EXP_pLENTI62_V5_Dest)) {
-                    String labelPrefix = null;
-                    if (project.getId() == Project.HUMAN) {
-                        labelPrefix = "HsxXG";
-                    } else if (project.getId() == Project.YEAST || project.getId() == Project.YEAST_DBD) {
-                        labelPrefix = "ScxXG";
-                    } else if (project.getId() == Project.PSEUDOMONAS) {
-                        labelPrefix = "PaxXG";
-                    } else if (project.getId() == Project.VC) {
-                        labelPrefix = "VcxXG";
-                    } else if (project.getId() == Project.FT) {
-                        labelPrefix = "FtxXG";
-                    } else if (project.getId() == Project.Bacillus_anthracis) {
-                        labelPrefix = "BaxXG";
-                    } else if (project.getId() == Project.Yersinia_pseudotuberculosis) {
-                        labelPrefix = "YpsXG";
-                    } else if (project.getId() == Project.ORFEOME_pENTR223) {
-                        labelPrefix = "HsxXG";
-                    }
-                    newBarcode = labelPrefix + container.getLabel().substring(3);
+                } 
+                else if (Protocol.GENERATE_GLYCEROL_PLATES.equals(protocol.getProcessname()) &&
+                        workflow.getWorkflowType()== WORKFLOW_TYPE.TRANSFER_TO_EXPRESSION) 
+                {
+                    key = ""+project.getId()+ProjectWorkflowProtocolInfo.PWP_SEPARATOR+
+                                "-1"+ProjectWorkflowProtocolInfo.PWP_SEPARATOR+
+                                "-1"+ProjectWorkflowProtocolInfo.PWP_SEPARATOR +"LABEL_PREFIX";
+                    String label_prefix = ProjectWorkflowProtocolInfo.getInstance().getPWPProperties().get(key);
+                     
+                    newBarcode = label_prefix + container.getLabel().substring(3);
                     newContainerType = ExpressionCloneContainer.EXPRESSION_CONTAINER_TYPE;
-                } else if (Protocol.GENERATE_MULTIPLE_GLYCEROL.equals(protocol.getProcessname())) {
+                } 
+                else if (Protocol.GENERATE_MULTIPLE_GLYCEROL.equals(protocol.getProcessname()))
+                {
                     newBarcode = container.getDaughterBarcode(daughterbarcodeid);
                     daughterbarcodeid = Integer.parseInt(newBarcode.substring(newBarcode.indexOf(Container.DAUGHTER_BARCODE_SEPARATER) + 1));
-                } else {
+                } 
+                else 
+                {
                     newBarcode = Container.getLabel(projectCode, protocol.getProcesscode(), container.getThreadid(), getSubThread(container));
                 }
-                Container newContainer = new Container(newContainerType, null, newBarcode, container.getThreadid());
+               Container newContainer = new Container(newContainerType, null, newBarcode, container.getThreadid());
                 //   getSamples(container);
                 container.restoreSampleWithoutSeq();
                 mappingSamples(container, newContainer, protocol);
                 newContainers.addElement(newContainer);
+              
             }
             addToContainerlabelmap(container,daughterbarcodeid);
         }

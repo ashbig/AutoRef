@@ -24,8 +24,8 @@ public abstract class ImportRunner implements Runnable
 {
   
        //------------------------------------------------------------------
-    protected ArrayList  m_error_messages = null;
-     protected ArrayList  m_process_messages = null;
+    protected ArrayList<String>  m_error_messages = null;
+     protected ArrayList<String>  m_process_messages = null;
    
     protected String      m_items = null;
     protected String      m_processed_items = null;
@@ -202,15 +202,18 @@ public abstract class ImportRunner implements Runnable
            //  String temp_path = FlexProperties.getInstance().getProperty("tmp");
              String from =  FlexProperties.getInstance().getProperty("HIP_FROM_EMAIL_ADDRESS");
              String msg = null;
-             System.out.println("m_error_messages "+ m_error_messages.size() +" m_process_messages "+ m_process_messages.size() );
-            if (m_error_messages.size() > 0)
+             //clean up null from m_error_messages
+             for ( String message: m_error_messages)
+             {
+                 if ( message==null)m_error_messages.remove(message);
+             }
+             if (m_error_messages.size() > 0)
             {
                 msg = Algorithms.convertStringArrayToString(m_error_messages,"\n");
                 System.out.println(msg);
                 Mailer.sendMessage(m_user.getUserEmail(), from, from, title, msg);  
             } 
             msg = Algorithms.convertStringArrayToString(m_process_messages,"\n");
-             System.out.println(msg);
             Mailer.sendMessage(m_user.getUserEmail(), from, from, title, msg);  
          
          }

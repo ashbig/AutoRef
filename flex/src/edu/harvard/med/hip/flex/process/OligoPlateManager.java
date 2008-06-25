@@ -162,22 +162,38 @@ public class OligoPlateManager {
      */
     protected void setIsReorder(boolean isReorder) {m_isReorderSequences = isReorder;}
     
-    protected void setOpenClose(Project project, Workflow workflow) {
-        if(project.getId() == Project.PSEUDOMONAS || project.getId() == Project.KINASE 
-        || project.getId() == Project.VC || project.getId() == Project.KINASE_MUT 
-        || project.getId() == Project.Bacillus_anthracis || project.getId() == Project.NIDDK
-        || workflow.getId() == Workflow.MGC_GATEWAY_INFUSION_FUSION) {
-            setIsOpenOnly(true);
-            setIsSetOpenClose(true);
-        } else if(project.getId() == Project.YEAST
-        || project.getId() == Project.YP
-        || project.getId() == Project.FT
-        || workflow.getId() == Workflow.MGC_GATEWAY_CLOSED
-        || project.getId() == Project.Yersinia_pseudotuberculosis
-        || project.getId() == Project.YEAST_DBD) {
-            setIsCloseOnly(true);
-            setIsSetOpenClose(true);
-        }
+    public void setOpenClose(Project project, Workflow workflow)
+    
+    {
+        
+         String key =""+ project.getId()+ProjectWorkflowProtocolInfo.PWP_SEPARATOR+"-1"+ProjectWorkflowProtocolInfo.PWP_SEPARATOR
+                    +"-1"+ProjectWorkflowProtocolInfo.PWP_SEPARATOR+"PROJECT_OPEN_CLOSED";
+         String  return_value =  ProjectWorkflowProtocolInfo.getInstance().getPWPProperties().get( key);
+         if (return_value != null)setIsSetOpenClose(true);
+         key =""+ project.getId()+ProjectWorkflowProtocolInfo.PWP_SEPARATOR+"-1"+ProjectWorkflowProtocolInfo.PWP_SEPARATOR
+                    +"-1"+ProjectWorkflowProtocolInfo.PWP_SEPARATOR+"PROJECT_OPEN";
+         return_value =  ProjectWorkflowProtocolInfo.getInstance().getPWPProperties().get( key);
+         if (return_value != null) setIsOpenOnly(true);
+         key =""+ project.getId()+ProjectWorkflowProtocolInfo.PWP_SEPARATOR+"-1"+ProjectWorkflowProtocolInfo.PWP_SEPARATOR
+                    +"-1"+ProjectWorkflowProtocolInfo.PWP_SEPARATOR+"PROJECT_CLOSED";
+         return_value =  ProjectWorkflowProtocolInfo.getInstance().getPWPProperties().get( key);
+         if (return_value != null)setIsCloseOnly(true);
+        
+         //try workflow setting
+         key ="-1"+ ProjectWorkflowProtocolInfo.PWP_SEPARATOR+workflow.getId()+ProjectWorkflowProtocolInfo.PWP_SEPARATOR
+                    +"-1"+ProjectWorkflowProtocolInfo.PWP_SEPARATOR+"PROJECT_OPEN_CLOSED";
+         return_value =  ProjectWorkflowProtocolInfo.getInstance().getPWPProperties().get( key);
+         if (return_value != null)setIsSetOpenClose(true);
+         key ="-1"+ ProjectWorkflowProtocolInfo.PWP_SEPARATOR+workflow.getId()+ProjectWorkflowProtocolInfo.PWP_SEPARATOR
+                    +"-1"+ProjectWorkflowProtocolInfo.PWP_SEPARATOR+"PROJECT_OPEN";
+         return_value =  ProjectWorkflowProtocolInfo.getInstance().getPWPProperties().get( key);
+         if (return_value != null) setIsOpenOnly(true);
+         key ="-1"+ ProjectWorkflowProtocolInfo.PWP_SEPARATOR+workflow.getId()+ProjectWorkflowProtocolInfo.PWP_SEPARATOR
+                    +"-1"+ProjectWorkflowProtocolInfo.PWP_SEPARATOR+"PROJECT_CLOSED";
+         return_value =  ProjectWorkflowProtocolInfo.getInstance().getPWPProperties().get( key);
+         if (return_value != null)setIsCloseOnly(true);
+      
+       
     }
     
     /**

@@ -10,22 +10,12 @@
 package edu.harvard.med.hip.flex.infoimport;
 
 import java.io.*;
-import java.util.*;
 import java.sql.*;
 import java.util.*;
-import sun.jdbc.rowset.*;
 
 import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.database.*;
-import edu.harvard.med.hip.flex.util.*;
-import edu.harvard.med.hip.flex.process.*;
-import edu.harvard.med.hip.flex.workflow.*;
 import edu.harvard.med.hip.flex.infoimport.file_mapping.*;
-import edu.harvard.med.hip.flex.infoimport.coreobjectsforimport.*;
-
-import org.xml.sax.*;
-import org.xml.sax.helpers.DefaultHandler;
-import org.apache.xerces.parsers.SAXParser;
 /**
  *
  * @author htaycher
@@ -124,7 +114,7 @@ public class ItemsImporter  extends ImportRunner
             CloneVector.insertVectors(vect, conn);
              
             DatabaseTransaction.commit(conn);
-           for (int count = 0; count < vect.size(); count++)
+            for (int count = 0; count < vect.size(); count++)
             {
                 m_process_messages.add("Vector: " +((CloneVector)vect.get(count)).toString()+ " have been added.");
             }
