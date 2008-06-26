@@ -13,9 +13,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.2 $
- * $Date: 2001-07-12 20:34:23 $
- * $Author: jmunoz $
+ * $Revision: 1.3 $
+ * $Date: 2008-06-26 14:06:50 $
+ * $Author: et15 $
  *
  ******************************************************************************
  *
@@ -43,14 +43,14 @@ import java.util.*;
 /**
  * Holds sytem level properties.
  *
- * @author     $Author: jmunoz $
- * @version    $Revision: 1.2 $ $Date: 2001-07-12 20:34:23 $
+ * @author     $Author: et15 $
+ * @version    $Revision: 1.3 $ $Date: 2008-06-26 14:06:50 $
  */
 
 public class FlexProperties {
     // The name of the properties file holding the system config info.
     public final static String SYSTEM_FILE_LOC="config/SystemConfig.properties";
-    
+   
     // The properties
     private Properties properties;
 
@@ -65,7 +65,6 @@ public class FlexProperties {
         this.properties = new Properties();
         //try to get the properties file from the class path
         InputStream iStream = getInputStream();
-        
         if(iStream !=null) {
             try {
             Properties prop = new Properties();
@@ -115,13 +114,17 @@ public class FlexProperties {
     } 
     
     protected InputStream getInputStream() {
+        
         return (Thread.currentThread().getContextClassLoader().getResourceAsStream(SYSTEM_FILE_LOC));
     }  
+    
+    protected Enumeration       getKeys(){ return properties.keys();}
     
     public static void main(String [] args) {
         FlexProperties sysProps = StaticPropertyClassFactory.makePropertyClass("FlexProperties");
         System.out.println("Test: " + sysProps.getProperty("flex.repository.baseurl"));
-    }         
+         System.out.println("Test: " + sysProps.getProperty("Archaeglobus.fulgidus"));    
+}
 } // End class FlexProperties
 
 
