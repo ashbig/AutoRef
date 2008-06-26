@@ -89,14 +89,13 @@ public class SelectProjectAction extends ResearcherAction {
             } 
              else
              {
-                workflows = project.getWorkflows();
                 Workflow wf;
-                for ( int count = 0; count < workflows.size(); count++)
+                for ( int count = 0; count < project.getWorkflows().size(); count++)
                 {
-                    wf=(Workflow)workflows.get(count);
-                    if (wf.getWorkflowType()== WORKFLOW_TYPE.REARRAY)
+                    wf=(Workflow)project.getWorkflows().get(count);
+                    if (wf.getWorkflowType()!= WORKFLOW_TYPE.REARRAY)
                     {
-                        workflows.remove(wf);
+                        workflows.add(wf);
                     }
                 }
                 
