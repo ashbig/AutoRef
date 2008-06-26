@@ -46,9 +46,12 @@ public class ReportRunAction extends FlexAction {
             REPORT_TYPE report_type = REPORT_TYPE.valueOf(temp);
             ReportRunner report_runner =new ReportRunner();
             report_runner.setUser(user);
+            
+        
             report_runner.setReportType(report_type);
             request.setAttribute("forwardName", String.valueOf( ConstantsImport.PROCESS_DATA_RUN_REPORT));
-            
+            REPORT_COLUMN selected_columns[]=null;
+           
             if ( report_type != REPORT_TYPE.CLONING_STRATEGY)
             {
                  String items = ((ReportRunForm)form).getItems();
@@ -56,7 +59,7 @@ public class ReportRunAction extends FlexAction {
                 ITEM_TYPE item_type =ITEM_TYPE.valueOf(temp);
            
                 String tmp[] = ((ReportRunForm)form).getSelectedColumns();
-                REPORT_COLUMN selected_columns[] = new REPORT_COLUMN[tmp.length]; 
+                selected_columns = new REPORT_COLUMN[tmp.length]; 
 
                 int count=0;
                 for (String column_name : tmp )
@@ -66,9 +69,13 @@ public class ReportRunAction extends FlexAction {
             
             
                 report_runner.setInputData(item_type, items);
-                report_runner.setUserSelectedReportColumns(selected_columns);
+                //report_runner.setUserSelectedReportColumns(selected_columns);
             }
-          
+            else
+            {
+                selected_columns= CloningStrategyReport.REPORT_COLUMNS;
+            }
+            report_runner.setUserSelectedReportColumns(selected_columns);
             Thread  t = new Thread( report_runner);     
             t.start();
             return (mapping.findForward("success"));
