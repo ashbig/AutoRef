@@ -102,11 +102,11 @@ public class OneToOneContainerMapper implements ContainerMapper {
                                 "-1"+ProjectWorkflowProtocolInfo.PWP_SEPARATOR +"VECTOR_ID";
                         String label_postfix = ProjectWorkflowProtocolInfo.getInstance().getPWPProperties().get(key);
                        
-                        StringBuilder sb= new StringBuilder("0000");int nlength=4;
-                        if (label_postfix.length() > 4 ) 
+                        StringBuilder sb= new StringBuilder("000");int nlength=3;
+                        if (label_postfix.length() > 3 ) 
                         {
-                            sb= new StringBuilder("000000");
-                            nlength=6;
+                            sb= new StringBuilder("0000");
+                            nlength=4;
                         }
                         
                         sb.replace(nlength-label_postfix.length(),  sb.length(), label_postfix);
