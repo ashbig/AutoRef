@@ -172,7 +172,7 @@ public String getTitle() {        return "Upload of information for third-party 
         }
         finally
          {
-           
+          
             sendEmails("New plates upload into FLEX","New plates upload into FLEX");
          }
     
@@ -185,7 +185,7 @@ public String getTitle() {        return "Upload of information for third-party 
   private void fellInEmptyWells() throws Exception
   {
       ImportSample sample = null; ImportContainer cur_container  =null;
-      int prev_sample_position = 1; 
+      int prev_sample_position = 0; 
        if (i_containers == null || i_containers.size() == 0)                return;
       Iterator  iter = i_containers.keySet().iterator (  ) ; 
         
@@ -194,15 +194,18 @@ public String getTitle() {        return "Upload of information for third-party 
              String key = (String)iter.next();
              int mis_samples = 0;
              cur_container =  (ImportContainer)i_containers.get(key);
-                cur_container.sortSamplesByPosition();
-             ArrayList control_samples = new ArrayList(); ;
+             prev_sample_position = 0; 
+    
+             cur_container.sortSamplesByPosition();
+             ArrayList control_samples = new ArrayList(); 
+             
              for ( int sample_count = 0; sample_count < cur_container.getSamples().size(); sample_count++)
              {
                   sample = (ImportSample)cur_container.getSamples().get(sample_count);
                 //fill in samples                   
                   if ( prev_sample_position < sample.getPosition()-1  )
                   {
-                      for ( mis_samples = prev_sample_position + 1; mis_samples <  sample.getPosition() ; mis_samples++)
+                      for ( mis_samples = prev_sample_position +1 ; mis_samples <  sample.getPosition() ; mis_samples++)
                       {
                           control_samples.add(new ImportSample(mis_samples, Sample.CONTROL_NEGATIVE));
                       }
