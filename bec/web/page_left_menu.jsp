@@ -103,7 +103,7 @@ document.onselectstart = new Function("return true");
 </script>
 
 
-<% //User user = (User)session.getAttribute(Constants.USER_KEY);
+<% User user = (User)session.getAttribute(Constants.USER_KEY);
 int user_level = 0;
 if (user.getUserGroup().equals("Researcher")) user_level = 0;
 else if (user.getUserGroup().equals("Researcher2")) user_level = 1;

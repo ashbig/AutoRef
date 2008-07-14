@@ -19,9 +19,9 @@
 <table width="100%" height="38" border="0" align="center">
 <tr bgcolor='black'>
     
-    <% User user = (User)session.getAttribute(Constants.USER_KEY);
+    <% User user1 = (User)session.getAttribute(Constants.USER_KEY);
 
-if (!user.getUserGroup().equals("Researcher")){%>
+if (!user1.getUserGroup().equals("Researcher")){%>
 <td><table width="100%" height="30" border="0" cellpadding="4" cellspacing="1" bgcolor="#FFFFFF">
               <tr bgcolor="#1145A6"> 
 <td align="center"  nowrap bgcolor="#1145A6">&nbsp</td>
