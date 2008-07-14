@@ -44,7 +44,7 @@ li {
 
 
 <body bgcolor="#9bbad6">
-  <div align="center">center><h3><bean:message key="flex.name"/></h3>    </div>
+  <div align="center"><h3><bean:message key="flex.name"/></h3>    </div>
   <hr>
 <ul>
     <li><p><a href="/FLEX/overview.jsp" target="display">Home</a>  </li>
