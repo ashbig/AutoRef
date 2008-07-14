@@ -85,7 +85,7 @@ function SwitchMenu(obj){
 	var el = document.getElementById(obj);
 	var ar = document.getElementById("cont").getElementsByTagName("DIV");
 		if(el.style.display == "none"){
-			for (var i=0; i<ar.length; i++){
+			for (var i=0; i < ar.length; i++){
 				ar[i].style.display = "none";
 			}
 			el.style.display = "block";
@@ -103,7 +103,7 @@ document.onselectstart = new Function("return true");
 </script>
 
 
-<% User user = (User)session.getAttribute(Constants.USER_KEY);
+<% //User user = (User)session.getAttribute(Constants.USER_KEY);
 int user_level = 0;
 if (user.getUserGroup().equals("Researcher")) user_level = 0;
 else if (user.getUserGroup().equals("Researcher2")) user_level = 1;
