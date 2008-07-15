@@ -27,7 +27,7 @@ public class ReportRunForm  extends ActionForm
     private String items = "";
     private String itemType = edu.harvard.med.hip.flex.report.ReportConstants.ITEM_TYPE.PLATE_LABELS.toString();
     private String reportType= REPORT_TYPE.GENERAL.toString();
-
+    private boolean isRemoveDuplicateRecords=false;
 
      public String[] getSelectedColumns() {   return this.selectedColumns;}
     public void setSelectedColumns(String[] selectedColumns) { this.selectedColumns = selectedColumns;
@@ -42,9 +42,17 @@ public class ReportRunForm  extends ActionForm
      public void    setReportType(String  v){   reportType = v;}
      public         String getReportType(){  return reportType.toString();} 
      
+     public void    setIsRemoveDuplicateRecords(boolean b){ isRemoveDuplicateRecords= b;}
+     public boolean getIsRemoveDuplicateRecords(){ return isRemoveDuplicateRecords;}
+     
     public void reset(ActionMapping mapping, HttpServletRequest request)     {
-          itemType = ITEM_TYPE.CLONE_ID.toString() ;
+          itemType = ITEM_TYPE.PLATE_LABELS.toString() ;
         items="";
+        isRemoveDuplicateRecords=false;
+        selectedColumns=null;
      }
+    
+    
+   
     
 }

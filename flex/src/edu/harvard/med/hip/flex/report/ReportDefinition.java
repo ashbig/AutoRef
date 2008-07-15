@@ -27,7 +27,7 @@ public abstract class ReportDefinition
     private ArrayList<String>         m_file_names_list_for_report =null;
     private ReportProperties          m_resource = null;
     protected  REPORT_TYPE          m_report_type ;
-  
+    private boolean         m_is_remove_duplicate_records=false;
     
     public enum REPORT_TYPE
     {
@@ -90,7 +90,7 @@ public abstract class ReportDefinition
    protected abstract  List<String[]> getDataForReport(String sql_items, ITEM_TYPE items_type, ReportProperties fr);
    protected abstract void                   setUpReportCheckList();
    protected void                   setUserSelectedColumns(REPORT_COLUMN[] user_selected_columns ){ m_user_report_columns=user_selected_columns; }
-   
+   public    void                   setIsRemoveDuplicateRecords(boolean v){ m_is_remove_duplicate_records=v;}
    
     public  void             buildReport(String items,  ITEM_TYPE items_type )
    {
@@ -107,6 +107,8 @@ public abstract class ReportDefinition
               for (String sql : sql_items)
               {
                   report_data = getDataForReport(sql,  items_type, (ReportProperties)fr);
+                  if ( m_is_remove_duplicate_records )
+                      report_data = removeDuplicateRecords(report_data);
                   printReport( report_file_name, report_data, (ReportProperties)fr, isHeader);
                   isHeader = false;
               }
@@ -174,4 +176,32 @@ public abstract class ReportDefinition
         catch(Exception e){ try { fr.close();}catch(Exception n){} }
    
     }
+     
+      private List<String[]>   removeDuplicateRecords( List<String[]> records)
+    {
+        List<String[]> no_duplicate_records = new ArrayList<String[]>(records.size());
+        HashMap<String,String> tmp = new HashMap<String,String>(records.size());
+         String key = null;
+         for (String[] record : records)
+        {
+            key = getKey(record, "*");
+            if ( key != null && tmp.get(key) == null)
+            {
+                tmp.put(key,key  );
+                no_duplicate_records.add(record);
+            }
+        }
+        return no_duplicate_records;
+    }
+      
+      private String    getKey(String[] record, String delim)
+      {
+          StringBuffer tmp = new StringBuffer();
+          for (String item : record)
+          {
+             if (item != null)
+                 tmp.append(item.toLowerCase() + delim);
+          }
+          return tmp.toString();
+      }
 }

@@ -104,7 +104,7 @@ public class GeneralReport extends ReportDefinition
          try
          {
             if (isCloningStrategy) cl_str=getCloningStrategies();
-            containers = getContainersInfo(sql_items,items_type);
+           containers = getContainersInfo(sql_items,items_type);
             clones =  getCloneInfo(sql_items,items_type);
              refsequence_info = getReferenceSequenceInfo(sql_items,items_type);
            
@@ -134,7 +134,7 @@ public class GeneralReport extends ReportDefinition
                     case LINKER_3P_SEQUENCE :
                     case LINKER_5P_NAME :
                     case LINKER_5P_SEQUENCE :
-                    case STRATEGY_NAME:     {  isCloningStrategy = true;     break;                    }
+                    case STRATEGY_NAME:     {  isCloneInfo= true ;isCloningStrategy = true;     break;                    }
                   case WELL_NUMBER : case WELL_NAME: 
                   case SAMPLE_ID: case SAMPLE_TYPE  :
                   
@@ -611,9 +611,9 @@ return "select '' || sequenceid as item1, flexstatus as item2,"
             else if (itemtype == ITEM_TYPE.USER_PLATE_LABELS)
             {
 sql="select label as item1, '' || c.containerid as item2, '' || sampleid as item3, sampletype as item4,'' ||  containerposition as item5,"
-+"'' || constructid as itm6,'' || cloneid as item7, containertype as item8 "
++"'' || constructid as item6,'' || cloneid as item7, containertype as item8, namevalue as item9 "
 +" from containerheader c, sample s , containerheader_name n where s.containerid=c.containerid and "
-+"and c.containerid=n.containerid and nametype='USER_ID'  namevalue in ("+item_ids+") order by c.containerid, position";
++" c.containerid=n.containerid and nametype='USER_ID' and namevalue in ("+item_ids+") order by c.containerid, s.containerposition";
              
              }
           
@@ -685,11 +685,10 @@ sql="select label as item1, '' || c.containerid as item2, '' || sampleid as item
                 refsequence_info);}
         else if ( isCloningStrategy )
             result = buildCloningStrategyReportOutput(user_column_in_order,cl_str);
-       
-      
         return result;
     }
        
+   
     private     List<String[]>            buildCloningStrategyReportOutput
             (REPORT_COLUMN[] user_column_in_order ,
         HashMap<Integer, CloningStrategy> cl_str)
@@ -700,7 +699,7 @@ sql="select label as item1, '' || c.containerid as item2, '' || sampleid as item
         for ( CloningStrategy cl : cl_str.values())
         {
             record = buildRecord(  user_column_in_order ,null,null,null,null,null,cl);
-            result.add(record);
+             result.add(record);
         }
         return result;
     }
@@ -715,7 +714,7 @@ sql="select label as item1, '' || c.containerid as item2, '' || sampleid as item
         for ( ImportFlexSequence refsequence : ref_sequences.values())
         {
                 record = buildRecord(  user_column_in_order ,null,null,null,null,refsequence,null);
-                result.add(record);
+                 result.add(record);
         }
         return result;
     }
@@ -732,6 +731,7 @@ sql="select label as item1, '' || c.containerid as item2, '' || sampleid as item
         String tmp;
         for ( ImportClone clone : clones.values())
         {
+            cl=null; refsequence=null;
              if ( cl_str != null)
               { cl = cl_str.get(Integer.valueOf(clone.getCloningStrategyId()));}
               if ( refsequence_info!= null)
@@ -759,6 +759,7 @@ sql="select label as item1, '' || c.containerid as item2, '' || sampleid as item
             for ( int count = 0; count < container.getSamples().size(); count++)
             {
                 sample = (Sample)container.getSamples().get(count);
+                clone=null;refsequence=null;cl=null;
                 if ( clones != null)
                 { clone = clones.get(String.valueOf(sample.getCloneid()));  }
                 if ( cl_str != null && clone != null)

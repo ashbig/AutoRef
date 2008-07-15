@@ -25,6 +25,7 @@ public class ReportRunner implements Runnable
     private ArrayList  m_process_messages = null;
    
     private String      m_items = null;
+    private boolean     m_is_remove_duplicate_records=false;
     private ITEM_TYPE   m_items_type = ITEM_TYPE.Not_set;
     private User        m_user = null;
     private REPORT_TYPE         m_report_type = REPORT_TYPE.GENERAL;
@@ -35,6 +36,7 @@ public class ReportRunner implements Runnable
         m_error_messages = new ArrayList();
         m_process_messages = new ArrayList();
     }
+    public void                 setIsRemoveDuplicateRecords(boolean v){ m_is_remove_duplicate_records = v;}
     public  void                setUser(User v){m_user=v;}
     public  void                setReportType(REPORT_TYPE report_type)  {        m_report_type = report_type;    }
     public void                 setUserSelectedReportColumns (REPORT_COLUMN[] s){ m_user_selected_columns = s;}
@@ -67,11 +69,14 @@ public class ReportRunner implements Runnable
                   case GENERAL:
                   {
                        report = new GeneralReport();
-                       break;
+                           report.setIsRemoveDuplicateRecords(m_is_remove_duplicate_records);
+                        break;
                   }
                   case CLONE_RELATIONS:
-                  {   report = new CloneRelationsReport();
-                      break; 
+                  {   
+                      report = new CloneRelationsReport();
+                      report.setIsRemoveDuplicateRecords(m_is_remove_duplicate_records);
+                       break; 
                   }
                   case CLONING_STRATEGY:
                   { 

@@ -143,7 +143,7 @@ public class UtilSQL
                 }
                 result.add(record);
             }
-             DatabaseTransactionLocal.closeResultSet(rs);
+           //  DatabaseTransactionLocal.closeResultSet(rs);
              return result;
             } catch (Exception sqlE)
         {

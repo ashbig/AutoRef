@@ -37,21 +37,17 @@ public class ReportRunAction extends FlexAction {
        
         try
         {
-            User user = ((User)request.getSession().getAttribute(Constants.USER_KEY));
+             User user = ((User)request.getSession().getAttribute(Constants.USER_KEY));
             AccessManager manager = AccessManager.getInstance();
             user.setUserEmail( manager.getEmail(user.getUsername()));
-         
-            String temp = (String)request.getParameter("reportType");
-            
+           String temp = (String)request.getParameter("reportType");
             REPORT_TYPE report_type = REPORT_TYPE.valueOf(temp);
             ReportRunner report_runner =new ReportRunner();
             report_runner.setUser(user);
             
-        
             report_runner.setReportType(report_type);
             request.setAttribute("forwardName", String.valueOf( ConstantsImport.PROCESS_DATA_RUN_REPORT));
             REPORT_COLUMN selected_columns[]=null;
-           
             if ( report_type != REPORT_TYPE.CLONING_STRATEGY)
             {
                  String items = ((ReportRunForm)form).getItems();
@@ -69,6 +65,8 @@ public class ReportRunAction extends FlexAction {
             
             
                 report_runner.setInputData(item_type, items);
+                 boolean mode =((ReportRunForm)form).getIsRemoveDuplicateRecords() ;
+                report_runner.setIsRemoveDuplicateRecords(mode);
                 //report_runner.setUserSelectedReportColumns(selected_columns);
             }
             else

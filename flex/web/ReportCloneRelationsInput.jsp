@@ -19,7 +19,32 @@
 <LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
 <LINK REL=StyleSheet HREF="application_styles.css" TYPE="text/css" MEDIA=screen>
 
-<SCRIPT LANGUAGE="JavaScript" SRC="script.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript"> 
+
+function validate_run_report(formElement)
+{
+    var aTextField_value = formElement.items.value;
+    aTextField_value = aTextField_value.replace(/^\s+|\s+$/g, '') ;
+    if (aTextField_value==null || aTextField_value.length==0)
+    {
+        alert("Please submit items to process.");
+        formElement.items.focus();
+        return false;
+    }
+    var count=0;
+    for (i = 0; i < formElement.selectedColumns.length; i++)
+    {
+	if( formElement.selectedColumns[i].checked ) count++ ;
+    }
+    if ( count == 0) 
+    { 
+        alert("Please select fields to report.");
+        return false;
+    }
+    return true;
+  
+}
+</SCRIPT>
 </head>
 <body>
     <h2><bean:message key="flex.name"/> : <%=  edu.harvard.med.hip.flex.report.ReportDefinition.REPORT_TYPE.CLONE_RELATIONS.getReportTitle()%> </h2>
@@ -30,6 +55,11 @@
 <input name="reportType" type="hidden" value="<%= edu.harvard.med.hip.flex.report.ReportDefinition.REPORT_TYPE.CLONE_RELATIONS %>" >
         
 <table width="100%" border="0" cellspacing="2" cellpadding="2">
+    
+ <tr class='headerRow'> <td colspan=2 ><strong>Define report properties:</strong></td>   </tr>
+ <tr><td>  <input name="isRemoveDuplicateRecords" value="on" type="checkbox"> Report only unique records
+</td> </tr>
+
         <tr class='headerRow'> <td colspan=2 ><strong>Select items type:</strong></td>   </tr>
 <tr>  <td width='40%'> 
 
