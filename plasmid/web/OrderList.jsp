@@ -37,11 +37,13 @@
             <html:option value="<%=CloneOrder.PENDING%>"/>
             <html:option value="<%=CloneOrder.PENDING_MTA%>"/>
             <html:option value="<%=CloneOrder.PENDING_PAYMENT%>"/>
+            <html:option value="<%=CloneOrder.PENDING_AQIS%>"/>
             <html:option value="<%=CloneOrder.MTA_RECEIVED%>"/>
             <html:option value="<%=CloneOrder.INPROCESS%>"/>
             <html:option value="<%=CloneOrder.SHIPPED%>"/>
             <html:option value="<%=CloneOrder.PARTIALLY_SHIPPED%>"/>
             <html:option value="<%=CloneOrder.CANCEL%>"/>
+            <html:option value="<%=CloneOrder.INVALIDE_PAYMENT%>"/>
         </html:select>
     </td>
     <td width="73%">
@@ -84,6 +86,12 @@
             </logic:equal>
             <logic:notEqual name="order" property="status" value="<%=CloneOrder.PENDING_MTA%>">
             <option value="<%=CloneOrder.PENDING_MTA%>"/><%=CloneOrder.PENDING_MTA%>
+            </logic:notEqual>
+            <logic:equal name="order" property="status" value="<%=CloneOrder.PENDING_AQIS%>">
+            <option value="<%=CloneOrder.PENDING_AQIS%>" selected/><%=CloneOrder.PENDING_AQIS%>
+            </logic:equal>
+            <logic:notEqual name="order" property="status" value="<%=CloneOrder.PENDING_AQIS%>">
+            <option value="<%=CloneOrder.PENDING_AQIS%>"/><%=CloneOrder.PENDING_AQIS%>
             </logic:notEqual>
             <logic:equal name="order" property="status" value="<%=CloneOrder.PENDING_PAYMENT%>">
             <option value="<%=CloneOrder.PENDING%>" selected/><%=CloneOrder.PENDING_PAYMENT%>

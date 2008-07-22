@@ -26,9 +26,12 @@ public class CloneOrder {
     public static final String COMPLETE = "Complete";
     public static final String CANCEL = "Cancelled";
     public static final String TBD = "To Be Determined";
+    public static final String PENDING_AQIS = "Pending AQIS";
     public static final String allstatus[] = {
         CloneOrder.PENDING, 
         CloneOrder.PENDING_MTA,
+        CloneOrder.PENDING_AQIS,
+        CloneOrder.PENDING_PAYMENT,
         CloneOrder.MTA_RECEIVED,
         CloneOrder.CANCEL, 
         CloneOrder.INPROCESS, 
@@ -79,11 +82,13 @@ public class CloneOrder {
     protected String comments;
     protected String piinstitution;
     protected String pidepartment;
+    private String isaustralia;
     
     /** Creates a new instance of CloneOrder */
     public CloneOrder() {
         this.items = new ArrayList();
         this.batches = new ArrayList();
+        this.isaustralia = "N";
     }
     
     public CloneOrder(int orderid,String orderDate, String status, String ponumber,String shippingTo,String billingTo,
@@ -108,6 +113,7 @@ public class CloneOrder {
         
         this.items = new ArrayList();
         this.batches = new ArrayList();
+        this.isaustralia = "N";
     }
     
     public int getOrderid() {return orderid;}
@@ -254,5 +260,13 @@ public class CloneOrder {
 
     public void setPidepartment(String pidepartment) {
         this.pidepartment = pidepartment;
+    }
+
+    public String getIsaustralia() {
+        return isaustralia;
+    }
+
+    public void setIsaustralia(String isaustralia) {
+        this.isaustralia = isaustralia;
     }
 }
