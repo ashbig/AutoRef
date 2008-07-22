@@ -1,5 +1,5 @@
 /**
- * $Id: Sample.java,v 1.16 2008-04-14 19:56:16 dz4 Exp $
+ * $Id: Sample.java,v 1.17 2008-07-22 15:14:54 et15 Exp $
  *
  * File     	: Sample.java
  * Date     	: 04162001
@@ -69,30 +69,35 @@ public class Sample {
     protected int sequenceid = -1;
     
     protected int cloneid = 0;
+    protected int m_cloning_strategy_id =-1;
     
     protected String geneSymbol;
     protected String pa;
     protected String sgd;
     protected String genbank;
-    protected ArrayList         m_additional_info = null;
+    protected ArrayList<PublicInfoItem>         m_additional_info = null;
     protected boolean           m_is_additional_info = false;
    
-    
+    public void setCloningStrategyId(int v){ m_cloning_strategy_id = v;}
     public void setCloneid(int cloneid) {this.cloneid = cloneid;}
     public void setGeneSymbol(String s) {this.geneSymbol = s;}
     public void setPa(String s) {this.pa = s;}
     public void setSgd(String s) {this.sgd = s;}
     public void setGenbank(String s) {this.genbank = s;}
-    public void setIsAdditionalInfo(boolean v) { this.m_is_additional_info = v;}
-    public void setAdditionalInfo(ArrayList v){ this.m_additional_info = v;}
+    public void setIsAdditionalInfo(boolean v) { m_is_additional_info = v;}
+    public void setAdditionalInfo(ArrayList<PublicInfoItem> v){ m_additional_info = v;}
+    public void addAdditionalInfo(PublicInfoItem v)
+    { if(m_additional_info==null)m_additional_info = new ArrayList<PublicInfoItem>(); 
+      m_additional_info.add( v);}
     
+    public int  getCloningStrategyId(){ return m_cloning_strategy_id;}
     public int getCloneid() {return cloneid;}
     public String getGeneSymbol() {return geneSymbol;}
     public String getPa() {return pa;}
     public String getSgd() {return sgd;}
     public String getGenbank() {return genbank;}
     public boolean isAdditionalInfo() { return m_is_additional_info ;}
-    public ArrayList getAdditionalInfo(){ return m_additional_info ;}
+    public ArrayList<PublicInfoItem> getAdditionalInfo(){ return m_additional_info ;}
    
     public Sample() {}
         

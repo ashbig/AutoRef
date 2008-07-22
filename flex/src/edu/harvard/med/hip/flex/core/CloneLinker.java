@@ -45,6 +45,7 @@ public class CloneLinker {
     public String getName() {return name;}
     public String getSequence() {return sequence;}
     
+    public void         setId(int v) {id = v;}
     public void         setName(String v) { name = v;}
     public void         setSequence(String v) { sequence = v;}
     

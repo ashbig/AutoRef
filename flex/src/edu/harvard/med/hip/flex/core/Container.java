@@ -1,5 +1,5 @@
 /**
- * $Id: Container.java,v 1.13 2008-04-16 13:17:59 dz4 Exp $
+ * $Id: Container.java,v 1.14 2008-07-22 15:12:51 et15 Exp $
  *
  * File     	: Container.java
  * Date     	: 04162001
@@ -1017,7 +1017,56 @@ public class Container
         return ret;
     }
     
+   public static List<Sample> getAllSamplesForContainerids(List containers, boolean isCloningStrategyId)
+           throws Exception
+   {
+        List<Sample> samples = new ArrayList();
+       Sample sample;
+        StringBuffer sql_container_ids= new StringBuffer();
+         int container_id;
+        for ( int count = 0; count < containers.size() ; count++)
+        {
+            container_id= ((Integer) containers.get(count)).intValue();
+            sql_container_ids.append(container_id);
+            if ( count != containers.size() -1)
+                sql_container_ids.append(",");
+        }
+         ResultSet rs=null ;Connection conn=null ;
+        String sql = "select sampleid,cloneid,sampletype,containerposition,containerid from sample where containerid in("+sql_container_ids.toString()+")";
+        if ( isCloningStrategyId)
+            sql = "select sampleid,s.cloneid as cloneid,sampletype,containerposition,containerid, strategyid from sample s, clones c "
+                    +" where s.cloneid(+)=c.cloneid and containerid in("+sql_container_ids.toString()+")";
    
+        try
+        {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            rs = DatabaseTransaction.executeQuery(sql, conn);
+            while(rs.next()) 
+            {
+                    sample = new Sample ( rs.getInt("sampleid"),-1, rs.getInt("containerid"));
+                    sample.setCloneid(rs.getInt("cloneid"));
+                    sample.setType(rs.getString("sampletype"));
+                    sample.setPosition( rs.getInt("containerposition"));
+                    if ( isCloningStrategyId && sample.getType().equals(Sample.ISOLATE))
+                          sample.setCloningStrategyId(rs.getInt("strategyid"));
+                    
+                    samples.add( sample);
+            }
+            return samples;
+        }
+        catch(Exception e)
+        {
+            throw new Exception ("Cannot get samples for containers: \n"+ sql+"\n"+e.getMessage());
+        }
+        finally
+        {
+            if ( rs != null)DatabaseTransaction.closeResultSet(rs);
+            if ( conn != null)DatabaseTransaction.closeConnection(conn);
+        }
+        
+        
+   }
     /**
      * Static method to find the DNA template plate from the rearrayed
      * MGC container.

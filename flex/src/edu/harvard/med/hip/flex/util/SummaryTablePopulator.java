@@ -41,12 +41,12 @@ public class SummaryTablePopulator {
             t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
             numConstructs = populateCloningprogressTable(samples, conn);
-            numMasterclones = populateObtainedmastercloneTable(samples, conn);
-            numClones = populateClonesTable(samples, strategyid, cloneType, conn);
+             numMasterclones = populateObtainedmastercloneTable(samples, conn);
+             numClones = populateClonesTable(samples, strategyid, cloneType, conn);
+    
             numClonestorage = populateOriginalStorageTable(samples, conn);
             numSamples = updateSampleTable(samples, conn);
             numSeqs = updateSequenceTable(samples, conn);
-            
             DatabaseTransaction.commit(conn);
             
             return true;
@@ -149,6 +149,7 @@ public class SummaryTablePopulator {
             stmtQuery.setInt(1, sampleid);
             rs = DatabaseTransaction.executeQuery(stmtQuery);
             if(rs.next()) {
+        
                 int statusid=rs.getInt(1);
                 int constructid = rs.getInt(2);
                 if(statusid == ConstructInfo.SEQUENCE_REJECTED_ID || statusid == ConstructInfo.FAILED_CLONING_ID) {
@@ -158,6 +159,7 @@ public class SummaryTablePopulator {
                 }
             } else {
                 stmt.setInt(1, sampleid);
+        
                 int num = DatabaseTransaction.executeUpdate(stmt);
                 ret += num;
             }
@@ -177,7 +179,8 @@ public class SummaryTablePopulator {
         " c.label, s.containerposition, s.sampletype, s.constructid"+
         " from sample s, containerheader c"+
         " where s.containerid=c.containerid"+
-        " and s.sampleid=?";
+        " and s.sampleid=? and s.sampletype='ISOLATE'";//
+        //change for PSI and other projects where clone id is created on upload
         PreparedStatement stmt = conn.prepareStatement(sql);
         int ret = 0;
         
@@ -294,11 +297,13 @@ public class SummaryTablePopulator {
         DatabaseTransaction.closeStatement(stmt);
     }
         
-    public boolean populateExpressionClonesWithContainers(List containers, int strategyid) {
+    public boolean populateExpressionClonesWithContainers(List containers, int strategyid) 
+    {
         DatabaseTransaction t = null;
         Connection conn = null;
         
-        try {
+        try 
+        {
             t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
             List samples = getSamples(containers);
@@ -319,6 +324,136 @@ public class SummaryTablePopulator {
         }
     }
     
+    // new version: clone creats new cloning strategy for itself
+     public synchronized  boolean populateExpressionClonesWithContainers(List containers,
+             String vector_name, String storage_form, String storage_type,
+             String clone_type)
+     
+    {
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        int cloning_strategy_id = -1;
+        List<Sample> all_samples =null;
+        String sql_set_clone_to_zero = "update sample set cloneid=null where sampleid=?";
+        String sql_insert_clone_info = "insert into clones (CLONEID,CLONENAME,"+
+        " CLONETYPE,MASTERCLONEID,SEQUENCEID,STRATEGYID,COMMENTS,STATUS,CONSTRUCTID)"+
+        " select ?, null, ?, cl.mastercloneid, c.sequenceid, ?, null, 'UNSEQUENCED', c.constructid"+
+        " from constructdesign c, sample s, clones cl  where s.constructid=c.constructid"+
+        " and s.cloneid=cl.cloneid and s.sampleid=?";
+        String sql_update_sample_with_clone_info = "update sample set cloneid=? where sampleid=?";
+       
+        
+        String sql_populate_clonestorage = "insert into clonestorage "
++" (storageid, storagesampleid,storagecontainerid,storagecontainerlabel,storagecontainerposition,storagetype,storageform,cloneid)"
++" values( storageid.nextval,?,?,(select label from containerheader where containerid=?),"
++" ?,?,?,?)";
+       
+        PreparedStatement stmt_set_clone_to_zero = null;
+          PreparedStatement stmt_insert_clone_info = null;
+           PreparedStatement stmt_update_sample_with_clone_info = null;
+            PreparedStatement stmt_populate_clonestorage = null;
+       
+         try 
+        {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+             stmt_set_clone_to_zero = conn.prepareStatement(sql_set_clone_to_zero);
+           stmt_insert_clone_info = conn.prepareStatement(sql_insert_clone_info);
+            stmt_update_sample_with_clone_info = conn.prepareStatement(sql_update_sample_with_clone_info);
+            stmt_populate_clonestorage = conn.prepareStatement(sql_populate_clonestorage);
+              //get all samples
+             all_samples = Container.getAllSamplesForContainerids(containers,true);
+            
+             List<CloningStrategy> all_cloning_strategies = CloningStrategy.getAllCloningStrategies(false,true) ;
+            for (Sample sample : all_samples)
+            {
+                if (sample.getType().intern() == Sample.ISOLATE)
+                {
+                    cloning_strategy_id = mapCloningStrategyByLinkerIDAndVectorID(
+                            sample.getCloningStrategyId(), vector_name, 
+                            all_cloning_strategies, conn);
+                    int cloneid = FlexIDGenerator.getID("clonesid");
+         
+                    stmt_insert_clone_info.setString(2, clone_type);
+                    stmt_insert_clone_info.setInt(3, cloning_strategy_id);
+                    stmt_insert_clone_info.setInt(1,cloneid);
+                    stmt_insert_clone_info.setInt(4, sample.getId());
+                    DatabaseTransaction.executeUpdate(       stmt_insert_clone_info);
+                    
+                    stmt_update_sample_with_clone_info.setInt(1, cloneid);
+                    stmt_update_sample_with_clone_info.setInt(2, sample.getId());
+                    DatabaseTransaction.executeUpdate(stmt_update_sample_with_clone_info);
+                
+                    
+                   stmt_populate_clonestorage.setInt(1, sample.getId());
+                   stmt_populate_clonestorage.setInt(2, sample.getContainerid());
+                   stmt_populate_clonestorage.setInt(3, sample.getContainerid());
+                   stmt_populate_clonestorage.setInt(4, sample.getPosition());
+                   stmt_populate_clonestorage.setString(5, storage_type);
+                   stmt_populate_clonestorage.setString(6, storage_form);
+                   
+                    stmt_populate_clonestorage.setInt(7, cloneid);
+                    DatabaseTransaction.executeUpdate(stmt_populate_clonestorage);
+                    
+                }
+                else 
+                {
+                     stmt_set_clone_to_zero.setInt(1, sample.getId());
+                     DatabaseTransaction.executeUpdate(stmt_set_clone_to_zero);
+                }
+            }
+            DatabaseTransaction.commit(conn);
+            return true;
+        } catch (Exception ex) {
+            System.out.println(ex);
+            DatabaseTransaction.rollback(conn);
+            return false;
+        } finally {
+            if ( stmt_set_clone_to_zero != null)
+                DatabaseTransaction.closeStatement(stmt_set_clone_to_zero);
+            if( stmt_insert_clone_info != null)
+                DatabaseTransaction.closeStatement(stmt_insert_clone_info);
+            if ( stmt_update_sample_with_clone_info != null)
+                DatabaseTransaction.closeStatement( stmt_update_sample_with_clone_info );
+            if ( stmt_populate_clonestorage != null)
+                DatabaseTransaction.closeStatement( stmt_populate_clonestorage);
+            DatabaseTransaction.closeConnection(conn);
+        }
+    }
+    
+     
+   private  int mapCloningStrategyByLinkerIDAndVectorID(int clone_strategy_id,
+           String  vector_name,List<CloningStrategy> cloning_strategies,
+           Connection conn) throws Exception
+   {
+       //check if exists
+       CloningStrategy cur_cloning_strategy = null;
+       for (CloningStrategy tmp: cloning_strategies)
+       {
+           if ( tmp.getId() == clone_strategy_id)
+           {cur_cloning_strategy = tmp;break;}
+       }
+       //check if exsits with new vector and the same linkers
+       for (CloningStrategy tmp: cloning_strategies)
+       {
+           if ( tmp.getClonevector().getName().equals(vector_name) &&
+                   tmp.getLinker3p().getId() == cur_cloning_strategy.getLinker3p().getId() &&
+                   tmp.getLinker5p().getId() == cur_cloning_strategy.getLinker5p().getId())
+           {
+               return tmp.getId();
+           }
+       }
+       //create new
+       CloneLinker linker5p = new CloneLinker(); linker5p.setId(cur_cloning_strategy.getLinker5p().getId());
+       CloneLinker linker3p = new CloneLinker(); linker3p.setId(cur_cloning_strategy.getLinker3p().getId());
+       String name ="exp strategy "+vector_name +"_"+cur_cloning_strategy.getLinker5p().getName()+"_"+cur_cloning_strategy.getLinker3p().getName();
+        CloningStrategy   new_cloning_strategy = new CloningStrategy(-1,
+                     name,  new CloneVector(vector_name), linker5p,  linker3p) ;
+        new_cloning_strategy.setType("destination plasmid");
+        new_cloning_strategy.insert(conn);
+        cloning_strategies.add(new_cloning_strategy) ;  
+        return new_cloning_strategy.getId();
+   }
     public int populateClonestorageTableWithContainers(List containers, String storageType, String storageForm, Connection conn) throws FlexDatabaseException, SQLException {
         String sql = "insert into clonestorage"+
         " select storageid.nextval, s.sampleid, '"+storageType+"',"+
@@ -562,12 +697,10 @@ public class SummaryTablePopulator {
     
     public static void main(String args[]) {
         //List containers = getContainers();
+
         List containers = new ArrayList();
-        containers.add(new Integer(20308));
-        containers.add(new Integer(20309));
-        containers.add(new Integer(20310));
-        containers.add(new Integer(20311));
-        
+        containers.add(new Integer(24145));
+         
         //List samples = new ArrayList();
         //samples.add(new Integer(1410486));
         
@@ -595,9 +728,9 @@ public class SummaryTablePopulator {
         } else {
             populator.sendEmail(false, containers);
         }
+
         
-        //populator.populateFailedConstructs(containers);
-        System.exit(0);
+      System.exit(0);
     }
     
     public static List getContainers() {

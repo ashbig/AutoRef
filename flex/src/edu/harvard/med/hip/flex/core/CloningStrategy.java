@@ -9,6 +9,7 @@ package edu.harvard.med.hip.flex.core;
 import edu.harvard.med.hip.flex.workflow.*;
 import static edu.harvard.med.hip.flex.workflow.Workflow.WORKFLOW_TYPE;
 import edu.harvard.med.hip.flex.database.*;
+import edu.harvard.med.hip.flex.util.*;
 import java.util.*;
 import java.sql.*;
 
@@ -394,8 +395,30 @@ public class CloningStrategy {
       
     }
     
+    public  void            insert(Connection conn) 
+            throws FlexDatabaseException
+    {
+        if (id == -1)
+            id = FlexIDGenerator.getID("strategyid");
+        String sql = "insert into cloningstrategy (strategyid, strategyname, linkerid_5p, linkerid_3p, vectorname, type   )"+
+        " values("+id+",'"+this.name+"',"+this.getLinker5p().getId()+","
+                +this.getLinker3p().getId()+",'"+this.getClonevector().getName()
+                +"','"+this.getType()+"')";
+  
+        Statement stmt = null;
+        try {
+            stmt = conn.createStatement();
+            stmt.executeUpdate(sql);
+           
+        } catch (SQLException sqlE) {
+            throw new FlexDatabaseException(sqlE.getMessage()+"\nSQL: "+sql);
+        } finally {
+            DatabaseTransaction.closeStatement(stmt);
+        }
+      
+    }
     
-    
+   
     
      
 }
