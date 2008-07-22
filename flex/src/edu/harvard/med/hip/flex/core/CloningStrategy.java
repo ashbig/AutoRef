@@ -326,7 +326,7 @@ public class CloningStrategy {
     public static int getStrategyid(int projectid, int workflowid ) throws Exception
     {
         Workflow cur_wf =new Workflow(workflowid);
-        if(cur_wf != null && cur_wf.getWorkflowType()== WORKFLOW_TYPE.TRANSFER_TO_EXPRESSION)
+        if(cur_wf != null )
         {
             
             String return_value ;
