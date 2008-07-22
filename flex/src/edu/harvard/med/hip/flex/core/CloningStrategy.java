@@ -333,12 +333,15 @@ public class CloningStrategy {
             String key =""+ projectid+ProjectWorkflowProtocolInfo.PWP_SEPARATOR+workflowid+ProjectWorkflowProtocolInfo.PWP_SEPARATOR
                     +"-1"+ProjectWorkflowProtocolInfo.PWP_SEPARATOR+"CLONING_STRATEGY_ID";
             return_value= ProjectWorkflowProtocolInfo.getInstance().getPWPProperties().get( key);
+//System.out.println("ll "+key +" "+return_value);  
             if (return_value==null)
             {
                key ="-1"+ProjectWorkflowProtocolInfo.PWP_SEPARATOR+workflowid+ProjectWorkflowProtocolInfo.PWP_SEPARATOR
                         +"-1"+ProjectWorkflowProtocolInfo.PWP_SEPARATOR+"CLONING_STRATEGY_ID";
                return_value =  ProjectWorkflowProtocolInfo.getInstance().getPWPProperties().get(key);
             }
+//System.out.println("ll "+key +" "+return_value);  
+
              if (return_value!=null)
             {
                 try {return Integer.parseInt(return_value);}catch(Exception e){ return 0;}
