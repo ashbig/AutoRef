@@ -240,6 +240,7 @@ public class GetResearcherAction extends ResearcherAction{
                     for(int i=0; i<newContainers.size(); i++) {
                         Container newContainer = (Container)newContainers.elementAt(i);
                         newContainerids.add(new Integer(newContainer.getId()));
+      System.out.println(newContainer.getId());
                     }
                    
                     //change class to allow processing of clones in different vectors into the same expression vector
