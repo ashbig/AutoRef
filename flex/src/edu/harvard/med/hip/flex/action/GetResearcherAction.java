@@ -236,25 +236,25 @@ public class GetResearcherAction extends ResearcherAction{
                 }
                 if(workflow.getWorkflowType()== WORKFLOW_TYPE.TRANSFER_TO_EXPRESSION) 
                 {
-                  /*  List newContainerids = new ArrayList();
+                    List newContainerids = new ArrayList();
                     for(int i=0; i<newContainers.size(); i++) {
                         Container newContainer = (Container)newContainers.elementAt(i);
                         newContainerids.add(new Integer(newContainer.getId()));
                     }
-                   * */
+                   
                     //change class to allow processing of clones in different vectors into the same expression vector
                     //ThreadedExpressionSummaryTablePopulator p = new ThreadedExpressionSummaryTablePopulator(newContainerids, strategyid);
-                   
+                                    
                     String key = "-1"+ProjectWorkflowProtocolInfo.PWP_SEPARATOR+
                                 workflow.getId()+ProjectWorkflowProtocolInfo.PWP_SEPARATOR+
                                 "-1"+ProjectWorkflowProtocolInfo.PWP_SEPARATOR +"VECTOR_NAME";
                     String vector_name = ProjectWorkflowProtocolInfo.getInstance().getPWPProperties().get(key);
                     ThreadedExpressionSummaryTablePopulator p = 
                            new ThreadedExpressionSummaryTablePopulator(
-                           containerids, seqContainers,  vector_name,
-                          StorageForm.GLYCEROL, StorageType.WORKING,  CloneInfo.EXPRESSION_CLONE);
-
-                    new Thread(p).start();
+                           newContainerids, vector_name,
+                           StorageForm.GLYCEROL, StorageType.WORKING,  CloneInfo.EXPRESSION_CLONE);
+                    Thread thread = new Thread(p);                    thread.start();       
+                    
                 } 
                 else 
                 {
