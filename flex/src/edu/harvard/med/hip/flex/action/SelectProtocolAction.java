@@ -79,7 +79,7 @@ public class SelectProtocolAction extends FlexAction {
             Project project = new Project(projectid);
             Workflow workflow = new Workflow(workflowid);
             request.setAttribute("workflowname", workflow.getName());
-            
+            request.setAttribute("workflow_type", workflow.getWorkflowType());
             Protocol protocol = new Protocol(processname);
             // System.out.println(protocol.getId() +"_"+ project.getId()+"_"+ workflow.getId());
             

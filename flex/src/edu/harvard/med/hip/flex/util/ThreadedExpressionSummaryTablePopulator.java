@@ -13,7 +13,8 @@ import java.util.*;
  * @author  DZuo
  */
 public class ThreadedExpressionSummaryTablePopulator extends SummaryTablePopulator implements Runnable {
-    private List m_containers;
+    private List m_storage_containers;
+    private List m_sequencing_containers;
     private String m_vector_name;
     private String m_storage_form;
     private String m_storage_type;
@@ -24,15 +25,17 @@ public class ThreadedExpressionSummaryTablePopulator extends SummaryTablePopulat
     public ThreadedExpressionSummaryTablePopulator(List containers, int strategyid) 
     {
         super();
-       m_containers = containers;
+        m_storage_containers = containers;
         this.strategyid = strategyid;
     }
     
-    public ThreadedExpressionSummaryTablePopulator(List containers, String vector_name,
+    public ThreadedExpressionSummaryTablePopulator(List containers, 
+            List seq_containers, String vector_name,
             String storage_form, String storage_type,
              String clone_type) 
     {
         this(containers, -1);
+        m_sequencing_containers=seq_containers;
         m_vector_name = vector_name ;
         m_storage_form = storage_form; 
         m_storage_type = storage_type;
@@ -54,9 +57,12 @@ public class ThreadedExpressionSummaryTablePopulator extends SummaryTablePopulat
      */
     public void run()
     {   
-        boolean result =  populateExpressionClonesWithContainers( m_containers,
+        //populates clones/clonestorage tables with new clones
+        //updates sample table for main containers
+        boolean result =  populateExpressionClonesWithContainers( m_storage_containers,
               m_vector_name,  m_storage_form,  m_storage_type,m_clone_type);
-        sendEmail(result, m_containers);
+       //sequencing plates are not expected
+        sendEmail(result, m_storage_containers);
          /*
         if(populateExpressionClonesWithContainers(containers, strategyid)) {
             sendEmail(true, containers);
@@ -106,7 +112,7 @@ public class ThreadedExpressionSummaryTablePopulator extends SummaryTablePopulat
          String vector_name = edu.harvard.med.hip.flex.workflow.ProjectWorkflowProtocolInfo.getInstance().getPWPProperties().get(key);
          ThreadedExpressionSummaryTablePopulator populator = 
                            new ThreadedExpressionSummaryTablePopulator(
-                           containers1,  vector_name,
+                           containers1,  null,vector_name,
                            edu.harvard.med.hip.flex.core.StorageForm.GLYCEROL, 
                            edu.harvard.med.hip.flex.core.StorageType.WORKING, 
                            

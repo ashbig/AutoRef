@@ -5,6 +5,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 
+<%@ page import="edu.harvard.med.hip.flex.workflow.*" %>
 <html>
 <head>
 <title><bean:message key="flex.name"/> : Create Process Plate </title>
@@ -38,11 +39,20 @@
 
     <tr>
     <td class="prompt">Generate rearrayed sequencing plate at the same time?</td>
-    <td><html:select property="isSeqPlates">
+    <logic:equal name="workflow_type" value="<%= Workflow.WORKFLOW_TYPE.TRANSFER_TO_EXPRESSION.toString() %>">
+        <td><html:select property="isSeqPlates" disabled="true">
+        <option name="Yes" />Yes
+        <option name="No" selected/>No
+        </html:select>
+    </td>
+    </logic:equal>
+    <logic:notEqual name="workflow_type" value="<%= Workflow.WORKFLOW_TYPE.TRANSFER_TO_EXPRESSION.toString() %>">
+        <td><html:select property="isSeqPlates">
         <option name="Yes"/>Yes
         <option name="No"/>No
         </html:select>
     </td>
+    </logic:notEqual>
     </tr>
 
     <tr>
