@@ -94,7 +94,7 @@ public class GetResearcherAction extends ResearcherAction{
         Vector sampleLineageSet = (Vector)request.getSession().getAttribute("EnterSourcePlateAction.sampleLineageSet");
         SubProtocol subprotocol = (SubProtocol)request.getSession().getAttribute("EnterSourcePlateAction.subprotocol");
         String executionStatus = edu.harvard.med.hip.flex.process.Process.SUCCESS;
-        
+ // System.out.println("nc "+newContainers.size());      
         if(workflowid == Workflow.EXPRESSION_WORKFLOW) {
             if(newContainers == null || oldContainers == null ||
             protocol == null || sampleLineageSet == null) {
@@ -116,6 +116,7 @@ public class GetResearcherAction extends ResearcherAction{
             // Insert the new containers and samples into database.
             for(int i=0; i<newContainers.size(); i++) {
                 Container newContainer = (Container)newContainers.elementAt(i);
+  //System.out.println("nc "+newContainer.getLabel());      
                 newContainer.insert(conn);
             }
             
@@ -187,9 +188,10 @@ public class GetResearcherAction extends ResearcherAction{
             for(int i=0; i<newContainers.size(); i++) {
                 Container newContainer = (Container)newContainers.elementAt(i);
                 String status = PrintLabel.execute(newContainer.getLabel());
-                //System.out.println("Printing barcode: "+status);
+     //           System.out.println("Printing barcode: "+status);
             }
-            
+ //System.out.println("nc "+BARCODEFILE);      
+             
             //Print the barcode to the file.
             if(writeBarcode == 1) {
                 PrintWriter pr = new PrintWriter(new BufferedWriter(new FileWriter(BARCODEFILE)));
@@ -215,7 +217,7 @@ public class GetResearcherAction extends ResearcherAction{
             if(Protocol.GENERATE_GLYCEROL_PLATES.equals(protocol.getProcessname()))
             {
                 int strategyid = CloningStrategy.getStrategyid(project.getId(), workflow.getId());  
-         
+//System.out.println(strategyid);         
                 List containerids = new ArrayList();
                 List seqContainers = new ArrayList();
                 for(int i=0; i<newContainers.size(); i++) {
@@ -234,11 +236,12 @@ public class GetResearcherAction extends ResearcherAction{
                 }
                 if(workflow.getWorkflowType()== WORKFLOW_TYPE.TRANSFER_TO_EXPRESSION) 
                 {
-                    List newContainerids = new ArrayList();
+                  /*  List newContainerids = new ArrayList();
                     for(int i=0; i<newContainers.size(); i++) {
                         Container newContainer = (Container)newContainers.elementAt(i);
                         newContainerids.add(new Integer(newContainer.getId()));
                     }
+                   * */
                     //change class to allow processing of clones in different vectors into the same expression vector
                     //ThreadedExpressionSummaryTablePopulator p = new ThreadedExpressionSummaryTablePopulator(newContainerids, strategyid);
                    
@@ -248,7 +251,7 @@ public class GetResearcherAction extends ResearcherAction{
                     String vector_name = ProjectWorkflowProtocolInfo.getInstance().getPWPProperties().get(key);
                     ThreadedExpressionSummaryTablePopulator p = 
                            new ThreadedExpressionSummaryTablePopulator(
-                           newContainerids,  vector_name,
+                           containerids, seqContainers,  vector_name,
                           StorageForm.GLYCEROL, StorageType.WORKING,  CloneInfo.EXPRESSION_CLONE);
 
                     new Thread(p).start();
