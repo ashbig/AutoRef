@@ -78,8 +78,6 @@
               
  <% if (user_level >= RESEARCHER){%>
  <div id="myMenuMain"> <a href="/FLEX/menu_Query.jsp" target="display">Query</a></div><%}%>               
-<% if (user_level == CUSTOMER){%>    
- <div id="myMenuMain"> <a href="/FLEX/Help.jsp" target="display">Help</a>          </div><%}%>
 
  <div id="myMenuMain"> <a href="/FLEX/Logout.do" target="_top">Logout</a></div>
  <hr>

@@ -252,7 +252,7 @@ padding-right: 10px;
 
 #myMenuMain a:link {
   background-color:#9bbad6 ;
-  	COLOR: #000000; TEXT-DECORATION: none; Font-Size:10px; font-weight:normal;
+  	COLOR: #000000; TEXT-DECORATION: none; Font-Size:12px; font-weight:normal;
 	border-top: solid #ffffff 1px;
   
 	
@@ -261,20 +261,20 @@ padding-right: 10px;
 #myMenuMain a:visited {
   background-color: #9bbad6;
   color: black;
-  	COLOR: #000000; TEXT-DECORATION: none; Font-Size:10px; 
+  	COLOR: #000000; TEXT-DECORATION: none; Font-Size:12px; 
 	border-top: solid #ffffff 1px;
 }
 
 #myMenuMain a:hover {
   background-color: #54A4DE;
   color: white;
- 	 TEXT-DECORATION: none; Font-Size:10px; font-weight:bold;
+ 	 TEXT-DECORATION: none; Font-Size:12px; font-weight:bold;
 	border-top: solid #ffffff 1px;
 }
 
 #myMenuMain a:active {
   background-color: #9bbad6;
   color: white;
- 	COLOR: #000000; TEXT-DECORATION: none; Font-Size:10px; 
+ 	COLOR: #000000; TEXT-DECORATION: none; Font-Size:12px; 
 	border-top: solid #ffffff 1px;
 }
