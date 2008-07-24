@@ -12,109 +12,82 @@
 <%@ include file="define_user_access_level.jsp" %>
 <html>
 <head>
-    <style type="text/css">
-dt { font-weight: bold; font-size:small;text-indent: 0.5em;}
-dd { font-weight: bold; font-size:small;text-indent: -1em; text-align: left;white-space: nowrap}
+     <LINK href="left_menu_style.css" type="text/css" rel="stylesheet">
 
-ul {
-	list-style: none;
-	margin-left: 0;
-	padding-left: 0.5em;
-	text-indent: -0.5em;
-	
-        font-weight: bold; font-size:small;
-       text-align: left;
-       white-space: nowrap
-	}
-        
-li {
-	list-style: none;
-	margin-left: 0;
-	padding-left: 0.5em;
-	text-indent: -0.5em;
-	
-        font-weight: bold; font-size:small;
-       text-align: left;
-       white-space: nowrap
-	}
-    
-</style>
-    <LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
+ <!--  <LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>-->
 </head>
 
+<body  bgcolor="#9bbad6"  >
 
-<body bgcolor="#9bbad6">
-  <div align="center"><h3><bean:message key="flex.name"/></h3>    </div>
-  <hr>
-<ul>
-    <li><p><a href="/FLEX/overview.jsp" target="display">Home</a>  </li>
+<table width="100%"   align="center" cellpadding="2" cellspacing="2" border="0">
+<tr><td><div align="center"><h3><bean:message key="flex.name"/></h3><hr>    </div>
+  
+
+
+<div id="myMenuMain">
+<a href="/FLEX/overview.jsp" target="display">Home</a> <span>|</span>
+</div>
+
+
+ 
 <% if (user_level >= RESEARCHER){%>    
-<li> <a href="/FLEX/AddItems.jsp" target="display">Add</a></li><%}%>     
+<div id="myMenuMain">
+    <a href="/FLEX/AddItems.jsp" target="display" >Add</a><span>|</span>
+</div><%}%>
 
  <% if (user_level >= RESEARCHER){%> 
- <li>Process</li>
- <ul>
+ <div class="navheader">Process</div>
+  
      <% if (user_level >= WADMIN){%> 
-     <li><a href="/FLEX/GetProjects.do?forwardName=SPECIAL_OLIGO_ORDER" target="display">Special Oligo Order</a></li><%}%>
+<div id="myMenu"><a href="/FLEX/GetProjects.do?forwardName=SPECIAL_OLIGO_ORDER" target="display">Special Oligo Order</a></div><%}%>
      <% if (user_level >= RESEARCHER){%>      
-     <li><a href="/FLEX/SetReceiveDate.do" target="display">Receive Oligo Orders</a></li><%}%>
+<div id="myMenu"><a href="/FLEX/SetReceiveDate.do" target="display">Receive Oligo Orders</a></div><%}%>
      <% if (user_level >= RESEARCHER){%>      
-     <li><a href="/FLEX/GetProjects.do?forwardName=CREATE_PROCESS_PLATES" target="display">Create Process Plates</a></li><%}%>
+<div id="myMenu"><a href="/FLEX/GetProjects.do?forwardName=CREATE_PROCESS_PLATES" target="display">Create Process Plates</a></div><%}%>
      <% if (user_level >= RESEARCHER){%>      
-     <li><a href="/FLEX/GetProjects.do?forwardName=ENTER_RESULT" target="display">Enter Process Results</a></li><%}%>
+<div id="myMenu"><a href="/FLEX/GetProjects.do?forwardName=ENTER_RESULT" target="display">Enter Process Results</a></div><%}%>
      <% if (user_level >= WADMIN){%>    
-     <li><a href="/FLEX/RearraySelection.jsp" target="display">Rearray</a></li><%}%>
+<div id="myMenu"><a href="/FLEX/RearraySelection.jsp" target="display">Rearray</a></div><%}%>
      <% if (user_level >= RESEARCHER){%>    
-     <li><a href="/FLEX/ExpressionCloneEntry.jsp" target="display">Expression Clones</a></li><%}%>
+<div id="myMenu"><a href="/FLEX/ExpressionCloneEntry.jsp" target="display">Expression Clones</a></div><%}%>
      <% if (user_level >= RESEARCHER){%>    
-     <li><a href="/FLEX/GenerateMultipleGlycerolInput.jsp" target="display">Create Multiple Glycerol Stocks</a></li><%}%>   
+<div id="myMenu"><a href="/FLEX/GenerateMultipleGlycerolInput.jsp" target="display">Create Multiple Glycerol Stocks</a></div><%}%>   
      <% if (user_level >= RESEARCHER){%>    
-     <li><a href="/FLEX/GetProjects.do?forwardName=PLATE_CONDENSATION" target="display">Plate Condensation</a></li><%}%>
+<div id="myMenu"><a href="/FLEX/GetProjects.do?forwardName=PLATE_CONDENSATION" target="display">Plate Condensation</a></div><%}%>
      <% if (user_level >= WADMIN){%>    
-     <li><a href="/FLEX/ACEtoFLEXImporterInput.jsp" target="display">ACE to FLEX data transfer</a></li><%}%>           
+<div id="myMenu"><a href="/FLEX/ACEtoFLEXImporterInput.jsp" target="display">ACE to FLEX data transfer</a></div><%}%>           
      <%}%>
- </ul>
+ 
 <% if (user_level >= COLLABORATOR){%>  
-<li>History</li>
-     <ul>
-     <li> <a href="/FLEX/ContainerScan.jsp?title=Container Process History" target="display">Container History</a></li>
-     <li><a href="/FLEX/QuerySequenceHistory.do" target="display">Clone History</a></li>
-     <li><a href="/FLEX/QueryStorageCloneInput.jsp" target="display">Clone Storage</a></li>
+<div class="navheader">History</div>
+  <div id="myMenu"> 
+     <a href="/FLEX/ContainerScan.jsp?title=Container Process History" target="display">Container History</a>
+     <a href="/FLEX/QuerySequenceHistory.do" target="display">Clone History</a>
+     <a href="/FLEX/QueryStorageCloneInput.jsp" target="display">Clone Storage</a>
+ </div>
      <%}%>
- </ul>
-   
+ 
  <% if (user_level >= RESEARCHER){%>   
- <li> <a href="/FLEX/ViewItemsMenuPage.jsp" target="display">View</a></li><%}%>     
+ <div id="myMenuMain">  <a href="/FLEX/ViewItemsMenuPage.jsp" target="display">View</a>
+ </div><%}%>    
 
- <!--<li>View</li>
-  <ul> 
-     <li><a href="/FLEX/ContainerScan.jsp?forwardName=<%= Constants.VIEW_CONTAINER %>&amp;title=Container Details" target="display">Container Details</a></li>
-     <li><a href="/FLEX/GetProjects.do?forwardName=<%= Constants.NEW_PLATE_LABELS%>" target="display">Print Submitted Plates</a></li>
-     <li><a href="/FLEX/ViewItems.do?forwardName=<%= Constants.VIEW_LINKERS%>" target="display">Linker</a></li>
-     <li><a href="/FLEX/ViewItems.do?forwardName=<%= Constants.VIEW_VECTORS%>" target="display">Vectors</a></li>
-     <li><a href="/FLEX/ViewItems.do?forwardName=<%= Constants.VIEW_CLONINGSTRATEGIES%>" target="display">Cloning Strategies</a></li>
-     < } %>-->
-     
- </ul>           
-                
-<% if (user_level >= RESEARCHER){%>    
-<li><a href="/FLEX/menu_MGCProject.jsp" target="display">MGC Project</a></li><%}%>
+ <% if (user_level >= RESEARCHER){%>    
+<div id="myMenuMain"> <a href="/FLEX/menu_MGCProject.jsp" target="display">MGC Project</a></div><%}%>
                 
           
               
  <% if (user_level >= RESEARCHER){%>
- <li><a href="/FLEX/menu_Query.jsp" target="display">Query</a></li><%}%>               
+ <div id="myMenuMain"> <a href="/FLEX/menu_Query.jsp" target="display">Query</a></div><%}%>               
 <% if (user_level == CUSTOMER){%>    
- <li><a href="/FLEX/Help.jsp" target="display">Help</a>          </li><%}%>
+ <div id="myMenuMain"> <a href="/FLEX/Help.jsp" target="display">Help</a>          </div><%}%>
 
- <li><a href="/FLEX/Logout.do" target="_top">Logout</a></li>
- <hr><li>
-     <address><a href="mailto:HIP_Informatics@hms.harvard.edu">FLEXGene Support</a></address>
- </li>
-</ul>
+ <div id="myMenuMain"> <a href="/FLEX/Logout.do" target="_top">Logout</a></div>
+ <hr>
+     <address><a href="mailto:HIP_Informatics@hms.harvard.edu"><b>FLEXGene Support</b></a></address>
+
 <small>** This system and the underlying database was built in conjunction with
 <a href="http://www.3rdmill.com" target="_blank">3rd Millennium Inc.</a> **</small>
-
+</td></tr></table>
 
 
 </body>

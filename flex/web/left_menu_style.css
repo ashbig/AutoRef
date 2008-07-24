@@ -1,0 +1,280 @@
+/* initialise behaviors support for mozilla */
+head {-moz-binding: url(http://www.jslibrary.org/JSLibrary/starlight/moz-behaviors.xml#block-netscape6);}
+
+
+/*---general---*/
+
+A {
+	COLOR: #0000FF; TEXT-DECORATION: underline; Font-Size:12px;
+}
+A:visited {
+	COLOR: #666666;   Font-Size:12px;white-space: nowrap
+
+}
+A:active {
+	COLOR: #666666;   Font-Size:12px;white-space: nowrap
+}
+A:hover {
+	COLOR: #0000FF; TEXT-DECORATION: NONE;  Font-Size:12px;white-space: nowrap
+}
+
+.linktext {
+	COLOR: #0000FF; 
+	Font-Size:10px;font-weight:bold;
+}
+
+A.inventory {
+	COLOR: #ffffff; TEXT-DECORATION: underline; Font-Size:12px; font-weight:bold;
+}
+A.inventory:visited {
+	COLOR: #ffffff; TEXT-DECORATION: none;Font-Size:12px;
+}
+A.inventory:active {
+	COLOR: #ffffff;TEXT-DECORATION: none;Font-Size:12px;
+}
+A.inventory:hover {
+	COLOR: #ffffff; TEXT-DECORATION: none;Font-Size:12px;
+	}
+	
+A.thinribbon_nav:link {
+	COLOR: #ffffff; TEXT-DECORATION: underline; Font-Size:12px; font-weight:bold;
+}
+A.thinribbon_nav:visited {
+	COLOR: #ffffff; TEXT-DECORATION: none;Font-Size:12px;
+}
+A.thinribbon_nav:active {
+	COLOR: #ffffff;TEXT-DECORATION: none;Font-Size:12px;
+}
+A.thinribbon_nav:hover {
+	COLOR: #ffffff; TEXT-DECORATION: none;Font-Size:12px;
+	}
+	
+.article_header {
+	COLOR: #000000; TEXT-DECORATION: none; Font-Size:12px; font-weight:bold;
+}
+
+.thinribbonbox {
+
+text-align:center;
+background-color:#669933;
+color:#ffffff;
+padding-top:0.5em;
+padding-bottom:0.5em;
+	Font-Size:12px;font-weight:bold;
+}
+
+.icombox {
+padding-bottom:0.5em;
+padding-top:0.5em;
+padding-left:0.5em;
+padding-right:0.5em;
+
+}
+
+
+.icomheader {
+color:#ffffff;
+
+}
+
+.sitebox {
+
+border: solid #0021B5 1px;
+
+}
+
+
+.category_header {
+	COLOR: #000000; 
+	Font-Size:12px;font-weight:bold;
+}
+
+.thumbnails {
+	 Font-Size:10px;
+	COLOR: #000000;  font-weight:bold;
+	}
+
+.thumbnails_text {
+	 Font-Size:12px;
+	COLOR: #000000;  
+	}
+
+.header {
+	 Font-Size:13px;
+	COLOR: #ffffff;  font-weight:bold;
+	padding-top: 0.2em;
+  padding-bottom: 0.2em;
+  text-align:center;
+}
+
+.ciu  {
+padding-top: 0.1em;
+  padding-bottom: 0.1em;
+padding-right: 0.1em;
+  padding-left: 0.1em;
+  border: solid #000000 1px;
+	 Font-Size:10px;
+	 font-weight:normal;
+}
+
+.sidenav  {
+
+  border: solid #666 1px;
+   
+}
+
+
+  
+
+td { 
+ 	COLOR: #000000; 
+	TEXT-DECORATION: none; 
+	Font-Size:12px; 
+  }
+
+.tagline {
+
+ FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif;
+	 Font-Size:12px;
+	 padding-top: 10px;
+  padding-bottom: 10px;
+padding-right: 10px;
+  padding-left: 10px;
+	 
+	 }
+
+.mainheader {
+	 FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif;
+	 Font-Size:23px;
+	COLOR: #000000;  font-weight:bold;
+	padding-top: 0.2em;
+  padding-bottom: 0.2em;
+  padding-left: 0.5em;
+}
+
+.mainheadergreen {
+	 FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif;
+	 Font-Size:23px;
+	COLOR: #2D5A00;  font-weight:bold;
+	padding-top: 0.2em;
+  padding-bottom: 0.2em;
+  padding-left: 0.5em;
+}
+
+.navheader {
+	 Font-Size:12px;
+	font-weight:bold;
+	padding-top: 0.2em;
+  padding-bottom: 0.2em;
+   padding-left: 0.4em;
+   background-color:#9bbad6;
+   border-top: solid #ffffff 1px;
+  
+}
+
+
+
+/*---navigation control---*/
+
+#myMenu { 
+  width: 100%;
+  background-color:#ffffff;
+  	
+}
+
+#myMenu span {
+  display: none;
+  visibility: hidden;
+}
+
+#myMenu a {
+  display: block;
+  padding-right: 0.4em;
+  padding-left: 0.5em;
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
+  text-decoration: none;
+  padding-left: 0.8em;
+}
+
+#myMenu a:link {
+  background-color:#9bbad6 ;
+  	COLOR: blue; TEXT-DECORATION: none; Font-Size:12px; font-weight:normal;
+	border-top: solid #ffffff 1px;
+  
+	
+}
+
+#myMenu a:visited {
+  background-color: #9bbad6;
+  color: black;
+  	COLOR: blue; TEXT-DECORATION: none; Font-Size:12px; 
+	border-top: solid #ffffff 1px;
+}
+
+#myMenu a:hover {
+  background-color: #54A4DE;
+  color: white;
+ 	 TEXT-DECORATION: none; Font-Size:12px; font-weight:bold;
+	border-top: solid #ffffff 1px;
+}
+
+#myMenu a:active {
+  background-color: #9bbad6;
+  color: white;
+ 	COLOR: #000000; TEXT-DECORATION: none; Font-Size:12px; 
+	border-top: solid #ffffff 1px;
+}
+
+
+
+
+#myMenuMain { 
+  width: 100%;
+  background-color:#ffffff;
+   font-weight:bold;	
+}
+
+#myMenuMain span {
+  display: none;
+  visibility: hidden;
+}
+
+#myMenuMain a {
+  display: block;
+  padding-right: 0.4em;
+  padding-left: 0.5em;
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
+  text-decoration: none;
+  
+}
+
+#myMenuMain a:link {
+  background-color:#9bbad6 ;
+  	COLOR: #000000; TEXT-DECORATION: none; Font-Size:10px; font-weight:normal;
+	border-top: solid #ffffff 1px;
+  
+	
+}
+
+#myMenuMain a:visited {
+  background-color: #9bbad6;
+  color: black;
+  	COLOR: #000000; TEXT-DECORATION: none; Font-Size:10px; 
+	border-top: solid #ffffff 1px;
+}
+
+#myMenuMain a:hover {
+  background-color: #54A4DE;
+  color: white;
+ 	 TEXT-DECORATION: none; Font-Size:10px; font-weight:bold;
+	border-top: solid #ffffff 1px;
+}
+
+#myMenuMain a:active {
+  background-color: #9bbad6;
+  color: white;
+ 	COLOR: #000000; TEXT-DECORATION: none; Font-Size:10px; 
+	border-top: solid #ffffff 1px;
+}
