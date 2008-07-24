@@ -169,7 +169,7 @@ padding-right: 10px;
    padding-left: 0.4em;
    background-color:#9bbad6;
    border-top: solid #ffffff 1px;
-  
+  white-space: nowrap
 }
 
 
@@ -179,7 +179,7 @@ padding-right: 10px;
 #myMenu { 
   width: 100%;
   background-color:#ffffff;
-  	
+  	white-space: nowrap
 }
 
 #myMenu span {
@@ -195,12 +195,15 @@ padding-right: 10px;
   padding-bottom: 0.2em;
   text-decoration: none;
   padding-left: 0.8em;
+  white-space: nowrap
+  
 }
 
 #myMenu a:link {
   background-color:#9bbad6 ;
   	COLOR: blue; TEXT-DECORATION: none; Font-Size:12px; font-weight:normal;
 	border-top: solid #ffffff 1px;
+	white-space: nowrap
   
 	
 }
@@ -210,6 +213,7 @@ padding-right: 10px;
   color: black;
   	COLOR: blue; TEXT-DECORATION: none; Font-Size:12px; 
 	border-top: solid #ffffff 1px;
+	white-space: nowrap
 }
 
 #myMenu a:hover {
@@ -217,6 +221,7 @@ padding-right: 10px;
   color: white;
  	 TEXT-DECORATION: none; Font-Size:12px; font-weight:bold;
 	border-top: solid #ffffff 1px;
+	white-space: nowrap
 }
 
 #myMenu a:active {
@@ -224,6 +229,7 @@ padding-right: 10px;
   color: white;
  	COLOR: #000000; TEXT-DECORATION: none; Font-Size:12px; 
 	border-top: solid #ffffff 1px;
+	white-space: nowrap
 }
 
 
@@ -252,7 +258,7 @@ padding-right: 10px;
 
 #myMenuMain a:link {
   background-color:#9bbad6 ;
-  	COLOR: #000000; TEXT-DECORATION: none; Font-Size:12px; font-weight:normal;
+  	COLOR: #000000; TEXT-DECORATION: none; Font-Size:12px; font-weight:bold;
 	border-top: solid #ffffff 1px;
   
 	
@@ -261,7 +267,7 @@ padding-right: 10px;
 #myMenuMain a:visited {
   background-color: #9bbad6;
   color: black;
-  	COLOR: #000000; TEXT-DECORATION: none; Font-Size:12px; 
+  	COLOR: #000000; TEXT-DECORATION: none; Font-Size:12px; font-weight:bold;
 	border-top: solid #ffffff 1px;
 }
 
@@ -275,6 +281,6 @@ padding-right: 10px;
 #myMenuMain a:active {
   background-color: #9bbad6;
   color: white;
- 	COLOR: #000000; TEXT-DECORATION: none; Font-Size:12px; 
+ 	COLOR: #000000; TEXT-DECORATION: none; Font-Size:12px; font-weight:bold;
 	border-top: solid #ffffff 1px;
 }
