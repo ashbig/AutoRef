@@ -45,6 +45,7 @@ public class CloneRelationsReport extends ReportDefinition
      private boolean isVector = false;
      private boolean isConstructType = false;
      private boolean isFlexSequenceStatus = false;
+     private boolean isClonesInfoOnly   = false;
      
     public CloneRelationsReport()
     {
@@ -80,10 +81,13 @@ public class CloneRelationsReport extends ReportDefinition
         {
               switch (column )  
               {
-                  case  VECTOR: case STRATEGY_NAME:{isVector=true;break;}
-                  case CONSTRUCT_TYPE: {isConstructType=true;break;}
-                  case FLEXSEQUENCE_STATUS:{ isFlexSequenceStatus=true;break;}
-                 
+                  case  VECTOR: case STRATEGY_NAME:{isVector=true;isClonesInfoOnly= true;break;}
+                  case CONSTRUCT_TYPE: {isConstructType=true;isClonesInfoOnly= true;break;}
+                  case FLEXSEQUENCE_STATUS:{ isFlexSequenceStatus=true;isClonesInfoOnly= true;break;}
+                  
+                  case PLATE_LABEL :case WELL_NUMBER: case STORAGE_TYPE :
+                  case STORAGE_FORM: case FLEXSEQUENCE_ID : 
+                  { isClonesInfoOnly= true; break;}
               }
           }
          
@@ -166,7 +170,7 @@ case VECTOR:
               query_fields = query_fields.substring(0, query_fields.length() - 1);
            sql = new StringBuffer();sql.append(query_fields);
            
-           if  ( ! isVector && !isConstructType && !isFlexSequenceStatus )
+           if  ( ! isClonesInfoOnly )
           {
               sql.append(" from clones c where mastercloneid in (");
               sql.append(master_clone_id);
