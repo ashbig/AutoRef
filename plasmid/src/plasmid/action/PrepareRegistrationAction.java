@@ -9,10 +9,8 @@ package plasmid.action;
 import java.util.*;
 import java.io.*;
 import java.sql.*;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionError;
@@ -20,10 +18,9 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionServlet;
-import org.apache.struts.util.MessageResources;
 
 import plasmid.Constants;
+import plasmid.coreobject.Institution;
 import plasmid.database.DatabaseManager.*;
 import plasmid.database.*;
 
@@ -75,6 +72,13 @@ public class PrepareRegistrationAction extends Action {
         List groups = DefTableManager.getVocabularies("usergroup", "usergroup");
         List pis = UserManager.getAllPis();
         
+        List members = DefTableManager.getVocabularies("Institution", "ismember", "Name", Institution.ISMEMBER_YES);
+        List us = UserManager.getInstitutions(Institution.CATEGORY_US_INSTITUTION, Institution.ISMEMBER_NO);
+        List international = UserManager.getInstitutions(Institution.CATEGORY_INT_INSTITUTION, Institution.ISMEMBER_NO, true);
+        List government = UserManager.getInstitutions(Institution.CATEGORY_GOVERNMENT, Institution.ISMEMBER_NO);
+        List company = UserManager.getInstitutions(Institution.CATEGORY_COMPANY, Institution.ISMEMBER_NO);
+        List categories = Institution.getInstitutionCategory();
+        
         if(pis == null) {
             errors.add(ActionErrors.GLOBAL_ERROR,
                 new ActionError("error.database"));
@@ -84,7 +88,13 @@ public class PrepareRegistrationAction extends Action {
         
         request.setAttribute("groups", groups);
         request.setAttribute("pis", pis);
-
+        request.setAttribute("members", members);
+        request.setAttribute("us", us);
+        request.setAttribute("international", international);
+        request.setAttribute("government", government);
+        request.setAttribute("company", company);
+        request.setAttribute("categories", categories);
+        
         return (mapping.findForward("success"));        
     }    
 }

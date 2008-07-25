@@ -22,6 +22,13 @@ public class PI {
     public PI() {
     }
     
+    public PI(String name, String firstname, String lastname, String email) {
+        this.name = name;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.email = email;
+    }
+    
     public PI(String name, String firstname, String lastname, String institution, String department, String email) {
         this.name = name;
         this.firstname = firstname;
@@ -38,11 +45,11 @@ public class PI {
     public String getDepartment() {return department;}
     public String getEmail() {return email;}
     
-    public void setName(String s) {this.name = name;}
-    public void setFirstname(String s) {this.firstname = firstname;}
-    public void setLastname(String s) {this.lastname = lastname;}
-    public void setInstitution(String s) {this.institution = institution;}
-    public void setDepartment(String s) {this.department = department;}
+    public void setName(String s) {this.name = s;}
+    public void setFirstname(String s) {this.firstname = s;}
+    public void setLastname(String s) {this.lastname = s;}
+    public void setInstitution(String s) {this.institution = s;}
+    public void setDepartment(String s) {this.department = s;}
     public void setEmail(String s) {this.email = s;}
     
     public String getNameEmail() {
@@ -50,6 +57,12 @@ public class PI {
     }
     
     public String getNameInstitution() {
-        return name+" ("+institution+")";
+        String s = email;
+        if(email != null) {
+            int i = email.indexOf('@');
+            if(i>0)
+                s = email.substring(i+1);
+        }
+        return name+" ("+s+")";
     }
 }

@@ -51,15 +51,15 @@
     </td>
   </tr>
   <tr class="formlabel"> 
-    <td width="22%" align="left" valign="baseline">Institution:</td>
+    <td width="22%" align="left" valign="baseline">*PI Institution or Company Name:</td>
     <td width="78%" align="left" valign="baseline"> 
         <bean:write name="registrationForm" property="institution"/>
     </td>
   </tr>
   <tr class="formlabel"> 
-    <td width="22%" align="left" valign="baseline">Department:</td>
+    <td width="22%" align="left" valign="baseline">*Category:</td>
     <td width="78%" align="left" valign="baseline"> 
-        <bean:write name="registrationForm"  property="department"/>
+        <bean:write name="registrationForm" property="category"/>
     </td>
   </tr>
   <logic:notEqual name="registrationForm"  property="piname" value="">
@@ -87,15 +87,9 @@
           </td>
         </tr>
         <tr class="formlabel"> 
-          <td class="formlabel">*Institution:</td>
+          <td class="formlabel"> *Email:</td>
           <td>
-             <bean:write name="registrationForm" property="piinstitution"/>
-          </td>
-        </tr>
-        <tr class="formlabel"> 
-          <td class="formlabel">*Department:</td>
-          <td>
-             <bean:write name="registrationForm" property="pidepartment"/>
+             <bean:write name="registrationForm" property="piemail"/>
           </td>
         </tr>
       </table></td>

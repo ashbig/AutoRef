@@ -31,46 +31,87 @@
 <html:errors/>
 <table width="100%" border="0">
   <tr class="formlabel"> 
-    <td width="22%" align="left" valign="baseline">*First Name:</td>
-    <td width="78%" align="left" valign="baseline"> 
+    <td width="30%" align="left" valign="baseline">*First Name:</td>
+    <td width="70%" align="left" valign="baseline"> 
         <html:text maxlength="50" property="firstname" size="30" styleClass="text"/>
     </td>
   </tr>
   <tr class="formlabel"> 
-    <td width="22%" align="left" valign="baseline">*Last Name:</td>
-    <td width="78%" align="left" valign="baseline"> 
+    <td width="30%" align="left" valign="baseline">*Last Name:</td>
+    <td width="70%" align="left" valign="baseline"> 
         <html:text maxlength="50" property="lastname" size="30" styleClass="text"/>
     </td>
   </tr>
   <tr class="formlabel"> 
-    <td width="22%" align="left" valign="baseline">*Email:</td>
-    <td width="78%" align="left" valign="baseline"> 
+    <td width="30%" align="left" valign="baseline">*Email:</td>
+    <td width="70%" align="left" valign="baseline"> 
         <html:text maxlength="50" property="email" size="40" styleClass="text"/>
     </td>
   </tr>
   <tr class="formlabel"> 
-    <td width="22%" align="left" valign="baseline">*Phone:</td>
-    <td width="78%" align="left" valign="baseline"> 
+    <td width="30%" align="left" valign="baseline">*Phone:</td>
+    <td width="70%" align="left" valign="baseline"> 
         <html:text maxlength="50" property="phone" size="40" styleClass="text"/>
     </td>
   </tr>
   <tr class="formlabel"> 
-    <td width="22%" align="left" valign="baseline">Institution:</td>
-    <td width="78%" align="left" valign="baseline"> 
-        <html:text maxlength="250" property="institution" size="50" styleClass="text"/>
+    <td width="30%" align="left" valign="top">*PI Institution or Company Name:</td>
+    <td width="70%" align="left" valign="baseline"> 
+    <table width="100%" border="0" bordercolor="#000000">
+        <tr>
+            <td class="formlabel" colspan="2">Expedited MTA Member: [<a class="text" href="memberinfo.html" target="_blank">i</a>]</td>
+        </tr>
+        <tr>
+            <td class="text" colspan="2">
+                <html:select property="institution1" styleClass="text">
+                    <html:option value="">-- Please Select --</html:option>
+                    <html:options name="members"/>
+                </html:select>
+            </td>
+        </tr>
+        <tr>
+            <td class="formlabel" colspan="2">Non Member: [<a class="text" href="nonmemberinfo.html" target="_blank">i</a>]</td>
+        </tr>
+        <tr>
+            <td class="text" colspan="2">
+                <html:select property="institution2" styleClass="text">
+                    <html:option value="">---------- US Institutions ----------</html:option>
+                    <html:options name="us"/>
+                    <html:option value="">---------- Government ----------</html:option>
+                    <html:options name="government"/>
+                    <html:option value="">---------- International Institutions ----------</html:option>
+                    <html:options name="international"/>
+                    <html:option value="">---------- Companies ----------</html:option>
+                    <html:options name="company"/>
+                </html:select>
+            </td>
+        </tr>
+        <tr>
+            <td class="formlabel" colspan="2">Other Institution (not listed above):</td>
+        </tr>
+        <tr>
+            <td class="text" colspan="2">
+                <html:text maxlength="250" property="institution3" size="100" styleClass="text"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="formlabel">Choose category:</td>
+            <td class="text">
+                <html:select property="category" styleClass="text">
+                    <html:option value="">-- Please Select --</html:option>
+                    <html:options name="categories"/>
+                </html:select>            
+            </td>
+        </tr>
+    </table>
     </td>
   </tr>
+  <tr></tr>
   <tr class="formlabel"> 
-    <td width="22%" align="left" valign="baseline">Department:</td>
-    <td width="78%" align="left" valign="baseline"> 
-        <html:text maxlength="100" property="department" size="50" styleClass="text"/>
-    </td>
-  </tr>
-  <tr class="formlabel"> 
-    <td width="22%" align="left" valign="baseline">Please choose your PI:<br>
+    <td width="30%" align="left" valign="baseline">Please choose your PI:<br>
         (*PI is required for HIP member, DF/HCC member, Harvard affiliate and Other academic groups)
     </td>
-    <td width="78%" align="left" valign="baseline"> 
+    <td width="70%" align="left" valign="baseline"> 
         <html:select property="piname" styleClass="text">
             <html:option value=""/>
             <html:options collection="pis" property="nameInstitution"/>
@@ -78,9 +119,9 @@
     </td>
   </tr>
   <tr class="formlabel"> 
-    <td width="22%" align="left" valign="top">If you don't find your PI from the 
+    <td width="30%" align="left" valign="top">If you don't find your PI from the 
       above list, please enter your PI information here:</td>
-    <td width="78%" align="left" valign="baseline"> <table width="100%" border="0" bordercolor="#000000">
+    <td width="70%" align="left" valign="baseline"> <table width="100%" border="0" bordercolor="#000000">
         <tr> 
           <td width="25%" class="formlabel"> *First Name:</td>
           <td width="75%">
@@ -99,25 +140,14 @@
              <html:text maxlength="50" property="piemail" size="30" styleClass="text"/>
           </td>
         </tr>
-        <tr> 
-          <td class="formlabel">*Institution:</td>
-          <td>
-             <html:text maxlength="250" property="piinstitution" size="50" styleClass="text"/>
-          </td>
-        </tr>
-        <tr> 
-          <td class="formlabel">*Department:</td>
-          <td>
-             <html:text maxlength="100" property="pidepartment" size="50" styleClass="text"/>
-          </td>
-        </tr>
       </table></td>
   </tr>
   <tr class="formlabel"> 
-    <td width="22%" align="left" valign="baseline">Please choose the appropriate 
+    <td width="30%" align="left" valign="baseline">Please choose the appropriate 
       group you or your PI belong to:</td>
-    <td width="78%" align="left" valign="baseline">
-        <html:select property="group" styleClass="text" value="<%=Constants.ACADEMIC%>">
+    <td width="70%" align="left" valign="baseline">
+        <html:select property="group" styleClass="text">
+            <html:option value="">-- Please Select --</html:option>
             <html:options name="groups"/>
         </html:select>
         <a href="http://www.dfhcc.harvard.edu/about-dfhcc/dfhcc-directory/" target="_blank">check if your PI is a DF/HCC memeber</a>
@@ -125,27 +155,27 @@
   </tr>
 
   <tr class="formlabel"> 
-    <td width="22%" align="right">&nbsp;</td>
-    <td width="78%">&nbsp;</td>
+    <td width="30%" align="right">&nbsp;</td>
+    <td width="70%">&nbsp;</td>
   </tr>
   <tr class="formlabel"> 
-    <td width="22%" align="left" valign="baseline">*Please enter a password:</td>
-    <td width="78%" align="left" valign="baseline"> 
+    <td width="30%" align="left" valign="baseline">*Please enter a password:</td>
+    <td width="70%" align="left" valign="baseline"> 
         <html:password maxlength="50" property="password" size="30" styleClass="text"/>
     </td>
   </tr>
   <tr class="formlabel"> 
-    <td width="22%" align="left" valign="baseline">*Please enter the password 
+    <td width="30%" align="left" valign="baseline">*Please enter the password 
       again</td>
-    <td width="78%" align="left" valign="baseline"> 
+    <td width="70%" align="left" valign="baseline"> 
         <html:password maxlength="50" property="password2" size="30" styleClass="text"/>
     </td>
   </tr>
   <tr class="formlabel"> 
-    <td width="22%" align="right" valign="baseline">
+    <td width="30%" align="right" valign="baseline">
         <html:submit styleClass="text" value="Register"/>
     </td>
-    <td width="78%" align="left" valign="baseline">
+    <td width="70%" align="left" valign="baseline">
         <html:reset styleClass="text" value="Clear"/>
     </td>
   </tr>

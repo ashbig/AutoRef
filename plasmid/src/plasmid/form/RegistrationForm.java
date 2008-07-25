@@ -13,6 +13,7 @@ import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
+import plasmid.coreobject.Institution;
 
 /**
  *
@@ -23,18 +24,22 @@ public class RegistrationForm extends ActionForm {
     private String lastname;
     private String email;
     private String phone;
-    private String institution;
-    private String department;
+//    private String department;
     private String piname;
     private String pifirstname;
     private String pilastname;
     private String piemail;
-    private String piinstitution;
-    private String pidepartment;
+//    private String piinstitution;
+//    private String pidepartment;
     private String group;
     private String password;
     private String password2;
     private String forward;
+    private String category;
+    private String institution1;
+    private String institution2;
+    private String institution3;
+    private String institution;
     
     /** Creates a new instance of RegistrationForm */
     public RegistrationForm() {
@@ -44,14 +49,13 @@ public class RegistrationForm extends ActionForm {
     public String getLastname() {return lastname;}
     public String getEmail() {return email;}
     public String getPhone() {return phone;}
-    public String getInstitution() {return institution;}
-    public String getDepartment() {return department;}
+   // public String getDepartment() {return department;}
     public String getPiname() {return piname;}
     public String getPifirstname() {return pifirstname;}
     public String getPilastname() {return pilastname;}
     public String getPiemail() {return piemail;}
-    public String getPiinstitution() {return piinstitution;}
-    public String getPidepartment() {return pidepartment;}
+   // public String getPiinstitution() {return piinstitution;}
+   // public String getPidepartment() {return pidepartment;}
     public String getGroup() {return group;}
     public String getPassword() {return password;}
     public String getPassword2() {return password2;}
@@ -61,14 +65,13 @@ public class RegistrationForm extends ActionForm {
     public void setLastname(String s) {this.lastname = s;}
     public void setEmail(String s) {this.email = s;}
     public void setPhone(String s) {this.phone = s;}
-    public void setInstitution(String s) {this.institution = s;}
-    public void setDepartment(String s) {this.department = s;}
+  //  public void setDepartment(String s) {this.department = s;}
     public void setPiname(String s) {this.piname = s;}
     public void setPiemail(String s) {this.piemail = s;}
     public void setPifirstname(String s) {this.pifirstname=s;}
     public void setPilastname(String s) {this.pilastname = s;}
-    public void setPiinstitution(String s) {this.piinstitution = s;}
-    public void setPidepartment(String s) {this.pidepartment = s;}
+ //   public void setPiinstitution(String s) {this.piinstitution = s;}
+  //  public void setPidepartment(String s) {this.pidepartment = s;}
     public void setGroup(String s) {this.group = s;}
     public void setPassword(String s) {this.password = s;}
     public void setPassword2(String s) {this.password2 = s;}
@@ -79,17 +82,21 @@ public class RegistrationForm extends ActionForm {
         lastname = null;
         email = null;
         phone = null;
-        institution = null;
-        department = null;
+        institution1 = "";
+        institution2 = "";
+        institution3 = "";
+     //   department = null;
         piname = null;
         pifirstname = null;
         pilastname = null;
         piemail = null;
-        piinstitution = null;
-        pidepartment = null;
+     //   piinstitution = null;
+     //   pidepartment = null;
         group = null;
         password = null;
         password2 = null;
+        category = Institution.CATEGORY_US_INSTITUTION;
+        institution="";
     }
    
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
@@ -116,10 +123,10 @@ public class RegistrationForm extends ActionForm {
                     errors.add("pilastname", new ActionError("error.pilastname.required"));
                 if(piemail == null || piemail.trim().length() < 1) 
                     errors.add("piemail", new ActionError("error.piemail.required"));
-                if(piinstitution == null || piinstitution.trim().length() < 1) 
-                    errors.add("piinstitution", new ActionError("error.piinstitution.required"));
-                if(pidepartment == null || pidepartment.trim().length() < 1) 
-                    errors.add("pidepartment", new ActionError("error.pidepartment.required"));
+ //               if(piinstitution == null || piinstitution.trim().length() < 1) 
+   //                 errors.add("piinstitution", new ActionError("error.piinstitution.required"));
+   //             if(pidepartment == null || pidepartment.trim().length() < 1) 
+   //                 errors.add("pidepartment", new ActionError("error.pidepartment.required"));
             }
         }
         
@@ -127,5 +134,45 @@ public class RegistrationForm extends ActionForm {
             errors.add("password", new ActionError("error.password2.nomatch"));
         
         return errors;
-    } 
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getInstitution1() {
+        return institution1;
+    }
+
+    public void setInstitution1(String institution1) {
+        this.institution1 = institution1;
+    }
+
+    public String getInstitution2() {
+        return institution2;
+    }
+
+    public void setInstitution2(String institution2) {
+        this.institution2 = institution2;
+    }
+
+    public String getInstitution3() {
+        return institution3;
+    }
+
+    public void setInstitution3(String institution3) {
+        this.institution3 = institution3;
+    }
+
+    public String getInstitution() {
+        return institution;
+    }
+
+    public void setInstitution(String institution) {
+        this.institution = institution;
+    }
 }

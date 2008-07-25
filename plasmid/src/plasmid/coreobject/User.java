@@ -49,6 +49,23 @@ public class User {
     }
    
     public User(int userid, String firstname, String lastname, String email, String phone,
+    String institution, String ponumber, String pi, String group, 
+    String password, String isinternal, String piemail) {
+        this.userid = userid;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.email = email;
+        this.phone = phone;
+        this.institution = institution;
+        this.ponumber = ponumber;
+        this.piname = pi;
+        this.group = group;
+        this.password = password;
+        this.isinternal = isinternal;
+        this.piemail = piemail;
+    }
+   
+    public User(int userid, String firstname, String lastname, String email, String phone,
     String institution, String department, String ponumber, String pi, String group, 
     String password, String isinternal, String piemail) {
         this.userid = userid;
@@ -61,6 +78,26 @@ public class User {
         this.ponumber = ponumber;
         this.piname = pi;
         this.group = group;
+        this.password = password;
+        this.isinternal = isinternal;
+        this.piemail = piemail;
+    }
+        
+    public User(int userid,String firstname,String lastname,String email,String phone,
+    String ponumber,String institution, String dateadded, String datemod,
+    String modifier,String pi, String usergroup, String password, String isinternal, String piemail) {
+        this.userid = userid;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.email = email;
+        this.phone = phone;
+        this.ponumber = ponumber;
+        this.institution = institution;
+        this.dateadded = dateadded;
+        this.datemod = datemod;
+        this.modifier = modifier;
+        this.piname = pi;
+        this.group = usergroup;
         this.password = password;
         this.isinternal = isinternal;
         this.piemail = piemail;
