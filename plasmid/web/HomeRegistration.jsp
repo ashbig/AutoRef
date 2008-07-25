@@ -59,7 +59,7 @@
     <td width="70%" align="left" valign="baseline"> 
     <table width="100%" border="0" bordercolor="#000000">
         <tr>
-            <td class="formlabel" colspan="2">Expedited MTA Member: [<a class="text" href="memberinfo.html" target="_blank">i</a>]</td>
+            <td class="formlabel" colspan="2">Expedited MTA Member: [<a class="text" href="memberinfo.html" target="_blank">?</a>]</td>
         </tr>
         <tr>
             <td class="text" colspan="2">
@@ -70,7 +70,7 @@
             </td>
         </tr>
         <tr>
-            <td class="formlabel" colspan="2">Non Member: [<a class="text" href="nonmemberinfo.html" target="_blank">i</a>]</td>
+            <td class="formlabel" colspan="2">Non Member: [<a class="text" href="nonmemberinfo.html" target="_blank">?</a>]</td>
         </tr>
         <tr>
             <td class="text" colspan="2">
@@ -150,7 +150,7 @@
             <html:option value="">-- Please Select --</html:option>
             <html:options name="groups"/>
         </html:select>
-        <a href="http://www.dfhcc.harvard.edu/about-dfhcc/dfhcc-directory/" target="_blank">check if your PI is a DF/HCC memeber</a>
+        <a href="PIList.html" target="_blank">check if your PI is a DF/HCC memeber</a>
     </td>        
   </tr>
 
