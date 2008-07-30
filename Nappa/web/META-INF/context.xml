@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Context path="/Nappa">
+  <!--<Resource auth="Container" driverClassName="oracle.jdbc.OracleDriver" maxActive="20" maxIdle="10" maxWait="-1" name="jdbc/nappa" password="nappa" type="javax.sql.DataSource" url="jdbc:oracle:thin:@128.103.32.198:1521:nappa" username="nappa"/>-->
+  <!--<ResourceLink global="jdbc/myoracle" name="jdbc/myoracle" type="javax.sql.DataSource"/>-->
+  <Resource auth="Container" driverClassName="oracle.jdbc.OracleDriver" maxActive="20" maxIdle="10" maxWait="-1" name="jdbc/nappa" password="anlirkyoos1" type="javax.sql.DataSource" url="jdbc:oracle:thin:@oracle.cl.med.harvard.edu:1521:devoradb" username="devnappaweb"/>  
+     
+ <Realm className="org.apache.catalina.realm.DataSourceRealm" debug="99" localDataSource="true"
+   dataSourceName="jdbc/nappa"
+   userTable="researcher" userNameCol="id" userCredCol="password"
+   userRoleTable="roles" roleNameCol="rolename"/>
+
+</Context>
+<!--
+<Context path="/Nappa">
+  <Resource auth="Container" driverClassName="oracle.jdbc.OracleDriver" maxActive="20" maxIdle="10" maxWait="-1" name="jdbc/nappa" password="anlirkyoos1" type="javax.sql.DataSource" url="jdbc:oracle:thin:@oracle.cl.med.harvard.edu:1521:devoradb" username="devnappaweb"/>
+  <ResourceLink global="jdbc/myoracle" name="jdbc/myoracle" type="javax.sql.DataSource"/>
+</Context>
+-->

@@ -1,0 +1,97 @@
+Reagent	Container	Well
+Human IgG 1	Registration3	A01
+Non Spots	Registration3	B01
+Human IgG 1	Registration3	C01
+C-EBNA	Registration3	D01
+No DNA	Registration3	E01
+No DNA	Registration3	F01
+No DNA	Registration3	G01
+No DNA	Registration3	H01
+GST1	Registration3	A02
+Non Spots	Registration3	B02
+Mouse IgG1	Registration3	C02
+C-EBNA	Registration3	D02
+Non Spots	Registration3	E02
+Non Spots	Registration3	F02
+Non Spots	Registration3	G02
+Non Spots	Registration3	H02
+Human IgG 2	Registration3	A03
+Non Spots	Registration3	B03
+Human IgG 2	Registration3	C03
+C-EBNA	Registration3	D03
+No DNA	Registration3	E03
+No DNA	Registration3	F03
+No DNA	Registration3	G03
+No DNA	Registration3	H03
+GST2	Registration3	A04
+Non Spots	Registration3	B04
+Mouse IgG2	Registration3	C04
+C-EBNA	Registration3	D04
+Non Spots	Registration3	E04
+Non Spots	Registration3	F04
+Non Spots	Registration3	G04
+Non Spots	Registration3	H04
+Human IgG 3	Registration3	A05
+Human IgG1	Registration3	B05
+Human IgG 3	Registration3	C05
+Human IgG1	Registration3	D05
+No DNA	Registration3	E05
+No DNA	Registration3	F05
+No DNA	Registration3	G05
+No DNA	Registration3	H05
+GST3	Registration3	A06
+Mouse IgG1	Registration3	B06
+Mouse IgG3	Registration3	C06
+GST1	Registration3	D06
+Non Spots	Registration3	E06
+Non Spots	Registration3	F06
+Non Spots	Registration3	G06
+Non Spots	Registration3	H06
+Human IgG 4	Registration3	A07
+Human IgG 2	Registration3	B07
+Human IgG 4	Registration3	C07
+Human IgG 2	Registration3	D07
+No DNA	Registration3	E07
+No DNA	Registration3	F07
+No DNA	Registration3	G07
+No DNA	Registration3	H07
+GST4	Registration3	A08
+Mouse IgG2	Registration3	B08
+Mouse IgG4	Registration3	C08
+GST2	Registration3	D08
+Non Spots	Registration3	E08
+Non Spots	Registration3	F08
+Non Spots	Registration3	G08
+Non Spots	Registration3	H08
+C_EBNA	Registration3	A09
+Human IgG 3	Registration3	B09
+Non Spots	Registration3	C09
+Human IgG 3	Registration3	D09
+No DNA	Registration3	E09
+No DNA	Registration3	F09
+No DNA	Registration3	G09
+No DNA	Registration3	H09
+C_EBNA	Registration3	A10
+Mouse IgG3	Registration3	B10
+Non Spots	Registration3	C10
+GST3	Registration3	D10
+Non Spots	Registration3	E10
+Non Spots	Registration3	F10
+Non Spots	Registration3	G10
+Non Spots	Registration3	H10
+C_EBNA	Registration3	A11
+Human IgG 4	Registration3	B11
+Non Spots	Registration3	C11
+Human IgG 4	Registration3	D11
+No DNA	Registration3	E11
+No DNA	Registration3	F11
+No DNA	Registration3	G11
+No DNA	Registration3	H11
+C_EBNA	Registration3	A12
+Mouse IgG 4	Registration3	B12
+Non Spots	Registration3	C12
+GST4	Registration3	D12
+Non Spots	Registration3	E12
+Non Spots	Registration3	F12
+Non Spots	Registration3	G12
+Non Spots	Registration3	H12
