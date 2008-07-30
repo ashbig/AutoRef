@@ -340,7 +340,7 @@ public class RearrayManager {
      
         String subject = "Rearraed plates for the project - "+project.getName();
         String msgText = "The attached files are robot file(s) for rearrayed plates.\n";
-         msgText+=  userEmail + "files number "+      files.size();
+     //    msgText+=  userEmail + "files number "+      files.size();
         Mailer.sendMessageWithFileCollection(userEmail, from,  subject, msgText, files);
          
       
