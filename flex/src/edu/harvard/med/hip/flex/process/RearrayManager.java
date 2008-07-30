@@ -324,13 +324,29 @@ public class RearrayManager {
      * @param userEmail The email address to send to.
      * @exception Exception.
      */
-    public void sendRobotFiles(String userEmail) throws Exception {
+    public void sendRobotFiles(String userEmail) throws Exception
+    {/*
         String to = "dongmei_zuo@hms.harvard.edu";
         String from = "dongmei_zuo@hms.harvard.edu";
         String cc = userEmail;
+        System.out.println(cc+" "+files.size());
+        
         String subject = "Rearraed plates for the project - "+project.getName();
         String msgText = "The attached files are robot file(s) for rearrayed plates.\n";
         Mailer.sendMessage(to, from, cc, subject, msgText, files);
+       */
+        String from =  FlexProperties.getInstance().getProperty("HIP_FROM_EMAIL_ADDRESS");
+          String cc = from;
+      
+        String subject = "Rearraed plates for the project - "+project.getName();
+        String msgText = "The attached files are robot file(s) for rearrayed plates.\n";
+                 
+            Collection files = new ArrayList();
+            File ff = null;
+           Mailer.sendMessageWithFileCollection(userEmail, from,  subject, msgText, files);
+         
+      
+    
     }
     
     public void writeToLog(String filename) throws IOException {
@@ -588,9 +604,11 @@ public class RearrayManager {
         }
         
         OligoPlateManager om = new OligoPlateManager(conn, project, workflow, numOfWellsOnPlate, isFullPlate, false, protocol);
+       // om.setOpenClose(project, workflow);
         om.setIsSetOpenClose(true);
         om.setIsOpenOnly(isFusion);
         om.setIsCloseOnly(isClosed);
+        
         om.setIsReorder(false);
         om.createOligoPlate(sequences, container.getId());
         om.sendOligoOrders();
@@ -661,6 +679,7 @@ public class RearrayManager {
         for(int i=0; i<samples.size(); i++) {
             RearrayPlateMap sample = (RearrayPlateMap)samples.get(i);
             fr.write(sample.getSourcePlateLabel()+DILIM+sample.getSourceWell()+DILIM+sample.getDestPlateLabel()+DILIM+sample.getDestWell()+"\n");
+ System.out.println(sample.getSourcePlateLabel()+DILIM+sample.getSourceWell()+DILIM+sample.getDestPlateLabel()+DILIM+sample.getDestWell()+"\n");
         }
         fr.flush();
         fr.close();
