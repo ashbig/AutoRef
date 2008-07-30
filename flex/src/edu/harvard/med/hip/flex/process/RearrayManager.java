@@ -337,13 +337,11 @@ public class RearrayManager {
        */
         String from =  FlexProperties.getInstance().getProperty("HIP_FROM_EMAIL_ADDRESS");
           String cc = from;
-      
+     
         String subject = "Rearraed plates for the project - "+project.getName();
         String msgText = "The attached files are robot file(s) for rearrayed plates.\n";
-                 
-            Collection files = new ArrayList();
-            File ff = null;
-           Mailer.sendMessageWithFileCollection(userEmail, from,  subject, msgText, files);
+         msgText+=  userEmail + "files number "+      files.size();
+        Mailer.sendMessageWithFileCollection(userEmail, from,  subject, msgText, files);
          
       
     
@@ -674,17 +672,17 @@ public class RearrayManager {
     protected void writeFile(String filename, List samples) throws IOException {
         filename = filename+".txt";
         File file = new File(FILEPATH+filename);
+        files.add(file);
         FileWriter fr = new FileWriter(file);
         fr.write("Original plate label"+DILIM+"Original plate well"+DILIM+"Destination plate label"+ DILIM+  "Destination plate well\n");
         for(int i=0; i<samples.size(); i++) {
             RearrayPlateMap sample = (RearrayPlateMap)samples.get(i);
             fr.write(sample.getSourcePlateLabel()+DILIM+sample.getSourceWell()+DILIM+sample.getDestPlateLabel()+DILIM+sample.getDestWell()+"\n");
- System.out.println(sample.getSourcePlateLabel()+DILIM+sample.getSourceWell()+DILIM+sample.getDestPlateLabel()+DILIM+sample.getDestWell()+"\n");
         }
         fr.flush();
         fr.close();
         
-        files.add(file);
+      
     }
     
     //Put the plateset containing rearrayed plate and oligo plates on queue for next protocol.
