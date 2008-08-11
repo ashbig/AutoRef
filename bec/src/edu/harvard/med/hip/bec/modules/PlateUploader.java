@@ -227,10 +227,13 @@ public class PlateUploader
             {
                 cl_strategy= (CloningStrategy) ace_cloning_strategies.get(count);
                 key = buildCloningStrategyKey(cl_strategy);
-           //     System.out.println(key);
-                flex_cl_strategy = (CloningStrategy)flex_cloneing_strategies.get(key);
+                 flex_cl_strategy = (CloningStrategy)flex_cloneing_strategies.get(key);
+             //  System.out.println("map '"+key+"' "+flex_cl_strategy );
+              
                 if (  flex_cl_strategy != null)
                 {
+                     //System.out.println("map '"+key+"' "+flex_cl_strategy.getId());
+             
                     // put only for the requested codons
                     if (cl_strategy.getStartCodon().equalsIgnoreCase(m_start_codon) &&
                             cl_strategy.getFusionStopCodon().equalsIgnoreCase(m_fusion_stop_codon) &&
@@ -268,7 +271,7 @@ public class PlateUploader
                
                 key = buildCloningStrategyKey(flex_strategy);
                 flex_cloneing_strategies.put(key , flex_strategy);
-          //      System.out.println(key);
+             //   System.out.println(flex_strategy.getId()+" '"+key+"'");
             }
           //  System.out.println("((((((((((((((((");
             return flex_cloneing_strategies;
@@ -335,7 +338,8 @@ public class PlateUploader
              {
                   m_error_messages.add("cannot find cloning strategy for clone : "+ sample.getCloneId()
                   +", start codon - " +  m_start_codon +", stop fusion - "+ m_fusion_stop_codon 
-                          + ", stop closed - "+ m_close_stop_codon);
+                          + ", stop closed - "+ m_close_stop_codon +", mapping to "+sample.getCloningStrategyID()+" FLEX cloning strategy");
+                  isNoMissingClonningStrategy=true;
              }
          }
          if(isNoMissingClonningStrategy) throw new Exception("Cannot find Cloning Strategy(is), please check error messages and creat reuiered Cloning Strategies.");
@@ -941,7 +945,7 @@ public class PlateUploader
         ArrayList plates = new ArrayList();
     
       //  plates.add("YGS000360-2");
-        plates.add("EDN003394");
+        plates.add("EGS006058 ");
        // plates.add("YGS000360-3");
        // plates.add("YGS000360-4");
         Connection conn=null;
