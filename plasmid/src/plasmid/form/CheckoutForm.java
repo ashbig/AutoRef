@@ -53,6 +53,7 @@ public class CheckoutForm extends ActionForm {
     private int orderid;
     private String paymentmethod;
     private String[] isagree;
+    private String ismta;
     
     /** Creates a new instance of CheckoutForm */
     public CheckoutForm() {
@@ -160,6 +161,14 @@ public class CheckoutForm extends ActionForm {
         for(int i=0; i<m; i++) {
             isagree[i] = MTA.ISAGREE_N;
         }
+    }
+
+    public String getIsmta() {
+        return ismta;
+    }
+
+    public void setIsmta(String ismta) {
+        this.ismta = ismta;
     }
     
     /**

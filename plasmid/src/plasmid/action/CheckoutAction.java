@@ -107,8 +107,10 @@ public class CheckoutAction extends UserAction {
         if(mtas.size() > 0) {
             request.setAttribute("mtas", mtas);
             ((CheckoutForm)form).resetIsagree(mtas.size());
+            ((CheckoutForm)form).setIsmta(CloneOrder.ISMTA_YES);
             return (mapping.findForward("mta"));
         } else {
+            ((CheckoutForm)form).setIsmta(CloneOrder.ISMTA_NO);
             return (mapping.findForward("continue"));
         }
         

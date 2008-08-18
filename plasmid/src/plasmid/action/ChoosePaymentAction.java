@@ -146,10 +146,12 @@ public class ChoosePaymentAction extends UserAction {
         }
         
         String status = CloneOrder.PENDING;
-        String ismta = CloneOrder.ISMTA_NO;
+        String ismta = ((CheckoutForm)form).getIsmta();
         if(mtas.size()>0) {
-            status = CloneOrder.PENDING_MTA;
-            ismta = CloneOrder.ISMTA_YES;
+            if(ismta.equals(CloneOrder.ISMTA_NO) || ismta.equals(CloneOrder.ISMTA_YES)) {
+                ismta = CloneOrder.ISMTA_YES;
+                status = CloneOrder.PENDING_MTA;
+            }
         }
         if (Constants.PO.equals(payment)) {
             ponumber = ((CheckoutForm) form).getPonumber();

@@ -29,6 +29,7 @@ public class CloneOrder {
     public static final String PENDING_AQIS = "Pending AQIS";
     public static final String ISMTA_YES = "Y";
     public static final String ISMTA_NO = "N";
+    public static final String ISMTA_AGREE = "A";
     
     public static final String allstatus[] = {
         CloneOrder.PENDING, 

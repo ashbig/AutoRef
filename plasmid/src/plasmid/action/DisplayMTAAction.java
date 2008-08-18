@@ -13,6 +13,7 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import plasmid.coreobject.CloneOrder;
 import plasmid.coreobject.MTA;
 import plasmid.form.CheckoutForm;
 
@@ -56,7 +57,7 @@ public class DisplayMTAAction extends UserAction {
             if(mtas[i].equals(MTA.ISAGREE_N))
                 return (mapping.findForward("fail"));
         }
-        
+        ((CheckoutForm)form).setIsmta(CloneOrder.ISMTA_AGREE);
         return (mapping.findForward("success"));
     }
 }
