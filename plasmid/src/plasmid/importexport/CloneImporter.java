@@ -123,7 +123,7 @@ public class CloneImporter {
                 if(Clone.NOINSERT.equals(c.getDomain())) {
                     sp = Clone.SPECIES_NOINSERT;
                 } else {
-                    throw new Exception("Cannot find code for species: "+c.getDomain());
+                    throw new Exception("Cannot find code for species: ["+c.getDomain()+"]");
                 }
             }
             if(tp == null) {

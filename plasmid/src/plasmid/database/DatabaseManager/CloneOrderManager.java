@@ -58,8 +58,8 @@ public class CloneOrderManager extends TableManager {
                 " (orderdate,orderstatus,ponumber,shippingto,billingto," +
                 " shippingaddress,billingaddress,numofclones,numofcollection," +
                 " costforclones,costforcollection,costforshipping,totalprice,userid,orderid," +
-                " shippingmethod,shippingaccount,trackingnumber,isbatch,comments,isaustralia)" +
-                " values(sysdate,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                " shippingmethod,shippingaccount,trackingnumber,isbatch,comments,isaustralia,ismta)" +
+                " values(sysdate,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
         String sql2 = "insert into orderclones(orderid,cloneid,collectionname,quantity)" +
                 " values(?,?,?,?)";
@@ -88,6 +88,7 @@ public class CloneOrderManager extends TableManager {
             stmt.setString(18, order.getIsBatch());
             stmt.setString(19, order.getComments());
             stmt.setString(20, order.getIsaustralia());
+            stmt.setString(21, order.getIsmta());
             DatabaseTransaction.executeUpdate(stmt);
 
             stmt2 = conn.prepareStatement(sql2);
@@ -277,7 +278,7 @@ public class CloneOrderManager extends TableManager {
                 " costforcollection,costforshipping,totalprice,c.userid,shippingdate,whoshipped," +
                 " shippingmethod,shippingaccount,trackingnumber,receiveconfirmationdate," +
                 " whoconfirmed,whoreceivedconfirmation,shippedcontainers,u.email,u.piname," +
-                " u.piemail,u.phone,c.isbatch,u.usergroup,c.comments,c.isaustralia" +
+                " u.piemail,u.phone,c.isbatch,u.usergroup,c.comments,c.isaustralia,c.ismta" +
                 " from cloneorder c, userprofile u where c.userid=u.userid and c.orderid=" + orderid;
 
         if (user != null) {
@@ -325,6 +326,7 @@ public class CloneOrderManager extends TableManager {
                 String usergroup = rs.getString(30);
                 String comments = rs.getString(31);
                 String isaustralia = rs.getString(32);
+                String ismta =  rs.getString(33);
 
                 order = new CloneOrder(orderid, date, st, ponumber, shippingto, billingto, shippingaddress, billingaddress, numofclones, numofcollection, costforclones, costforcollection, costforshipping, total, userid);
                 order.setShippingdate(shippingdate);
@@ -346,6 +348,7 @@ public class CloneOrderManager extends TableManager {
                     order.setIsBatch(isbatch);
                 }
                 order.setIsaustralia(isaustralia);
+                order.setIsmta(ismta);
             }
         } catch (Exception ex) {
             handleError(ex, "Cannot query cloneorder.");
@@ -369,7 +372,7 @@ public class CloneOrderManager extends TableManager {
                 " c.costforcollection,c.costforshipping,c.totalprice,c.userid,u.firstname,u.lastname," +
                 " c.shippingdate, c.whoshipped, c.shippingmethod,c.shippingaccount,c.trackingnumber," +
                 " c.receiveconfirmationdate, c.whoconfirmed,c.whoreceivedconfirmation,u.email,c.shippedcontainers," +
-                " u.piname, u.piemail, u.phone, c.isbatch, c.comments, c.isaustralia" +
+                " u.piname, u.piemail, u.phone, c.isbatch, c.comments, c.isaustralia, c.ismta" +
                 " from cloneorder c, userprofile u where c.userid=u.userid";
 
         if (user != null) {
@@ -432,6 +435,7 @@ public class CloneOrderManager extends TableManager {
                 String isbatch = rs.getString(31);
                 String comments = rs.getString(32);
                 String isaustralia = rs.getString(33);
+                String ismta = rs.getString(34);
                 CloneOrder order = new CloneOrder(orderid, date, st, ponumber, shippingto, billingto, shippingaddress, billingaddress, numofclones, numofcollection, costforclones, costforcollection, costforshipping, total, userid);
 
                 order.setFirstname(firstname);
@@ -454,7 +458,7 @@ public class CloneOrderManager extends TableManager {
                     order.setIsBatch(isbatch);
                 }
                 order.setIsaustralia(isaustralia);
-                
+                order.setIsmta(ismta);
                 orders.add(order);
             }
             return orders;
@@ -482,7 +486,7 @@ public class CloneOrderManager extends TableManager {
                 " c.costforcollection,c.costforshipping,c.totalprice,c.userid,u.firstname,u.lastname," +
                 " c.shippingdate, c.whoshipped, c.shippingmethod,c.shippingaccount,c.trackingnumber," +
                 " c.receiveconfirmationdate, c.whoconfirmed,c.whoreceivedconfirmation,u.email," +
-                " c.shippedcontainers, u.piname, u.piemail, u.phone, c.isbatch, c.comments, c.isaustralia" +
+                " c.shippedcontainers, u.piname, u.piemail, u.phone, c.isbatch, c.comments, c.isaustralia, c.ismta" +
                 " from cloneorder c, userprofile u where c.userid=u.userid";
         String sql2 = "select institution, department from pi where name=?";
 
@@ -577,6 +581,7 @@ public class CloneOrderManager extends TableManager {
                 String isbatch = rs.getString(31);
                 String comments = rs.getString(32);
                 String isaustralia = rs.getString(33);
+                String ismta = rs.getString(34);
                 CloneOrder order = new CloneOrder(orderid, date, st, ponumber, shippingto, billingto, shippingaddress, billingaddress, numofclones, numofcollection, costforclones, costforcollection, costforshipping, total, userid);
 
                 order.setFirstname(firstname);
@@ -599,7 +604,7 @@ public class CloneOrderManager extends TableManager {
                     order.setIsBatch(isbatch);
                 }
                 order.setIsaustralia(isaustralia);
-
+                order.setIsmta(ismta);
                 if (isPI) {
                     stmt.setString(1, piname);
                     rs2 = DatabaseTransaction.executeQuery(stmt);

@@ -1,7 +1,6 @@
 /*
- * CheckoutAction.java
- *
- * Created on May 19, 2005, 4:01 PM
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
  */
 
 package plasmid.action;
@@ -27,9 +26,9 @@ import plasmid.process.OrderProcessManager;
 
 /**
  *
- * @author  DZuo
+ * @author DZuo
  */
-public class CheckoutAction extends UserAction {
+public class CheckoutContinueAction extends UserAction {
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
      * response (or forward to another web component that will create it).
@@ -55,64 +54,19 @@ public class CheckoutAction extends UserAction {
         
         User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
         List shoppingcart = (List)request.getSession().getAttribute(Constants.CART);
-        // List clones = (List)request.getAttribute("cart");
-        String isBatch = (String)request.getAttribute("isbatch");
-        if(isBatch == null)
-            isBatch = "N";
-        
+       
         if(shoppingcart == null || shoppingcart.size() == 0) {
             shoppingcart = new ArrayList();
             request.getSession().setAttribute(Constants.CART, shoppingcart);
             return (mapping.findForward("success_empty"));
         }
         
+        String isBatch = (String)request.getAttribute("isbatch");
+        if(isBatch == null)
+            isBatch = "N";
+        
         OrderProcessManager m = new OrderProcessManager();
-        List restrictedClones = m.checkDistribition(user, shoppingcart);
         
-        if(restrictedClones == null) {
-            if(Constants.DEBUG)
-                System.out.println("Database error occured.");
-            
-            errors.add(ActionErrors.GLOBAL_ERROR,
-            new ActionError("error.database.error","Database error occured."));
-            return (mapping.findForward("error"));
-        }
-        
-        if(restrictedClones.size()>0) {
-            String error = "<br>The following clones/collections are restricted and cannot be distributed to you based on your group:<br>";
-            for(int i=0; i<restrictedClones.size(); i++) {
-                String id = (String)restrictedClones.get(i);
-                error += id+"<br>";
-            }
-            errors.add(ActionErrors.GLOBAL_ERROR,
-            new ActionError("error.general", error));
-            saveErrors(request, errors);
-            return (new ActionForward(mapping.getInput()));
-        }
-        
-        List mtas = null;
-        try {
-            mtas = m.getMTAs(user, shoppingcart);
-        } catch (Exception ex) {
-            if(Constants.DEBUG)
-                ex.printStackTrace();
-            
-            errors.add(ActionErrors.GLOBAL_ERROR,
-            new ActionError("error.general",ex.getMessage()));
-            return (mapping.findForward(mapping.getInput()));
-        }
-        
-        request.setAttribute("isbatch", isBatch);
-        
-        if(mtas.size() > 0) {
-            request.setAttribute("mtas", mtas);
-            ((CheckoutForm)form).resetIsagree(mtas.size());
-            return (mapping.findForward("mta"));
-        } else {
-            return (mapping.findForward("continue"));
-        }
-        
-        /**
         m.processShoppingCartItems(shoppingcart);
         List collectionNames = m.getCollectionNames();
         List collections = m.getShoppingCartCollections(collectionNames, m.getCollections());
@@ -131,6 +85,10 @@ public class CheckoutAction extends UserAction {
         double collectionPrice = m.getTotalCollectionPrice(collections, user.getGroup());
         int totalQuantity = m.getTotalQuantity();
         double totalPrice = clonePrice+collectionPrice;
+        
+        if(cloneQuantity == 0) {
+            return (new ActionForward(mapping.getInput()));
+        }
         
         UserAddress shipping = null;
         UserAddress billing = null;
@@ -158,6 +116,5 @@ public class CheckoutAction extends UserAction {
         request.setAttribute("shippingMethods", shippingMethods);
         
         return (mapping.findForward("success"));
-        */
     }
 }

@@ -1385,4 +1385,62 @@ public class OrderProcessManager {
         }
         return false;
     }
+        
+    public List getMTAs(User user, List items) throws Exception {
+        if(items == null || items.size() == 0)
+            return new ArrayList();
+        
+        List cloneids = new ArrayList();
+        for(int i=0; i<items.size(); i++) {
+            ShoppingCartItem s = (ShoppingCartItem)items.get(i);
+            if(s.getType().equals(ShoppingCartItem.CLONE)) {
+                cloneids.add(s.getItemid());
+            }
+        }
+        
+        List collectionNames = new ArrayList();
+        for(int i=0; i<items.size(); i++) {
+            ShoppingCartItem s = (ShoppingCartItem)items.get(i);
+            if(s.getType().equals(ShoppingCartItem.COLLECTION)) {
+                collectionNames.add(s.getItemid());
+            }
+        }
+        
+        CloneManager manager = new CloneManager();
+        List mtas = manager.getMTAs(cloneids, collectionNames, user);
+        if(mtas == null) {
+            throw new Exception(manager.getErrorMessage());
+        }
+        
+        return mtas;
+    }
+        
+    public List getMTAs(List items) throws Exception {
+        if(items == null || items.size() == 0)
+            return new ArrayList();
+        
+        List cloneids = new ArrayList();
+        for(int i=0; i<items.size(); i++) {
+            ShoppingCartItem s = (ShoppingCartItem)items.get(i);
+            if(s.getType().equals(ShoppingCartItem.CLONE)) {
+                cloneids.add(s.getItemid());
+            }
+        }
+        
+        List collectionNames = new ArrayList();
+        for(int i=0; i<items.size(); i++) {
+            ShoppingCartItem s = (ShoppingCartItem)items.get(i);
+            if(s.getType().equals(ShoppingCartItem.COLLECTION)) {
+                collectionNames.add(s.getItemid());
+            }
+        }
+        
+        CloneManager manager = new CloneManager();
+        List mtas = manager.getMTAs(cloneids, collectionNames);
+        if(mtas == null) {
+            throw new Exception(manager.getErrorMessage());
+        }
+        
+        return mtas;
+    }
 }

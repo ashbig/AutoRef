@@ -79,7 +79,7 @@
     </td>
   </tr>
   <tr> 
-    <td class="formlabel">Enter shipping account number:</td>
+    <td class="formlabel">Enter shipping account number (ONLY FedEx number. We do not accept other couriers):</td>
     <td class="text">
         <html:text size="50"property="accountNumber"/>
     </td>

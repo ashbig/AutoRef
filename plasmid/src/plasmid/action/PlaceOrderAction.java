@@ -69,7 +69,7 @@ public class PlaceOrderAction extends Action {
             while(names.hasMoreElements()) {
                 String name =  (String)names.nextElement();
                 String value = request.getParameter(name);
-                System.out.println(name+":"+value);
+                //System.out.println(name+":"+value);
                 if("invoice".equals(name))
                     invoice = value;
                 if("payment_gross".equals(name))
@@ -111,6 +111,9 @@ public class PlaceOrderAction extends Action {
                     boolean isok = checkData(payment_gross,receiver_email,payment_status,txn_id,order);
                     if(isok) {
                         String status = CloneOrder.PENDING;
+                        if(CloneOrder.ISMTA_YES.equals(order.getIsmta())) {
+                            status = CloneOrder.PENDING_MTA;
+                        }
                         if("Y".equals(order.getIsaustralia())) {
                             status = CloneOrder.PENDING_AQIS;
                         }

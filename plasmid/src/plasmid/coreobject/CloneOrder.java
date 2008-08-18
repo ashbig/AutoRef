@@ -27,6 +27,9 @@ public class CloneOrder {
     public static final String CANCEL = "Cancelled";
     public static final String TBD = "To Be Determined";
     public static final String PENDING_AQIS = "Pending AQIS";
+    public static final String ISMTA_YES = "Y";
+    public static final String ISMTA_NO = "N";
+    
     public static final String allstatus[] = {
         CloneOrder.PENDING, 
         CloneOrder.PENDING_MTA,
@@ -83,12 +86,14 @@ public class CloneOrder {
     protected String piinstitution;
     protected String pidepartment;
     private String isaustralia;
+    private String ismta;
     
     /** Creates a new instance of CloneOrder */
     public CloneOrder() {
         this.items = new ArrayList();
         this.batches = new ArrayList();
         this.isaustralia = "N";
+        this.ismta = ISMTA_NO;
     }
     
     public CloneOrder(int orderid,String orderDate, String status, String ponumber,String shippingTo,String billingTo,
@@ -114,6 +119,7 @@ public class CloneOrder {
         this.items = new ArrayList();
         this.batches = new ArrayList();
         this.isaustralia = "N";
+        this.ismta = ISMTA_NO;
     }
     
     public int getOrderid() {return orderid;}
@@ -268,5 +274,13 @@ public class CloneOrder {
 
     public void setIsaustralia(String isaustralia) {
         this.isaustralia = isaustralia;
+    }
+
+    public String getIsmta() {
+        return ismta;
+    }
+
+    public void setIsmta(String ismta) {
+        this.ismta = ismta;
     }
 }

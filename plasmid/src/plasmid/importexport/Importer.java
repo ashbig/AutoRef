@@ -102,7 +102,11 @@ public class Importer {
     //public static final String filepath = "G:\\plasmid\\TRC_2008_05\\Ref_6\\";
     //public static final String filepath = "G:\\plasmid\\TRC_2008_05\\Ref_7\\";
     //public static final String filepath = "G:\\plasmid\\import files CESG vector clones\\";
-    public static final String filepath = "G:\\plasmid\\TRC_2008_05\\CloneBatch1\\";
+    //public static final String filepath = "G:\\plasmid\\donnelly_vector_mar_2008\\author\\";
+    //public static final String filepath = "G:\\plasmid\\PSI_200806\\";
+    //public static final String filepath = "G:\\plasmid\\Vector_2008_06\\";
+    //public static final String filepath = "G:\\plasmid\\PSI_2008_07\\";
+    public static final String filepath = "G:\\plasmid\\PSI_2008_07_2\\";
     
     private List tables;
     private String error;

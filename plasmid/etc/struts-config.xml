@@ -185,7 +185,17 @@
                 type="plasmid.action.CheckoutAction"
                name="checkoutForm"
               input="/DisplayCart.jsp">
+      <forward  name="continue"  path="/CheckoutContinue.do"/>
+      <forward  name="mta"  path="/DisplayMTA.jsp"/>
+      <forward  name="success_empty"  path="/DisplayEmptyCart.jsp"/>
+    </action>
+    
+    <action     path="/CheckoutContinue"
+                type="plasmid.action.CheckoutContinueAction"
+               name="checkoutForm"
+              input="/Checkout.do">
       <forward  name="success"  path="/ChooseShipping.jsp"/>
+      <forward  name="success_empty"  path="/DisplayEmptyCart.jsp"/>
     </action>
       
     <action     path="/CheckoutConfirm"
@@ -217,6 +227,14 @@
                validate="false"
               input="/ConfirmResultFile.jsp">
       <forward  name="success"  path="/GetResultTypes.do"/>
+    </action>
+    
+    <action     path="/DisplayMTA"
+                type="plasmid.action.DisplayMTAAction"
+               name="checkoutForm"
+              input="/DisplayMTA.jsp">
+      <forward  name="success"  path="/CheckoutContinue.do"/>
+      <forward  name="fail"  path="/Checkout.do"/>
     </action>
     
     <action    path="/DownloadClones"

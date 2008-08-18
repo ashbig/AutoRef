@@ -7,10 +7,9 @@
 package plasmid.form;
 
 import javax.servlet.http.HttpServletRequest;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
+import plasmid.coreobject.MTA;
 
 /**
  *
@@ -53,9 +52,11 @@ public class CheckoutForm extends ActionForm {
     private String isBatch = "N";
     private int orderid;
     private String paymentmethod;
+    private String[] isagree;
     
     /** Creates a new instance of CheckoutForm */
     public CheckoutForm() {
+        this.isagree = null;
     }
     
     //public String getUsername() {return username;}
@@ -140,6 +141,25 @@ public class CheckoutForm extends ActionForm {
      */
     public void reset(ActionMapping mapping, HttpServletRequest request) {
         //saveInfo = false;
+    }
+    
+    public String getIsagree(int i) {
+        return isagree[i];
+    }
+    
+    public void setIsagree(int i, String s) {
+        isagree[i] = s;
+    }
+        
+    public String[] getIsagreeList() {
+        return isagree;
+    }
+    
+    public void resetIsagree(int m) {
+        isagree = new String[m];
+        for(int i=0; i<m; i++) {
+            isagree[i] = MTA.ISAGREE_N;
+        }
     }
     
     /**
