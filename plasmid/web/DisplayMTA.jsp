@@ -68,7 +68,7 @@ Please read the MTA to be sure you understand the obligations herein, which may 
 
 <html:form action="DisplayMTA.do">
     <input type="hidden" name="isBatch" value="<bean:write name="isbatch"/>">
-    <html:hidden property="ismta"/>
+
     <% int num=((List)request.getAttribute("mtas")).size(); %>
     <logic:iterate name="mtas" id="mta" indexId="n">
         <html:textarea rows="10" cols="80" name="mta" property="textfile" readonly="true"/>

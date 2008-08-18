@@ -7,7 +7,6 @@ package plasmid.action;
 
 import java.util.*;
 import java.io.*;
-import java.sql.*;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,8 +16,6 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
-import plasmid.database.*;
-import plasmid.database.DatabaseManager.*;
 import plasmid.Constants;
 import plasmid.coreobject.*;
 import plasmid.form.CheckoutForm;
@@ -147,6 +144,7 @@ public class ChoosePaymentAction extends UserAction {
         
         String status = CloneOrder.PENDING;
         String ismta = ((CheckoutForm)form).getIsmta();
+       
         if(mtas.size()>0) {
             if(ismta.equals(CloneOrder.ISMTA_NO) || ismta.equals(CloneOrder.ISMTA_YES)) {
                 ismta = CloneOrder.ISMTA_YES;
