@@ -28,6 +28,7 @@ import edu.harvard.med.hip.flex.form.*;
 import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.workflow.*;
 import edu.harvard.med.hip.flex.Constants;
+import static edu.harvard.med.hip.flex.infoimport.ConstantsImport.PROCESS_NTYPE;
 
 /**
  *
@@ -82,7 +83,29 @@ public class SelectProtocolAction extends FlexAction {
             request.setAttribute("workflow_type", workflow.getWorkflowType());
             Protocol protocol = new Protocol(processname);
             // System.out.println(protocol.getId() +"_"+ project.getId()+"_"+ workflow.getId());
+            //for new branches
             
+            String forwardName = (String)request.getParameter("forwardName");
+             if ( forwardName != null)
+            {
+                PROCESS_NTYPE cur_process = null;
+                try
+                {
+                    cur_process = PROCESS_NTYPE.valueOf(forwardName);
+                }catch(Exception e){;}
+                if ( cur_process != null )
+                {
+                    switch(cur_process)
+                    {
+                        case PUT_PLATES_IN_PIPELINE:
+                        {   request.setAttribute("forwardName", forwardName);
+                            request.setAttribute("processid", new Integer(protocol.getId()));
+                            return mapping.findForward("put_plates_in_pipeline");}
+                    }
+                }
+                
+            }
+           
             if(Protocol.GENERATE_PCR_PLATES.equals(processname) ||
             Protocol.DILUTE_OLIGO_PLATE.equals(processname)) {
                 queue = new PlatesetProcessQueue();

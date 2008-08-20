@@ -107,8 +107,8 @@ public class ACEtoFLEXImporterAction extends ResearcherAction
              // read file to populates clone_ids
             ImportRunner importer = new AceToFlexImporter();
             
-            importer.setInputData(ConstantsImport.ITEM_TYPE_CLONEID, i_clone_data);//154431  154512  154516  154520  154454  154245  154532  154269");
-            importer.setProcessType( ConstantsImport.PROCESS_DATA_TRANSFER_ACE_TO_FLEX );
+            importer.setInputData(ConstantsImport.ITEM_TYPE.ITEM_TYPE_CLONEID, i_clone_data);//154431  154512  154516  154520  154454  154245  154532  154269");
+            importer.setProcessType( ConstantsImport.PROCESS_NTYPE.TRANSFER_ACE_TO_FLEX );
             importer.setUser( user);
             importer.run();
            // isBusy = false;
@@ -133,8 +133,8 @@ public class ACEtoFLEXImporterAction extends ResearcherAction
             System.out.println(username);
             ImportRunner importer = new AceToFlexImporter();
             
-            importer.setInputData(ConstantsImport.ITEM_TYPE_CLONEID, clone_data);//154431  154512  154516  154520  154454  154245  154532  154269");
-            importer.setProcessType( ConstantsImport.PROCESS_DATA_TRANSFER_ACE_TO_FLEX );
+            importer.setInputData(ConstantsImport.ITEM_TYPE.ITEM_TYPE_CLONEID, clone_data);//154431  154512  154516  154520  154454  154245  154532  154269");
+            importer.setProcessType( ConstantsImport.PROCESS_NTYPE.TRANSFER_ACE_TO_FLEX );
             importer.setUser(new User(username, ""));
             importer.run();
       

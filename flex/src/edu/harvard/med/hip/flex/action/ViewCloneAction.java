@@ -29,6 +29,7 @@ import edu.harvard.med.hip.flex.Constants;
 import edu.harvard.med.hip.flex.user.*;
 import edu.harvard.med.hip.flex.infoimport.coreobjectsforimport.*;
 import edu.harvard.med.hip.flex.infoimport.*;
+import static edu.harvard.med.hip.flex.infoimport.ConstantsImport.ITEM_TYPE;
 import edu.harvard.med.hip.flex.core.PublicInfoItem;
 /**
  *
@@ -77,8 +78,8 @@ public class ViewCloneAction extends Action {
             CloneInfo clone = new CloneInfo();
             clone.restoreClone(cloneid);
             List storages = clone.getStorages();
-            ArrayList authors = ImportAuthor.restoreAuthors(cloneid, ConstantsImport.ITEM_TYPE_CLONEID);
-            ArrayList clone_publicinfo = PublicInfoItem.restorePublicInfo(cloneid, ConstantsImport.ITEM_TYPE_CLONEID);
+            ArrayList authors = ImportAuthor.restoreAuthors(cloneid, ITEM_TYPE.ITEM_TYPE_CLONEID);
+            ArrayList clone_publicinfo = PublicInfoItem.restorePublicInfo(cloneid, ITEM_TYPE.ITEM_TYPE_CLONEID);
             
             request.setAttribute("clone", clone);
             request.setAttribute("authors", authors);

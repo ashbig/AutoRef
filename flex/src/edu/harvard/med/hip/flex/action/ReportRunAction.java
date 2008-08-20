@@ -18,6 +18,7 @@ import edu.harvard.med.hip.flex.user.*;
 import  edu.harvard.med.hip.flex.form.*;
 import  edu.harvard.med.hip.flex.report.*;
 import  edu.harvard.med.hip.flex.infoimport.*;
+import  edu.harvard.med.hip.flex.infoimport.ConstantsImport.PROCESS_NTYPE;
 import static edu.harvard.med.hip.flex.report.ReportConstants.ITEM_TYPE;
 import static edu.harvard.med.hip.flex.report.ReportConstants.REPORT_COLUMN;
 import static edu.harvard.med.hip.flex.report.ReportDefinition.REPORT_TYPE;
@@ -46,7 +47,7 @@ public class ReportRunAction extends FlexAction {
             report_runner.setUser(user);
             
             report_runner.setReportType(report_type);
-            request.setAttribute("forwardName", String.valueOf( ConstantsImport.PROCESS_DATA_RUN_REPORT));
+            request.setAttribute("forwardName", String.valueOf( ConstantsImport.PROCESS_NTYPE.RUN_REPORT));
             REPORT_COLUMN selected_columns[]=null;
             if ( report_type != REPORT_TYPE.CLONING_STRATEGY)
             {

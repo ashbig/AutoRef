@@ -107,7 +107,9 @@ public class ViewItemsAction extends ResearcherAction {
             {
                 String tablename = (String) request.getAttribute("TABLENAME");
                 if(tablename == null) tablename =  request.getParameter("TABLENAME");
-                 ArrayList nametypes = Nametype.getInfoFromNamesTable(tablename);
+                Nametype.TABLE_NAME_NAMETYPE cur_name_type = Nametype.TABLE_NAME_NAMETYPE.valueOf(tablename.toUpperCase());
+           
+                ArrayList nametypes = Nametype.getInfoFromNamesTable(cur_name_type);
                 request.setAttribute("TABLENAME",tablename);
                 request.setAttribute("nametypes",nametypes);
                 return (mapping.findForward("view_nametypes"));

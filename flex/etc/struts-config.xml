@@ -549,6 +549,8 @@
     <forward  name="success_sequencing" path="/EnterSrcForSequencing.jsp" />
     <forward  name="success_glycerol" path="/IsCreateSequencing.jsp" />
     <forward  name="success_upload_containers_from_file" path="/AddNewPlatesFromFile.jsp" />
+     <forward  name="put_plates_in_pipeline" path="/AddItemsEntryParameters.jsp" />
+    
     </action> 
     
     <!-- Process the source plate input -->
@@ -1474,7 +1476,7 @@
         type="edu.harvard.med.hip.flex.action.AddItemsAction">
             <forward name="add_items" path="/AddItemsEntryParameters.jsp"/>
             <forward name="confirm_add_items" path="/AddItemsConfirm.jsp"/>
-                            
+                    
 </action>
 
  <!-- add new items-->

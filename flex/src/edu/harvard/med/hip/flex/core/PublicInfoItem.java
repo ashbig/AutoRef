@@ -27,6 +27,7 @@ import java.sql.*;
 import javax.sql.*;
 import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.infoimport.*;
+import static  edu.harvard.med.hip.flex.infoimport.ConstantsImport.ITEM_TYPE;
 /**
  *
  * @author  htaycher
@@ -240,14 +241,14 @@ public class PublicInfoItem
         }
         return result.toString();
     }
-    public static ArrayList restorePublicInfo(int owner_id, int owner_type) throws Exception
+    public static ArrayList restorePublicInfo(int owner_id, ITEM_TYPE owner_type) throws Exception
      {
          
          ArrayList info = new ArrayList();
          PublicInfoItem p_info = null;
         String sql = "select nametype,namevalue,nameurl,description from " +
-                ConstantsImport.getNameTableNamePerOwner(owner_type)+
-                " where "+ ConstantsImport.getNameTableIdColumnNamePerOwner(owner_type)+"="+owner_id;
+               owner_type.getNameTableNamePerOwner()+
+                " where "+ owner_type.getNameTableIdColumnNamePerOwner()+"="+owner_id;
         
         DatabaseTransaction t = null;
         ResultSet rs = null;
@@ -282,8 +283,8 @@ public class PublicInfoItem
   {
         try
         {
-    ArrayList r = PublicInfoItem.restorePublicInfo(258460 , ConstantsImport.ITEM_TYPE_CLONEID);
-      ArrayList authors = edu.harvard.med.hip.flex.infoimport.coreobjectsforimport.ImportAuthor.restoreAuthors(258460, ConstantsImport.ITEM_TYPE_CLONEID);
+      ArrayList r = PublicInfoItem.restorePublicInfo(258460 , ConstantsImport.ITEM_TYPE.ITEM_TYPE_CLONEID);
+      ArrayList authors = edu.harvard.med.hip.flex.infoimport.coreobjectsforimport.ImportAuthor.restoreAuthors(258460, ConstantsImport.ITEM_TYPE.ITEM_TYPE_CLONEID);
       edu.harvard.med.hip.flex.infoimport.coreobjectsforimport.ImportAuthor at = 
               edu.harvard.med.hip.flex.infoimport.coreobjectsforimport.ImportAuthor.restoreAuthor(12);
         

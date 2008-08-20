@@ -19,14 +19,17 @@ import java.sql.*;
 public class Nametype 
 {
     // name tables names
-    public static final String   TABLE_NAME_SAMPLE_NAMETYPE = "SAMPLE_NAMETYPE";
-    public static final String   TABLE_NAME_NAMETYPE = "NAMETYPE";
-    public static final String   TABLE_NAME_CONTAINERHEADER_NAMETYPE= "CONTAINERHEADER_NAMETYPE";
-    public static final String   TABLE_NAME_SPECIES = "SPECIES";
-    public static final String   TABLE_NAME_FLEXSTATUS= "FLEXSTATUS";
-    public static final String   TABLE_NAME_SAMPLETYPE ="SAMPLETYPE";
-    public static final String   TABLE_NAME_CONTAINERTYPE=  "CONTAINERTYPE";
-    public static final String   TABLE_NAME_CLONEAUTHORTYPE="CLONEAUTHORTYPE";
+    public enum TABLE_NAME_NAMETYPE
+    {
+        SAMPLE_NAMETYPE,
+        NAMETYPE,
+        CONTAINERHEADER_NAMETYPE,
+        SPECIES,
+        FLEXSTATUS,
+        SAMPLETYPE,
+        CONTAINERTYPE,
+        CLONEAUTHORTYPE;
+    }
             
     private String name = null;
     private String m_description = null;
@@ -134,20 +137,21 @@ public class Nametype
     }
     public void setDescription(String v) { m_description = v;}
    
-     public static ArrayList getInfoFromNamesTable( String table_name ) throws Exception
+    public static ArrayList getInfoFromNamesTable( TABLE_NAME_NAMETYPE cur_name_type ) throws Exception
     {
        String sql = null ;
        ArrayList nametypes = new ArrayList();
-       table_name= table_name.toUpperCase();
-       if ( table_name.intern() == Nametype.TABLE_NAME_SAMPLE_NAMETYPE) sql = " select  nametype, displaytitle as description from " + table_name +" order by nametype";
-       if ( table_name.intern() == Nametype.TABLE_NAME_NAMETYPE) sql = " select  nametype, displaytitle as description from " + table_name +" order by nametype";
-       if ( table_name.intern() == Nametype.TABLE_NAME_CONTAINERHEADER_NAMETYPE) sql = "  select  nametype, displaytitle as description from  " + table_name +" order by nametype";
-       if ( table_name.intern() == Nametype.TABLE_NAME_SPECIES) sql = "select  genusspecies as nametype from  " + table_name +" order by nametype ";
-        if ( table_name.intern() == Nametype.TABLE_NAME_FLEXSTATUS) sql = " select  flexstatus as nametype from  " + table_name +" order by nametype ";
-       if ( table_name.intern() == Nametype.TABLE_NAME_SAMPLETYPE) sql = " select  sampletype as nametype from  " + table_name +" order by nametype ";
-        if ( table_name.intern() == Nametype.TABLE_NAME_CONTAINERTYPE) sql = " select  containertype as nametype from  " + table_name +" order by nametype";
-         if ( table_name.intern() == Nametype.TABLE_NAME_CLONEAUTHORTYPE) sql = " select  nametype, displaytitle as description from " + table_name +" order by nametype";
-   
+       switch(cur_name_type)
+       {
+           case SAMPLE_NAMETYPE:{ sql = " select  nametype, displaytitle as description from " + cur_name_type.toString() +" order by nametype";break;}
+           case NAMETYPE:{ sql = " select  nametype, displaytitle as description from " + cur_name_type.toString() +" order by nametype";break;}
+           case CONTAINERHEADER_NAMETYPE:{ sql = "  select  nametype, displaytitle as description from  " + cur_name_type.toString() +" order by nametype";break;}
+       case SPECIES:{ sql = "select  genusspecies as nametype from  " + cur_name_type.toString() +" order by nametype ";break;}
+           case FLEXSTATUS:{ sql = " select  flexstatus as nametype from  " + cur_name_type.toString() +" order by nametype ";break;}
+           case SAMPLETYPE:{ sql = " select  sampletype as nametype from  " + cur_name_type.toString() +" order by nametype ";break;}
+        case CONTAINERTYPE:{ sql = " select  containertype as nametype from  " + cur_name_type.toString() +" order by nametype";break;}
+           case CLONEAUTHORTYPE:{ sql = " select  nametype, displaytitle as description from " + cur_name_type.toString() +" order by nametype";break;}
+       }
        if (sql == null) throw new Exception("Not known table.");
        
        ResultSet rs = null;
@@ -158,12 +162,14 @@ public class Nametype
             while( rs.next()) 
             {
                 nametype = new Nametype( rs.getString("nametype"));
-                if ( table_name.equalsIgnoreCase("SAMPLE_NAMETYPE")
-                || table_name.equalsIgnoreCase("NAMETYPE")  
-                ||  table_name.equalsIgnoreCase("CONTAINERHEADER_NAMETYPE")) 
+                 switch(cur_name_type)
                 {
-                     nametype.setDescription( rs.getString("description"));
-                }
+                     case SAMPLE_NAMETYPE: case NAMETYPE:  
+                     case CONTAINERHEADER_NAMETYPE: case CLONEAUTHORTYPE:
+                    {
+                         nametype.setDescription( rs.getString("description"));
+                    }
+                 }
                 nametypes.add(nametype);
               
             }
@@ -176,7 +182,7 @@ public class Nametype
         finally         {              DatabaseTransaction.closeResultSet(rs);         }
       
     }
-    
+  
     public static void main(String [] args) {
         DatabaseTransaction t = null;
         Connection conn = null;

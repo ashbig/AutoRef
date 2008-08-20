@@ -35,6 +35,8 @@ import edu.harvard.med.hip.flex.workflow.*;
 import edu.harvard.med.hip.flex.infoimport.*;
 import edu.harvard.med.hip.flex.infoimport.bioinfo.*;
 import edu.harvard.med.hip.flex.infoimport.file_mapping.*;
+import static edu.harvard.med.hip.flex.infoimport.ConstantsImport.PROCESS_NTYPE;
+
 /**
  *
  * @author htaycher
@@ -50,7 +52,9 @@ public class AddNewPlatesFromFileAction extends WorkflowAction
    {
         ActionErrors errors = new ActionErrors();
         AddNewPlatesFromFileForm requestForm= (AddNewPlatesFromFileForm)form;
-        int forwardName = requestForm.getForwardName();
+        String forwardName = requestForm.getForwardName();
+        PROCESS_NTYPE cur_process = PROCESS_NTYPE.valueOf(forwardName);
+    
          User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
         
          try 
@@ -58,9 +62,9 @@ public class AddNewPlatesFromFileAction extends WorkflowAction
             AccessManager manager = AccessManager.getInstance();
             user.setUserEmail( manager.getEmail(user.getUsername()));
       
-            switch (forwardName)
+            switch (cur_process)
             {
-                case ConstantsImport.PROCESS_IMPORT_OUTSIDE_CONTAINERS_INTO_FLEX:
+                case  IMPORT_OUTSIDE_CONTAINERS_INTO_FLEX_INPUT:
 
                   {
                   
@@ -80,7 +84,7 @@ public class AddNewPlatesFromFileAction extends WorkflowAction
                        return (mapping.findForward("submit_mgc_plates"));
                  
               }
-            case -ConstantsImport.PROCESS_IMPORT_OUTSIDE_CONTAINERS_INTO_FLEX:
+            case IMPORT_OUTSIDE_CONTAINERS_INTO_FLEX:
             {
                 Researcher researcher = null;
                 String researcher_barcode = requestForm.getResearcherBarcode();
@@ -127,7 +131,7 @@ public class AddNewPlatesFromFileAction extends WorkflowAction
                 importer.isDefineContructTypeByNSequence(isDefineConstructSizeBySequence);
                 importer.setSampleBioType(sampleType );
                 importer.setDataFilesMappingSchema(mapFile.getInputStream());
-                importer.setProcessType(ConstantsImport.PROCESS_IMPORT_OUTSIDE_CONTAINERS_INTO_FLEX);
+                importer.setProcessType(ConstantsImport.PROCESS_NTYPE.IMPORT_OUTSIDE_CONTAINERS_INTO_FLEX);
                 importer.setPlatesLocation(plateLocation);   
                 importer.isGetFLEXSequenceFromNCBI(requestForm.getIsGetFLEXSequenceFromNCBI() );
                 importer.isFLEXSequenceIDGI(requestForm.getIsFLEXSequenceIDGI());

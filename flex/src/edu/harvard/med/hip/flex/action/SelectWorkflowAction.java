@@ -34,6 +34,8 @@ import edu.harvard.med.hip.flex.user.*;
 import edu.harvard.med.hip.flex.Constants;
 import edu.harvard.med.hip.flex.workflow.*;
 import edu.harvard.med.hip.flex.query.*;
+import static edu.harvard.med.hip.flex.infoimport.ConstantsImport.PROCESS_NTYPE;
+
 
 /**
  *
@@ -67,15 +69,15 @@ public class SelectWorkflowAction extends ResearcherAction {
         int workflowid = ((ProjectWorkflowForm)form).getWorkflowid();
         String forwardName = ((ProjectWorkflowForm)form).getForwardName();
         String projectname = ((ProjectWorkflowForm)form).getProjectname();
-        
         try {
             
             request.setAttribute("projectname", projectname);
+            request.setAttribute("forwardName", forwardName);
+           
             request.setAttribute("projectid", new Integer(projectid));
             Workflow workflow = new Workflow(workflowid);
             request.setAttribute("workflowname", workflow.getName());
             request.setAttribute("workflowid", new Integer(workflowid));
-            
             if(Constants.APPROVE_SEQUENCES.equals(forwardName)) {
                 return mapping.findForward("success_approve_sequences");
             }
@@ -83,7 +85,7 @@ public class SelectWorkflowAction extends ResearcherAction {
             if(Constants.CREATE_PROCESS_PLATES.equals(forwardName)) {
                 return mapping.findForward("success_create_process_plates");
             }
-            
+              
             if(Constants.MGC_PLATE_HANDLE.equals(forwardName)) {
                 return mapping.findForward("success_mgc_plate_handle");
             }
@@ -91,7 +93,7 @@ public class SelectWorkflowAction extends ResearcherAction {
             if(Constants.MGC_REQUEST_IMPORT.equals(forwardName)) {
                 return mapping.findForward("success_mgc_request_import");
             }
-            
+               
             if(Constants.ENTER_RESULT.equals(forwardName)) {
                 return mapping.findForward("success_result_entry");
             }
@@ -109,6 +111,7 @@ public class SelectWorkflowAction extends ResearcherAction {
                 request.setAttribute("large", new Integer(large));
                 return mapping.findForward("success_special_oligo_order");
             }
+   
             if("QUERY_SUCCESS_RATE".equals(forwardName)){                
                 request.setAttribute("month_collection", DateCollection.getMonthCollection());
                 request.setAttribute("day_collection", DateCollection.getDayCollection());
@@ -124,6 +127,7 @@ public class SelectWorkflowAction extends ResearcherAction {
                 request.setAttribute("perimeterRearrayInputForm", f);
                 return (mapping.findForward("success_perimeter_rearray"));
             }
+   
             if(Constants.CREATE_EXP_DNA.equals(forwardName) && workflowid==Workflow.EXPRESSION_WORKFLOW) {
                 EnterSrcPlatesForm f = new EnterSrcPlatesForm();
                 f.setProjectid(projectid);
@@ -133,9 +137,18 @@ public class SelectWorkflowAction extends ResearcherAction {
                 request.setAttribute("enterSrcPlatesForm", f);
                 return (mapping.findForward("success_create_dna"));
             }
-            
+            PROCESS_NTYPE cur_process = PROCESS_NTYPE.valueOf(forwardName);
+            if ( cur_process != null )
+            {
+                switch(cur_process)
+                {
+                    case PUT_PLATES_IN_PIPELINE:
+                        return mapping.findForward("success_create_process_plates");
+                }
+            }
             return (mapping.findForward("success"));
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             request.setAttribute(Action.EXCEPTION_KEY, e);
             return (mapping.findForward("error"));
         }

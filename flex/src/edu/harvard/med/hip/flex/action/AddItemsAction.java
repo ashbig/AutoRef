@@ -38,9 +38,11 @@ import edu.harvard.med.hip.flex.Constants;
 import edu.harvard.med.hip.flex.workflow.*;
 
 import edu.harvard.med.hip.flex.infoimport.*;
+import static edu.harvard.med.hip.flex.infoimport.ConstantsImport.PROCESS_NTYPE;
 import edu.harvard.med.hip.flex.infoimport.bioinfo.*;
 import edu.harvard.med.hip.flex.infoimport.file_mapping.*;
-
+ import org.hibernate.*;
+import org.hibernate.cfg.*;
 /**
  *
  * @author  dzuo
@@ -72,7 +74,8 @@ public class AddItemsAction extends ResearcherAction {
              
         ActionErrors errors = new ActionErrors();
         AddItemsForm requestForm= ((AddItemsForm)form);
-        int forwardName = requestForm.getForwardName();
+        String forwardName = requestForm.getForwardName();
+        PROCESS_NTYPE cur_process = PROCESS_NTYPE.valueOf(forwardName);
         FormFile inputFile = ((AddItemsForm)form).getInputFile();
          User user = ((User)request.getSession().getAttribute(Constants.USER_KEY));
           ItemsImporter imp = new ItemsImporter();
@@ -83,90 +86,112 @@ public class AddItemsAction extends ResearcherAction {
              request.setAttribute("forwardName", String.valueOf(forwardName));
              AccessManager manager = AccessManager.getInstance();
              user.setUserEmail( manager.getEmail(user.getUsername()));
-      
-              if ( forwardName > 0)
+             switch(cur_process) 
               {
-                  return (mapping.findForward("add_items"));
-              }
-             else 
-             {
-                 ConstantsImport.fillInNames();
-                 imp.setProcessType(forwardName);
-                  switch (forwardName)
+                 case      IMPORT_VECTORS_INPUT:
+                 case IMPORT_LINKERS_INPUT :
+                 case IMPORT_INTO_NAMESTABLE_INPUT:
+                 case IMPORT_CLONING_STRATEGIES_INPUT:
+                 case     PUT_PLATES_FOR_SEQUENCING_INPUT:
+                 case    PUT_PLATES_IN_PIPELINE_INPUT:
                  {
-                     case -ConstantsImport.PROCESS_IMPORT_INTO_NAMESTABLE:
-                     {
-                          imp.setProcessType(ConstantsImport.PROCESS_IMPORT_INTO_NAMESTABLE) ;
-                          imp.setInputData(FileStructure.STR_FILE_TYPE_INPUT_FOR_NAME_TABLE, inputFile.getInputStream());
-                          imp.run();
-                          return (mapping.findForward("confirm_add_items"));
-                     }
-                     case -ConstantsImport.PROCESS_IMPORT_CLONING_STRATEGIES:
-                     {
-                        map_name= FlexProperties.getInstance().getProperty("flex.repository.basedir")
-                        + FlexProperties.getInstance().getProperty("ADD_CLONING_STRATEGY_MAP");
-                        imp.setDataFilesMappingSchema(map_name);
-                        imp.setProcessType(ConstantsImport.PROCESS_IMPORT_CLONING_STRATEGIES) ;
-                        imp.setInputData(FileStructure.STR_FILE_TYPE_CLONING_STRATEGY, inputFile.getInputStream());
-                        imp.run();
-                         return (mapping.findForward("confirm_add_items"));
-                     }
-                     case -ConstantsImport.PROCESS_IMPORT_LINKERS:
-                     {
-                         map_name= FlexProperties.getInstance().getProperty("flex.repository.basedir")+
-                                 
-                                 FlexProperties.getInstance().getProperty("ADD_LINKER_MAP");
-                        imp.setDataFilesMappingSchema(map_name);
-                         imp.setProcessType(ConstantsImport.PROCESS_IMPORT_LINKERS) ;
-                         imp.setInputData(FileStructure.STR_FILE_TYPE_LINKER_INFO, inputFile.getInputStream());
-                         imp.run();
-                          return (mapping.findForward("confirm_add_items"));
-                     }
-                     case -ConstantsImport.PROCESS_IMPORT_VECTORS:
-                     {
-                          map_name= FlexProperties.getInstance().getProperty("flex.repository.basedir")
-                          + FlexProperties.getInstance().getProperty("ADD_VECTOR_MAP");
-                            imp.setDataFilesMappingSchema(map_name);
-                          imp.setProcessType(ConstantsImport.PROCESS_IMPORT_VECTORS) ;
-                          imp.setInputData(FileStructure.STR_FILE_TYPE_VECTOR_INFO, inputFile.getInputStream());
-                            FormFile vector_feature = ((AddItemsForm)form).getInputFile1();
-                          imp.setInputData(FileStructure.STR_FILE_TYPE_VECTOR_FEATURE_INFO, vector_feature.getInputStream());
-                            imp.run();
-                            return (mapping.findForward("confirm_add_items"));
-                     }
-                    case -ConstantsImport.PROCESS_PUT_PLATES_FOR_SEQUENCING:
-                     {
-                         String seq_facility  = ((AddItemsForm)form).getFacilityName();
-                         String  container_labels = ((AddItemsForm)form).getPlateLabels();//get from form
-        
-                         
-                         ArrayList containers = Algorithms.splitString(container_labels.trim(), null);
-                         if (containers == null || containers.size() == 0 )
-                        {
-                           errors.add(ActionErrors.GLOBAL_ERROR,  new ActionError("error.container.querry.parameter", "Please enter plate labels"));
-                            saveErrors(request,errors);
-                            return new ActionForward(mapping.getInput());
-                        }
-                        String plate_names = putPlatesForSequencing(containers, seq_facility);
-                        request.setAttribute("container_labels", container_labels);
-                        return (mapping.findForward("confirm_add_items"));
-                     }
-                   
-                     default: return null;
+                     return (mapping.findForward("add_items"));
                  }
-                 
+              }
+             ConstantsImport.fillInNames();
+             imp.setProcessType(cur_process);
+              switch (cur_process)
+             {
+                 case   IMPORT_INTO_NAMESTABLE:
+                 {
+                      imp.setProcessType( PROCESS_NTYPE.IMPORT_INTO_NAMESTABLE ) ;
+                      imp.setInputData(FileStructure.STR_FILE_TYPE_INPUT_FOR_NAME_TABLE, inputFile.getInputStream());
+                      imp.run();
+                      return (mapping.findForward("confirm_add_items"));
+                 }
+                 case IMPORT_CLONING_STRATEGIES:
+                 {
+                    map_name= FlexProperties.getInstance().getProperty("flex.repository.basedir")
+                    + FlexProperties.getInstance().getProperty("ADD_CLONING_STRATEGY_MAP");
+                    imp.setDataFilesMappingSchema(map_name);
+                    imp.setProcessType(PROCESS_NTYPE.IMPORT_CLONING_STRATEGIES) ;
+                    imp.setInputData(FileStructure.STR_FILE_TYPE_CLONING_STRATEGY, inputFile.getInputStream());
+                    imp.run();
+                     return (mapping.findForward("confirm_add_items"));
+                 }
+                 case IMPORT_LINKERS:
+                 {
+                     map_name= FlexProperties.getInstance().getProperty("flex.repository.basedir")+
+
+                             FlexProperties.getInstance().getProperty("ADD_LINKER_MAP");
+                    imp.setDataFilesMappingSchema(map_name);
+                     imp.setProcessType(PROCESS_NTYPE.IMPORT_LINKERS) ;
+                     imp.setInputData(FileStructure.STR_FILE_TYPE_LINKER_INFO, inputFile.getInputStream());
+                     imp.run();
+                      return (mapping.findForward("confirm_add_items"));
+                 }
+                 case  IMPORT_VECTORS:
+                 {
+                      map_name= FlexProperties.getInstance().getProperty("flex.repository.basedir")
+                      + FlexProperties.getInstance().getProperty("ADD_VECTOR_MAP");
+                        imp.setDataFilesMappingSchema(map_name);
+                      imp.setProcessType(PROCESS_NTYPE.IMPORT_VECTORS) ;
+                      imp.setInputData(FileStructure.STR_FILE_TYPE_VECTOR_INFO, inputFile.getInputStream());
+                        FormFile vector_feature = ((AddItemsForm)form).getInputFile1();
+                      imp.setInputData(FileStructure.STR_FILE_TYPE_VECTOR_FEATURE_INFO, vector_feature.getInputStream());
+                        imp.run();
+                        return (mapping.findForward("confirm_add_items"));
+                 }
+                case  PUT_PLATES_FOR_SEQUENCING:
+                case    PUT_PLATES_IN_PIPELINE:
+                 {
+                     String  container_labels = ((AddItemsForm)form).getPlateLabels();//get from form
+                     ArrayList containers = Algorithms.splitString(container_labels.trim(), null);
+                     if (containers == null || containers.size() == 0 )
+                    {
+                       errors.add(ActionErrors.GLOBAL_ERROR,  new ActionError("error.container.querry.parameter", "Please enter plate labels"));
+                        saveErrors(request,errors);
+                        return new ActionForward(mapping.getInput());
+                    }
+                      String plate_names="";
+                    switch (cur_process)
+                    {
+                        case PUT_PLATES_IN_PIPELINE:
+                        {   
+                            int workflow_id = requestForm.getWorkflowid();
+                            int project_id = requestForm.getProjectid();
+                            int processid =requestForm.getProcessid();
+                            plate_names = putPlatesInProcessingPipeline(containers,project_id ,workflow_id,processid);
+                            break;
+                        }
+             
+                        case PUT_PLATES_FOR_SEQUENCING:
+                        {     
+                              String seq_facility  = ((AddItemsForm)form).getFacilityName();
+                              plate_names = putPlatesForSequencing(containers, seq_facility);
+                              break;
+                        }
+             
+                    }
+                    request.setAttribute("container_labels", container_labels);
+                    return (mapping.findForward("confirm_add_items"));
+                 }
+
+                 default: return null;
              }
+             
                  
                  
             
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             request.setAttribute(Action.EXCEPTION_KEY, e);
             return (mapping.findForward("error"));
         }
         
     }
     
-    private  String  putPlatesForSequencing(ArrayList container_labels, 
+    private    String  putPlatesForSequencing(ArrayList container_labels, 
             String sequencing_facility_name) throws Exception
     {
         ArrayList messages = new ArrayList();
@@ -231,7 +256,69 @@ public class AddItemsAction extends ResearcherAction {
     }
      
     
+  public static  String  putPlatesInProcessingPipeline(ArrayList container_labels,
+          int project_id ,int workflow_id,int protocol_id) throws FlexDatabaseException
+    {
+                 String labels=Algorithms.convertArrayToSQLString(container_labels);      
+                
+                String sql = "select projectid,workflowid,protocolid,c.containerid as containerid,label from queue q, containerheader c "
+ +" where q.containerid(+)=c.containerid and label in ("+labels+")";
   
+         sun.jdbc.rowset.CachedRowSet crs = null;
+         ArrayList <QueueItemNew> items = new ArrayList<QueueItemNew>();
+        QueueItemNew item ;
+        try {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            crs = t.executeQuery(sql);
+            while(crs.next()) 
+            {
+               item = new QueueItemNew();
+                item.setContainerLabel(crs.getString("label"));
+                item.setProjectid(crs.getInt("projectid"));
+                item.setProtocolid(crs.getInt("protocolid"));
+                item.setWorkflowid(crs.getInt("workflowid"));
+                item.setContainerid(crs.getInt("containerid"));
+                items.add(item);
+             
+            }
+         } catch (SQLException sqlE) {
+            throw new FlexDatabaseException("Error occured while checking for previously submitted plates\n"+sqlE.getMessage());
+        } finally {
+            DatabaseTransaction.closeResultSet(crs);
+        }
+        
+        
+       labels="";
+        for (QueueItemNew cur_item : items )
+        {
+            if ( !(cur_item.getProjectid() == project_id &&
+                    cur_item.getWorkflowid() == workflow_id && 
+                     cur_item.getProtocolid() == protocol_id ))
+            {
+                 cur_item.setProjectid( project_id);
+                cur_item.setProtocolid(protocol_id);
+                cur_item.setWorkflowid( workflow_id);
+            //    System.out.println(cur_item.getContainerLabel()+" "+cur_item.getProjectid() + 
+                   //     " "+cur_item.getWorkflowid()+" "+cur_item.getProtocolid()+"----" );
+              try
+              {
+                cur_item.insert();
+                labels +="container "+ cur_item.getContainerLabel()+" was put for processing;";
+              }
+              catch(Exception e)
+              {
+                  labels +="cannot put container "+ cur_item.getContainerLabel()+" for processing;";
+              
+              }
+            }
+            else
+            {
+                 labels +="container "+ cur_item.getContainerLabel()+" was in processing queue already;";
+            }
+        }
+        return labels;
+        
+  }
 }
 
 
