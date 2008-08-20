@@ -19,6 +19,7 @@ import javax.sql.*;
 import edu.harvard.med.hip.flex.database.*;
 import  edu.harvard.med.hip.flex.util.*;
 import edu.harvard.med.hip.flex.infoimport.*;
+import static edu.harvard.med.hip.flex.infoimport.ConstantsImport.ITEM_TYPE;
 /**
  *
  * @author htaycher
@@ -188,28 +189,24 @@ public class ImportAuthor
      }
      
      
-     public static ArrayList restoreAuthors(int owner_id, int owner_type) throws Exception
+     public static ArrayList restoreAuthors(int owner_id, ITEM_TYPE owner_type) throws Exception
      {
          
          ArrayList authors = new ArrayList();
           String sql = null;
          ImportAuthor author = null;
-         if ( owner_type == ConstantsImport.ITEM_TYPE_CLONEID)
+         switch ( owner_type)
+         {
+             case ITEM_TYPE_CLONEID:
          {
             sql =  "select AUTHORID ,AUTHORNAME  ,FIRSTNAME  ,LASTNAME   ,TEL   ,FAX "+
  ",AUTHOREMAIL   ,ADDRESS  ,WWW  ,DESCRIPTION  ,ORGANIZATIONNAME from authorinfo where authorid in "
-+ "(select AUTHORID from CLONEAUTHOR where CLONEID = "+ owner_id+")";
++ "(select AUTHORID from CLONEAUTHOR where CLONEID = "+ owner_id+")";break;
 
          }
-         else if (owner_type == ConstantsImport.ITEM_TYPE_PLATE_LABELS )
-         {
-             sql = "";
+         case  ITEM_TYPE_PLATE_LABELS :
+        case  ITEM_TYPE_SAMPLE_ID:           {             sql = "";break;         }
          }
-        else if (owner_type == ConstantsImport.ITEM_TYPE_SAMPLE_ID )
-         {
-             sql = "";
-         }
-        
         DatabaseTransaction t = null;
         ResultSet rs = null;
         

@@ -1037,7 +1037,8 @@ public String getTitle() {        return "Upload of information for third-party 
                 {
                     p_item = (PublicInfoItem ) sample.getPublicInfo().get(p_count);
                     if ( ! sample_names.contains( p_item.getName())&& p_item.isSubmit())
-                         sample_names.add( p_item.getName());
+                    {  sample_names.add( p_item.getName());
+                      }
                 }
             }
             
@@ -1046,7 +1047,7 @@ public String getTitle() {        return "Upload of information for third-party 
         if ( !isAllFlexsequenceNamesExists) m_error_messages.add("Check 'NAMETYPE' table.");
         boolean isAllContainerNamesExists = checkNamesInDatabase(container_names, ConstantsImport.s_container_names);
           if ( !isAllContainerNamesExists) m_error_messages.add("Check 'CONTAINERHEADER_NAMETYPE' table.");
-         boolean isAllSampleExists = checkNamesInDatabase(sample_names, ConstantsImport.s_sample_names);
+         boolean isAllSampleExists = checkNamesInDatabase(sample_names, ConstantsImport.s_sample_type_names);
          if ( !isAllSampleExists) m_error_messages.add("Check 'SAMPLE_NAMETYPE' table.");
        boolean isSpeciesExists = checkNamesInDatabase(species_names, ConstantsImport.s_species_names);
        if ( !isSpeciesExists ) m_error_messages.add("Check 'SPECIES' table.");

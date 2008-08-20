@@ -138,3 +138,28 @@
 	font-size: 10px; font-family: arial, helvetica, verdana, san-serif; 
 	line-height: 12px; color: #6C6C6C 
 }
+
+
+.leftnav {
+	border-bottom: 1px solid #D7E0C0;
+	padding: 7px 10px;
+}
+
+.leftnav ul {
+	color : #015E4B;
+	font: 11px/16px Tahoma, Verdana, Arial, sans-serif;
+	margin: 0px 0px 0px 8px;
+	padding: 0px 0px 0px 8px;
+	line-height: 16px;
+	list-style: none;
+} 
+.leftnav ul a {color: #015E4B; text-decoration: none;}
+.leftnav ul a:link {color: #015E4B;}
+.leftnav ul a:visited {color: #015E4B;}
+.leftnav ul a:hover {color: #CC6600; text-decoration: underline;}
+
+.leftnav ul .on a {color: #CC6600; text-decoration: none;}
+.leftnav ul .on a:link {color: #CC6600;}
+.leftnav ul .on a:visited {color: #CC6600;}
+.leftnav ul .on a:hover {color: #CC6600; text-decoration: none;}
+

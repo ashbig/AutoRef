@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+
+<class name="edu.harvard.med.hip.flex.process.QueueItemNew" table="queue">
+        <composite-id      >
+               <key-property name="projectid" type="integer" column="projectid"/>
+               <key-property name="workflowid" type="integer" column="workflowid"/>
+               <key-property name="protocolid" type="integer" column="protocolid"/>
+
+               <key-property name="constructid" type="integer" column="constructid"   />
+                <key-property name="containerid" type="integer" column="containerid"   />
+                <key-property name="platesetid" type="integer" column="platesetid"   />
+                <key-property name="sequenceid" type="integer" column="sequenceid"  />
+		      
+	</composite-id>
+         <property name="dateadded" type="date" column="dateadded" insert="false"/>
+	
+<!--<join         table="containerheader" fetch="join"   inverse="true"  >    
+       <key column ="containerid" not-null="true"/>
+      <property name="containerlabel" type="string" column="label"/>
+</join>  -->
+   
+       
+</class>
+
+
+</hibernate-mapping>

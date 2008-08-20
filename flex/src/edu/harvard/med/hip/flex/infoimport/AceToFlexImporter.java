@@ -589,8 +589,8 @@ public class AceToFlexImporter extends ImportRunner
         {
             
         ImportRunner runner = new AceToFlexImporter();
-        runner.setInputData(ConstantsImport.ITEM_TYPE_CLONEID, " 268620 268622 268624   " );     //  runner.setContainerLabels(master_container_labels );
-        runner.setProcessType( ConstantsImport.PROCESS_DATA_TRANSFER_ACE_TO_FLEX );
+        runner.setInputData(ConstantsImport.ITEM_TYPE.ITEM_TYPE_CLONEID, " 268620 268622 268624   " );     //  runner.setContainerLabels(master_container_labels );
+        runner.setProcessType( ConstantsImport.PROCESS_NTYPE.TRANSFER_ACE_TO_FLEX );
        // Spec spec_f = Spec.getSpecById(91, Spec.FULL_SEQ_SPEC_INT);
         User user = new User("htaycher", "hip_informatics@hms.harvard.edu", "");
     

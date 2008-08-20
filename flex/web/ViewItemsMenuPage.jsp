@@ -41,7 +41,7 @@
      <ul> 
 <li><a href="/FLEX/ReportGeneralInput.jsp">General Report </a> </li>  
 <li><a href="/FLEX/ReportCloneRelationsInput.jsp">Clone Hierarchy Report </a> </li>  
-<li><a href="/FLEX/ReportRun.do?reportType=<%= edu.harvard.med.hip.flex.report.ReportDefinition.REPORT_TYPE.CLONING_STRATEGY.toString() %>">Cloning Strategy Description Report </a> </li>  
+<li><a href="/FLEX/ReportRun.do?reportType=<%= edu.harvard.med.hip.flex.report.ReportDefinition.REPORT_TYPE.CLONING_STRATEGY %>">Cloning Strategy Description Report </a> </li>  
 
 </ul>
 

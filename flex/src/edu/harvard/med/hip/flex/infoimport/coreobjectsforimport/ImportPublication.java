@@ -18,6 +18,9 @@ import javax.sql.*;
 import edu.harvard.med.hip.flex.database.*;
 import  edu.harvard.med.hip.flex.util.*;
 import edu.harvard.med.hip.flex.infoimport.*;
+
+ import org.hibernate.*;
+import org.hibernate.cfg.*;
 /**
  *
  * @author htaycher
@@ -90,4 +93,24 @@ public class ImportPublication
         DatabaseTransaction.executeUpdate(sql,conn);
      }
      
+      
+      
+        public void insertH(Session session) 
+     {
+         
+        
+        session.beginTransaction();
+        session.save(this);
+        session.getTransaction().commit();
+     }
+      
+     public static void main(String[] args)
+     {
+        ImportPublication p = new ImportPublication();
+        p.setPubMedID("PUBLICATION_TITLE");
+        p.setTitle("TTTT");
+        Session session = HibernateSessionFactory.getSessionFactoryFLEX().getCurrentSession();
+        p.insertH(session);
+        HibernateSessionFactory.getSessionFactoryFLEX().close();
+    }
 }

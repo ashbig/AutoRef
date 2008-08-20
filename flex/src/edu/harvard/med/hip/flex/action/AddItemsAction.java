@@ -161,14 +161,14 @@ public class AddItemsAction extends ResearcherAction {
                             int workflow_id = requestForm.getWorkflowid();
                             int project_id = requestForm.getProjectid();
                             int processid =requestForm.getProcessid();
-                            plate_names = putPlatesInProcessingPipeline(containers,project_id ,workflow_id,processid);
+                            container_labels = putPlatesInProcessingPipeline(containers,project_id ,workflow_id,processid);
                             break;
                         }
              
                         case PUT_PLATES_FOR_SEQUENCING:
                         {     
                               String seq_facility  = ((AddItemsForm)form).getFacilityName();
-                              plate_names = putPlatesForSequencing(containers, seq_facility);
+                              container_labels = putPlatesForSequencing(containers, seq_facility);
                               break;
                         }
              
@@ -195,6 +195,7 @@ public class AddItemsAction extends ResearcherAction {
             String sequencing_facility_name) throws Exception
     {
         ArrayList messages = new ArrayList();
+        StringBuffer result= new StringBuffer();
         String sql_plate_labels =edu.harvard.med.hip.flex.util.Algorithms.convertArrayToSQLString(container_labels);
         String sql_not_submitted_plates = 
                 "select  label from containerheader where containerid in"
@@ -233,10 +234,12 @@ public class AddItemsAction extends ResearcherAction {
             {
                 not_processed_plates.add(container_labels.get(count));
              }
+            else
+                result.append("Plate "+(String)container_labels.get(count)+" have been sequenced already;");
         }
         if (not_processed_plates.size()==0)
         {
-              return null;
+              return result.toString();
         }
    
         sql_plate_labels =Algorithms.convertArrayToSQLString(not_processed_plates);
@@ -247,7 +250,7 @@ public class AddItemsAction extends ResearcherAction {
             sql_insert +=sql_plate_labels+  "))";
             DatabaseTransaction.executeUpdate(sql_insert,conn);
             conn.commit();
-             return  sql_plate_labels ;
+            return  sql_plate_labels ;
         } catch (Exception sqlE) {
             throw new FlexDatabaseException("Error occured while notifing FLEX that plates were sequenced\n"+sql_insert);
         } finally {
@@ -316,6 +319,7 @@ public class AddItemsAction extends ResearcherAction {
                  labels +="container "+ cur_item.getContainerLabel()+" was in processing queue already;";
             }
         }
+        System.out.println(labels);
         return labels;
         
   }

@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+
+<class name="edu.harvard.med.hip.flex.infoimport.coreobjectsforimport.ImportPublication" table="publication">
+        <id name="id" column="publicationID" type="integer">
+            <generator class="sequence">
+	        <param name="sequence">publicationid</param>
+	    </generator>
+        </id>
+        <property name="title" type="string" column="title"/>
+        <property name="pubMedID" type="string" column="pubmedid"/>
+</class>
+
+
+<class name="edu.harvard.med.hip.flex.infoimport.coreobjectsforimport.ImportAuthor" table="authorinfo">
+        <id name="id" column="authoroid" type="integer">
+            <generator class="sequence">
+	        <param name="sequence">authorinfoid</param>
+	    </generator>
+        </id>
+        <property name="NAME" type="string" column="AUTHORNAME"/>
+        <property name="NAME" type="string" column="FIRSTNAME"/>
+        <property name="NAME" type="string" column="LASTNAME"/>
+        <property name="NAME" type="string" column="TEL"/>
+        <property name="NAME" type="string" column="FAX"/>
+        <property name="NAME" type="string" column="AUTHOREMAIL"/>
+        <property name="NAME" type="string" column="ADDRESS"/>
+        <property name="NAME" type="string" column="WWW"/>
+        <property name="NAME" type="string" column="DESCRIPTION"/>
+        <property name="NAME" type="string" column="ORGANIZATIONNAME"/>
+      <!--  <property name="NAME" type="string" column="AUTHORTYPE"/> -->
+        
+</class>
+
+
+  
+
+
+
+</hibernate-mapping>

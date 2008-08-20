@@ -21,29 +21,26 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.upload.*;
 
-import edu.harvard.med.hip.flex.infoimport.*;
+import static edu.harvard.med.hip.flex.infoimport.ConstantsImport.PROCESS_NTYPE;
 
 /**
  *
  * @author  dzuo
  * @version 
  */
-public class AddItemsForm extends ActionForm 
+public class AddItemsForm extends ProjectWorkflowForm 
 {
-    private int forwardName = ConstantsImport.PROCESS_IMPORT_INTO_NAMESTABLE;
+    private String forwardName = PROCESS_NTYPE.IMPORT_INTO_NAMESTABLE_INPUT.toString();
     private FormFile inputFile = null;
     private FormFile inputFile1 = null;
     private String   plateLabels = null;
     private String   facilityName = null;
+    private int processid = -1;
    
     
-    public int getForwardName() {
-        return forwardName;
-    }
+    public String getForwardName() {        return forwardName;    }
     
-    public void setForwardName(int addItem) {
-        this.forwardName = addItem;
-    }
+    public void setForwardName(String b) {        forwardName = b;    }
     
     public void setInputFile(FormFile v) {        this.inputFile = v;    }
     public FormFile getInputFile() {        return inputFile;    }
@@ -57,7 +54,8 @@ public class AddItemsForm extends ActionForm
       public void        setFacilityName (String v){ facilityName = v;}
      public String      getFacilityName (){ return  facilityName ;}
    
- 
+ public void    setProcessid(int v){ processid = v;}
+ public int     getProcessid(){ return processid;}
     /**
      * Validate the properties that have been set from this HTTP request,
      * and return an <code>ActionErrors</code> object that encapsulates any
@@ -72,20 +70,33 @@ public class AddItemsForm extends ActionForm
                                  HttpServletRequest request) {
 
         ActionErrors errors = new ActionErrors();
-        if ( forwardName < 0 && forwardName != -ConstantsImport.PROCESS_PUT_PLATES_FOR_SEQUENCING)
+        PROCESS_NTYPE cur_pr_type = PROCESS_NTYPE.valueOf(forwardName);
+        switch(cur_pr_type)
         {
-            if (inputFile.getFileName() == null || inputFile.getFileName().trim().length() < 1)
-                errors.add("mgcCloneFile", new ActionError("error.mgcCloneFile.required"));
-        }
-        else if ( forwardName == -ConstantsImport.PROCESS_PUT_PLATES_FOR_SEQUENCING)
-        {
-            if ( plateLabels == null || plateLabels.trim().length() < 1
-                    || facilityName == null || facilityName.trim().length() < 1)
+            case      IMPORT_VECTORS:
+            case IMPORT_LINKERS :
+            case IMPORT_INTO_NAMESTABLE:
+            case IMPORT_CLONING_STRATEGIES:
             {
-                errors.add("mgcCloneFile", new ActionError("error.empty.fields.putplatesforsequencing.wrong"));
+                 {
+                    if (inputFile.getFileName() == null || inputFile.getFileName().trim().length() < 1)
+                    {
+                        errors.add("mgcCloneFile", new ActionError("error.mgcCloneFile.required"));
+                    }
+                }
+                break;
             }
-          }
-        if ( errors.size() > 0 ) forwardName = -forwardName;
+            case PUT_PLATES_FOR_SEQUENCING:
+            {
+                if ( plateLabels == null || plateLabels.trim().length() < 1
+                        || facilityName == null || facilityName.trim().length() < 1)
+                {
+                    errors.add("mgcCloneFile", new ActionError("error.empty.fields.putplatesforsequencing.wrong"));
+                }
+                break;
+            }
+        }
+        if ( errors.size() > 0 ) forwardName = cur_pr_type.getPreviousProcess().toString();
         return errors;
     }        
     
@@ -96,6 +107,6 @@ public class AddItemsForm extends ActionForm
      * @param request The servlet request we are processing
      */
     public void reset(ActionMapping mapping, HttpServletRequest request) {
-        forwardName = ConstantsImport.PROCESS_IMPORT_INTO_NAMESTABLE;
+        forwardName = PROCESS_NTYPE.IMPORT_INTO_NAMESTABLE_INPUT.toString();
     }
 }

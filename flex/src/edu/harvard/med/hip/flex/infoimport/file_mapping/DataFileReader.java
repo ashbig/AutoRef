@@ -161,7 +161,7 @@ public class DataFileReader
         catch(Exception e)
         {
             in.close();reader.close();
-            throw new Exception("Can not read file " +file_type +" line "+line);
+            throw new Exception("Can not read file " +file_type +" line "+line+" "+e.getMessage());
         }
  
     
@@ -458,7 +458,7 @@ public class DataFileReader
        ImportClone temp_clone = (ImportClone)m_clones.get( row_clone.getUserId());
        temp_clone.reasignCloneProperties( row_clone) ;
       
-       System.out.println(row_container.getLabel()+" "+sample.getPosition());
+     //  System.out.println(row_container.getLabel()+" "+sample.getPosition());
   
   }
   

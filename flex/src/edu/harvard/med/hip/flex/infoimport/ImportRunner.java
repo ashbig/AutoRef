@@ -18,6 +18,9 @@ import edu.harvard.med.hip.flex.process.*;
 import org.xml.sax.*;
 import org.xml.sax.helpers.DefaultHandler;
 import org.apache.xerces.parsers.SAXParser;
+import static edu.harvard.med.hip.flex.infoimport.ConstantsImport.ITEM_TYPE;
+import static edu.harvard.med.hip.flex.infoimport.ConstantsImport.PROCESS_NTYPE;
+
 
 
 public abstract class ImportRunner implements Runnable
@@ -29,12 +32,12 @@ public abstract class ImportRunner implements Runnable
    
     protected String      m_items = null;
     protected String      m_processed_items = null;
-    protected int         m_items_type = -1;
+    protected ITEM_TYPE         m_items_type  ;
     protected User        m_user = null;
     protected Researcher        m_researcher = null;
-    protected int         m_process_type = -1;
+    protected PROCESS_NTYPE         m_process_type;
     protected Hashtable     m_file_input_data = null;
-    private   String        m_process_title = null;
+    //private   String        m_process_title = null;
     private   String        m_input_files_data_schema = null;
     private   InputStream   m_instream_input_files_data_schema = null;
     
@@ -47,11 +50,11 @@ public abstract class ImportRunner implements Runnable
     }
     public  void        setUser(User v){m_user=v;}
     public  void        setResearcher( Researcher v)       { m_researcher = v;}
-    public  void        setProcessType(int process_id)    {        m_process_type = process_id;    }
+    public  void        setProcessType(PROCESS_NTYPE process_id)    {        m_process_type = process_id;    }
     public void         setConnection(Connection conn){m_conn = conn;}
     public Connection         getConnection( ){ return m_conn ;}
     
-    public void       setInputData(int type,String item_ids)
+    public void       setInputData(ITEM_TYPE type,String item_ids)
      {
          m_items_type = type;
          m_items = item_ids;
@@ -70,8 +73,7 @@ public abstract class ImportRunner implements Runnable
     public void         setDataFilesMappingSchema(InputStream v){ m_instream_input_files_data_schema= v;}
     
      public  String             getItems()   {      return  m_items;    }   
-     public int                 getProcessType(){ return m_process_type;}
-     public abstract String     getTitle();
+     public PROCESS_NTYPE                 getProcessType(){ return m_process_type;}
      public  User               getUser(){ return m_user;}
     
     
@@ -82,18 +84,20 @@ public abstract class ImportRunner implements Runnable
      {
           switch (m_process_type)
          {
-               case ConstantsImport.PROCESS_DATA_TRANSFER_ACE_TO_FLEX  : 
+               case TRANSFER_ACE_TO_FLEX : 
                     {((AceToFlexImporter)this).run_process(); break;}
-               case ConstantsImport.PROCESS_IMPORT_OUTSIDE_CONTAINERS_INTO_FLEX  : 
+               case IMPORT_OUTSIDE_CONTAINERS_INTO_FLEX : 
                     {((OutsidePlatesImporter)this).run_process(); break;}
-               case ConstantsImport.PROCESS_IMPORT_VECTORS : 
-               case ConstantsImport.PROCESS_IMPORT_LINKERS : 
-               case ConstantsImport.PROCESS_IMPORT_INTO_NAMESTABLE : 
-              case ConstantsImport.PROCESS_IMPORT_CLONING_STRATEGIES:
+               case IMPORT_VECTORS: 
+               case IMPORT_LINKERS : 
+               case IMPORT_INTO_NAMESTABLE : 
+              case  IMPORT_CLONING_STRATEGIES:
+              case    PUT_PLATES_IN_PIPELINE:
                     {((ItemsImporter)this).run_process(); break;}
              
           }
      }
+    
      
           //-----------------------------------------------------
        public ArrayList prepareItemsListForSQL()
@@ -102,12 +106,12 @@ public abstract class ImportRunner implements Runnable
           
           switch ( m_items_type)
           {
-              case ConstantsImport.ITEM_TYPE_PLATE_LABELS:
+              case  ITEM_TYPE_PLATE_LABELS:
               {
                    item_increment = 2; break;
               }
-              case ConstantsImport.ITEM_TYPE_CLONEID:
-              case ConstantsImport.ITEM_TYPE_FLEXSEQUENCE_ID :
+              case  ITEM_TYPE_CLONEID:
+              case  ITEM_TYPE_FLEXSEQUENCE_ID :
               {
                    item_increment = 50; break;
               }
@@ -117,13 +121,12 @@ public abstract class ImportRunner implements Runnable
        }
       
        
-       
        public ArrayList prepareItemsListForSQL(int item_increment)
        {
          return    prepareItemsListForSQL(m_items_type, m_items, item_increment);
      
        }
-       public  ArrayList prepareItemsListForSQL(int items_type, String initial_items, int item_increment)
+       public  ArrayList prepareItemsListForSQL(ITEM_TYPE items_type, String initial_items, int item_increment)
      {
          ArrayList result = new ArrayList();
          if ( initial_items == null || initial_items.trim().length() < 1) return result;
@@ -135,15 +138,15 @@ public abstract class ImportRunner implements Runnable
               // get items for cycle
               switch ( items_type)
               {
-                  case ConstantsImport.ITEM_TYPE_PLATE_LABELS:
+                  case  ITEM_TYPE_PLATE_LABELS:
                   {
                       first_item_in_cycle = last_item_in_cycle;
                       last_item_in_cycle = first_item_in_cycle + item_increment;
                       last_item_in_cycle = ( last_item_in_cycle > items.size()- 1 ) ? items.size() :last_item_in_cycle;
                       break;
                   }
-                  case ConstantsImport.ITEM_TYPE_CLONEID:
-                  case ConstantsImport.ITEM_TYPE_FLEXSEQUENCE_ID :
+                  case  ITEM_TYPE_CLONEID:
+                  case  ITEM_TYPE_FLEXSEQUENCE_ID :
                   {
                       first_item_in_cycle = last_item_in_cycle;
                       last_item_in_cycle = first_item_in_cycle + item_increment;
@@ -169,13 +172,13 @@ public abstract class ImportRunner implements Runnable
           String result = "";
           switch ( m_items_type)
           {
-              case ConstantsImport.ITEM_TYPE_CLONEID:
-              case ConstantsImport.ITEM_TYPE_FLEXSEQUENCE_ID :
+              case  ITEM_TYPE_CLONEID:
+              case  ITEM_TYPE_FLEXSEQUENCE_ID :
               {
                   result =  Algorithms.convertStringArrayToString(items,"," );
                   break;
               }
-              case ConstantsImport.ITEM_TYPE_PLATE_LABELS :
+              case  ITEM_TYPE_PLATE_LABELS :
               { 
                   StringBuffer plate_names = new StringBuffer();
                     for (int index = 0; index < items.size(); index++)

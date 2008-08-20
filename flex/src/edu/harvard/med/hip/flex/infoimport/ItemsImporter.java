@@ -16,6 +16,9 @@ import java.util.*;
 import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.infoimport.file_mapping.*;
+
+import static edu.harvard.med.hip.flex.infoimport.ConstantsImport.ITEM_TYPE;
+import static edu.harvard.med.hip.flex.infoimport.ConstantsImport.PROCESS_NTYPE;
 /**
  *
  * @author htaycher
@@ -23,19 +26,7 @@ import edu.harvard.med.hip.flex.infoimport.file_mapping.*;
 public class ItemsImporter  extends ImportRunner
 {
     
-    public String getTitle() 
-    {    
-        switch (m_process_type)
-        {
-            case ConstantsImport.PROCESS_IMPORT_VECTORS:return "Vector(s) upload.";
-            case ConstantsImport.PROCESS_IMPORT_LINKERS: return "Linker(s) upload.";
-             case ConstantsImport.PROCESS_IMPORT_INTO_NAMESTABLE: return "Names upload";
-                case ConstantsImport.PROCESS_IMPORT_CLONING_STRATEGIES: return "Cloning strategy upload";
-           
-            default: return "";
-        }
-  
-    }
+    
     
     public void run_process() 
     {
@@ -49,10 +40,10 @@ public class ItemsImporter  extends ImportRunner
              { conn = this.getConnection();}
              switch (m_process_type)
             {
-                case ConstantsImport.PROCESS_IMPORT_VECTORS: uploadVectors(conn);
-                case ConstantsImport.PROCESS_IMPORT_LINKERS: uploadLinkers(conn);
-                case ConstantsImport.PROCESS_IMPORT_INTO_NAMESTABLE: uploadIntoNameTable(conn );
-                case ConstantsImport.PROCESS_IMPORT_CLONING_STRATEGIES: uploadCloningStrategies(conn);
+                case IMPORT_VECTORS: { uploadVectors(conn);break;}
+                case IMPORT_LINKERS: {uploadLinkers(conn);break;}
+                case IMPORT_INTO_NAMESTABLE:{ uploadIntoNameTable(conn );break;}
+                case IMPORT_CLONING_STRATEGIES:{ uploadCloningStrategies(conn);break;}
               
             }
               
@@ -65,7 +56,7 @@ public class ItemsImporter  extends ImportRunner
         }
         finally
          {
-            sendEmails( getTitle(), getTitle());
+            sendEmails( m_process_type.getTitle(), m_process_type.getTitle());
          }
         
     }
@@ -186,7 +177,7 @@ public class ItemsImporter  extends ImportRunner
      
      private void uploadIntoNameTable(Connection conn)throws Exception
      {
-         String table_name = null;
+          String table_name = null;
          ArrayList items = new ArrayList();
          BufferedReader in = null;
          String line = null;
@@ -207,8 +198,8 @@ public class ItemsImporter  extends ImportRunner
                      String[] tmp = line.split("\t");
                      if (tmp.length == 1 )
                      {
-                         if ( table_name.equalsIgnoreCase(Nametype.TABLE_NAME_SPECIES)
-                         || table_name.equalsIgnoreCase(Nametype.TABLE_NAME_CLONEAUTHORTYPE))
+                         if ( table_name.equalsIgnoreCase(Nametype.TABLE_NAME_NAMETYPE.SPECIES.toString())
+                         || table_name.equalsIgnoreCase(Nametype.TABLE_NAME_NAMETYPE.CLONEAUTHORTYPE.toString()))
                              nametype = new Nametype(tmp[0]);
                          else    nametype = new Nametype(tmp[0].toUpperCase());
                      }
@@ -218,8 +209,10 @@ public class ItemsImporter  extends ImportRunner
             }
             in.close();            input.close();
             // drop duplicates
-             Hashtable table_content = ConstantsImport.getNamesTableContent(table_name);
-              
+             Nametype.TABLE_NAME_NAMETYPE cur_name_type = Nametype.TABLE_NAME_NAMETYPE.valueOf(table_name);
+         
+             Hashtable table_content = ConstantsImport.getNamesTableContent(cur_name_type);
+                    
              ArrayList new_items = new ArrayList();
              StringBuffer new_items_to_upload = new StringBuffer();
              if ( table_content != null)
@@ -239,7 +232,7 @@ public class ItemsImporter  extends ImportRunner
              
             if ( new_items.size() > 0 )
             {
-                ConstantsImport.uploadIntoNamesTable(  table_name,    new_items,  conn );
+                ConstantsImport.uploadIntoNamesTable(  cur_name_type,    new_items,  conn );
            
                 DatabaseTransaction.commit(conn);
                  m_process_messages.add("Uploading into table "+table_name+" items: "+ new_items_to_upload);

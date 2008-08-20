@@ -31,7 +31,8 @@ public class CloningStrategyReport  extends ReportDefinition
             REPORT_COLUMN.LINKER_3P_NAME,
             REPORT_COLUMN.LINKER_3P_SEQUENCE,
             REPORT_COLUMN.LINKER_5P_NAME,
-            REPORT_COLUMN.LINKER_5P_SEQUENCE
+            REPORT_COLUMN.LINKER_5P_SEQUENCE,
+            REPORT_COLUMN.STRATEGY_ID
 
      };
     
@@ -82,6 +83,7 @@ public class CloningStrategyReport  extends ReportDefinition
                   {
 case VECTOR:{record_for_cloning_strategy[column_count++]= cloning_strategy.getClonevector().getName();break;}
 case STRATEGY_NAME:{record_for_cloning_strategy[column_count++]= cloning_strategy.getName();break;}
+case STRATEGY_ID:{record_for_cloning_strategy[column_count++]= ""+cloning_strategy.getId();break;}
 case VECTOR_TYPE:{record_for_cloning_strategy[column_count++]= cloning_strategy.getClonevector().getType();break;}
 case VECTOR_DESCRIPTION:{record_for_cloning_strategy[column_count++]= cloning_strategy.getClonevector().getType();break;}
 

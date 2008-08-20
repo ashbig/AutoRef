@@ -73,7 +73,7 @@
         <input type="hidden" name="workflowname" value="<bean:write name="workflowname"/>" >
         
         <input type="hidden" name="processname" value="<bean:write name="processname"/>">
-        <input type="hidden" name="forwardName"    value="<%= String.valueOf(-ConstantsImport.PROCESS_IMPORT_OUTSIDE_CONTAINERS_INTO_FLEX) %>">
+        <input type="hidden" name="forwardName"    value="<%= ConstantsImport.PROCESS_NTYPE.IMPORT_OUTSIDE_CONTAINERS_INTO_FLEX %>">
         
         
         <input type="hidden" name="numberofwells" value="96">
@@ -110,24 +110,18 @@
                         <option value="AD"/> DNA archive storage plate
                      
                         <option value="AG"/> Glycerol archive storage plate
-                        <option value="BP"/> BP reaction plate
-                        <option value="CR"/> Infusion reaction plate
-                        <option value="DD"/> Distribution DNA plate
+                          <option value="DD"/> Distribution DNA plate
                         <option value="DG"/> Distribution glycerol stocks
-                        <option value="LI"/> Culture block plate
-                        <option value="MD"/> Working DNA plate
+                         <option value="MD"/> Working DNA plate
                         <option value="MG"/> Working glycerol stocks
                         <option value="RA"/> Rearrayed DNA plate
                         <option value="RC"/> Rearrayed plate based on sequencing results
                         <option value="RD"/> DNA template plate
                         <option value="RG"/> Rearrayed glycerol plate
                         <option value="RT"/> Rearrayed transformation plate
-                        <option value="SD"/> Sequencing DNA plate
-                        <option value="SG"/> Sequencing glycerol plate
-                        <option value="XD"/> Expression DNA plate
+                         <option value="XD"/> Expression DNA plate
                         <option value="XG"/> Expression glycerol plate
-                        <option value="XT"/> Transfection plate
-                    </select>
+                     </select>
                 </td>
             </tr>
             <tr>

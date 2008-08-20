@@ -20,13 +20,13 @@
 <h2>
 <bean:message key="flex.name"/> :
 <logic:present name="TABLE_NAME">
-    <logic:equal name="TABLE_NAME"  value="<%= Nametype.TABLE_NAME_SAMPLE_NAMETYPE %>" ><bean:message key="title.nametype.sample"/></logic:equal>
-    <logic:equal name="TABLE_NAME"  value="<%= Nametype.TABLE_NAME_NAMETYPE %>" ><bean:message key="title.nametype.flexsequence"/></logic:equal>
-    <logic:equal name="TABLE_NAME"  value="<%= Nametype.TABLE_NAME_CONTAINERHEADER_NAMETYPE %>" ><bean:message key="title.nametype.container"/></logic:equal>
-    <logic:equal name="TABLE_NAME"  value="<%= Nametype.TABLE_NAME_SPECIES %>" ><bean:message key="title.nametype.species"/></logic:equal>
-    <logic:equal name="TABLE_NAME"  value="<%= Nametype.TABLE_NAME_FLEXSTATUS %>" ><bean:message key="title.nametype.flexstatus"/></logic:equal>
-    <logic:equal name="TABLE_NAME"  value="<%= Nametype.TABLE_NAME_SAMPLETYPE %>" ><bean:message key="title.nametype.sampletype"/></logic:equal>
-    <logic:equal name="TABLE_NAME"  value="<%= Nametype.TABLE_NAME_CONTAINERTYPE %>" ><bean:message key="title.nametype.containertype"/></logic:equal>
+    <logic:equal name="TABLE_NAME"  value="<%= edu.harvard.med.hip.flex.core.Nametype.TABLE_NAME_NAMETYPE.SAMPLE_NAMETYPE.toString() %>" ><bean:message key="title.nametype.sample"/></logic:equal>
+    <logic:equal name="TABLE_NAME"  value="<%= Nametype.TABLE_NAME_NAMETYPE.NAMETYPE.toString() %>" ><bean:message key="title.nametype.flexsequence"/></logic:equal>
+    <logic:equal name="TABLE_NAME"  value="<%= Nametype.TABLE_NAME_NAMETYPE.CONTAINERHEADER_NAMETYPE.toString() %>" ><bean:message key="title.nametype.container"/></logic:equal>
+    <logic:equal name="TABLE_NAME"  value="<%= Nametype.TABLE_NAME_NAMETYPE.SPECIES.toString() %>" ><bean:message key="title.nametype.species"/></logic:equal>
+    <logic:equal name="TABLE_NAME"  value="<%= Nametype.TABLE_NAME_NAMETYPE.FLEXSTATUS.toString() %>" ><bean:message key="title.nametype.flexstatus"/></logic:equal>
+    <logic:equal name="TABLE_NAME"  value="<%= Nametype.TABLE_NAME_NAMETYPE.SAMPLETYPE.toString() %>" ><bean:message key="title.nametype.sampletype"/></logic:equal>
+    <logic:equal name="TABLE_NAME"  value="<%= Nametype.TABLE_NAME_NAMETYPE.CONTAINERTYPE.toString() %>" ><bean:message key="title.nametype.containertype"/></logic:equal>
   
 </logic:present>    
 <logic:notPresent name="TABLE_NAME">  Name Types  </logic:notPresent>    

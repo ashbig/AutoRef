@@ -25,6 +25,8 @@ import edu.harvard.med.hip.flex.workflow.*;
 import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.process.*;
 import edu.harvard.med.hip.flex.workflow.*;
+import static edu.harvard.med.hip.flex.infoimport.ConstantsImport.PROCESS_NTYPE;
+
 /**
  *
  * @author htaycher
@@ -39,7 +41,8 @@ public class AddNewPlatesFromFileForm    extends AddItemsForm
     private int         m_number_of_wells=96;
    
     private String      m_processname = null;
-    private int         m_processid = ConstantsImport.PROCESS_IMPORT_OUTSIDE_CONTAINERS_INTO_FLEX;
+    //protocol
+    private int         m_processid = -1;
     
     protected String plateType = "96 Well Plate";
     protected String sampleType = null;
@@ -148,15 +151,20 @@ public class AddNewPlatesFromFileForm    extends AddItemsForm
      * @param request The servlet request we are processing
      */
     public ActionErrors validate(ActionMapping mapping,
-                                 HttpServletRequest request) {
+                                 HttpServletRequest request) 
+    {
 
         ActionErrors errors = new ActionErrors();
-       if ( this.getForwardName() < 0 && (this.getInputFile() == null || this.getInputFile().getFileName().trim().length() < 1
-        || mapFile == null || mapFile.getFileName().trim().length()<0))
+        PROCESS_NTYPE cur_pr_type = PROCESS_NTYPE.valueOf(this.getForwardName() );
+      
+       if ( cur_pr_type == PROCESS_NTYPE.IMPORT_OUTSIDE_CONTAINERS_INTO_FLEX
+                && (this.getInputFile() == null || this.getInputFile().getFileName().trim().length() < 1
+            || mapFile == null || mapFile.getFileName().trim().length()<0))
         {
             errors.add("mgcCloneFile", new ActionError("error.mgcCloneFile.required"));
         }
-      return errors;
+       
+       return errors;
     }        
      
    
