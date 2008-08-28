@@ -64,9 +64,11 @@ public class ViewItemsAction extends ResearcherAction {
         
         String forwardName = ((ProjectWorkflowForm)form).getForwardName();        
               List items = null;
-          String no_items_header = null;
-          PROCESS_NTYPE cur_process = PROCESS_NTYPE.valueOf(forwardName);
-      
+          String no_items_header = null;PROCESS_NTYPE cur_process =null;
+          try{
+           cur_process = PROCESS_NTYPE.valueOf(forwardName);
+          }catch(Exception e){}
+      Comparator genericComparator;
          String title= ""; 
          try 
         {
@@ -78,18 +80,26 @@ public class ViewItemsAction extends ResearcherAction {
                     {
                         items = Workflow.getAllWorkflows();
                          if( items != null && items.size() > 0 )
+                         {
+                            genericComparator =  new BeanClassComparator("name");
+                            Collections.sort(items, genericComparator);
                             request.setAttribute("workflows",items);
+                         }
                        else
                          request.setAttribute(Constants.UI_TABLE_NO_DATA,"No workflows available");
-                         title="Currently Available Workflows ";
+                        title="Currently Available Workflows ";
                     }
                 }
             }
-            if(Constants.VIEW_VECTORS.equals(forwardName)) 
+              if(Constants.VIEW_VECTORS.equals(forwardName)) 
             {
                items = CloneVector.getAllVectors();
                if( items != null && items.size() > 0 )
-                    request.setAttribute("vectors",items);
+               {
+                     genericComparator =  new BeanClassComparator("name");
+                     Collections.sort(items, genericComparator);
+                   request.setAttribute("vectors",items);
+               }
                else
                  request.setAttribute(Constants.UI_TABLE_NO_DATA,"No vectors available");
               
@@ -99,7 +109,9 @@ public class ViewItemsAction extends ResearcherAction {
             {
                items = CloneLinker.getAllLinkers();
                if( items != null && items.size() > 0 )
-              {  
+              { 
+                      genericComparator =  new BeanClassComparator("name");
+                     Collections.sort(items, genericComparator);
                 request.setAttribute("linkers",items);
                } 
                else
@@ -112,6 +124,8 @@ public class ViewItemsAction extends ResearcherAction {
                items = CloningStrategy.getAllCloningStrategies();
                if( items != null && items.size() > 0 )
                {  
+                      genericComparator =  new BeanClassComparator("name");
+                     Collections.sort(items, genericComparator);
                     request.setAttribute("clstrategies",items);
                } 
                else
@@ -142,7 +156,7 @@ public class ViewItemsAction extends ResearcherAction {
             request.setAttribute(Constants.UI_PAGE_TITLE,title);
            
             request.setAttribute("forwardName",forwardName);
-            return (mapping.findForward("view_items"));
+             return (mapping.findForward("view_items"));
        
         } catch (Exception e)
         {
