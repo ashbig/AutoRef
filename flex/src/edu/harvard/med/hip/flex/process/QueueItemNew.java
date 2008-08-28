@@ -69,7 +69,7 @@ public  void setPlatesetid  (Integer v){   m_platesetid = v;}
      
       public boolean equals(Object other) {
         if ( !(other instanceof QueueItemNew) ) return false;
-        QueueItemNewKey castOther = (QueueItemNewKey) other;
+        QueueItemNew  castOther = (QueueItemNew ) other;
         return (castOther.getProjectid() == this.getProjectid()
                 && castOther.getConstructid() == this.getConstructid()
                 && castOther.getContainerid() == this.getContainerid()
@@ -91,7 +91,7 @@ public  void setPlatesetid  (Integer v){   m_platesetid = v;}
     public void insert( ) throws Exception
      {
          Session session = HibernateSessionFactory.getSessionFactoryFLEX().getCurrentSession();
-             session.beginTransaction();
+          session.beginTransaction();
             session.save(this);
             session.getTransaction().commit();
         
@@ -106,11 +106,11 @@ public  void setPlatesetid  (Integer v){   m_platesetid = v;}
      public static void main(String[] args)
      {
          String container_labels = "YGS000363-2 FPL9 P1PL5 P1PL51 PL50  P1PL51 FPL24 FPL7 FPL8 FPL0061";
-         container_labels=    "HDG006205";     
+         container_labels=    "HMG000758 ";     
         
          java.util.ArrayList containers = Algorithms.splitString(container_labels.trim(), null);
          int project_id =1;
-         int workflow_id = 67; 
+         int workflow_id = 68; 
          int processid=18;
          try
          {
@@ -124,6 +124,7 @@ public  void setPlatesetid  (Integer v){   m_platesetid = v;}
               
           }
          System.exit(0);
+        
          try
          {
                   QueueItemNew p = new QueueItemNew();

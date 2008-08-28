@@ -41,26 +41,27 @@ public class Tester
 	  boolean isFLEXSequenceIDGI;	  boolean checkinFLEXDB; 	  boolean isFillInClonesTables;
 	  boolean isPutOnQueue;	  boolean isDefineContructTypeByNSequence;	  String sampleBioType=null;
 boolean isGetFLEXSequenceFromNCBI;
- FlexProperties sysProps =  FlexProperties.getInstance( );
-           
+ 
+      
 
        // main_vector();
        // main_get_sequence();
         //submitMGC();
-      // main_read_map();
-     //   Tester.buildTrTables();
-       String linker_data ="c:\\tmp\\test.txt";
-      //  submitLinker(linker_data);
-             String vector_data ="E:\\HTaycher\\HIP projects\\ORF_clones\\ORF_Submission\\ORF_Linkers.txt";
-
-    //    submitVector(vector_data);
-                  String clstr_data ="c:\\tmp\\test.txt";
+    //   main_read_map();
+      //  Tester.buildTrTables();
+       String linker_data ="Z:\\PSI_ACE_FLEX\\FilesForPSIFilesTransfer\\New_FLEXLinkers.txt";
+       //submitLinker(linker_data);
+             String vector_data ="C:\\bio\\test\\testVector.txt";
+String vfeat = "C:\\bio\\test\\testVFeat.txt";
+      //  submitVector(vector_data, vfeat);
+String clstr_data ="Z:\\PSI_ACE_FLEX\\FilesForPSIFilesTransfer\\new_FLEXCloningStrategies.txt";
 map_file = "c:\\Projects\\FLEX\\flex\\docs\\cloning_strategy_map.xml";
 
-    //   submitCloningStrategy(clstr_data, map_file);
+   //    submitCloningStrategy(clstr_data, map_file);
 String name_data ="E:\\HTaycher\\HIP projects\\FLEX_Changes_Upload_Module\\new_flexsequence_names.txt";
+ name_data ="Z:\\PSI_ACE_FLEX\\NewDescriptionsForDB\\new_species_names.txt";
 
-      //  submitIntoNameTable(name_data);
+     //   submitIntoNameTable(name_data);
    
 map_file = "E:\\HTaycher\\HIP projects\\ORF_clones\\ORF_Submission\\ORF_submission_map.xml";
 data_file ="E:\\HTaycher\\HIP projects\\ORF_clones\\ORF_Submission\\ORF_plate_20070808.txt";
@@ -75,19 +76,20 @@ data_file ="E:\\HTaycher\\HIP projects\\ORF_clones\\ORF_Submission\\ORF_plate_20
       
   //     submitYPlates();
 //****************************************************************//
- replaceIds(
+/* replaceIds(
          "z:\\HTaycher\\HIP projects\\ORF_clones\\replasementIDs.txt" 
          ,"z:\\HTaycher\\HIP projects\\ORF_clones\\ORF_Submission\\for_submission\\8.txt" 
          , "z:\\HTaycher\\HIP projects\\ORF_clones\\ORF_Submission\\for_submission\\8_1.txt",
          14 );
- 
+ */
  
 //orf parameters
+/*
+map_file = "z:\\HTaycher\\HIP projects\\ORF_clones\\ORF_Submission\\for_submission\\test\\ORF_submission_map.xml";
+data_file ="z:\\HTaycher\\HIP projects\\ORF_clones\\ORF_Submission\\for_submission\\ocb07.txt";
+String[] data_files = {data_file};
+ projectid=21; workflowid=57;protocolid= 68;// 68 for production
 
-map_file = "z:\\HTaycher\\HIP projects\\ORF_clones\\ORF_Submission\\for_submission\\ORF_submission_map.xml";
-data_file ="z:\\HTaycher\\HIP projects\\ORF_clones\\ORF_Submission\\for_submission\\8_1.txt";
-projectid=21; workflowid=58;protocolid= 68;// 68 for production
-//projectid=30; workflowid=59;protocolid= 69;// 68 for production
 isFLEXSequenceIDGI=false;
 checkinFLEXDB=true;
 isFillInClonesTables=true;
@@ -95,32 +97,80 @@ isPutOnQueue=false;
  isDefineContructTypeByNSequence=false;
  sampleBioType="MG";
  isGetFLEXSequenceFromNCBI=true;
-submitPlates( map_file, data_file,  projectid,  workflowid,     protocolid,  isFLEXSequenceIDGI,
+submitPlates( map_file, data_files,  projectid,  workflowid,     protocolid,  isFLEXSequenceIDGI,
          checkinFLEXDB,  isFillInClonesTables,  isPutOnQueue,
          isDefineContructTypeByNSequence,  sampleBioType,  isGetFLEXSequenceFromNCBI);
-
+*/
 //**********************************************************************************//
 
 
 
 //****************************************************************//
-/*
+
 //PSI parameters
- map_file = "E:\\HTaycher\\HIP projects\\PSI\\submission\\PSI_submission_map.xml";
-  data_file ="E:\\HTaycher\\HIP projects\\PSI\\submission\\submitted_plates\\PSI_plate_b_with_vectors.txt" ;
-projectid=24;//22 production 24 dev
-workflowid=47;protocolid= 69;// 68 for production
+ /*
+ String base = "Z:\\HTaycher\\HIP projects\\PSI\\submitted_plates\\NYSGXRC\\";
+ 
+ map_file = base+"map\\NYSGXRC_old_PSIMapMFilesInfoFile.xml";
+
+ data_file =base+"Clone_LOCATION.txt" ;
+
+  
+ String  data_file_1 =base+"Clone_Information.txt" ;
+String  data_file_2=base+"Clone_Gene_Info.txt" ;
+String  data_file_3 =base+"AuthorInfo.txt" ;
+String  data_file_4 =base+"Clone_author.txt" ;
+String  data_file_5 =base+"Publication_info.txt";
+
+String  data_file_6 =base+"Clone_Publication.txt" ;
+  
+
+String[] data_files = {data_file,data_file_1,data_file_2,data_file_3,
+ data_file_4,data_file_5,data_file_6};
+//  projectid=24; workflowid=47;protocolid= 69;// 68 for production
+
+   projectid=22;  workflowid=64;  protocolid= 68;
+
 isFLEXSequenceIDGI=false;
 checkinFLEXDB=false;
 isFillInClonesTables=true;
 isPutOnQueue=true;
- isDefineContructTypeByNSequence=true;
- sampleBioType="DN";
+ isDefineContructTypeByNSequence=false;
+ sampleBioType="GP";
  isGetFLEXSequenceFromNCBI=false;
-submitPlates( map_file, data_file,  projectid,  workflowid,     protocolid,  isFLEXSequenceIDGI,
+ int submission_type = OutsidePlatesImporter.SUBMISSION_TYPE_PSI;
+ boolean isFillNegativeControl=true;
+  submitPlates( map_file, data_files,  projectid,  workflowid,     protocolid,  isFLEXSequenceIDGI,
          checkinFLEXDB,  isFillInClonesTables,  isPutOnQueue,
-         isDefineContructTypeByNSequence,  sampleBioType,  isGetFLEXSequenceFromNCBI);
- **/
+         isDefineContructTypeByNSequence,  sampleBioType, 
+          isGetFLEXSequenceFromNCBI, isFillNegativeControl,submission_type);
+  
+//**********************************************************************************/
+
+
+        
+ map_file = "Z:\\HTaycher\\HIP projects\\YHPlates\\MT_TIGR_map.xml"; 
+       //  "//JoinByRefsequence_submission_map.xml";
+  
+ 
+ data_file ="Z:\\HTaycher\\HIP projects\\YHPlates\\ZMTMF.txt" ;
+String  data_file_2 ="Z:\\HTaycher\\HIP projects\\YHPlates\\p53_plate2_ref.txt" ;
+
+String[] data_files = {data_file};//,null,data_file_2,null, null,null,null,null};
+isFLEXSequenceIDGI=false;
+checkinFLEXDB=false;
+isFillInClonesTables=true;
+isPutOnQueue=false;
+ isDefineContructTypeByNSequence=false;
+ sampleBioType="GS";
+ isGetFLEXSequenceFromNCBI=false;
+  projectid=25;  workflowid=61;  protocolid= 68;
+ boolean isFillNegativeControl=true;
+submitPlates( map_file, data_files,  projectid,  workflowid,     protocolid,  isFLEXSequenceIDGI,
+         checkinFLEXDB,  isFillInClonesTables,  isPutOnQueue,
+         isDefineContructTypeByNSequence,  sampleBioType,  isGetFLEXSequenceFromNCBI, isFillNegativeControl,
+        OutsidePlatesImporter.SUBMISSION_TYPE_ONE_FILE);
+ 
 //**********************************************************************************//
 
 
@@ -128,21 +178,24 @@ submitPlates( map_file, data_file,  projectid,  workflowid,     protocolid,  isF
 //****************************************************************//
 //YH parameters
 /*
-map_file = "E:\\HTaycher\\HIP projects\\YHPlates\\YH_submission_map.xml";
-data_file ="E:\\HTaycher\\HIP projects\\YHPlates\\Aventis_import_RZPA_plates_2.txt";
+map_file = "Z:\\HTaycher\\HIP projects\\TRC_Collection\\TRC_Collection_Map.xml";
+data_file ="Z:\\HTaycher\\HIP projects\\TRC_Collection\\file_10_aac51.txt";
+String[] data_files = {data_file};
 
-projectid=1; workflowid=31;protocolid= 69;// 68 for production
-isFLEXSequenceIDGI=true;
-checkinFLEXDB=true;
+projectid=24; workflowid=61;protocolid= 68;// 68 for production
+isFLEXSequenceIDGI=false;
+checkinFLEXDB=false;
 isFillInClonesTables=true;
 isPutOnQueue=false;
  isDefineContructTypeByNSequence=false;
  sampleBioType="MG";
- isGetFLEXSequenceFromNCBI=true;
-submitPlates( map_file, data_file,  projectid,  workflowid,     protocolid,  isFLEXSequenceIDGI,
+ isGetFLEXSequenceFromNCBI=false;
+ boolean isFillNegativeControl=true;
+submitPlates( map_file, data_files,  projectid,  workflowid,     protocolid,  isFLEXSequenceIDGI,
          checkinFLEXDB,  isFillInClonesTables,  isPutOnQueue,
-         isDefineContructTypeByNSequence,  sampleBioType,  isGetFLEXSequenceFromNCBI);
- **/
+         isDefineContructTypeByNSequence,  sampleBioType,  isGetFLEXSequenceFromNCBI, isFillNegativeControl,
+        OutsidePlatesImporter.SUBMISSION_TYPE_ONE_FILE);
+ */
 //**********************************************************************************//
 
 
@@ -164,7 +217,10 @@ writeNotAffectedRecords( filenamein,  outputfn,  check_against);*/
      String f_name = "C:\\Projects\\FLEX\\flex\\docs\\PSI-submission_map.xml";
           f_name = "C:\\Projects\\FLEX\\flex\\docs\\irat121_mgc_submission_map.xml";
    f_name = "E:\\HTaycher\\HIP projects\\YHPlates\\YH_submission_map.xml";
-              InputStream in_stream = new FileInputStream(f_name);
+   f_name= "Z:\\HTaycher\\HIP projects\\PSI\\submission\\submitted_plates\\ATCG3D\\ATCG3D_PSIMapMFilesInfoFile.xml";
+            
+   
+   InputStream in_stream = new FileInputStream(f_name);
              FileMapParser SAXHandler = new FileMapParser();
              SAXParser parser = new SAXParser();
              parser.setContentHandler(SAXHandler);
@@ -182,24 +238,24 @@ writeNotAffectedRecords( filenamein,  outputfn,  check_against);*/
    }
 
 
-    public static void submitVector(String vector_data)
+    public static void submitVector(String vector_data, String vfeat)
   {
         ItemsImporter imp = null;
        try
        {
           imp = new ItemsImporter();
-            String f_name = "E:\\HTaycher\\HIP projects\\PSI\\submission\\vectors\\vectors_map.xml";
+            String f_name = "C:\\Projects\\FLEX\\flex\\docs\\maps\\vectors_map.xml";
                User user = new User("htaycher", "hip_informatics@hms.harvard.edu", "");
 
            imp.setDataFilesMappingSchema(f_name);
-            imp.setProcessType(ConstantsImport.PROCESS_IMPORT_VECTORS) ;
+            imp.setProcessType(ConstantsImport.PROCESS_NTYPE.IMPORT_VECTORS) ;
             imp.setUser(user);
-            f_name ="E:\\HTaycher\\HIP projects\\PSI\\submission\\vectors\\FLEXGene_import_vector_table.txt";
-            InputStream in_stream = new FileInputStream(f_name);
+         //   f_name ="E:\\HTaycher\\HIP projects\\PSI\\submission\\vectors\\FLEXGene_import_vector_table.txt";
+            InputStream in_stream = new FileInputStream(vector_data);
 
             imp.setInputData(FileStructure.STR_FILE_TYPE_VECTOR_INFO, in_stream);
           //  String vector_data="E:\\HTaycher\\HIP projects\\PSI\\submission\\vectors\\FLEXGene_vector_feature.txt";
-            in_stream = new FileInputStream(f_name);
+            in_stream = new FileInputStream(vfeat);
 
             imp.setInputData(FileStructure.STR_FILE_TYPE_VECTOR_FEATURE_INFO, in_stream);
             imp.run();
@@ -220,7 +276,7 @@ writeNotAffectedRecords( filenamein,  outputfn,  check_against);*/
     
             User user = new User("htaycher", "hip_informatics@hms.harvard.edu", "");
 
-            imp.setProcessType(ConstantsImport.PROCESS_IMPORT_INTO_NAMESTABLE) ;
+            imp.setProcessType(ConstantsImport.PROCESS_NTYPE.IMPORT_INTO_NAMESTABLE) ;
             imp.setUser(user);
 
             InputStream in_stream = new FileInputStream(name_data);
@@ -239,11 +295,11 @@ writeNotAffectedRecords( filenamein,  outputfn,  check_against);*/
        try
        {
            imp = new ItemsImporter();
-            String f_name = "E:\\HTaycher\\HIP projects\\FLEX_Changes_Upload_Module\\MAPS\\linkers_map.xml";
+            String f_name = "C:\\Projects\\FLEX\\flex\\docs\\maps\\linkers_map.xml";
                User user = new User("htaycher", "hip_informatics@hms.harvard.edu", "");
 
            imp.setDataFilesMappingSchema(f_name);
-            imp.setProcessType(ConstantsImport.PROCESS_IMPORT_LINKERS) ;
+            imp.setProcessType(ConstantsImport.PROCESS_NTYPE.IMPORT_LINKERS) ;
             imp.setUser(user);
             //String linker_data ="E:\\HTaycher\\HIP projects\\PSI\\submission\\vectors\\FLEXLinkers.txt";
             InputStream in_stream = new FileInputStream(linker_data);
@@ -268,7 +324,7 @@ writeNotAffectedRecords( filenamein,  outputfn,  check_against);*/
             User user = new User("htaycher", "elena_taycher@hms.harvard.edu", "");
 
             imp.setDataFilesMappingSchema(map_file);
-            imp.setProcessType(ConstantsImport.PROCESS_IMPORT_CLONING_STRATEGIES) ;
+            imp.setProcessType(ConstantsImport.PROCESS_NTYPE.IMPORT_CLONING_STRATEGIES) ;
             imp.setUser(user);
           //  String clst_data ="E:\\HTaycher\\HIP projects\\PSI\\submission\\vectors\\FLEXCloningStrategies.txt";
             InputStream in_stream = new FileInputStream(clst_data);
@@ -384,7 +440,7 @@ String[] labels_orf = {"OCAC3", "OCAC4", "OCAC5", "OCAC6", "OCAC7", "OCAB9", "OC
              freader.setNumberOfWellsInContainer(96);
              freader.readFileIntoSetOfObjects( input, true,
             FileStructure.FILE_TYPE_ONE_FILE_SUBMISSION,
-                    true, true,file_structures[ FileStructure.FILE_TYPE_ONE_FILE_SUBMISSION]) ;
+                    true, true,file_structures[ FileStructure.FILE_TYPE_ONE_FILE_SUBMISSION]);//,null) ;
              i_containers =freader.getContainers();
 
 
@@ -440,221 +496,13 @@ String[] labels_orf = {"OCAC3", "OCAC4", "OCAC5", "OCAC6", "OCAC7", "OCAB9", "OC
         System.out.println(tat.size());
         }catch(Exception e){}
    }
-   public static void      submitMGC()
-   {
-         ImportRunner runner = null;
-       String map_file = "C:\\Projects\\FLEX\\flex\\docs\\irat121_mgc_submission_map.xml";
-       String data_file ="C:\\Projects\\FLEX\\flex\\docs\\submission_examples\\testIRAT122-121.txt";
-                InputStream in_stream = null;
-
-       try
-       {
-             User user = new User("htaycher", "hip_informatics@hms.harvard.edu", "");
-             in_stream = new FileInputStream(data_file);
-             edu.harvard.med.hip.flex.process.Researcher researcher =
-                     new edu.harvard.med.hip.flex.process.Researcher(2);
-           runner = new  OutsidePlatesImporter();
-           ((OutsidePlatesImporter)runner).setPlateType("96 WELL PLATE");
-           ((OutsidePlatesImporter)runner).setProjectId(Project.MGC_PROJECT);
-           ((OutsidePlatesImporter)runner).setWorkFlowId(Workflow.MGC_PLATE_HANDLE_WORKFLOW);
-
-           Protocol  protocol = new Protocol(  Protocol.CREATE_CULTURE_FROM_MGC);
-
-           ((OutsidePlatesImporter)runner).setProtocolId(protocol.getId());
-           ((OutsidePlatesImporter)runner).setNumberOfWellsInContainer(96);
-           ((OutsidePlatesImporter)runner).setMGCFileName("testIRAT122-121.txt");
-           ((OutsidePlatesImporter)runner).setResearcher(researcher);
-            ((OutsidePlatesImporter)runner).isCheckInFLEXDatabase(true);
-               ((OutsidePlatesImporter)runner).setPlatesLocation(Location.CODE_FREEZER);
-
-           runner.setDataFilesMappingSchema(map_file);
-           runner.setProcessType(ConstantsImport.PROCESS_IMPORT_OUTSIDE_CONTAINERS_INTO_FLEX);
-           runner.setUser(user);
-           runner.setInputData(FileStructure.STR_FILE_TYPE_ONE_FILE_SUBMISSION, in_stream);
-           runner.run();
-       }
-       catch(Exception e)
-  {
-      e.printStackTrace(System.err);
-      System.out.println(e.getMessage());
-     //e.printStackTrace(System.err);
-  }
-  finally {System.exit(0);}
-   }
-
-
-    public static void      submitPSI()
-   {
-         ImportRunner runner = null;
-String map_file = "E:\\HTaycher\\HIP projects\\PSI\\submission\\PSI_submission_map.xml";
-//String data_file ="E:\\HTaycher\\HIP projects\\PSI\\submission\\PSI_datawithplate_3_text.txt";
-
-// amp without DNA quant    47
-//String data_file ="E:\\HTaycher\\HIP projects\\PSI\\submission\\test\\PSI_plate_a_test.txt" ;
-
- // kan with DNA quant....   53
- String data_file ="E:\\HTaycher\\HIP projects\\PSI\\submission\\submitted_plates\\PSI_plate_b_with_vectors.txt" ;
-//production:
- // 68 - Protocol ID(Upload); projectID - 22; Kan workflow 48, amp workflow 47;
- InputStream in_stream = null;
-
-       try
-       {
-            FlexProperties sysProps =  SpeciesTranslationProperties.getInstance(  );
-            Hashtable tat = TranslationTable.getTranlationTables();
-
-             User user = new User("htaycher", "hip_informatics@hms.harvard.edu", "");
-             in_stream = new FileInputStream(data_file);
-             edu.harvard.med.hip.flex.process.Researcher researcher =
-                     new edu.harvard.med.hip.flex.process.Researcher(2);
-           runner = new  OutsidePlatesImporter();
-            ((OutsidePlatesImporter)runner).setResearcher(researcher);
-            /* dev
-            ((OutsidePlatesImporter)runner).setProjectId(24);
-           ((OutsidePlatesImporter)runner).setWorkFlowId(47);
-           ((OutsidePlatesImporter)runner).setProtocolId( 69);
-           */
-            //production
-             ((OutsidePlatesImporter)runner).setProjectId(22);
-             // amp
-           //  ((OutsidePlatesImporter)runner).setWorkFlowId(47);
-           //  kan
-           ((OutsidePlatesImporter)runner).setWorkFlowId(48);
-           ((OutsidePlatesImporter)runner).setProtocolId( 68);
-
-
-
-           ((OutsidePlatesImporter)runner).setPlateType("96 WELL PLATE");
-            ((OutsidePlatesImporter)runner).setNumberOfWellsInContainer(96);
-            ((OutsidePlatesImporter)runner).isCheckInFLEXDatabase(false);
-             ((OutsidePlatesImporter)runner).isPutOnQueue(true);
-              ((OutsidePlatesImporter)runner).isDefineContructTypeByNSequence(true);
-              ((OutsidePlatesImporter)runner).setPlatesLocation(Location.CODE_FREEZER);
-              ((OutsidePlatesImporter)runner).setSampleBioType("DN");
-               ((OutsidePlatesImporter)runner).isGetFLEXSequenceFromNCBI(false);
-                      ((OutsidePlatesImporter)runner).isFillInClonesTables(true);
-
-           runner.setDataFilesMappingSchema(map_file);
-           runner.setProcessType(ConstantsImport.PROCESS_IMPORT_OUTSIDE_CONTAINERS_INTO_FLEX);
-           runner.setUser(user);
-           runner.setInputData(FileStructure.STR_FILE_TYPE_ONE_FILE_SUBMISSION, in_stream);
-           runner.run();
-       }
-       catch(Exception e)
-  {
-      e.printStackTrace(System.err);
-      System.out.println(e.getMessage());
-     //e.printStackTrace(System.err);
-  }
-  finally {System.exit(0);}
-   }
-
-
-       public static void      submitYPlates()
-   {
-         ImportRunner runner = null;
-String map_file = "E:\\HTaycher\\HIP projects\\YHPlates\\YH_submission_map.xml";
-String data_file ="E:\\HTaycher\\HIP projects\\YHPlates\\Aventis_import_RZPA_plates_2.txt";
-                InputStream in_stream = null;
-
-       try
-       {
-             User user = new User("htaycher", "hip_informatics@hms.harvard.edu", "");
-             in_stream = new FileInputStream(data_file);
-             edu.harvard.med.hip.flex.process.Researcher researcher =
-                     new edu.harvard.med.hip.flex.process.Researcher(2);
-           runner = new  OutsidePlatesImporter();
-           ((OutsidePlatesImporter)runner).setPlateType("96 WELL PLATE");
-           ((OutsidePlatesImporter)runner).setProjectId(1);
-           ((OutsidePlatesImporter)runner).setWorkFlowId(31);
-
-         //testing
-          // ((OutsidePlatesImporter)runner).setProtocolId(69);
-           // ((OutsidePlatesImporter)runner).setProjectId(1);
-         //  ((OutsidePlatesImporter)runner).setWorkFlowId(31);
-
-           //production
-           ((OutsidePlatesImporter)runner).setProtocolId(68);
-            ((OutsidePlatesImporter)runner).setProjectId(1);
-           ((OutsidePlatesImporter)runner).setWorkFlowId(31);
-
-
-           ((OutsidePlatesImporter)runner).setNumberOfWellsInContainer(96);
-           ((OutsidePlatesImporter)runner).setResearcher(researcher);
-            ((OutsidePlatesImporter)runner).isCheckInFLEXDatabase(true);
-           ((OutsidePlatesImporter)runner).setPlatesLocation(Location.CODE_FREEZER);
-           ((OutsidePlatesImporter)runner).isFillInClonesTables(true);
-
-              ((OutsidePlatesImporter)runner).isPutOnQueue(false);
-              ((OutsidePlatesImporter)runner).isDefineContructTypeByNSequence(false);
-              ((OutsidePlatesImporter)runner).setSampleBioType("MG");
-               ((OutsidePlatesImporter)runner).isGetFLEXSequenceFromNCBI(true);
-                ((OutsidePlatesImporter)runner).isFLEXSequenceIDGI(true);
-
-           runner.setDataFilesMappingSchema(map_file);
-           runner.setProcessType(ConstantsImport.PROCESS_IMPORT_OUTSIDE_CONTAINERS_INTO_FLEX);
-           runner.setUser(user);
-           runner.setInputData(FileStructure.STR_FILE_TYPE_ONE_FILE_SUBMISSION, in_stream);
-           runner.run();
-       }
-       catch(Exception e)
-  {
-      e.printStackTrace(System.err);
-      System.out.println(e.getMessage());
-     //e.printStackTrace(System.err);
-  }
-  finally {System.exit(0);}
-   }
-
-
-
-public static void      submitORFPlates()
-   {
-         ImportRunner runner = null;
-String map_file = "C:\\Projects\\FLEX\\flex\\docs\\irat121_mgc_submission_map.xml";
-String data_file ="C:\\Projects\\FLEX\\flex\\docs\\submission_examples\\testIRAT122-121.txt";
-                InputStream in_stream = null;
-
-       try
-       {
-             User user = new User("htaycher", "hip_informatics@hms.harvard.edu", "");
-             in_stream = new FileInputStream(data_file);
-             edu.harvard.med.hip.flex.process.Researcher researcher =
-                     new edu.harvard.med.hip.flex.process.Researcher(2);
-           runner = new  OutsidePlatesImporter();
-           ((OutsidePlatesImporter)runner).setPlateType("96 WELL PLATE");
-           ((OutsidePlatesImporter)runner).setProjectId(Project.HUMAN);
-           ((OutsidePlatesImporter)runner).setWorkFlowId(47);
-
-           Protocol  protocol = new Protocol(  69);
-
-           ((OutsidePlatesImporter)runner).setProtocolId(protocol.getId());
-           ((OutsidePlatesImporter)runner).setNumberOfWellsInContainer(96);
-           ((OutsidePlatesImporter)runner).setResearcher(researcher);
-            ((OutsidePlatesImporter)runner).isCheckInFLEXDatabase(true);
-           ((OutsidePlatesImporter)runner).setPlatesLocation(Location.CODE_FREEZER);
-           ((OutsidePlatesImporter)runner).isFillInClonesTables(true);
-
-           runner.setDataFilesMappingSchema(map_file);
-           runner.setProcessType(ConstantsImport.PROCESS_IMPORT_OUTSIDE_CONTAINERS_INTO_FLEX);
-           runner.setUser(user);
-           runner.setInputData(FileStructure.STR_FILE_TYPE_ONE_FILE_SUBMISSION, in_stream);
-           runner.run();
-       }
-       catch(Exception e)
-  {
-      e.printStackTrace(System.err);
-      System.out.println(e.getMessage());
-     //e.printStackTrace(System.err);
-  }
-  finally {System.exit(0);}
-   }
-
-
-public static void      submitPlates(String map_file,String data_file, int projectid, int workflowid,
+  
+public static void      submitPlates(String map_file,String[] data_file, int projectid, int workflowid,
         int protocolid, boolean isFLEXSequenceIDGI,
         boolean checkinFLEXDB, boolean isFillInClonesTables, boolean isPutOnQueue,
-        boolean isDefineContructTypeByNSequence, String sampleBioType, boolean isGetFLEXSequenceFromNCBI)
+        boolean isDefineContructTypeByNSequence, String sampleBioType, 
+        boolean isGetFLEXSequenceFromNCBI, boolean isFillNegativeControl,
+        int submission_type)
    {
          ImportRunner runner = null;
         InputStream in_stream = null;
@@ -662,7 +510,7 @@ public static void      submitPlates(String map_file,String data_file, int proje
        try
        {
              User user = new User("htaycher", "hip_informatics@hms.harvard.edu", "");
-             in_stream = new FileInputStream(data_file);
+             in_stream = new FileInputStream(data_file[0]);
              edu.harvard.med.hip.flex.process.Researcher researcher =
                      new edu.harvard.med.hip.flex.process.Researcher(2);
            runner = new  OutsidePlatesImporter();
@@ -683,11 +531,61 @@ public static void      submitPlates(String map_file,String data_file, int proje
           ((OutsidePlatesImporter)runner).setSampleBioType(sampleBioType);
            ((OutsidePlatesImporter)runner).isGetFLEXSequenceFromNCBI(isGetFLEXSequenceFromNCBI);
             ((OutsidePlatesImporter)runner).isFLEXSequenceIDGI(isFLEXSequenceIDGI);
+              ((OutsidePlatesImporter)runner).isInsertControlNegativeForEmptyWell(isFillNegativeControl);
 
            runner.setDataFilesMappingSchema(map_file);
-           runner.setProcessType(ConstantsImport.PROCESS_IMPORT_OUTSIDE_CONTAINERS_INTO_FLEX);
+           runner.setProcessType(ConstantsImport.PROCESS_NTYPE.IMPORT_OUTSIDE_CONTAINERS_INTO_FLEX);
            runner.setUser(user);
-           runner.setInputData(FileStructure.STR_FILE_TYPE_ONE_FILE_SUBMISSION, in_stream);
+           
+           
+   switch  (submission_type)
+   {
+       case  OutsidePlatesImporter.SUBMISSION_TYPE_PSI:
+       {
+            runner.setInputData(FileStructure.STR_FILE_TYPE_PLATE_MAPPING, in_stream);
+             InputStream in_stream_Clone_Information = new FileInputStream(data_file[1]);//"Z:\\HTaycher\\HIP projects\\PSI\\submission\\submitted_plates\\Wisc\\Clone_Information.txt" ;
+            InputStream in_stream_Clone_Gene_Info = new FileInputStream(data_file[2]);//"Z:\\HTaycher\\HIP projects\\PSI\\submission\\submitted_plates\\Wisc\\Clone_Gene_Info.txt" ;
+            InputStream in_stream_Clone_Author_Info = new FileInputStream(data_file[3]);//"Z:\\HTaycher\\HIP projects\\PSI\\submission\\submitted_plates\\Wisc\\Clone_Author_Info.txt" ;
+            InputStream in_stream_clone_author = new FileInputStream(data_file[4]);//"Z:\\HTaycher\\HIP projects\\PSI\\submission\\submitted_plates\\Wisc\\Clone_Author.txt" ;
+         if ( data_file[5] != null)
+         {
+                InputStream in_stream_publication_info = new FileInputStream(data_file[5]); //"Z:\\HTaycher\\HIP projects\\PSI\\submission\\submitted_plates\\Wisc\\Publication_Info.txt";
+                  runner.setInputData(FileStructure.STR_FILE_TYPE_PUBLICATION_INFO,in_stream_publication_info );
+          
+         }
+            if (  data_file[6] != null )
+            {
+                    
+          InputStream  in_stream_clone_publication = new FileInputStream(data_file[6]);//"Z:\\HTaycher\\HIP projects\\PSI\\submission\\submitted_plates\\Wisc\\Clone_Publication.txt" ;
+         runner.setInputData(FileStructure.STR_FILE_TYPE_PUBLICATION_CONNECTION, in_stream_clone_publication);
+        
+            }
+         
+           runner.setInputData(FileStructure.STR_FILE_TYPE_SEQUENCE_INFO, in_stream_Clone_Information);
+           runner.setInputData(FileStructure.STR_FILE_TYPE_GENE_INFO, in_stream_Clone_Gene_Info );
+           runner.setInputData(FileStructure.STR_FILE_TYPE_AUTHOR_INFO, in_stream_Clone_Author_Info);
+           runner.setInputData(FileStructure.STR_FILE_TYPE_AUTHOR_CONNECTION, in_stream_clone_author);
+         
+           break;
+       }
+        case  OutsidePlatesImporter.SUBMISSION_TYPE_MGC:
+        case  OutsidePlatesImporter.SUBMISSION_TYPE_ONE_FILE:
+        {
+            runner.setInputData(FileStructure.STR_FILE_TYPE_ONE_FILE_SUBMISSION, in_stream);
+            
+            break;
+        }
+      case  OutsidePlatesImporter.SUBMISSION_TYPE_REFSEQUENCE_LOCATION_FILES:
+      {
+            runner.setInputData(FileStructure.STR_FILE_TYPE_ONE_FILE_SUBMISSION, in_stream);
+            InputStream in_stream_refseq_info = new FileInputStream(data_file[2]);//"Z:\\HTaycher\\HIP projects\\PSI\\submission\\submitted_plates\\Wisc\\Clone_Information.txt" ;
+            runner.setInputData(FileStructure.STR_FILE_TYPE_REFERENCE_SEQUENCE_INFO, in_stream_refseq_info);
+         
+            break;
+      }
+   }
+         
+            ((OutsidePlatesImporter)runner).setSubmissionType(submission_type);
            runner.run();
        }
        catch(Exception e)
@@ -696,10 +594,13 @@ public static void      submitPlates(String map_file,String data_file, int proje
       System.out.println(e.getMessage());
      //e.printStackTrace(System.err);
   }
-  finally {System.exit(0);}
+  finally {
+      System.exit(0);
+  }
    }
-
-
+//**********************************************************************************
+//**********************************************************************************
+//**********************************************************************************
 private static void writeNotAffectedRecords(String filenamein, String filenameout, String[] check_against)
 {
         FileInputStream input = null;
@@ -772,6 +673,216 @@ private static void replaceIds(String file_replace, String filenamein, String fi
         catch(Exception e)       {}
        
 }
+
+ public static void      submitMGC()
+   {
+         ImportRunner runner = null;
+       String map_file = "C:\\Projects\\FLEX\\flex\\docs\\irat121_mgc_submission_map.xml";
+       String data_file ="C:\\Projects\\FLEX\\flex\\docs\\submission_examples\\testIRAT122-121.txt";
+                InputStream in_stream = null;
+
+       try
+       {
+             User user = new User("htaycher", "hip_informatics@hms.harvard.edu", "");
+             in_stream = new FileInputStream(data_file);
+             edu.harvard.med.hip.flex.process.Researcher researcher =
+                     new edu.harvard.med.hip.flex.process.Researcher(2);
+           runner = new  OutsidePlatesImporter();
+           ((OutsidePlatesImporter)runner).setPlateType("96 WELL PLATE");
+           ((OutsidePlatesImporter)runner).setProjectId(Project.MGC_PROJECT);
+           ((OutsidePlatesImporter)runner).setWorkFlowId(Workflow.MGC_PLATE_HANDLE_WORKFLOW);
+
+           Protocol  protocol = new Protocol(  Protocol.CREATE_CULTURE_FROM_MGC);
+
+           ((OutsidePlatesImporter)runner).setProtocolId(protocol.getId());
+           ((OutsidePlatesImporter)runner).setNumberOfWellsInContainer(96);
+           ((OutsidePlatesImporter)runner).setMGCFileName("testIRAT122-121.txt");
+           ((OutsidePlatesImporter)runner).setResearcher(researcher);
+            ((OutsidePlatesImporter)runner).isCheckInFLEXDatabase(true);
+               ((OutsidePlatesImporter)runner).setPlatesLocation(Location.CODE_FREEZER);
+
+           runner.setDataFilesMappingSchema(map_file);
+           runner.setProcessType(ConstantsImport.PROCESS_NTYPE.IMPORT_OUTSIDE_CONTAINERS_INTO_FLEX);
+           runner.setUser(user);
+           runner.setInputData(FileStructure.STR_FILE_TYPE_ONE_FILE_SUBMISSION, in_stream);
+           runner.run();
+       }
+       catch(Exception e)
+  {
+      e.printStackTrace(System.err);
+      System.out.println(e.getMessage());
+     //e.printStackTrace(System.err);
+  }
+  finally {System.exit(0);}
+   }
+
+
+    public static void      submitPSI()
+   {
+         ImportRunner runner = null;
+String map_file = "E:\\HTaycher\\HIP projects\\PSI\\submission\\PSI_submission_map.xml";
+//String data_file ="E:\\HTaycher\\HIP projects\\PSI\\submission\\PSI_datawithplate_3_text.txt";
+
+// amp without DNA quant    47
+//String data_file ="E:\\HTaycher\\HIP projects\\PSI\\submission\\test\\PSI_plate_a_test.txt" ;
+
+ // kan with DNA quant....   53
+ String data_file ="E:\\HTaycher\\HIP projects\\PSI\\submission\\submitted_plates\\PSI_plate_b_with_vectors.txt" ;
+//production:
+ // 68 - Protocol ID(Upload); projectID - 22; Kan workflow 48, amp workflow 47;
+ InputStream in_stream = null;
+
+       try
+       {
+            FlexProperties sysProps =  SpeciesTranslationProperties.getInstance(  );
+            Hashtable tat = TranslationTable.getTranlationTables();
+
+             User user = new User("htaycher", "hip_informatics@hms.harvard.edu", "");
+             in_stream = new FileInputStream(data_file);
+             edu.harvard.med.hip.flex.process.Researcher researcher =
+                     new edu.harvard.med.hip.flex.process.Researcher(2);
+           runner = new  OutsidePlatesImporter();
+            ((OutsidePlatesImporter)runner).setResearcher(researcher);
+            /* dev
+            ((OutsidePlatesImporter)runner).setProjectId(24);
+           ((OutsidePlatesImporter)runner).setWorkFlowId(47);
+           ((OutsidePlatesImporter)runner).setProtocolId( 69);
+           */
+            //production
+             ((OutsidePlatesImporter)runner).setProjectId(22);
+             // amp
+           //  ((OutsidePlatesImporter)runner).setWorkFlowId(47);
+           //  kan
+           ((OutsidePlatesImporter)runner).setWorkFlowId(48);
+           ((OutsidePlatesImporter)runner).setProtocolId( 68);
+
+
+
+           ((OutsidePlatesImporter)runner).setPlateType("96 WELL PLATE");
+            ((OutsidePlatesImporter)runner).setNumberOfWellsInContainer(96);
+            ((OutsidePlatesImporter)runner).isCheckInFLEXDatabase(false);
+             ((OutsidePlatesImporter)runner).isPutOnQueue(true);
+              ((OutsidePlatesImporter)runner).isDefineContructTypeByNSequence(true);
+              ((OutsidePlatesImporter)runner).setPlatesLocation(Location.CODE_FREEZER);
+              ((OutsidePlatesImporter)runner).setSampleBioType("DN");
+               ((OutsidePlatesImporter)runner).isGetFLEXSequenceFromNCBI(false);
+                      ((OutsidePlatesImporter)runner).isFillInClonesTables(true);
+
+           runner.setDataFilesMappingSchema(map_file);
+           runner.setProcessType(ConstantsImport.PROCESS_NTYPE.IMPORT_OUTSIDE_CONTAINERS_INTO_FLEX);
+           runner.setUser(user);
+           runner.setInputData(FileStructure.STR_FILE_TYPE_ONE_FILE_SUBMISSION, in_stream);
+           runner.run();
+       }
+       catch(Exception e)
+  {
+      e.printStackTrace(System.err);
+      System.out.println(e.getMessage());
+     //e.printStackTrace(System.err);
+  }
+  finally {System.exit(0);}
+   }
+
+
+       public static void      submitYPlates()
+   {
+         ImportRunner runner = null;
+String map_file = "E:\\HTaycher\\HIP projects\\YHPlates\\YH_submission_map.xml";
+String data_file ="E:\\HTaycher\\HIP projects\\YHPlates\\Aventis_import_RZPA_plates_2.txt";
+                InputStream in_stream = null;
+
+       try
+       {
+             User user = new User("htaycher", "hip_informatics@hms.harvard.edu", "");
+             in_stream = new FileInputStream(data_file);
+             edu.harvard.med.hip.flex.process.Researcher researcher =
+                     new edu.harvard.med.hip.flex.process.Researcher(2);
+           runner = new  OutsidePlatesImporter();
+           ((OutsidePlatesImporter)runner).setPlateType("96 WELL PLATE");
+           ((OutsidePlatesImporter)runner).setProjectId(1);
+           ((OutsidePlatesImporter)runner).setWorkFlowId(31);
+
+         //testing
+          // ((OutsidePlatesImporter)runner).setProtocolId(69);
+           // ((OutsidePlatesImporter)runner).setProjectId(1);
+         //  ((OutsidePlatesImporter)runner).setWorkFlowId(31);
+
+           //production
+           ((OutsidePlatesImporter)runner).setProtocolId(68);
+            ((OutsidePlatesImporter)runner).setProjectId(1);
+           ((OutsidePlatesImporter)runner).setWorkFlowId(31);
+
+
+           ((OutsidePlatesImporter)runner).setNumberOfWellsInContainer(96);
+           ((OutsidePlatesImporter)runner).setResearcher(researcher);
+            ((OutsidePlatesImporter)runner).isCheckInFLEXDatabase(true);
+           ((OutsidePlatesImporter)runner).setPlatesLocation(Location.CODE_FREEZER);
+           ((OutsidePlatesImporter)runner).isFillInClonesTables(true);
+
+              ((OutsidePlatesImporter)runner).isPutOnQueue(false);
+              ((OutsidePlatesImporter)runner).isDefineContructTypeByNSequence(false);
+              ((OutsidePlatesImporter)runner).setSampleBioType("MG");
+               ((OutsidePlatesImporter)runner).isGetFLEXSequenceFromNCBI(true);
+                ((OutsidePlatesImporter)runner).isFLEXSequenceIDGI(true);
+
+           runner.setDataFilesMappingSchema(map_file);
+           runner.setProcessType(ConstantsImport.PROCESS_NTYPE.IMPORT_OUTSIDE_CONTAINERS_INTO_FLEX);
+           runner.setUser(user);
+           runner.setInputData(FileStructure.STR_FILE_TYPE_ONE_FILE_SUBMISSION, in_stream);
+           runner.run();
+       }
+       catch(Exception e)
+  {
+      e.printStackTrace(System.err);
+      System.out.println(e.getMessage());
+     //e.printStackTrace(System.err);
+  }
+  finally {System.exit(0);}
+   }
+
+
+
+public static void      submitORFPlates()
+   {
+         ImportRunner runner = null;
+String map_file = "C:\\Projects\\FLEX\\flex\\docs\\irat121_mgc_submission_map.xml";
+String data_file ="C:\\Projects\\FLEX\\flex\\docs\\submission_examples\\testIRAT122-121.txt";
+                InputStream in_stream = null;
+
+       try
+       {
+             User user = new User("htaycher", "hip_informatics@hms.harvard.edu", "");
+             in_stream = new FileInputStream(data_file);
+             edu.harvard.med.hip.flex.process.Researcher researcher =
+                     new edu.harvard.med.hip.flex.process.Researcher(2);
+           runner = new  OutsidePlatesImporter();
+           ((OutsidePlatesImporter)runner).setPlateType("96 WELL PLATE");
+           ((OutsidePlatesImporter)runner).setProjectId(Project.HUMAN);
+           ((OutsidePlatesImporter)runner).setWorkFlowId(47);
+
+           Protocol  protocol = new Protocol(  69);
+
+           ((OutsidePlatesImporter)runner).setProtocolId(protocol.getId());
+           ((OutsidePlatesImporter)runner).setNumberOfWellsInContainer(96);
+           ((OutsidePlatesImporter)runner).setResearcher(researcher);
+            ((OutsidePlatesImporter)runner).isCheckInFLEXDatabase(true);
+           ((OutsidePlatesImporter)runner).setPlatesLocation(Location.CODE_FREEZER);
+           ((OutsidePlatesImporter)runner).isFillInClonesTables(true);
+
+           runner.setDataFilesMappingSchema(map_file);
+           runner.setProcessType(ConstantsImport.PROCESS_NTYPE.IMPORT_OUTSIDE_CONTAINERS_INTO_FLEX);
+           runner.setUser(user);
+           runner.setInputData(FileStructure.STR_FILE_TYPE_ONE_FILE_SUBMISSION, in_stream);
+           runner.run();
+       }
+       catch(Exception e)
+  {
+      e.printStackTrace(System.err);
+      System.out.println(e.getMessage());
+     //e.printStackTrace(System.err);
+  }
+  finally {System.exit(0);}
+   }
 
 
 private static void getORFCloneSequences(  String filenamein, String filenameout  )
