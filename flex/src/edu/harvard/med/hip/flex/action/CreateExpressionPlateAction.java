@@ -145,7 +145,7 @@ public class CreateExpressionPlateAction extends ResearcherAction {
             return (mapping.findForward("error"));
         }
         
-        Workflow workflow = new Workflow(Workflow.TRANSFER_TO_EXPRESSION, null, null,null);
+        Workflow workflow = new Workflow(Workflow.TRANSFER_TO_EXPRESSION, null, null,null,null);
         Project p = new Project(-1, null, null, null, null);
         Protocol protocol = new Protocol(Protocol.CREATE_EXPRESSION_PLATE_CODE,null,null,null);
         

@@ -271,6 +271,10 @@
                     
     <form-bean      name="reportRunForm"
                     type="edu.harvard.med.hip.flex.form.ReportRunForm"/>
+   <form-bean      name="addWorkflowItemsForm"
+                    type="edu.harvard.med.hip.flex.form.AddWorkflowItemsForm"/>
+  
+ 
  </form-beans>
 
   <!-- ========== Global Forward Definitions ============================== -->
@@ -1476,7 +1480,18 @@
         type="edu.harvard.med.hip.flex.action.AddItemsAction">
             <forward name="add_items" path="/AddItemsEntryParameters.jsp"/>
             <forward name="confirm_add_items" path="/AddItemsConfirm.jsp"/>
-                    
+</action>
+
+ <action     path="/AddWorkflowItems"
+        name="addWorkflowItemsForm"
+        scope="request"
+        input="/AddWorkflowItems.jsp"
+        validate="true"
+        type="edu.harvard.med.hip.flex.action.AddWorkflowItemsAction">
+            <forward name="confirm_add_items" path="/AddItemsConfirm.jsp"/>
+             <forward name="display_workflow" path="/DisplayWorkflow.jsp"/>
+           
+           <forward name="add_workflow_items" path="/AddWorkflowItemsEntryParameters.jsp"/>         
 </action>
 
  <!-- add new items-->

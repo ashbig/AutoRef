@@ -39,6 +39,7 @@ import edu.harvard.med.hip.flex.workflow.*;
 
 import edu.harvard.med.hip.flex.infoimport.*;
 import static edu.harvard.med.hip.flex.infoimport.ConstantsImport.PROCESS_NTYPE;
+import static edu.harvard.med.hip.flex.workflow.Workflow.WORKFLOW_TYPE;
 import edu.harvard.med.hip.flex.infoimport.bioinfo.*;
 import edu.harvard.med.hip.flex.infoimport.file_mapping.*;
  import org.hibernate.*;
@@ -176,7 +177,7 @@ public class AddItemsAction extends ResearcherAction {
                     request.setAttribute("container_labels", container_labels);
                     return (mapping.findForward("confirm_add_items"));
                  }
-
+                  
                  default: return null;
              }
              
@@ -306,20 +307,21 @@ public class AddItemsAction extends ResearcherAction {
               try
               {
                 cur_item.insert();
-                labels +="container "+ cur_item.getContainerLabel()+" was put for processing;";
+                labels +="<p>container "+ cur_item.getContainerLabel()+" was put for processing;";
               }
               catch(Exception e)
               {
-                  labels +="cannot put container "+ cur_item.getContainerLabel()+" for processing;";
+                  System.out.println(e.getMessage());
+                  labels +="<P>cannot put container "+ cur_item.getContainerLabel()+" for processing;";
               
               }
             }
             else
             {
-                 labels +="container "+ cur_item.getContainerLabel()+" was in processing queue already;";
+                 labels +="<P>container "+ cur_item.getContainerLabel()+" was in processing queue already;";
             }
         }
-        System.out.println(labels);
+       // System.out.println(labels);
         return labels;
         
   }

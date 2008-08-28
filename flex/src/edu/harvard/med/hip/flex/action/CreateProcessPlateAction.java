@@ -100,6 +100,10 @@ public class CreateProcessPlateAction extends FlexAction {
             
             request.setAttribute("workflowid", new Integer(workflowid));
             request.setAttribute("projectid", new Integer(projectid));
+            String forwardName = (String)request.getAttribute("forwardName");
+            if ( forwardName != null)
+            {request.setAttribute("forwardName", forwardName);}
+          
             request.setAttribute("CreateProcessPlateAction.protocols", protocols);
             return (mapping.findForward("success"));
         } catch (FlexDatabaseException ex) {
