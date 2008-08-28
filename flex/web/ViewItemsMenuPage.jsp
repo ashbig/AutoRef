@@ -33,7 +33,8 @@
      <li><a href="/FLEX/ViewItems.do?forwardName=<%= Constants.VIEW_LINKERS%>" target="display">Linker</a></li>
      <li><a href="/FLEX/ViewItems.do?forwardName=<%= Constants.VIEW_VECTORS%>" target="display">Vectors</a></li>
      <li><a href="/FLEX/ViewItems.do?forwardName=<%= Constants.VIEW_CLONINGSTRATEGIES%>" target="display">Cloning Strategies</a></li>
-      
+    <br>    <li><a href="/FLEX/ViewItems.do?forwardName=<%= ConstantsImport.PROCESS_NTYPE.VIEW_WORKFLOWS.toString()%>" target="display">Workflows</a></li>
+   
     </ul>
    
 <p>

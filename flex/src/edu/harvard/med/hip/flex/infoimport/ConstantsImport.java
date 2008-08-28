@@ -202,8 +202,8 @@ CREATE_PROJECT ("Create new project"),
 
 
 
-DISPLAY_WORKFLOW         ("Workflow")
-              
+DISPLAY_WORKFLOW         ("Workflow"),
+VIEW_WORKFLOWS("View workflows")              
                     ;
       
          

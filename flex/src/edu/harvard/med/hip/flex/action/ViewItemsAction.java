@@ -27,6 +27,7 @@ import edu.harvard.med.hip.flex.Constants;
 import edu.harvard.med.hip.flex.workflow.*;
 import edu.harvard.med.hip.flex.infoimport.coreobjectsforimport.*;
 import edu.harvard.med.hip.flex.infoimport.*;
+import static edu.harvard.med.hip.flex.infoimport.ConstantsImport.PROCESS_NTYPE;
 
 import java.sql.*;
 import javax.sql.*;
@@ -64,10 +65,26 @@ public class ViewItemsAction extends ResearcherAction {
         String forwardName = ((ProjectWorkflowForm)form).getForwardName();        
               List items = null;
           String no_items_header = null;
+          PROCESS_NTYPE cur_process = PROCESS_NTYPE.valueOf(forwardName);
+      
          String title= ""; 
          try 
         {
-            
+            if ( cur_process != null)
+            {
+                switch (cur_process)
+                {
+                    case VIEW_WORKFLOWS:
+                    {
+                        items = Workflow.getAllWorkflows();
+                         if( items != null && items.size() > 0 )
+                            request.setAttribute("workflows",items);
+                       else
+                         request.setAttribute(Constants.UI_TABLE_NO_DATA,"No workflows available");
+                         title="Currently Available Workflows ";
+                    }
+                }
+            }
             if(Constants.VIEW_VECTORS.equals(forwardName)) 
             {
                items = CloneVector.getAllVectors();

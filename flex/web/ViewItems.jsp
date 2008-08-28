@@ -1,14 +1,19 @@
-<%@ page contentType="text/html"%>
 <%@ page language="java" %>
-
-<%@ page import="java.util.*" %>
-<%@ page import="edu.harvard.med.hip.flex.*" %>
-<%@ page import="edu.harvard.med.hip.flex.core.*" %>
+<%@ page errorPage="ProcessError.do"%>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/flex.tld" prefix="flex" %>
+
+<%@ page import="edu.harvard.med.hip.flex.Constants" %>
+<%@ page import="java.util.*" %>
+<%@ page import="edu.harvard.med.hip.flex.*" %>
+<%@ page import="edu.harvard.med.hip.flex.core.*" %>
+<%@ page import="edu.harvard.med.hip.flex.infoimport.*" %>
+<%@ page import="edu.harvard.med.hip.flex.workflow.*" %>
+
+ 
 
 
 
@@ -148,7 +153,19 @@
 </logic:present>
     
 
-
+<logic:present name="workflows">
+    <TABLE border="1" cellpadding="2" cellspacing="0">
+        <tr class="headerRow"> <td>Workflow ID</td><td>Workflow Name</td><td>Structure</td>  </tr>
+          <logic:iterate id="str" name="workflows"  >
+          <flex:row oddStyleClass="oddRow" evenStyleClass="evenRow">
+            <td><bean:write name="str" property="id"/></td>
+            <td><bean:write name="str" property="name"/></td>
+          <td>   <input type=BUTTON value="Display" onCLick="window.open('AddWorkflowItems.do?forwardName=<%= ConstantsImport.PROCESS_NTYPE.DISPLAY_WORKFLOW.toString()%>&amp;workflowid=<bean:write name="str" property="id"/>','Display Workflow','width=700,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" > </td>
+          
+          </flex:row>
+      </logic:iterate>
+    </table>
+    </logic:present>
 <br>
 
 
