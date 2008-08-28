@@ -13,23 +13,31 @@ import java.util.*;
 import java.sql.*;
 import edu.harvard.med.hip.flex.process.Protocol;
 import edu.harvard.med.hip.flex.database.*;
+import edu.harvard.med.hip.flex.core.*;
+import edu.harvard.med.hip.flex.util.*;
 /**
  *
  * @author  dzuo
  * @version
  */
 public class Workflow {
-    protected int id;
+    protected int id = -1;
     protected String name;
     protected String description;
     protected Vector flow;
     protected WORKFLOW_TYPE    m_workflow_type;
+    protected Collection<PWPItem>       m_properties;
     
     public enum WORKFLOW_TYPE
     {
-        REGULAR,
-        REARRAY,
-        TRANSFER_TO_EXPRESSION;
+        REGULAR("Regular workflow"),
+        REARRAY ("Rearray workflow"),
+        TRANSFER_TO_EXPRESSION ("Transfer clones to expression vector");
+        
+         WORKFLOW_TYPE(String title ){i_title=title; }
+         public String getTitle(){ return i_title;}
+        private String i_title = "Not known";
+       
     };
     
     public static final int COMMON_WORKFLOW = 1;
@@ -199,6 +207,7 @@ public class Workflow {
             this.name = w.getName();
             this.flow = w.getFlow();
             m_workflow_type= w.getWorkflowType();
+            m_properties = w.getProperties();
             return;
         }
         
@@ -258,19 +267,54 @@ public class Workflow {
      * @param description The workflow description.
      * @return The Workflow object.
      */
-    public Workflow(int id, String name, String description, WORKFLOW_TYPE workflow_type) {
+    public Workflow(int id, String name, String description, WORKFLOW_TYPE workflow_type, Collection p) {
         this.id = id;
         this.name = name;
         this.description = description;
         m_workflow_type=workflow_type;
+        m_properties = p;
     }
     
+    public  Workflow(Workflow template, String name, int vectorid)
+            throws Exception
+    {
+        this.name = name;
+        this.id = FlexIDGenerator.getID("workflowid");
+        m_workflow_type = template.getWorkflowType();
+        this.flow = new Vector(template.getFlow());
+        CloneVector vec =  CloneVector.getCloneVectorByID(vectorid);
+        for (PWPItem item : template.getProperties())
+        {
+            if ( item.getName().equals("VECTOR_ID"))
+            {
+                PWPItem nitem = new PWPItem(-1,this.id,-1,"VECTOR_ID", String.valueOf(vectorid));
+                this.addProperty(nitem);
+            }
+            else if (item.getName().equals("VECTOR_NAME"))
+            {
+                PWPItem nitem = new PWPItem(-1,this.id,-1,"VECTOR_NAME", vec.getName());
+                this.addProperty(nitem);
+            }
+            else if ( item.getName().equals("CLONING_STRATEGY_ID"))
+            { //artifact
+            }
+            else // should never be here - > exception
+            {
+                throw new Exception ("Cannot clone workflow (unrecognized property) " + template.getName());
+            }
+                
+        }
+    }
     /**
      * Return the workflow id.
      *
      * @return The workflow id.
      */
     public int getId() {        return id;    }
+    public Collection<PWPItem>   getProperties(){ return m_properties;}
+    public void       addProperty(PWPItem p)
+    { if (m_properties == null) m_properties=new ArrayList();
+      m_properties.add(p);}
     
     /**
      * Return the next protocol name for the given protocol name.
@@ -306,6 +350,30 @@ public class Workflow {
         return null;
     }
     
+     
+     public String getHTMLView ()
+     {
+        Iterator iter;Protocol prot;
+        StringBuffer html_string = new StringBuffer();
+        FlowRecord r ; Protocol pr;
+        int count = 1;   
+          for (int c = 0; c < flow.size(); c++)
+          {
+             r = ((FlowRecord)flow.get(c));
+             if ( c == 0 )
+             { 
+                pr = r.getCurrent();
+                html_string.append(" <ul><li>"+pr.getProcessname()+"</li>");
+                
+             }
+             html_string.append( r.getHTMLView());
+             count+=r.getNext().size();
+          }
+        while(count-->0)
+        {html_string.append( "</ul>");}
+        
+        return html_string.toString();
+    }
     /**
      * Return the previous protocol name for the given protocol name.
      *
@@ -349,6 +417,21 @@ public class Workflow {
     public void             setFlow(Vector v) { flow = v;    }
     public void             setWorkflowType(String workflow_type){m_workflow_type=WORKFLOW_TYPE.valueOf(workflow_type);}
     public WORKFLOW_TYPE           getWorkflowType(){ return m_workflow_type;}
+    public static List       getAllWorkflows(WORKFLOW_TYPE wtype, Collection workflows) 
+    {
+        Iterator <Workflow> iter = workflows.iterator();
+        List req_workflows = new ArrayList();
+        Workflow cur_w ;
+        while(iter.hasNext())
+        {
+            cur_w = (Workflow)iter.next();
+            if ( cur_w.getWorkflowType().equals( wtype))
+            {
+                req_workflows.add(cur_w);
+            }
+        }
+        return req_workflows;
+    }
     
     public static Vector getAllWorkflows() throws FlexDatabaseException {
         
@@ -370,7 +453,7 @@ public class Workflow {
                 String name = rs.getString("NAME");
                 String description = rs.getString("DESCRIPTION");
                 WORKFLOW_TYPE workflow_type = WORKFLOW_TYPE.valueOf(rs.getString("workflowtype"));
-                Workflow w = new Workflow(workflowid, name, description,workflow_type);
+                Workflow w = new Workflow(workflowid, name, description,workflow_type, null);
                 workflows.addElement(w);
             }
         } catch(SQLException sqlE) {
@@ -393,24 +476,75 @@ public class Workflow {
         });
     }
     
+    public void insert (Connection conn)throws FlexDatabaseException
+    {
+       String temp;
+       String sql = "insert into workflow (workflowid, name,workflowtype) ";
+       if ( id==-1 )  
+           sql +=" values (workflowid.nextval,'"+ name+"','"+m_workflow_type.toString() +"')";
+       else
+          sql +=" values ("+id+",'"+ name+"','"+m_workflow_type.toString() +"')";
+       
+       String sql_w_task1 =
+              "insert into workflowtask   (workflowtaskid, currentprotocolid, nextprotocolid,workflowid) values  "
++" (workflowtaskid.nextval,";
+               String sql_w_task2=",(select workflowid from workflow where name='"+name+"'))";
+        String sql_properties="insert into setup_properties (projectid, workflowid,protocolid, propertyname,propertyvalue) "
+   +" values (-1,(select workflowid from workflow where name='"+name+"'),-1," ;   
     
-    public static void main(String [] args) {
+        Statement stmt = null;
         try {
-            Workflow flow = new Workflow(Workflow.CONVERT_CLOSE_TO_FUSION);
-            System.out.println("Name is: "+flow.getName());
-            System.out.println("Description is: "+flow.getDescription());
-            
-            Protocol curr = new Protocol(45);
-            System.out.println("Current protocol is: "+curr.getProcessname());
-            
-            List nexts = flow.getNextProtocol(curr);
-            Iterator iter = nexts.iterator();
-            while(iter.hasNext()) {
-                Protocol next = (Protocol)iter.next();
-                System.out.println("Next protocol is: "+next.getProcessname());
+            stmt = conn.createStatement();
+        //    System.out.println(sql);
+            stmt.executeUpdate(sql);
+           
+            for (PWPItem item  : m_properties)
+            {
+                temp = sql_properties+"'" + item.getName()+"','"+item.getValue()+"')";
+             // System.out.println(temp);
+                stmt.executeUpdate(temp);
             }
-        } catch (FlexDatabaseException ex) {
-            System.out.println(ex);
+            
+            Iterator iter = flow.iterator();
+            FlowRecord r;Protocol n;
+            while (iter.hasNext())
+            {
+                r = (FlowRecord)iter.next();
+                for (int cc = 0; cc < r.getNext().size();cc++)
+                {
+                    n = (Protocol) r.getNext().get(cc);
+                  temp = sql_w_task1+ r.getCurrent().getId()+"," + n.getId() +sql_w_task2;
+          //    System.out.println(temp);
+                   stmt.executeUpdate(temp);
+                }
+             }
+            
+            
+        } catch (Exception sqlE) {
+            throw new FlexDatabaseException(sqlE+"\nSQL: "+sql);
+        } finally {
+            DatabaseTransaction.closeStatement(stmt);
+        }
+    }
+    public static void main(String [] args) {
+        Connection conn=null;
+        try {
+                  DatabaseTransaction t = DatabaseTransaction.getInstance();
+              conn = t.requestConnection();
+       
+            ProjectWorkflowProtocolInfo.getInstance();
+             Workflow flow = new Workflow(2);
+             System.out.println(flow.getHTMLView());
+             
+             Workflow neww = new Workflow(flow,"new111vector",134 );
+             System.out.println(neww.getHTMLView());
+           neww.insert(conn);
+        } catch (Exception e)
+        {
+            DatabaseTransaction.rollback(conn);
+             
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
         }
     }
 }

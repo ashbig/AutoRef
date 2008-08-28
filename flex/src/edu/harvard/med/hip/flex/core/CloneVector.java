@@ -36,6 +36,13 @@ public class CloneVector {
         this.name = name;
     }
     
+    public static CloneVector getCloneVectorByID(int id) throws Exception
+    {
+         String sql = "select vectorname,vectorsource,vectortype,vectorfile,vectorfilepath,"
+      +"description,restriction,hipname,vectorid from vector where  vectorid="+id;
+       List vv =  getVectorsBySQL(sql);
+       return (CloneVector)vv.get(0);
+    }
     public CloneVector(CloneVector c) {
         if(c != null) {
             this.name = c.getName();
@@ -85,6 +92,12 @@ public class CloneVector {
    {
        String sql = "select vectorname,vectorsource,vectortype,vectorfile,vectorfilepath,"
       +"description,restriction,hipname,vectorid from vector order by vectorid";
+       return getVectorsBySQL(sql);
+   }
+    public static List  getAllVectorsByVectorType(String v_type) throws FlexDatabaseException
+   {
+       String sql = "select vectorname,vectorsource,vectortype,vectorfile,vectorfilepath,"
+      +"description,restriction,hipname,vectorid from vector where vectortype like '"+v_type +"' order by vectorid";
        return getVectorsBySQL(sql);
    }
    
@@ -187,6 +200,7 @@ public class CloneVector {
                 vectorid = rs.getInt(9);
                 
                 features = new ArrayList();
+                if ( name.indexOf("'") >-1) name=name.replace("'", "''");
                 sql = "select * from vectorfeature where vectorname='"+name+"'";
                 rs = t.executeQuery(sql);
                 while(rs.next()) {

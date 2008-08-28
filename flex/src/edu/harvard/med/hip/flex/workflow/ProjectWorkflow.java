@@ -40,9 +40,9 @@ public class ProjectWorkflow extends Workflow {
     }
     public void           setCode(String v){ code = v;}
     public ProjectWorkflow(String code, int workflowid, String name, 
-            String description, WORKFLOW_TYPE workflowtype) 
+            String description, WORKFLOW_TYPE workflowtype, Collection v) 
     {
-        super(workflowid,  name,  description ,workflowtype);
+        super(workflowid,  name,  description ,workflowtype,v);
         this.code = code;
     }
     

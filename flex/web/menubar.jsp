@@ -35,6 +35,11 @@
     <a href="/FLEX/AddItems.jsp" target="display" >Add</a><span>|</span>
 </div><%}%>
 
+<% if (user_level >= WADMIN){%>    
+<div id="myMenuMain">
+    <a href="/FLEX/AddWorkflowItems.jsp" target="display" >Workflow managment</a><span>|</span>
+</div><%}%>
+
  <% if (user_level >= RESEARCHER){%> 
  <div class="navheader">Process</div>
   

@@ -51,8 +51,10 @@
      <ul> 
 <li><a href="/FLEX/AddItems.do?forwardName=<%= ConstantsImport.PROCESS_NTYPE.PUT_PLATES_FOR_SEQUENCING_INPUT %>">
 <%= ConstantsImport.PROCESS_NTYPE.PUT_PLATES_FOR_SEQUENCING_INPUT.getTitle() %>    </a> </li>  
-<li><a href="/FLEX/GetProjects.do?forwardName=<%= ConstantsImport.PROCESS_NTYPE.PUT_PLATES_IN_PIPELINE %>">
+ <% if (user_level >= WADMIN){%>
+ <li><a href="/FLEX/GetProjects.do?forwardName=<%= ConstantsImport.PROCESS_NTYPE.PUT_PLATES_IN_PIPELINE %>">
 <%= ConstantsImport.PROCESS_NTYPE.PUT_PLATES_IN_PIPELINE.getTitle() %>    </a> </li>  
+<%}%>
 
 </ul>
 <%}%>

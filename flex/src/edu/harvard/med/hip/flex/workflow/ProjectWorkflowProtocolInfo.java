@@ -11,6 +11,7 @@ package edu.harvard.med.hip.flex.workflow;
 import java.util.*;
 
 import edu.harvard.med.hip.flex.database.*;
+import edu.harvard.med.hip.flex.core.*;
 import java.sql.*;
 import javax.sql.*;
 import edu.harvard.med.hip.flex.process.*;
@@ -35,6 +36,7 @@ public class ProjectWorkflowProtocolInfo {
      * Protected constructor.
      *
      */
+    
     private ProjectWorkflowProtocolInfo() {
         //get data
         try {
@@ -87,17 +89,42 @@ public class ProjectWorkflowProtocolInfo {
         }
         return instance;
     }
+    public static void reloadProjectWorkflowProtocolInfo()
+    {
+        instance = new ProjectWorkflowProtocolInfo();
+       
+    }
 
     /////
     private void getProperties() throws FlexDatabaseException {
         String sql = "select projectid, workflowid, protocolid, propertyname, propertyvalue  from setup_properties  ";
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         ResultSet rs = t.executeQuery(sql);
-        String key;
+        String key;PWPItem pitem;
         try {
-            while (rs.next()) {
-                key = rs.getString("projectid") +PWP_SEPARATOR+ rs.getString("workflowid") + PWP_SEPARATOR+rs.getString("protocolid") +PWP_SEPARATOR+ rs.getString("propertyname");
-                s_project_protocol_workflow_properties.put(key, rs.getString("propertyvalue"));
+            while (rs.next())
+            {
+               // key = rs.getString("projectid") +PWP_SEPARATOR+ rs.getString("workflowid") + PWP_SEPARATOR+rs.getString("protocolid") +PWP_SEPARATOR+ rs.getString("propertyname");
+                int pid = rs.getInt("projectid");
+                int wid = rs.getInt("workflowid");
+                int ppid = rs.getInt("protocolid");
+                pitem = new PWPItem(pid,wid,ppid,rs.getString("propertyname"),rs.getString("propertyvalue"));
+                
+                s_project_protocol_workflow_properties.put(pitem.getKey(), rs.getString("propertyvalue"));
+                if (pid==-1 && ppid==-1 && wid != -1)
+                {
+                    Workflow w = s_workflows.get(String.valueOf(wid));
+                    w.addProperty(pitem);
+                }
+                else if (pid!=-1 && ppid==-1 && wid == -1)
+                {
+                     Project p = s_projects.get(String.valueOf(pid));
+                    p.addProperty(pitem);
+                }
+                else if (pid==-1 && ppid!=-1 && wid == -1)
+                {
+                    
+                }
             }
         } catch (SQLException sqlE) {
             throw new FlexDatabaseException(sqlE + "\nSQL: " + sql);
@@ -110,7 +137,7 @@ public class ProjectWorkflowProtocolInfo {
     private void getProjectInfo() throws FlexDatabaseException {
         String sql = "select * from project order by name";
         Project p = null;
-        String name = null;
+        String name = null;String code = null;
         String description = null;
         String version = null;
         DatabaseTransaction t = DatabaseTransaction.getInstance();
@@ -122,7 +149,8 @@ public class ProjectWorkflowProtocolInfo {
                 name = rs.getString("NAME");
                 description = rs.getString("DESCRIPTION");
                 version = rs.getString("VERSION");
-                p = new Project(projectid, name, description, version, 1);
+                code = rs.getString("code");
+                p = new Project(projectid, name, description, version,code, 1);
                 s_projects.put(String.valueOf(p.getId()), p);
             }
         } catch (SQLException sqlE) {
@@ -133,7 +161,16 @@ public class ProjectWorkflowProtocolInfo {
 
     }
 
-    private void getWorkflowsInfo() throws FlexDatabaseException {
+    public  static void addWorkflows(Workflow wf) throws FlexDatabaseException 
+    {
+            s_workflows.put(String.valueOf(wf.getId()), wf);
+    }
+    public  static void addProject(Project p) throws FlexDatabaseException 
+    {
+            s_projects.put(String.valueOf(p.getId()), p);
+    }
+    
+    private static void getWorkflowsInfo() throws FlexDatabaseException {
         String sql = "select workflowid, name, description, workflowtype from workflow order by workflowid ";
         String name = null;
         String description = null;
@@ -148,7 +185,7 @@ public class ProjectWorkflowProtocolInfo {
                 description = rs.getString("DESCRIPTION");
                 workflowid = rs.getInt("workflowid");
                 workflow_type = WORKFLOW_TYPE.valueOf(rs.getString("workflowtype"));
-                wf = new ProjectWorkflow(null, workflowid, name, description,workflow_type);
+                wf = new ProjectWorkflow(null, workflowid, name, description,workflow_type,null);
                 s_workflows.put(String.valueOf(workflowid), wf);
             }
 
@@ -245,7 +282,7 @@ public class ProjectWorkflowProtocolInfo {
                 if (pwf == null) {
                     throw new Exception("Cannot find workflow with id: " + workflowid);
                 }
-                workflow = new ProjectWorkflow(code, workflowid, pwf.getName(), pwf.getDescription(),pwf.getWorkflowType());
+                workflow = new ProjectWorkflow(code, workflowid, pwf.getName(), pwf.getDescription(),pwf.getWorkflowType(),null);
                 workflows.addElement(workflow);
             }
         } catch (SQLException sqlE) {
@@ -258,7 +295,7 @@ public class ProjectWorkflowProtocolInfo {
     private void connectWorkflowProtocols() throws Exception 
     {
        
-        String sql = "select workflowid,currentprotocolid, nextprotocolid from workflowtask order by workflowid, currentprotocolid";
+        String sql = "select workflowid,currentprotocolid, nextprotocolid from workflowtask order by workflowid, workflowtaskid";
         DatabaseTransaction t = DatabaseTransaction.getInstance();
 
         RowSet rs = t.executeQuery(sql);
@@ -278,6 +315,7 @@ public class ProjectWorkflowProtocolInfo {
             while (rs.next()) {
                 if (workflowid != rs.getInt("workflowid")) // new workflow
                 {
+                    
                     workflowid = rs.getInt("workflowid");
                     current = -1;
                     flow = new Vector();
@@ -319,14 +357,23 @@ public class ProjectWorkflowProtocolInfo {
 
     public static void main(String[] args) {
 
-        ProjectWorkflowProtocolInfo prf = ProjectWorkflowProtocolInfo.getInstance();
-       String  key = "-1"+ProjectWorkflowProtocolInfo.PWP_SEPARATOR+
-                                "65"+ProjectWorkflowProtocolInfo.PWP_SEPARATOR+
-                                "-1"+ProjectWorkflowProtocolInfo.PWP_SEPARATOR +"VECTOR_ID";
-       
-       key="-1.65.-1.CLONING_STRATEGY_ID";
-                        String label_postfix = ProjectWorkflowProtocolInfo.getInstance().getPWPProperties().get(key);
-             System.out.println(label_postfix);
+        try
+      {
+             ProjectWorkflowProtocolInfo.reloadProjectWorkflowProtocolInfo();// .getInstance();
+   
+             ProjectWorkflowProtocolInfo prf = ProjectWorkflowProtocolInfo.getInstance();
+   //Workflow w = new Workflow(65);
+       //     Workflow ww = new Workflow(w, "new name", 165);
+              DatabaseTransaction t = DatabaseTransaction.getInstance();
+             Connection conn = t.requestConnection();
+          
+              Workflow w=  edu.harvard.med.hip.flex.action.AddWorkflowItemsAction.createNewWorkflowFromTemplate
+          (65,159,"newworkflow", "TRANSFER_TO_EXPRESSION", conn);
+          System.exit(0);
+      }catch(Exception e)
+      {
+      System.exit(0);
+      }
        // Hashtable tr = prf.getWorkflows();
        // Hashtable re = prf.getProjects();
     //    String label_postfix = "112";

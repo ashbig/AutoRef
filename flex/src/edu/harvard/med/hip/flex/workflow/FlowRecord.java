@@ -73,5 +73,24 @@ public class FlowRecord {
      */
     public Protocol getCurrent() {
         return this.current;
-    }    
+    }   
+    
+    public String getHTMLView()
+     {
+        Iterator iter;Protocol prot;String temp=null;
+        StringBuffer html_string = new StringBuffer();
+        iter = next.iterator();
+        html_string.append("<ul>");
+        while(iter.hasNext())
+        {
+            prot = (Protocol)iter.next();
+            if ( !prot.getProcessname().equals(temp ))
+            {
+                temp = prot.getProcessname();
+                html_string.append("<li>"+prot.getProcessname()+"</li>");
+            }
+        }
+       // html_string.append("</ul>");
+        return html_string.toString();
+    }
 }

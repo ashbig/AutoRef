@@ -12,9 +12,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.11 $
- * $Date: 2008-04-14 20:09:23 $
- * $Author: dz4 $
+ * $Revision: 1.12 $
+ * $Date: 2008-08-28 16:47:28 $
+ * $Author: et15 $
  *
  ******************************************************************************
  *
@@ -64,8 +64,8 @@ import edu.harvard.med.hip.flex.Constants;
 /**
  * Implementation of <strong>Action</strong> that validates a user logon.
  *
- * @author $Author: dz4 $
- * @version $Revision: 1.11 $ $Date: 2008-04-14 20:09:23 $
+ * @author $Author: et15 $
+ * @version $Revision: 1.12 $ $Date: 2008-08-28 16:47:28 $
  */
 
 public final class LogonAction extends Action {
@@ -116,7 +116,7 @@ public final class LogonAction extends Action {
             request.setAttribute(Action.EXCEPTION_KEY, th);
             return mapping.findForward("error");
         }
-        
+       
         // Report any errors we have discovered back to the original form
         if (!errors.empty()) {
             
@@ -152,7 +152,8 @@ public final class LogonAction extends Action {
         //get all project/workflow/protocol information and store it
      
         try{
-            ProjectWorkflowProtocolInfo.getInstance();
+            ProjectWorkflowProtocolInfo.reloadProjectWorkflowProtocolInfo();
+         //   HibernateSessionFactory.getSessionFactoryFLEX();
         /*    Vector pr = Project.getAllProjects();
             
             Constants.s_projects = new Hashtable(pr.size());

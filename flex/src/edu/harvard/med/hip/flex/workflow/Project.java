@@ -12,14 +12,16 @@ import java.sql.*;
 import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.process.*;
 import edu.harvard.med.hip.flex.Constants;
-
+import edu.harvard.med.hip.flex.core.*;
 /**
  *
  * @author  dzuo
  * @version 
  */
-public class Project {
-
+public class Project 
+{
+     
+    
     public final static int HUMAN = 1;
     public final static int YEAST = 2;
     public final static int PSEUDOMONAS = 3;
@@ -68,6 +70,8 @@ public class Project {
     private String name;
     private String description;
     private String version;
+    private Collection<PWPItem>       m_properties;
+    private String project_code;
     // Stores all the workflows belonging to this project. The element in
     // the Vector is a ProjectWorkflow object.
     private Vector workflows;
@@ -77,6 +81,10 @@ public class Project {
         workflows = new Vector();
     }
 
+     public Collection<PWPItem>   getProperties(){ return m_properties;}
+    public void       addProperty(PWPItem p)
+    { if (m_properties == null) m_properties=new ArrayList();
+      m_properties.add(p);}
     /**
      * Constructor.
      * 
@@ -95,6 +103,7 @@ public class Project {
             this.workflows = p.getWorkflows();
             this.description = p.getDescription();
             this.version = p.getVersion();
+            this.project_code = p.getCode();
             return;
         }
 
@@ -130,6 +139,7 @@ public class Project {
                     this.workflows = p.getWorkflows();
                     this.description = p.getDescription();
                     this.version = p.getVersion();
+                     this.project_code = p.getCode();
                     return;
                 }
             }
@@ -146,19 +156,21 @@ public class Project {
      * @param version The project version.
      * @exception The FlexDatabaseException.
      */
-    public Project(int id, String name, String description, String version) throws FlexDatabaseException {
+    public Project(int id, String name, String description, String version ) throws FlexDatabaseException {
         this.id = id;
         this.name = name;
         this.description = description;
         this.version = version;
+       // this.project_code =  code;
         populateWorkflows();
     }
 
-    public Project(int id, String name, String description, String version, int mode) throws FlexDatabaseException {
+    public Project(int id, String name, String description, String version, String code,int mode) throws FlexDatabaseException {
         this.id = id;
         this.name = name;
         this.description = description;
         this.version = version;
+        project_code=code;
         workflows = new Vector();
     }
 
@@ -187,7 +199,8 @@ public class Project {
     public int getId() {
         return id;
     }
-
+    public String getCode(){ return   project_code  ;}
+ 
     /**
      * Return all the workflow records for this project.
      *
@@ -199,6 +212,9 @@ public class Project {
 
     public void setWorkflows(Vector v) {
         workflows = v;
+    }
+    public void addWorkflow(Workflow w) {
+        workflows.add(w);
     }
 
     /**

@@ -133,7 +133,7 @@ public class PlateCondensationInputAction extends ResearcherAction {
             return (new ActionForward(mapping.getInput()));
         }
 
-        Workflow workflow = new Workflow(-1, null, null,null);
+        Workflow workflow = new Workflow(-1, null, null,null,null);
         Project p = new Project(projectid, null, null, null, null);
         Protocol protocol = null;
         try {

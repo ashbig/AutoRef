@@ -185,7 +185,25 @@ public class ConstantsImport
          TRANSFER_FLEX_TO_PLASMID_CREATE_FILES (""),
          TRANSFER_FLEX_TO_PLASMID_DIRECT_IMPORT(""),
          PUT_PLATES_IN_PIPELINE_INPUT ("Add plates to production pipe-line"),
-         PUT_PLATES_IN_PIPELINE ("Add plates to production pipe-line")
+         PUT_PLATES_IN_PIPELINE ("Add plates to production pipe-line"),
+          CREATE_PROJECT_INPUT ("Create new project"),
+CREATE_NEW_WORKFLOW_INPUT("Create new workflow"),
+CREATE_NEW_WORKFLOW_FROM_TEMPLATE_INPUT ("Create new workflow from template"),
+CREATE_NEW_WORKFLOW_FROM_TEMPLATE_CONFIRM ("Confirm parameters for new workflow from template"),
+CREATE_NEW_WORKFLOW_FROM_TEMPLATE ("Create new workflow from template"),
+
+CREATE_NEW_WORKFLOW("Create new workflow"),
+
+ADD_WORKFLOW_TO_PROJECT_INPUT          ("Add workflow to project"),
+ADD_WORKFLOW_TO_PROJECT_CONFIRM          ("Confirm workflow addition to project"),
+ADD_WORKFLOW_TO_PROJECT         ("Add workflow to project"),
+
+CREATE_PROJECT ("Create new project"),
+
+
+
+DISPLAY_WORKFLOW         ("Workflow")
+              
                     ;
       
          
@@ -209,6 +227,18 @@ public class ConstantsImport
                     return PUT_PLATES_FOR_SEQUENCING ;
                  case PUT_PLATES_IN_PIPELINE_INPUT:
                      return PUT_PLATES_IN_PIPELINE;
+                 case CREATE_PROJECT_INPUT:
+                     return CREATE_PROJECT;
+                case CREATE_NEW_WORKFLOW_INPUT:
+                    return CREATE_NEW_WORKFLOW;
+                 case CREATE_NEW_WORKFLOW_FROM_TEMPLATE_INPUT :
+                     return CREATE_NEW_WORKFLOW_FROM_TEMPLATE_CONFIRM;
+                 case CREATE_NEW_WORKFLOW_FROM_TEMPLATE_CONFIRM:
+                     return CREATE_NEW_WORKFLOW_FROM_TEMPLATE;
+                 case ADD_WORKFLOW_TO_PROJECT_INPUT  :
+                     return ADD_WORKFLOW_TO_PROJECT_CONFIRM;
+                 case ADD_WORKFLOW_TO_PROJECT_CONFIRM :
+                     return ADD_WORKFLOW_TO_PROJECT;
                  default: return NOT_KNOWN;
              }
          }
@@ -230,6 +260,18 @@ public class ConstantsImport
                     return PUT_PLATES_FOR_SEQUENCING_INPUT ;
                  case PUT_PLATES_IN_PIPELINE:
                      return PUT_PLATES_IN_PIPELINE_INPUT;
+                  case CREATE_PROJECT:
+                     return CREATE_PROJECT_INPUT;
+                case CREATE_NEW_WORKFLOW:
+                    return CREATE_NEW_WORKFLOW_INPUT;
+                 case CREATE_NEW_WORKFLOW_FROM_TEMPLATE :
+                     return CREATE_NEW_WORKFLOW_FROM_TEMPLATE_CONFIRM;
+                 case CREATE_NEW_WORKFLOW_FROM_TEMPLATE_CONFIRM:
+                     return CREATE_NEW_WORKFLOW_FROM_TEMPLATE_INPUT;
+                 case ADD_WORKFLOW_TO_PROJECT :
+                     return ADD_WORKFLOW_TO_PROJECT_CONFIRM;
+                     case ADD_WORKFLOW_TO_PROJECT_CONFIRM :
+                     return ADD_WORKFLOW_TO_PROJECT_INPUT;
                  default: return NOT_KNOWN;
              }
          }
