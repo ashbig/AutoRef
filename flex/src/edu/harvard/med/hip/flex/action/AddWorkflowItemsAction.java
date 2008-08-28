@@ -80,7 +80,7 @@ public class AddWorkflowItemsAction extends ResearcherAction
         PROCESS_NTYPE cur_process = PROCESS_NTYPE.valueOf(forwardName);
        
         User user = ((User)request.getSession().getAttribute(Constants.USER_KEY));
-      Connection conn = null;
+      Connection conn = null; Comparator genericObject;
         try 
         {
              request.setAttribute("forwardName", String.valueOf(forwardName));
@@ -103,11 +103,18 @@ public class AddWorkflowItemsAction extends ResearcherAction
                   {
                      // WORKFLOW_TYPE[] workflowtypes = {WORKFLOW_TYPE.TRANSFER_TO_EXPRESSION};
                    //   request.setAttribute("workflowtypes", workflowtypes);
-                      List workflowtemplates = Workflow.getAllWorkflows(
+                      List<Workflow> workflowtemplates = Workflow.getAllWorkflows(
                               WORKFLOW_TYPE.TRANSFER_TO_EXPRESSION,
                               ProjectWorkflowProtocolInfo.getInstance().getWorkflows().values() );
+                       genericObject = new BeanClassComparator("name");
+ 
+                       Collections.sort(workflowtemplates, genericObject);
                       request.setAttribute("workflowtemplates", workflowtemplates);
                       List vectors = CloneVector.getAllVectorsByVectorType("%destination%");
+                       genericObject = new BeanClassComparator("name");
+ 
+                       Collections.sort(vectors, genericObject);
+           
                       request.setAttribute("vectors", vectors);
                       return (mapping.findForward("add_workflow_items"));
                   }
@@ -158,11 +165,19 @@ public class AddWorkflowItemsAction extends ResearcherAction
                         {
                             if( pr.getId() == -1){  projects.remove(pr);break;}
                         }
+                         genericObject = new BeanClassComparator("name");
+ 
+                       Collections.sort(projects, genericObject);
+           
                        List <Workflow> workflows = Workflow.getAllWorkflows();
                        for(Workflow wf: workflows)
                         {
                             if( wf.getId() == -1){  workflows.remove(wf);break;}
                         }
+                          genericObject = new BeanClassComparator("name");
+ 
+                       Collections.sort(workflows, genericObject);
+           
                       request.setAttribute("workflowtemplates", workflows);
                       request.setAttribute("projects", projects);
              

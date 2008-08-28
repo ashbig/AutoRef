@@ -8,10 +8,7 @@
 
 package edu.harvard.med.hip.flex.action;
 
-import java.util.Hashtable;
-import java.util.Vector;
-import java.util.Enumeration;
-import java.util.LinkedList;
+import java.util.*;
 import java.sql.*;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
@@ -66,7 +63,7 @@ public class GetProjectsAction extends ResearcherAction {
     throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
         String forwardName = ((ProjectWorkflowForm)form).getForwardName();
-        
+        Comparator genericObject;
         try {
             Vector projects = null;
             
@@ -88,6 +85,9 @@ public class GetProjectsAction extends ResearcherAction {
                      if( proj.getId() == -1)
                         projects.remove(i);
                 }
+                  genericObject = new BeanClassComparator("name");
+                Collections.sort(projects, genericObject);
+           
                  
             } else {
                 projects = Project.getAllProjects();
@@ -98,6 +98,8 @@ public class GetProjectsAction extends ResearcherAction {
                     if( proj.getId() == -1)
                         projects.remove(i);
                 }
+                genericObject = new BeanClassComparator("name");
+                Collections.sort(projects, genericObject);
             }
             
             request.setAttribute("projects", projects);

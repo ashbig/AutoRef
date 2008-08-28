@@ -6,8 +6,7 @@
 
 package edu.harvard.med.hip.flex.action;
 
-import java.util.Vector;
-import java.util.ArrayList;
+import java.util.*;
 import java.sql.*;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
@@ -27,7 +26,7 @@ import org.apache.struts.util.MessageResources;
 import edu.harvard.med.hip.flex.form.GenericRearrayForm;
 import edu.harvard.med.hip.flex.core.Location;
 import edu.harvard.med.hip.flex.workflow.*;
-
+import edu.harvard.med.hip.flex.util.*;
 /**
  *
  * @author  dzuo
@@ -94,7 +93,11 @@ public class RearraySelectionAction extends ResearcherAction {
                 workflows.add(w8);
                 workflows.add(w9);
             }
+            Comparator        genericObject = new BeanClassComparator("name");
+            Collections.sort(workflows, genericObject);
             
+            genericObject = new BeanClassComparator("name");
+            Collections.sort(projects, genericObject);
             request.setAttribute("projects", projects);
             request.setAttribute("workflows", workflows);
             request.setAttribute("rearrayType", rearrayType);
