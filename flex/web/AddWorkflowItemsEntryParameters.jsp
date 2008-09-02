@@ -153,7 +153,7 @@ For workflows that deal with expression clones please submit label code as YYY (
     <tr>    <td class="prompt">Project name:</td>
     <td><bean:write name="projectname" /></td></tr>
     <tr>    <td class="prompt">Wokflow name</td>
-    <td><bean:write name="workflowname" /> <input type=BUTTON value="Display Workflow" onCLick="window.open('AddWorkflowItems.do?forwardName=<%= ConstantsImport.PROCESS_NTYPE.DISPLAY_WORKFLOW.toString()%>&amp;workflowid=<bean:write name="workflowid" />','Display Workflow','width=700,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" > 
+    <td><bean:write name="workflowname" /> <input type=BUTTON value="Display Workflow" onCLick="window.open('AddWorkflowItems.do?forwardName=<%= ConstantsImport.PROCESS_NTYPE.DISPLAY_WORKFLOW.toString()%>&amp;workflowid=<bean:write name="workflowid" />','DisplayWorkflow','width=700,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" > 
 	</td></tr>
     <tr><td class="prompt">Plate label code:</td>
     <td><bean:write name="projectworkflowcode" />

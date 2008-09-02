@@ -107,7 +107,7 @@ public class AddWorkflowItemsForm extends   ProjectWorkflowForm
                       if ( vitem != null && vitem.getValue().equals(String.valueOf(vectorid)))
                       {
                            vitem = PWPItem.getItem("VECTOR_NAME",  temp.getProperties() )   ;
-                           errors.add("workflowname", new ActionError("error.parameter.invalid", "<br>Transfer workflow for vector "+ vitem.getValue()+" already exists. <P> Workflow name: "+temp.getName()));
+                           errors.add("workflowname", new ActionError("error.parameter.invalid", "<br>Transfer workflow for vector "+ vitem.getValue()+" already exists. <br> Workflow name: "+temp.getName()));
                       }
                   }
               }

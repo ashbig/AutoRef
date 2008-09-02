@@ -210,7 +210,7 @@ public class AddWorkflowItemsAction extends ResearcherAction
                        synchronized(this)
                       {//verify that this workflow does not belong to the project yet
                          String sql_connection = "insert into projectworkflow values("
-                                     +projectid +","+workflowid+",'"+project_workflow_code+"')";
+                                     +projectid +","+workflowid+",'"+project_workflow_code.toUpperCase()+"')";
                            DatabaseTransaction.executeUpdate(sql_connection,conn);
                           conn.commit();
                            p.addWorkflow(w);

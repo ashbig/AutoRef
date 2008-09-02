@@ -33,7 +33,7 @@
 
  
    <br>
-
+ <div align="center"> 
 <%--Loop through all the items  --%>
 <logic:present name="<%= Constants.UI_TABLE_NO_DATA %>">
     <%= request.getAttribute(Constants.UI_TABLE_NO_DATA) %>
@@ -43,7 +43,7 @@
 <logic:present name="linkers">
        
          
-         	
+       	
         
     <TABLE border="1" cellpadding="2" cellspacing="0">
         <tr class="headerRow">                       <td>Linker ID</td><td>Linker Name</td><td>Linker Sequence</td>    </tr>
@@ -160,7 +160,7 @@
           <flex:row oddStyleClass="oddRow" evenStyleClass="evenRow">
             <td><bean:write name="str" property="id"/></td>
             <td><bean:write name="str" property="name"/></td>
-          <td>   <input type=BUTTON value="Display Workflow" onCLick="window.open('AddWorkflowItems.do?forwardName=<%= ConstantsImport.PROCESS_NTYPE.DISPLAY_WORKFLOW.toString()%>&amp;workflowid=<bean:write name="str" property="id"/>','DisplayWorkflow','width=700,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" >
+          <td>   <input type=BUTTON value="Display" onCLick="window.open('AddWorkflowItems.do?forwardName=<%= ConstantsImport.PROCESS_NTYPE.DISPLAY_WORKFLOW.toString()%>&amp;workflowid=<bean:write name="str" property="id"/>','DisplayWorkflow','width=700,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" >
           </td>
           
           </flex:row>
@@ -170,6 +170,6 @@
 <br>
 
 
-    
+</div> 
 </body>
 </html>
