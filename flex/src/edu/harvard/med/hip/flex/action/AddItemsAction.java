@@ -312,7 +312,7 @@ public class AddItemsAction extends ResearcherAction {
               catch(Exception e)
               {
                   System.out.println(e.getMessage());
-                  labels +="<P>cannot put container "+ cur_item.getContainerLabel()+" for processing;";
+                  labels +="<P>cannot put container "+ cur_item.getContainerLabel()+" for processing ("+e.getMessage()+");";
               
               }
             }
