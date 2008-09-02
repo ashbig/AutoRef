@@ -85,7 +85,7 @@ public class AddWorkflowItemsForm extends   ProjectWorkflowForm
             case  CREATE_NEW_WORKFLOW_FROM_TEMPLATE_CONFIRM:
             { 
                 if ( workflowname == null || workflowname.trim().equals(""))
-                errors.add("workflowname", new ActionError("error.parameter.invalid", workflowname));
+                errors.add("workflowname", new ActionError("error.parameter.invalid", "<br>Workflow name is empty. "+workflowname));
                 break;
             }
             case CREATE_NEW_WORKFLOW_FROM_TEMPLATE:
@@ -99,7 +99,7 @@ public class AddWorkflowItemsForm extends   ProjectWorkflowForm
                   temp = iter.next();
                   if ( temp.getName().equalsIgnoreCase(workflowname))
                   {
-                      errors.add("workflowname", new ActionError("error.parameter.invalid", "<P>Workflow named "+ workflowname+" already exists."));
+                      errors.add("workflowname", new ActionError("error.parameter.invalid", "<br>Workflow named "+ workflowname+" already exists."));
                   }
                   if ( temp.getWorkflowType() == WORKFLOW_TYPE.TRANSFER_TO_EXPRESSION)
                   {
@@ -107,17 +107,17 @@ public class AddWorkflowItemsForm extends   ProjectWorkflowForm
                       if ( vitem != null && vitem.getValue().equals(String.valueOf(vectorid)))
                       {
                            vitem = PWPItem.getItem("VECTOR_NAME",  temp.getProperties() )   ;
-                           errors.add("workflowname", new ActionError("error.parameter.invalid", "Transfer workflow for vector "+ vitem.getValue()+" already exists. <P> Workflow name: "+temp.getName()));
+                           errors.add("workflowname", new ActionError("error.parameter.invalid", "<br>Transfer workflow for vector "+ vitem.getValue()+" already exists. <P> Workflow name: "+temp.getName()));
                       }
                   }
               }
             }
-            case   ADD_WORKFLOW_TO_PROJECT_CONFIRM:
+            case   ADD_WORKFLOW_TO_PROJECT_CONFIRM:{break;}
             case ADD_WORKFLOW_TO_PROJECT:
             {
                  if ( projectworkflowcode == null || projectworkflowcode.trim().length()==0)
                  {
-                     errors.add("projectworkflowcode", new ActionError("error.parameter.invalid", "Please provide code for plates."));
+                     errors.add("projectworkflowcode", new ActionError("error.parameter.invalid", "<br>Please provide code for plates."));
                   break;
                  }
                   try
@@ -127,7 +127,7 @@ public class AddWorkflowItemsForm extends   ProjectWorkflowForm
                      Workflow ww = p.getWorkflow(workflowid);
                      if (ww != null)
                      {
-                        errors.add("workflowname", new ActionError("error.parameter.invalid", "Selected project already has selected workflow "+ww.getName()));
+                        errors.add("workflowname", new ActionError("error.parameter.invalid", "<br>Selected project already has selected workflow "+ww.getName()));
                      }
                   }catch(Exception e){}
                 break;
