@@ -160,7 +160,8 @@
           <flex:row oddStyleClass="oddRow" evenStyleClass="evenRow">
             <td><bean:write name="str" property="id"/></td>
             <td><bean:write name="str" property="name"/></td>
-          <td>   <input type=BUTTON value="Display" onCLick="window.open('AddWorkflowItems.do?forwardName=<%= ConstantsImport.PROCESS_NTYPE.DISPLAY_WORKFLOW.toString()%>&amp;workflowid=<bean:write name="str" property="id"/>','Display Workflow','width=700,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" > </td>
+          <td>   <input type=BUTTON value="Display Workflow" onCLick="window.open('AddWorkflowItems.do?forwardName=<%= ConstantsImport.PROCESS_NTYPE.DISPLAY_WORKFLOW.toString()%>&amp;workflowid=<bean:write name="str" property="id"/>','DisplayWorkflow','width=700,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" >
+          </td>
           
           </flex:row>
       </logic:iterate>

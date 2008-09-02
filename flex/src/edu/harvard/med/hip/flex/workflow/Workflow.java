@@ -357,6 +357,8 @@ public class Workflow {
         StringBuffer html_string = new StringBuffer();
         FlowRecord r ; Protocol pr;
         int count = 1;   
+         if ( flow != null && flow.size()>0)
+         {
           for (int c = 0; c < flow.size(); c++)
           {
              r = ((FlowRecord)flow.get(c));
@@ -369,6 +371,7 @@ public class Workflow {
              html_string.append( r.getHTMLView());
              count+=r.getNext().size();
           }
+         }
         while(count-->0)
         {html_string.append( "</ul>");}
         
@@ -526,19 +529,27 @@ public class Workflow {
             DatabaseTransaction.closeStatement(stmt);
         }
     }
+    
+    
+    
     public static void main(String [] args) {
         Connection conn=null;
         try {
-                  DatabaseTransaction t = DatabaseTransaction.getInstance();
-              conn = t.requestConnection();
+              //    DatabaseTransaction t = DatabaseTransaction.getInstance();
+           //   conn = t.requestConnection();
        
             ProjectWorkflowProtocolInfo.getInstance();
-             Workflow flow = new Workflow(2);
-             System.out.println(flow.getHTMLView());
+            List<Workflow> ww = Workflow.getAllWorkflows();
+            Comparator genericObject = new BeanClassComparator("name");
+ 
+            Collections.sort(ww, genericObject);
+         //    Workflow flow = new Workflow(2);ww
+         //    System.out.println(flow.getHTMLView());
              
-             Workflow neww = new Workflow(flow,"new111vector",134 );
-             System.out.println(neww.getHTMLView());
-           neww.insert(conn);
+         //    Workflow neww = new Workflow(flow,"new111vector",134 );
+         //    System.out.println(neww.getHTMLView());
+         //  neww.insert(conn);
+            System.exit(0);
         } catch (Exception e)
         {
             DatabaseTransaction.rollback(conn);

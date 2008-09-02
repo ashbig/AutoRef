@@ -84,7 +84,7 @@
     <td><bean:write name="workflowtype" /></td></tr>
     <tr><td class="prompt">Template workflow:</td>
     <td><bean:write name="workflowtemplatename" />
-    <input type=BUTTON value="Display Workflow" onCLick="window.open('AddWorkflowItems.do?forwardName=<%= ConstantsImport.PROCESS_NTYPE.DISPLAY_WORKFLOW.toString()%>&amp;workflowid=<bean:write name="workflowid" />','Display Workflow','width=700,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" > 
+    <input type=BUTTON value="Display Workflow" onCLick="window.open('AddWorkflowItems.do?forwardName=<%= ConstantsImport.PROCESS_NTYPE.DISPLAY_WORKFLOW.toString()%>&amp;workflowid=<bean:write name="workflowid" />','DisplayWorkflow','width=700,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" > 
 	</td></tr>
     <tr><td class="prompt">Vector transfer clones to:</td>
     <td><bean:write name="vectorname" /></td></tr>
