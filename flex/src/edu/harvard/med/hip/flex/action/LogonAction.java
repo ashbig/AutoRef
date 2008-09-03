@@ -12,8 +12,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.12 $
- * $Date: 2008-08-28 16:47:28 $
+ * $Revision: 1.13 $
+ * $Date: 2008-09-03 18:24:45 $
  * $Author: et15 $
  *
  ******************************************************************************
@@ -65,7 +65,7 @@ import edu.harvard.med.hip.flex.Constants;
  * Implementation of <strong>Action</strong> that validates a user logon.
  *
  * @author $Author: et15 $
- * @version $Revision: 1.12 $ $Date: 2008-08-28 16:47:28 $
+ * @version $Revision: 1.13 $ $Date: 2008-09-03 18:24:45 $
  */
 
 public final class LogonAction extends Action {
@@ -153,7 +153,7 @@ public final class LogonAction extends Action {
      
         try{
             ProjectWorkflowProtocolInfo.reloadProjectWorkflowProtocolInfo();
-         //   HibernateSessionFactory.getSessionFactoryFLEX();
+           HibernateSessionFactory.getSessionFactoryFLEX();
         /*    Vector pr = Project.getAllProjects();
             
             Constants.s_projects = new Hashtable(pr.size());
