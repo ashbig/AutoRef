@@ -91,9 +91,13 @@ public  void setPlatesetid  (Integer v){   m_platesetid = v;}
     public void insert( ) throws Exception
      {
          Session session = HibernateSessionFactory.getSessionFactoryFLEX().getCurrentSession();
+          System.out.println("Cannot get session");
           session.beginTransaction();
+          System.out.println("Cannot begin");
             session.save(this);
+            System.out.println("Cannot save");
             session.getTransaction().commit();
+            System.out.println("Cannot commit");
         
      }
     
