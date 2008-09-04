@@ -54,7 +54,7 @@ public class PlatePositionConvertor {
         
         int a_value = (int) 'A';
         int row_value = (well-1) % rownum;
-        int column = (int) well / rownum  +1 ;
+        int column = ((int) well-1) / rownum  +1 ;
         char rowname = (char) (a_value + row_value);
         String column_string ="";
         
@@ -65,8 +65,10 @@ public class PlatePositionConvertor {
     }
     
     public static void main(String args[]) {
-        String inputFile = "G:\\plasmid\\plate_outside_200704\\plate.txt";
-        String outputFile = "G:\\plasmid\\plate_outside_200704\\plateout.txt";
+        //String inputFile = "G:\\plasmid\\plate_outside_200704\\plate.txt";
+        //String outputFile = "G:\\plasmid\\plate_outside_200704\\plateout.txt";
+        String inputFile = "G:\\plasmid\\test\\plate.txt";
+        String outputFile = "G:\\plasmid\\test\\plateout.txt";
         String line;
         
         try {
@@ -75,7 +77,9 @@ public class PlatePositionConvertor {
             BufferedReader in = new BufferedReader((new FileReader(inputFile)));
             
             while((line = in.readLine()) != null) {
-                int position = PlatePositionConvertor.convertWellFromA8_12toInt(line);
+                int pos = Integer.parseInt(line);
+                //int position = PlatePositionConvertor.convertWellFromA8_12toInt(line);
+                String position = PlatePositionConvertor.convertWellFromInttoA8_12(pos);
                 output.println(line+"\t"+position);
             }
             in.close();
