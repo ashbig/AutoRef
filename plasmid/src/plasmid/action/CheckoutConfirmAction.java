@@ -8,26 +8,17 @@ package plasmid.action;
 
 import java.util.*;
 import java.io.*;
-import java.sql.*;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionServlet;
-import org.apache.struts.util.MessageResources;
 
-import plasmid.database.*;
 import plasmid.database.DatabaseManager.*;
 import plasmid.Constants;
-import plasmid.coreobject.*;
-import plasmid.query.coreobject.CloneInfo;
 import plasmid.form.CheckoutForm;
 import plasmid.process.OrderProcessManager;
 
@@ -97,9 +88,9 @@ public class CheckoutConfirmAction extends UserAction {
             errors.add("zipcode", new ActionError("error.zipcode.required"));
         if(billingzipcode == null || billingzipcode.trim().length()<1)
             errors.add("billingzipcode", new ActionError("error.billingzipcode.required"));
-        if(country == null || country.trim().length()<1)
+        if(country == null || country.trim().length()<1 || country.trim().equals(Constants.SELECT))
             errors.add("country", new ActionError("error.country.required"));
-        if(billingcountry == null || billingcountry.trim().length()<1)
+        if(billingcountry == null || billingcountry.trim().length()<1 || billingcountry.trim().equals(Constants.SELECT))
             errors.add("billingcountry", new ActionError("error.billingcountry.required"));
         if(phone == null || phone.trim().length() < 1)
             errors.add("phone", new ActionError("error.phone.shipping.required"));

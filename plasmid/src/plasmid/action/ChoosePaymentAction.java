@@ -166,6 +166,7 @@ public class ChoosePaymentAction extends UserAction {
             }
         } else {
             status = CloneOrder.PENDING_PAYMENT;
+            ponumber = Constants.PAYPAL;
         }
 
         CloneOrder order = new CloneOrder(orderid, time, status, ponumber, shippingto, billingto, shippingAddress, billingAddress, numOfClones, numOfCollections, costOfClones, costOfCollections, shippingCost, totalCost, user.getUserid());

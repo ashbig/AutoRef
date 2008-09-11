@@ -103,6 +103,8 @@ public class Constants {
     public static final String PAYPALEMAIL = "janice_williamson@hms.harvard.edu";
     public static final String SEARCH_WILDCARD = "*";
     
+    public static final String SELECT = "Please Select";
+    
     /** Creates a new instance of Constants */
     public Constants() {
     }
