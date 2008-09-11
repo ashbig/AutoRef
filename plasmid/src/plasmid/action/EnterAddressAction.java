@@ -104,8 +104,8 @@ public class EnterAddressAction extends UserAction {
         ((CheckoutForm)form).setCostForShipping(shippingCost);
         
         ((CheckoutForm)form).setPonumber(user.getPonumber());
-        ((CheckoutForm)form).setCountry("USA");
-        ((CheckoutForm)form).setBillingcountry("USA");
+        ((CheckoutForm)form).setCountry(Constants.SELECT);
+        ((CheckoutForm)form).setBillingcountry(Constants.SELECT);
         ((CheckoutForm)form).setSaveInfo(false);
         return (mapping.findForward("success"));
     }
