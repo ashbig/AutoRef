@@ -60,19 +60,19 @@ function Disab(num) {
    Your institution has pre-approved the transfer of plasmid clones in our collection that are covered by our standard Plasmid Transfer Agreement (MTA).  The plasmid(s) you requested fall into the standard MTA category.  Thus, you do not need an institutional signature on this document.  
 </p>
 <p class="mainbodytexthead">
-Please read the MTA to be sure you understand the obligations herein, which may include restrictions on commercial use and/or patentability of the material. To indicate your agreement to these terms, please click ?Agree? below.  
+Please read the MTA to be sure you understand the obligations herein, which may include restrictions on commercial use and/or patentability of the material. To indicate your agreement to these terms, please click "Agree" below.  
 </p>
+<p><b>Please insure that you have complied with all of your institution's internal regulations for material transfer before placing this order.</b></p>
 <p class="mainbodytexthead">
     If you have any questions, contact us at <a href="mailto:plasmidMTA@hms.harvard.edu">plasmidMTA@hms.harvard.edu</a>.
 </p>
 
 <html:form action="DisplayMTA.do">
     <input type="hidden" name="isBatch" value="<bean:write name="isbatch"/>">
-
     <% int num=((List)request.getAttribute("mtas")).size(); %>
     <logic:iterate name="mtas" id="mta" indexId="n">
         <html:textarea rows="10" cols="80" name="mta" property="textfile" readonly="true"/>
-        <p><b>You acknowledge that you have read and understood the conditions outlined in this Agreement You understand that your Institution has agreed to be bound by the conditions set forth in this Agreement and you also agree to abide by them in the receipt and use of the Plasmids.  
+        <p><b>You acknowledge that you have read and understood the conditions outlined in this Agreement. You understand that your Institution has agreed to be bound by the conditions set forth in this Agreement and you also agree to abide by them in the receipt and use of the Plasmids.  
         </b></p>
         <p>
             <html:radio styleClass="text" property='<%="isagree["+n+"]"%>' value="<%=MTA.ISAGREE_Y%>" onclick='<%="Disab("+num+")"%>'>Agree</html:radio>
