@@ -477,7 +477,7 @@ public class DiscrepancyFinderRunner extends ProcessRunner
             if ( i_discrepancy_finder.getErrors() != null &&  i_discrepancy_finder.getErrors().size() > 0)
                  {
                      m_error_messages.addAll(i_discrepancy_finder.getErrors());
-              System.out.println("eerors from d "+i_discrepancy_finder.getErrors().size());
+              System.out.println("errors from discrepancy finder "+i_discrepancy_finder.getErrors().size());
                      i_discrepancy_finder.setErrors(null);
                  }
             clonesequence.setLinker3Stop(i_discrepancy_finder.getCdsStop());
