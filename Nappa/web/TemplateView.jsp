@@ -81,7 +81,8 @@
                         </t:dataTable>
                     </t:column>
                 </t:dataTable>
-                
+
+                <h:commandButton value="#{msgs.downloadButton}" action="#{layoutViewBean.downloadMap}"/>                  
                 <h:commandButton rendered="#{templateDesignBean.design}" value="#{msgs.saveButton}" action="#{templateDesignBean.saveTemplate}"/>  
             </h:form>
         </f:view>

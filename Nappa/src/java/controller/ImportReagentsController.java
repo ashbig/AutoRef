@@ -9,6 +9,7 @@
 
 package controller;
 
+import core.ReagentInfo;
 import dao.ContainerDAO;
 import dao.DaoException;
 import dao.FilereferenceDAO;
@@ -18,7 +19,6 @@ import io.FileRepository;
 import io.NappaIOException;
 import io.ReagentFileParser;
 import java.io.InputStream;
-import java.io.Serializable;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -43,6 +43,7 @@ public abstract class ImportReagentsController extends ProcessController {
     private String sampleform;
     private String location;
     private String filename;
+    private String idtype;
     
     /** Creates a new instance of ImportReagentsController */
     public ImportReagentsController() {
@@ -50,6 +51,7 @@ public abstract class ImportReagentsController extends ProcessController {
     
     abstract public ReagentFileParser makeFileParser();
     
+    @Override
     public void doSpecificProcess() throws ControllerException {
         ReagentFileParser parser = makeFileParser();
         
@@ -63,7 +65,7 @@ public abstract class ImportReagentsController extends ProcessController {
                 throw new ControllerException("The following labels are not valid: "+missinglabels);
             }
             
-            List reagents = parser.getReagents();
+            List<ReagentInfo> reagents = parser.getReagents();
             setImporter(makeReagentImporter(reagents));
             getImporter().setContainers((List)containers);
             getImporter().setSampletype(getSampletype());
@@ -71,7 +73,7 @@ public abstract class ImportReagentsController extends ProcessController {
             getImporter().setLocation(getLocation());
             getImporter().populateContainers();
             
-            setFilereference(new FilereferenceTO(getFilename().substring(getFilename().lastIndexOf("\\")+1), FilereferenceTO.PATH, FilereferenceTO.TYPE_IMPORT));
+            setFilereference(new FilereferenceTO(getFilename().substring(getFilename().lastIndexOf("\\")+1), FilereferenceTO.MAPFILEPATH, FilereferenceTO.TYPE_IMPORT));
             FileRepository.uploadFile(getFilereference(), getFilecopy());
             getFilereference().setObjecttype(ProcessobjectTO.getTYPE_FILEREFERENCE());
             getFilereference().setIoflag(ProcessobjectTO.getIO_INPUT());
@@ -92,6 +94,7 @@ public abstract class ImportReagentsController extends ProcessController {
         }
     }
     
+    @Override
     public void persistSpecificProcess(Connection conn) throws ControllerException {
         List reagents = getImporter().getReagentList();
         List containers = getImporter().getContainers();
@@ -182,5 +185,13 @@ public abstract class ImportReagentsController extends ProcessController {
 
     public void setFilecopy(InputStream filecopy) {
         this.filecopy = filecopy;
+    }
+
+    public String getIdtype() {
+        return idtype;
+    }
+
+    public void setIdtype(String idtype) {
+        this.idtype = idtype;
     }
 }

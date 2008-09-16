@@ -18,12 +18,14 @@ import java.io.Serializable;
 public class ReagentTO extends ProcessobjectTO implements Serializable {
     private static final String TYPE_CLONE = ContainercellTO.getTYPE_GENE();
     private static final String TYPE_CONTROL = ContainercellTO.getTYPE_CONTROL();
+    public static final String NON_SPOTS = "Non Spots";
     public static final String NOT_SELECTED = "Not Selected";
     
     private int reagentid;
     private String name;
     private String type;
     private String desc;
+    private SampleTO sample;
     
     /** Creates a new instance of ReagentTO */
     public ReagentTO() {
@@ -35,6 +37,11 @@ public class ReagentTO extends ProcessobjectTO implements Serializable {
     
     public ReagentTO(int id) {
         this.setReagentid(id);
+    }
+    
+    public ReagentTO(int id, SampleTO sample) {
+        setReagentid(id);
+        setSample(sample);
     }
     
     public ReagentTO(String name, String type, String desc) {
@@ -90,5 +97,13 @@ public class ReagentTO extends ProcessobjectTO implements Serializable {
     
     public static String getTYPE_CONTROL() {
         return TYPE_CONTROL;
+    }
+
+    public SampleTO getSample() {
+        return sample;
+    }
+
+    public void setSample(SampleTO sample) {
+        this.sample = sample;
     }
 }

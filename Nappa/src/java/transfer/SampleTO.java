@@ -60,6 +60,8 @@ public class SampleTO  implements Serializable{
     private double culturecut;
     private double dnacut;
     
+    private String newReagent;
+    
     /** Creates a new instance of SampleTO */
     public SampleTO() {
         setReagents(new ArrayList<ReagentTO>());
@@ -351,5 +353,13 @@ public class SampleTO  implements Serializable{
                 return p.getValue();
         }
         return "";
+    }
+
+    public String getNewReagent() {
+        return newReagent;
+    }
+
+    public void setNewReagent(String newReagent) {
+        this.newReagent = newReagent;
     }
 }

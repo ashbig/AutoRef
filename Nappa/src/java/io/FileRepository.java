@@ -9,14 +9,13 @@
 
 package io;
 
-import com.jscape.inet.sftp.Sftp;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import transfer.FilereferenceTO;
-import util.SftpHandler;
 
 /**
  *
@@ -42,8 +41,9 @@ public class FileRepository {
         String file = fileref.getFilepath()+fileref.getFilename();
         
         try {
-            Sftp ftp = SftpHandler.getSftpConnection();
-            OutputStream out = ftp.getOutputStream(file, 0, false);
+            //Sftp ftp = SftpHandler.getSftpConnection();
+            //OutputStream out = ftp.getOutputStream(file, 0, false);
+            OutputStream out = new FileOutputStream(new File(file));
             int bytesRead = 0;
             byte[] buffer = new byte[8192];
             while((bytesRead = input.read(buffer, 0, 8192)) != -1) {
@@ -51,7 +51,7 @@ public class FileRepository {
             }
             
             out.close();
-            SftpHandler.disconnectSftp(ftp);
+            //SftpHandler.disconnectSftp(ftp);
         } catch (IOException ex) {
             throw new NappaIOException(ex.getMessage());
         } 

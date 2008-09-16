@@ -60,6 +60,7 @@ public class Container96To384MapperWithMMix extends Container96To384Mapper {
     }
     
     public boolean isValid() {
-        return ((srcContainers.size() == destContainers.size()*4) && (srcContainers.size() == mmixes.size()));
+        //return ((srcContainers.size() == destContainers.size()*4) && (srcContainers.size() == mmixes.size()));
+        return srcContainers.size() == mmixes.size();
     }
 }

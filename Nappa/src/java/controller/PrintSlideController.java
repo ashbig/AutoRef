@@ -110,7 +110,7 @@ public class PrintSlideController extends FileMapContainerController {
     
     public void addOtherObjects() throws ControllerException {
         super.addOtherObjects();
-        FilereferenceTO logfileref = new FilereferenceTO(getLogfile().substring(getLogfile().lastIndexOf("\\")+1), FilereferenceTO.PATH, FilereferenceTO.TYPE_MAPPING);
+        FilereferenceTO logfileref = new FilereferenceTO(getLogfile().substring(getLogfile().lastIndexOf("\\")+1), FilereferenceTO.MAPFILEPATH, FilereferenceTO.TYPE_MAPPING);
         try {
             FileRepository.uploadFile(logfileref, getLogfileInput());
         } catch (NappaIOException ex){

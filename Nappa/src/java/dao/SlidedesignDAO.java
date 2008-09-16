@@ -178,9 +178,9 @@ public class SlidedesignDAO {
                 for (SlidecelllineageTO cell : cells) {
                     ContainercellTO c = cell.getCell();
                     String controlreagent = c.getControlreagent();
-                    if(ReagentTO.NOT_SELECTED.equals(controlreagent)) {
+                    /**if(ReagentTO.NOT_SELECTED.equals(controlreagent)) {
                         controlreagent = null;
-                    }
+                    }*/
                     stmt2.setInt(1, container.getContainerid());
                     stmt2.setInt(2, c.getPos());
                     stmt2.setString(3, c.getPosx());

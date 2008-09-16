@@ -17,6 +17,7 @@ import transfer.SlidecelllineageTO;
 import transfer.ContainercellTO;
 import transfer.LayoutcontainerTO;
 import transfer.ProgramdefinitionTO;
+import transfer.ReagentTO;
 import transfer.SlidelayoutTO;
 import transfer.SlidetemplateTO;
 

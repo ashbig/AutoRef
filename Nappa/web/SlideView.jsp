@@ -88,7 +88,7 @@
                             <t:column id="rowlabelblock">
                                 <h:outputText value="#{ContainerViewBean.blockRowLabel}"/>
                             </t:column>
-                            <t:columns id="colblock" value="#{ContainerViewBean.blockHeaderModel}" var="colHeaderblock">        
+                            <t:columns id="colblock" value="#{ContainerViewBean.blockHeaderModel}" var="colHeaderblock" styleClass="#{ContainerViewBean.blockValue.cell.control? 'controlcell' : 'regularcell'}">        
                                 <f:facet name="header">
                                     <h:outputText value="#{colHeaderblock}"/>
                                 </f:facet>

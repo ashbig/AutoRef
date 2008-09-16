@@ -53,6 +53,18 @@ public class ContainercellTO implements Serializable {
         this.setPosy(y);
         this.setType(type);
     }
+
+    public boolean isControl() {
+        if(getTYPE_CONTROL().equals(type))
+            return true;
+        return false;
+    }
+
+    public boolean isEmptycell() {
+        if(this.TYPE_EMPTY.equals(type))
+            return true;
+        return false;
+    }
     
     public int getPos() {
         return pos;
@@ -116,12 +128,6 @@ public class ContainercellTO implements Serializable {
 
     public void setContainerlabel(String containerlabel) {
         this.containerlabel = containerlabel;
-    }
-
-    public boolean isControl() {
-        if(getTYPE_CONTROL().equals(type))
-            return true;
-        return false;
     }
 
     public String getControlreagent() {

@@ -17,11 +17,13 @@
         <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
+    <!--
     <servlet>
         <servlet-name>ServletAdaptor</servlet-name>
         <servlet-class>com.sun.ws.rest.impl.container.servlet.ServletAdaptor</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
+    -->
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
         <url-pattern>/faces/*</url-pattern>
@@ -62,10 +64,12 @@
         <res-type>javax.sql.DataSource</res-type>
         <res-auth>Container</res-auth>
     </resource-ref>
+    <!--
     <servlet-mapping>
         <servlet-name>ServletAdaptor</servlet-name>
         <url-pattern>/resources/*</url-pattern>
     </servlet-mapping>
+    -->
     <session-config>
         <session-timeout>
             30
@@ -89,8 +93,8 @@
         <auth-method>FORM</auth-method>
         <realm-name>Secured Application Area</realm-name>
         <form-login-config>
-            <form-login-page>/faces/Login.jsp</form-login-page>
-            <form-error-page>/faces/Login.jsp?error=Invalid+username+or+password</form-error-page>
+            <form-login-page>/Login.jsp</form-login-page>
+            <form-error-page>/Login.jsp?error=Invalid+username+or+password</form-error-page>
         </form-login-config>
     </login-config>
     <security-role>
@@ -98,6 +102,6 @@
     </security-role>
     <error-page>
         <error-code>403</error-code>
-        <location>/faces/Login.jsp?error=Invalid+username+or+password</location>
+        <location>/Login.jsp?error=Invalid+username+or+password</location>
     </error-page>
 </web-app>

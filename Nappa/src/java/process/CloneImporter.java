@@ -31,7 +31,10 @@ public class CloneImporter extends ReagentImporter {
     
     public ReagentTO createReagent(ReagentInfo r) {
         CloneInfo c = (CloneInfo)r;
-        return new CloneTO(c.getSrccloneid(),c.getSource(),c.getGenbank(),c.getGi(),c.getGeneid(),c.getSymbol(),new GrowthconditionTO(c.getGrowth()),new VectorTO(c.getVectorname()));
+        String name = c.getName();
+        CloneTO clone = new CloneTO(c.getSrccloneid(),c.getSource(),c.getGenbank(),c.getGi(),c.getGeneid(),c.getSymbol(),new GrowthconditionTO(c.getGrowth()),new VectorTO(c.getVectorname()));
+        clone.setName(name);
+        return clone;
     }
     
     public ReagentTO findReagent(List l, ReagentInfo r) {

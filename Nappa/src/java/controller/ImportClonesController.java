@@ -36,14 +36,19 @@ public class ImportClonesController extends ImportReagentsController implements 
         super();
     }
     
+    @Override
     public ReagentFileParser makeFileParser() {
-        return new CloneFileParser();
+        CloneFileParser parser = new CloneFileParser();
+        parser.setIdtype(getIdtype());
+        return parser;
     }
     
+    @Override
     public ReagentImporter makeReagentImporter(List reagents) {
         return new CloneImporter(reagents);
     }
     
+    @Override
     public ReagentDAO makeReagentDAO(Connection conn) {
         return new CloneDAO(conn);
     }

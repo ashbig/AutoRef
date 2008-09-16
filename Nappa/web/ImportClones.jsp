@@ -43,6 +43,11 @@
                     <h:selectOneRadio styleClass="text" id="formatid" value="#{ImportClonesBean.format}">	
                         <f:selectItems value="#{ImportClonesBean.fileFormats}" />
                     </h:selectOneRadio> 
+                    
+                    <h:outputLabel styleClass="prompt" value="#{msgs.selectIDtype}:" for="idtype"/>
+                    <h:selectOneMenu styleClass="text" id="idtype" value="#{ImportClonesBean.idtype}">	
+                        <f:selectItems value="#{ImportClonesBean.ids}" />
+                    </h:selectOneMenu> 
                 </h:panelGrid>
                 
                 <h:commandButton value="#{msgs.importButton}" action="#{ImportClonesBean.runImport}"/>    

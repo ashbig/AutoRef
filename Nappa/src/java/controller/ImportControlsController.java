@@ -30,6 +30,7 @@ public class ImportControlsController extends ImportReagentsController implement
         super();
     }
     
+    @Override
     public ReagentFileParser makeFileParser() { 
         return new ControlFileParser();
     }

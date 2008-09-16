@@ -13,11 +13,7 @@ import core.ReagentInfo;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 import java.util.StringTokenizer;
-import java.util.TreeSet;
 import transfer.ReagentTO;
 
 /**
@@ -35,6 +31,7 @@ public class ControlFileParser extends ReagentFileParser {
     * (NA means the field can be optional and NA will be used):
     * control, plate, well. The first line is the header information.
     */
+    @Override
     public void parseFile(InputStream input) throws CloneFileParserException {
         try {
             BufferedReader in = new BufferedReader(new InputStreamReader(input));
