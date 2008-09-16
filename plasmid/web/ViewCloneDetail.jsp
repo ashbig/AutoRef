@@ -37,7 +37,7 @@
   <tr> 
     <td class="tablebody">Source:</td>
     <td class="mainbodytext"><bean:write name="clone" property="source"/></td>
-    <td class="tablebody">Special Treatment:</td>
+    <td class="tablebody">Special MTA:</td>
     <td class="mainbodytext"><bean:write name="clone" property="specialtreatment"/></td>
   </tr>
   <tr> 
