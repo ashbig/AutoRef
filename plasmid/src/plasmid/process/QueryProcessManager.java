@@ -30,6 +30,10 @@ public class QueryProcessManager {
     }
     
     public List getAllEmptyVectors(List clonetypes, List restrictions) {
+        return getAllEmptyVectors(clonetypes, restrictions, false);
+    }
+    
+    public List getAllEmptyVectors(List clonetypes, List restrictions, boolean isPSI) {
         DatabaseTransaction t = null;
         Connection conn = null;
         List found = new ArrayList();
@@ -37,7 +41,7 @@ public class QueryProcessManager {
             t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
             CloneManager manager = new CloneManager(conn);
-            List cloneids = manager.queryCloneidsByCloneType(clonetypes);
+            List cloneids = manager.queryCloneidsByCloneType(clonetypes, isPSI);
             Map clones = manager.queryAvailableClonesByCloneid(cloneids, false, true, false, restrictions, clonetypes, null);
             Set ks = clones.keySet();
             Iterator iter = ks.iterator();

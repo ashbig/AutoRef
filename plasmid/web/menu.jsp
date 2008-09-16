@@ -49,7 +49,10 @@
           <td height="15" class="mainbodytext">Vector Collection</td>
         </tr>
         <tr> 
-          <td height="15" class="lftsubtxt">- <a href="GetAllVectors.do" class="leftsubnavtext">view empty vectors</a></td>
+          <td height="15" class="lftsubtxt">- <a href="GetAllVectors.do?PSI=false" class="leftsubnavtext">all empty vectors</a></td>
+        </tr>
+        <tr> 
+          <td height="15" class="lftsubtxt">- <a href="GetAllVectors.do?PSI=true" class="leftsubnavtext">PSI empty vectors</a></td>
         </tr>
       </table></td>
   </tr>

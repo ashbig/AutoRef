@@ -119,6 +119,9 @@
     <form-bean      name="plate96To384MappingForm"
                     type="plasmid.form.Plate96To384MappingForm"/>
                     
+    <form-bean      name="queryVectorForm"
+                    type="plasmid.form.QueryVectorForm"/>
+                    
  </form-beans>
 
   <!-- ========== Global Forward Definitions ============================== -->
@@ -284,7 +287,9 @@
          
     <action    path="/GetAllVectors"
                type="plasmid.action.GetAllVectorsAction"
-              input="/GetAllVectors.do">
+              input="/GetAllVectors.do"
+              name="queryVectorForm"
+              scope="request">
       <forward  name="success"   path="/DisplayVectors.jsp"/>
       <forward  name="empty"   path="/DisplayVectorsEmpty.jsp"/>
     </action>

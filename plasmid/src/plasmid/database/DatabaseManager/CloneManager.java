@@ -1152,6 +1152,10 @@ public class CloneManager extends TableManager {
     }
 
     public List queryCloneidsByCloneType(List clonetypes) {
+        return queryCloneidsByCloneType(clonetypes, false);
+    }
+    
+    public List queryCloneidsByCloneType(List clonetypes, boolean isPSI) {
         String sql = "select cloneid from clone";
 
         if (clonetypes != null && clonetypes.size() > 0) {
@@ -1159,6 +1163,10 @@ public class CloneManager extends TableManager {
             sql = sql + " where clonetype in (" + s + ")";
         }
 
+        if(isPSI) {
+            sql = sql+" and cloneid in (select cloneid from cloneproperty where propertytype='Collection' and propertyvalue='PSI')";
+        }
+        
         PreparedStatement stmt = null;
 
         List cloneids = new ArrayList();

@@ -8,10 +8,8 @@ package plasmid.form;
 
 import org.apache.struts.action.ActionForm;
 
-import java.util.*;
 
 import plasmid.Constants;
-import plasmid.coreobject.CloneProperty;
 
 /**
  *
