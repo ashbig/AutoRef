@@ -157,7 +157,7 @@ public class ContainerViewBean {
         reset();
         try {
             ContainerheaderTO c = getContainerheader();
-            List containertable = convertContainerToDatamodel(c);
+            List containertable = TableModelBean.convertContainerToDatamodel(c);
             setPlateModel(new ListDataModel(containertable));
             
             List l = new ArrayList();
@@ -319,7 +319,7 @@ public class ContainerViewBean {
         }
         return plateValue;
     }
-    
+    /**
     public List convertContainerToDatamodel(ContainerheaderTO c) {
         List mappingsInTable = new ArrayList<List>();
         for(int i=0; i<c.getRownum(); i++) {
@@ -332,7 +332,7 @@ public class ContainerViewBean {
         }
         return mappingsInTable;
     }
-    
+    */
     public void convertSlideToDatamodel(SlideTO slide) {
         List mappingsInTable = new ArrayList<List>();
         List headerList = new ArrayList();

@@ -55,7 +55,7 @@ public class FileMapContainerController extends MapContainerController {
     }
     
     public void addOtherObjects() throws ControllerException {
-            setMapfileref(new FilereferenceTO(getMapfile().substring(getMapfile().lastIndexOf("\\")+1), FilereferenceTO.PATH, FilereferenceTO.TYPE_MAPPING));
+            setMapfileref(new FilereferenceTO(getMapfile().substring(getMapfile().lastIndexOf("\\")+1), FilereferenceTO.MAPFILEPATH, FilereferenceTO.TYPE_MAPPING));
             try {
                 FileRepository.uploadFile(getMapfileref(), getMapfileInput());
             } catch (NappaIOException ex) {

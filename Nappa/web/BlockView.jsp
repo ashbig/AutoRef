@@ -29,7 +29,7 @@
                     <t:column id="rowlabel">
                         <h:outputText value="#{ContainerViewBean.blockRowLabel}"/>
                     </t:column>
-                    <t:columns id="col" value="#{ContainerViewBean.blockHeaderModel}" var="colHeader">        
+                    <t:columns id="col" value="#{ContainerViewBean.blockHeaderModel}" var="colHeader" styleClass="#{ContainerViewBean.blockValue.cell.control? 'controlcell' : 'regularcell'}">        
                         <f:facet name="header">
                             <h:outputText value="#{colHeader}"/>
                         </f:facet>

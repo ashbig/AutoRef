@@ -50,8 +50,20 @@ public class CloneTO extends ReagentTO {
         this.setSymbol(symbol);
         this.setGrowthname(new GrowthconditionTO(growth));
         this.setVectorname(new VectorTO(vector));
+    }  
+        
+    public CloneTO(ReagentTO r, String vector, String growth, String srccloneid, String src, String genbank, String gi, String geneid, String symbol) {
+        super(r.getReagentid(), r.getName(), r.getType(), r.getDesc());
+        this.setSrccloneid(srccloneid);
+        this.setSource(src);
+        this.setGenbank(genbank);
+        this.setGi(gi);
+        this.setGeneid(geneid);
+        this.setSymbol(symbol);
+        this.setGrowthname(new GrowthconditionTO(growth));
+        this.setVectorname(new VectorTO(vector));
     }
-    
+        
     /**
      * Gets the srccloneid of this Clone.
      * @return the srccloneid

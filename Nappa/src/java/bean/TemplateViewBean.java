@@ -21,5 +21,5 @@ public class TemplateViewBean extends LayoutViewBean {
     public void setTemplate(SlidetemplateTO template) {
         this.template = template;
         setLayout(template.getLayout());
-    }
+    }    
 }

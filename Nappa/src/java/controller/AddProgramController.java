@@ -94,7 +94,7 @@ public class AddProgramController {
         }
 
         try {
-            FilereferenceTO fileref  =new FilereferenceTO(filename.substring(filename.lastIndexOf("\\") + 1), FilereferenceTO.PATH, FilereferenceTO.TYPE_MAPPING);
+            FilereferenceTO fileref  =new FilereferenceTO(filename.substring(filename.lastIndexOf("\\") + 1), FilereferenceTO.MAPFILEPATH, FilereferenceTO.TYPE_MAPPING);
             FileRepository.uploadFile(fileref, fileinput);
             
             FilereferenceDAO dao = new FilereferenceDAO(conn);

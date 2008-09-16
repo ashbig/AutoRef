@@ -49,10 +49,12 @@ public class ImportClonesBean implements Serializable {
     private List<ContainerheaderTO> outputcontainers;
     private FilereferenceTO inputfile;
     private String format;
+    private String idtype;
     
     /** Creates a new instance of ImportClonesBean */
     public ImportClonesBean() {
         setFormat(Constants.FILE_CLONE);
+        setIdtype(Constants.ID_GENENAME);
         setImportstatus(0);
     }
     
@@ -60,6 +62,16 @@ public class ImportClonesBean implements Serializable {
         List<SelectItem> formats = new ArrayList<SelectItem>();
         formats.add(new SelectItem(Constants.FILE_CLONE));
         formats.add(new SelectItem(Constants.FILE_CONTROL));
+        return formats;
+    }
+    
+    public List getIds() {
+        List<SelectItem> formats = new ArrayList<SelectItem>();
+        formats.add(new SelectItem(Constants.ID_GENENAME));
+        formats.add(new SelectItem(Constants.ID_CLONEID));
+        formats.add(new SelectItem(Constants.ID_GENEID));
+        formats.add(new SelectItem(Constants.ID_GENBANK));
+        formats.add(new SelectItem(Constants.ID_GI));
         return formats;
     }
     
@@ -88,7 +100,7 @@ public class ImportClonesBean implements Serializable {
             getC().setLocation(ContainerheaderTO.getLOCATION_FREEZER());
             getC().setProtocol(new ProcessprotocolTO(ProcessprotocolTO.IMPORT_PLATES,null,null));
             getC().setWho(ResearcherDAO.getResearcher(researcherid));
-            
+            getC().setIdtype(idtype);
             getC().doProcess();
             getC().persistProcess();
             
@@ -193,5 +205,13 @@ public class ImportClonesBean implements Serializable {
 
     public void setFormat(String format) {
         this.format = format;
+    }
+
+    public String getIdtype() {
+        return idtype;
+    }
+
+    public void setIdtype(String idtype) {
+        this.idtype = idtype;
     }
 }

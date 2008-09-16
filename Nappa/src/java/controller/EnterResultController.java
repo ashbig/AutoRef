@@ -9,6 +9,8 @@
 
 package controller;
 
+import com.jscape.inet.sftp.Sftp;
+import com.jscape.inet.sftp.SftpFile;
 import core.Fileresult;
 import dao.ContainerDAO;
 import dao.DaoException;
@@ -16,13 +18,12 @@ import dao.FilereferenceDAO;
 import io.FileRepository;
 import io.ResultFileParser;
 import io.StaticResultFileParserFactory;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Enumeration;
 import java.util.List;
 import process.ResultManager;
 import transfer.ContainerheaderTO;
@@ -35,6 +36,7 @@ import transfer.ResultTO;
 import transfer.SampleTO;
 import transfer.SamplepropertyTO;
 import util.Constants;
+import util.SftpHandler;
 
 /**
  *
@@ -61,12 +63,14 @@ public class EnterResultController extends ProcessController implements Serializ
     public void readFiles() throws ControllerException {
         setFilenames(new ArrayList<String>());
         try {
-            File dir = new File(Constants.DIR_RESULT_FILE);
-            File[] files = dir.listFiles();
-            for(int i=0; i<files.length; i++) {
-                File f = files[i];
-                getFilenames().add(f.getName());
+            Sftp ftp = SftpHandler.getSftpConnection();
+            ftp.setDir(Constants.DIR_RESULT_FILE);
+            Enumeration dirs = ftp.getDirListing();
+            while(dirs.hasMoreElements()) {
+                SftpFile file = (SftpFile)dirs.nextElement();
+                getFilenames().add(file.getFilename());
             }
+            ftp.disconnect();
         } catch (Exception ex) {
             throw new ControllerException("Error reading files."+ex.getMessage());
         }
@@ -158,6 +162,7 @@ public class EnterResultController extends ProcessController implements Serializ
         }
     }
     
+    @Override
     public void doSpecificProcess() throws ControllerException {
         ResultFileParser parser = StaticResultFileParserFactory.getResultFileParser(getResulttype());
         if(parser == null)
@@ -166,22 +171,27 @@ public class EnterResultController extends ProcessController implements Serializ
         ResultManager manager = new ResultManager();
         filerefs = new ArrayList<FilereferenceTO>();
         try {
+            Sftp ftp = SftpHandler.getSftpConnection();
             for(String filename:foundFilenames) {
                 ContainerheaderTO container = findContainer(filename);
                 if(container == null)
                     throw new ControllerException("Cannot find container for file: "+filename);
                 
-                InputStream input = new FileInputStream(Constants.DIR_RESULT_FILE+filename);
+                InputStream input = ftp.getInputStream(Constants.DIR_RESULT_FILE+filename, 0);
                 List<Fileresult> results = parser.parseFile(input);
                 manager.populateResultsForContainer(container,results, getResulttype());
+                input.close();
                 
-                FilereferenceTO fileref = new FilereferenceTO(filename, FilereferenceTO.PATH, FilereferenceTO.TYPE_RESULT);
-                FileRepository.uploadFile(fileref, Constants.DIR_RESULT_FILE+filename);
+                input = ftp.getInputStream(Constants.DIR_RESULT_FILE+filename, 0);
+                FilereferenceTO fileref = new FilereferenceTO(filename, FilereferenceTO.RESULTFILEPATH, FilereferenceTO.TYPE_RESULT);
+                FileRepository.uploadFile(fileref, input);
                 fileref.setObjecttype(ProcessobjectTO.getTYPE_FILEREFERENCE());
                 fileref.setIoflag(ProcessobjectTO.getIO_INPUT());
                 getPe().addProcessobject(fileref);
                 filerefs.add(fileref);
+                input.close();;
             }
+            ftp.disconnect();
             
             List<ResultTO> results = new ArrayList<ResultTO>();
             for(ContainerheaderTO c:getContainers()) {
@@ -198,6 +208,7 @@ public class EnterResultController extends ProcessController implements Serializ
         }
     }
     
+    @Override
     public void persistSpecificProcess(Connection conn) throws ControllerException {
         try {
             FilereferenceDAO dao = new FilereferenceDAO(conn);

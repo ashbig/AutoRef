@@ -1,4 +1,14 @@
-CLONENAME	GENEID	NAME	TARGETGENBANK	TARGETSEQID	VECTORNAME	GROWTH	SPECIES	CONTAINERLABEL	S.POSITIONX||S.POSITIONY
+Please prepare your file according to the following guidline:
+1. Tab delimited text file
+2. The first line contains the header
+3. Keep the colomns in the same order as the example file
+4. Clone ID field is required for each clone
+5. Put "NA" in place of the empty field
+6. The "Gene Identifier" column cannot have empty (NA) field. Use "Undefined" for clones with unknown insert
+
+Sample file:
+
+Clone ID    	Gene ID	Gene Name	GenBank Accession	GI	Vector Name	Vector Growth	Species	Plate	Well
 HsCD00038418	6788	STK3	NM_006281	5454093	pJP1563	test	Homo sapiens	HsxXG002541	A01
 HsCD00038419	203	AK1	NM_000476	4502010	pJP1563	test	Homo sapiens	HsxXG002541	B01
 HsCD00038420	1445	CSK	NM_004383	4758077	pJP1563	test	Homo sapiens	HsxXG002541	C01

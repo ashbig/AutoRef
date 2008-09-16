@@ -8,25 +8,32 @@ import core.Block;
 import core.Slidecontainerlineageinfo;
 import core.Well;
 import dao.ReagentDAO;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 import javax.faces.model.SelectItem;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 import transfer.ContainercellTO;
 import transfer.SlidecelllineageTO;
 import transfer.LayoutcontainerTO;
 import transfer.ReagentTO;
 import transfer.SlidecellTO;
 import transfer.SlidelayoutTO;
+import util.SlidecellMapComparator;
 
 /**
  *
  * @author dzuo
  */
 public class LayoutViewBean {
+
     protected SlidelayoutTO layout;
     protected int blocknum;
     protected List<SlidecelllineageTO> cells;
@@ -34,7 +41,6 @@ public class LayoutViewBean {
     protected boolean editcontrol;
     protected List<SelectItem> controlreagents;
     private LayoutcontainerTO container;
-    
     protected DataModel plateModel;
     protected DataModel headerModel;
     protected DataModel blockModel;
@@ -201,6 +207,12 @@ public class LayoutViewBean {
     public void convertCellsToDatamodel(List<SlidecelllineageTO> samples) {
         List mappingsInTable = new ArrayList<List>();
         List headerList = new ArrayList();
+        getCellsInDatamodel(samples, mappingsInTable, headerList);
+        setBlockModel(new ListDataModel(mappingsInTable));
+        setBlockHeaderModel(new ListDataModel(headerList));
+    }
+
+    public void getCellsInDatamodel(List<SlidecelllineageTO> samples, List<List> mappingsInTable, List headerList) {
         int row = 1;
         List<SlidecelllineageTO> cols = new ArrayList<SlidecelllineageTO>();
         boolean addHeader = true;
@@ -217,8 +229,6 @@ public class LayoutViewBean {
             row = ((SlidecellTO) sample.getCell()).getBlockwellx();
         }
         mappingsInTable.add(cols);
-        setBlockModel(new ListDataModel(mappingsInTable));
-        setBlockHeaderModel(new ListDataModel(headerList));
     }
 
     public Block getSlideValue() {
@@ -257,8 +267,8 @@ public class LayoutViewBean {
         try {
             List<ReagentTO> reagents = ReagentDAO.getReagents(ReagentTO.getTYPE_CONTROL());
             controlreagents = new ArrayList<SelectItem>();
-            controlreagents.add(new SelectItem(ReagentTO.NOT_SELECTED, ReagentTO.NOT_SELECTED));
-            for(ReagentTO r:reagents) {
+            controlreagents.add(new SelectItem(ReagentTO.NON_SPOTS, ReagentTO.NON_SPOTS));
+            for (ReagentTO r : reagents) {
                 SelectItem i = new SelectItem(r.getName(), r.getName());
                 controlreagents.add(i);
             }
@@ -269,34 +279,66 @@ public class LayoutViewBean {
     }
 
     public void saveControls() {
-        for(SlidecelllineageTO cell:cells) {
+        for (SlidecelllineageTO cell : cells) {
             String control = cell.getCell().getControlreagent();
             List<ContainercellTO> pre = cell.getPre();
-            for(ContainercellTO c:pre) {
+            for (ContainercellTO c : pre) {
                 c.setControlreagent(control);
             }
             List<ContainercellTO> post = cell.getPost();
-            for(ContainercellTO c:post) {
+            for (ContainercellTO c : post) {
                 c.setControlreagent(control);
             }
         }
     }
-    
+
     public void saveSlideControls() {
         List<SlidecelllineageTO> slidecells = getLayout().getSlide().getCells();
-        for(SlidecelllineageTO cell:slidecells) {
+        for (SlidecelllineageTO cell : slidecells) {
             String control = cell.getCell().getControlreagent();
             List<ContainercellTO> pre = cell.getPre();
-            for(ContainercellTO c:pre) {
+            for (ContainercellTO c : pre) {
                 c.setControlreagent(control);
             }
             List<ContainercellTO> post = cell.getPost();
-            for(ContainercellTO c:post) {
+            for (ContainercellTO c : post) {
                 c.setControlreagent(control);
             }
         }
     }
-    
+
+    public void downloadMap() {
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        HttpServletResponse response = (HttpServletResponse) context.getResponse();
+        response.setContentType("Application/x-msexcel");
+        response.setHeader("Content-Disposition", "inline;filename=slide.xls");
+
+        LayoutcontainerTO slide = getLayout().getSlide();
+        List<SlidecelllineageTO> cells = slide.getCells();
+        Collections.sort(cells, new SlidecellMapComparator());
+        int index = 1;
+        try {
+            ServletOutputStream out = response.getOutputStream();
+            for (SlidecelllineageTO sample : cells) {
+                SlidecellTO cell = (SlidecellTO) sample.getCell();
+                if (Integer.parseInt(cell.getPosx()) != index) {
+                    out.println();
+                    index++;
+                }
+                out.print(cell.getBlocknum() + "," + cell.getPosx() + "," + cell.getPosy() + "," + cell.getPos() +","+ cell.getType());
+                if(cell.getControlreagent() != null) {
+                    out.print(","+ cell.getControlreagent());
+                }
+                out.print("\t");
+            }
+            out.flush();
+            out.close();
+            FacesContext.getCurrentInstance().responseComplete();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
     public DataModel getPlateModel() {
         return plateModel;
     }
@@ -370,7 +412,7 @@ public class LayoutViewBean {
     }
 
     public List<SelectItem> getControlreagents() {
-        if(controlreagents == null) {
+        if (controlreagents == null) {
             loadControlReagents();
         }
         return controlreagents;

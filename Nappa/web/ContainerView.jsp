@@ -59,7 +59,7 @@
                             <t:column id="rowlabel">
                                 <h:outputText value="#{ContainerViewBean.rowLabel.cell.posx}"/>
                             </t:column>
-                            <t:columns id="col" value="#{ContainerViewBean.headerModel}" var="colHeader">        
+                            <t:columns id="col" value="#{ContainerViewBean.headerModel}" var="colHeader" styleClass="#{ContainerViewBean.plateValue.cell.control? 'controlcell' : 'regularcell'}">        
                                 <f:facet name="header">
                                     <h:outputText value="#{colHeader}"/>
                                 </f:facet>

@@ -9,12 +9,10 @@
 
 package transfer;
 
-import com.jscape.inet.sftp.Sftp;
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.FileReader;
 import java.io.Serializable;
 import util.Constants;
-import util.SftpHandler;
 
 /**
  *
@@ -24,7 +22,8 @@ public class FilereferenceTO extends ProcessobjectTO implements Serializable{
     public static final String TYPE_IMPORT = "Import file";
     public static final String TYPE_MAPPING = "Program file";
     public static final String TYPE_RESULT = "Result file";
-    public static final String PATH = Constants.REPOSITORY+Constants.FILEPATH;
+    public static final String MAPFILEPATH = Constants.REPOSITORY+Constants.MAPFILE;
+    public static final String RESULTFILEPATH = Constants.REPOSITORY+Constants.RESULTFILE;
     
     private int filereferenceid;
     private String filename;
@@ -86,13 +85,14 @@ public class FilereferenceTO extends ProcessobjectTO implements Serializable{
         try {
             String s = "";
             String line = null;
-            Sftp ftp = SftpHandler.getSftpConnection();
-            BufferedReader f = new BufferedReader(new InputStreamReader(ftp.getInputStream(getFilepath()+getFilename(), 0)));
+            //Sftp ftp = SftpHandler.getSftpConnection();
+            //BufferedReader f = new BufferedReader(new InputStreamReader(ftp.getInputStream(getFilepath()+getFilename(), 0)));
+            BufferedReader f = new BufferedReader(new FileReader(getFilepath()+getFilename()));
             while((line=f.readLine()) != null) {
                 s += line+"\n";
             }
             f.close();
-            SftpHandler.disconnectSftp(ftp);
+            //SftpHandler.disconnectSftp(ftp);
             return s;
         } catch (Exception ex) {
             System.out.println(ex);

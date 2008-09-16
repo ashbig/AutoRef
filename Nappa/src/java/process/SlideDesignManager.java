@@ -173,14 +173,21 @@ public class SlideDesignManager {
             for (SlidecelllineageTO l : lineages) {
                 ContainercellTO containercell = l.getCell();
                 containercell.setType(type);
+                String controlreagent = containercell.getControlreagent();
+                if(controlreagent==null) {
+                    controlreagent = ReagentTO.NON_SPOTS;
+                }
+                containercell.setControlreagent(controlreagent);
                 List<ContainercellTO> pre = l.getPre();
                 for (ContainercellTO cell : pre) {
                     cell.setType(type);
+                    cell.setControlreagent(controlreagent);
                 }
 
                 List<ContainercellTO> post = l.getPost();
                 for (ContainercellTO cell : post) {
                     cell.setType(type);
+                    cell.setControlreagent(controlreagent);
                 }
             }
         }

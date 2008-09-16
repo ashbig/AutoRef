@@ -19,6 +19,12 @@
     </managed-bean>
     
     <managed-bean>
+        <managed-bean-name>addControlsBean</managed-bean-name>
+        <managed-bean-class>bean.AddControlsBean</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    
+    <managed-bean>
         <managed-bean-name>ContainerViewBean</managed-bean-name>
         <managed-bean-class>bean.ContainerViewBean</managed-bean-class>
         <managed-bean-scope>session</managed-bean-scope>
@@ -82,6 +88,14 @@
         <managed-bean-class>bean.TemplateDesignBean</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
+    
+    <navigation-rule>
+        <from-view-id>/AddControls.jsp</from-view-id>
+        <navigation-case>
+            <from-outcome>success</from-outcome>
+            <to-view-id>/SearchContainer.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
     
     <navigation-rule>
         <from-view-id>/DirectContainerMapping.jsp</from-view-id>
@@ -208,6 +222,14 @@
         <navigation-case>
             <from-outcome>viewreagent</from-outcome>
             <to-view-id>/ReagentView.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <from-view-id>/SearchContainer.jsp</from-view-id>
+        <navigation-case>
+            <from-outcome>addControls</from-outcome>
+            <to-view-id>/AddControls.jsp</to-view-id>
         </navigation-case>
     </navigation-rule>
     
