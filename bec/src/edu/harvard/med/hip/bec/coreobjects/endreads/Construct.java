@@ -197,7 +197,7 @@ public class Construct
              codingsequence = startCodon + codingsequence.substring(3);
          }
         // seq = seq.substring(3, seq.length()-3);
-         if (format == FORMAT_OPEN)
+         if (format == FORMAT_OPEN && !closedStopCodon.equalsIgnoreCase("NON"))
          {
              codingsequence =  codingsequence.substring( 0,codingsequence.length()-3 )+ fusionStopCodon;
          }
