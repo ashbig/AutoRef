@@ -42,6 +42,7 @@
     <td class="tableheader">Insert Format</td>
     <td class="tableheader">Vector</td>
     <td class="tableheader">Selection Markers</td>
+    <td class="tableheader">Special MTA</td>
     <logic:present name="isBatch">
     <logic:equal name="isBatch" value="Y">
     <td class="tableheader">Target Plate</td>
@@ -111,6 +112,7 @@
         <bean:write name="selection" property="hosttype"/>: <bean:write name="selection" property="marker"/>;
     </logic:iterate>
     </td>
+    <td><bean:write name="clone" property="specialtreatment"/></td>
     <logic:present name="isBatch">
     <logic:equal name="isBatch" value="Y">
     <td><bean:write name="clone" property="targetPlate"/></td>
