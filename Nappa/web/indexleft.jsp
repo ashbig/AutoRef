@@ -35,11 +35,15 @@ on Libraries node in Projects view can be used to add the JSTL 1.1 library.
                 <li><a href="./faces/EnterResults.jsp" target="rightFrame">Enter Results</a></li>
                 <li><a href="./faces/SearchContainer.jsp" target="rightFrame">Add Controls</a></li>
             </ul>
-            <p>View
+            <p>Search
             <ul>
                 <li><a href="./faces/SearchLayout.jsp" target="rightFrame">Search Slide Layout</a></li>
                 <li><a href="./faces/SearchTemplate.jsp" target="rightFrame">Search Slide Template</a></li>
                 <li><a href="./faces/SearchContainers.jsp" target="rightFrame">Search Containers</a></li>
+            </ul>
+            <p>View
+            <ul>
+                <li><a href="./faces/ListReagent.jsp" target="rightFrame">View Master Mix</a></li>
             </ul>
             <p><a href="./Logout.jsp" target="_parent">Logout</a>
     

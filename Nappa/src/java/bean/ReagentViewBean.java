@@ -33,13 +33,17 @@ public class ReagentViewBean {
     }
 
     public String viewAllMastermix() {
+        loadMastermix();
+        return "viewmastermix";
+    }
+    
+    private void loadMastermix() {
         try {
             List<ReagentTO> reagents = ReagentDAO.getReagents(ReagentTO.TYPE_MASTERMIX);
             setMastermix(reagents);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        return "viewmastermix";
     }
     
     public int getReagentid() {
@@ -59,6 +63,8 @@ public class ReagentViewBean {
     }
 
     public List<ReagentTO> getMastermix() {
+        if(mastermix==null)
+            loadMastermix();
         return mastermix;
     }
 

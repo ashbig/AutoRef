@@ -23,6 +23,7 @@
                 </tr>
             </table>
             
+            <p>
                 <h:dataTable value='#{ReagentViewBean.mastermix}' var='item' border="1" cellpadding="2" cellspacing="0">
                     <h:column>
                         <f:facet name="header">
