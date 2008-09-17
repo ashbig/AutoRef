@@ -24,7 +24,7 @@
             </table>
             
             <t:saveState id="directContainerMapBeanid" value="#{directContainerMapBean}" />
-
+            
             <h:form id="directContainerMappingForm" enctype="multipart/form-data">
                 <h:panelGrid columns="2" columnClasses="top,top"> 
                     <h:outputLabel styleClass="prompt" value="#{msgs.selectProcessPrompt}:" for="protocolid"/>
@@ -78,6 +78,11 @@
                 </h:form>
             </h:panelGroup>
             
+            <h:form id="viewmastermixform">
+                <h:commandLink rendered="#{directContainerMapBean.showmmix}" target="mastermixview" action="#{ReagentViewBean.viewAllMastermix}">
+                    <h:outputText value="View master mix"/>
+                </h:commandLink>
+            </h:form>
         </f:view>
     </body>
 </html>

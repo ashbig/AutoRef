@@ -6,6 +6,7 @@
 package bean;
 
 import dao.ReagentDAO;
+import java.util.List;
 import java.util.Map;
 import javax.faces.context.FacesContext;
 import transfer.ReagentTO;
@@ -17,6 +18,7 @@ import transfer.ReagentTO;
 public class ReagentViewBean {
     private ReagentTO reagent;
     private int reagentid;
+    private List<ReagentTO> mastermix;
     
     public String viewReagent() {
         try {
@@ -30,6 +32,16 @@ public class ReagentViewBean {
         return "viewreagent";
     }
 
+    public String viewAllMastermix() {
+        try {
+            List<ReagentTO> reagents = ReagentDAO.getReagents(ReagentTO.TYPE_MASTERMIX);
+            setMastermix(reagents);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return "viewmastermix";
+    }
+    
     public int getReagentid() {
         return reagentid;
     }
@@ -44,5 +56,13 @@ public class ReagentViewBean {
 
     public void setReagent(ReagentTO reagent) {
         this.reagent = reagent;
+    }
+
+    public List<ReagentTO> getMastermix() {
+        return mastermix;
+    }
+
+    public void setMastermix(List<ReagentTO> mastermix) {
+        this.mastermix = mastermix;
     }
 }

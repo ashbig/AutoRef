@@ -12,6 +12,7 @@ import controller.MapContainerController;
 import controller.PrepDnaController;
 import controller.PrintSlideController;
 import controller.StaticMapContainerControllerFactory;
+import dao.ReagentDAO;
 import dao.ResearcherDAO;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -25,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.myfaces.custom.fileupload.UploadedFile;
 import transfer.ContainerheaderTO;
 import transfer.ProcessprotocolTO;
+import transfer.ReagentTO;
 import transfer.SampleTO;
 import util.Constants;
 import util.StringConvertor;
@@ -52,7 +54,7 @@ public class DirectContainerMapBean implements Serializable {
     private String format;
     private int numofslide;
     private int executionid;
-
+    
     /** Creates a new instance of DirectContainerMapBean */
     public DirectContainerMapBean() {
         reset();

@@ -18,6 +18,7 @@ import java.io.Serializable;
 public class ReagentTO extends ProcessobjectTO implements Serializable {
     private static final String TYPE_CLONE = ContainercellTO.getTYPE_GENE();
     private static final String TYPE_CONTROL = ContainercellTO.getTYPE_CONTROL();
+    public static final String TYPE_MASTERMIX = "Master Mix";
     public static final String NON_SPOTS = "Non Spots";
     public static final String NOT_SELECTED = "Not Selected";
     
