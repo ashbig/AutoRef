@@ -38,12 +38,10 @@
     <td class="tableheader">Keyword</td>
     <td class="tableheader">Gene Name</td>
     <td class="tableheader">Reference Sequence</td>
-    <td class="tableheader">Mutation</td>
-    <td class="tableheader">Discrepancy</td>
+    <td class="tableheader">Mutation/ Discrepancy</td>
     <td class="tableheader">Insert Format</td>
     <td class="tableheader">Vector</td>
     <td class="tableheader">Selection Markers</td>
-    <td class="tableheader">Special MTA</td>
     <logic:present name="isBatch">
     <logic:equal name="isBatch" value="Y">
     <td class="tableheader">Target Plate</td>
@@ -94,13 +92,11 @@
         <td><bean:write name="insert" property="annotation"/></td>  
         <td><bean:write name="insert" property="description"/></td>
         <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=nucleotide&val=<bean:write name="insert" property="targetseqidForNCBI"/>"><bean:write name="insert" property="targetgenbank"/></a></td>
-        <td><bean:write name="insert" property="hasmutation"/></td>
-        <td><bean:write name="insert" property="hasdiscrepancy"/></td>
+        <td><bean:write name="insert" property="hasmutdis"/></td>
         <td><bean:write name="insert" property="format"/></td>
     </logic:iterate>
     </logic:notEqual>
     <logic:equal name="clone" property="type" value="<%=Clone.NOINSERT%>">
-        <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
@@ -115,7 +111,6 @@
         <bean:write name="selection" property="hosttype"/>: <bean:write name="selection" property="marker"/>;
     </logic:iterate>
     </td>
-    <td><bean:write name="clone" property="specialtreatment"/></td>
     <logic:present name="isBatch">
     <logic:equal name="isBatch" value="Y">
     <td><bean:write name="clone" property="targetPlate"/></td>

@@ -42,7 +42,6 @@
     <td class="tableheader">Insert Format</td>
     <td class="tableheader">Vector</td>
     <td class="tableheader">Selection Markers</td>
-    <td class="tableheader">Use Restriction</td>
     <logic:present name="viewCartForm" property="isBatch">
     <logic:equal name="viewCartForm" property="isBatch" value="Y">
     <td class="tableheader">Target Plate</td>
@@ -111,7 +110,6 @@
         <bean:write name="selection" property="hosttype"/>: <bean:write name="selection" property="marker"/>
     </logic:iterate>
     </td>
-    <td><bean:write name="clone" property="restriction"/></td>
     <logic:present name="viewCartForm" property="isBatch">
     <logic:equal name="viewCartForm" property="isBatch" value="Y">
     <td><bean:write name="clone" property="targetPlate"/></td>

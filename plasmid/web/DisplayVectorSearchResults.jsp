@@ -65,13 +65,10 @@
     <td class="tableheader">Keywords</td>
     <td class="tableheader">Gene Name</td>
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=targetseq">Reference Sequence</a></td>
-    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=insertmutation">Mutation</a></td>
-    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=insertdiscrepancy">Discrepancy</a></td>
+    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=mutdis">Mutation/ Discrepancy</a></td>
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=insertformat">Insert Format</a></td>
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=vectorname">Vector</a></td>
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=selection">Selection Markers</a></td>
-    <td class="tableheader">Special MTA</td>
-    <td class="tableheader">Use Restriction</td>
     <td class="tableheader">&nbsp;</td>
   </tr>
 
@@ -84,7 +81,6 @@
     <td><a target="_blank" href="GetCloneDetail.do?cloneid=<bean:write name="clone" property="cloneid"/>&species=<bean:write name="refseqSearchForm" property="species"/>"><bean:write name="clone" property="name"/></a></td>
     <td><bean:write name="clone" property="type"/></td>
     <logic:equal name="clone" property="type" value="<%=Clone.NOINSERT%>">
-    <td>&nbsp;</td>
     <td>&nbsp;</td>
     <td>&nbsp;</td>
     <td>&nbsp;</td>
@@ -133,8 +129,7 @@
     <td><bean:write name="insert" property="annotation"/></td>
     <td><bean:write name="insert" property="description"/></td>
     <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=nucleotide&val=<bean:write name="insert" property="targetseqidForNCBI"/>"><bean:write name="insert" property="targetgenbank"/></a></td>
-    <td><bean:write name="insert" property="hasmutation"/></td>
-    <td><bean:write name="insert" property="hasdiscrepancy"/></td>
+    <td><bean:write name="insert" property="hasmutdis"/></td>
     <td><bean:write name="insert" property="format"/></td>
     </logic:iterate>
     </logic:notEqual>
@@ -144,8 +139,6 @@
         <bean:write name="selection" property="hosttype"/>: <bean:write name="selection" property="marker"/>
     </logic:iterate>
     </td>
-    <td><bean:write name="clone" property="specialtreatment"/></td>
-    <td><bean:write name="clone" property="restriction"/></td>
     <html:form action="SetDisplay.do">
         <input type="hidden" name="displayPage" value="indirect"/>
         <input type="hidden" name="forward" value="vectorSearchResult"/>

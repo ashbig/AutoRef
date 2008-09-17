@@ -114,12 +114,10 @@ To request individual clones from the collection, download the Excel file, find 
     <td class="tableheader">Keywords</td>
     <td class="tableheader">Gene Name</td>
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=targetseq&displayPage=<bean:write name="displayPage"/>&forward=collection">Reference Sequence</a></td>
-    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=insertmutation&displayPage=<bean:write name="displayPage"/>&forward=collection">Mutation</a></td>
-    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=insertdiscrepancy&displayPage=<bean:write name="displayPage"/>&forward=collection">Discrepancy</a></td>
+    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=mutdis&displayPage=<bean:write name="displayPage"/>&forward=collection">Mutation/ Discrepancy</a></td>
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=insertformat&displayPage=<bean:write name="displayPage"/>&forward=collection">Insert Format</a></td>
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=vectorname&displayPage=<bean:write name="displayPage"/>&forward=collection">Vector</a></td>
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=selection&displayPage=<bean:write name="displayPage"/>&forward=collection">Selection Markers</a></td>
-    <td class="tableheader">Special MTA</td>
     <td class="tableheader">&nbsp;</td>
   </tr>
 
@@ -130,7 +128,6 @@ To request individual clones from the collection, download the Excel file, find 
     <td><a target="_blank" href="GetCloneDetail.do?cloneid=<bean:write name="clone" property="cloneid"/>"><bean:write name="clone" property="name"/></a></td>
     <td><bean:write name="clone" property="type"/></td>
     <logic:equal name="clone" property="type" value="<%=Clone.NOINSERT%>">
-    <td>&nbsp;</td>
     <td>&nbsp;</td>
     <td>&nbsp;</td>
     <td>&nbsp;</td>
@@ -178,8 +175,7 @@ To request individual clones from the collection, download the Excel file, find 
     <td><bean:write name="insert" property="annotation"/></td>
     <td><bean:write name="insert" property="description"/></td>
     <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=nucleotide&val=<bean:write name="insert" property="targetseqidForNCBI"/>"><bean:write name="insert" property="targetgenbank"/></a></td>
-    <td><bean:write name="insert" property="hasmutation"/></td>
-    <td><bean:write name="insert" property="hasdiscrepancy"/></td>
+    <td><bean:write name="insert" property="hasmutdis"/></td>
     <td><bean:write name="insert" property="format"/></td>
     </logic:iterate>
     </logic:notEqual>
@@ -189,7 +185,6 @@ To request individual clones from the collection, download the Excel file, find 
         <bean:write name="selection" property="hosttype"/>: <bean:write name="selection" property="marker"/>
     </logic:iterate>
     </td>
-    <td><bean:write name="clone" property="specialtreatment"/></td>
     <html:form action="SetDisplay.do">
     <html:hidden property="pagesize"/>
     <html:hidden property="page"/>

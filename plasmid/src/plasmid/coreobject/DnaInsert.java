@@ -117,6 +117,9 @@ public class DnaInsert {
     public String getTargetgenbank() {return targetgenbank;}
     public String getHasdiscrepancy() {return hasdiscrepancy;}
     public String getHasmutation() {return hasmutation;}
+    public String getHasmutdis() {
+        return hasmutation+"/"+hasdiscrepancy;
+    }
     public int getRefseqid() {return refseqid;}
     public List getProperties() {return properties;}
     public String getSequence() {return sequence;}

@@ -148,6 +148,8 @@ public class SetDisplayAction extends Action {
             Collections.sort(clones, new TargetSeqidComparator());
         if("insertmutation".equals(sortby))
             Collections.sort(clones, new InsertMutationComparator());
+        if("mutdis".equals(sortby)) 
+            Collections.sort(clones, new InsertMutDisComparator());
         if("insertdiscrepancy".equals(sortby))
             Collections.sort(clones, new InsertDiscrepancyComparator());
         if("insertformat".equals(sortby))
