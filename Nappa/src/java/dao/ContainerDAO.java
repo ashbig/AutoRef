@@ -312,7 +312,7 @@ public class ContainerDAO {
         return slide;
     }
 
-    public static SlideTO getSlide(int slideid, boolean isSample, boolean isReagent, boolean isClone, boolean isType) throws DaoException {
+    public static SlideTO getSlide(int slideid, boolean isSample, boolean isReagent, boolean isClone, boolean isType, boolean isLineage) throws DaoException {
         String sql = "select barcode, printorder, surfacechem, program, startdate, containerid from slide where slideid=" + slideid;
         DatabaseTransaction t = null;
         ResultSet rs = null;
@@ -328,7 +328,7 @@ public class ContainerDAO {
                 String startdate = rs.getString(5);
                 int containerid = rs.getInt(6);
                 slide = new SlideTO(slideid, printorder, barcode, surfacechem, program, startdate);
-                ContainerheaderTO c = ContainerDAO.getContainer(containerid, isSample, isReagent, isClone, isType);
+                ContainerheaderTO c = ContainerDAO.getContainer(containerid, isSample, isReagent, isClone, isType, isLineage);
                 slide.setContainer(c);
             }
         } catch (Exception ex) {
@@ -338,8 +338,12 @@ public class ContainerDAO {
         }
         return slide;
     }
-
+    
     public static ContainerheaderTO getContainer(int containerid, boolean isSample, boolean isReagent, boolean isClone, boolean isType) throws DaoException {
+        return getContainer(containerid, isSample, isReagent, isClone, isType, false);
+    }
+
+    public static ContainerheaderTO getContainer(int containerid, boolean isSample, boolean isReagent, boolean isClone, boolean isType, boolean isLineage) throws DaoException {
         String sql = "select barcode,type,format,status,location,labware,threadid,category from containerheader where containerid=?";
         String sql2 = "select pos,posx,posy,type from containercell where containerid=? and sampleid=?";
         String sql3 = "select sampleid,name,description,volume,quantity,unit,type,form,status,pos from sample where containerid=?";
@@ -348,7 +352,12 @@ public class ContainerDAO {
         String sql6 = "select blocknum,blockrow,blockcol,blockposx,blockposy,blockwellx,blockwelly from slidecell where containerid=? and pos=?";
         String sql7 = "select description, numofrow, numofcol from containertype where type=?";
         String sql8 = "select type,value from sampleproperty where sampleid=?";
-
+        String sql9 = "select h.barcode, c.pos, c.posx, c.posy, c.sampleid"+
+                " from containercell c, containerheader h"+
+                " where  h.containerid=c.containerid and c.sampleid in"+
+                " (select sampleid_from from samplelineage"+
+                " where sampleid_to=?)";
+        
         DatabaseTransaction t = null;
         Connection conn = null;
         ResultSet rs = null;
@@ -359,6 +368,7 @@ public class ContainerDAO {
         ResultSet rs6 = null;
         ResultSet rs7 = null;
         ResultSet rs8 = null;
+        ResultSet rs9 = null;
         PreparedStatement stmt = null;
         PreparedStatement stmt2 = null;
         PreparedStatement stmt3 = null;
@@ -367,6 +377,7 @@ public class ContainerDAO {
         PreparedStatement stmt6 = null;
         PreparedStatement stmt7 = null;
         PreparedStatement stmt8 = null;
+        PreparedStatement stmt9 = null;
 
         ContainerheaderTO container = null;
         try {
@@ -388,7 +399,10 @@ public class ContainerDAO {
             if (isType) {
                 stmt7 = conn.prepareStatement(sql7);
             }
-
+            if(isLineage) {
+                stmt9 = conn.prepareStatement(sql9);
+            }
+            
             stmt.setInt(1, containerid);
             rs = t.executeQuery(stmt);
             if (rs.next()) {
@@ -472,6 +486,35 @@ public class ContainerDAO {
                             sample.addProperty(property);
                         }
 
+                        if (isLineage) {
+                            stmt9.setInt(1, sampleid);
+                            rs9 = t.executeQuery(stmt9);
+                            if (rs9.next()) {
+                                String plate384 = rs9.getString(1);
+                                int pos384 = rs9.getInt(2);
+                                String posx384 = rs9.getString(3);
+                                String posy384 = rs9.getString(4);
+                                int sample384 = rs9.getInt(5);
+                                ContainercellTO pre = new ContainercellTO(pos384, posx384, posy384, null);
+                                pre.setContainerlabel(plate384);
+                                DatabaseTransaction.closeResultSet(rs9);
+
+                                stmt9.setInt(1, sample384);
+                                rs9 = t.executeQuery(stmt9);
+                                if (rs9.next()) {
+                                    String plate96 = rs9.getString(1);
+                                    int pos96 = rs9.getInt(2);
+                                    String posx96 = rs9.getString(3);
+                                    String posy96 = rs9.getString(4);
+                                    int sample96 = rs9.getInt(5);
+                                    pre = new ContainercellTO(pos96, posx96, posy96, null);
+                                    pre.setContainerlabel(plate96);
+                                    DatabaseTransaction.closeResultSet(rs9);
+                                }
+                                sample.setPrecell(pre);
+                            }
+                        }
+
                         if (isReagent) {
                             stmt4.setInt(1, sampleid);
                             rs4 = t.executeQuery(stmt4);
@@ -529,6 +572,9 @@ public class ContainerDAO {
             if (rs8 != null) {
                 DatabaseTransaction.closeResultSet(rs8);
             }
+            if (rs9 != null) {
+                DatabaseTransaction.closeResultSet(rs9);
+            }
             DatabaseTransaction.closeStatement(stmt);
             if (stmt2 != null) {
                 DatabaseTransaction.closeStatement(stmt2);
@@ -550,6 +596,9 @@ public class ContainerDAO {
             }
             if (stmt8 != null) {
                 DatabaseTransaction.closeStatement(stmt8);
+            }
+            if (stmt9 != null) {
+                DatabaseTransaction.closeStatement(stmt9);
             }
             DatabaseTransaction.closeConnection(conn);
         }

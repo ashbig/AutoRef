@@ -11,19 +11,27 @@ package bean;
 
 import core.Block;
 import dao.ContainerDAO;
+import dao.DaoException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import transfer.ContainercellTO;
 import transfer.ContainerheaderTO;
 import transfer.ContainertypeTO;
 import transfer.ReagentTO;
 import transfer.SampleTO;
 import transfer.SlideTO;
 import transfer.SlidecellTO;
+import util.SlidecellComparator;
 import util.StringConvertor;
 
 /**
@@ -52,14 +60,16 @@ public class ContainerViewBean {
     /** Creates a new instance of ContainerViewBean */
     public ContainerViewBean() {
         reset();
+        setCulturecut(SampleTO.getCULTURE_THREASHOLD());
+        setDnacut(SampleTO.getDNA_THREASHOLD());
     }
     
     public void reset() {
         setReagent(null);
         setDisplayDetail(false);
         setDisplayBlock(false);
-        setCulturecut(SampleTO.getCULTURE_THREASHOLD());
-        setDnacut(SampleTO.getDNA_THREASHOLD());
+        //setCulturecut(SampleTO.getCULTURE_THREASHOLD());
+        //setDnacut(SampleTO.getDNA_THREASHOLD());
     }
     
     public ContainerheaderTO getContainerheader() {
@@ -377,6 +387,38 @@ public class ContainerViewBean {
         mappingsInTable.add(cols);
         setBlockModel(new ListDataModel(mappingsInTable));
         setBlockHeaderModel(new ListDataModel(headerList));
+    }
+    
+    public void downloadSlide() {
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        HttpServletResponse response = (HttpServletResponse) context.getResponse();
+        response.setContentType("Application/x-msexcel");
+        response.setHeader("Content-Disposition", "inline;filename=slide.xls");
+
+        try {
+            SlideTO s = ContainerDAO.getSlide(getSlide().getSlideid(),true,true,false,true,true);
+            List<SampleTO> samples = s.getContainer().getSamples();
+            Collections.sort(samples, new SlidecellComparator());
+            ServletOutputStream out = response.getOutputStream();
+            out.println("Block\tRow\tColumn\tSpotNo\tSource\tType\tReagent\tCulture\tDNA");
+            
+            for (SampleTO sample : samples) {
+                SlidecellTO cell = (SlidecellTO)sample.getCell();
+                ContainercellTO precell = sample.getPrecell();
+                String src = precell.getContainerlabel()+":"+precell.getPosx()+precell.getPosy();
+
+                out.println(cell.getBlocknum()+"\t"+cell.getBlockwellx()+"\t"+cell.getBlockwelly()+"\t"+cell.getPos()+"\t"+src+"\t"+cell.getType()+"\t"+sample.getReagentString()+"\t"+sample.getCultureResult()+"\t"+sample.getDNAResult());
+            }
+            out.flush();
+            out.close();
+            FacesContext.getCurrentInstance().responseComplete();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } catch (DaoException ex) {
+            ex.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
     
     public DataModel getPlateModel() {

@@ -33,7 +33,7 @@
                         <f:facet name="header">
                             <h:outputText value="#{colHeader}"/>
                         </f:facet>
-                        <h:outputText rendered="#{ContainerViewBean.blockValue.hasPrecell}" styleClass="text" value="#{ContainerViewBean.blockValue.precell.containerlabel},#{ContainerViewBean.blockValue.precell.pos},#{ContainerViewBean.blockValue.precell.posx}#{ContainerViewBean.blockValue.precell.posy}"/>
+                        <h:outputText rendered="#{ContainerViewBean.blockValue.hasPrecell}" styleClass="text" value="#{ContainerViewBean.blockValue.precell.containerlabel}:#{ContainerViewBean.blockValue.precell.posx}#{ContainerViewBean.blockValue.precell.posy}"/>
                         <t:dataTable value="#{ContainerViewBean.blockValue.reagents}" var="reagent">
                             <t:column>
                                 <h:commandLink action="#{ContainerViewBean.showReagent}">

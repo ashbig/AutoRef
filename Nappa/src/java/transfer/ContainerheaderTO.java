@@ -13,6 +13,7 @@ import core.Well;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  *
@@ -38,7 +39,7 @@ public class ContainerheaderTO extends ProcessobjectTO implements Serializable {
     private int threadid;
     private String category;
     
-    private Collection<SampleTO> samples;
+    private List<SampleTO> samples;
     private ContainertypeTO containertype;
     private Collection<ContainerpropertyTO> properties;
     private Collection<SlideTO> slides;
@@ -234,11 +235,11 @@ public class ContainerheaderTO extends ProcessobjectTO implements Serializable {
         return FORMAT_REGULAR;
     }
     
-    public Collection<SampleTO> getSamples() {
+    public List<SampleTO> getSamples() {
         return samples;
     }
     
-    public void setSamples(Collection<SampleTO> samples) {
+    public void setSamples(List<SampleTO> samples) {
         this.samples = samples;
     }
     
