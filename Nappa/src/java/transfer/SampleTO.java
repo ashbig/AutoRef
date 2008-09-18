@@ -61,6 +61,8 @@ public class SampleTO  implements Serializable{
     private double dnacut;
     
     private String newReagent;
+    private ContainercellTO precell;
+    private boolean hasPrecell;
     
     /** Creates a new instance of SampleTO */
     public SampleTO() {
@@ -361,5 +363,23 @@ public class SampleTO  implements Serializable{
 
     public void setNewReagent(String newReagent) {
         this.newReagent = newReagent;
+    }
+
+    public ContainercellTO getPrecell() {
+        return precell;
+    }
+
+    public void setPrecell(ContainercellTO precell) {
+        this.precell = precell;
+    }
+
+    public boolean isHasPrecell() {
+        if(getPrecell() == null)
+            return false;
+        return true;
+    }
+
+    public void setHasPrecell(boolean hasPrecell) {
+        this.hasPrecell = hasPrecell;
     }
 }

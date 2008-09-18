@@ -10,7 +10,6 @@
 package bean;
 
 import core.Block;
-import core.Well;
 import dao.ContainerDAO;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -197,7 +196,7 @@ public class ContainerViewBean {
             
             setBlocknum(1);
             int containerid = getSlide().getContainer().getContainerid();
-            List<SampleTO> samples = ContainerDAO.getSamplesForBlock(containerid,blocknum,true,true);
+            List<SampleTO> samples = ContainerDAO.getSamplesForBlock(containerid,blocknum,true,true,true);
             setSamples(samples);
             convertSamplesToDatamodel(samples);
             setDisplayBlock(true);
@@ -243,7 +242,7 @@ public class ContainerViewBean {
             Map map = context.getExternalContext().getRequestParameterMap();
             setBlocknum(Integer.parseInt((String)map.get("blocknum")));
             int containerid = getSlide().getContainer().getContainerid();
-            List<SampleTO> samples = ContainerDAO.getSamplesForBlock(containerid,blocknum,true,true);
+            List<SampleTO> samples = ContainerDAO.getSamplesForBlock(containerid,blocknum,true,true,true);
             setSamples(samples);
             convertSamplesToDatamodel(samples);
             setDisplayBlock(true);

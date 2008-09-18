@@ -27,16 +27,17 @@
             <h:form id="viewSampleDetailForm">
                 <t:dataTable id="table" value="#{ContainerViewBean.blockModel}" var="plate" frame="box">
                     <t:column id="rowlabel">
-                        <h:outputText value="#{ContainerViewBean.blockRowLabel}"/>
+                        <h:outputText styleClass="prompt" value="#{ContainerViewBean.blockRowLabel}"/>
                     </t:column>
                     <t:columns id="col" value="#{ContainerViewBean.blockHeaderModel}" var="colHeader" styleClass="#{ContainerViewBean.blockValue.cell.control? 'controlcell' : 'regularcell'}">        
                         <f:facet name="header">
                             <h:outputText value="#{colHeader}"/>
                         </f:facet>
+                        <h:outputText rendered="#{ContainerViewBean.blockValue.hasPrecell}" styleClass="text" value="#{ContainerViewBean.blockValue.precell.containerlabel},#{ContainerViewBean.blockValue.precell.pos},#{ContainerViewBean.blockValue.precell.posx}#{ContainerViewBean.blockValue.precell.posy}"/>
                         <t:dataTable value="#{ContainerViewBean.blockValue.reagents}" var="reagent">
                             <t:column>
                                 <h:commandLink action="#{ContainerViewBean.showReagent}">
-                                    <h:outputText value="#{reagent.name}"/>
+                                    <h:outputText styleClass="text" value="#{reagent.name}"/>
                                     <f:param name="reagentid" value="#{reagent.reagentid}"/>
                                 </h:commandLink>
                             </t:column>

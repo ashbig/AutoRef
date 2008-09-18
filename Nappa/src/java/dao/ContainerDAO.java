@@ -557,14 +557,19 @@ public class ContainerDAO {
         return container;
     }
 
-    public static List getSamplesForBlock(int containerid, int blocknum, boolean isReagent, boolean isClone) throws DaoException {
+    public static List getSamplesForBlock(int containerid, int blocknum, boolean isReagent, boolean isClone, boolean isLineage) throws DaoException {
         String sql = "select pos,blockrow,blockcol,blockposx,blockposy,blockwellx,blockwelly from slidecell where containerid=? and blocknum=? order by blockwellx, blockwelly";
         String sql2 = "select posx,posy,type,sampleid from containercell where containerid=? and pos=?";
         String sql3 = "select name,description,volume,quantity,unit,type,form,status from sample where sampleid=?";
         String sql4 = "select reagentid, name, type, description from reagent where reagentid in (select reagentid from samplereagent where sampleid=?)";
         String sql5 = "select vectorname, growthname, srccloneid, source, genbank, gi, geneid, symbol from clone where cloneid=?";
         String sql6 = "select type,value from sampleproperty where sampleid=?";
-
+        String sql7 = "select h.barcode, c.pos, c.posx, c.posy, c.sampleid"+
+                " from containercell c, containerheader h"+
+                " where  h.containerid=c.containerid and c.sampleid in"+
+                " (select sampleid_from from samplelineage"+
+                " where sampleid_to=?)";
+        
         DatabaseTransaction t = null;
         Connection conn = null;
         ResultSet rs = null;
@@ -573,12 +578,14 @@ public class ContainerDAO {
         ResultSet rs4 = null;
         ResultSet rs5 = null;
         ResultSet rs6 = null;
+        ResultSet rs7 = null;
         PreparedStatement stmt = null;
         PreparedStatement stmt2 = null;
         PreparedStatement stmt3 = null;
         PreparedStatement stmt4 = null;
         PreparedStatement stmt5 = null;
         PreparedStatement stmt6 = null;
+        PreparedStatement stmt7 = null;
 
         List<SampleTO> samples = new ArrayList<SampleTO>();
         try {
@@ -594,6 +601,9 @@ public class ContainerDAO {
             }
             if (isClone) {
                 stmt5 = conn.prepareStatement(sql5);
+            }
+            if(isLineage) {
+                stmt7 = conn.prepareStatement(sql7);
             }
 
             stmt.setInt(1, containerid);
@@ -631,7 +641,36 @@ public class ContainerDAO {
                         String sstatus = rs3.getString(8);
                         SampleTO sample = new SampleTO(sampleid, name, description, volume, quantity, unit, stype, form, sstatus, containerid, position);
                         sample.setCell(cell);
-
+                        
+                        if(isLineage) {
+                            stmt7.setInt(1, sampleid);
+                            rs7 = t.executeQuery(stmt7);
+                            if(rs7.next()) {
+                                String plate384 = rs7.getString(1);
+                                int pos384 = rs7.getInt(2);
+                                String posx384 = rs7.getString(3);
+                                String posy384 = rs7.getString(4);
+                                int sample384 = rs7.getInt(5);
+                                ContainercellTO pre = new ContainercellTO(pos384,posx384,posy384,null);
+                                pre.setContainerlabel(plate384);
+                                DatabaseTransaction.closeResultSet(rs7);
+                                
+                                stmt7.setInt(1, sample384);
+                                rs7 = t.executeQuery(stmt7);
+                                if(rs7.next()) {
+                                    String plate96 = rs7.getString(1);
+                                    int pos96 = rs7.getInt(2);
+                                    String posx96 = rs7.getString(3);
+                                    String posy96 = rs7.getString(4);
+                                    int sample96 = rs7.getInt(5);
+                                    pre = new ContainercellTO(pos96,posx96,posy96,null);
+                                    pre.setContainerlabel(plate96);
+                                    DatabaseTransaction.closeResultSet(rs7);
+                                }
+                                sample.setPrecell(pre);
+                            } 
+                        }
+                        
                         if (isReagent) {
                             stmt4.setInt(1, sampleid);
                             rs4 = t.executeQuery(stmt4);
@@ -694,6 +733,9 @@ public class ContainerDAO {
             if (rs6 != null) {
                 DatabaseTransaction.closeResultSet(rs6);
             }
+            if (rs7 != null) {
+                DatabaseTransaction.closeResultSet(rs7);
+            }
             DatabaseTransaction.closeStatement(stmt);
             if (stmt2 != null) {
                 DatabaseTransaction.closeStatement(stmt2);
@@ -709,6 +751,9 @@ public class ContainerDAO {
             }
             if (stmt6 != null) {
                 DatabaseTransaction.closeStatement(stmt6);
+            }
+            if (stmt7 != null) {
+                DatabaseTransaction.closeStatement(stmt7);
             }
             DatabaseTransaction.closeConnection(conn);
         }

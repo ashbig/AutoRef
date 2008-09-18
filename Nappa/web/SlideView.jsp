@@ -50,7 +50,7 @@
                         <h:outputText styleClass="nav" value="Blocks:"/>   
                         <t:dataTable id="table" value="#{ContainerViewBean.plateModel}" var="plate" frame="box">
                             <t:column id="rowlabel">
-                                <h:outputText value="#{ContainerViewBean.slideRowLabel}"/>
+                                <h:outputText styleClass="prompt" value="#{ContainerViewBean.slideRowLabel}"/>
                             </t:column>
                             <t:columns id="col" value="#{ContainerViewBean.headerModel}" var="colHeader">        
                                 <f:facet name="header">
@@ -86,12 +86,13 @@
                         
                         <t:dataTable id="block" value="#{ContainerViewBean.blockModel}" var="block" frame="box">
                             <t:column id="rowlabelblock">
-                                <h:outputText value="#{ContainerViewBean.blockRowLabel}"/>
+                                <h:outputText styleClass="prompt" value="#{ContainerViewBean.blockRowLabel}"/>
                             </t:column>
                             <t:columns id="colblock" value="#{ContainerViewBean.blockHeaderModel}" var="colHeaderblock" styleClass="#{ContainerViewBean.blockValue.cell.control? 'controlcell' : 'regularcell'}">        
                                 <f:facet name="header">
                                     <h:outputText value="#{colHeaderblock}"/>
                                 </f:facet>
+                                <h:outputText rendered="#{ContainerViewBean.blockValue.hasPrecell}" styleClass="text" value="#{ContainerViewBean.blockValue.precell.containerlabel},#{ContainerViewBean.blockValue.precell.pos},#{ContainerViewBean.blockValue.precell.posx}#{ContainerViewBean.blockValue.precell.posy}"/>
                                 <t:dataTable value="#{ContainerViewBean.blockValue.reagents}" var="reagent1">
                                     <t:column>
                                         <h:commandLink action="#{ContainerViewBean.showReagent}">
