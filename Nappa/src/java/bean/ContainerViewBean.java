@@ -393,7 +393,7 @@ public class ContainerViewBean {
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         HttpServletResponse response = (HttpServletResponse) context.getResponse();
         response.setContentType("Application/x-msexcel");
-        response.setHeader("Content-Disposition", "inline;filename=slide.xls");
+        response.setHeader("Content-Disposition", "inline;filename="+getSlide().getBarcode()+".xls");
 
         try {
             SlideTO s = ContainerDAO.getSlide(getSlide().getSlideid(),true,true,false,true,true);

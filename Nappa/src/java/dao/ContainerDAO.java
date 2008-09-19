@@ -1159,6 +1159,33 @@ public class ContainerDAO {
         return types;
     }
 
+    public static void setSlidefeatures(ContainerheaderTO c) throws DaoException {
+        String sql = "select count(*), max(blockrow), max(blockcol), max(blockwellx), max(blockwelly) from slidecell where containerid="+c.getContainerid();
+        DatabaseTransaction t = null;
+        ResultSet rs = null;
+        try {
+            t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            if(rs.next()) {
+                int num = rs.getInt(1);
+                int blockrow = rs.getInt(2);
+                int blockcol = rs.getInt(3);
+                int rowinblock = rs.getInt(4);
+                int colinblock = rs.getInt(5);
+                
+                c.setNumofspots(num);
+                c.setNumofrow(blockrow);
+                c.setNumofcol(blockcol);
+                c.setNumofrowinblock(rowinblock);
+                c.setNumofcolinblock(colinblock);
+            }
+        } catch (Exception ex) {
+            throw new DaoException(ex.getMessage());
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+    }
+    
     public void addSampleReagents(List<SampleTO> samples) throws DaoException {
         String sql = "insert into samplereagent (sampleid,reagentid) values(?,?)";
         PreparedStatement stmt = null;

@@ -39,6 +39,12 @@ public class ContainerheaderTO extends ProcessobjectTO implements Serializable {
     private int threadid;
     private String category;
     
+    private int numofspots;
+    private int numofrow;
+    private int numofcol;
+    private int numofrowinblock;
+    private int numofcolinblock;
+    
     private List<SampleTO> samples;
     private ContainertypeTO containertype;
     private Collection<ContainerpropertyTO> properties;
@@ -277,5 +283,45 @@ public class ContainerheaderTO extends ProcessobjectTO implements Serializable {
     
     public void addSlide(SlideTO s) {
         this.getSlides().add(s);
+    }
+
+    public int getNumofrow() {
+        return numofrow;
+    }
+
+    public void setNumofrow(int numofrow) {
+        this.numofrow = numofrow;
+    }
+
+    public int getNumofcol() {
+        return numofcol;
+    }
+
+    public void setNumofcol(int numofcol) {
+        this.numofcol = numofcol;
+    }
+
+    public int getNumofrowinblock() {
+        return numofrowinblock;
+    }
+
+    public void setNumofrowinblock(int numofrowinblock) {
+        this.numofrowinblock = numofrowinblock;
+    }
+
+    public int getNumofcolinblock() {
+        return numofcolinblock;
+    }
+
+    public void setNumofcolinblock(int numofcolinblock) {
+        this.numofcolinblock = numofcolinblock;
+    }
+
+    public int getNumofspots() {
+        return numofspots;
+    }
+
+    public void setNumofspots(int numofspots) {
+        this.numofspots = numofspots;
     }
 }

@@ -21,7 +21,6 @@ import transfer.ContainercellTO;
 import transfer.ContainerheaderTO;
 import transfer.SampleTO;
 import transfer.SamplelineageTO;
-import transfer.SamplepropertyTO;
 import transfer.TransferException;
 
 /**

@@ -170,7 +170,7 @@ public class ProgrammappingTO {
         int y = destblockwelly+(destblockcol-1)*blockcolnum;
         this.destwellx = ""+x;
         this.destwelly = ""+y;
-        this.destpos = Well.convertWellToVPos(x, y, rownum*blockrownum);
+        this.destpos = Well.convertWellToHPos(x, y, rownum*blockrownum);
     }
 
     public int getMapid() {

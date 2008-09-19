@@ -45,6 +45,10 @@ on Libraries node in Projects view can be used to add the JSTL 1.1 library.
             <ul>
                 <li><a href="./faces/ListReagent.jsp" target="rightFrame">View Master Mix</a></li>
             </ul>
+            <p>Export
+            <ul>
+                <li><a href="./faces/ExportToVigene.jsp" target="rightFrame">Generate MicroVigene File</a></li>
+            </ul>
             <p><a href="./Logout.jsp" target="_parent">Logout</a>
     
     <%--

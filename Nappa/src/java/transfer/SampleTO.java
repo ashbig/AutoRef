@@ -236,6 +236,15 @@ public class SampleTO  implements Serializable{
         }
         return StringConvertor.convertFromListToString(l);
     }
+    
+    public String getReagentStringWithoutMM() {
+        List l = new ArrayList<String>();
+        for(ReagentTO r:getReagents()) {
+            if(!ReagentTO.TYPE_MASTERMIX.equals(r.getType()))
+                l.add(r.getName());
+        }
+        return StringConvertor.convertFromListToString(l);
+    }
 
     public static String getTYPE_EMPTY() {
         return TYPE_EMPTY;
