@@ -45,7 +45,7 @@ public class ExportBean {
     public void exportFile() {
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         HttpServletResponse response = (HttpServletResponse) context.getResponse();
-        response.setContentType("Application/x-msexcel");
+        response.setContentType("Application/plain");
         response.setHeader("Content-Disposition", "inline;filename="+label+".txt");
 
         try {
