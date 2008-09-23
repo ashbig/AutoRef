@@ -14,7 +14,9 @@ import transfer.ProgrammappingTO;
 import java.io.InputStream;
 import transfer.ContainercellTO;
 import transfer.ContainerheaderTO;
+import transfer.SampleTO;
 import transfer.SlidecellTO;
+import transfer.TransferException;
 
 /**
  *
@@ -45,4 +47,8 @@ public class Container384ToSlideMapper extends ContainerMapper {
     }
     
     public void addToContainerLineages(ContainerheaderTO containerFrom, ContainerheaderTO containerTo) {}
+    
+    public void addToContainer(ContainerheaderTO container, SampleTO sample, int pos) throws TransferException {
+        container.addSample(sample);
+    }
 }

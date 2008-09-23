@@ -45,8 +45,8 @@ public class ExportBean {
     public void exportFile() {
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         HttpServletResponse response = (HttpServletResponse) context.getResponse();
-        response.setContentType("Application/plain");
-        response.setHeader("Content-Disposition", "inline;filename="+label+".txt");
+        response.setContentType("application/plain");
+        response.setHeader("Content-Disposition", "attachment;filename="+label+".txt");
 
         try {
             ContainerheaderTO container = ContainerManager.findContainer(label);

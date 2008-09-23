@@ -128,6 +128,7 @@ public abstract class ContainerMapper {
             throw new ProcessException("Number of source and destination plates doesn't match.");
         }
         
+        populateEmptySamples();
         Iterator iter = destContainers.iterator();
         Iterator iter2 = getSrcContainers().iterator();
         List processSrcContainers = new ArrayList();
@@ -153,7 +154,11 @@ public abstract class ContainerMapper {
                     SampleTO sampleFrom = containerFrom.getSample(m.getSrcpos());
                     if(sampleFrom == null)
                         throw new ProcessException("Cannot find sample for container "+m.getSrcplate()+" at position "+m.getSrcpos());
-                    
+                     
+                    ContainerheaderTO containerTo = findContainer(processDestContainers, mapdestlabels, m.getDestplate());
+                    if(containerTo == null)
+                        throw new ProcessException("Cannot find container "+m.getDestplate());                   
+      
                     SampleTO sampleTo = new SampleTO(-1,getNewsamplename(),null,0,0,null,getNewsampletype(),getNewsampleform(), SampleTO.getSTATUS_GOOD(), 0, m.getDestpos());
                     ContainercellTO dest = getContainercellmapTO(m);
                     dest.setType(sampleFrom.getCell().getType());
@@ -162,12 +167,10 @@ public abstract class ContainerMapper {
                     if(!SampleTO.getTYPE_CULTURE().equals(getNewsampletype())) {
                         sampleTo.setProperties(sampleFrom.getProperties());
                     }
-                    ContainerheaderTO containerTo = findContainer(processDestContainers, mapdestlabels, m.getDestplate());
-                    if(containerTo == null)
-                        throw new ProcessException("Cannot find container "+m.getDestplate());
+
                     sampleTo.setContainerheader(containerTo);
                     try {
-                        containerTo.addSample(sampleTo);
+                        addToContainer(containerTo, sampleTo, m.getDestpos());
                     } catch (TransferException ex) {
                         throw new ProcessException(ex.getMessage());
                     }
@@ -180,6 +183,12 @@ public abstract class ContainerMapper {
                 processSrcContainers = new ArrayList();
                 k=n;
             }
+        }
+    }
+    
+    public void populateEmptySamples() {
+        for(ContainerheaderTO container:getDestContainers()) {
+            container.initSamples();
         }
     }
     
@@ -227,6 +236,10 @@ public abstract class ContainerMapper {
         }
         
         return null;
+    }
+    
+    public void addToContainer(ContainerheaderTO container, SampleTO sample, int pos) throws TransferException {
+        container.setSample(sample, pos);
     }
     
     public String getNewsampletype() {

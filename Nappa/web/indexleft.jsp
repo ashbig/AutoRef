@@ -21,32 +21,27 @@ on Libraries node in Projects view can be used to add the JSTL 1.1 library.
 
     <h2>NAPPA Tracking</h2>
     <br/>
-            <p>Design
-            <ul>
+            <ul>Design
                 <li><a href="./faces/AddProgram.jsp" target="rightFrame">Add Robot Program</a></li>
                 <li><a href="./faces/LayoutDesign.jsp" target="rightFrame">Design Slide Layout</a></li>
                 <li><a href="./faces/TemplateDesign.jsp" target="rightFrame">Design Slide Template</a></li>
             </ul>
-            <p>Process
-            <ul>
+            <ul>Process
                 <li><a href="./faces/ImportClones.jsp" target="rightFrame">Import Reagents</a></li>
                 <li><a href="./faces/RegisterLabels.jsp" target="rightFrame">Register Container Labels</a></li>
                 <li><a href="./faces/DirectContainerMapping.jsp" target="rightFrame">Generate New Containers</a></li>
                 <li><a href="./faces/EnterResults.jsp" target="rightFrame">Enter Results</a></li>
                 <li><a href="./faces/SearchContainer.jsp" target="rightFrame">Add Controls</a></li>
             </ul>
-            <p>Search
-            <ul>
+            <ul>Search
                 <li><a href="./faces/SearchLayout.jsp" target="rightFrame">Search Slide Layout</a></li>
                 <li><a href="./faces/SearchTemplate.jsp" target="rightFrame">Search Slide Template</a></li>
                 <li><a href="./faces/SearchContainers.jsp" target="rightFrame">Search Containers</a></li>
             </ul>
-            <p>View
-            <ul>
+            <ul>View
                 <li><a href="./faces/ListReagent.jsp" target="rightFrame">View Master Mix</a></li>
             </ul>
-            <p>Export
-            <ul>
+            <ul>Export
                 <li><a href="./faces/ExportToVigene.jsp" target="rightFrame">Generate MicroVigene File</a></li>
             </ul>
             <p><a href="./Logout.jsp" target="_parent">Logout</a>
