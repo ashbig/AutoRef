@@ -76,7 +76,7 @@ public class EnterResultsBean {
         setMessage(null);
         try {
             String username = ((HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest()).getUserPrincipal().getName();
-            List slabels = StringConvertor.convertFromStringToList(getLabelstring(), "\n\t\b ");
+            List slabels = StringConvertor.convertFromStringToList(getLabelstring(), "\n");
             getController().setLabels(slabels);
             getController().setResulttype(getResulttype());
             getController().setWho(ResearcherDAO.getResearcher(username));

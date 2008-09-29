@@ -5,6 +5,7 @@
 package controller;
 
 import dao.ContainerDAO;
+import dao.ReagentDAO;
 import database.DatabaseTransaction;
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -59,6 +60,43 @@ public class AddReagentsController {
             DatabaseTransaction.rollback(conn);
             ex.printStackTrace();
             throw new ControllerException(ex.getMessage());
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
+        }
+    }
+    
+    public boolean isReagentExist(String name) throws ControllerException {
+        if(name==null || name.trim().length()==0)
+            return false;
+        ReagentTO reagent = null;
+        try {
+            reagent = ReagentDAO.getReagent(name.trim());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new ControllerException("Cannot check reagent name.\n"+ex.getMessage());
+        }
+        
+        if(reagent==null)
+            return false;
+        
+        return true;
+    }
+    
+    public void addReagent(ReagentTO reagent) throws ControllerException {
+        List<ReagentTO> reagents = new ArrayList<ReagentTO>();
+        reagents.add(reagent);
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            ReagentDAO dao = new ReagentDAO(conn);
+            dao.addReagents(reagents);
+            DatabaseTransaction.commit(conn);
+        } catch (Exception ex) {
+            DatabaseTransaction.rollback(conn);
+            ex.printStackTrace();
+            throw new ControllerException("Error occured while adding reagent to the database.\n"+ex.getMessage());
         } finally {
             DatabaseTransaction.closeConnection(conn);
         }

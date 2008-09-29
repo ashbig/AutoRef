@@ -25,6 +25,12 @@
     </managed-bean>
     
     <managed-bean>
+        <managed-bean-name>addReagentBean</managed-bean-name>
+        <managed-bean-class>bean.AddReagentBean</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    
+    <managed-bean>
         <managed-bean-name>ContainerViewBean</managed-bean-name>
         <managed-bean-class>bean.ContainerViewBean</managed-bean-class>
         <managed-bean-scope>session</managed-bean-scope>
@@ -41,6 +47,13 @@
         <managed-bean-class>bean.EnterResultsBean</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
+    
+    <managed-bean>
+        <managed-bean-name>exportBean</managed-bean-name>
+        <managed-bean-class>bean.ExportBean</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    
     <managed-bean>
         <managed-bean-name>FileViewBean</managed-bean-name>
         <managed-bean-class>bean.FileViewBean</managed-bean-class>

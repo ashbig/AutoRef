@@ -87,7 +87,7 @@ public class RegisterLabelsBean {
         status = true;
         List<String> l = null;
         try {
-            l = StringConvertor.convertFromStringToList(getLabels().trim(), " \n\t\b");
+            l = StringConvertor.convertFromStringToList(getLabels().trim(), "\n");
             Collection <ContainerheaderTO> containers = getController().checkContainers(l);
             if(containers.size()>0) {
                 String s = "The following labels exist in the system:\n";

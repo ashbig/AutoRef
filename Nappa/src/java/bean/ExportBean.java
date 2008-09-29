@@ -23,6 +23,7 @@ import transfer.ContainertypeTO;
  * @author DZuo
  */
 public class ExportBean {
+
     private String label;
     private String template;
     private String message;
@@ -32,37 +33,38 @@ public class ExportBean {
         setMessage(null);
         setTemplate(ViageneTemplateGenerator.BLOCKWISE);
     }
-    
+
     public List<SelectItem> getTemplateList() {
         List<SelectItem> templates = new ArrayList<SelectItem>();
         templates.add(new SelectItem(ViageneTemplateGenerator.BLOCKWISE));
         templates.add(new SelectItem(ViageneTemplateGenerator.MULTIPLEROI));
         templates.add(new SelectItem(ViageneTemplateGenerator.ONEGRID));
-       
+
         return templates;
     }
 
     public void exportFile() {
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         HttpServletResponse response = (HttpServletResponse) context.getResponse();
-        response.setContentType("application/plain");
-        response.setHeader("Content-Disposition", "attachment;filename="+label+".txt");
 
         try {
             ContainerheaderTO container = ContainerManager.findContainer(label);
-            if(container==null)
-                throw new Exception("Cannot find slide: "+label);
-            
+            if (container == null) {
+                throw new Exception("Cannot find slide: " + label);
+            }
             if (ContainertypeTO.TYPE_SLIDE.equals(container.getType())) {
                 container = ContainerDAO.getContainer(container.getContainerid(), true, true, false, false);
                 ContainerDAO.setSlidefeatures(container);
-                
+
                 ViageneTemplateGenerator generator = StaticViageneTemplateGeneratorFactory.makeTemplateGenerator(template);
-                if(generator == null) {
+                if (generator == null) {
                     throw new Exception("Cannot get the MicroVigene file template.");
                 }
-                String output = generator.generateTemplate(container);
                 
+                response.setContentType("application/plain");
+                response.setHeader("Content-Disposition", "attachment;filename=" + label + ".txt");
+                String output = generator.generateTemplate(container);
+
                 ServletOutputStream out = response.getOutputStream();
                 out.print(output);
                 out.flush();

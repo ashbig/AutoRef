@@ -123,7 +123,7 @@ public class ReagentDAO {
     }
 
     public static ReagentTO getReagent(String name) throws DaoException {
-        String sql = "select reagentid,type,description from reagent where name=?";
+        String sql = "select reagentid,type,description from reagent where lower(name)=?";
         DatabaseTransaction t = null;
         Connection c = null;
         PreparedStatement stmt = null;
@@ -135,7 +135,7 @@ public class ReagentDAO {
             c = t.requestConnection();
             stmt = c.prepareStatement(sql);
             {
-                stmt.setString(1, name);
+                stmt.setString(1, name.toLowerCase());
                 rs = DatabaseTransaction.executeQuery(stmt);
                 if (rs.next()) {
                     int id = rs.getInt(1);

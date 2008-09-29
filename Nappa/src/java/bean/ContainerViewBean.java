@@ -98,7 +98,7 @@ public class ContainerViewBean {
     
     public String findContainers() {
         try {
-            List containerLabels = StringConvertor.convertFromStringToList(getLabels(), "\n\t\b ");
+            List containerLabels = StringConvertor.convertFromStringToList(getLabels(), "\n");
             containers = ContainerDAO.checkContainers(containerLabels, false);
         } catch (Exception ex) {
             System.out.println(ex);
