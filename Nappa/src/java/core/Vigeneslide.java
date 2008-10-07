@@ -5,6 +5,7 @@
 
 package core;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,10 +13,7 @@ import java.util.List;
  * @author DZuo
  */
 public class Vigeneslide {
-    private String version;
     private String date;
-    private int roiRow;
-    private int roiCol;
     private int mainRow;
     private int mainCol;
     private int subRow;
@@ -23,12 +21,21 @@ public class Vigeneslide {
     
     private List<Spotinfo> spots;
 
-    public String getVersion() {
-        return version;
+    public Vigeneslide() {
+        setSpots(new ArrayList<Spotinfo>());
     }
-
-    public void setVersion(String version) {
-        this.version = version;
+    
+    public Vigeneslide(String date, int mainrow, int maincol, int subrow, int subcol) {
+        setDate(date);
+        setMainRow(mainrow);
+        setMainCol(maincol);
+        setSubRow(subrow);
+        setSubCol(subcol);
+        setSpots(new ArrayList<Spotinfo>());
+    }
+    
+    public void addSpotinfo(Spotinfo info) {
+        this.spots.add(info);
     }
 
     public String getDate() {
@@ -37,22 +44,6 @@ public class Vigeneslide {
 
     public void setDate(String date) {
         this.date = date;
-    }
-
-    public int getRoiRow() {
-        return roiRow;
-    }
-
-    public void setRoiRow(int roiRow) {
-        this.roiRow = roiRow;
-    }
-
-    public int getRoiCol() {
-        return roiCol;
-    }
-
-    public void setRoiCol(int roiCol) {
-        this.roiCol = roiCol;
     }
 
     public int getMainRow() {

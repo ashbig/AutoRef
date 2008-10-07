@@ -44,6 +44,8 @@ public class Spotinfo {
     private double roundness;
     private double aspect;
 
+    public Spotinfo() {}
+    
     public Spotinfo(int MainRow, int MainCol, int SubRow, int SubCol, String GeneID, double meannet, double meantotal, int meanbkg, int bkgused, int meandust, int mediannet, int mediantotal, int medianbkg, int volnet, int voltotal, int volbkg, int voldust, double cvspot, double cvbkg, int dustiness, double spotskew, double bkgskew, double kurtosis, int rank, int type, int xcenter, int ycenter, int areasignal, int areaspot, int areabkg, int solidity, double circularity, double roundness, double aspect) {
         setMainRow(MainRow);
         setMainCol(MainCol);
