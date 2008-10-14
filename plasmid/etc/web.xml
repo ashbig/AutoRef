@@ -1,8 +1,5 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
-<!DOCTYPE web-app
-     PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
-    "http://java.sun.com/dtd/web-app_2_3.dtd">
-
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd">
 <web-app>
 
 
@@ -89,16 +86,16 @@
     </init-param>   
     <init-param>
       <param-name>jdbcURL</param-name>
-      <param-value>jdbc:oracle:thin:@kotel:1523:PLASMID</param-value>
+      <param-value>jdbc:oracle:thin:@oracle.cl.med.harvard.edu:1521:devoradb</param-value>
     </init-param>
 
     <init-param>
       <param-name>user</param-name>
-      <param-value>plasmid_test</param-value>
+      <param-value>devplasmid</param-value>
     </init-param>
     <init-param>
         <param-name>password</param-name>
-        <param-value>plasmID</param-value>
+        <param-value>quozubvuod3</param-value>
     </init-param>
     <!-- for oracle database -->   
 
@@ -151,7 +148,7 @@
     </init-param>
     <init-param>
       <param-name>cgiPathPrefix</param-name>
-      <param-value></param-value>
+      <param-value/>
     </init-param>
      <load-on-startup>5</load-on-startup>
    </servlet>
@@ -174,7 +171,8 @@
 
   <!-- Welcome-file-list -->
   <welcome-file-list>
-    <welcome-file>Home.jsp</welcome-file>
+        <welcome-file>Login.jsp</welcome-file>
+        <welcome-file>Home.jsp</welcome-file>
   </welcome-file-list>
 
     <taglib>

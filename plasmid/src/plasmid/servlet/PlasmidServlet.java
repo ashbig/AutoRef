@@ -58,7 +58,7 @@ public class PlasmidServlet extends ActionServlet {
             getServletContext().getResourceAsStream(name);
         if(systemStream == null) {
             System.err.println("Unable to read properties file: "+name);
-        }
+        } else {
         Properties prop = new Properties();
         try {
             
@@ -72,6 +72,7 @@ public class PlasmidServlet extends ActionServlet {
            
         } catch (IOException ioE) {
             throw new ServletException(ioE);
+        }
         }
        
     }

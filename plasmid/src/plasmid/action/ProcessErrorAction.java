@@ -16,9 +16,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2005-04-26 14:07:44 $
- * $Author: dzuo $
+ * $Revision: 1.2 $
+ * $Date: 2008-10-14 14:39:38 $
+ * $Author: jx25 $
  *
  ******************************************************************************
  *
@@ -36,8 +36,6 @@
 |<---            this code is formatted to fit into 80 columns             --->|
 |<---            this code is formatted to fit into 80 columns             --->|
  */
-
-
 package edu.harvard.med.hip.flex.action;
 
 import java.io.*;
@@ -50,19 +48,17 @@ import plasmid.Constants;
 
 import org.apache.struts.action.*;
 
-
-
 /**
  * The action for handling all flex error encountered.
  *
  * Whenever an exception is encountered, controll should be forwarded
  * to this action to process the exception.
  *
- * @author     $Author: dzuo $
- * @version    $Revision: 1.1 $ $Date: 2005-04-26 14:07:44 $
+ * @author     $Author: jx25 $
+ * @version    $Revision: 1.2 $ $Date: 2008-10-14 14:39:38 $
  */
-
 public class ProcessErrorAction extends Action {
+
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
      * response (or forward to another web component that will create it).
@@ -79,39 +75,39 @@ public class ProcessErrorAction extends Action {
      * @exception ServletException if a servlet exception occurs
      */
     public ActionForward perform(ActionMapping mapping,
-    ActionForm form, HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            ActionForm form, HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         ActionForward retForward = null;
         // get the errors to log
         ActionErrors errors =
-        (ActionErrors)request.getAttribute(Action.ERROR_KEY);
-        
+                (ActionErrors) request.getAttribute(Action.ERROR_KEY);
+
         // make sure errors isn't null
-        if(errors == null) {
+        if (errors == null) {
             errors = new ActionErrors();
         }
-        
+
         // buffer to store the log message
         StringBuffer logMessage = new StringBuffer();
-        
+
         Throwable throwable =
-        (Throwable)request.getAttribute(Action.EXCEPTION_KEY);
-        
+                (Throwable) request.getAttribute(Action.EXCEPTION_KEY);
+
         // log each error
         logMessage.append("The following errors have occured: \n");
         Iterator propIter = errors.properties();
-        while(propIter.hasNext()) {
-            String curProp = (String)propIter.next();
+        while (propIter.hasNext()) {
+            String curProp = (String) propIter.next();
             Iterator errorIter = errors.get(curProp);
-            while(errorIter.hasNext()) {
+            while (errorIter.hasNext()) {
                 Object errorObj = errorIter.next();
-                
+
                 logMessage.append(curProp + ": " + errorObj + "\n");
             }
         }
-        
+
         // log the exception if any
-        if(throwable != null) {
+        if (throwable != null) {
             logMessage.append("Unkown exception: ");
             logMessage.append(throwable.getMessage());
             StringWriter sw = new StringWriter();
@@ -119,67 +115,62 @@ public class ProcessErrorAction extends Action {
             throwable.printStackTrace(pw);
             logMessage.append(sw + "\n");
         }
-        
-        
+
+
         logMessage.append("\n-----Environment-----\n");
         // log the connected user
-        logMessage.append("\n-Connected User: " + 
-            request.getSession().getAttribute(Constants.USER_KEY) + "\n");
+        logMessage.append("\n-Connected User: " +
+                request.getSession().getAttribute(Constants.USER_KEY) + "\n");
         // log the environment
         // start with the application level env.
         ServletContext application = servlet.getServletContext();
         Enumeration appAttribEnum = application.getAttributeNames();
         logMessage.append("\n-Application attributes\n");
-        while(appAttribEnum.hasMoreElements()) {
-            String key = (String)appAttribEnum.nextElement();
+        while (appAttribEnum.hasMoreElements()) {
+            String key = (String) appAttribEnum.nextElement();
             Object value = application.getAttribute(key);
             logMessage.append("\t" + key + " = " + value + "\n");
         }
-        
+
         // now log session variables
         HttpSession session = request.getSession();
         Enumeration sessionAttribEnum = session.getAttributeNames();
         logMessage.append("\n-Session attributes\n");
-        while(sessionAttribEnum.hasMoreElements()) {
-            String key = (String)sessionAttribEnum.nextElement();
+        while (sessionAttribEnum.hasMoreElements()) {
+            String key = (String) sessionAttribEnum.nextElement();
             Object value = session.getAttribute(key);
-            logMessage.append("\t"+key + " = " + value + "\n");
+            logMessage.append("\t" + key + " = " + value + "\n");
         }
-        
-        
+
+
         // now log request level env.
         Enumeration requestAttribEnum = request.getAttributeNames();
         logMessage.append("\n-Request attributes\n");
-        while(requestAttribEnum.hasMoreElements()) {
-            String key = (String)requestAttribEnum.nextElement();
+        while (requestAttribEnum.hasMoreElements()) {
+            String key = (String) requestAttribEnum.nextElement();
             Object value = request.getAttribute(key);
-            logMessage.append("\t"+key + " = " + value + "\n");
+            logMessage.append("\t" + key + " = " + value + "\n");
         }
-        
+
         // now log request level parameters
         Enumeration requestParamEnum = request.getParameterNames();
         logMessage.append("\n-Request parameters\n");
-        while(requestParamEnum.hasMoreElements()) {
-            String key = (String)requestParamEnum.nextElement();
-            String value = (String)request.getParameter(key);
-            logMessage.append("\t"+key + " = " + value + "\n");
+        while (requestParamEnum.hasMoreElements()) {
+            String key = (String) requestParamEnum.nextElement();
+            String value = (String) request.getParameter(key);
+            logMessage.append("\t" + key + " = " + value + "\n");
         }
-        
-        
+
+
         //System.out.println("#######Exception###########");
         servlet.log(logMessage.toString());
         //System.out.println("###########################");
-         
+
         //servlet.log(logMessage);
         retForward = mapping.findForward("displayError");
         return retForward;
     } // end perform()
-    
-    
-    
 } // End class ProcessError
-
-
 /*
 |<---            this code is formatted to fit into 80 columns             --->|
 |<---            this code is formatted to fit into 80 columns             --->|

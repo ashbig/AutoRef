@@ -24,9 +24,15 @@
         <tr> 
           <td height="15" valign="middle"><a href="ViewContainers.jsp" class="leftnavtext">View Containers</a></td>
         </tr>
+        <tr> 
+          <td height="15" valign="middle"><a href="vSearch.jsp" class="leftnavtext">Vector Submission</a></td>
+        </tr>
         <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
         <tr> 
           <td height="15" valign="middle"><a href="SearchOrderInput.jsp" class="leftnavtext">Search Orders</a></td>
+        </tr>
+        <tr> 
+          <td height="15" valign="middle"><a href="pReceive.jsp" class="leftnavtext">Receive Plasmids</a></td>
         </tr>
         </logic:equal>
       </table>

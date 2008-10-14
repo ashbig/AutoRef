@@ -22,6 +22,12 @@ public class VectorProperty {
     /** Creates a new instance of VectorProperty */
     public VectorProperty() {
     }
+
+    public VectorProperty(int vectorid, String propertyType, String value) {
+        this.vectorid=vectorid;
+        this.propertyType=propertyType;
+        this.displayValue = value;
+    }
     
     public VectorProperty(int vectorid, String propertyType) {
         this.vectorid=vectorid;

@@ -24,7 +24,7 @@ public class CloneManager extends TableManager {
     public CloneManager(Connection conn) {
         super(conn);
     }
-    
+
     public CloneManager() {
         super();
     }
@@ -96,6 +96,33 @@ public class CloneManager extends TableManager {
         return true;
     }
 
+    public boolean insertCloneGrowths(int cloneid, List growths) {  // With cloneid and vectorgrowthconditions
+        if ((cloneid < 1) || (growths == null)) {
+            return true;
+        }
+
+        String sql = "insert into clonegrowth" +
+                " (cloneid,growthid,isrecommended)" +
+                " values(?,?,?)";
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+
+            for (int i = 0; i < growths.size(); i++) {
+                VectorGrowthCondition c = (VectorGrowthCondition) growths.get(i);
+                stmt.setInt(1, cloneid);
+                stmt.setInt(2, c.getGrowthid());
+                stmt.setString(3, c.getIsrecommended());
+
+                DatabaseTransaction.executeUpdate(stmt);
+            }
+            DatabaseTransaction.closeStatement(stmt);
+        } catch (Exception ex) {
+            handleError(ex, "Error occured while inserting into CLONEGROWTH table");
+            return false;
+        }
+        return true;
+    }
+
     public boolean insertCloneSelections(List selections) {
         if (selections == null) {
             return true;
@@ -123,6 +150,33 @@ public class CloneManager extends TableManager {
         return true;
     }
 
+    public boolean insertCloneSelections(int cloneid, List selections) {
+        if ((cloneid < 1) || (selections == null)) {
+            return true;
+        }
+
+        String sql = "insert into cloneselection" +
+                " (cloneid,hosttype,marker)" +
+                " values(?,?,?)";
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+
+            for (int i = 0; i < selections.size(); i++) {
+                VectorSelectMarker c = (VectorSelectMarker) selections.get(i);
+                stmt.setInt(1, cloneid);
+                stmt.setString(2, c.getHosttype());
+                stmt.setString(3, c.getMarker());
+
+                DatabaseTransaction.executeUpdate(stmt);
+            }
+            DatabaseTransaction.closeStatement(stmt);
+        } catch (Exception ex) {
+            handleError(ex, "Error occured while inserting into CLONESELECTION table");
+            return false;
+        }
+        return true;
+    }
+
     public boolean insertCloneHosts(List hosts) {
         if (hosts == null) {
             return true;
@@ -137,6 +191,34 @@ public class CloneManager extends TableManager {
             for (int i = 0; i < hosts.size(); i++) {
                 CloneHost c = (CloneHost) hosts.get(i);
                 stmt.setInt(1, c.getCloneid());
+                stmt.setString(2, c.getHoststrain());
+                stmt.setString(3, c.getIsinuse());
+                stmt.setString(4, c.getDescription());
+
+                DatabaseTransaction.executeUpdate(stmt);
+            }
+            DatabaseTransaction.closeStatement(stmt);
+        } catch (Exception ex) {
+            handleError(ex, "Error occured while inserting into HOST table");
+            return false;
+        }
+        return true;
+    }
+
+    public boolean insertCloneHosts(int cloneid, List hosts) {
+        if ((cloneid < 1) || (hosts == null)) {
+            return true;
+        }
+
+        String sql = "insert into host" +
+                " (cloneid,hoststrain,isinuse,description)" +
+                " values(?,?,?,?)";
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+
+            for (int i = 0; i < hosts.size(); i++) {
+                VectorHostStrain c = (VectorHostStrain) hosts.get(i);
+                stmt.setInt(1, cloneid);
                 stmt.setString(2, c.getHoststrain());
                 stmt.setString(3, c.getIsinuse());
                 stmt.setString(4, c.getDescription());
@@ -1361,8 +1443,8 @@ public class CloneManager extends TableManager {
 
             stmt = c.prepareStatement(sql4);
             iter = mtaids.iterator();
-            while(iter.hasNext()) {
-                int id = ((Integer)iter.next()).intValue();
+            while (iter.hasNext()) {
+                int id = ((Integer) iter.next()).intValue();
                 stmt.setInt(1, id);
                 rs = DatabaseTransaction.executeQuery(stmt);
                 if (rs.next()) {
@@ -1439,6 +1521,120 @@ public class CloneManager extends TableManager {
         }
         mtalist.addAll(mtas);
         return mtalist;
+    }
+
+    public List getCloneInfoByCloneids(List cloneids) {
+        if ((cloneids == null) || (cloneids.size() < 1)) {
+            return null;
+        }
+        List cs = new ArrayList();
+        String sql = "select clonename, clonetype, verified, vermethod," +
+                " domain, subdomain, restriction, comments, vectorid, vectorname," +
+                " clonemapfilename,status,specialtreatment,source,description,cloneid" +
+                " from clone where cloneid =?";
+
+        String sql2 = "select h.hoststrain, h.isinuse, h.description" +
+                " from host h where h.cloneid=?";
+
+        ResultSet rs = null, rs2 = null;
+        PreparedStatement stmt = null, stmt2 = null;
+        try {
+            stmt = conn.prepareStatement(sql);
+            stmt2 = conn.prepareStatement(sql2);
+
+            for (int i = 0; i < cloneids.size(); i++) {
+                int cid = Integer.parseInt((String) cloneids.get(i));
+                stmt.setInt(1, cid);
+                stmt2.setInt(1, cid);
+                rs = DatabaseTransaction.executeQuery(stmt);
+                rs2 = DatabaseTransaction.executeQuery(stmt2);
+                if (rs.next()) {
+                    String clonename = rs.getString(1);
+                    String clonetype = rs.getString(2);
+                    String verified = rs.getString(3);
+                    String vermethod = rs.getString(4);
+                    String domain = rs.getString(5);
+                    String subdomain = rs.getString(6);
+                    String restriction = rs.getString(7);
+                    String comments = rs.getString(8);
+                    int vectorid = rs.getInt(9);
+                    String vectorname = rs.getString(10);
+                    String clonemap = rs.getString(11);
+                    String status = rs.getString(12);
+                    String specialtreatment = rs.getString(13);
+                    String src = rs.getString(14);
+                    String des = rs.getString(15);
+                    int cloneid = rs.getInt(16);
+                    Clone c = new Clone(cloneid, clonename, clonetype, verified, vermethod, domain, subdomain, restriction, comments, vectorid, vectorname, clonemap, status, specialtreatment, src, des);
+                    List hs = new ArrayList();
+                    while (rs2.next()) {
+                        CloneHost h = new CloneHost(cid, rs2.getString(1), rs2.getString(2), rs2.getString(3));
+                        hs.add(h);
+                    }
+                    if (hs.size() > 0) {
+                        c.setHosts(hs);
+                    }
+                    cs.add(c);
+                }
+            }
+            DatabaseTransaction.closeResultSet(rs);
+        } catch (Exception ex) {
+            handleError(ex, "Error occured while query clones");
+            return null;
+        } finally {
+            DatabaseTransaction.closeStatement(stmt);
+        }
+
+        if (cs.size() < 1) {
+            cs = null;
+        }
+        return cs;
+    }
+
+    public boolean updateCloneSubmission(int cloneid, int userid, 
+            String st, String hs, String re, String f,
+            String s, String sd, String r, String rd) {
+        if ((cloneid < 1) || (userid < 1) 
+                || (s == null) || (s.length() < 1) || (sd == null) || (sd.length()<1)
+                || (r == null) || (r.length() < 1) || (rd == null) || (rd.length()<1)
+                || (st == null) || (st.length() < 1) || (hs == null) || (hs.length() < 1)
+                || (re == null) || (re.length() < 1) || (f == null) || (f.length() < 1)) {
+            return true;
+        }
+
+        String sql1 = "update clone set status=? where cloneid=?";
+        String sql2 = "update host set isinuse=? where cloneid=? and hoststrain=?";
+        String sql3 = "insert into clonesubmission (cloneid, userid, submitter, submitdate, receiver, receivedate) values (?,?,?,?,?,?)";
+        try {
+            PreparedStatement stmt1 = conn.prepareStatement(sql1);
+            PreparedStatement stmt2 = conn.prepareStatement(sql2);
+            PreparedStatement stmt3 = conn.prepareStatement(sql3);
+
+            stmt1.setString(1, st);
+            stmt1.setInt(2, cloneid);
+            
+            stmt2.setString(1, "Y");
+            stmt2.setInt(2, cloneid);
+            stmt2.setString(3, hs);
+            
+            stmt3.setInt(1, cloneid);
+            stmt3.setInt(2, userid);
+            stmt3.setString(3, s);
+            stmt3.setString(4, sd);
+            stmt3.setString(5, r);
+            stmt3.setString(6, rd);
+            DatabaseTransaction.executeUpdate(stmt1);
+            DatabaseTransaction.closeStatement(stmt1);
+            DatabaseTransaction.executeUpdate(stmt2);
+            DatabaseTransaction.closeStatement(stmt2);
+            DatabaseTransaction.executeUpdate(stmt3);
+            DatabaseTransaction.closeStatement(stmt3);            
+        } catch (Exception ex) {
+            handleError(ex, "Error occured while updating CLONE,HOST,CLONESUBMISSION table");
+            return false;
+        }
+
+        return true;
     }
     
     public static void main(String args[]) {

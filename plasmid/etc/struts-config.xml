@@ -22,6 +22,48 @@
  
   <!-- ========== Form Bean Definitions =================================== -->
   <form-beans>
+        <form-bean name="addVFTForm" 
+                type="plasmid.form.AddVFTForm"/>
+        <form-bean name="addVFNForm" 
+                type="plasmid.form.AddVFNForm"/>
+        <form-bean name="addHSForm" 
+                type="plasmid.form.AddHSForm"/>
+        <form-bean name="addHTForm" 
+                type="plasmid.form.AddHTForm"/>
+        <form-bean name="addGCForm" 
+                type="plasmid.form.AddGCForm"/>
+        <form-bean name="addSMForm" 
+                type="plasmid.form.AddSMForm"/>
+        <form-bean name="addVPTForm" 
+                type="plasmid.form.AddVPTForm"/>
+        <form-bean name="vSearchForm" 
+                type="plasmid.form.VSearchForm"/>
+        <form-bean name="continueVSubmitForm" 
+                type="plasmid.form.ContinueVSubmitForm"/>
+        <form-bean name="vInputForm" 
+                type="plasmid.form.VInputForm"/>
+        <form-bean name="vInput2Form" 
+                type="plasmid.form.VInput2Form"/>
+        <form-bean name="vInput3Form" 
+                type="plasmid.form.VInput3Form"/>
+        <form-bean name="vInput4Form" 
+                type="plasmid.form.VInput4Form"/>
+        <form-bean name="vInput5Form" 
+                type="plasmid.form.VInput5Form"/>
+        <form-bean name="vInput6Form" 
+                type="plasmid.form.VInput6Form"/>
+        <form-bean name="vInput7Form" 
+                type="plasmid.form.VInput7Form"/>
+        <form-bean name="vInput8Form" 
+                type="plasmid.form.VInput8Form"/>
+        <form-bean name="vSubmitForDistForm" 
+                type="plasmid.form.VSubmitForDistForm"/>
+        <form-bean name="pReceiveForm" 
+                type="plasmid.form.PReceiveForm"/>
+        <form-bean name="findAuthorForm" 
+                type="plasmid.form.FindAuthorForm"/>
+        <form-bean name="findPMIDForm" 
+                type="plasmid.form.FindPMIDForm"/>
 
     <form-bean      name="refseqSearchForm"
                     type="plasmid.form.RefseqSearchForm"/>
@@ -133,6 +175,24 @@
     <forward    name="register"     path="/CustomerRegistration.jsp"/>
     <forward    name="findRegistration" path="/FindRegistration.jsp"/>
     <forward    name="error"        path="/ProcessError.do"/>
+    <forward    name="vInput1"      path="/vInput.jsp"/>
+    <forward    name="vInput2"      path="/vInput2.jsp"/>
+    <forward    name="vInput3"      path="/vInput3.jsp"/>
+    <forward    name="vInput4"      path="/vInput4.jsp"/>
+    <forward    name="vInput5"      path="/vInput5.jsp"/>
+    <forward    name="vInput6"      path="/vInput6.jsp"/>
+    <forward    name="vInput7"      path="/vInput7.jsp"/>
+    <forward    name="vInput8"      path="/vInput8.jsp"/>
+    <forward    name="vSubmitForDist"      path="/vSubmitForDist.jsp"/>
+    <forward    name="addGC"        path="/addGC.jsp"/>
+    <forward    name="addHS"        path="/addHS.jsp"/>
+    <forward    name="addHT"        path="/addHT.jsp"/>
+    <forward    name="addSM"        path="/addSM.jsp"/>
+    <forward    name="addVFN"        path="/addVFN.jsp"/>
+    <forward    name="addVFT"        path="/addVFT.jsp"/>
+    <forward    name="addVPT"        path="/addVPT.jsp"/>
+    <forward    name="findAuthor"    path="/findAuthor.jsp"/>
+    <forward    name="findPMID"    path="/findPMID.jsp"/>
   </global-forwards>
   
 
@@ -612,6 +672,165 @@
               validate="true">
       <forward  name="success"   path="/WorklistOutput.jsp"/>
     </action>
+
+        <action path="/addVFT" 
+            type="plasmid.action.AddVFTAction"
+            name="addVFTForm" 
+            input="/addVFT.jsp" 
+            validate="true">
+        </action>
+        <action path="/addVFN" 
+            type="plasmid.action.AddVFNAction"
+            name="addVFNForm" 
+            input="/addVFN.jsp" 
+            validate="true">
+        </action>
+        <action path="/addVPT" 
+            type="plasmid.action.AddVPTAction"
+            name="addVPTForm" 
+            input="/addVPT.jsp" 
+            validate="true">
+        </action>
+        <action path="/addSM" 
+            type="plasmid.action.AddSMAction"
+            name="addSMForm" 
+            input="/addSM.jsp" 
+            validate="true">
+        </action>
+        <action path="/addGC" 
+            type="plasmid.action.AddGCAction"
+            name="addGCForm" 
+            input="/addGC.jsp" 
+            validate="true">
+            <forward  name="success"   path="/addGC.jsp"/>
+        </action>
+        <action path="/addGrowCondition" 
+            type="plasmid.action.AddGrowConditionAction">
+            <forward  name="success"   path="/addGC.jsp"/>
+            <forward  name="error"   path="/addGC.jsp"/>
+        </action>
+        <action path="/addHT" 
+            type="plasmid.action.AddHTAction"
+            name="addHTForm" 
+            input="/addHT.jsp" 
+            validate="true">
+        </action>        
+        <action path="/addHS" 
+            type="plasmid.action.AddHSAction"
+            name="addHSForm" 
+            input="/addHS.jsp" 
+            validate="true">
+        </action>
+        <action path="/vSearch" 
+            type="plasmid.action.VSearchAction"
+            name="vSearchForm" 
+            input="/vSearch.jsp" 
+            validate="true">
+        </action>
+        <action path="/continueVSubmit" 
+            type="plasmid.action.ContinueVSubmitAction"
+            input="/vSearch.jsp"
+            name="continueVSubmitForm"
+            validate="true">
+            <forward  name="success"   path="/vInput.jsp"/>
+        </action>
+        <action path="/vInput" 
+            type="plasmid.action.VInputAction"
+            name="vInputForm" 
+            input="/vInput.jsp" 
+            validate="true">
+            <forward name="save" path="/vSearch.jsp"/>
+            <forward name="continue" path="/vInput2.jsp"/>
+        </action>        
+        <action path="/vInput2" 
+            type="plasmid.action.VInput2Action"
+            name="vInput2Form" 
+            input="/vInput2.jsp" 
+            validate="true">
+            <forward name="save" path="/vSearch.jsp"/>
+            <forward name="back" path="/vInput.jsp"/>
+            <forward name="continue" path="/vInput3.jsp"/>
+        </action>        
+        <action path="/vInput3" 
+            type="plasmid.action.VInput3Action"
+            name="vInput3Form" 
+            input="/vInput3.jsp" 
+            validate="true">
+            <forward name="save" path="/vSearch.jsp"/>
+            <forward name="back" path="/vInput2.jsp"/>
+            <forward name="continue" path="/vInput4.jsp"/>
+        </action>        
+        <action path="/vInput4" 
+            type="plasmid.action.VInput4Action"
+            name="vInput4Form" 
+            input="/vInput4.jsp" 
+            validate="true">
+            <forward name="save" path="/vSearch.jsp"/>
+            <forward name="back" path="/vInput3.jsp"/>
+            <forward name="continue" path="/vInput5.jsp"/>
+        </action>        
+        <action path="/vInput5" 
+            type="plasmid.action.VInput5Action"
+            name="vInput5Form" 
+            input="/vInput5.jsp" 
+            validate="true">
+            <forward name="save" path="/vSearch.jsp"/>
+            <forward name="back" path="/vInput4.jsp"/>
+            <forward name="continue" path="/vInput6.jsp"/>
+        </action>        
+        <action path="/vInput6" 
+            type="plasmid.action.VInput6Action"
+            name="vInput6Form" 
+            input="/vInput6.jsp" 
+            validate="true">
+            <forward name="save" path="/vSearch.jsp"/>
+            <forward name="back" path="/vInput5.jsp"/>
+            <forward name="continue" path="/vInput7.jsp"/>
+        </action>        
+        <action path="/vInput7" 
+            type="plasmid.action.VInput7Action"
+            name="vInput7Form" 
+            input="/vInput7.jsp" 
+            validate="true">
+            <forward name="save" path="/vSearch.jsp"/>
+            <forward name="back" path="/vInput6.jsp"/>
+            <forward name="continue" path="/vInput8.jsp"/>
+        </action>        
+        <action path="/vInput8" 
+            type="plasmid.action.VInput8Action"
+            name="vInput8Form" 
+            input="/vInput8.jsp" 
+            validate="true">
+            <forward name="save" path="/vSearch.jsp"/>
+            <forward name="back" path="/vInput7.jsp"/>
+            <forward name="continue" path="/vSubmitForDist.jsp"/>
+        </action>        
+        <action path="/vSubmitForDist" 
+            type="plasmid.action.VSubmitForDistAction"
+            name="vSubmitForDistForm" 
+            input="/vSubmitForDist.jsp" 
+            validate="true">
+            <forward name="success" path="/vSearch.jsp"/>
+        </action>        
+        <action path="/pReceive" 
+            type="plasmid.action.PReceiveAction"
+            name="pReceiveForm" 
+            input="/pReceive.jsp" 
+            validate="true">
+        </action>        
+        <action path="/findAuthor" 
+            type="plasmid.action.FindAuthorAction"
+            name="findAuthorForm" 
+            input="/findAuthor.jsp" 
+            validate="true">
+        </action>        
+        <action path="/findPMID" 
+            type="plasmid.action.FindPMIDAction"
+            name="findPMIDForm" 
+            input="/findPMID.jsp" 
+            validate="true">
+        </action>        
+
     
     <!-- The standard administrative actions available with Struts -->
     <!-- These would be either omitted or protected by security -->

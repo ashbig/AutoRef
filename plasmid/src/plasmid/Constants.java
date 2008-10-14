@@ -104,7 +104,11 @@ public class Constants {
     public static final String SEARCH_WILDCARD = "*";
     
     public static final String SELECT = "Please Select";
-    
+
+    // Vector related constants
+    public static final String HTS = "HTS";
+    public static final String PENDING = "PENDING";
+    public static final String PENDING_X = "PENDING-X";
     /** Creates a new instance of Constants */
     public Constants() {
     }

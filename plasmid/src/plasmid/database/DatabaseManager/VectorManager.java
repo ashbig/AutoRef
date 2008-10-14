@@ -10,6 +10,7 @@ import java.util.*;
 
 import plasmid.coreobject.*;
 import plasmid.database.*;
+import plasmid.util.StringConvertor;
 import plasmid.Constants;
 
 /**
@@ -38,7 +39,7 @@ public class VectorManager extends TableManager {
             stmt.setInt(6, vector.getSize());
             stmt.setString(7, vector.getMapfilename());
             stmt.setString(8, vector.getSeqfilename());
-            stmt.setString(9, vector.getComments());
+            stmt.setString(9, vector.getFullComments());
 
             DatabaseTransaction.executeUpdate(stmt);
             DatabaseTransaction.closeStatement(stmt);
@@ -71,7 +72,7 @@ public class VectorManager extends TableManager {
                 stmt.setInt(6, vector.getSize());
                 stmt.setString(7, vector.getMapfilename());
                 stmt.setString(8, vector.getSeqfilename());
-                stmt.setString(9, vector.getComments());
+                stmt.setString(9, vector.getFullComments());
 
                 DatabaseTransaction.executeUpdate(stmt);
             }
@@ -81,6 +82,329 @@ public class VectorManager extends TableManager {
             return false;
         }
         return true;
+    }
+
+    public boolean updateVector(CloneVector vector, boolean noDesp) {
+        if (noDesp) {
+            String sql = new String("update vector" +
+                    " set name=?, set form=?, set type=?, set sizeinbp=?," +
+                    " set mapfilename=?, set sequencefilename=?, set comments=? where vectorid=?");
+            try {
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                stmt.setString(1, vector.getName());
+                stmt.setString(2, vector.getForm());
+                stmt.setString(3, vector.getType());
+                stmt.setInt(4, vector.getSize());
+                stmt.setString(5, vector.getMapfilename());
+                stmt.setString(6, vector.getSeqfilename());
+                stmt.setString(7, vector.getFullComments());
+                stmt.setInt(8, vector.getVectorid());
+
+                DatabaseTransaction.executeUpdate(stmt);
+                DatabaseTransaction.closeStatement(stmt);
+            } catch (Exception ex) {
+                handleError(ex, "Error occured while inserting into VECTOR table");
+                return false;
+            }
+        } else {
+            return updateVector(vector);
+        }
+        return true;
+    }
+
+    public boolean updateVector(CloneVector vector) {
+        String sql = new String("update vector" +
+                " set name=?, set description=?, set form=?, set type=?, set sizeinbp=?," +
+                " set mapfilename=?, set sequencefilename=?, set comments=? where vectorid=?");
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, vector.getName());
+            stmt.setString(2, vector.getDescription());
+            stmt.setString(3, vector.getForm());
+            stmt.setString(4, vector.getType());
+            stmt.setInt(5, vector.getSize());
+            stmt.setString(6, vector.getMapfilename());
+            stmt.setString(7, vector.getSeqfilename());
+            stmt.setString(8, vector.getFullComments());
+            stmt.setInt(9, vector.getVectorid());
+
+            DatabaseTransaction.executeUpdate(stmt);
+            DatabaseTransaction.closeStatement(stmt);
+        } catch (Exception ex) {
+            handleError(ex, "Error occured while inserting into VECTOR table");
+            return false;
+        }
+        return true;
+    }
+
+    public boolean updateVSubmission(int vid, int uid) {
+        return (removeVSubmission(vid, uid) && insertVSubmission(vid, uid));
+    }
+
+    public boolean removeVSubmission(int vid, int uid) {
+        if (vid < 1) {
+            return true;
+        }
+        if (uid < 1) {
+            return true;
+        }
+        String sql = new String("delete from vectorsubmission where userid=? and vectorid=?");
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, uid);
+            stmt.setInt(2, vid);
+
+            DatabaseTransaction.executeUpdate(stmt);
+            DatabaseTransaction.closeStatement(stmt);
+        } catch (Exception ex) {
+            handleError(ex, "Error occured while deleteing into VECTORSUBMISSION table");
+            return false;
+        }
+        return true;
+    }
+
+    public boolean insertVSubmission(int vid, int uid) {
+        if ((vid < 1) || (uid < 1)) {
+            return true;
+        }
+        String sql = new String("insert into vectorsubmission (userid, vectorid, submitdate, status) values (?, ?, SYSDATE, 'PENDING')");
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, uid);
+            stmt.setInt(2, vid);
+
+            DatabaseTransaction.executeUpdate(stmt);
+            DatabaseTransaction.closeStatement(stmt);
+        } catch (Exception ex) {
+            handleError(ex, "Error occured while inserting into VECTORSUBMISSION table");
+            return false;
+        }
+        return true;
+    }
+
+    public boolean updatetVSubmissionStatus(int vid, String s) {
+        if ((vid < 1) || (s == null) || (s.length() < 1)) {
+            return true;
+        }
+
+        String sql = new String("update vectorsubmission set status = ? where vectorid = ?");
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, vid);
+            stmt.setString(2, s);
+
+            DatabaseTransaction.executeUpdate(stmt);
+            DatabaseTransaction.closeStatement(stmt);
+        } catch (Exception ex) {
+            handleError(ex, "Error occured while updating VECTORSUBMISSION table");
+            return false;
+        }
+        return true;
+    }
+
+    
+    public boolean updateVHS(int vid, List VHS) {
+        if ((vid < 1) || (VHS.size() < 1)) {
+            return true;
+        }
+        
+        String sql1 = new String("delete from vectorhost where vectorid=?");
+        String sql2 = new String("insert into vectorhost (vectorid, vectorname, hoststrain, isinuse, description) values (?,?,?,?,?)");
+
+        try {
+            PreparedStatement stmt1 = conn.prepareStatement(sql1);
+            PreparedStatement stmt2 = conn.prepareStatement(sql2);
+            stmt1.setInt(1, vid);
+            DatabaseTransaction.executeUpdate(stmt1);
+            DatabaseTransaction.closeStatement(stmt1);
+            for (int i = 0; i < VHS.size(); i++) {
+                VectorHostStrain vhs = (VectorHostStrain) VHS.get(i);
+                stmt2.setInt(1, vid);
+                stmt2.setString(2, vhs.getVectorame());
+                stmt2.setString(3, vhs.getHoststrain());
+                stmt2.setString(4, vhs.getIsinuse());
+                stmt2.setString(5, vhs.getDescription());
+                DatabaseTransaction.executeUpdate(stmt2);
+            }
+        } catch (Exception ex) {
+            handleError(ex, "Error occured while updating VECTORHOST table");
+            return false;
+        }
+        return true;
+    }
+
+    public boolean updateVGC(int vid, List VGC) {
+        if ((vid < 1) || (VGC.size() < 1)) {
+            return true;
+        }
+
+        String sql1 = new String("delete from vectorgrowth where vectorid=?");
+        String sql2 = new String("insert into vectorgrowth (vectorid, growthid, vectorname, growthname, isrecommended) values (?,?,?,?,?)");
+
+        try {
+            PreparedStatement stmt1 = conn.prepareStatement(sql1);
+            PreparedStatement stmt2 = conn.prepareStatement(sql2);
+            stmt1.setInt(1, vid);
+            DatabaseTransaction.executeUpdate(stmt1);
+            DatabaseTransaction.closeStatement(stmt1);
+            for (int i = 0; i < VGC.size(); i++) {
+                VectorGrowthCondition vgc = (VectorGrowthCondition) VGC.get(i);
+                stmt2.setInt(1, vid);
+                stmt2.setInt(2, vgc.getGrowthid());
+                stmt2.setString(3, vgc.getVectorame());
+                stmt2.setString(4, vgc.getGrowthname());
+                stmt2.setString(5, vgc.getIsrecommended());
+                DatabaseTransaction.executeUpdate(stmt2);
+            }
+        } catch (Exception ex) {
+            handleError(ex, "Error occured while updating VECTORGROWTH table");
+            return false;
+        }
+        return true;
+    }
+
+    public boolean updateVSM(int vid, List VSM) {
+        if ((vid < 1) || (VSM.size() < 1)) {
+            return true;
+        }
+
+        String sql1 = new String("delete from vectorsel where vectorid=?");
+        String sql2 = new String("insert into vectorsel (vectorid, vectorname, hosttype, marker) values (?,?,?,?)");
+
+        try {
+            PreparedStatement stmt1 = conn.prepareStatement(sql1);
+            PreparedStatement stmt2 = conn.prepareStatement(sql2);
+            stmt1.setInt(1, vid);
+            DatabaseTransaction.executeUpdate(stmt1);
+            DatabaseTransaction.closeStatement(stmt1);
+            for (int i = 0; i < VSM.size(); i++) {
+                VectorSelectMarker vsm = (VectorSelectMarker) VSM.get(i);
+                stmt2.setInt(1, vid);
+                stmt2.setString(2, vsm.getVectorname());
+                stmt2.setString(3, vsm.getHosttype());
+                stmt2.setString(4, vsm.getMarker());
+                DatabaseTransaction.executeUpdate(stmt2);
+            }
+        } catch (Exception ex) {
+            handleError(ex, "Error occured while updating VECTORSEL table");
+            return false;
+        }
+        
+        return true;
+    }
+
+    
+    public boolean updateFeatures(int vid, List features) {
+        if ((vid < 1) || (features.size() < 1)) {
+            return true;
+        }
+
+        String sql1 = new String("delete from vectorfeature where vectorid=?");
+        String sql2 = new String("insert into vectorfeature (vectorid, featureid, maptype, name, description, startpos, stoppos) values (?,?,?,?,?,?)");
+        try {
+            PreparedStatement stmt1 = conn.prepareStatement(sql1);
+            PreparedStatement stmt2 = conn.prepareStatement(sql2);
+            stmt1.setInt(1, vid);
+            DatabaseTransaction.executeUpdate(stmt1);
+            DatabaseTransaction.closeStatement(stmt1);
+            for (int i = 0; i < features.size(); i++) {
+                VectorFeature vf = (VectorFeature) features.get(i);
+                stmt2.setInt(1, vid);
+                stmt2.setInt(2, vf.getFeatureid());
+                stmt2.setString(3, vf.getMaptype());
+                stmt2.setString(4, vf.getName());
+                stmt2.setString(5, vf.getDescription());
+                stmt2.setInt(6, vf.getStart());
+                stmt2.setInt(7, vf.getStop());
+                DatabaseTransaction.executeUpdate(stmt2);
+            }
+            DatabaseTransaction.closeStatement(stmt2);
+        } catch (Exception ex) {
+            handleError(ex, "Error occured while updating VECTORFEATURE table");
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean updateSynonyms(int vid, String synonyms) {
+        if (vid < 1) {
+            return true;
+        }
+
+        StringConvertor sc = new StringConvertor();
+        List syns = sc.convertFromStringToCapList(synonyms, ",");
+
+        return (updateSynonyms(vid, syns));
+    }
+
+    public boolean updateSynonyms(int vid, List synonyms) {
+        if (vid < 1) {
+            return true;
+        }
+
+        return (removeSynonyms(vid) && insertSynonyms(vid, synonyms));
+    }
+
+    public boolean removeSynonyms(int vid) {
+        if (vid < 1) {
+            return true;
+        }
+
+        String sql = new String("delete from vectorsynonym where vectorid=?");
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, vid);
+            DatabaseTransaction.executeUpdate(stmt);
+            DatabaseTransaction.closeStatement(stmt);
+        } catch (Exception ex) {
+            handleError(ex, "Error occured while inserting into VECTORSYNONYM table");
+            return false;
+        }
+        return true;
+    }
+
+    public boolean insertSynonyms(int vid, List synonyms) {
+        if (vid < 1) {
+            return true;
+        }
+        if (synonyms == null) {
+            return true;
+        }
+
+        String sql = "insert into vectorsynonym" +
+                " (vectorid, vsynonym)" +
+                " values(?,?)";
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+
+            for (int i = 0; i < synonyms.size(); i++) {
+                String s = (String) synonyms.get(i);
+                stmt.setInt(1, vid);
+                stmt.setString(2, s);
+
+                DatabaseTransaction.executeUpdate(stmt);
+            }
+            DatabaseTransaction.closeStatement(stmt);
+        } catch (Exception ex) {
+            handleError(ex, "Error occured while inserting into VECTORSYNONYM table");
+            return false;
+        }
+        return true;
+    }
+
+    public boolean insertSynonyms(int vid, String synonyms) {
+        if (vid < 1) {
+            return true;
+        }
+        if ((synonyms == null) || (synonyms.length() < 1)) {
+            return true;
+        }
+
+        StringConvertor sc = new StringConvertor();
+        List syns = sc.convertFromStringToCapList(synonyms, ",");
+
+        return insertSynonyms(vid, syns);
     }
 
     public boolean insertSynonyms(List synonyms) {
@@ -104,6 +428,27 @@ public class VectorManager extends TableManager {
             DatabaseTransaction.closeStatement(stmt);
         } catch (Exception ex) {
             handleError(ex, "Error occured while inserting into VECTORSYNONYM table");
+            return false;
+        }
+        return true;
+    }
+
+    public boolean insertProperty(int vid, String vp) {
+        if ((vid < 1) || (vp == null)) {
+            return true;
+        }
+
+        String sql = "insert into vectorproperty" +
+                " (vectorid, propertytype)" +
+                " values(?,?)";
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, vid);
+            stmt.setString(2, vp);
+            DatabaseTransaction.executeUpdate(stmt);
+            DatabaseTransaction.closeStatement(stmt);
+        } catch (Exception ex) {
+            handleError(ex, "Error occured while inserting into VECTORPROPERTY table");
             return false;
         }
         return true;
@@ -162,6 +507,466 @@ public class VectorManager extends TableManager {
             DatabaseTransaction.closeStatement(stmt2);
         } catch (Exception ex) {
             handleError(ex, "Error occured while inserting into VECTORFEATURE table");
+            return false;
+        }
+        return true;
+    }
+
+    public boolean insertVFTs(List VFTs) {
+        if (VFTs == null) {
+            return true;
+        }
+        DatabaseTransaction t = null;
+        ResultSet rs = null;
+        String sql1 = "select * from featuremaptype where upper(maptype)=";
+        String sql2 = "insert into featuremaptype" +
+                " (maptype)" +
+                " values(?)";
+        try {
+            t = DatabaseTransaction.getInstance();
+            PreparedStatement stmt2 = conn.prepareStatement(sql2);
+
+            for (int i = 0; i < VFTs.size(); i++) {
+                String v = (String) VFTs.get(i);
+                String sql = new String(sql1 + "'" + v.toUpperCase() + "'");
+                rs = t.executeQuery(sql);
+                if ((rs != null) && rs.next()) {
+                    continue;
+                }
+
+                stmt2.setString(1, v);
+                DatabaseTransaction.executeUpdate(stmt2);
+            }
+            DatabaseTransaction.closeStatement(stmt2);
+        } catch (Exception ex) {
+            handleError(ex, "Error occured while inserting into FEATUREMAPTYPE table");
+            return false;
+        }
+        return true;
+    }
+
+    public boolean insertVFNs(List VFNs) {
+        if (VFNs == null) {
+            return true;
+        }
+        DatabaseTransaction t = null;
+        ResultSet rs = null;
+        String sql1 = "select * from featurename where upper(name)=?";
+        String sql2 = "insert into featurename" +
+                " (name)" +
+                " values(?)";
+        try {
+            t = DatabaseTransaction.getInstance();
+            PreparedStatement stmt1 = conn.prepareStatement(sql1);
+            PreparedStatement stmt2 = conn.prepareStatement(sql2);
+
+            for (int i = 0; i < VFNs.size(); i++) {
+                String v = (String) VFNs.get(i);
+                stmt1.setString(1, v.toUpperCase());
+                rs = DatabaseTransaction.executeQuery(stmt1);
+                if ((rs != null) && rs.next()) {
+                    continue;
+                }
+
+                stmt2.setString(1, v);
+                DatabaseTransaction.executeUpdate(stmt2);
+            }
+            DatabaseTransaction.closeStatement(stmt2);
+        } catch (Exception ex) {
+            handleError(ex, "Error occured while inserting into FEATURENAME table");
+            return false;
+        }
+        return true;
+    }
+
+    public boolean insertHSs(List HSs) {
+        if (HSs == null) {
+            return true;
+        }
+        DatabaseTransaction t = null;
+        ResultSet rs = null;
+        String sql1 = "select * from hoststrain where upper(hoststrain)=";
+        String sql2 = "insert into hoststrain" +
+                " (hoststrain)" +
+                " values(?)";
+        try {
+            t = DatabaseTransaction.getInstance();
+            PreparedStatement stmt2 = conn.prepareStatement(sql2);
+
+            for (int i = 0; i < HSs.size(); i++) {
+                String v = (String) HSs.get(i);
+                String sql = new String(sql1 + "'" + v.toUpperCase() + "'");
+                rs = t.executeQuery(sql);
+                if ((rs != null) && rs.next()) {
+                    continue;
+                }
+
+                stmt2.setString(1, v);
+                DatabaseTransaction.executeUpdate(stmt2);
+            }
+            DatabaseTransaction.closeStatement(stmt2);
+        } catch (Exception ex) {
+            handleError(ex, "Error occured while inserting into HOSTSTRAIN table");
+            return false;
+        }
+        return true;
+    }
+
+    public boolean insertHTs(List HTs) {
+        if (HTs == null) {
+            return true;
+        }
+        DatabaseTransaction t = null;
+        ResultSet rs = null;
+        String sql1 = "select * from hosttype where upper(type)=";
+        String sql2 = "insert into hosttype" +
+                " (type)" +
+                " values(?)";
+        try {
+            t = DatabaseTransaction.getInstance();
+            PreparedStatement stmt2 = conn.prepareStatement(sql2);
+
+            for (int i = 0; i < HTs.size(); i++) {
+                String v = (String) HTs.get(i);
+                String sql = new String(sql1 + "'" + v.toUpperCase() + "'");
+                rs = t.executeQuery(sql);
+                if ((rs != null) && rs.next()) {
+                    continue;
+                }
+
+                stmt2.setString(1, v);
+                DatabaseTransaction.executeUpdate(stmt2);
+            }
+            DatabaseTransaction.closeStatement(stmt2);
+        } catch (Exception ex) {
+            handleError(ex, "Error occured while inserting into HOSTTYPE table");
+            return false;
+        }
+        return true;
+    }
+
+    public List getSMs(String name) {
+        String sql = null;
+        if ((name == null) || (name.length() < 1)) {
+            sql = "select marker from marker";
+        } else {
+            sql = "select marker from marker where marker like '" + name + "%'";
+        }
+        List SMs = new ArrayList();
+
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = null;
+            rs = DatabaseTransaction.executeQuery(stmt);
+            while (rs.next()) {
+                SMs.add(rs.getString(1));
+            }
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+        } catch (Exception ex) {
+            if (Constants.DEBUG) {
+                System.out.println(ex);
+            }
+        }
+
+        return SMs;
+    }
+
+    public List getGCs(String name) {
+        String sql = null;
+        if ((name == null) || (name.length() < 1)) {
+            sql = "select growthid, name, hosttype, antibioticselection, growthcondition, comments from growthcondition";
+        } else {
+            sql = "select growthid, name, hosttype, antibioticselection, growthcondition, comments from growthcondition where growthcondition like '" + name + "%'";
+        }
+        List GCs = new ArrayList();
+
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = null;
+            rs = DatabaseTransaction.executeQuery(stmt);
+            while (rs.next()) {
+                GrowthCondition gc = new GrowthCondition(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4),
+                        rs.getString(5), rs.getString(6));
+                GCs.add(gc);
+            }
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+        } catch (Exception ex) {
+            if (Constants.DEBUG) {
+                System.out.println(ex);
+            }
+        }
+
+        return GCs;
+    }
+
+    public List getGCNs(String name) {
+        String sql = null;
+        if ((name == null) || (name.length() < 1)) {
+            sql = "select name from growthcondition";
+        } else {
+            sql = "select name from growthcondition where growthcondition like '" + name + "%'";
+        }
+        List GCs = new ArrayList();
+
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = null;
+            rs = DatabaseTransaction.executeQuery(stmt);
+            while (rs.next()) {
+                GCs.add(rs.getString(1));
+            }
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+        } catch (Exception ex) {
+            if (Constants.DEBUG) {
+                System.out.println(ex);
+            }
+        }
+
+        return GCs;
+    }
+
+    public List getHSs(String name) {
+        String sql = null;
+        if ((name == null) || (name.length() < 1)) {
+            sql = "select hoststrain from hoststrain";
+        } else {
+            sql = "select hoststrain from hoststrain where hoststrain like '" + name + "%'";
+        }
+        List HSs = new ArrayList();
+
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = null;
+            rs = DatabaseTransaction.executeQuery(stmt);
+            while (rs.next()) {
+                HSs.add(rs.getString(1));
+            }
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+        } catch (Exception ex) {
+            if (Constants.DEBUG) {
+                System.out.println(ex);
+            }
+        }
+
+        return HSs;
+    }
+
+    public List getHTs(String name) {
+        String sql = null;
+        if ((name == null) || (name.length() < 1)) {
+            sql = "select type from hosttype";
+        } else {
+            sql = "select type from hosttype where type like '" + name + "%'";
+        }
+        List HTs = new ArrayList();
+
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = null;
+            rs = DatabaseTransaction.executeQuery(stmt);
+            while (rs.next()) {
+                HTs.add(rs.getString(1));
+            }
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+        } catch (Exception ex) {
+            if (Constants.DEBUG) {
+                System.out.println(ex);
+            }
+        }
+
+        return HTs;
+    }
+
+    public List getVSMs(int vid) {
+        if (vid < 1) {
+            return null;
+        }
+        String sql = "select hosttype, marker from vectorsel where vectorid=?";
+        List VSMs = new ArrayList();
+
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = null;
+            stmt.setInt(1, vid);
+            rs = DatabaseTransaction.executeQuery(stmt);
+            while (rs.next()) {
+                VectorSelectMarker v = new VectorSelectMarker(vid, rs.getString(1), rs.getString(2));
+                VSMs.add(v);
+            }
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+        } catch (Exception ex) {
+            if (Constants.DEBUG) {
+                System.out.println(ex);
+            }
+        }
+
+        return VSMs;
+    }
+
+    public List getVGCs(int vid) {
+        if (vid < 1) {
+            return null;
+        }
+        String sql = "select growthid, growthname, isrecommended from vectorgrowth where vectorid=?";
+        List VGCs = new ArrayList();
+
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = null;
+            stmt.setInt(1, vid);
+            rs = DatabaseTransaction.executeQuery(stmt);
+            while (rs.next()) {
+                VectorGrowthCondition vgc = new VectorGrowthCondition(vid, rs.getInt(1), rs.getString(2), rs.getString(3));
+                VGCs.add(vgc);
+            }
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+        } catch (Exception ex) {
+            if (Constants.DEBUG) {
+                System.out.println(ex);
+            }
+        }
+
+        return VGCs;
+    }
+
+    public List getVHSs(int vid) {
+        if (vid < 1) {
+            return null;
+        }
+        String sql = "select hoststrain, isinuse, description from vectorhost where vectorid=?";
+        List VHSs = new ArrayList();
+
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = null;
+            stmt.setInt(1, vid);
+            rs = DatabaseTransaction.executeQuery(stmt);
+            while (rs.next()) {
+                VectorHostStrain vhs = new VectorHostStrain(vid, rs.getString(1), rs.getString(2), rs.getString(3));
+                VHSs.add(vhs);
+            }
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+        } catch (Exception ex) {
+            if (Constants.DEBUG) {
+                System.out.println(ex);
+            }
+        }
+
+        return VHSs;
+    }
+
+    public boolean insertVPTs(String CAT, List VPTs) {
+        if (VPTs == null) {
+            return false;
+        }
+        if (CAT == null) {
+            return false;
+        }
+        DatabaseTransaction t = null;
+        ResultSet rs = null;
+        String sql1 = "select * from vectorpropertytype where upper(category)='" + CAT.toUpperCase() + "' and upper(propertytype)=";
+        String sql2 = "insert into vectorpropertytype" +
+                " (propertytype, category)" +
+                " values(?, ?)";
+        try {
+            t = DatabaseTransaction.getInstance();
+            PreparedStatement stmt2 = conn.prepareStatement(sql2);
+
+            for (int i = 0; i < VPTs.size(); i++) {
+                String v = (String) VPTs.get(i);
+                String sql = new String(sql1 + "'" + v.toUpperCase() + "'");
+                rs = t.executeQuery(sql);
+                if ((rs != null) && rs.next()) {
+                    continue;
+                }
+
+                stmt2.setString(1, v);
+                stmt2.setString(2, CAT);
+                DatabaseTransaction.executeUpdate(stmt2);
+            }
+            DatabaseTransaction.closeStatement(stmt2);
+        } catch (Exception ex) {
+            handleError(ex, "Error occured while inserting into VECTORPROPERTYTYPE table");
+            return false;
+        }
+        return true;
+    }
+
+    public boolean insertSMs(List SMs) {
+        if (SMs == null) {
+            return true;
+        }
+        DatabaseTransaction t = null;
+        ResultSet rs = null;
+        String sql1 = "select * from marker where upper(marker)=";
+        String sql2 = "insert into marker" +
+                " (marker)" +
+                " values(?)";
+        try {
+            t = DatabaseTransaction.getInstance();
+            PreparedStatement stmt2 = conn.prepareStatement(sql2);
+
+            for (int i = 0; i < SMs.size(); i++) {
+                String v = (String) SMs.get(i);
+                String sql = new String(sql1 + "'" + v.toUpperCase() + "'");
+                rs = t.executeQuery(sql);
+                if ((rs != null) && rs.next()) {
+                    continue;
+                }
+
+                stmt2.setString(1, v);
+                DatabaseTransaction.executeUpdate(stmt2);
+            }
+            DatabaseTransaction.closeStatement(stmt2);
+        } catch (Exception ex) {
+            handleError(ex, "Error occured while inserting into MARKER table");
+            return false;
+        }
+        return true;
+    }
+
+    public boolean insertGCs(List GCs) {
+        if (GCs == null) {
+            return true;
+        }
+        DatabaseTransaction t = null;
+        ResultSet rs = null;
+        String sql1 = "select * from growthcondition where upper(name)=?";
+        String sql2 = "insert into growthcondition (growthid, name, hosttype, antibioticselection, growthcondition, comments) " +
+                " values(?,?,?,?,?,?)";
+        try {
+            t = DatabaseTransaction.getInstance();
+            PreparedStatement stmt1 = conn.prepareStatement(sql1);
+            PreparedStatement stmt2 = conn.prepareStatement(sql2);
+
+            for (int i = 0; i < GCs.size(); i++) {
+                GrowthCondition gc = (GrowthCondition) GCs.get(i);
+                stmt1.setString(1, gc.getName());
+                rs = stmt1.executeQuery();
+                if ((rs != null) && rs.next()) {
+                    continue;
+                }
+
+                int gid = DefTableManager.getNextid("growthid");
+                stmt2.setInt(1, gid);
+                stmt2.setString(2, gc.getName());
+                stmt2.setString(3, gc.getHosttype());
+                stmt2.setString(4, gc.getSelection());
+                stmt2.setString(5, gc.getCondition());
+                stmt2.setString(6, gc.getComments());
+                DatabaseTransaction.executeUpdate(stmt2);
+            }
+            DatabaseTransaction.closeStatement(stmt2);
+        } catch (Exception ex) {
+            handleError(ex, "Error occured while inserting into GROWTHCONDITION table");
             return false;
         }
         return true;
@@ -389,23 +1194,83 @@ public class VectorManager extends TableManager {
     }
 
     public List getVectorsByName(Collection names) {
-        String sql = "select vectorid,description,form,type,sizeinbp,mapfilename," +
-                " sequencefilename,comments from vector where name=?";
-
-        List vectors = new ArrayList();
         if (names == null) {
-            return vectors;
+            return null;
+        }
+
+        return (getVectorsByNameAndUser(names, -1));
+    }
+
+    public List getVectorsByNameAndUser(Collection names, String uid) {
+        if (names == null) {
+            return null;
+        }
+
+        return (getVectorsByNameAndUser(names, Integer.parseInt(uid)));
+    }
+
+    public List getVectorsByNameAndUser(Collection names, int uid) {
+        if (names == null) {
+            return null;
+        }
+
+        return (getVectorsByNameExt(names, false, uid));
+    }
+
+    public List getVectorsByNameLike(Collection names) {
+        if (names == null) {
+            return null;
+        }
+
+        return (getVectorsByNameAndUserLike(names, -1));
+    }
+
+    public List getVectorsByNameAndUserLike(Collection names, String uid) {
+        if (names == null) {
+            return null;
+        }
+
+        return (getVectorsByNameAndUserLike(names, Integer.parseInt(uid)));
+    }
+
+    public List getVectorsByNameAndUserLike(Collection names, int uid) {
+        if (names == null) {
+            return null;
+        }
+
+        return (getVectorsByNameExt(names, true, uid));
+    }
+
+    private List getVectorsByNameExt(Collection names, boolean bLike, int uid) {
+        List vectors = new ArrayList();
+        String sql = null;
+        if (bLike) {
+            sql = "select a.vectorid,a.description,a.form,a.type,a.sizeinbp,a.mapfilename," +
+                    " a.sequencefilename,a.comments,nvl(b.userid, 0) userid,nvl(b.status, '') status, a.name " +
+                    " from vector a left join vectorsubmission b on a.vectorid=b.vectorid " +
+                    " where name like ?";
+        } else {
+            sql = "select a.vectorid,a.description,a.form,a.type,a.sizeinbp,a.mapfilename," +
+                    " a.sequencefilename,a.comments,nvl(b.userid, 0) userid,nvl(b.status, '') status, a.name " +
+                    " from vector a left join vectorsubmission b on a.vectorid=b.vectorid " +
+                    " where name=?";
         }
 
         try {
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = null;
             Iterator iter = names.iterator();
+            String name = null;
             while (iter.hasNext()) {
-                String name = (String) iter.next();
-                stmt.setString(1, name);
+                name = (String) iter.next();
+                if (bLike) {
+                    stmt.setString(1, "%" + name + "%");
+                } else {
+                    stmt.setString(1, name);
+                }
+
                 rs = DatabaseTransaction.executeQuery(stmt);
-                if (rs.next()) {
+                while (rs.next()) {
                     int vectorid = rs.getInt(1);
                     String description = rs.getString(2);
                     String form = rs.getString(3);
@@ -414,7 +1279,18 @@ public class VectorManager extends TableManager {
                     String mapfilename = rs.getString(6);
                     String seqfilename = rs.getString(7);
                     String comments = rs.getString(8);
-                    CloneVector v = new CloneVector(vectorid, name, description, form, type, size, mapfilename, seqfilename, comments);
+                    int userid = rs.getInt(9);
+                    String status = rs.getString(10);
+                    String vname = rs.getString(11);
+                    if (status == null) {
+                        status = "";
+                    }
+                    if (status.equals(Constants.PENDING)) {
+                        if (userid != uid) {
+                            status = new String(Constants.PENDING_X);
+                        }
+                    }
+                    CloneVector v = new CloneVector(vectorid, vname, description, form, type, size, mapfilename, seqfilename, comments, status, userid);
                     vectors.add(v);
                 }
             }
@@ -427,6 +1303,230 @@ public class VectorManager extends TableManager {
         }
 
         return vectors;
+    }
+
+    public List getForms() {
+        return getForms(null, false);
+    }
+
+    public List getFormsByNames(Collection formnames) {
+        return getForms(formnames, false);
+    }
+
+    public List getFormsByNamesLike(Collection formnames) {
+        return getForms(formnames, true);
+    }
+
+    private List getForms(Collection formnames, boolean bLike) {
+        List forms = new ArrayList();
+        String sql = new String("select form from vectorform");
+        ResultSet rs = null;
+        PreparedStatement stmt = null;
+
+        if ((formnames != null) && (formnames.size() > 0)) {
+            if (bLike) {
+                sql = new String(sql + " where form like ?");
+            } else {
+                sql = new String(sql + " where form = ?");
+            }
+            try {
+                stmt = conn.prepareStatement(sql);
+                Iterator iter = formnames.iterator();
+                String formname = null;
+                while (iter.hasNext()) {
+                    if ((formnames != null) && (formnames.size() > 0)) {
+                        if (bLike) {
+                            formname = "%" + (String) iter.next() + "%";
+                        } else {
+                            formname = (String) iter.next();
+                        }
+                    }
+                    stmt.setString(1, formname);
+                    rs = DatabaseTransaction.executeQuery(stmt);
+                    while (rs.next()) {
+                        String sForm = rs.getString(1);
+                        forms.add(sForm);
+                    }
+                }
+            } catch (Exception ex) {
+                if (Constants.DEBUG) {
+                    System.out.println(ex);
+                }
+            } finally {
+                DatabaseTransaction.closeResultSet(rs);
+                DatabaseTransaction.closeStatement(stmt);
+            }
+        } else {
+            try {
+                stmt = conn.prepareStatement(sql);
+                rs = DatabaseTransaction.executeQuery(stmt);
+                while (rs.next()) {
+                    String sForm = rs.getString(1);
+                    forms.add(sForm);
+                }
+            } catch (Exception ex) {
+                if (Constants.DEBUG) {
+                    System.out.println(ex);
+                }
+            } finally {
+                DatabaseTransaction.closeResultSet(rs);
+                DatabaseTransaction.closeStatement(stmt);
+            }
+        }
+
+        return forms;
+    }
+
+    public List getFeatures(int vid) {
+        if (vid < 1) {
+            return null;
+        }
+
+        List features = new ArrayList();
+        String sql = new String("select featureid,name,description,startpos,endpos,maptype from vectorfeature where vectorid=?");
+        ResultSet rs = null;
+        PreparedStatement stmt = null;
+
+        try {
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, vid);
+
+            rs = DatabaseTransaction.executeQuery(stmt);
+            while (rs.next()) {
+                VectorFeature vf = new VectorFeature(rs.getInt(1), rs.getString(2), rs.getString(3),
+                        rs.getInt(4), rs.getInt(5), vid, rs.getString(6));
+                features.add(vf);
+            }
+        } catch (Exception ex) {
+            if (Constants.DEBUG) {
+                System.out.println(ex);
+            }
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+        }
+
+        return features;
+    }
+
+    public List getFeatureNames() {
+        List featurenames = new ArrayList();
+        String sql = new String("select name from featurename order by name");
+        ResultSet rs = null;
+        PreparedStatement stmt = null;
+
+        try {
+            stmt = conn.prepareStatement(sql);
+            rs = DatabaseTransaction.executeQuery(stmt);
+            while (rs.next()) {
+                featurenames.add(rs.getString(1));
+            }
+        } catch (Exception ex) {
+            if (Constants.DEBUG) {
+                System.out.println(ex);
+            }
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+        }
+        return featurenames;
+    }
+
+    public List getFeatureTypes() {
+        List featuretypes = new ArrayList();
+        String sql = new String("select maptype from featuremaptype order by maptype");
+        ResultSet rs = null;
+        PreparedStatement stmt = null;
+
+        try {
+            stmt = conn.prepareStatement(sql);
+            rs = DatabaseTransaction.executeQuery(stmt);
+            while (rs.next()) {
+                featuretypes.add(rs.getString(1));
+            }
+        } catch (Exception ex) {
+            if (Constants.DEBUG) {
+                System.out.println(ex);
+            }
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+        }
+        return featuretypes;
+    }
+
+    public List getTypes() {
+        return getTypes(null, false);
+    }
+
+    public List getTypesByNames(Collection typenames) {
+        return getTypes(typenames, false);
+    }
+
+    public List getTypesByNamesLike(Collection typenames) {
+        return getTypes(typenames, true);
+    }
+
+    private List getTypes(Collection typenames, boolean bLike) {
+        List types = new ArrayList();
+        String sql = new String("select type from vectortype");
+        ResultSet rs = null;
+        PreparedStatement stmt = null;
+
+        if ((typenames != null) && (typenames.size() > 0)) {
+            if (bLike) {
+                sql = new String(sql + " where type like ?");
+            } else {
+                sql = new String(sql + " where type = ?");
+            }
+            try {
+                stmt = conn.prepareStatement(sql);
+                Iterator iter = typenames.iterator();
+                String typename = null;
+                while (iter.hasNext()) {
+                    typename = (String) iter.next();
+                    if (bLike) {
+                        stmt.setString(1, "%" + typename + "%");
+                    } else {
+                        stmt.setString(1, typename);
+                    }
+
+                    rs = DatabaseTransaction.executeQuery(stmt);
+                    while (rs.next()) {
+                        String sProperty = rs.getString(1);
+                        types.add(sProperty);
+                    }
+                }
+            } catch (Exception ex) {
+                if (Constants.DEBUG) {
+                    System.out.println(ex);
+                }
+            } finally {
+                DatabaseTransaction.closeResultSet(rs);
+                DatabaseTransaction.closeStatement(stmt);
+            }
+        } else {
+            try {
+                stmt = conn.prepareStatement(sql);
+                rs = DatabaseTransaction.executeQuery(stmt);
+                while (rs.next()) {
+                    String sProperty = rs.getString(1);
+                    types.add(sProperty);
+                }
+
+                DatabaseTransaction.closeResultSet(rs);
+                DatabaseTransaction.closeStatement(stmt);
+            } catch (Exception ex) {
+                if (Constants.DEBUG) {
+                    System.out.println(ex);
+                }
+            } finally {
+                DatabaseTransaction.closeResultSet(rs);
+                DatabaseTransaction.closeStatement(stmt);
+            }
+        }
+
+        return types;
     }
 
     public CloneVector getVectorByName(String name) {
@@ -468,25 +1568,93 @@ public class VectorManager extends TableManager {
         return vector;
     }
 
+    public CloneVector getVectorByID(String id) {
+        if ((id == null) || (id.length() < 1)) {
+            return null;
+        }
+
+        return getVectorByID(Integer.parseInt(id));
+    }
+
+    public CloneVector getVectorByID(int id) {
+        if (id < 1) {
+            return null;
+        }
+        String sql = "select a.name,a.description,a.form,a.type,a.sizeinbp,a.mapfilename," +
+                " a.sequencefilename,a.comments,nvl(b.userid, 0) userid,nvl(b.status, '') status " +
+                " from vector a left join vectorsubmission b on a.vectorid=b.vectorid " +
+                " where a.vectorid=?";
+        CloneVector vector = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            stmt = conn.prepareStatement(sql);
+            rs = null;
+            stmt.setInt(1, id);
+            rs = DatabaseTransaction.executeQuery(stmt);
+            if (rs.next()) {
+                String name = rs.getString(1);
+                String description = rs.getString(2);
+                String form = rs.getString(3);
+                String type = rs.getString(4);
+                int size = rs.getInt(5);
+                String mapfilename = rs.getString(6);
+                String seqfilename = rs.getString(7);
+                String comments = rs.getString(8);
+                int userid = rs.getInt(9);
+                String status = rs.getString(10);
+                if (status == null) {
+                    status = "";
+                }
+                vector = new CloneVector(id, name, description, form, type, size, mapfilename, seqfilename, comments, status, userid);
+                sql = "select VSYNONYM from vectorsynonym where vectorid=?";
+                stmt = conn.prepareStatement(sql);
+                rs = null;
+                stmt.setInt(1, id);
+                rs = DatabaseTransaction.executeQuery(stmt);
+                List s = new ArrayList();
+                while (rs.next()) {
+                    s.add(rs.getString(1));
+                }
+                vector.setSynonyms(s);
+            }
+        } catch (Exception ex) {
+            if (Constants.DEBUG) {
+                System.out.println(ex);
+            }
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+        }
+
+        return vector;
+    }
+
     public CloneVector getVectorByAnyName(String name) {
         if (name == null) {
             return null;
         }
-        
+        CloneVector vector = null;
+        /*        
         CloneVector vector = this.getVectorByName(name);
         if(vector != null)
-            return vector;
+        return vector;
         
         String sql = "select vectorid,description,form,type,sizeinbp,mapfilename," +
-                " sequencefilename,comments from vector where vectorid in ("+
-                " select vectorid from vectorsynonym where vsynonym=?)";
+        " sequencefilename,comments from vector where vectorid in ("+
+        " select vectorid from vectorsynonym where vsynonym=?)";
+         */
+        String sql = new String("select a.vectorid,a.description,a.form,a.type,a.sizeinbp," +
+                "a.mapfilename,a.sequencefilename,a.comments, b.vsynonym " +
+                "from vector a left join vectorsynonym b on a.vectorid = b.vectorid " +
+                "where upper(trim(a.name)) like '?' or upper(trim(b.vsynonym)) like '?'");
 
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
             stmt = conn.prepareStatement(sql);
             rs = null;
-            stmt.setString(1, name);
+            stmt.setString(1, name.trim().toUpperCase());
             rs = DatabaseTransaction.executeQuery(stmt);
             if (rs.next()) {
                 int vectorid = rs.getInt(1);
@@ -543,6 +1711,128 @@ public class VectorManager extends TableManager {
         }
 
         return types;
+    }
+
+    public Map getVectorPerperties(int vid) {
+        if (vid < 1) {
+            return null;
+        }
+        Map vps = new TreeMap();
+        String sql = "select a.category,a.propertytype,a.displayvalue,nvl(b.vectorid, 0) from vectorpropertytype a left join vectorproperty b on a.propertytype=b.propertytype and b.vectorid=? order by a.category,a.displayvalue";
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            stmt = conn.prepareStatement(sql);
+            rs = null;
+            stmt.setInt(1, vid);
+            rs = DatabaseTransaction.executeQuery(stmt);
+            String lastCategory = null;
+            List l = null;
+            while (rs.next()) {
+                String category = rs.getString(1);
+                String type = rs.getString(2);
+                String value = rs.getString(3);
+                int vvid = rs.getInt(4);
+                if (lastCategory != null && lastCategory.equals(category)) {
+                    l.add(new VectorProperty(vvid, type, value));
+                } else {
+                    l = new ArrayList();
+                    l.add(new VectorProperty(vvid, type, value));
+                    lastCategory = category;
+                    vps.put(category, l);
+                }
+            }
+        } catch (Exception ex) {
+            if (Constants.DEBUG) {
+                System.out.println(ex);
+            }
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+
+        return vps;
+    }
+
+    public List getPerpertiesByCat(String c) {
+        if ((c == null) || (c.length() < 1)) {
+            return null;
+        }
+        String cat = VectorProperty.ASSAY;
+        if (c.equals("A")) {
+            cat = VectorProperty.ASSAY;
+        } else if (c.equals("C")) {
+            cat = VectorProperty.CLONING;
+        } else if (c.equals("E")) {
+            cat = VectorProperty.EXPRESSION;
+        } else {
+            return null;
+        }
+
+        List vps = new ArrayList();
+        String sql = "select a.propertytype,a.displayvalue from vectorpropertytype a  where a.category=? order by a.displayvalue";
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            stmt = conn.prepareStatement(sql);
+            rs = null;
+            stmt.setString(1, cat);
+            rs = DatabaseTransaction.executeQuery(stmt);
+            while (rs.next()) {
+                String type = rs.getString(1);
+                String value = rs.getString(2);
+                vps.add(new VectorProperty(-1, type, value));
+            }
+        } catch (Exception ex) {
+            if (Constants.DEBUG) {
+                System.out.println(ex);
+            }
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+
+        return vps;
+    }
+
+    public List getVectorPerpertiesByCat(int vid, String c) {
+        if ((vid < 1) || (c == null) || (c.length() < 1)) {
+            return null;
+        }
+        String cat = VectorProperty.ASSAY;
+        if (c.equals("A")) {
+            cat = VectorProperty.ASSAY;
+        } else if (c.equals("C")) {
+            cat = VectorProperty.CLONING;
+        } else if (c.equals("E")) {
+            cat = VectorProperty.EXPRESSION;
+        } else {
+            return null;
+        }
+
+        List vps = new ArrayList();
+        String sql = "select a.category,a.propertytype,a.displayvalue,nvl(b.vectorid, 0) from vectorpropertytype a left join vectorproperty b on a.propertytype=b.propertytype and b.vectorid=? where a.category=? order by a.category,a.displayvalue";
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            stmt = conn.prepareStatement(sql);
+            rs = null;
+            stmt.setInt(1, vid);
+            stmt.setString(2, cat);
+            rs = DatabaseTransaction.executeQuery(stmt);
+            while (rs.next()) {
+                String type = rs.getString(2);
+                String value = rs.getString(3);
+                int vvid = rs.getInt(4);
+                vps.add(new VectorProperty(vvid, type, value));
+            }
+        } catch (Exception ex) {
+            if (Constants.DEBUG) {
+                System.out.println(ex);
+            }
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+
+        return vps;
     }
 
     public static Set getVectoridByProperty(String property) {
