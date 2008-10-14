@@ -336,6 +336,7 @@ public String getTitle() {        return "Upload of information for third-party 
     }
     
      private void           assignPublicationInformation(DataFileReader freader)
+             throws Exception
     {
         // read authors 
             HashMap publications = null; HashMap publications_connectors = null;
@@ -348,8 +349,10 @@ public String getTitle() {        return "Upload of information for third-party 
              publications= freader.getPublications();
              publications_connectors = freader.getAdditionalInfo();
                
+             if ( publications == null && publications_connectors!= null)
+                 throw new Exception("Please check publication files");
                // assign publications to objects owner can be container, sample, clone in the future
-                if ( publications_connectors != null  && publications_connectors.size() > 0)
+                if ( publications != null && publications_connectors != null  && publications_connectors.size() > 0)
                 {
                     Iterator iter = publications_connectors.keySet().iterator();
                     while( iter.hasNext())
