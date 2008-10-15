@@ -313,7 +313,7 @@ public class VInput4Action extends Action {
             }
         }
 
-        desp = desp.replaceAll("<VPT>", desp1).replace("<VFT>", desp2).replace("<SM>", desp3).replace("<CLONE>", desp4);
+        desp = desp.replaceAll("<VPT>", desp1).replaceAll("<VFT>", desp2).replaceAll("<SM>", desp3).replaceAll("<CLONE>", desp4);
         v.setDescription(desp);
         session.setAttribute("Vector", v);
     }

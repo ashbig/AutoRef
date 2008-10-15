@@ -165,7 +165,7 @@ public class VInputAction extends Action {
             session.setAttribute("Vector", vector);
         }
         if (vid > 0) {
-            session.setAttribute("VID", (Integer) vid);
+            session.setAttribute("VID", new Integer(vid));
         }
 
         return bReturn;

@@ -57,7 +57,7 @@ public class VInput3Action extends Action {
         VInput3Form vif = (VInput3Form) form;
         String sAction = vif.getSubmit();
         int vid = vif.getVectorid();
-        request.setAttribute("VID", (Integer) vid);
+        request.setAttribute("VID", new Integer(vid));
 
         DatabaseTransaction t = null;
         Connection conn = null;
