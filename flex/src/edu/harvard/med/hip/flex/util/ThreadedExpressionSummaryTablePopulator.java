@@ -80,14 +80,18 @@ public class ThreadedExpressionSummaryTablePopulator extends SummaryTablePopulat
  {
    edu.harvard.med.hip.flex.workflow.ProjectWorkflowProtocolInfo prf =
                    edu.harvard.med.hip.flex.workflow.ProjectWorkflowProtocolInfo.getInstance();
-            
-          edu.harvard.med.hip.flex.core.Container container = new edu.harvard.med.hip.flex.core.Container(24172);
+           String key = "-1"+edu.harvard.med.hip.flex.workflow.ProjectWorkflowProtocolInfo.PWP_SEPARATOR+
+         "67"+edu.harvard.med.hip.flex.workflow.ProjectWorkflowProtocolInfo.PWP_SEPARATOR+
+         "-1"+edu.harvard.med.hip.flex.workflow.ProjectWorkflowProtocolInfo.PWP_SEPARATOR +"VECTOR_NAME";
+         String vector_name = edu.harvard.med.hip.flex.workflow.ProjectWorkflowProtocolInfo.getInstance().getPWPProperties().get(key);
+        
+          edu.harvard.med.hip.flex.core.Container container = new edu.harvard.med.hip.flex.core.Container(26963);
             container.restoreSample();
             containers.add(container);
             edu.harvard.med.hip.flex.workflow.Project project = 
-                    new edu.harvard.med.hip.flex.workflow.Project(1);
+                    new edu.harvard.med.hip.flex.workflow.Project(25);
             edu.harvard.med.hip.flex.workflow.Workflow workflow =
-                    new edu.harvard.med.hip.flex.workflow.Workflow(68);
+                    new edu.harvard.med.hip.flex.workflow.Workflow(67);
             edu.harvard.med.hip.flex.process.Protocol protocol = 
                     new edu.harvard.med.hip.flex.process.Protocol(20);
             edu.harvard.med.hip.flex.process.ContainerMapper mapper = new edu.harvard.med.hip.flex.process.OneToOneNewContainerMapper();
@@ -105,11 +109,7 @@ public class ThreadedExpressionSummaryTablePopulator extends SummaryTablePopulat
            conn.commit();
        
         // containers1.add(24172);
-         String key = "-1"+edu.harvard.med.hip.flex.workflow.ProjectWorkflowProtocolInfo.PWP_SEPARATOR+
-         "68"+edu.harvard.med.hip.flex.workflow.ProjectWorkflowProtocolInfo.PWP_SEPARATOR+
-         "-1"+edu.harvard.med.hip.flex.workflow.ProjectWorkflowProtocolInfo.PWP_SEPARATOR +"VECTOR_NAME";
-         String vector_name = edu.harvard.med.hip.flex.workflow.ProjectWorkflowProtocolInfo.getInstance().getPWPProperties().get(key);
-         ThreadedExpressionSummaryTablePopulator populator = 
+           ThreadedExpressionSummaryTablePopulator populator = 
                            new ThreadedExpressionSummaryTablePopulator(
                            containers1,  vector_name,
                            edu.harvard.med.hip.flex.core.StorageForm.GLYCEROL, 
