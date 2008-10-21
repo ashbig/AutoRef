@@ -51,7 +51,7 @@ function validate_run_report(formElement)
 <hr>
 <html:errors/>  
     
-<form action="ReportRun.do" onSubmit="return validate_run_report(this);"> 
+<form action="ReportRun.do" method='POST' onSubmit="return validate_run_report(this);"> 
 <input name="reportType" type="hidden" value="<%= edu.harvard.med.hip.flex.report.ReportDefinition.REPORT_TYPE.CLONE_RELATIONS %>" >
         
 <table width="100%" border="0" cellspacing="2" cellpadding="2">
