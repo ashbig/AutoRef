@@ -84,7 +84,7 @@ public class CheckoutContinueAction extends UserAction {
         int totalQuantity = m.getTotalQuantity();
         double totalPrice = clonePrice+collectionPrice;
         
-        if(cloneQuantity == 0) {
+        if(cloneQuantity == 0 && collectionQuantity == 0) {
             return (new ActionForward(mapping.getInput()));
         }
         
