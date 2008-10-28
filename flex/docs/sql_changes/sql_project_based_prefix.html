@@ -1,0 +1,35 @@
+insert into SETUP_PROPERTIES(propertyname, protocolid,  workflowid,   propertyvalue,projectid) 
+values ('LABEL_PREFIX',-1,-1 ,'HsxXG',
+(select projectid from project where name='Human'));
+
+insert into SETUP_PROPERTIES(propertyname, protocolid,  workflowid,   propertyvalue,projectid) 
+values ('LABEL_PREFIX',-1,-1 ,'ScxXG',
+(select projectid from project where name='Yeast'));
+
+insert into SETUP_PROPERTIES(propertyname, protocolid,  workflowid,   propertyvalue,projectid) 
+values ('LABEL_PREFIX',-1,-1 ,'ScxXG',
+(select projectid from project where name='Yeast DBD'));
+
+insert into SETUP_PROPERTIES(propertyname, protocolid,  workflowid,   propertyvalue,projectid) 
+values ('LABEL_PREFIX',-1,-1 ,'PaxXG',
+(select projectid from project where name='Pseudomonas'));
+
+insert into SETUP_PROPERTIES(propertyname, protocolid,  workflowid,   propertyvalue,projectid) 
+values ('LABEL_PREFIX',-1,-1 ,'VcxXG',
+(select projectid from project where name='Vibrio cholerae'));
+
+insert into SETUP_PROPERTIES(propertyname, protocolid,  workflowid,   propertyvalue,projectid) 
+values ('LABEL_PREFIX',-1,-1 ,'FtxXG',
+(select projectid from project where name='Francisella tularensis'));
+
+insert into SETUP_PROPERTIES(propertyname, protocolid,  workflowid,   propertyvalue,projectid) 
+values ('LABEL_PREFIX',-1,-1 ,'BaxXG',
+(select projectid from project where name='Bacillus anthracis'));
+
+insert into SETUP_PROPERTIES(propertyname, protocolid,  workflowid,   propertyvalue,projectid) 
+values ('LABEL_PREFIX',-1,-1 ,'YpsXG',
+(select projectid from project where name='Yersinia pestis'));
+
+insert into SETUP_PROPERTIES(propertyname, protocolid,  workflowid,   propertyvalue,projectid) 
+values ('LABEL_PREFIX',-1,-1 ,'HsxXG',
+(select projectid from project where name='ORFeome collaboration - pENTR223'));

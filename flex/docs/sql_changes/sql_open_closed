@@ -1,0 +1,141 @@
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('PROJECT_OPEN_CLOSED', -1,
+(select projectid from project where name='Pseudomonas'), -1, '1' );
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('PROJECT_OPEN_CLOSED', -1,
+(select projectid from project where name='Human Kinase'), -1, '1' );
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('PROJECT_OPEN_CLOSED', -1,
+(select projectid from project where name='Vibrio cholerae'), -1, '1' );
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('PROJECT_OPEN_CLOSED', -1,
+(select projectid from project where name='Kinase Mutagenesis'), -1, '1' );
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('PROJECT_OPEN_CLOSED', -1,
+(select projectid from project where name='Bacillus anthracis'), -1, '1' );
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('PROJECT_OPEN_CLOSED', -1,
+(select projectid from project where name='NIDDK Diabetis'), -1, '1' );
+
+
+
+
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('PROJECT_OPEN', -1,
+(select projectid from project where name='Pseudomonas'), -1, '1' );
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('PROJECT_OPEN', -1,
+(select projectid from project where name='Human Kinase'), -1, '1' );
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('PROJECT_OPEN', -1,
+(select projectid from project where name='Vibrio cholerae'), -1, '1' );
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('PROJECT_OPEN', -1,
+(select projectid from project where name='Kinase Mutagenesis'), -1, '1' );
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('PROJECT_OPEN', -1,
+(select projectid from project where name='Bacillus anthracis'), -1, '1' );
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('PROJECT_OPEN', -1,
+(select projectid from project where name='NIDDK Diabetis'), -1, '1' );
+
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('PROJECT_OPEN_CLOSED', -1,
+(select projectid from project where name='Francisella tularensis'), -1, '1' );
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('PROJECT_OPEN_CLOSED', -1,
+(select projectid from project where name='Yersinia pestis'), -1, '1' );
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('PROJECT_OPEN_CLOSED', -1,
+(select projectid from project where name='Yersinia pseudotuberculosis'), -1, '1' );
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('PROJECT_OPEN_CLOSED', -1,
+(select projectid from project where name='Yeast DBD'), -1, '1' );
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('PROJECT_OPEN_CLOSED', -1,-1,
+(select workflowid from workflow where name='MGC Gateway Workflow - Closed Only'),  '1' );
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('PROJECT_OPEN_CLOSED', -1,
+(select projectid from project where name='Yeast'), -1, '1' );
+
+
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('PROJECT_CLOSED', -1,
+(select projectid from project where name='Yeast'), -1, '1' );
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('PROJECT_CLOSED', -1,
+(select projectid from project where name='Francisella tularensis'), -1, '1' );
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('PROJECT_CLOSED', -1,
+(select projectid from project where name='Yersinia pestis'), -1, '1' );
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('PROJECT_CLOSED', -1,
+(select projectid from project where name='Yersinia pseudotuberculosis'), -1, '1' );
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('PROJECT_CLOSED', -1,
+(select projectid from project where name='Yeast DBD'), -1, '1' );
+
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('PROJECT_CLOSED', -1,-1,
+(select workflowid from workflow where name='MGC Gateway Workflow - Closed Only'),  '1' );
+
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('PROJECT_OPEN_CLOSED', -1,-1,
+(select workflowid from workflow where name='MGC Gateway Infusion Workflow - Fusion Only'),  '1' );
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('PROJECT_OPEN', -1,-1,
+(select workflowid from workflow where name='MGC Gateway Infusion Workflow - Fusion Only'),  '1' );
+
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('PROJECT_OPEN', -1,-1,
+(select workflowid from workflow where name='Convert Close to Fusion - Creator Workflow'),  '1' );
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('PROJECT_CLOSED', -1,-1,
+(select workflowid from workflow where name='Convert Fusion to Close - Creator Workflow'),  '1' );
+
+
+
+insert into SETUPPROPERTYNAME values('ISOLIGOREARRAY' );
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('ISOLIGOREARRAY', -1,-1,
+(select workflowid from workflow where name='Rearray Oligo Plates'),  'YES' );
+
+
+insert into SETUPPROPERTYNAME values('ISSHOWOPTIONSFOROLIGOREARRAY' );
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('ISSHOWOPTIONSFOROLIGOREARRAY', -1,-1,
+(select workflowid from workflow where name='Convert Fusion to Close - Creator Workflow'),  'YES' );
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('ISSHOWOPTIONSFOROLIGOREARRAY', -1,-1,
+(select workflowid from workflow where name='Convert Close to Fusion - Creator Workflow'),  'YES' );
+
+

@@ -1,0 +1,153 @@
+insert into SETUP_PROPERTIES(propertyname, protocolid, projectid, workflowid,   propertyvalue) 
+values ('VECTOR_ID',-1,-1 ,
+(select workflowid from workflow where name='Transfer clones to expression vector pDEST-GST'),
+(select vectorid from vector where vectorname='pDEST-GST'));
+
+insert into SETUP_PROPERTIES(propertyname, protocolid, projectid, workflowid,   propertyvalue) 
+values ('VECTOR_ID',-1,-1 ,
+(select workflowid from workflow where name='Transfer clones to expression vector pCITE-GST'),
+(select vectorid from vector where vectorname='pCITE-GST'));
+
+
+insert into SETUP_PROPERTIES(propertyname, protocolid, projectid, workflowid,   propertyvalue) 
+values ('VECTOR_ID',-1,-1 ,
+(select workflowid from workflow where name='Transfer clones to expression vector pBY011'),
+(select vectorid from vector where vectorname='pBY011'));
+
+
+insert into SETUP_PROPERTIES(propertyname, protocolid, projectid, workflowid,   propertyvalue) 
+values ('VECTOR_ID',-1,-1 ,
+(select workflowid from workflow where name='Transfer clones to expression vector pDEST17'),
+(select vectorid from vector where vectorname='pDEST17'));
+
+insert into SETUP_PROPERTIES(propertyname, protocolid, projectid, workflowid,   propertyvalue) 
+values ('VECTOR_ID',-1,-1 ,
+(select workflowid from workflow where name='Transfer clones to expression vector pJP1520'),
+(select vectorid from vector where vectorname='pJP1520'));
+
+insert into SETUP_PROPERTIES(propertyname, protocolid, projectid, workflowid,   propertyvalue) 
+values ('VECTOR_ID',-1,-1 ,
+(select workflowid from workflow where name='Transfer clones to expression vector pLDNT7_nFLAG'),
+(select vectorid from vector where vectorname='pLDNT7_nFLAG'));
+
+insert into SETUP_PROPERTIES(propertyname, protocolid, projectid, workflowid,   propertyvalue) 
+values ('VECTOR_ID',-1,-1 ,
+(select workflowid from workflow where name='Transfer clones to expression vector pLP-DS 3xFlag'),
+(select vectorid from vector where vectorname='pLP-DS 3xFlag'));
+
+insert into SETUP_PROPERTIES(propertyname, protocolid, projectid, workflowid,   propertyvalue) 
+values ('VECTOR_ID',-1,-1 ,
+(select workflowid from workflow where name='Transfer clones to expression vector pLP-DS 3xMyc'),
+(select vectorid from vector where vectorname='pLP-DS 3xMyc'));
+
+insert into SETUP_PROPERTIES(propertyname, protocolid, projectid, workflowid,   propertyvalue) 
+values ('VECTOR_ID',-1,-1 ,
+(select workflowid from workflow where name='Transfer clones to pLENTI6.2/V5 Dest'),
+(select vectorid from vector where vectorname='pLENTI6.2/V5 Dest'));
+
+
+
+
+insert into SETUP_PROPERTIES(propertyname, protocolid, projectid, workflowid,   propertyvalue) 
+values ('CLONING_STRATEGY_ID',-1,-1 ,
+(select workflowid from workflow where name='Transfer clones to expression vector pDEST-GST'),
+(select vectorid from vector where vectorname='pDEST-GST'));
+
+insert into SETUP_PROPERTIES(propertyname, protocolid, projectid, workflowid,   propertyvalue) 
+values ('CLONING_STRATEGY_ID',-1,-1 ,
+(select workflowid from workflow where name='Transfer clones to expression vector pCITE-GST'),
+(select vectorid from vector where vectorname='pCITE-GST'));
+
+
+insert into SETUP_PROPERTIES(propertyname, protocolid, projectid, workflowid,   propertyvalue) 
+values ('CLONING_STRATEGY_ID',-1,-1 ,
+(select workflowid from workflow where name='Transfer clones to expression vector pBY011'),
+(select vectorid from vector where vectorname='pBY011'));
+
+
+insert into SETUP_PROPERTIES(propertyname, protocolid, projectid, workflowid,   propertyvalue) 
+values ('CLONING_STRATEGY_ID',-1,-1 ,
+(select workflowid from workflow where name='Transfer clones to expression vector pDEST17'),
+(select vectorid from vector where vectorname='pDEST17'));
+
+insert into SETUP_PROPERTIES(propertyname, protocolid, projectid, workflowid,   propertyvalue) 
+values ('CLONING_STRATEGY_ID',-1,-1 ,
+(select workflowid from workflow where name='Transfer clones to expression vector pJP1520'),
+(select vectorid from vector where vectorname='pJP1520'));
+
+insert into SETUP_PROPERTIES(propertyname, protocolid, projectid, workflowid,   propertyvalue) 
+values ('CLONING_STRATEGY_ID',-1,-1 ,
+(select workflowid from workflow where name='Transfer clones to expression vector pLDNT7_nFLAG'),
+(select vectorid from vector where vectorname='pLDNT7_nFLAG'));
+
+insert into SETUP_PROPERTIES(propertyname, protocolid, projectid, workflowid,   propertyvalue) 
+values ('CLONING_STRATEGY_ID',-1,-1 ,
+(select workflowid from workflow where name='Transfer clones to expression vector pLP-DS 3xFlag'),
+(select vectorid from vector where vectorname='pLP-DS 3xFlag'));
+
+insert into SETUP_PROPERTIES(propertyname, protocolid, projectid, workflowid,   propertyvalue) 
+values ('CLONING_STRATEGY_ID',-1,-1 ,
+(select workflowid from workflow where name='Transfer clones to expression vector pLP-DS 3xMyc'),
+(select vectorid from vector where vectorname='pLP-DS 3xMyc'));
+
+insert into SETUP_PROPERTIES(propertyname, protocolid, projectid, workflowid,   propertyvalue) 
+values ('CLONING_STRATEGY_ID',-1,-1 ,
+(select workflowid from workflow where name='Transfer clones to pLENTI6.2/V5 Dest'),
+(select vectorid from vector where vectorname='pLENTI6.2/V5 Dest'));
+
+
+insert into SETUP_PROPERTIES(propertyname, protocolid, projectid, workflowid,   propertyvalue) 
+values ('VECTOR_NAME',-1,-1 ,
+(select workflowid from workflow where name='Transfer clones to expression vector pDEST-GST'),
+(select vectorname from vector where vectorname='pDEST-GST'));
+
+insert into SETUP_PROPERTIES(propertyname, protocolid, projectid, workflowid,   propertyvalue) 
+values ('VECTOR_NAME',-1,-1 ,
+(select workflowid from workflow where name='Transfer clones to expression vector pCITE-GST'),
+(select vectorname from vector where vectorname='pCITE-GST'));
+
+
+insert into SETUP_PROPERTIES(propertyname, protocolid, projectid, workflowid,   propertyvalue) 
+values ('VECTOR_NAME',-1,-1 ,
+(select workflowid from workflow where name='Transfer clones to expression vector pBY011'),
+(select vectorname from vector where vectorname='pBY011'));
+
+
+insert into SETUP_PROPERTIES(propertyname, protocolid, projectid, workflowid,   propertyvalue) 
+values ('VECTOR_NAME',-1,-1 ,
+(select workflowid from workflow where name='Transfer clones to expression vector pDEST17'),
+(select vectorname from vector where vectorname='pDEST17'));
+
+insert into SETUP_PROPERTIES(propertyname, protocolid, projectid, workflowid,   propertyvalue) 
+values ('VECTOR_NAME',-1,-1 ,
+(select workflowid from workflow where name='Transfer clones to expression vector pJP1520'),
+(select vectorname from vector where vectorname='pJP1520'));
+
+insert into SETUP_PROPERTIES(propertyname, protocolid, projectid, workflowid,   propertyvalue) 
+values ('VECTOR_NAME',-1,-1 ,
+(select workflowid from workflow where name='Transfer clones to expression vector pLDNT7_nFLAG'),
+(select vectorname from vector where vectorname='pLDNT7_nFLAG'));
+
+insert into SETUP_PROPERTIES(propertyname, protocolid, projectid, workflowid,   propertyvalue) 
+values ('VECTOR_NAME',-1,-1 ,
+(select workflowid from workflow where name='Transfer clones to expression vector pLP-DS 3xFlag'),
+(select vectorname from vector where vectorname='pLP-DS 3xFlag'));
+
+insert into SETUP_PROPERTIES(propertyname, protocolid, projectid, workflowid,   propertyvalue) 
+values ('VECTOR_NAME',-1,-1 ,
+(select workflowid from workflow where name='Transfer clones to expression vector pLP-DS 3xMyc'),
+(select vectorname from vector where vectorname='pLP-DS 3xMyc'));
+
+insert into SETUP_PROPERTIES(propertyname, protocolid, projectid, workflowid,   propertyvalue) 
+values ('VECTOR_NAME',-1,-1 ,
+(select workflowid from workflow where name='Transfer clones to pLENTI6.2/V5 Dest'),
+(select vectorname from vector where vectorname='pLENTI6.2/V5 Dest'));
+
+
+insert into SETUP_PROPERTIES(propertyname, protocolid, projectid, workflowid,   propertyvalue) 
+values ('VECTOR_NAME',-1,-1 ,
+(select workflowid from workflow where name='Transfer clones to expression vector ZM522'),
+(select vectorname from vector where vectorname='ZM552'));
+
+
+ 

@@ -1,0 +1,20 @@
+#delete plate
+
+
+delete from samplelineage where executionid=30555;
+delete from containercell where containerid=27426;
+delete from sample where containerid=27426;
+delete from processobject where containerid=27426;
+delete from containerheader where containerid=27426;
+
+
+delete from samplelineage where sample_to in
+(select sampleid from sample where containerid = );
+delete from containercell where containerid =);
+
+delete from sample where containerid =;
+delete from processobject where containerid=;
+delete from containerheader where containerid in ( );
+
+
+delete from containerlabelmap  where rootlabel='MtbXG006394.012-1';

@@ -1,100 +1,154 @@
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Standard Cloning Workflow'),(select projectid from project where name='Human'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Standard Cloning Workflow'),(select projectid from project where name='Breast Cancer'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Standard Cloning Workflow'),(select projectid from project where name='Human Transcription Factor'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Standard Cloning Workflow'),(select projectid from project where name='ORFeome collaboration - pENTR223'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Pseudomonas Cloning Workflow'),(select projectid from project where name='Pseudomonas'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Creator Workflow'),(select projectid from project where name='CLONTECH'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Creator Workflow'),(select projectid from project where name='Human Kinase'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Creator Workflow'),(select projectid from project where name='Prostate Cancer'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Creator Workflow'),(select projectid from project where name='NIDDK Diabetis'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Standard Cloning Workflow Using Colony Picker'),(select projectid from project where name='Breast Cancer'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Standard Cloning Workflow Using Colony Picker'),(select projectid from project where name='Human Kinase'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='MGC Gateway Workflow'),(select projectid from project where name='CLONTECH'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='MGC Gateway Workflow'),(select projectid from project where name='Breast Cancer'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='MGC Gateway Workflow'),(select projectid from project where name='Human Kinase'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='MGC Gateway Workflow'),(select projectid from project where name='Aventis'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='MGC Creator Workflow'),(select projectid from project where name='CLONTECH'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='MGC Creator Workflow'),(select projectid from project where name='Breast Cancer'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='MGC Creator Workflow'),(select projectid from project where name='Human Kinase'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='MGC Creator Workflow'),(select projectid from project where name='Prostate Cancer'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='MGC Creator Workflow'),(select projectid from project where name='Human Transcription Factor'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Revised ORF workflow'),(select projectid from project where name='Yeast'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Phase I failed ORFs'),(select projectid from project where name='Yeast'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Convert Fusion to Close - Creator Workflow'),(select projectid from project where name='Breast Cancer'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Convert Close to Fusion - Creator Workflow'),(select projectid from project where name='Breast Cancer'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='DNA Template Creator Workflow'),(select projectid from project where name='NIDDK Diabetis'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='DNA Template Creator Workflow'),(select projectid from project where name='NIDDK Diabetis - Human'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Gateway Workflow'),(select projectid from project where name='Yeast'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Gateway Workflow'),(select projectid from project where name='Yersinia pestis'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Gateway Workflow'),(select projectid from project where name='Francisella tularensis'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Gateway Workflow'),(select projectid from project where name='Vibrio cholerae'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Gateway Workflow'),(select projectid from project where name='Kinase Mutagenesis'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Import clones from external source'),(select projectid from project where name='Human'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Import clones from external source'),(select projectid from project where name='Yeast'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Import clones from external source'),(select projectid from project where name='Breast Cancer'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Import clones from external source'),(select projectid from project where name='Human Kinase'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Import clones from external source'),(select projectid from project where name='Human Transcription Factor'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Import clones from external source'),(select projectid from project where name='NIDDK Diabetis'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Import clones from external source'),(select projectid from project where name='RZPD - Wall'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Import clones from external source'),(select projectid from project where name='Francisella tularensis'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Import clones from external source'),(select projectid from project where name='Vibrio cholerae'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Import clones from external source'),(select projectid from project where name='Kinase Mutagenesis'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Import clones from external source'),(select projectid from project where name='ORFeome collaboration - pENTR223'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='MGC Gateway Workflow - Closed Only'),(select projectid from project where name='Aventis'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='MGC HIP InGa'),(select projectid from project where name='Aventis'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Transfer clones to expression vector pJP1520'),(select projectid from project where name='Human'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Transfer clones to expression vector pJP1520'),(select projectid from project where name='Yeast'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Transfer clones to expression vector pJP1520'),(select projectid from project where name='Pseudomonas'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Transfer clones to expression vector pJP1520'),(select projectid from project where name='Human Transcription Factor'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Transfer clones to expression vector pJP1520'),(select projectid from project where name='Yersinia pestis'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Transfer clones to expression vector pJP1520'),(select projectid from project where name='Francisella tularensis'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Transfer clones to expression vector pJP1520'),(select projectid from project where name='Vibrio cholerae'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Transfer clones to expression vector pJP1520'),(select projectid from project where name='ORFeome collaboration - pENTR223'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Gateway Workflow With E Gel'),(select projectid from project where name='Yeast'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Gateway Workflow With E Gel'),(select projectid from project where name='Vibrio cholerae'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Gateway Workflow With E Gel'),(select projectid from project where name='Bacillus anthracis'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Gateway Workflow With E Gel'),(select projectid from project where name='Yersinia pseudotuberculosis'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Gateway Workflow With E Gel'),(select projectid from project where name='Yeast DBD'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Gateway Workflow With Infusion Reaction'),(select projectid from project where name='Yeast'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Gateway Workflow With Infusion Reaction'),(select projectid from project where name='Francisella tularensis'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Gateway Workflow With Infusion Reaction'),(select projectid from project where name='Vibrio cholerae'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Gateway Workflow With Infusion Reaction'),(select projectid from project where name='Bacillus anthracis'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Gateway Workflow With Infusion Reaction'),(select projectid from project where name='Yersinia pseudotuberculosis'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Transfer clones to expression vector pLP-DS 3xFlag'),(select projectid from project where name='Human'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Transfer clones to expression vector pLP-DS 3xFlag'),(select projectid from project where name='Yeast'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Transfer clones to expression vector pLP-DS 3xFlag'),(select projectid from project where name='Pseudomonas'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Transfer clones to expression vector pLP-DS 3xFlag'),(select projectid from project where name='Human Transcription Factor'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Transfer clones to expression vector pLP-DS 3xFlag'),(select projectid from project where name='Yersinia pestis'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Transfer clones to expression vector pLP-DS 3xFlag'),(select projectid from project where name='Francisella tularensis'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Transfer clones to expression vector pLP-DS 3xFlag'),(select projectid from project where name='Vibrio cholerae'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Transfer clones to expression vector pLP-DS 3xFlag'),(select projectid from project where name='ORFeome collaboration - pENTR223'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Transfer clones to expression vector pLP-DS 3xMyc'),(select projectid from project where name='Human'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Transfer clones to expression vector pLP-DS 3xMyc'),(select projectid from project where name='Yeast'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Transfer clones to expression vector pLP-DS 3xMyc'),(select projectid from project where name='Pseudomonas'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Transfer clones to expression vector pLP-DS 3xMyc'),(select projectid from project where name='Human Transcription Factor'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Transfer clones to expression vector pLP-DS 3xMyc'),(select projectid from project where name='Yersinia pestis'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Transfer clones to expression vector pLP-DS 3xMyc'),(select projectid from project where name='Francisella tularensis'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Transfer clones to expression vector pLP-DS 3xMyc'),(select projectid from project where name='Vibrio cholerae'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Transfer clones to expression vector pLP-DS 3xMyc'),(select projectid from project where name='ORFeome collaboration - pENTR223'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Transfer clones to expression vector pCITE-GST'),(select projectid from project where name='Human'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Transfer clones to expression vector pCITE-GST'),(select projectid from project where name='Pseudomonas'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Transfer clones to expression vector pCITE-GST'),(select projectid from project where name='Human Transcription Factor'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Transfer clones to expression vector pCITE-GST'),(select projectid from project where name='Vibrio cholerae'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Transfer clones to expression vector pCITE-GST'),(select projectid from project where name='Bacillus anthracis'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Transfer clones to expression vector pCITE-GST'),(select projectid from project where name='ORFeome collaboration - pENTR223'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Transfer clones to expression vector pDEST17'),(select projectid from project where name='Francisella tularensis'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Transfer clones to expression vector pBY011'),(select projectid from project where name='Yeast'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Transfer clones to expression vector pBY011'),(select projectid from project where name='Yersinia pseudotuberculosis'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Transfer clones to expression vector pLDNT7_nFLAG'),(select projectid from project where name='Human'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Transfer clones to expression vector pLDNT7_nFLAG'),(select projectid from project where name='Human Transcription Factor'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Transfer clones to expression vector pLDNT7_nFLAG'),(select projectid from project where name='ORFeome collaboration - pENTR223'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Transfer clones to expression vector pDEST-GST'),(select projectid from project where name='Yeast'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Transfer clones to expression vector pDEST-GST'),(select projectid from project where name='Yeast DBD'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Gateway Long Primer Workflow With E Gel'),(select projectid from project where name='Bacillus anthracis'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='MGC Gateway Infusion Workflow - Fusion Only'),(select projectid from project where name='Human Transcription Factor'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Transfer clones to pLENTI6.2/V5 Dest'),(select projectid from project where name='Human'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Transfer clones to pLENTI6.2/V5 Dest'),(select projectid from project where name='Pseudomonas'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Transfer clones to pLENTI6.2/V5 Dest'),(select projectid from project where name='Human Transcription Factor'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Transfer clones to pLENTI6.2/V5 Dest'),(select projectid from project where name='Vibrio cholerae'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Transfer clones to pLENTI6.2/V5 Dest'),(select projectid from project where name='Bacillus anthracis'),	,	);
-insert into SETUPPROPERTY (propertyname, protocolid, projectid, workflowid,   propertyvalue)	values ('CLONING_STRATEGY_ID', (select protocolid from processprotocol where processname='Generate glycerol plates'),	(select workflowid from workflow where name='Transfer clones to pLENTI6.2/V5 Dest'),(select projectid from project where name='ORFeome collaboration - pENTR223'),	,	);
+insert into processprotocol values (-1,'NA','NA','NA');
+update workflow set workflowtype='REARRAY'	 where name='Rearray clones to distribution DNA plates';	
+update workflow set workflowtype='REARRAY'	 where name='Rearray clones to distribution glycerol stocks';	
+update workflow set workflowtype='REARRAY'	 where name='Rearray clones to DNA archive storage plates';	
+update workflow set workflowtype='REARRAY'	 where name='Rearray clones to glycerol archive storage plates';	
+update workflow set workflowtype='REARRAY'	 where name='Rearray clones to sequencing DNA plates';	
+update workflow set workflowtype='REARRAY'	 where name='Rearray clones to sequencing glycerol stocks';	
+update workflow set workflowtype='REARRAY'	 where name='Rearray clones to working DNA plates';	
+update workflow set workflowtype='REARRAY'	 where name='Rearray clones to working glycerol stocks';	
+update workflow set workflowtype='REARRAY'	 where name='Rearray Oligo Plates';	
+update workflow set workflowtype='REARRAY'	 where name='Rearray Production Plates';	
+update workflow set workflowtype='REARRAY'	 where name='Rearray Template Plates';	
+update workflow set workflowtype='REARRAY'	 where name='Rearray working expression clones';	
+update workflow set workflowtype='TRANSFER_TO_EXPRESSION'	 where name='Transfer clones into expression vector';	
+update workflow set workflowtype='TRANSFER_TO_EXPRESSION'	 where name='Transfer clones to expression vector pBY011';	
+update workflow set workflowtype='TRANSFER_TO_EXPRESSION'	 where name='Transfer clones to expression vector pCITE-GST';	
+update workflow set workflowtype='TRANSFER_TO_EXPRESSION'	 where name='Transfer clones to expression vector pDEST17';	
+update workflow set workflowtype='TRANSFER_TO_EXPRESSION'	 where name='Transfer clones to expression vector pDEST-GST';	
+update workflow set workflowtype='TRANSFER_TO_EXPRESSION'	 where name='Transfer clones to expression vector pJP1520';	
+update workflow set workflowtype='TRANSFER_TO_EXPRESSION'	 where name='Transfer clones to expression vector pLDNT7_nFLAG';	
+update workflow set workflowtype='TRANSFER_TO_EXPRESSION'	 where name='Transfer clones to expression vector pLP-DS 3xFlag';	
+update workflow set workflowtype='TRANSFER_TO_EXPRESSION'	 where name='Transfer clones to expression vector pLP-DS 3xMyc';	
+update workflow set workflowtype='TRANSFER_TO_EXPRESSION'	 where name='Transfer clones to pLENTI6.2/V5 Dest';	
+						
+						
+						
+						
+
+						
+						
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('CLONING_STRATEGY_ID', -1,-1, 
+(select workflowid from workflow where name='Creator Workflow'),
+(select strategyid from cloningstrategy where strategyname='CREATOR') );
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('CLONING_STRATEGY_ID', -1,-1, 
+(select workflowid from workflow where name='DNA Template Creator Workflow'),
+(select strategyid from cloningstrategy where strategyname='CREATOR') );
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('CLONING_STRATEGY_ID', -1,-1, 
+(select workflowid from workflow where name='MGC Creator Workflow'),
+(select strategyid from cloningstrategy where strategyname='CREATOR') );
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('CLONING_STRATEGY_ID', -1,-1, 
+(select workflowid from workflow where name='Convert Close to Fusion - Creator Workflow'),
+(select strategyid from cloningstrategy where strategyname='CREATOR') );
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('CLONING_STRATEGY_ID', -1,-1, 
+(select workflowid from workflow where name='Convert Fusion to Close - Creator Workflow'),
+(select strategyid from cloningstrategy where strategyname='CREATOR') );
+
+
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('CLONING_STRATEGY_ID', -1,-1, 
+(select workflowid from workflow where name='Standard Cloning Workflow Using Colony Picker'),
+(select strategyid from cloningstrategy where strategyname='GATEWAY - pDONR221') );
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('CLONING_STRATEGY_ID', -1,-1, 
+(select workflowid from workflow where name='Pseudomonas Cloning Workflow'),
+(select strategyid from cloningstrategy where strategyname='GATEWAY - pDONR221') );
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('CLONING_STRATEGY_ID', -1,-1, 
+(select workflowid from workflow where name='MGC Gateway Workflow'),
+(select strategyid from cloningstrategy where strategyname='GATEWAY - pDONR221') );
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('CLONING_STRATEGY_ID', -1,-1, 
+(select workflowid from workflow where name='Gateway Workflow'),
+(select strategyid from cloningstrategy where strategyname='GATEWAY - pDONR221') );
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('CLONING_STRATEGY_ID', -1,-1, 
+(select workflowid from workflow where name='MGC Gateway Workflow - Closed Only'),
+(select strategyid from cloningstrategy where strategyname='GATEWAY - pDONR221') );
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('CLONING_STRATEGY_ID', -1,-1, 
+(select workflowid from workflow where name='Gateway Workflow With E Gel'),
+(select strategyid from cloningstrategy where strategyname='GATEWAY - pDONR221') );
+
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('CLONING_STRATEGY_ID', -1,-1, 
+(select workflowid from workflow where name='Gateway Long Primer Workflow With E Gel'),
+(select strategyid from cloningstrategy where strategyname='GATEWAY - pDONR221') );
+
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('CLONING_STRATEGY_ID', -1,-1, 
+(select workflowid from workflow where name='Gateway Workflow With Infusion Reaction'),
+(select strategyid from cloningstrategy where strategyname='GATEWAY - pGW_NcoI-Eco109I') );
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('CLONING_STRATEGY_ID', -1,-1, 
+(select workflowid from workflow where name='MGC Gateway Infusion Workflow - Fusion Only'),
+(select strategyid from cloningstrategy where strategyname='GATEWAY - pGW_NcoI-Eco109I') );
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('CLONING_STRATEGY_ID', -1,-1, 
+(select workflowid from workflow where name='Transfer clones to expression vector pJP1520'),
+(select strategyid from cloningstrategy where strategyname='CREATOR EXPRESSION - pJP1520') );
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('CLONING_STRATEGY_ID', -1,-1, 
+(select workflowid from workflow where name='Transfer clones to expression vector pLP-DS 3xFlag'),
+(select strategyid from cloningstrategy where strategyname='CREATOR EXPRESSION - pLP-DS 3xFlag') );
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('CLONING_STRATEGY_ID', -1,-1, 
+(select workflowid from workflow where name='Transfer clones to expression vector pLP-DS 3xMyc'),
+(select strategyid from cloningstrategy where strategyname='CREATOR EXPRESSION - pLP-DS 3xMyc') );
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('CLONING_STRATEGY_ID', -1,-1, 
+(select workflowid from workflow where name='Transfer clones to expression vector pCITE-GST'),
+(select strategyid from cloningstrategy where strategyname='GATEWAY - pCITE-GST') );
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('CLONING_STRATEGY_ID', -1,21, 
+(select workflowid from workflow where name='Transfer clones to expression vector pCITE-GST'),
+(select strategyid from cloningstrategy where strategyname='GATEWAY EXPRESSION - pENTR223 - pCITE-GST') );
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('CLONING_STRATEGY_ID', -1,-1, 
+(select workflowid from workflow where name='Transfer clones to expression vector pDEST17'),
+(select strategyid from cloningstrategy where strategyname='GATEWAY - pDEST17') );
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('CLONING_STRATEGY_ID', -1,-1, 
+(select workflowid from workflow where name='Transfer clones to expression vector pBY011'),
+(select strategyid from cloningstrategy where strategyname='GATEWAY EXPRESSION - pBY011') );
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('CLONING_STRATEGY_ID', -1,-1, 
+(select workflowid from workflow where name='Transfer clones to expression vector pLDNT7_nFLAG'),
+(select strategyid from cloningstrategy where strategyname='CREATOR EXPRESSION - pLDNT7_nFLAG') );
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('CLONING_STRATEGY_ID', -1,-1, 
+(select workflowid from workflow where name='Transfer clones to expression vector pDEST-GST'),
+(select strategyid from cloningstrategy where strategyname='GATEWAY EXPRESSION - pDEST-GST') );
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('CLONING_STRATEGY_ID', -1,-1, 
+(select workflowid from workflow where name='Transfer clones to pLENTI6.2/V5 Dest'),
+(select strategyid from cloningstrategy where strategyname='GATEWAY - pLENTI6.2/V5 Dest') );
