@@ -32,6 +32,8 @@ public class Workflow {
     {
         REGULAR("Regular workflow"),
         REARRAY ("Rearray workflow"),
+        REARRAY_CLONES ("Rearray workflow (clones only)"),
+        REARRAY_SAMPLES ("Rearray workflow (samples only)"),
         TRANSFER_TO_EXPRESSION ("Transfer clones to expression vector");
         
          WORKFLOW_TYPE(String title ){i_title=title; }
@@ -439,11 +441,12 @@ public class Workflow {
     public static Vector getAllWorkflows() throws FlexDatabaseException {
         
         Vector workflows = new Vector();
-        if (ProjectWorkflowProtocolInfo.getInstance().getWorkflows() != null) 
+       /* if (ProjectWorkflowProtocolInfo.getInstance().getWorkflows() != null) 
         {
-            workflows = new Vector(ProjectWorkflowProtocolInfo.getInstance().getWorkflows().values());
-            return workflows;
-        }
+             Collection cn = ProjectWorkflowProtocolInfo.getInstance().getWorkflows().values();
+             workflows = new Vector(cn);
+             return workflows;
+        }*/
         
         String sql = "select * from workflow";
         DatabaseTransaction t = DatabaseTransaction.getInstance();
