@@ -370,7 +370,7 @@ public class CloningStrategy {
                 cl_strategy = (CloningStrategy) iter.next();
                 temp = (cl_strategy.getName() == null) ? "strategy "+ cl_strategy.getClonevector().getName()
                 : cl_strategy.getName();
-                if ( temp.length() > 49) temp = temp.substring(0,49);
+                if ( temp.length() > 149) temp = temp.substring(0,149);
                /*sql_strategy = "insert into cloningstrategy (strategyid, strategyname, linkerid_5p, linkerid_3p, vectorname, type   )"+
         " values(strategyid.nextval,'"+temp
  +"',(select linkerid from linker where linkername='"+cl_strategy.getLinker5p().getName()
