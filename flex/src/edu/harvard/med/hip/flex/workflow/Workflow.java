@@ -441,12 +441,12 @@ public class Workflow {
     public static Vector getAllWorkflows() throws FlexDatabaseException {
         
         Vector workflows = new Vector();
-       /* if (ProjectWorkflowProtocolInfo.getInstance().getWorkflows() != null) 
+        if (ProjectWorkflowProtocolInfo.getInstance().getWorkflows() != null) 
         {
              Collection cn = ProjectWorkflowProtocolInfo.getInstance().getWorkflows().values();
              workflows = new Vector(cn);
              return workflows;
-        }*/
+        }
         
         String sql = "select * from workflow";
         DatabaseTransaction t = DatabaseTransaction.getInstance();
