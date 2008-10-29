@@ -25,7 +25,7 @@ public class DefTableManager extends TableManager {
     /**
      * Return the next ID number.
      */
-    public int getMaxNumber(String table, String column, DatabaseTransaction dt) {
+/**    public int getMaxNumber(String table, String column, DatabaseTransaction dt) {
         String sql = "select max("+column+") from "+table;
         
         ResultSet rs = null;
@@ -43,11 +43,11 @@ public class DefTableManager extends TableManager {
         
         return ++id;
     }
-    
+    */
     /**
      * Return the next ID number.
      */
-    public int getMaxNumber(String table, String column) {
+ /**   public int getMaxNumber(String table, String column) {
         String sql = "select max("+column+") from "+table;
         
         DatabaseTransaction t = null;
@@ -66,7 +66,7 @@ public class DefTableManager extends TableManager {
         }
         
         return ++id;
-    }
+    }*/
     
     public int getNextid(String seqname, DatabaseTransaction t) {
         String sql = "select "+seqname+".nextval from dual";
@@ -244,8 +244,6 @@ public class DefTableManager extends TableManager {
             DefTableManager manager = new DefTableManager();
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             Connection conn = t.requestConnection();
-            int id = manager.getMaxNumber("containerheader", "containerid");
-            System.out.println(id);
             String sp = DefTableManager.getVocabulary("species", "genusspecies", "code", "Pseudomonas aeruginosa");
             System.out.println(sp);
             DatabaseTransaction.closeConnection(conn);

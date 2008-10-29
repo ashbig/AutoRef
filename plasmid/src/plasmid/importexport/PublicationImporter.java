@@ -29,17 +29,13 @@ public class PublicationImporter {
     
     public void importPublication(ImportTable table) throws Exception {
         idmap = new HashMap();
-        DefTableManager m = new DefTableManager();
-        int id = m.getMaxNumber("publication", "publicationid", DatabaseTransaction.getInstance());
-        if(id == -1) {
-            throw new Exception("Cannot get publicationid from publication table.");
-        }
         
         List publications = new ArrayList();
         List columns = table.getColumnNames();
         List contents = table.getColumnInfo();
         for(int n=0; n<contents.size(); n++) {
             Publication p = new Publication();
+            int id = DefTableManager.getNextid("publicationid");
             p.setPublicationid(id);
             List row = (List)contents.get(n);
             boolean isnew = true;
@@ -71,7 +67,6 @@ public class PublicationImporter {
             }
             if(isnew) {
                 publications.add(p);
-                id++;
             }
         }
         

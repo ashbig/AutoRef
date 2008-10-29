@@ -11,7 +11,6 @@ import java.util.*;
 import plasmid.database.DatabaseManager.*;
 import plasmid.coreobject.*;
 import plasmid.util.*;
-import plasmid.process.*;
 
 /**
  *
@@ -111,8 +110,6 @@ public class DataTransfer {
             }
         }
         
-        DefTableManager m = new DefTableManager();
-        int id = m.getMaxNumber("userprofile", "userid");
         for(int i=0; i<users.size(); i++) {
             User user = (User)users.get(i);
             int userid = -1;
@@ -120,8 +117,8 @@ public class DataTransfer {
                 user.setUserid(userid);
                 System.out.println("User exists: "+user.getEmail());
             } else {
+                int id = DefTableManager.getNextid("userid");
                 user.setUserid(id);
-                id++;
                 if(!manager.insertUser(user)) {
                     throw new Exception("Cannot insert user: "+user.getEmail());
                 } else {
@@ -131,9 +128,6 @@ public class DataTransfer {
         }
         
         CloneOrderManager man = new CloneOrderManager(conn);
-        int orderid = m.getMaxNumber("cloneorder", "orderid");
-        if(orderid == -1)
-            throw new Exception("Cannot get orderid.");
         
         for(int i=0; i<orders.size(); i++) {
             CloneOrder order = (CloneOrder)orders.get(i);
@@ -148,6 +142,7 @@ public class DataTransfer {
             System.out.println(useremail);
             System.out.println("user: "+user.getUserid()+","+user.getEmail());
             System.out.println("old orderid: "+order.getOrderid());
+            int orderid = DefTableManager.getNextid("orderid");
             order.setOrderid(orderid);
             if(order.getIsBatch().equals("Y")) {
                 orderid = man.addBatchCloneOrder(order, user);
@@ -158,8 +153,6 @@ public class DataTransfer {
             
             System.out.println("new orderid: "+orderid);
             System.out.println("Add order: "+orderid+" for user: "+user.getUserid()+","+user.getEmail());
-            
-            orderid++;
         }
     }
     

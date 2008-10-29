@@ -30,18 +30,13 @@ public class CloneImporter {
     
     public void importClone(ImportTable table, Map vectoridmap) throws Exception {
         idmap = new HashMap();
-        DefTableManager m = new DefTableManager();
-        int id = m.getMaxNumber("clone", "cloneid", DatabaseTransaction.getInstance());
-        if(id == -1) {
-            throw new Exception("Cannot get cloneid from clone table.");
-        }
-        
         List clones = new ArrayList();
         List synonyms = new ArrayList();
         List columns = table.getColumnNames();
         List contents = table.getColumnInfo();
         for(int n=0; n<contents.size(); n++) {
             Clone c = new Clone();
+            int id = DefTableManager.getNextid("cloneid");
             c.setCloneid(id);
             List row = (List)contents.get(n);
             for(int i=0; i<columns.size(); i++) {
@@ -131,7 +126,6 @@ public class CloneImporter {
             }
             c.setName(sp+tp+fmt.format(id));
             clones.add(c);
-            id++;
         }
         
         if(!manager.insertClones(clones)) {

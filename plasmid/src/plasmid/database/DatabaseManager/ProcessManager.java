@@ -30,12 +30,7 @@ public class ProcessManager extends TableManager {
         if(process == null)
             return true;
         
-        DefTableManager m = new DefTableManager();
-        int executionid = m.getMaxNumber("processexecution", "executionid");
-        if(executionid < 0) {
-            handleError(new Exception(m.getErrorMessage()), "Cannot get max executionid from processexecution table.");
-            return false;
-        }
+        int executionid = DefTableManager.getNextid("executionid");
         
         String sql = "insert into processexecution"+
         " (executionid,executionstatus,executiondate,processname,researchername,protocolname)"+
@@ -43,7 +38,6 @@ public class ProcessManager extends TableManager {
        
         try {
             PreparedStatement stmt = conn.prepareStatement(sql);
-            
             stmt.setInt(1, executionid);
             stmt.setString(2, process.getStatus());
             stmt.setString(3, process.getProcessname());

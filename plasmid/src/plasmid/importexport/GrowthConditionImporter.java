@@ -30,11 +30,6 @@ public class GrowthConditionImporter {
     
     public void importGrowthCondition(ImportTable table) throws Exception {
         idmap = new HashMap();
-        DefTableManager m = new DefTableManager();
-        int id = m.getMaxNumber("growthcondition", "growthid", DatabaseTransaction.getInstance());
-        if(id == -1) {
-            throw new Exception("Cannot get growthid from growthcondition table.");
-        }
         
         List conditions = new ArrayList();
         List synonyms = new ArrayList();
@@ -42,6 +37,7 @@ public class GrowthConditionImporter {
         List contents = table.getColumnInfo();
         for(int n=0; n<contents.size(); n++) {
             GrowthCondition g = new GrowthCondition();
+            int id = DefTableManager.getNextid("growthid");
             g.setGrowthid(id);
             List row = (List)contents.get(n);
             for(int i=0; i<columns.size(); i++) {
@@ -65,7 +61,6 @@ public class GrowthConditionImporter {
                 }
             }
             conditions.add(g);
-            id++;
         }
         
         if(!manager.insertGrowthConditions(conditions)) {

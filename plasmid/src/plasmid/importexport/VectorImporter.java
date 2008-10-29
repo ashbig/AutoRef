@@ -30,11 +30,6 @@ public class VectorImporter {
     
     public void importVector(ImportTable table) throws Exception {
         idmap = new HashMap();
-        DefTableManager m = new DefTableManager();
-        int id = m.getMaxNumber("vector", "vectorid", DatabaseTransaction.getInstance());
-        if(id == -1) {
-            throw new Exception("Cannot get vectorid from vector table.");
-        }
         
         List vectors = new ArrayList();
         List synonyms = new ArrayList();
@@ -42,6 +37,7 @@ public class VectorImporter {
         List contents = table.getColumnInfo();
         for(int n=0; n<contents.size(); n++) {
             CloneVector v = new CloneVector();
+            int id = DefTableManager.getNextid("vectorid");
             v.setVectorid(id);
             
             List row = (List)contents.get(n);
@@ -81,7 +77,6 @@ public class VectorImporter {
                 }
             }
             vectors.add(v);
-            id++;
         }
         
         if(!vm.insertVectors(vectors)) {
@@ -93,17 +88,12 @@ public class VectorImporter {
     }
     
     public void importVectorFeature(ImportTable table) throws Exception {
-        DefTableManager m = new DefTableManager();
-        int id = m.getMaxNumber("vectorfeature", "featureid", DatabaseTransaction.getInstance());
-        if(id == -1) {
-            throw new Exception("Cannot get featureid from vectorfeature table.");
-        }
-        
         List features = new ArrayList();
         List columns = table.getColumnNames();
         List contents = table.getColumnInfo();
         for(int n=0; n<contents.size(); n++) {
             VectorFeature v = new VectorFeature();
+            int id = DefTableManager.getNextid("featureid");
             v.setFeatureid(id);
             List row = (List)contents.get(n);
             for(int i=0; i<columns.size(); i++) {
@@ -131,7 +121,6 @@ public class VectorImporter {
                 }
             }
             features.add(v);
-            id++;
         }
         
         if(!vm.insertVectorFeatures(features)) {

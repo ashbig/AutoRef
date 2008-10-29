@@ -9,7 +9,6 @@ package plasmid.importexport;
 import plasmid.coreobject.*;
 import plasmid.database.*;
 import plasmid.database.DatabaseManager.*;
-import plasmid.util.PlatePositionConvertor;
 import java.util.*;
 import java.sql.*;
 
@@ -33,16 +32,6 @@ public class PlateImporter {
     }
     
     public void importPlateAndSample(ImportTable table, Map cloneidmap, String sampletype, String containertype) throws Exception {
-        DefTableManager m = new DefTableManager();
-        int containerid = m.getMaxNumber("containerheader", "containerid", DatabaseTransaction.getInstance());
-        if(containerid == -1) {
-            throw new Exception("Cannot get containerid from containerheader table.");
-        }
-        int sampleid = m.getMaxNumber("sample", "sampleid", DatabaseTransaction.getInstance());
-        if(sampleid == -1) {
-            throw new Exception("Cannot get sampleid from sample table.");
-        }
-        
         List plates = new ArrayList();
         List columns = table.getColumnNames();
         List contents = table.getColumnInfo();
@@ -59,6 +48,7 @@ public class PlateImporter {
                     currentLabel = columnInfo.trim();
                     if(!currentLabel.equals(lastLabel)) {
                         c = new Container();
+                        int containerid = DefTableManager.getNextid("containerid");
                         c.setContainerid(containerid);
                         c.setType(containertype);
                         c.setCapacity(Container.getCapacity(containertype));
@@ -70,6 +60,7 @@ public class PlateImporter {
                         
                         for(int j=0; j<Container.getCapacity(c.getType()); j++) {
                             Sample s = new Sample();
+                            int sampleid = DefTableManager.getNextid("sampleid");
                             s.setSampleid(sampleid);
                             s.setType(Sample.EMPTY);
                             s.setStatus(Sample.GOOD);
@@ -77,12 +68,10 @@ public class PlateImporter {
                             s.setContainerid(containerid);
                             s.setContainerlabel(c.getLabel());
                             c.addSample(s);
-                            sampleid++;
                         }
                         
                         plates.add(c);
                         lastLabel = currentLabel;
-                        containerid++;
                     }
                 }
                 if("position".equalsIgnoreCase(columnName)) {
@@ -114,12 +103,6 @@ public class PlateImporter {
     }
     
     public void importSample(ImportTable table, Map cloneidmap) throws Exception {
-        DefTableManager m = new DefTableManager();
-        int sampleid = m.getMaxNumber("sample", "sampleid", DatabaseTransaction.getInstance());
-        if(sampleid == -1) {
-            throw new Exception("Cannot get sampleid from sample table.");
-        }
-        
         List columns = table.getColumnNames();
         List contents = table.getColumnInfo();
         List samples = new ArrayList();
@@ -168,7 +151,6 @@ public class PlateImporter {
             s.setType(Sample.WORKING_GLYCEROL);
             s.setCloneid(cloneid);
             samples.add(s);
-            sampleid++;
         }
         
         if(!manager.updateSamples(samples)) {

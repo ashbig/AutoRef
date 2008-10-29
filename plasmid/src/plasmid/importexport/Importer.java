@@ -241,7 +241,7 @@ public class Importer {
                 }
                 if(table.getTableName().trim().equalsIgnoreCase(ImportTable.CLONEINSERT)) {
                     System.out.println("Importing CLONEINSERT.");
-                    iimp.importCloneInsert(table, cimp.getIdmap(), rimp.getIdmap(), rimp.getMaxseqid());
+                    iimp.importCloneInsert(table, cimp.getIdmap(), rimp.getIdmap());
                 }
                 if(table.getTableName().trim().equalsIgnoreCase(ImportTable.CLONEINSERTONLY)) {
                     System.out.println("Importing CLONEINSERTONLY.");
@@ -249,7 +249,7 @@ public class Importer {
                 }
                 if(table.getTableName().trim().equalsIgnoreCase(ImportTable.REFSEQ)) {
                     System.out.println("Importing REFSEQ.");
-                    rimp.importRefseq(table, iimp.getMaxseqid());
+                    rimp.importRefseq(table);
                 }
                 /*
                 if(table.getTableName().trim().equalsIgnoreCase(ImportTable.INSERTREFSEQ)) {

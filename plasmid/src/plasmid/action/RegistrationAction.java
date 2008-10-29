@@ -135,7 +135,7 @@ public class RegistrationAction extends Action {
         }
 
         DefTableManager m = new DefTableManager();
-        int id = m.getMaxNumber("userprofile", "userid", t);
+        int id = m.getNextid("userid", t);
 
         if (id < 0) {
             errors.add(ActionErrors.GLOBAL_ERROR,

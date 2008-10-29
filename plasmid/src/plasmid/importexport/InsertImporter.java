@@ -33,21 +33,8 @@ public class InsertImporter {
     
     public Map getIdmap() {return idmap;}
     
-    public void importCloneInsert(ImportTable table, Map cloneidmap, Map refseqidmap, int maxid) throws Exception {
+    public void importCloneInsert(ImportTable table, Map cloneidmap, Map refseqidmap) throws Exception {
         idmap = new HashMap();
-        DefTableManager m = new DefTableManager();
-        
-        int id = m.getMaxNumber("dnainsert", "insertid", DatabaseTransaction.getInstance());
-        if(id == -1) {
-            throw new Exception("Cannot get insertid from dnainsert table.");
-        }
-        
-        int insertseqid = m.getMaxNumber("dnasequence", "sequenceid", DatabaseTransaction.getInstance());
-        if(insertseqid == -1) {
-            throw new Exception("Cannot get sequenceid from dnasequence table.");
-        }
-        if(maxid > insertseqid)
-            insertseqid = maxid;
         
         List inserts = new ArrayList();
         List dnaseqs = new ArrayList();
@@ -55,8 +42,10 @@ public class InsertImporter {
         List contents = table.getColumnInfo();
         for(int n=0; n<contents.size(); n++) {
             DnaInsert c = new DnaInsert();
+            int id = DefTableManager.getNextid("insertid");
             c.setInsertid(id);
             Dnasequence seq = new Dnasequence();
+            int insertseqid = DefTableManager.getNextid("sequenceid");
             seq.setSequenceid(insertseqid);
             
             List row = (List)contents.get(n);
@@ -149,11 +138,8 @@ public class InsertImporter {
             }
             inserts.add(c);
             dnaseqs.add(seq);
-            id++;
-            insertseqid++;
         }
         
-        maxseqid = insertseqid;
         if(!manager.insertCloneInserts(inserts)) {
             throw new Exception("Error occured while inserting into DNAINSERT table");
         }

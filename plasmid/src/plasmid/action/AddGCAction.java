@@ -102,7 +102,7 @@ public class AddGCAction extends Action {
             try {
                 t = DatabaseTransaction.getInstance();
                 conn = t.requestConnection();
-                id = m.getMaxNumber("growthcondition", "growthid", t);
+                id = m.getNextid("growthid", t);
             } catch (Exception ex) {
                 if (Constants.DEBUG) {
                     System.out.println(ex);

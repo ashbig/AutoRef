@@ -31,17 +31,13 @@ public class AuthorImporter {
     
     public void importAuthor(ImportTable table) throws Exception {
         idmap = new HashMap();
-        DefTableManager m = new DefTableManager();
-        int id = m.getMaxNumber("authorinfo", "authorid", DatabaseTransaction.getInstance());
-        if(id == -1) {
-            throw new Exception("Cannot get authorid from authorinfo table.");
-        }
         
         List authors = new ArrayList();
         List columns = table.getColumnNames();
         List contents = table.getColumnInfo();
         for(int n=0; n<contents.size(); n++) {
             Authorinfo v = new Authorinfo();
+            int id = DefTableManager.getNextid("authorid");
             v.setAuthorid(id); 
             List row = (List)contents.get(n);
             for(int i=0; i<columns.size(); i++) {
@@ -69,7 +65,6 @@ public class AuthorImporter {
                     v.setDescription(columnInfo);                               
             }
             authors.add(v);
-            id++;
         }
         
         if(Constants.DEBUG)

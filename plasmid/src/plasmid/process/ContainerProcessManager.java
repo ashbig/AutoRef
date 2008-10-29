@@ -277,18 +277,9 @@ public class ContainerProcessManager {
         if(containers == null || containers.size() == 0)
             return true;
         
-        DefTableManager m = new DefTableManager();
-        int containerid = m.getMaxNumber("containerheader", "containerid");
-        if(containerid < 0) {
-            if(Constants.DEBUG) {
-                System.out.println("Cannot get containerid from database.");
-                System.out.println(m.getErrorMessage());
-            }
-            return false;
-        }
-        
         for(int i=0; i<containers.size(); i++) {
             Container c = (Container)containers.get(i);
+            int containerid = DefTableManager.getNextid("containerid");
             c.setContainerid(containerid);
             List samples = c.getSamples();
             if(samples != null) {
@@ -297,7 +288,6 @@ public class ContainerProcessManager {
                     s.setContainerid(containerid);
                 }
             }
-            containerid++;
         }
         
         return true;
@@ -307,20 +297,10 @@ public class ContainerProcessManager {
         if(samples == null || samples.size() == 0)
             return true;
         
-        DefTableManager m = new DefTableManager();
-        int sampleid = m.getMaxNumber("sample", "sampleid");
-        if(sampleid < 0) {
-            if(Constants.DEBUG) {
-                System.out.println("Cannot get sampleid from database.");
-                System.out.println(m.getErrorMessage());
-            }
-            return false;
-        }
-        
         for(int i=0; i<samples.size(); i++) {
             Sample c = (Sample)samples.get(i);
+            int sampleid = DefTableManager.getNextid("sampleid");
             c.setSampleid(sampleid);
-            sampleid++;
         }
         
         return true;
