@@ -356,14 +356,14 @@ public class CloningStrategy {
     public static void            insertCloningStrategies(Collection cloning_strategies,Connection conn) 
             throws Exception
     {
-        String sql_strategy = "insert into cloningstrategy (strategyid, strategyname, linkerid_5p, linkerid_3p, vectorname, type   )"+
-        " values(strategyid.nextval,?,(select linkerid from linker where linkername=?),(select linkerid from linker where linkername=?),?,?)";
-  
+      //  String sql_strategy = "insert into cloningstrategy (strategyid, strategyname, linkerid_5p, linkerid_3p, vectorname, type   )"+
+     //   " values(strategyid.nextval,?,(select linkerid from linker where linkername=?),(select linkerid from linker where linkername=?),?,?)";
+  String sql_strategy;
        PreparedStatement stmt_strategy = null;
        CloningStrategy  cl_strategy = null;
        String temp = null;
         try {
-            stmt_strategy = conn.prepareStatement(sql_strategy);
+        //    stmt_strategy = conn.prepareStatement(sql_strategy);
             Iterator iter = cloning_strategies.iterator();
             while(iter.hasNext())
             {
@@ -371,20 +371,20 @@ public class CloningStrategy {
                 temp = (cl_strategy.getName() == null) ? "strategy "+ cl_strategy.getClonevector().getName()
                 : cl_strategy.getName();
                 if ( temp.length() > 149) temp = temp.substring(0,149);
-               /*sql_strategy = "insert into cloningstrategy (strategyid, strategyname, linkerid_5p, linkerid_3p, vectorname, type   )"+
+               sql_strategy = "insert into cloningstrategy (strategyid, strategyname, linkerid_5p, linkerid_3p, vectorname, type   )"+
         " values(strategyid.nextval,'"+temp
  +"',(select linkerid from linker where linkername='"+cl_strategy.getLinker5p().getName()
  +"'),(select linkerid from linker where linkername='"+cl_strategy.getLinker3p().getName()+"'),'"
   + cl_strategy.getClonevector().getName()+ "','"+cl_strategy.getType()+"')";
   DatabaseTransaction.executeUpdate(sql_strategy,conn);
-  /**/
+  /*
                 stmt_strategy.setString(1, temp);
                 stmt_strategy.setString(2, cl_strategy.getLinker5p().getName() );
                 stmt_strategy.setString(3, cl_strategy.getLinker3p().getName() );
                 stmt_strategy.setString(4, cl_strategy.getClonevector().getName() );
                 stmt_strategy.setString(5, cl_strategy.getType());
                 
-                DatabaseTransaction.executeUpdate(stmt_strategy);
+                DatabaseTransaction.executeUpdate(stmt_strategy);*/
              }
            
         } catch (Exception ex) {
