@@ -138,12 +138,20 @@ public class PrimerOrderRunner extends ProcessRunner
               int process_id = Request.createProcessHistory( conn, ProcessDefinition.RUN_OLIGO_ORDER, new ArrayList(),m_user) ;
              createPreparedStatements( process_id, conn);
               ArrayList clone_ids = Algorithms.splitString( m_items);
-            ArrayList  clone_description =     getCloneDescriptions(clone_ids);
-            if ( clone_description == null || clone_description.size() <1 ) return;
+    //changed on andreas request to preserver clones order 
+              ArrayList  clone_descriptions =  new ArrayList();
+              for ( int cc = 0; cc < clone_ids.size(); cc ++)
+              {
+                  clone_descriptions.add(getCloneDescription( (String) clone_ids.get(cc)));
+              }
+             // ArrayList  clone_description =     getCloneDescriptions(clone_ids);
+            if ( clone_descriptions == null || clone_descriptions.size() <1 ) return;
           //  ArrayList sorted_clone_description = sortCloneDescriptions(clone_description);
-             ArrayList sorted_clone_description = clone_description;
-            processClones(sorted_clone_description,m_wells_per_plate,   conn);
-           // if ( m_isTryMode ) DatabaseTransaction.rollback(conn);
+             //ArrayList sorted_clone_description = clone_description;
+           // processClones(sorted_clone_description,m_wells_per_plate,   conn);
+           processClones(clone_descriptions,m_wells_per_plate,   conn);
+          
+            // if ( m_isTryMode ) DatabaseTransaction.rollback(conn);
         }
         catch(Exception e)
         {
@@ -266,7 +274,38 @@ public class PrimerOrderRunner extends ProcessRunner
         }
         
     }
-    
+    private CloneDescription           getCloneDescription(String clone_id)
+    {
+         CloneDescription clone_description = null;
+        String sql = "select flexsequenceid, flexcloneid as cloneid,c.refsequenceid as becrefsequenceid, "
+        +" flexsequencingplateid as flexcontainerid,position "
+        +" from flexinfo f, sequencingconstruct c, isolatetracking i, sample s"
+        +" where f.isolatetrackingid=i.isolatetrackingid and c.constructid=i.constructid and "
+        +" i.sampleid=s.sampleid and flexcloneid  = "+clone_id +"";
+        ResultSet rs = null;
+       try
+        {
+           rs = DatabaseTransaction.getInstance().executeQuery(sql);
+            while(rs.next())
+            {
+                clone_description = new CloneDescription();
+                clone_description.setFlexSequenceId  ( rs.getInt("flexsequenceid") );
+                clone_description.setCloneId (  rs.getInt("cloneid") );
+                clone_description.setBecRefSequenceId ( rs.getInt("becrefsequenceid") );
+                clone_description.setContainerId( rs.getInt("flexcontainerid") );
+                clone_description.setPosition( rs.getInt("position") );
+                clone_description.setIsolateStatus(CLONE_NOT_PROCESSED);
+                
+            }
+           return clone_description;
+        }
+        catch(Exception e)
+        {
+            m_error_messages.add("Cannot extract clone information from database. "+e.getMessage());
+            return null;
+        }
+        
+    }
     private ArrayList           sortCloneDescriptions(ArrayList clone_descriptions)
     {
         
