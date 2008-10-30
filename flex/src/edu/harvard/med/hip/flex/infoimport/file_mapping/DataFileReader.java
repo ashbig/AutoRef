@@ -348,14 +348,18 @@ public class DataFileReader
       ImportContainer row_container = setContainerProperties(records_out);
       String flex_sequence_id = setFlexSequenceProperties( records_out);
        ImportSample   sample= setSampleProperties( records_out );
+       
        sample.setSequenceId(flex_sequence_id);
        row_container.addSample(sample);
        ImportClone row_clone = setCloneProperties(records_out);
        ImportClone temp_clone = (ImportClone)m_clones.get( row_clone.getUserId());
-       if ( i_is_CreateCloneObjectPerSample && 
-               row_clone!= null    ) 
+       if ( i_is_CreateCloneObjectPerSample && row_clone!= null    ) 
        {    sample.setClone( row_clone) ;}
-     
+       //get publication info
+       ImportPublication publication =  setPublicationProperties(records_out);
+       if ( publication != null && row_clone != null)row_clone.addPublication(publication);
+     //get author info
+         
   }
   
   private  String              setAdditionalInfo( ColumnValue[] records_of_row, 
@@ -1087,7 +1091,11 @@ public class DataFileReader
           }
  
        }
-       m_publications.put(key, row_publication);
+      // for processing one file where clone can have null publication
+      if ( row_publication.getPubMedID()== null || row_publication.getTitle()== null)
+          row_publication=null;
+      if ( key != null && row_publication != null)
+      {m_publications.put(key, row_publication);}
        return row_publication;
      }
     
