@@ -193,24 +193,28 @@ public class CloningStrategy {
      public static int findStrategyByVectorAndLinker(String vectorname, String linkerid5p_name,
              String linkerid3p_name) throws FlexDatabaseException 
      {
-        String sql = "Select * from cloningstrategy"+
-        " where linkerid_5p=(select linkerid from linker where linkername = ?)"+
+        String sql;
+                /*= "Select * from cloningstrategy"+
+      /  " where linkerid_5p=(select linkerid from linker where linkername = ?)"+
         " and linkerid_3p=(select linkerid from linker where linkername = ?)"+
-        " and vectorname=?";
+        " and vectorname=?";*/
+        sql= "Select * from cloningstrategy"+
+        " where linkerid_5p=(select linkerid from linker where linkername = '"+linkerid5p_name+"')"+
+        " and linkerid_3p=(select linkerid from linker where linkername = '"+linkerid3p_name+"')"+
+        " and vectorname='"+vectorname+"'";
         DatabaseTransaction t = null;
-        Connection c = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
         int result = -1;
         try 
         {
             t = DatabaseTransaction.getInstance();
-            c = t.requestConnection();
-            stmt = c.prepareStatement(sql);
-            stmt.setString(1, linkerid5p_name);
+            rs = t.executeQuery(sql);
+        /*      stmt = c.prepareStatement(sql);
+          stmt.setString(1, linkerid5p_name);
             stmt.setString(2, linkerid3p_name);
             stmt.setString(3, vectorname);
-            rs = t.executeQuery(stmt);
+            rs = t.executeQuery(stmt);*/
             if(rs.next())
             {
                 result =  rs.getInt("STRATEGYID");
@@ -224,9 +228,9 @@ public class CloningStrategy {
             System.out.println(ex);
             throw new FlexDatabaseException(ex);
         } finally {
-            DatabaseTransaction.closeResultSet(rs);
-            DatabaseTransaction.closeStatement(stmt);
-            DatabaseTransaction.closeConnection(c);
+            if ( rs != null) DatabaseTransaction.closeResultSet(rs);
+            if ( stmt != null) DatabaseTransaction.closeStatement(stmt);
+            //DatabaseTransaction.closeConnection(c);
         }
     
     }
@@ -272,14 +276,14 @@ public class CloningStrategy {
             {
                 if ( isLinkerSequence )
                 {
-                    lsequence_5p=rs.getString("linker_5p_sequence");
-                    lsequence_3p=rs.getString("linker_3p_sequence");
+                    lsequence_5p=rs.getString("linker_5p_sequence").trim();
+                    lsequence_3p=rs.getString("linker_3p_sequence").trim();
                 }
                 CloningStrategy c = new CloningStrategy(rs.getInt("strategyid"), 
                         rs.getString("strategyname"),
-                        new CloneVector(rs.getString("vectorname")), 
-                        new CloneLinker(rs.getInt("linkerid_5p"), rs.getString("linker_5p_name"),lsequence_5p),
-                        new CloneLinker(rs.getInt("linkerid_3p"), rs.getString("linker_3p_name"),lsequence_3p),
+                        new CloneVector(rs.getString("vectorname").trim()), 
+                        new CloneLinker(rs.getInt("linkerid_5p"), rs.getString("linker_5p_name").trim(),lsequence_5p),
+                        new CloneLinker(rs.getInt("linkerid_3p"), rs.getString("linker_3p_name").trim(),lsequence_3p),
                         rs.getString("type"));
                 if ( isVectorDetails)
                 {
