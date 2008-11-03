@@ -285,6 +285,19 @@ public class DataFileReader
           for (int count = 0; count < column_numbers.length; count++)
           {
               value += row_content[column_numbers[count]];
+              if ( object_property_value_description.getFileColumnDescription().getValueLength() > 0 &&
+                      object_property_value_description.getColumnsPerProperty().length==1)
+              {
+                  int length = object_property_value_description.getFileColumnDescription().getValueLength();
+             if (value.length() > 200)
+             {
+                 System.out.println(length);
+             
+             }
+                  
+                  length = (length <= value.length())? length : value.length()+1;
+                  value = value.substring(0, length-1);
+              }
           }
           // translate if needed
           if (object_property_value_description.getFileColumnDescription().getPropertyTranslation() != null &&

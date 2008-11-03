@@ -34,6 +34,7 @@ public class FileMapParser extends DefaultHandler
      private static final String FILE_COLUMN_ELEMENT = "file_column";
      private static final String FILE_COLUMN_HEADER = "header";
      private static final String FILE_COLUMN_OBJECT = "object";
+     private static final String DBCOLUMN_LENGTH="dbcolumn_length";
      private static final String FILE_COLUMN_OBJECT_PROPERTY_NAME = "property_name";
       private static final String FILE_COLUMN_OBJECT_PROPERTY_TYPE = "object_property_type";
      private static final String FILE_COLUMN_OBJECT_INSTRUCTION = "property_instruction";
@@ -81,6 +82,7 @@ public class FileMapParser extends DefaultHandler
            {
                throw new SAXException("Wrong tag: "+localName);
            }
+           System.out.println(localName);
             if (localName==FILE_MAP_START )
             {
                 i_file_structure = new FileStructure();
@@ -131,7 +133,19 @@ public class FileMapParser extends DefaultHandler
                         else if (local_name== FILE_COLUMN_OBJECT_PROPERTY_ORDER   ) i_current_column.setObjectPropertyOrder(Integer.parseInt(local_value));
                         else if (local_name == FILE_COLUMN_IS_KEY && local_value.equalsIgnoreCase("1"))i_current_column.setIsKey(true);
                         else if (local_name == FILE_COLUMN_IS_PUBINFO_SUBMIT && local_value.equalsIgnoreCase("0"))i_current_column.setIsSubmit(false);
-                      }
+                        else if (local_name == DBCOLUMN_LENGTH)
+                        {
+                            try
+                            {
+                                int length = Integer.parseInt(local_value);
+                                i_current_column.setValueLength(length);
+                            }
+                            catch(Exception e)
+                            {
+                                throw new SAXException("Wrong database column length value: "+localName);
+                            }
+                        }
+                    }
                  }
                   else
                    throw new SAXException("File collumn attribute(s) are missing for the column "+localName);
@@ -211,6 +225,7 @@ public class FileMapParser extends DefaultHandler
 
                     localName==   FILE_COLUMN_ELEMENT     ||
                     localName==   FILE_COLUMN_HEADER     ||
+                    localName==  DBCOLUMN_LENGTH ||
                     localName==   FILE_COLUMN_OBJECT     ||
                     localName==   FILE_COLUMN_OBJECT_PROPERTY_NAME     ||
                     localName==   FILE_COLUMN_OBJECT_PROPERTY_TYPE     ||
@@ -245,11 +260,10 @@ public class FileMapParser extends DefaultHandler
           parser.setContentHandler(SAXHandler);
         parser.setErrorHandler(SAXHandler);
          String fn = "C:\\tmp\\ORF_submission_map.xml";
-    fn= "Z:\\HTaycher\\HIP projects\\PSI\\submission\\submitted_plates\\NYSGXRC\\map\\NYSGXRC_old_PSIMapMFilesInfoFile.xml";
-     
+    fn= "Z:\\HTaycher\\HIP projects\\OtherProjects\\yamada_xml_map.xml";
         File f = new File(fn);
          f.exists();
- System.out.println(" file "+f.exists());   
+ //System.out.println(" file "+f.exists());   
           InputSource in = new InputSource(new FileInputStream(fn));
           String featureURI = "http://xml.org/sax/features/string-interning";
            parser.setFeature(featureURI, true);
