@@ -185,8 +185,8 @@ function validate_run_report(formElement)
   <tr>
     <td><input type="checkbox" name="selectedColumns"  value="<%= edu.harvard.med.hip.flex.report.ReportConstants.REPORT_COLUMN.CDS_TEXT%>"  >
       <%= edu.harvard.med.hip.flex.report.ReportConstants.REPORT_COLUMN.CDS_TEXT.getColumnDisplayTitle() %></td> 
-    <td><input type="checkbox" name="selectedColumns"  value="<%=edu.harvard.med.hip.flex.report.ReportConstants.REPORT_COLUMN.CLONE_S_CDS_STOP%>"  >  
-       <%= edu.harvard.med.hip.flex.report.ReportConstants.REPORT_COLUMN.CLONE_S_CDS_STOP.getColumnDisplayTitle() %></td>
+    <td><input type="checkbox" name="selectedColumns"  value="<%=edu.harvard.med.hip.flex.report.ReportConstants.REPORT_COLUMN.CLONE_S_CDS_START%>"  >  
+       <%= edu.harvard.med.hip.flex.report.ReportConstants.REPORT_COLUMN.CLONE_S_CDS_START.getColumnDisplayTitle() %></td>
   </tr>
   <tr>
     <td><input type="checkbox" name="selectedColumns"  value="<%= edu.harvard.med.hip.flex.report.ReportConstants.REPORT_COLUMN.SPECIES%>"  >
