@@ -56,6 +56,7 @@ public class ContainerViewBean {
     private double dnacut;
     
     private int blocknum;
+    private boolean islikequery;
     
     /** Creates a new instance of ContainerViewBean */
     public ContainerViewBean() {
@@ -68,6 +69,7 @@ public class ContainerViewBean {
         setReagent(null);
         setDisplayDetail(false);
         setDisplayBlock(false);
+        setIslikequery(false);
         //setCulturecut(SampleTO.getCULTURE_THREASHOLD());
         //setDnacut(SampleTO.getDNA_THREASHOLD());
     }
@@ -99,7 +101,16 @@ public class ContainerViewBean {
     public String findContainers() {
         try {
             List containerLabels = StringConvertor.convertFromStringToList(getLabels(), "\n");
-            containers = ContainerDAO.checkContainers(containerLabels, false);
+            if(islikequery) {
+                String label = null;
+                if(containerLabels==null || containerLabels.size()==0)
+                    label = "";
+                else
+                    label = (String)containerLabels.get(0);
+                ContainerDAO dao = new ContainerDAO();
+                containers = dao.getLikeContainers(label, null, false, false, false);
+            } else
+                containers = ContainerDAO.checkContainers(containerLabels, false);
         } catch (Exception ex) {
             System.out.println(ex);
         }
@@ -523,5 +534,13 @@ public class ContainerViewBean {
 
     public void setContainerid(int containerid) {
         this.containerid = containerid;
+    }
+
+    public boolean isIslikequery() {
+        return islikequery;
+    }
+
+    public void setIslikequery(boolean islikequery) {
+        this.islikequery = islikequery;
     }
 }

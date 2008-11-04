@@ -25,12 +25,19 @@
             
             <h:form id="searchContainersForm">
                 <h:panelGrid columns="1"> 
-                    
                     <h:outputLabel styleClass="prompt" value="#{msgs.enterContainerLabelsPrompt}:" for="containerLabels"/>
-                    <h:inputTextarea cols="50" rows="10" styleClass="text" id="containerLabels" value="#{ContainerViewBean.labels}" required="true"/>
+                    <h:inputTextarea cols="50" rows="10" styleClass="text" id="containerLabels" value="#{ContainerViewBean.labels}" required="false"/>
                     <h:message styleClass="errors" for="containerLabels" />
-                    
                 </h:panelGrid>
+
+                <h:panelGrid columns="2"> 
+                    <h:selectBooleanCheckbox styleClass="text" id="islikequeryid" value="#{ContainerViewBean.islikequery}" required="false"/>
+                    <h:outputLabel styleClass="prompt" value="Check here to find more containers with similar labels (please enter one label only)"/>
+                </h:panelGrid>
+                
+                <h:panelGrid columns="1"> 
+                <h:outputText styleClass="text" value="To find all the containers, don't enter any label, and check the above checkbox"/>
+                </h:panelGrid>       
                 
                 <h:commandButton value="#{msgs.submitButton}" action="#{ContainerViewBean.findContainers}"/>    
             </h:form> 

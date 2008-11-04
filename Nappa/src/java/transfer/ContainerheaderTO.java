@@ -49,6 +49,7 @@ public class ContainerheaderTO extends ProcessobjectTO implements Serializable {
     private ContainertypeTO containertype;
     private Collection<ContainerpropertyTO> properties;
     private Collection<SlideTO> slides;
+    private int slideid;
     
     /** Creates a new instance of ContainerheaderTO */
     public ContainerheaderTO() {
@@ -323,5 +324,13 @@ public class ContainerheaderTO extends ProcessobjectTO implements Serializable {
 
     public void setNumofspots(int numofspots) {
         this.numofspots = numofspots;
+    }
+
+    public int getSlideid() {
+        return slideid;
+    }
+
+    public void setSlideid(int slideid) {
+        this.slideid = slideid;
     }
 }

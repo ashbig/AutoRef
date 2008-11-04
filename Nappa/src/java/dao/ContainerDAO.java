@@ -338,7 +338,7 @@ public class ContainerDAO {
         }
         return slide;
     }
-    
+
     public static ContainerheaderTO getContainer(int containerid, boolean isSample, boolean isReagent, boolean isClone, boolean isType) throws DaoException {
         return getContainer(containerid, isSample, isReagent, isClone, isType, false);
     }
@@ -352,12 +352,12 @@ public class ContainerDAO {
         String sql6 = "select blocknum,blockrow,blockcol,blockposx,blockposy,blockwellx,blockwelly from slidecell where containerid=? and pos=?";
         String sql7 = "select description, numofrow, numofcol from containertype where type=?";
         String sql8 = "select type,value from sampleproperty where sampleid=?";
-        String sql9 = "select h.barcode, c.pos, c.posx, c.posy, c.sampleid"+
-                " from containercell c, containerheader h"+
-                " where  h.containerid=c.containerid and c.sampleid in"+
-                " (select sampleid_from from samplelineage"+
+        String sql9 = "select h.barcode, c.pos, c.posx, c.posy, c.sampleid" +
+                " from containercell c, containerheader h" +
+                " where  h.containerid=c.containerid and c.sampleid in" +
+                " (select sampleid_from from samplelineage" +
                 " where sampleid_to=?)";
-        
+
         DatabaseTransaction t = null;
         Connection conn = null;
         ResultSet rs = null;
@@ -399,10 +399,10 @@ public class ContainerDAO {
             if (isType) {
                 stmt7 = conn.prepareStatement(sql7);
             }
-            if(isLineage) {
+            if (isLineage) {
                 stmt9 = conn.prepareStatement(sql9);
             }
-            
+
             stmt.setInt(1, containerid);
             rs = t.executeQuery(stmt);
             if (rs.next()) {
@@ -613,12 +613,12 @@ public class ContainerDAO {
         String sql4 = "select reagentid, name, type, description from reagent where reagentid in (select reagentid from samplereagent where sampleid=?)";
         String sql5 = "select vectorname, growthname, srccloneid, source, genbank, gi, geneid, symbol from clone where cloneid=?";
         String sql6 = "select type,value from sampleproperty where sampleid=?";
-        String sql7 = "select h.barcode, c.pos, c.posx, c.posy, c.sampleid"+
-                " from containercell c, containerheader h"+
-                " where  h.containerid=c.containerid and c.sampleid in"+
-                " (select sampleid_from from samplelineage"+
+        String sql7 = "select h.barcode, c.pos, c.posx, c.posy, c.sampleid" +
+                " from containercell c, containerheader h" +
+                " where  h.containerid=c.containerid and c.sampleid in" +
+                " (select sampleid_from from samplelineage" +
                 " where sampleid_to=?)";
-        
+
         DatabaseTransaction t = null;
         Connection conn = null;
         ResultSet rs = null;
@@ -651,7 +651,7 @@ public class ContainerDAO {
             if (isClone) {
                 stmt5 = conn.prepareStatement(sql5);
             }
-            if(isLineage) {
+            if (isLineage) {
                 stmt7 = conn.prepareStatement(sql7);
             }
 
@@ -690,36 +690,36 @@ public class ContainerDAO {
                         String sstatus = rs3.getString(8);
                         SampleTO sample = new SampleTO(sampleid, name, description, volume, quantity, unit, stype, form, sstatus, containerid, position);
                         sample.setCell(cell);
-                        
-                        if(isLineage) {
+
+                        if (isLineage) {
                             stmt7.setInt(1, sampleid);
                             rs7 = t.executeQuery(stmt7);
-                            if(rs7.next()) {
+                            if (rs7.next()) {
                                 String plate384 = rs7.getString(1);
                                 int pos384 = rs7.getInt(2);
                                 String posx384 = rs7.getString(3);
                                 String posy384 = rs7.getString(4);
                                 int sample384 = rs7.getInt(5);
-                                ContainercellTO pre = new ContainercellTO(pos384,posx384,posy384,null);
+                                ContainercellTO pre = new ContainercellTO(pos384, posx384, posy384, null);
                                 pre.setContainerlabel(plate384);
                                 DatabaseTransaction.closeResultSet(rs7);
-                                
+
                                 stmt7.setInt(1, sample384);
                                 rs7 = t.executeQuery(stmt7);
-                                if(rs7.next()) {
+                                if (rs7.next()) {
                                     String plate96 = rs7.getString(1);
                                     int pos96 = rs7.getInt(2);
                                     String posx96 = rs7.getString(3);
                                     String posy96 = rs7.getString(4);
                                     int sample96 = rs7.getInt(5);
-                                    pre = new ContainercellTO(pos96,posx96,posy96,null);
+                                    pre = new ContainercellTO(pos96, posx96, posy96, null);
                                     pre.setContainerlabel(plate96);
                                     DatabaseTransaction.closeResultSet(rs7);
                                 }
                                 sample.setPrecell(pre);
-                            } 
+                            }
                         }
-                        
+
                         if (isReagent) {
                             stmt4.setInt(1, sampleid);
                             rs4 = t.executeQuery(stmt4);
@@ -1160,19 +1160,19 @@ public class ContainerDAO {
     }
 
     public static void setSlidefeatures(ContainerheaderTO c) throws DaoException {
-        String sql = "select count(*), max(blockrow), max(blockcol), max(blockwellx), max(blockwelly) from slidecell where containerid="+c.getContainerid();
+        String sql = "select count(*), max(blockrow), max(blockcol), max(blockwellx), max(blockwelly) from slidecell where containerid=" + c.getContainerid();
         DatabaseTransaction t = null;
         ResultSet rs = null;
         try {
             t = DatabaseTransaction.getInstance();
             rs = t.executeQuery(sql);
-            if(rs.next()) {
+            if (rs.next()) {
                 int num = rs.getInt(1);
                 int blockrow = rs.getInt(2);
                 int blockcol = rs.getInt(3);
                 int rowinblock = rs.getInt(4);
                 int colinblock = rs.getInt(5);
-                
+
                 c.setNumofspots(num);
                 c.setNumofrow(blockrow);
                 c.setNumofcol(blockcol);
@@ -1185,7 +1185,7 @@ public class ContainerDAO {
             DatabaseTransaction.closeResultSet(rs);
         }
     }
-    
+
     public void addSampleReagents(List<SampleTO> samples) throws DaoException {
         String sql = "insert into samplereagent (sampleid,reagentid) values(?,?)";
         PreparedStatement stmt = null;
@@ -1201,7 +1201,7 @@ public class ContainerDAO {
                 }
             }
         } catch (Exception ex) {
-            throw new DaoException("Error occured while adding reagents to the database.\n"+ex.getMessage());
+            throw new DaoException("Error occured while adding reagents to the database.\n" + ex.getMessage());
         } finally {
             DatabaseTransaction.closeStatement(stmt);
         }
@@ -1212,50 +1212,246 @@ public class ContainerDAO {
         PreparedStatement stmt = null;
         try {
             stmt = conn.prepareStatement(sql);
-            for (ReagentTO r:reagents) {
+            for (ReagentTO r : reagents) {
                 stmt.setInt(1, r.getSample().getSampleid());
-                    stmt.setInt(2, r.getReagentid());
-                    DatabaseTransaction.executeUpdate(stmt);
+                stmt.setInt(2, r.getReagentid());
+                DatabaseTransaction.executeUpdate(stmt);
             }
         } catch (Exception ex) {
-            throw new DaoException("Error occured while adding reagents to the database.\n"+ex.getMessage());
+            throw new DaoException("Error occured while adding reagents to the database.\n" + ex.getMessage());
         } finally {
             DatabaseTransaction.closeStatement(stmt);
         }
     }
-    
+
     public void updateCelltype(List<ContainercellTO> cells, String type) throws DaoException {
         String sql = "update containercell set type=? where containerid=? and pos=?";
         PreparedStatement stmt = null;
         try {
             stmt = conn.prepareStatement(sql);
-            for(ContainercellTO cell:cells) {
+            for (ContainercellTO cell : cells) {
                 stmt.setString(1, type);
                 stmt.setInt(2, cell.getContainerid());
                 stmt.setInt(3, cell.getPos());
                 DatabaseTransaction.executeUpdate(stmt);
             }
         } catch (Exception ex) {
-            throw new DaoException("Error occured while updating container cell type.\n"+ex.getMessage());
+            throw new DaoException("Error occured while updating container cell type.\n" + ex.getMessage());
         } finally {
             DatabaseTransaction.closeStatement(stmt);
         }
     }
-    
+
     public void updateSampletype(List<SampleTO> samples, String type) throws DaoException {
         String sql = "update sample set type=? where sampleid=?";
         PreparedStatement stmt = null;
         try {
             stmt = conn.prepareStatement(sql);
-            for(SampleTO s:samples) {
+            for (SampleTO s : samples) {
                 stmt.setString(1, type);
                 stmt.setInt(2, s.getSampleid());
                 DatabaseTransaction.executeUpdate(stmt);
             }
         } catch (Exception ex) {
-            throw new DaoException("Error occured while updating sample type.\n"+ex.getMessage());
+            throw new DaoException("Error occured while updating sample type.\n" + ex.getMessage());
         } finally {
             DatabaseTransaction.closeStatement(stmt);
         }
+    }
+
+    public Collection<ContainerheaderTO> getLikeContainers(String label, String containerStatus, boolean isSample, boolean isContainerType, boolean isReagent) throws DaoException {
+        String sql = "select containerid,barcode,type,format,status,location,labware,threadid,category from containerheader where upper(barcode) like '%" + label.toUpperCase() + "%'";
+        String sql2 = "select pos,posx,posy,type from containercell where containerid=? and sampleid=?";
+        String sql3 = "select sampleid,name,description,volume,quantity,unit,type,form,status,pos from sample where containerid=?";
+        String sql4 = "select description, numofrow, numofcol from containertype where type=?";
+        String sql5 = "select reagentid from samplereagent where sampleid=?";
+        String sql6 = "select s.slideid,s.barcode,c.type,c.format,c.status,c.location,c.labware,c.threadid,c.category,c.containerid from containerheader c, slide s where c.containerid=s.containerid and upper(s.barcode) like '%" + label.toUpperCase() + "%'";
+        String sql7 = "select type,value from sampleproperty where sampleid=?";
+
+        if (containerStatus != null) {
+            sql += " and status='" + containerStatus + "'";
+        }
+
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        ResultSet rs = null;
+        ResultSet rs2 = null;
+        ResultSet rs3 = null;
+        ResultSet rs4 = null;
+        ResultSet rs5 = null;
+        ResultSet rs6 = null;
+        ResultSet rs7 = null;
+        PreparedStatement stmt2 = null;
+        PreparedStatement stmt3 = null;
+        PreparedStatement stmt4 = null;
+        PreparedStatement stmt5 = null;
+        PreparedStatement stmt7 = null;
+
+        Collection<ContainerheaderTO> containers = new ArrayList<ContainerheaderTO>();
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            if (isSample) {
+                stmt2 = conn.prepareStatement(sql2);
+                stmt3 = conn.prepareStatement(sql3);
+                stmt7 = conn.prepareStatement(sql7);
+            }
+            if (isContainerType) {
+                stmt4 = conn.prepareStatement(sql4);
+            }
+            if (isReagent) {
+                stmt5 = conn.prepareStatement(sql5);
+            }
+
+            rs = t.executeQuery(sql);
+            while (rs.next()) {
+                int containerid = rs.getInt(1);
+                String barcode = rs.getString(2);
+                String type = rs.getString(3);
+                String format = rs.getString(4);
+                String status = rs.getString(5);
+                String location = rs.getString(6);
+                String labware = rs.getString(7);
+                int threadid = rs.getInt(8);
+                String category = rs.getString(9);
+
+                boolean isContainer = false;
+                if (!ContainertypeTO.TYPE_SLIDE.equals(type)) {
+                    isContainer = true;
+                } else if (ContainerheaderTO.getSTATUS_EMPTY().equals(status)) {
+                    isContainer = true;
+                }
+                if (isContainer) {
+                    ContainerheaderTO container = new ContainerheaderTO(containerid, barcode, new ContainertypeTO(type), format, status, location, labware, threadid, category);
+                    containers.add(container);
+                }
+            }
+
+            rs6 = t.executeQuery(sql6);
+            while (rs6.next()) {
+                int slideid = rs6.getInt(1);
+                String barcode = rs6.getString(2);
+                String type = rs6.getString(3);
+                String format = rs6.getString(4);
+                String status = rs6.getString(5);
+                String location = rs6.getString(6);
+                String labware = rs6.getString(7);
+                int threadid = rs6.getInt(8);
+                String category = rs6.getString(9);
+                int containerid = rs6.getInt(10);
+                ContainerheaderTO container = new ContainerheaderTO(containerid, barcode, new ContainertypeTO(type), format, status, location, labware, threadid, category);
+                container.setSlideid(slideid);
+                containers.add(container);
+            }
+
+            for (ContainerheaderTO container : containers) {
+                int containerid = container.getContainerid();
+                if (isSample) {
+                    stmt3.setInt(1, containerid);
+                    rs3 = t.executeQuery(stmt3);
+                    while (rs3.next()) {
+                        int sampleid = rs3.getInt(1);
+                        String name = rs3.getString(2);
+                        String description = rs3.getString(3);
+                        int volume = rs3.getInt(4);
+                        int quantity = rs3.getInt(5);
+                        String unit = rs3.getString(6);
+                        String stype = rs3.getString(7);
+                        String form = rs3.getString(8);
+                        String sstatus = rs3.getString(9);
+                        int pos = rs3.getInt(10);
+                        SampleTO sample = new SampleTO(sampleid, name, description, volume, quantity, unit, stype, form, sstatus, containerid, pos);
+
+                        stmt2.setInt(1, containerid);
+                        stmt2.setInt(2, sampleid);
+                        rs2 = t.executeQuery(stmt2);
+                        if (rs2.next()) {
+                            int position = rs2.getInt(1);
+                            String posx = rs2.getString(2);
+                            String posy = rs2.getString(3);
+                            String celltype = rs2.getString(4);
+                            ContainercellTO cell = new ContainercellTO(position, posx, posy, celltype, containerid, sampleid);
+                            sample.setCell(cell);
+                        }
+
+                        stmt7.setInt(1, sampleid);
+                        rs7 = DatabaseTransaction.executeQuery(stmt7);
+                        while (rs7.next()) {
+                            String ptype = rs7.getString(1);
+                            String pvalue = rs7.getString(2);
+                            SamplepropertyTO property = new SamplepropertyTO(sampleid, ptype, pvalue);
+                            sample.addProperty(property);
+                        }
+
+                        if (isReagent) {
+                            stmt5.setInt(1, sampleid);
+                            rs5 = DatabaseTransaction.executeQuery(stmt5);
+                            while (rs5.next()) {
+                                int reagentid = rs5.getInt(1);
+                                ReagentTO reagent = new ReagentTO(reagentid);
+                                sample.addReagent(reagent);
+                            }
+                        }
+                        container.addSample(sample);
+                    }
+                }
+                if (isContainerType) {
+                    String type = container.getType();
+                    stmt4.setString(1, type);
+                    rs4 = t.executeQuery(stmt4);
+                    if (rs4.next()) {
+                        String desc = rs4.getString(1);
+                        int row = rs4.getInt(2);
+                        int col = rs4.getInt(3);
+                        ContainertypeTO ctype = new ContainertypeTO(type, desc, row, col);
+                        container.setContainertype(ctype);
+                    }
+                }
+
+                if (ContainertypeTO.TYPE_SLIDE.equals(container.getType())) {
+                    container.setContainerid(container.getSlideid());
+                }
+            }
+        } catch (Exception ex) {
+            throw new DaoException("Error occured while getting containers from database.\n" + ex.getMessage());
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+            if (rs2 != null) {
+                DatabaseTransaction.closeResultSet(rs2);
+            }
+            if (rs3 != null) {
+                DatabaseTransaction.closeResultSet(rs3);
+            }
+            if (rs4 != null) {
+                DatabaseTransaction.closeResultSet(rs4);
+            }
+            if (rs5 != null) {
+                DatabaseTransaction.closeResultSet(rs5);
+            }
+            if (rs6 != null) {
+                DatabaseTransaction.closeResultSet(rs6);
+            }
+            if (rs7 != null) {
+                DatabaseTransaction.closeResultSet(rs7);
+            }
+            if (stmt2 != null) {
+                DatabaseTransaction.closeStatement(stmt2);
+            }
+            if (stmt3 != null) {
+                DatabaseTransaction.closeStatement(stmt3);
+            }
+            if (stmt4 != null) {
+                DatabaseTransaction.closeStatement(stmt4);
+            }
+            if (stmt5 != null) {
+                DatabaseTransaction.closeStatement(stmt5);
+            }
+            if (stmt7 != null) {
+                DatabaseTransaction.closeStatement(stmt7);
+            }
+            DatabaseTransaction.closeConnection(conn);
+        }
+
+        return containers;
     }
 }
