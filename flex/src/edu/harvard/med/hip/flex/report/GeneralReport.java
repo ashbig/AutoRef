@@ -373,7 +373,7 @@ public class GeneralReport extends ReportDefinition
                  clone_sequence = new ImportCloneSequence();
                if ( record[5] != null)  clone_sequence.setCDSStart(Integer.parseInt(record[5]));
                if ( record[1] != null) clone_sequence.setSequenceID(Integer.parseInt(record[1]));
-              if ( record[6] != null)  clone_sequence.setCDSStop(Integer.parseInt(record[6]) - clone_sequence.getCDSStart());
+              if ( record[6] != null)  clone_sequence.setCDSStop(Integer.parseInt(record[6]) + clone_sequence.getCDSStart());
                 clone_sequence.setMLinker5(record[3]);
                 clone_sequence.setMutCDS(record[7]);
                 clone_sequence.setMutLinker3(record[4]);
