@@ -237,12 +237,14 @@ public class AceToFlexImporter extends ImportRunner
          int sequenceid =  -1; String cloneName = null;
         String sql_insert_cseq = "insert into clonesequence(sequenceid,sequencetype,resultexpect,"+
         " matchexpect,genechange,linker5p,linker3p,cdsstart,cdslength,sequencingid)"+
-        " values(?,'FULL SEQUENCE',?,?,?,?,?,?,?,(select sequencingid from clonesequencing where cloneid=?))";
+        " values(?,'FULL SEQUENCE',?,?,?,?,?,?,?,(select max(sequencingid) from clonesequencing where cloneid=?))";
        
         String sql_insert_seq = "insert into clonesequencetext(sequenceid, sequenceorder, sequencetext)\n"+
         " values(?,?,?)";
          
-        String sql_update_clonesequencing ="update CLONESEQUENCING set sequencingstatus ='COMPLETE' ,sequencingindate=sysdate where cloneid =?";
+        String sql_update_clonesequencing ="update CLONESEQUENCING set sequencingstatus ='COMPLETE' ,sequencingindate=sysdate "
+                +" where cloneid =? and sequencingid=(select max(sequencingid) from clonesequencing where cloneid=?)";
+        
         String sql_update_clones_acc = "update clones set status='SEQUENCE VERIFIED'  where cloneid =?";
         
         String  sql_update_cloningprogress = "update CLONINGPROGRESS set statusid = 4 where constructid in "
@@ -319,6 +321,8 @@ public class AceToFlexImporter extends ImportRunner
                  
                  //set different flags related to clone status
                  stmt_update_clonesequencing.setInt(1, clone_data.getCloneID()); 
+                  stmt_update_clonesequencing.setInt(2, clone_data.getCloneID()); 
+                
                  DatabaseTransaction.executeUpdate(stmt_update_clonesequencing);
                  
                  if ( clone_data.getCloneFinalStatus() == IsolateTrackingEngine.FINAL_STATUS_ACCEPTED)
