@@ -155,7 +155,7 @@ public class CheckoutConfirmAction extends UserAction {
             if(country.equals(Constants.COUNTRY_USA)) {
                 shippingCost = 10;
             } else {
-                shippingCost = 15;
+                shippingCost = 20;
             }
             double totalCost = clonePrice+collectionPrice+shippingCost;
             ((CheckoutForm)form).setTotalPrice(totalCost);
