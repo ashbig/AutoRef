@@ -37,7 +37,7 @@ We have standardized our submission process.  This  information is outlined in t
 Please read through each of these  documents before you start.
 <em>Last Updated: November 6, 2008</em></pre>
       <ul>
-        <li><a href="Clone_Submission.xls" target="_blank">Clone_Submission.xls</a> This is an Excel spreadsheet containing two forms that allow you to enter the information about your vector and your clones (vector+insert).  The forms add your data into a spreadsheet that can be saved and sent back to me to be entered into the Plasmid Information Database (PlasmID) to be linked to your samples online. If you have a large number of samples, feel free to enter your plasmid information directly into the spreadsheet provided or <a href="Contacts.html">contact us</a> for alternate submission methods.</li>
+        <li><a href="Clone_Submission.xls" target="_blank">Clone_Submission.xls</a> This is an Excel spreadsheet containing two forms that allow you to enter the information about your vector and your clones (vector+insert).  The forms add your data into a spreadsheet that can be saved and sent back to me to be entered into the Plasmid Information Database (PlasmID) to be linked to your samples online. If you have a large number of samples, feel free to enter your plasmid information directly into the spreadsheet provided or <a href="Contactus.jsp">contact us</a> for alternate submission methods.</li>
         <br />
         <li><a href="File_Details_v2.doc" target="_blank">File_details</a> This document outlines the definition of the data we ask for in the excel forms. If there are elements here that do not work for you, additional information you would like to add or any questions, please contact me for further discussion.</li>
         <br />

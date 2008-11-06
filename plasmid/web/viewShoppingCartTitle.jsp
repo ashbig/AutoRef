@@ -13,7 +13,7 @@
                   <li>If you don't provide a FedEx account number, we will apply a standard shipping charge at check-out.</li>
                   <ul>  
                       <li>$10.00 for domestic orders</li>
-                      <li>$15.00 for international orders</li>
+                      <li>$20.00 for international orders</li>
                   </ul>
               </ol>
               <b>Payment Options</b>
