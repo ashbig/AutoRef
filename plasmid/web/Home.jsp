@@ -24,7 +24,7 @@
         <p align="center" class="mainbodytext">To search for plasmids, please go to <a href="OrderOverview.jsp">Plasmid Request</a>  
           or find a list of our large collections <a href="collection_overview.jsp" target="_blank">here</a>. </p>
         <p align="center" class="mainbodytext">For  more information on how to deposit clones with our repository,<br>please go to <a href="Submission.jsp">Plasmid Submission</a>.</p>
-        <p align="center" class="mainbodytext">Click <a href="http://www.hip.harvard.edu/PSIMR/DepositorAgreement/MTAdetails.html" target="_blank">here</a> for  information about the terms and conditions for receiving plasmids from the repository. </p>
+        <p align="center" class="mainbodytext">Click <a href="http://www.hip.harvard.edu/PSIMR/MTAdetails.html" target="_blank">here</a> for  information about the terms and conditions for receiving plasmids from the repository. </p>
         <p align="center" class="mainbodytext">Click <a href="cloning_strategies.htm" target="_blank">here</a> to view the cloning methods used to create many of the  plasmids           </p>        </td>
       </tr>
     </table></td>
@@ -38,24 +38,16 @@
   <tr>
     <td colspan="2"><table width="697" border="5" align="center" bordercolor="#999999" id="gray">
       <tr>
-        <td width="679" height="234"><h1 align="center">What's New? </h1>
-        <ul type= circles>
-            <li class="mainbodytext"><a href="http://www.hip.harvard.edu/PSIMR/PSIMRNews/EmptyVectors.html" target="_blank">Empty vectors</a> for cell free and bacterial expression from University of Wisconsin (CESG) now available!</li>
-         
-            <li class="mainbodytext"><a href="http://www.hip.harvard.edu/PSIMR/pMHTdelta238.html" target="_blank">TEV protease</a> plasmid now available!</li>
+        <td width="679" height="180"><h1 align="center">What's New? </h1>
+        <ul type= circles><li class="mainbodytext">Yeast genes now available in  two new expression vectors (pBY011 and ZM552). </li>
+            <li class="mainbodytext">Over 40 <a href="GetAllVectors.do?PSI=true" target="_self">Empty vectors</a> for cell free and bacterial expression from PSI sites now available!</li>
+            <li class="mainbodytext"><a href="http://www.hip.harvard.edu/PSIMR/pMHTdelta238.html" target="_blank">TEV protease</a> expressing plasmid now available!</li>
             <li class="mainbodytext">PSI CloneIDs now link to data in<a href="http://targetdb.rcsb.org/" target="_blank"> TargetDB</a>, <a href="http://pepcdb.rcsb.org/" target="_blank">PepcDB</a>, <a href="http://kb.psi-structuralgenomics.org/KB/" target="_blank">PSI Structural Genomics Knowledgebase</a> and <a href="http://www.topsan.org/WikiHome" target="_blank">TOPSAN</a></li>
             <li class="mainbodytext">New<a href="PrepareAdvancedSearch.do?psi=1" target="_self"> PSI specific searches</a> available. Search by TargetDB ID, PDB ID, protein expression, solubility or purification or by PSI site.</li>
          
             <li class="mainbodytext"><a href="GetCollection.do?collectionName=PSI">Nearly 10,000 sequence-verified PSI plasmids available.</a></li>
           
             <li class="mainbodytext">Credit Card Payments now accepted! You can now use either a credit card or purchase order (PO) number to pay for your request.</li>
-            
-            <li class="mainbodytext">Sequence-verified, genome-scale ORF collections for F. tularensis, Y. pestis and V. cholerae (HIP/HMS).</li>
-          
-            <li class="mainbodytext">Human kinase collection now includes clones in entry vectors for recombinational cloning and <a href="GetCollection.do?collectionName=HIP%20human%20kinase%20collection%20(pJP1520,%20complete%20set)">clones in a mammalian expression vector</a> (HIP/HMS)</li>
-          
-            <li class="mainbodytext">Harvard  Institute of Proteomics named site of the Materials Repository of the <a href="http://www.nigms.nih.gov/Initiatives/PSI/">Protein Structure Initiative</a>, funded by <a href="http://www.nigms.nih.gov/">NIGMS/NIH</a> for  storage and distribution of more than 100,000 plasmid clones for protein expression.</li>
-            <br>
           </ul></td>
       </tr>
     </table></td>
