@@ -14,16 +14,25 @@
   </tr>
   <tr align="left" valign="top" bordercolor="#000000"> 
     <td width="70" valign="top" class="alert"><img src="emptyvector70sq.gif" width="70" height="70"></td>
-    <td width="318" class="homeMainText"> 
+    <td width="264" class="homeMainText"> 
       <p><span class="mainbodytextlarge">Empty Vectors</span><br>
         for inserts, readout, helper, etc.</p></td>
-    <td width="347" class="homeMainText"> 
+    <td width="342" class="homeMainText"> 
       <ul>
         <li class="homeMainText">expression vectors for yeast, bacteria, mammalian 
           cells</li>
         <li class="homeMainText">tagged and inducible lentiviral vectors for shRNA</li>
         <li class="homeMainText">cloning vectors for routine and cutting-edge 
           approaches</li>
+    </ul></td>
+  </tr>
+  <tr align="left" valign="top" bordercolor="#000000">
+    <td valign="top" class="alert"><img src="Mobius.gif" alt="plasmid" width="72" height="70"></td>
+    <td class="homeMainText"><span class="mainbodytextlarge">Protein Structure Initiative Material Repository (PSI-MR) Clones</span></td>
+    <td class="homeMainText"><ul>
+      <li>the PSI-MR will eventually store and distribute over 100,000 clones created by PSI researchers</li>
+      <li>over 40 empty vectors for expression and protein purification</li>
+      <li>currently, over 10,000 PSI clones containing genes from over 200 organisms</li>
       </ul></td>
   </tr>
   <tr align="left" valign="top" bordercolor="#000000"> 
@@ -35,7 +44,7 @@
       <ul>
         <li class="homeMainText">&gt; 500 sequence verified human kinase ORFs 
           from HIP</li>
-        <li class="homeMainText">&gt; 7,600 sequence verified human clones from 
+        <li class="homeMainText">&gt;45,000 sequence verified human clones from 
           HIP </li>
         <li class="homeMainText"> full-length cDNA clones, shRNAs, genomic fragments</li>
       </ul></td>
@@ -50,10 +59,11 @@
       <ul>
         <li class="homeMainText">genome-scale, sequence-verified ORF collection 
           from HIP</li>
-        <li class="homeMainText">&gt;6,600 clones</li>
-        <li class="homeMainText">~1700 in expression vectors</li>
+        <li class="homeMainText">ORFs in Gateway entry and two expression vectors</li>
+        <li class="homeMainText">&gt;15,000 clones</li>
+        <li class="homeMainText">~10,000 in expression vectors</li>
         <li class="homeMainText">fluorescence-tagged expression vectors</li>
-      </ul></td>
+    </ul></td>
   </tr>
   <tr align="left" valign="top" bordercolor="#000000"> 
     <td><img src="virus70sq.gif" width="70" height="70"></td>
@@ -89,7 +99,7 @@
       <ul>
         <li class="homeMainText">genome-scale, sequence-verified ORF collection 
           from HIP</li>
-        <li class="homeMainText">&gt;3,400 clones</li>
+        <li class="homeMainText">&gt;7,400 clones</li>
       </ul></td>
   </tr>
   <tr align="left" valign="top" bordercolor="#000000"> 
@@ -102,7 +112,7 @@
       <ul>
         <li class="homeMainText">genome-scale, sequence-verified ORF collection 
           from HIP</li>
-        <li class="homeMainText">&gt;1,400 full-length ORFs</li>
+        <li class="homeMainText">&gt;4,500 full-length ORFs</li>
       </ul></td>
   </tr>
   <tr align="left" valign="top" bordercolor="#000000"> 
@@ -115,7 +125,7 @@
       <ul>
         <li class="homeMainText">genome-scale, sequence-verified ORF collection 
           from HIP</li>
-        <li class="homeMainText">&gt;3,900 clones</li>
+        <li class="homeMainText">&gt;4,200 clones</li>
       </ul></td>
   </tr>
   <tr align="left" valign="top" bordercolor="#000000"> 
