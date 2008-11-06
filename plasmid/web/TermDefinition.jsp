@@ -157,8 +157,8 @@
 </table>
 <table width="100%" border="0">
   <tr> 
-    <td class="tablebody">Still have questions? Read our <a href="FAQ.jsp">FAQs</a> or contact 
-      <a href="mailto:stephanie_mohr@hms.harvard.edu">Stephanie Mohr</a>.</td>
+    <td class="tablebody">Still have questions? Read our <a href="FAQs.jsp">FAQs</a> or contact 
+      <a href="mailto:catherine_cormier@hms.harvard.edu">Catherine Cormier</a>.</td>
   </tr>
 </table>
 
