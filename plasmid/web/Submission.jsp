@@ -35,14 +35,14 @@
       <pre class="mainbodytext">
 We have standardized our submission process.  This  information is outlined in the following five files.  <br>
 Please read through each of these  documents before you start.
-<em>Last Updated: May 16, 2008</em></pre>
+<em>Last Updated: November 6, 2008</em></pre>
       <ul>
-        <li class="mainbodytext"><a target="_blank" href="Submission checklist nonPSI v3.doc">Submission Checklist</a>.  This document will guide you through the submission process.  The items in this checklist highlight a variety of problems we have frequently encountered. </li>
-        <li class="mainbodytext"><a target="_blank" href="Clone_files_table details_v1.doc">clone_files_table details</a>.  This document outlines the information we need regarding your plasmids. It also describes in detail the data format that is compatible with the parsing software that transfers this information into our sequencing and database programs.    If there are elements here that do not work for you, please contact me for further discussion.</li>
-        <li class="mainbodytext"><a target="_blank" href="Definitions for annotating CDS sequences_v4.doc">Definitions for annotating CDS sequences.</a> This document describes how to identify the NTSeq, relevant CDS, and linker sequences to input into the data tables.  This document addresses the questions we have encountered from various sites about how to annotate their sequences.</li>
-        <li class="mainbodytext"><a target="_blank" href="SubmissionTable.xls">Submission Table.</a> This is an Excel spreadsheet containing the columns listed in the &ldquo;clone_file_table details.&rdquo;  This can serve as a template for you data submission, and you can delete the columns that do not apply to you.</li>
-        <li class="mainbodytext"><a target="_blank" href="vector template.xls">Vector Template</a>.  This is an Excel spreadsheet containing columns to help you provide us with information about your vectors.</li>
-      </ul>
+        <li><a href="Clone_Submission.xls" target="_blank">Clone_Submission.xls</a> This is an Excel spreadsheet containing two forms that allow you to enter the information about your vector and your clones (vector+insert).  The forms add your data into a spreadsheet that can be saved and sent back to me to be entered into the Plasmid Information Database (PlasmID) to be linked to your samples online. If you have a large number of samples, feel free to enter your plasmid information directly into the spreadsheet provided or <a href="Contacts.html">contact us</a> for alternate submission methods.</li>
+        <br />
+        <li><a href="File_Details_v2.doc" target="_blank">File_details</a> This document outlines the definition of the data we ask for in the excel forms. If there are elements here that do not work for you, additional information you would like to add or any questions, please contact me for further discussion.</li>
+        <br />
+        <li><a href="Submission checklist v4.doc">Submission Checklist</a> This document will guide you through the submission process.  The items in this checklist highlight a variety of problems we have frequently encountered and describe in detail how to prepare your data and samples. </li>
+        </ul>
     </td>
   </tr>
 </table>
