@@ -102,7 +102,7 @@
       <pre><span class="homepageText2">
 Can't find what you're looking for? </span>
 <span class="mainbodytext">          1. Please be sure you logged in because log-in effects what clones you can view.
-          2. <a href="http://dnaseq.med.harvard.edu/plasmid-related_links.htm" title="Plasmid Links Page" target="_blank">CLICK HERE</a> to see other resources for clones.</span></pre>
+          2. <a href="plasmid_links.jsp" title="Plasmid Links Page" target="_self">CLICK HERE</a> to see other resources for clones.</span></pre>
       <p><span class="homepageText2">CloneID is your link to more info. </span>
           <br>
           <span class="mainbodytext">Click on the clone ID to view growth conditions, insert and vector info, insert sequence (if we have it), authors and references to cite, and to download 
