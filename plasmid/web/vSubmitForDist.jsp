@@ -11,8 +11,9 @@
         <title>Submit Vector For Distribution</title>
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
         <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
+        <script src="js/common.js"></script>
     </head>
-
+    
     <body>
         <jsp:include page="homeTitle.jsp" />
         <table width="1000" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
@@ -36,16 +37,16 @@
                             <p><em>If you would like to distribute this vector through us, please fill out
                             the following page.</em></p>
                             <p>*Required field is in bold</p>
-                            <table width="100%" border="1">
-                                <tr valign="top">
-                                    <td align="right" width="21%"><strong>Verified</strong>: <label id="verifieddesp">?</label></td>
+                            <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="red">
+                                <tr bgcolor="white">
+                                    <td align="right" width="21%"><strong>Verified</strong>:<img src="img/info.jpg" border="0" onmouseover="javascript: showTitle('divTitle', vrftitle, gx(this), gy(this));"/>&nbsp;</td>
                                     <td width="79%">
                                         <html:radio property="verified" value="Y"/>Yes&nbsp;&nbsp; Verified method &nbsp;<html:text property="verifiedmethod" size="50"/><br>
                                         <html:radio property="verified" value="N"/>No
                                     </td>
                                 </tr>
-                                <tr valign="top">
-                                    <td align="right"><strong>Source</strong>: <label id="sourcedesp">?</label></td>
+                                <tr bgcolor="white" valign="top">
+                                    <td align="right"><strong>Source</strong>:<img src="img/info.jpg" border="0" onmouseover="javascript: showTitle('divTitle', srctitle, gx(this), gy(this));"/>&nbsp;</td>
                                     <td>
                                         <html:radio property="source" value="Non-PSI"/>Non-PSI:&nbsp;&nbsp;<html:text property="nonpsi"  size="50"/><br>
                                         <html:radio property="source" value="PSI"/>PSI:&nbsp;&nbsp;
@@ -57,10 +58,10 @@
                                         <logic:notPresent name="PSIC">
                                             <html:text property="psi" size="50"/>
                                         </logic:notPresent>
-
+                                        
                                     </td>
                                 </tr>
-                                <tr valign="top">
+                                <tr bgcolor="white" valign="top">
                                     <td align="right"><strong>Comments:</strong></td>
                                     <td>&nbsp;
                                         <html:textarea property="comments" cols="68" rows="5"/>
@@ -69,7 +70,7 @@
                             </table>
                             <table border="0" width="100%">
                                 <tr height="24px"><td></td></tr>
-
+                                
                                 <tr><td>
                                         <strong>Growth Condition for vector alone: </strong>
                                 </td></tr>
@@ -85,8 +86,8 @@
                                         <span id="vgca" name="vgca" style="display:block;">
                                             <table width="100%" border="0">
                                                 <tr><td>
-                                                        <table width="100%" border="1">
-                                                            <tr>
+                                                        <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="red">
+                                                            <tr bgcolor="white">
                                                                 <td width="20%" align="right">
                                                                     Growth Condition:&nbsp;
                                                                 </td>
@@ -103,7 +104,7 @@
                                                                     <html:submit value="Add New Growth Condition"/>
                                                                 </td>
                                                             </tr>
-                                                            <tr>
+                                                            <tr bgcolor="white">
                                                                 <td align="right">Is Recommended?&nbsp;</td>
                                                                 <td>&nbsp;
                                                                     <select id="isrecommended" name="isrecommended">
@@ -114,20 +115,20 @@
                                                             </tr>
                                                         </table>
                                                 </td></tr>
-                                                <tr height="2px"><td></td></tr>
-                                                <tr><td><html:submit value="Add To List" onclick="return checkFormAdd();"/></td></tr>
+                                                <tr bgcolor="white" height="2px"><td></td></tr>
+                                                <tr bgcolor="white"><td><html:submit value="Add To List" onclick="return checkFormAdd();"/></td></tr>
                                                 <logic:present name="VGCA">
-                                                    <tr height="12px"><td></td></tr>
-                                                    <tr><td>
-                                                            <table width="100%" border="1">
-                                                                <tr>
+                                                    <tr bgcolor="white" height="12px"><td></td></tr>
+                                                    <tr bgcolor="white"><td>
+                                                            <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="green">
+                                                                <tr bgcolor="white">
                                                                     <th width="3%">&nbsp;</th>
                                                                     <th width="45%"><strong>Growth Condition</strong></th>
                                                                     <th width="44%"><strong>Is Recommended</strong></th>
                                                                 </tr>
-
+                                                                
                                                                 <logic:iterate id="vg" name="VGCA" indexId="GCID">
-                                                                    <tr>
+                                                                    <tr bgcolor="white">
                                                                         <td><input type="radio" name="GCID" id="GCID" value="<bean:write name="GCID"/>"/></td>
                                                                         <td><bean:write name="vg" property="growthname"/>&nbsp;</td>
                                                                         <td>
@@ -143,25 +144,25 @@
                                                                 </logic:iterate>
                                                             </table>
                                                     </td></tr>
-                                                    <tr height="2px"><td></td></tr>
-                                                    <tr><td><html:submit value="Remove From List" onclick="return checkFormRemove();"/></td></tr>
+                                                    <tr bgcolor="white" height="2px"><td></td></tr>
+                                                    <tr bgcolor="white"><td><html:submit value="Remove From List" onclick="return checkFormRemove();"/></td></tr>
                                                 </logic:present>
                                             </table>
                                         </span>
                                 </td></tr>
-                                <tr height="24px"><td></td></tr>
-                                <tr><td>
+                                <tr bgcolor="white" height="24px"><td></td></tr>
+                                <tr bgcolor="white"><td>
                                         <strong>Growth Condition for vector with insert:</strong>
                                 </td></tr>
-                                <tr><td>
-                                        <table width="100%" border="1">
-                                            <tr>
+                                <tr bgcolor="white"><td>
+                                        <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="green">
+                                            <tr bgcolor="white">
                                                 <th width="80%"><strong>Growth Condition</strong></th>
                                                 <th width="20%"><strong>Is Recommended</strong></th>
                                             </tr>
                                             <logic:present name="VGC">
                                                 <logic:iterate id="vg" name="VGC">
-                                                    <tr>
+                                                    <tr bgcolor="white">
                                                         <td><bean:write name="vg" property="growthname"/>&nbsp;</td>
                                                         <td>
                                                             <logic:equal name="vg" property="isrecommended" value="Y">
@@ -177,8 +178,8 @@
                                             </logic:present>
                                         </table>
                                 </td></tr>
-                                <tr height="24px"><td></td></tr>
-                                <tr><td>
+                                <tr bgcolor="white" height="24px"><td></td></tr>
+                                <tr bgcolor="white"><td>
                                         <html:submit value="Submit" onclick="return checkForm();"/>
                                 </td></tr>
                             </table>
@@ -187,6 +188,10 @@
                 </td>
             </tr>
         </table>
+        <div id="divTitle"
+             onmouseout="showTitle(this.id, null, 0, 0);"
+             style="visibility: hidden; position: absolute; float: left; left: 0; top: 0; z-index: 999; border: none 0px black; background-color: #FFFFCC; padding: 10px;">
+        </div>
         <logic:notPresent name="Clone">
             <span id="verifiedtitle" style="display:none;">
                 Indicate if the vector has been verified by sequencing or restriction digest. Indicate which method in the "Verification Method" box.
@@ -197,8 +202,8 @@
                 PI where this vector was produced.
             </span>
             <script>
-                document.getElementById("verifieddesp").title = document.getElementById("verifiedtitle").innerHTML;
-                document.getElementById("sourcedesp").title = document.getElementById("sourcetitle").innerHTML;
+                var vrftitle = document.getElementById("verifiedtitle").innerHTML;
+                var srctitle = document.getElementById("sourcetitle").innerHTML;
                 if (document.getElementById("sameasvector").checked)
                     document.getElementById("vgca").style.display = "block";
 
@@ -255,7 +260,7 @@
                         alert("Please enter institution before continue.");
                         return false;
                     }
-                    
+
                     c = document.getElementById("sameasvector");
                     if (!c.checked) {
                         g = document.getElementsByName("GCID");

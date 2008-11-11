@@ -6,12 +6,14 @@ package plasmid.form;
 
 import java.util.*;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
 
 public class VInput4Form extends ActionForm {
+
     private String step = null;
     private int vectorid = 0;
     private String submit = null;
@@ -159,7 +161,7 @@ public class VInput4Form extends ActionForm {
             if ((growthcondition == null) || (growthcondition.length() < 1)) {
                 errors.add("VIF4", new ActionError("error.GC.required"));
             }
-        } else  if (submit.equals("Add To Selectable Marker List")) {
+        } else if (submit.equals("Add To Selectable Marker List")) {
             if ((hosttype == null) || (hosttype.length() < 1)) {
                 errors.add("VIF4", new ActionError("error.HT.required"));
             }
@@ -167,19 +169,32 @@ public class VInput4Form extends ActionForm {
                 errors.add("VIF4", new ActionError("error.MK.required"));
             }
         } else if (submit.equals("Remove From Host Strain List")) {
-            if (HSID < 1) {
+            if (HSID < 0) {
                 errors.add("VIF4", new ActionError("error.HSID.required"));
             }
         } else if (submit.equals("Remove From Growth Condition List")) {
-            if (GCID < 1) {
+            if (GCID < 0) {
                 errors.add("VIF4", new ActionError("error.GCID.required"));
             }
         } else if (submit.equals("Remove From Selectable Marker List")) {
-            if (SMID < 1) {
+            if (SMID < 0) {
                 errors.add("VIF4", new ActionError("error.SMID.required"));
             }
-        }        
-
+        } else if (submit.equals("Continue") || (submit.equals("Save..."))) {
+            HttpSession session = request.getSession();
+            List VHS = (List) session.getAttribute("VHS");
+            if ((VHS == null) || (VHS.size() < 1)) {
+                errors.add("VIF9", new ActionError("error.VHS.required"));
+            }
+            List VGC = (List) session.getAttribute("VGC");
+            if ((VGC == null) || (VGC.size() < 1)) {
+                errors.add("VIF9", new ActionError("error.VGC.required"));
+            }
+            List VSM = (List) session.getAttribute("VSM");
+            if ((VSM == null) || (VSM.size() < 1)) {
+                errors.add("VIF9", new ActionError("error.VSM.required"));
+            }
+        }
         return errors;
     }
 }

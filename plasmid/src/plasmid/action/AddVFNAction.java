@@ -60,7 +60,7 @@ public class AddVFNAction extends Action {
         String sAction = vfnf.getSubmit();
         String VFN = vfnf.getVFN();
         StringConvertor sv = new StringConvertor();
-        List VFNs = sv.convertFromStringToList(VFN, ", \t\n");
+        List VFNs = sv.convertFromStringToList(VFN, "\n");
 
         Connection conn = null;
         try {

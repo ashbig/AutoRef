@@ -175,6 +175,7 @@
     <forward    name="register"     path="/CustomerRegistration.jsp"/>
     <forward    name="findRegistration" path="/FindRegistration.jsp"/>
     <forward    name="error"        path="/ProcessError.do"/>
+    <forward    name="vSearch"      path="/vSearch.jsp"/>
     <forward    name="vInput1"      path="/vInput.jsp"/>
     <forward    name="vInput2"      path="/vInput2.jsp"/>
     <forward    name="vInput3"      path="/vInput3.jsp"/>
@@ -739,7 +740,7 @@
             name="vInputForm" 
             input="/vInput.jsp" 
             validate="true">
-            <forward name="save" path="/vSearch.jsp"/>
+            <forward name="save" path="/vInput.jsp"/>
             <forward name="continue" path="/vInput2.jsp"/>
         </action>        
         <action path="/vInput2" 
@@ -747,7 +748,7 @@
             name="vInput2Form" 
             input="/vInput2.jsp" 
             validate="true">
-            <forward name="save" path="/vSearch.jsp"/>
+            <forward name="save" path="/vInput2.jsp"/>
             <forward name="back" path="/vInput.jsp"/>
             <forward name="continue" path="/vInput3.jsp"/>
         </action>        
@@ -756,7 +757,7 @@
             name="vInput3Form" 
             input="/vInput3.jsp" 
             validate="true">
-            <forward name="save" path="/vSearch.jsp"/>
+            <forward name="save" path="/vInput3.jsp"/>
             <forward name="back" path="/vInput2.jsp"/>
             <forward name="continue" path="/vInput4.jsp"/>
         </action>        
@@ -765,7 +766,7 @@
             name="vInput4Form" 
             input="/vInput4.jsp" 
             validate="true">
-            <forward name="save" path="/vSearch.jsp"/>
+            <forward name="save" path="/vInput4.jsp"/>
             <forward name="back" path="/vInput3.jsp"/>
             <forward name="continue" path="/vInput5.jsp"/>
         </action>        
@@ -774,7 +775,7 @@
             name="vInput5Form" 
             input="/vInput5.jsp" 
             validate="true">
-            <forward name="save" path="/vSearch.jsp"/>
+            <forward name="save" path="/vInput5.jsp"/>
             <forward name="back" path="/vInput4.jsp"/>
             <forward name="continue" path="/vInput6.jsp"/>
         </action>        
@@ -783,7 +784,7 @@
             name="vInput6Form" 
             input="/vInput6.jsp" 
             validate="true">
-            <forward name="save" path="/vSearch.jsp"/>
+            <forward name="save" path="/vInput6.jsp"/>
             <forward name="back" path="/vInput5.jsp"/>
             <forward name="continue" path="/vInput7.jsp"/>
         </action>        
@@ -792,7 +793,7 @@
             name="vInput7Form" 
             input="/vInput7.jsp" 
             validate="true">
-            <forward name="save" path="/vSearch.jsp"/>
+            <forward name="save" path="/vInput7.jsp"/>
             <forward name="back" path="/vInput6.jsp"/>
             <forward name="continue" path="/vInput8.jsp"/>
         </action>        
@@ -801,7 +802,7 @@
             name="vInput8Form" 
             input="/vInput8.jsp" 
             validate="true">
-            <forward name="save" path="/vSearch.jsp"/>
+            <forward name="save" path="/vInput8.jsp"/>
             <forward name="back" path="/vInput7.jsp"/>
             <forward name="continue" path="/vSubmitForDist.jsp"/>
         </action>        

@@ -64,7 +64,7 @@ public class AddVFTAction extends Action {
         String sAction = vftf.getSubmit();
         String VFT = vftf.getVFT();
         StringConvertor sv = new StringConvertor();
-        List VFTs = sv.convertFromStringToList(VFT, ", \t\n");
+        List VFTs = sv.convertFromStringToList(VFT, "\n");
 
         Connection conn = null;
         try {
@@ -73,8 +73,8 @@ public class AddVFTAction extends Action {
 
             if (sAction.equals("Add Feature Type")) {
                 bReturn = vm.insertVFTs(VFTs);
-
             }
+            
             List vft = vm.getFeatureTypes();
             session.removeAttribute("FT");
             if ((vft != null) && (vft.size() > 0)) {

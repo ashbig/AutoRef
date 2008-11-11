@@ -145,13 +145,13 @@ public class VInput2Form extends ActionForm {
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
         ActionErrors errors = new ActionErrors();
         if (getSubmit().equals("Add To List")) {
-            if ((getStart() < 1) || (getStop() < 1)) {
-                errors.add("Position", new ActionError("error.position.required"));
-            }
+            if ((start > 0) && (stop > 0)) {
             CloneVector v = (CloneVector) request.getSession().getAttribute("Vector");
             int size = v.getSize();
-            if ((getStart() >= getStop()) || (getStart() >= size) || (getStop() > size)) {
+            // if ((getStart() >= getStop()) || (getStart() >= size) || (getStop() > size)) {
+            if ((start >= size) || (stop > size)) {
                 errors.add("Position", new ActionError("error.position.incorrect"));
+            }
             }
         } else if (getSubmit().equals("Continue")) {
             List f = (List) request.getSession().getAttribute("Features");

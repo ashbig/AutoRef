@@ -64,7 +64,7 @@ public class AddSMAction extends Action {
         String sAction = smf.getSubmit();
         String SM = smf.getSM();
         StringConvertor sv = new StringConvertor();
-        List SMs = sv.convertFromStringToList(SM, ", \t\n");
+        List SMs = sv.convertFromStringToList(SM, "\n");
 
         Connection conn = null;
         try {

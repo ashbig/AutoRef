@@ -11,6 +11,7 @@
         <title>Submit vector information - Step 4</title>
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
         <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
+        <script src="js/common.js"></script>
         <script>
             function gcinfo() {
                 var gc = document.getElementById("growthcondition");
@@ -52,6 +53,25 @@
                 return false;
             }
             
+            function checkForm() {
+                hs = document.getElementsByName("HSID");
+                gc = document.getElementsByName("GCID");
+                sm = document.getElementsByName("SMID");
+                if ((typeof(hs) == 'undefined') || (hs.length < 1)) {
+                    alert("Please enter at least one host strain before continue.")
+                    return false;
+                }                
+                if ((typeof(gc) == 'undefined') || (gc.length < 1)) {
+                    alert("Please enter at least one growth condition before continue.")
+                    return false;
+                }
+                if ((typeof(sm) == 'undefined') || (sm.length < 1)) {
+                    alert("Please enter at least one selectable marker before continue.")
+                    return false;
+                }
+                    
+                return true;
+            }
         </script>
     </head>
     
@@ -74,102 +94,124 @@
                         <table width="100%" border="0">
                             <tr>
                                 <td>
-                                    <p>* At least one host strain, growth condition and selectable marker are required.</p>
-                                    <p><strong>Host Strain: </strong><label id="hsdesp">?</label>&nbsp;<html:submit value="Add New Host Strain"/> </p>
-                                    <table width="100%" border="1">
-                                        <tr>
-                                            <td width="13%" align="right">Host Strain:</td>
-                                            <td width="87%" align="left">
-                                                <logic:notPresent name="HS">
-                                                    <html:text property="hoststrain"/>
-                                                </logic:notPresent>
-                                                <logic:present name="HS">
-                                                    <logic:empty name="HS">
-                                                        <html:text property="hoststrain"/>
-                                                    </logic:empty>
-                                                    <logic:notEmpty name="HS">
-                                                        <html:select property="hoststrain">
-                                                            <html:options name="HS"/>
-                                                        </html:select>
-                                                    </logic:notEmpty>
-                                                </logic:present>
+                                    <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                                        <tr bgcolor="white" valign="middle">
+                                            <td>* At least one host strain, growth condition and selectable marker are required.</td>
+                                        </tr>
+                                        <tr bgcolor="#9999CC" valign="middle">
+                                            <td style="padding: 5px">
+                                                <strong>Host Strain: </strong><img src="img/info.jpg" border="0" onmouseover="javascript: showTitle('divTitle', hstitle, gx(this), gy(this));"/>&nbsp;<html:submit value="Add New Host Strain"/>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>Description</td>
-                                            <td width="60%">
-                                                <html:text property="description"/>
+                                            <td>
+                                                <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="red">
+                                                    <tr bgcolor="white">
+                                                        <td width="13%" align="right">Host Strain:</td>
+                                                        <td width="87%" align="left">
+                                                            <logic:notPresent name="HS">
+                                                                <html:text property="hoststrain"/>
+                                                            </logic:notPresent>
+                                                            <logic:present name="HS">
+                                                                <logic:empty name="HS">
+                                                                    <html:text property="hoststrain"/>
+                                                                </logic:empty>
+                                                                <logic:notEmpty name="HS">
+                                                                    <html:select property="hoststrain">
+                                                                        <html:options name="HS"/>
+                                                                    </html:select>
+                                                                </logic:notEmpty>
+                                                            </logic:present>
+                                                        </td>
+                                                    </tr>
+                                                    <tr bgcolor="white">
+                                                        <td>Description</td>
+                                                        <td width="60%">
+                                                            <html:text property="description"/>
+                                                        </td>
+                                                    </tr>
+                                                    <tr bgcolor="white"><td colSpan="2"><html:submit value="Add To Host Strain List"/></td></tr>
+                                                </table>
                                             </td>
                                         </tr>
-                                        <tr><td colSpan="2"><html:submit value="Add To Host Strain List"/></td></tr>
                                     </table>
                             </td></tr>
                             <tr height="18px"><td>&nbsp;</td></tr>
                             <tr>
                                 <td>
-                                    <table width="100%" border="1">
-                                        <tr>
+                                    <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="green">
+                                        <tr bgcolor="white">
                                             <td width="3%">&nbsp;</td>
                                             <td width="30%"><strong>Host Strain</strong></td>
                                             <td width="67%">Description</td>
                                         </tr>
                                         <logic:present name="VHS">
                                             <logic:iterate id="vhs" name="VHS" indexId="HSID">
-                                                <tr>
+                                                <tr bgcolor="white">
                                                     <td><input type="radio" name="HSID" id="HSID" value="<bean:write name="HSID"/>"/></td>
                                                     <td><bean:write name="vhs" property="hoststrain"/>&nbsp;</td>
                                                     <td><bean:write name="vhs" property="description"/>&nbsp;</td>
                                                 </tr>
                                             </logic:iterate>
-                                            <tr><td colSpan="3"><html:submit value="Remove From Host Strain List" onclick="return checkHSL();"/></td></tr>
+                                            <tr bgcolor="white"><td colSpan="3"><html:submit value="Remove From Host Strain List" onclick="return checkHSL();"/></td></tr>
                                         </logic:present>
                                     </table>
                             </td></tr>
                             <tr height="18px"><td>&nbsp;</td></tr>
                             <tr>
                                 <td>
-                                    <p><strong>Growth Condition: </strong><label id="gcdesp">?</label>&nbsp;<html:submit value="Add New Growth Condition"/> </p>
-                                    <table width="100%" border="1">
-                                        <tr>
-                                            <td  width="20%" align="right">Growth Condition:</td>
-                                            <td width="80%" align="left">
-                                                <logic:notPresent name="GC">
-                                                    <html:text property="growthcondition"/>
-                                                </logic:notPresent>
-                                                <logic:present name="GC">
-                                                    <html:select property="growthcondition">
-                                                        <html:options name="GC"/>
-                                                    </html:select>
-                                                </logic:present>
-                                                <input type="button" name="gcinfo" id="gcinfo" value="Info" onclick="gcinfo();"/>
+                                    <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                                        <tr bgcolor="#9999CC" valign="middle">
+                                            <td style="padding: 5px">
+                                                <strong>Growth Condition: </strong><img src="img/info.jpg" border="0" onmouseover="javascript: showTitle('divTitle', gctitle, gx(this), gy(this));"/>&nbsp;<html:submit value="Add New Growth Condition"/>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td widht="13%" align="right">Is Recommended?</td>
                                             <td>
-                                                <html:select property="isrecommended">
-                                                    <html:option value="Y">Yes</html:option>
-                                                    <html:option value="N">No</html:option>
-                                                </html:select>
+                                                <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="red">
+                                                    <tr bgcolor="white">                                    
+                                                        <td  width="20%" align="right">Growth Condition:</td>
+                                                        <td width="80%" align="left">
+                                                            <logic:notPresent name="GC">
+                                                                <html:text property="growthcondition"/>
+                                                            </logic:notPresent>
+                                                            <logic:present name="GC">
+                                                                <html:select property="growthcondition">
+                                                                    <html:options name="GC"/>
+                                                                </html:select>
+                                                            </logic:present>
+                                                            <input type="button" name="gcinfo" id="gcinfo" value="Info" onclick="gcinfo();"/>
+                                                        </td>
+                                                    </tr>
+                                                    <tr bgcolor="white">
+                                                        <td widht="13%" align="right">Is Recommended?</td>
+                                                        <td>
+                                                            <html:select property="isrecommended">
+                                                                <html:option value="Y">Yes</html:option>
+                                                                <html:option value="N">No</html:option>
+                                                            </html:select>
+                                                        </td>
+                                                    </tr>
+                                                    <tr bgcolor="white">
+                                                        <td colspan="2"><html:submit value="Add To Growth Condition List"/></td>
+                                                    </tr>
+                                                </table>
                                             </td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2"><html:submit value="Add To Growth Condition List"/></td>
                                         </tr>
                                     </table>
                             </td></tr>
                             <tr height="18px"><td>&nbsp;</td></tr>
                             <tr>
                                 <td>
-                                    <table width="100%" border="1">
-                                        <tr>
+                                    <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="green">
+                                        <tr bgcolor="white">
                                             <td width="3%">&nbsp;</td>
                                             <td width="30%"><strong>Growth Condition</strong></td>
                                             <td width="67%"><strong>Is Recommended?</strong></td>
                                         </tr>
                                         <logic:present name="VGC">
                                             <logic:iterate id="vg" name="VGC" indexId="GCID">
-                                                <tr>
+                                                <tr bgcolor="white">
                                                     <td><input type="radio" name="GCID" id="GCID" value="<bean:write name="GCID"/>"/></td>
                                                     <td><bean:write name="vg" property="growthname"/>&nbsp;</td>
                                                     <td>
@@ -183,101 +225,138 @@
                                                     </td>
                                                 </tr>
                                             </logic:iterate>
-                                            <tr><td colSpan="3"><html:submit value="Remove From Growth Condition List" onclick="return checkGCL();"/></td></tr>
+                                            <tr bgcolor="white"><td colSpan="3"><html:submit value="Remove From Growth Condition List" onclick="return checkGCL();"/></td></tr>
                                         </logic:present>
                                     </table>
                             </td></tr>
                             <tr height="18px"><td>&nbsp;</td></tr>
                             <tr>
                                 <td>
-                                    <p><strong>Selectable Marker: </strong><label id="smdesp">?</label></p>
-                                    <table width="100%" border="0">
-                                        <tr>
-                                            <td width="11%" align="right">Host Type:</td>
-                                            <td width="89%">
-                                                <logic:notPresent name="HT">
-                                                    <html:text property="hosttype"/>
-                                                </logic:notPresent>
-                                                <logic:present name="HT">
-                                                    <html:select property="hosttype">
-                                                        <html:options name="HT"/>
-                                                    </html:select>
-                                                </logic:present>
-                                                <html:submit value="Add New Host Type"/>
+                                    <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                                        <tr bgcolor="#9999CC" valign="middle">
+                                            <td style="padding: 5px">
+                                                <strong>Selectable Marker: </strong><img src="img/info.jpg" border="0" onmouseover="javascript: showTitle('divTitle', smtitle, gx(this), gy(this));"/>&nbsp;
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td width="11%" align="right">Marker:</td>
-                                            <td width="89%">
-                                                <logic:notPresent name="SM">
-                                                    <html:text property="marker"/>
-                                                </logic:notPresent>
-                                                <logic:present name="SM">
-                                                    <html:select property="marker">
-                                                        <html:options name="SM"/>
-                                                    </html:select>
-                                                </logic:present>
-                                                <html:submit value="Add New Marker"/>
+                                            <td>
+                                                <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="red">
+                                                    <tr bgcolor="white">
+                                                        <td width="11%" align="right">Host Type:</td>
+                                                        <td width="89%">
+                                                            <logic:notPresent name="HT">
+                                                                <html:text property="hosttype"/>
+                                                            </logic:notPresent>
+                                                            <logic:present name="HT">
+                                                                <html:select property="hosttype">
+                                                                    <html:options name="HT"/>
+                                                                </html:select>
+                                                            </logic:present>
+                                                            <html:submit value="Add New Host Type"/>
+                                                        </td>
+                                                    </tr>
+                                                    <tr bgcolor="white">
+                                                        <td width="11%" align="right">Marker:</td>
+                                                        <td width="89%">
+                                                            <logic:notPresent name="SM">
+                                                                <html:text property="marker"/>
+                                                            </logic:notPresent>
+                                                            <logic:present name="SM">
+                                                                <html:select property="marker">
+                                                                    <html:options name="SM"/>
+                                                                </html:select>
+                                                            </logic:present>
+                                                            <html:submit value="Add New Marker"/>
+                                                        </td>
+                                                    </tr>
+                                                    <tr bgcolor="white">
+                                                        <td colspan="2"><html:submit value="Add To Selectable Marker List"/></td>
+                                                    </tr>
+                                                </table>
                                             </td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2"><html:submit value="Add To Selectable Marker List"/></td>
                                         </tr>
                                     </table>
                             </td></tr>
                             <tr height="18px"><td>&nbsp;</td></tr>
                             <tr>
                                 <td>
-                                    <table width="100%" border="1">
-                                        <tr>
+                                    <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="green">
+                                        <tr bgcolor="white">
                                             <td width="3%">&nbsp;</td>
                                             <td width="30%"><strong>Host Type</strong></td>
                                             <td width="67%"><strong>Marker</strong></td>
                                         </tr>
                                         <logic:present name="VSM">
                                             <logic:iterate id="vsm" name="VSM" indexId="SMID">
-                                                <tr>
+                                                <tr bgcolor="white">
                                                     <td><input type="radio" name="SMID" id="SMID" value="<bean:write name="SMID"/>"/></td>
                                                     <td><bean:write name="vsm" property="hosttype"/>&nbsp;</td>
                                                     <td><bean:write name="vsm" property="marker"/>&nbsp;</td>
                                                 </tr>
                                             </logic:iterate>
-                                            <tr><td colSpan="3"><html:submit value="Remove From Select Marker List" onclick="return checkSML();"/></td></tr>
+                                            <tr bgcolor="white"><td colSpan="3"><html:submit value="Remove From Select Marker List" onclick="return checkSML();"/></td></tr>
                                         </logic:present>
                                     </table>
                             </td></tr>
                             <tr height="18px"><td>&nbsp;</td></tr>
                         </table>
-                        <html:submit value="Continue"/>
+                        <html:submit value="Continue" onclick="return checkForm();"/>
                         <html:submit value="Back"/>
-                        <html:submit value="Save..."/>
+                        <html:submit value="Save..." onclick="return checkForm();"/>
                     </html:form>
                 </td>
             </tr>
         </table>
+        <div id="divTitle"
+             onmouseout="showTitle(this.id, null, 0, 0);"
+             style="visibility: hidden; position: absolute; float: left; left: 0; top: 0; z-index: 999; border: none 0px black; background-color: #FFFFCC; padding: 10px;">
+        </div>
         <span id="hstitle" style="display:none;">
-            Host Strain:
-            We require that these vectors can grow
-            in T1 phage resistant bacteria. DH5alpha T1 phage-resistant bacteria is
-            our standard bacterial strain. If your vector CANNOT be grown in this
-            strain please indicate this here and describe the strain in detail below.
+            <p><strong><font size="-1">Host Strain:</font></strong></p>
+            <p><font color="#000000" size="-1">We require that these vectors can grow 
+                    in T1 phage resistant bacteria. DH5alpha T1 phage-resistant bacteria is 
+                    our standard bacterial strain. If your vector CANNOT be grown in this 
+            strain please indicate this here and describe the strain in detail below.</font></p>
         </span>
         <span id="gctitle" style="display:none;">
-            Growth Condition:
-            Growth condition refers to the conditions for growing this vector in bacteria. If the growth conditions of the vector alone differ from that of the vector plus the insert, you will have the opportunity to input this information on a later page.
+            <p><font color="#000000" size="-1"><strong>Growth Condition:</strong></font></p>
+            <p><font size="-1">Growth condition refers to the conditions for growing 
+                    this vector in bacteria. If the growth conditions of the vector alone 
+                    differ from that of the vector plus the insert, you will have the opportunity 
+            to input this information on a later page.</font></p><br>
+            <p><font color="#000000" size="-1"><strong>Is Recommended:</strong></font></p>
+            <p><font color="#000000" size="-1">Certain vectors can be grown in several 
+                    different growth conditions. Please indicate which of these growth conditions 
+            you recommend for most experiments.</font></p>            
         </span>
         <span id="smtitle" style="display:none;">
-            Selectable Marker:
-            Please list all selectable markers for this vector and define in what organism this type of selection would be used. For example:
-            
-            Host Type Marker
-            Mammalian puromycin
-            Bacterial ampicillin
+            <p><font color="#000000" size="-1"><strong>Selectable Marker:</strong></font></p>
+            <p><font size="-1">Please list all selectable markers for this vector and 
+            define in what organism this type of selection would be used. For example:</font></p>
+            <table border="0" cellpadding="5" cellspacing="1" bgcolor="green">
+                <tr bgcolor="#FFFFCC">
+                    <th><font size="-1">Host Type Marker</font></th>
+                </tr>
+                <tr bgcolor="#FFFFCC">
+                    <td><font size="-1">Mammalian puromycin</font></td>
+                </tr>
+                <tr bgcolor="#FFFFCC">
+                    <td><font size="-1">Bacterial ampicillin</font></td>
+                </tr>
+            </table>
         </span>
         <script>
-            document.getElementById("hsdesp").title = document.getElementById("hstitle").innerHTML;
-            document.getElementById("gcdesp").title = document.getElementById("gctitle").innerHTML;
-            document.getElementById("smdesp").title = document.getElementById("smtitle").innerHTML;
+            var hstitle = document.getElementById("hstitle").innerHTML;
+            var gctitle = document.getElementById("gctitle").innerHTML;
+            var smtitle = document.getElementById("smtitle").innerHTML;
+            
+            function shdesp(d) {
+                document.getElementById(d).style.display="block";
+            }
+            
+            function hddesp(d) {
+                document.getElementById(d).style.display="none";
+            }
         </script>
         <jsp:include page="footer.jsp" />
     </body>

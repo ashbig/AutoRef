@@ -6,6 +6,7 @@ package plasmid.form;
 
 import java.util.*;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
@@ -182,17 +183,24 @@ public class VSubmitForDistForm extends ActionForm {
             } else if (source.equals("N") && ((psi == null) || (psi.length() < 1))) {
                 errors.add("VIF9", new ActionError("error.PSI.required"));
             }
+            if (sameasvector == null) {
+                HttpSession session = request.getSession();
+                List VGCA = (List) session.getAttribute("VGCA");
+                if ((VGCA == null) || (VGCA.size() < 1)) {
+                    errors.add("VIF9", new ActionError("error.GC.required"));
+                }
+            }
         }
-        
+
         if ((submit.equals("Remove From List")) && (GCID < 0)) {
             errors.add("VIF9", new ActionError("error.GCID.required"));
         }
-        
+
         if ((submit.equals("Add To List")) && ((growthcondition == null) || (growthcondition.length() < 1))) {
             errors.add("VIF9", new ActionError("error.GC.required"));
         }
-        
-        
+
+
         return errors;
     }
 }

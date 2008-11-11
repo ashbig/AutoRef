@@ -64,7 +64,7 @@ public class AddHSAction extends Action {
         String sAction = hsf.getSubmit();
         String HS = hsf.getHS();
         StringConvertor sv = new StringConvertor();
-        List HSs = sv.convertFromStringToList(HS, ", \t\n");
+        List HSs = sv.convertFromStringToList(HS, "\n");
 
         Connection conn = null;
         try {

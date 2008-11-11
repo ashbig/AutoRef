@@ -68,7 +68,7 @@ public class AddVPTAction extends Action {
         CAT = (CAT.equals("A") ? "Assay" : (CAT.equals("C") ? "Cloning System" : (CAT.equals("E") ? "Expression" : "")));
         String cat = vptf.getCAT();
         StringConvertor sv = new StringConvertor();
-        List VPTs = sv.convertFromStringToList(VPT, ", \t\n");
+        List VPTs = sv.convertFromStringToList(VPT, "\n");
 
         Connection conn = null;
         try {

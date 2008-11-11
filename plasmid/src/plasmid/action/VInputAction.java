@@ -70,26 +70,31 @@ public class VInputAction extends Action {
             if (sAction.equals("Save...")) {
                 af = mapping.findForward("save");
                 if (vid == 0) {  // New Vector
+
                     if (vm.getVectorByName(name) != null) {  //Duplicate name, exit error
                         errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("failed.VIA.duplicatename"));
-                        af = new ActionForward(mapping.getInput());
                     } else {
                         saveInfo(session, t, vm, form, uid);
                     }
                 } else { // Update Vector
+
                     CloneVector v = vm.getVectorByName(name);
                     if ((v != null) && (v.getVectorid() != vid)) { // Check for duplicate name
                         errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("failed.VIA.duplicatename"));
-                        af = new ActionForward(mapping.getInput());
                     } else {
                         saveInfo(session, t, vm, form, uid);
                     }
                 }
-            } else { //Continue
+            } else if (sAction.equals("Continue")) { //Continue
                 saveInfo(session, t, vm, form, uid); // Save the info before continue.
-                nextPage(session, vm, vid);
+
+                nextPage(session, vm);
 
                 af = mapping.findForward("continue");
+            } else {
+                session.removeAttribute("Vector");
+                session.removeAttribute("VID");
+                af = mapping.findForward("vSearch");
             }
 
         } catch (Exception ex) {
@@ -122,7 +127,7 @@ public class VInputAction extends Action {
         String mapfilename = mf.getFileName();
         FormFile sf = vif.getSeqfile();
         String seqfilename = sf.getFileName();
-        String comments = "<CMT>" + vif.getComments() + "</CMT>";
+        String comments = ((vif.getComments().length() < 1) ? "" : "<CMT>" + vif.getComments() + "</CMT>");
         String syns = vif.getSyns();
         CloneVector vector = null;
 
@@ -141,8 +146,9 @@ public class VInputAction extends Action {
                 }
 
                 // Add Vector Submission
-                vm.insertVSubmission(uid, vid);
+                vm.insertVSubmission(vid, uid);
             } else { // Update Vector
+
                 vector = new CloneVector(vid, name, "", vform, vtype, vsize, mapfilename, seqfilename, comments);
                 vm.updateVector(vector, true);  // Update vector without update description now.
 
@@ -152,7 +158,7 @@ public class VInputAction extends Action {
                 }
 
                 // Update Vector Submission
-                vm.updateVSubmission(uid, vid);
+                vm.updateVSubmission(vid, uid);
             }
         } catch (Exception ex) {
             if (Constants.DEBUG) {
@@ -173,11 +179,11 @@ public class VInputAction extends Action {
 
     private boolean nextPage(
             HttpSession session,
-            VectorManager vm,
-            int vid) {
+            VectorManager vm) {
         boolean bReturn = true;
 
         // Prepare for next page
+        int vid = (Integer) session.getAttribute("VID");
         List features = vm.getFeatures(vid);
         List featuretypes = vm.getFeatureTypes();
         List featurenames = vm.getFeatureNames();

@@ -86,24 +86,34 @@ public class VectorManager extends TableManager {
 
     public boolean updateVector(CloneVector vector, boolean noDesp) {
         if (noDesp) {
-            String sql = new String("update vector" +
-                    " set name=?, set form=?, set type=?, set sizeinbp=?," +
-                    " set mapfilename=?, set sequencefilename=?, set comments=? where vectorid=?");
+            String sql = new String("update vector set name=?, form=?, type=?, sizeinbp=?, comments=?");
+            if (vector.getMapfilename().length() > 0) {
+                sql = sql + ", mapfilename=?";
+            }
+            if (vector.getSeqfilename().length() > 0) {
+                sql = sql + ", sequencefilename=?";
+            }
+            sql = sql + " where vectorid=?";
             try {
                 PreparedStatement stmt = conn.prepareStatement(sql);
                 stmt.setString(1, vector.getName());
                 stmt.setString(2, vector.getForm());
                 stmt.setString(3, vector.getType());
                 stmt.setInt(4, vector.getSize());
-                stmt.setString(5, vector.getMapfilename());
-                stmt.setString(6, vector.getSeqfilename());
-                stmt.setString(7, vector.getFullComments());
-                stmt.setInt(8, vector.getVectorid());
+                stmt.setString(5, vector.getFullComments());
+                int i = 6;
+                if (vector.getMapfilename().length() > 0) {
+                    stmt.setString(i++, vector.getMapfilename());
+                }
+                if (vector.getSeqfilename().length() > 0) {
+                    stmt.setString(i++, vector.getSeqfilename());
+                }
+                stmt.setInt(i, vector.getVectorid());
 
                 DatabaseTransaction.executeUpdate(stmt);
                 DatabaseTransaction.closeStatement(stmt);
             } catch (Exception ex) {
-                handleError(ex, "Error occured while inserting into VECTOR table");
+                handleError(ex, "Error occured while updating VECTOR table");
                 return false;
             }
         } else {
@@ -113,9 +123,14 @@ public class VectorManager extends TableManager {
     }
 
     public boolean updateVector(CloneVector vector) {
-        String sql = new String("update vector" +
-                " set name=?, set description=?, set form=?, set type=?, set sizeinbp=?," +
-                " set mapfilename=?, set sequencefilename=?, set comments=? where vectorid=?");
+        String sql = new String("update vector set name=?, description=?, form=?, type=?, sizeinbp=?, comments=?");
+        if (vector.getMapfilename().length() > 0) {
+            sql = sql + ", mapfilename=?";
+        }
+        if (vector.getSeqfilename().length() > 0) {
+            sql = sql + ", sequencefilename=?";
+        }
+        sql = sql + " where vectorid=?";
         try {
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, vector.getName());
@@ -123,15 +138,20 @@ public class VectorManager extends TableManager {
             stmt.setString(3, vector.getForm());
             stmt.setString(4, vector.getType());
             stmt.setInt(5, vector.getSize());
-            stmt.setString(6, vector.getMapfilename());
-            stmt.setString(7, vector.getSeqfilename());
-            stmt.setString(8, vector.getFullComments());
-            stmt.setInt(9, vector.getVectorid());
+            stmt.setString(6, vector.getFullComments());
+            int i = 7;
+            if (vector.getMapfilename().length() > 0) {
+                stmt.setString(i++, vector.getMapfilename());
+            }
+            if (vector.getSeqfilename().length() > 0) {
+                stmt.setString(i++, vector.getSeqfilename());
+            }
+            stmt.setInt(i, vector.getVectorid());
 
             DatabaseTransaction.executeUpdate(stmt);
             DatabaseTransaction.closeStatement(stmt);
         } catch (Exception ex) {
-            handleError(ex, "Error occured while inserting into VECTOR table");
+            handleError(ex, "Error occured while updating VECTOR table");
             return false;
         }
         return true;
@@ -202,12 +222,11 @@ public class VectorManager extends TableManager {
         return true;
     }
 
-    
     public boolean updateVHS(int vid, List VHS) {
         if ((vid < 1) || (VHS.size() < 1)) {
             return true;
         }
-        
+
         String sql1 = new String("delete from vectorhost where vectorid=?");
         String sql2 = new String("insert into vectorhost (vectorid, vectorname, hoststrain, isinuse, description) values (?,?,?,?,?)");
 
@@ -289,11 +308,10 @@ public class VectorManager extends TableManager {
             handleError(ex, "Error occured while updating VECTORSEL table");
             return false;
         }
-        
+
         return true;
     }
 
-    
     public boolean updateFeatures(int vid, List features) {
         if ((vid < 1) || (features.size() < 1)) {
             return true;
@@ -516,28 +534,48 @@ public class VectorManager extends TableManager {
         if (VFTs == null) {
             return true;
         }
-        DatabaseTransaction t = null;
         ResultSet rs = null;
-        String sql1 = "select * from featuremaptype where upper(maptype)=";
-        String sql2 = "insert into featuremaptype" +
-                " (maptype)" +
-                " values(?)";
+        String sql1 = "select * from featuremaptype where upper(maptype)=?";
+        String sql2 = "insert into featuremaptype (maptype) values (?)";
         try {
-            t = DatabaseTransaction.getInstance();
-            PreparedStatement stmt2 = conn.prepareStatement(sql2);
-
+            PreparedStatement stmt = conn.prepareStatement(sql1);
             for (int i = 0; i < VFTs.size(); i++) {
                 String v = (String) VFTs.get(i);
-                String sql = new String(sql1 + "'" + v.toUpperCase() + "'");
-                rs = t.executeQuery(sql);
+                stmt.setString(1, v.toUpperCase());
+                rs = stmt.executeQuery();
                 if ((rs != null) && rs.next()) {
-                    continue;
+                    VFTs.set(i, "");
                 }
-
-                stmt2.setString(1, v);
-                DatabaseTransaction.executeUpdate(stmt2);
             }
-            DatabaseTransaction.closeStatement(stmt2);
+            stmt.close();
+            stmt = conn.prepareStatement(sql2);
+            for (int i = 0; i < VFTs.size(); i++) {
+                String v = (String) VFTs.get(i);
+                if (v.length() > 0) {
+                    stmt.setString(1, v);
+                    stmt.executeUpdate();
+                }
+            }
+            stmt.close();
+
+            if (false) {
+                PreparedStatement stmt1 = conn.prepareStatement(sql1);
+                PreparedStatement stmt2 = conn.prepareStatement(sql2);
+
+                for (int i = 0; i < VFTs.size(); i++) {
+                    String v = (String) VFTs.get(i);
+                    stmt1.setString(1, v.toUpperCase());
+                    rs = stmt1.executeQuery();
+                    if ((rs != null) && rs.next()) {
+                        continue;
+                    }
+
+                    stmt2.setString(1, v);
+                    stmt2.executeUpdate();
+                }
+                stmt1.close();
+                stmt2.close();
+            }
         } catch (Exception ex) {
             handleError(ex, "Error occured while inserting into FEATUREMAPTYPE table");
             return false;
@@ -549,29 +587,28 @@ public class VectorManager extends TableManager {
         if (VFNs == null) {
             return true;
         }
-        DatabaseTransaction t = null;
         ResultSet rs = null;
         String sql1 = "select * from featurename where upper(name)=?";
         String sql2 = "insert into featurename" +
                 " (name)" +
                 " values(?)";
         try {
-            t = DatabaseTransaction.getInstance();
             PreparedStatement stmt1 = conn.prepareStatement(sql1);
             PreparedStatement stmt2 = conn.prepareStatement(sql2);
 
             for (int i = 0; i < VFNs.size(); i++) {
                 String v = (String) VFNs.get(i);
                 stmt1.setString(1, v.toUpperCase());
-                rs = DatabaseTransaction.executeQuery(stmt1);
+                rs = stmt1.executeQuery();
                 if ((rs != null) && rs.next()) {
                     continue;
                 }
 
                 stmt2.setString(1, v);
-                DatabaseTransaction.executeUpdate(stmt2);
+                stmt2.executeUpdate();
             }
-            DatabaseTransaction.closeStatement(stmt2);
+            stmt1.close();
+            stmt2.close();
         } catch (Exception ex) {
             handleError(ex, "Error occured while inserting into FEATURENAME table");
             return false;
@@ -583,28 +620,28 @@ public class VectorManager extends TableManager {
         if (HSs == null) {
             return true;
         }
-        DatabaseTransaction t = null;
         ResultSet rs = null;
-        String sql1 = "select * from hoststrain where upper(hoststrain)=";
+        String sql1 = "select * from hoststrain where upper(hoststrain)=?";
         String sql2 = "insert into hoststrain" +
                 " (hoststrain)" +
                 " values(?)";
         try {
-            t = DatabaseTransaction.getInstance();
+            PreparedStatement stmt1 = conn.prepareStatement(sql1);
             PreparedStatement stmt2 = conn.prepareStatement(sql2);
 
             for (int i = 0; i < HSs.size(); i++) {
                 String v = (String) HSs.get(i);
-                String sql = new String(sql1 + "'" + v.toUpperCase() + "'");
-                rs = t.executeQuery(sql);
+                stmt1.setString(1, v.toUpperCase());
+                rs = stmt1.executeQuery();
                 if ((rs != null) && rs.next()) {
                     continue;
                 }
 
                 stmt2.setString(1, v);
-                DatabaseTransaction.executeUpdate(stmt2);
+                stmt2.executeUpdate();
             }
-            DatabaseTransaction.closeStatement(stmt2);
+            stmt1.close();
+            stmt2.close();
         } catch (Exception ex) {
             handleError(ex, "Error occured while inserting into HOSTSTRAIN table");
             return false;
@@ -616,28 +653,30 @@ public class VectorManager extends TableManager {
         if (HTs == null) {
             return true;
         }
-        DatabaseTransaction t = null;
+
         ResultSet rs = null;
-        String sql1 = "select * from hosttype where upper(type)=";
+        String sql1 = "select * from hosttype where upper(type)=?";
         String sql2 = "insert into hosttype" +
                 " (type)" +
                 " values(?)";
         try {
-            t = DatabaseTransaction.getInstance();
+            PreparedStatement stmt1 = conn.prepareStatement(sql1);
             PreparedStatement stmt2 = conn.prepareStatement(sql2);
 
             for (int i = 0; i < HTs.size(); i++) {
                 String v = (String) HTs.get(i);
-                String sql = new String(sql1 + "'" + v.toUpperCase() + "'");
-                rs = t.executeQuery(sql);
+                stmt1.setString(1, v.toUpperCase());
+                rs = stmt1.executeQuery();
                 if ((rs != null) && rs.next()) {
                     continue;
                 }
 
                 stmt2.setString(1, v);
-                DatabaseTransaction.executeUpdate(stmt2);
+                stmt2.executeUpdate();
+                ;
             }
-            DatabaseTransaction.closeStatement(stmt2);
+            stmt1.close();
+            stmt2.close();
         } catch (Exception ex) {
             handleError(ex, "Error occured while inserting into HOSTTYPE table");
             return false;
@@ -657,12 +696,12 @@ public class VectorManager extends TableManager {
         try {
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = null;
-            rs = DatabaseTransaction.executeQuery(stmt);
+            rs = stmt.executeQuery();
             while (rs.next()) {
                 SMs.add(rs.getString(1));
             }
-            DatabaseTransaction.closeResultSet(rs);
-            DatabaseTransaction.closeStatement(stmt);
+            rs.close();
+            stmt.close();
         } catch (Exception ex) {
             if (Constants.DEBUG) {
                 System.out.println(ex);
@@ -684,14 +723,14 @@ public class VectorManager extends TableManager {
         try {
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = null;
-            rs = DatabaseTransaction.executeQuery(stmt);
+            rs = stmt.executeQuery();
             while (rs.next()) {
                 GrowthCondition gc = new GrowthCondition(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4),
                         rs.getString(5), rs.getString(6));
                 GCs.add(gc);
             }
-            DatabaseTransaction.closeResultSet(rs);
-            DatabaseTransaction.closeStatement(stmt);
+            rs.close();
+            stmt.close();
         } catch (Exception ex) {
             if (Constants.DEBUG) {
                 System.out.println(ex);
@@ -713,12 +752,12 @@ public class VectorManager extends TableManager {
         try {
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = null;
-            rs = DatabaseTransaction.executeQuery(stmt);
+            rs = stmt.executeQuery();
             while (rs.next()) {
                 GCs.add(rs.getString(1));
             }
-            DatabaseTransaction.closeResultSet(rs);
-            DatabaseTransaction.closeStatement(stmt);
+            rs.close();
+            stmt.close();
         } catch (Exception ex) {
             if (Constants.DEBUG) {
                 System.out.println(ex);
@@ -740,12 +779,12 @@ public class VectorManager extends TableManager {
         try {
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = null;
-            rs = DatabaseTransaction.executeQuery(stmt);
+            rs = stmt.executeQuery();
             while (rs.next()) {
                 HSs.add(rs.getString(1));
             }
-            DatabaseTransaction.closeResultSet(rs);
-            DatabaseTransaction.closeStatement(stmt);
+            rs.close();
+            stmt.close();
         } catch (Exception ex) {
             if (Constants.DEBUG) {
                 System.out.println(ex);
@@ -767,12 +806,12 @@ public class VectorManager extends TableManager {
         try {
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = null;
-            rs = DatabaseTransaction.executeQuery(stmt);
+            rs = stmt.executeQuery();
             while (rs.next()) {
                 HTs.add(rs.getString(1));
             }
-            DatabaseTransaction.closeResultSet(rs);
-            DatabaseTransaction.closeStatement(stmt);
+            rs.close();
+            stmt.close();
         } catch (Exception ex) {
             if (Constants.DEBUG) {
                 System.out.println(ex);
@@ -793,13 +832,13 @@ public class VectorManager extends TableManager {
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = null;
             stmt.setInt(1, vid);
-            rs = DatabaseTransaction.executeQuery(stmt);
+            rs = stmt.executeQuery();
             while (rs.next()) {
                 VectorSelectMarker v = new VectorSelectMarker(vid, rs.getString(1), rs.getString(2));
                 VSMs.add(v);
             }
-            DatabaseTransaction.closeResultSet(rs);
-            DatabaseTransaction.closeStatement(stmt);
+            rs.close();
+            stmt.close();
         } catch (Exception ex) {
             if (Constants.DEBUG) {
                 System.out.println(ex);
@@ -820,13 +859,13 @@ public class VectorManager extends TableManager {
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = null;
             stmt.setInt(1, vid);
-            rs = DatabaseTransaction.executeQuery(stmt);
+            rs = stmt.executeQuery();
             while (rs.next()) {
                 VectorGrowthCondition vgc = new VectorGrowthCondition(vid, rs.getInt(1), rs.getString(2), rs.getString(3));
                 VGCs.add(vgc);
             }
-            DatabaseTransaction.closeResultSet(rs);
-            DatabaseTransaction.closeStatement(stmt);
+            rs.close();
+            stmt.close();
         } catch (Exception ex) {
             if (Constants.DEBUG) {
                 System.out.println(ex);
@@ -847,13 +886,13 @@ public class VectorManager extends TableManager {
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = null;
             stmt.setInt(1, vid);
-            rs = DatabaseTransaction.executeQuery(stmt);
+            rs = stmt.executeQuery();
             while (rs.next()) {
                 VectorHostStrain vhs = new VectorHostStrain(vid, rs.getString(1), rs.getString(2), rs.getString(3));
                 VHSs.add(vhs);
             }
-            DatabaseTransaction.closeResultSet(rs);
-            DatabaseTransaction.closeStatement(stmt);
+            rs.close();
+            stmt.close();
         } catch (Exception ex) {
             if (Constants.DEBUG) {
                 System.out.println(ex);
@@ -870,29 +909,29 @@ public class VectorManager extends TableManager {
         if (CAT == null) {
             return false;
         }
-        DatabaseTransaction t = null;
         ResultSet rs = null;
-        String sql1 = "select * from vectorpropertytype where upper(category)='" + CAT.toUpperCase() + "' and upper(propertytype)=";
+        String sql1 = "select * from vectorpropertytype where upper(category)='" + CAT.toUpperCase() + "' and upper(propertytype)=?";
         String sql2 = "insert into vectorpropertytype" +
                 " (propertytype, category)" +
                 " values(?, ?)";
         try {
-            t = DatabaseTransaction.getInstance();
+            PreparedStatement stmt1 = conn.prepareStatement(sql1);
             PreparedStatement stmt2 = conn.prepareStatement(sql2);
 
             for (int i = 0; i < VPTs.size(); i++) {
                 String v = (String) VPTs.get(i);
-                String sql = new String(sql1 + "'" + v.toUpperCase() + "'");
-                rs = t.executeQuery(sql);
+                stmt1.setString(1, v.toUpperCase());
+                rs = stmt1.executeQuery();
                 if ((rs != null) && rs.next()) {
                     continue;
                 }
 
                 stmt2.setString(1, v);
                 stmt2.setString(2, CAT);
-                DatabaseTransaction.executeUpdate(stmt2);
+                stmt2.executeUpdate();
             }
-            DatabaseTransaction.closeStatement(stmt2);
+            stmt1.close();
+            stmt2.close();
         } catch (Exception ex) {
             handleError(ex, "Error occured while inserting into VECTORPROPERTYTYPE table");
             return false;
@@ -904,28 +943,28 @@ public class VectorManager extends TableManager {
         if (SMs == null) {
             return true;
         }
-        DatabaseTransaction t = null;
         ResultSet rs = null;
         String sql1 = "select * from marker where upper(marker)=";
         String sql2 = "insert into marker" +
                 " (marker)" +
                 " values(?)";
         try {
-            t = DatabaseTransaction.getInstance();
+            PreparedStatement stmt1 = conn.prepareStatement(sql1);
             PreparedStatement stmt2 = conn.prepareStatement(sql2);
 
             for (int i = 0; i < SMs.size(); i++) {
                 String v = (String) SMs.get(i);
-                String sql = new String(sql1 + "'" + v.toUpperCase() + "'");
-                rs = t.executeQuery(sql);
+                stmt1.setString(1, v.toUpperCase());
+                rs = stmt1.executeQuery();
                 if ((rs != null) && rs.next()) {
                     continue;
                 }
 
                 stmt2.setString(1, v);
-                DatabaseTransaction.executeUpdate(stmt2);
+                stmt2.executeUpdate();
             }
-            DatabaseTransaction.closeStatement(stmt2);
+            stmt1.close();
+            stmt2.close();
         } catch (Exception ex) {
             handleError(ex, "Error occured while inserting into MARKER table");
             return false;
@@ -937,19 +976,17 @@ public class VectorManager extends TableManager {
         if (GCs == null) {
             return true;
         }
-        DatabaseTransaction t = null;
         ResultSet rs = null;
         String sql1 = "select * from growthcondition where upper(name)=?";
         String sql2 = "insert into growthcondition (growthid, name, hosttype, antibioticselection, growthcondition, comments) " +
                 " values(?,?,?,?,?,?)";
         try {
-            t = DatabaseTransaction.getInstance();
             PreparedStatement stmt1 = conn.prepareStatement(sql1);
             PreparedStatement stmt2 = conn.prepareStatement(sql2);
 
             for (int i = 0; i < GCs.size(); i++) {
                 GrowthCondition gc = (GrowthCondition) GCs.get(i);
-                stmt1.setString(1, gc.getName());
+                stmt1.setString(1, gc.getName().toUpperCase());
                 rs = stmt1.executeQuery();
                 if ((rs != null) && rs.next()) {
                     continue;
@@ -962,9 +999,10 @@ public class VectorManager extends TableManager {
                 stmt2.setString(4, gc.getSelection());
                 stmt2.setString(5, gc.getCondition());
                 stmt2.setString(6, gc.getComments());
-                DatabaseTransaction.executeUpdate(stmt2);
+                stmt2.executeUpdate();
             }
-            DatabaseTransaction.closeStatement(stmt2);
+            stmt1.close();
+            stmt2.close();
         } catch (Exception ex) {
             handleError(ex, "Error occured while inserting into GROWTHCONDITION table");
             return false;
@@ -1023,9 +1061,9 @@ public class VectorManager extends TableManager {
                 stmt.setString(3, vp.getType());
                 stmt.setString(4, vp.getDate());
                 //System.out.println(vp.getVectorid()+"\t"+vp.getAuthorid());
-                DatabaseTransaction.executeUpdate(stmt);
+                stmt.executeUpdate();
             }
-            DatabaseTransaction.closeStatement(stmt);
+            stmt.close();
         } catch (Exception ex) {
             handleError(ex, "Error occured while inserting into VECTORAUTHOR table");
             return false;
@@ -1049,9 +1087,9 @@ public class VectorManager extends TableManager {
                 stmt.setInt(1, vp.getVectorid());
                 stmt.setInt(2, vp.getPublicationid());
 
-                DatabaseTransaction.executeUpdate(stmt);
+                stmt.executeUpdate();
             }
-            DatabaseTransaction.closeStatement(stmt);
+            stmt.close();
         } catch (Exception ex) {
             handleError(ex, "Error occured while inserting into VECTORPUBLICATIOIN table");
             return false;
@@ -1635,7 +1673,7 @@ public class VectorManager extends TableManager {
             return null;
         }
         CloneVector vector = null;
-        /*        
+        /*
         CloneVector vector = this.getVectorByName(name);
         if(vector != null)
         return vector;

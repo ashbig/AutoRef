@@ -154,7 +154,7 @@ public class VInput4Action extends Action {
                     vsm = new VectorSelectMarker(vid, vif.getHosttype(), vif.getMarker());
                     VSM.add(vsm);
                 }
-                updateGC(session, vm, VSM);
+                updateSM(session, vm, VSM);
 
                 af = new ActionForward(mapping.getInput());
             } else if (sAction.equals("Remove From Host Strain List")) {

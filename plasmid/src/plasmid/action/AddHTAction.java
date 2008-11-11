@@ -64,7 +64,7 @@ public class AddHTAction extends Action {
         String sAction = htf.getSubmit();
         String HT = htf.getHT();
         StringConvertor sv = new StringConvertor();
-        List HTs = sv.convertFromStringToList(HT, ", \t\n");
+        List HTs = sv.convertFromStringToList(HT, "\n");
 
         Connection conn = null;
         try {

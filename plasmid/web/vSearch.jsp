@@ -11,8 +11,9 @@
         <title>Search Vector by Name</title>
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
         <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
+            <script src="js/common.js"></script>
     </head>
-
+    
     <body>
         <jsp:include page="homeTitle.jsp" />
         <table width="1000" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
@@ -24,9 +25,9 @@
                     <jsp:include page="vSearchTitle.jsp" />
                     <html:form action="/vSearch">
                         <html:errors/>
-
+                        
                         <h2>Submit Vector Information</h2>
-
+                        
                         <p>The following pages are designed to help you submit information about the vectors
                             you will be depositing with the Protein Structure Initiative Material Repository
                         (PSI-MR) or the Harvard Institute of Proteomics (HIP) plasmid repository.</p>
@@ -60,27 +61,28 @@
                             </tr>
                         </table>
                     </html:form>
-
-                    <logic:present name="vSearchForm" property="results">
-                        <logic:empty name="vSearchForm" property="results">
-                            <center><font color="red"><b>No Vector Found. Please try again.</b></font></center>
-                        </logic:empty>
-                        <logic:notEmpty name="vSearchForm" property="results">
-                            <p>We found the following vectors. Please click the vector name to review the
-                                detailed information to make sure it is the same vector. If you don't think
-                                our database has your vector information, please continue your submission. Please
-                            note that vector names in our database have to be unique.</p>
-                            <html:form action="/continueVSubmit">
-                                <html:submit value="Continue to Vector Submission Page"/>
+                    <p></p>
+                    <html:form action="/continueVSubmit">
+                        <html:submit value="Continue to Vector Submission Page"/>
+                        <p></p>
+                        <logic:present name="vSearchForm" property="results">
+                            <logic:empty name="vSearchForm" property="results">
+                                <center><font color="red"><b>No Vector Found. Please try again.</b></font></center>
+                            </logic:empty>
+                            <logic:notEmpty name="vSearchForm" property="results">
+                                <p>We found the following vectors. Please click the vector name to review the
+                                    detailed information to make sure it is the same vector. If you don't think
+                                    our database has your vector information, please continue your submission. Please
+                                note that vector names in our database have to be unique.</p>
                                 <p></p>
-                                <table width="100%" border="1">
-                                    <tr>
+                                <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="red">
+                                    <tr bgcolor="white">
                                         <td width="4%">&nbsp;</td>
                                         <td width="16%"><strong>Vector Name</strong></td>
                                         <td width="80%"><strong>Description</strong></td>
                                     </tr>
                                     <logic:iterate id="result" name="vSearchForm" property="results">
-                                        <tr>
+                                        <tr bgcolor="white">
                                             <td>
                                                 <logic:equal name="result" property="status" value="<%=Constants.PENDING%>">
                                                     <input type="radio" id="VID" name="VID" value="<bean:write name="result" property="vectorid"/>">
@@ -91,20 +93,19 @@
                                                     <bean:write name="result" property="name"/>&nbsp;
                                                 </html:link>
                                             </td>
-                                            <td><bean:write name="result" property="description"/></td>
+                                            <td><bean:write name="result" property="description"/>&nbsp;</td>
                                         </tr>
                                     </logic:iterate>
                                 </table>
                                 <p></p>
                                 <html:submit value="Continue to Vector Submission Page"/>
-                            </html:form>
-                        </logic:notEmpty>
-                    </logic:present>
-
+                            </logic:notEmpty>
+                        </logic:present>
+                    </html:form>
                 </td>
             </tr>
         </table>
-
+        
     <jsp:include page="footer.jsp" /></body>
 </html>
 

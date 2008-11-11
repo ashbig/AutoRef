@@ -22,7 +22,7 @@
                 </td>
                 <td width="83%" align="left" valign="top">
                     <jsp:include page="pReceiveTitle.jsp" />
-                    <html:form action="/pReceive" method="POST">
+                    <html:form action="/pReceive" method="POST" enctype="multipart/form-data">
                         <html:errors/>
                         <table width="100%" border="0">
                             <tr><td><h2>Receive Plasmids</h2></td></tr>
@@ -32,15 +32,15 @@
                             <logic:present name="Clone">
                                 <tr height="18px"><td></td></tr>
                                 <tr><td>
-                                        <table width="100%" border="1">
-                                            <tr align="center" bgcolor="#CCCCCC">
+                                        <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="blue">
+                                            <tr bgcolor="white" align="center" bgcolor="#CCCCCC">
                                                 <td width="10%"><strong>Clone ID</strong></td>
                                                 <td width="10%"><strong>Status</strong></td>
                                                 <td width="25%"><strong>Host Strain</strong></td>
                                                 <td width="25%"><strong>Restriction</strong></td>
                                                 <td width="30%"><strong>Special MTA</strong></td>
                                             </tr>
-                                            <tr>
+                                            <tr bgcolor="white">
                                                 <td><bean:write name="Clone" property="cloneid"/></td>
                                                 <td>
                                                     <html:select property="status">
@@ -73,10 +73,10 @@
                                             </tr>
                                         </table>
                                 </td></tr>
-                                <tr height="12px"><td></td></tr>
-                                <tr><td>
-                                        <table width="100%" border="0">
-                                            <tr>
+                                <tr bgcolor="white" height="12px"><td></td></tr>
+                                <tr bgcolor="white"><td>
+                                        <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="blue">
+                                            <tr bgcolor="white">
                                                 <td width="17%" align="right"><strong>Who submitted:</strong></td>
                                                 <td width="24%">
                                                     <input type="text" name="sender" id="sender">
@@ -86,7 +86,7 @@
                                                     <input type="text" name="sdate" id="sdate">
                                                 </td>
                                             </tr>
-                                            <tr>
+                                            <tr bgcolor="white">
                                                 <td align="right"><strong>Who received:</strong></td>
                                                 <td>
                                                     <input type="text" name="receiver" id="receiver">
@@ -99,8 +99,8 @@
                                         </table>
                                         
                                 </td></tr>
-                                <tr height="18px"><td></td></tr>
-                                <tr><td><html:submit value="Submit" onclick="return checkForm();"/></td></tr>
+                                <tr bgcolor="white" height="18px"><td></td></tr>
+                                <tr bgcolor="white"><td><html:submit value="Submit" onclick="return checkForm();"/></td></tr>
                             </logic:present>
                         </table>
                     </html:form>

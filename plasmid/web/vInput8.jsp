@@ -12,6 +12,7 @@
         <title>Submit vector information - Step 8</title>
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
         <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
+        <script src="js/common.js"></script>
     </head>
     
     <body>
@@ -38,6 +39,10 @@
                 </td>
             </tr>
         </table>
+        <div id="divTitle"
+             onmouseout="showTitle(this.id, null, 0, 0);"
+             style="visibility: hidden; position: absolute; float: left; left: 0; top: 0; z-index: 999; border: none 0px black; background-color: #FFFFCC; padding: 10px;">
+        </div>
         
     <jsp:include page="footer.jsp" /></body>
 </html>

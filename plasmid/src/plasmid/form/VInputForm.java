@@ -89,18 +89,25 @@ public class VInputForm extends ActionForm {
    }
    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
        ActionErrors errors = new ActionErrors();
-       if (getName() == null || getName().length() < 1) {
+       if (!submit.equals("Cancel")) {
+       if (name == null || name.length() < 1) {
            errors.add("Name", new ActionError("error.NAME.required"));
-           // TODO: add 'error.VN.required' key to your resources
        }
-       int nbp = getSize();
-       if (nbp < 1) {
-           errors.add("Size", new ActionError("error.SIZE.required"));
-           // TODO: add 'error.VN.required' key to your resources
+       if (form == null || form.length() < 1) {
+           errors.add("Form", new ActionError("error.FORM.required"));
        }
-       if (nbp != Math.floor(nbp))
-              errors.add("Size", new ActionError("error.SIZE.needinteger"));
+       if (type == null || type.length() < 1) {
+           errors.add("Form", new ActionError("error.TYPE.required"));
+       }       
+
+//       if (size < 1) {
+  //         errors.add("Size", new ActionError("error.SIZE.required"));
+           // TODO: add 'error.VN.required' key to your resources
+    //   }
+ //      if (size != (int) Math.floor(size))
+//              errors.add("Size", new ActionError("error.SIZE.needinteger"));
        
+       }
        return errors;
    }
 }
