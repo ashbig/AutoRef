@@ -11,6 +11,7 @@ update workflow set workflowtype='REARRAY'	 where name='Rearray Oligo Plates';
 update workflow set workflowtype='REARRAY'	 where name='Rearray Production Plates';	
 update workflow set workflowtype='REARRAY'	 where name='Rearray Template Plates';	
 update workflow set workflowtype='REARRAY'	 where name='Rearray working expression clones';	
+
 update workflow set workflowtype='TRANSFER_TO_EXPRESSION'	 where name='Transfer clones into expression vector';	
 update workflow set workflowtype='TRANSFER_TO_EXPRESSION'	 where name='Transfer clones to expression vector pBY011';	
 update workflow set workflowtype='TRANSFER_TO_EXPRESSION'	 where name='Transfer clones to expression vector pCITE-GST';	

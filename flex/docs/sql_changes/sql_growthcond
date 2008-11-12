@@ -214,3 +214,95 @@ PROMPT Creating Sequence 'BMCONDITIONID'
  insert into biomaterialtype values( 'METABOLIC'        );
 insert into biomaterialtype values( 'HOSTSTRAIN' );
 insert into biomaterialtype values( 'MEDIA' );
+
+
+
+
+
+insert into SETUPPROPERTYNAME values('ISOLIGOREARRAY' );
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('ISOLIGOREARRAY', -1,-1,
+(select workflowid from workflow where name='Rearray Oligo Plates'),  'YES' );
+
+
+insert into SETUPPROPERTYNAME values('ISSHOWOPTIONSFOROLIGOREARRAY' );
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('ISSHOWOPTIONSFOROLIGOREARRAY', -1,-1,
+(select workflowid from workflow where name='Convert Fusion to Close - Creator Workflow'),  'YES' );
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('ISSHOWOPTIONSFOROLIGOREARRAY', -1,-1,
+(select workflowid from workflow where name='Convert Close to Fusion - Creator Workflow'),  'YES' );
+
+
+insert into SETUPPROPERTYNAME values('ISARRANGEBYFORMAT_REARRAY' );
+insert into SETUPPROPERTYNAME values('PLATETYPE_REARRAY' );
+insert into SETUPPROPERTYNAME values('SAMPLETYPE_REARRAY' );
+insert into SETUPPROPERTYNAME values('SOURCEFORMAT_REARRAY' );
+
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('SOURCEFORMAT_REARRAY', -1,-1,
+(select workflowid from workflow where name='Rearray working expression clones'),  'EXP' );
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('SOURCEFORMAT_REARRAY', -1,-1,
+(select workflowid from workflow where name='Rearray clones to distribution DNA plates'),  'EXP' );
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('SOURCEFORMAT_REARRAY', -1,-1,
+(select workflowid from workflow where name='Rearray clones to distribution glycerol stocks'),  'EXP' );
+
+
+
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('PLATETYPE_REARRAY', -1,-1,
+(select workflowid from workflow where name='Rearray working expression clones'),  'EXP' );
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('SAMPLETYPE_REARRAY', -1,-1,
+(select workflowid from workflow where name='Rearray working expression clones'),  'EXP' );
+
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('ISARRANGEBYFORMAT_REARRAY', -1,-1,
+(select workflowid from workflow where name='Rearray clones to working glycerol stocks'),  'EXP' );
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('ISARRANGEBYFORMAT_REARRAY', -1,-1,
+(select workflowid from workflow where name='Rearray clones to working DNA plates'),  'EXP' );
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('ISARRANGEBYFORMAT_REARRAY', -1,-1,
+(select workflowid from workflow where name='Rearray clones to DNA archive storage plates'),  'EXP' );
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('ISARRANGEBYFORMAT_REARRAY', -1,-1,
+(select workflowid from workflow where name='Rearray clones to glycerol archive storage plates'),  'EXP' );
+
+insert into WORKFLOWTYPE (workflowtype) values ( 'REARRAY_CLONES');
+insert into WORKFLOWTYPE (workflowtype) values ( 'REARRAY_SAMPLES');
+
+
+update workflow set workflowtype='REARRAY_SAMPLES'	 where name='Rearray Production Plates';
+update workflow set workflowtype='REARRAY_CLONES'	 where name='Rearray clones to working glycerol stocks';
+update workflow set workflowtype='REARRAY_CLONES'	 where name='Rearray clones to working DNA plates';
+update workflow set workflowtype='REARRAY_CLONES'	 where name='Rearray clones to DNA archive storage plates';
+update workflow set workflowtype='REARRAY_CLONES'	 where name='Rearray clones to glycerol archive storage plates';
+update workflow set workflowtype='REARRAY_CLONES'	 where name='Rearray clones to sequencing glycerol stocks';
+update workflow set workflowtype='REARRAY_CLONES'	 where name='Rearray clones to sequencing DNA plates';
+update workflow set workflowtype='REARRAY_CLONES'	 where name='Rearray clones to distribution DNA plates';
+update workflow set workflowtype='REARRAY_CLONES'	 where name='Rearray clones to distribution glycerol stocks';
+update workflow set workflowtype='REARRAY_SAMPLES'	 where name='Rearray Template Plates';
+update workflow set workflowtype='REARRAY_SAMPLES'	 where name='Rearray Oligo Plates';
+update workflow set workflowtype='REARRAY_CLONES'	 where name='Rearray working expression clones';
+ 
+
+//old set
+update workflow set workflowtype='REARRAY'	 where name='Rearray clones to distribution DNA plates';	
+update workflow set workflowtype='REARRAY'	 where name='Rearray clones to distribution glycerol stocks';	
+update workflow set workflowtype='REARRAY'	 where name='Rearray clones to DNA archive storage plates';	
+update workflow set workflowtype='REARRAY'	 where name='Rearray clones to glycerol archive storage plates';	
+update workflow set workflowtype='REARRAY'	 where name='Rearray clones to sequencing DNA plates';	
+update workflow set workflowtype='REARRAY'	 where name='Rearray clones to sequencing glycerol stocks';	
+update workflow set workflowtype='REARRAY'	 where name='Rearray clones to working DNA plates';	
+update workflow set workflowtype='REARRAY'	 where name='Rearray clones to working glycerol stocks';	
+update workflow set workflowtype='REARRAY'	 where name='Rearray Oligo Plates';	
+update workflow set workflowtype='REARRAY'	 where name='Rearray Production Plates';	
+update workflow set workflowtype='REARRAY'	 where name='Rearray Template Plates';	
+update workflow set workflowtype='REARRAY'	 where name='Rearray working expression clones';	

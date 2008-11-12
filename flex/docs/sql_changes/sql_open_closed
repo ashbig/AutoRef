@@ -139,3 +139,42 @@ values ('ISSHOWOPTIONSFOROLIGOREARRAY', -1,-1,
 (select workflowid from workflow where name='Convert Close to Fusion - Creator Workflow'),  'YES' );
 
 
+insert into SETUPPROPERTYNAME values('ISARRANGEBYFORMAT_REARRAY' );
+insert into SETUPPROPERTYNAME values('PLATETYPE_REARRAY' );
+insert into SETUPPROPERTYNAME values('SAMPLETYPE_REARRAY' );
+insert into SETUPPROPERTYNAME values('SOURCEFORMAT_REARRAY' );
+
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('SOURCEFORMAT_REARRAY', -1,-1,
+(select workflowid from workflow where name='Rearray working expression clones'),  'EXP' );
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('SOURCEFORMAT_REARRAY', -1,-1,
+(select workflowid from workflow where name='Rearray clones to distribution DNA plates'),  'EXP' );
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('SOURCEFORMAT_REARRAY', -1,-1,
+(select workflowid from workflow where name='Rearray clones to distribution glycerol stocks'),  'EXP' );
+
+
+
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('PLATETYPE_REARRAY', -1,-1,
+(select workflowid from workflow where name='Rearray working expression clones'),  'EXP' );
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('SAMPLETYPE_REARRAY', -1,-1,
+(select workflowid from workflow where name='Rearray working expression clones'),  'EXP' );
+
+
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('ISARRANGEBYFORMAT_REARRAY', -1,-1,
+(select workflowid from workflow where name='Rearray clones to working glycerol stocks'),  'EXP' );
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('ISARRANGEBYFORMAT_REARRAY', -1,-1,
+(select workflowid from workflow where name='Rearray clones to working DNA plates'),  'EXP' );
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('ISARRANGEBYFORMAT_REARRAY', -1,-1,
+(select workflowid from workflow where name='Rearray clones to DNA archive storage plates'),  'EXP' );
+insert into SETUP_PROPERTIES (propertyname, protocolid, projectid, workflowid,   propertyvalue)	
+values ('ISARRANGEBYFORMAT_REARRAY', -1,-1,
+(select workflowid from workflow where name='Rearray clones to glycerol archive storage plates'),  'EXP' );
