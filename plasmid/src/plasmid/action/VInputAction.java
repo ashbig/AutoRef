@@ -183,7 +183,7 @@ public class VInputAction extends Action {
         boolean bReturn = true;
 
         // Prepare for next page
-        int vid = (Integer) session.getAttribute("VID");
+        int vid = ((Integer) session.getAttribute("VID")).intValue();
         List features = vm.getFeatures(vid);
         List featuretypes = vm.getFeatureTypes();
         List featurenames = vm.getFeatureNames();
