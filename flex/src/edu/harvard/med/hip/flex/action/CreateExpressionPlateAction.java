@@ -100,9 +100,10 @@ public class CreateExpressionPlateAction extends ResearcherAction {
         int threadid = container.getThreadid();
         String labelPrefix = null;
         String oldLabel = container.getLabel();
-        String species = oldLabel.substring(0, 1);
+        String project_code = oldLabel.substring(0, 1);
         
-        if("H".equals(species)) {
+      /* String species = oldLabel.substring(0, 1);
+       if("H".equals(species)) {
             labelPrefix = "HsxXG";
         } else if("Y".equals(species)) {
             labelPrefix = "ScxXG";
@@ -120,8 +121,31 @@ public class CreateExpressionPlateAction extends ResearcherAction {
             labelPrefix = "YpxXG";
         } else if("I".equals(species)) {
             labelPrefix = "YptXG";
-        } else {
-            errors.add("sourcePlate", new ActionError("error.plate.invalid.barcode", sourcePlate));
+        } */
+        //get Project id by code
+        try
+        {
+          
+            Project project = Project.getProjectByCode(project_code);
+           
+             String key = ""+project.getId()+ProjectWorkflowProtocolInfo.PWP_SEPARATOR+
+             "-1"+ProjectWorkflowProtocolInfo.PWP_SEPARATOR+
+             "-1"+ProjectWorkflowProtocolInfo.PWP_SEPARATOR +"LABEL_PREFIX_EXPRESSION_REARRAY";
+
+            labelPrefix = ProjectWorkflowProtocolInfo.getInstance().getPWPProperties().get(key);
+        }
+        catch (Exception e)
+        {
+            errors.add("sourcePlate", new ActionError("error.plate.invalid.barcode.for.expression.plate", sourcePlate));
+                saveErrors(request, errors);
+                return (new ActionForward(mapping.getInput()));
+           
+        }
+        
+                
+        if (labelPrefix == null) 
+        {
+            errors.add("sourcePlate", new ActionError("error.plate.invalid.barcode.for.expression.plate", sourcePlate));
             saveErrors(request, errors);
             return (new ActionForward(mapping.getInput()));
         }

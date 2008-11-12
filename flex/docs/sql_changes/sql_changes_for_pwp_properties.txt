@@ -79,4 +79,5 @@ insert into SETUPPROPERTYNAME values ('PROJECT_OPEN');
 insert into SETUPPROPERTYNAME values ('PROJECT_CLOSED');
 insert into SETUPPROPERTYNAME values ('PROJECT_OPEN_CLOSED');
 insert into setuppropertyname values('VECTOR_NAME');
+insert into setuppropertyname values('LABEL_PREFIX_EXPRESSION_REARRAY');
 

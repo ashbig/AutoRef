@@ -191,6 +191,47 @@ public class Project
         this.workflows = workflows;
     }
 
+    public static Project    getProjectByCode(String code)throws Exception
+    {
+          //try to get from memory
+          Project project = null;
+        if (ProjectWorkflowProtocolInfo.getInstance().getProjects() != null )
+        {
+            Iterator iter = ProjectWorkflowProtocolInfo.getInstance().getProjects().values().iterator();
+            while (iter.hasNext())  
+            {
+                project = (Project)iter.next();
+                if ( project.getCode() != null && 
+                        project.getCode().equals(code))
+                {
+                    return project;
+                }
+            }
+            return null;
+            
+        }
+
+
+        String sql = "select * from project where code = '" + code +"'";
+        DatabaseTransaction t = DatabaseTransaction.getInstance();
+        ResultSet rs = t.executeQuery(sql);
+        try {
+            if (rs.next()) 
+            {
+                 project= new  Project(rs.getInt("projectid"), rs.getString("NAME"),
+                        rs.getString("DESCRIPTION"),
+                        rs.getString("VERSION"),
+                        rs.getString("CODE"),0);
+      
+            }
+            return project;
+             
+        } catch (SQLException sqlE) {
+            throw new FlexDatabaseException(sqlE + "\nSQL: " + sql);
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+    }
     /**
      * Return the project id.
      *
