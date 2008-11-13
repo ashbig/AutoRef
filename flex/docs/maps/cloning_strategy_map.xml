@@ -6,12 +6,12 @@
 <file_maps>
 <file_map file_type="FILE_TYPE_CLONING_STRATEGY" >
     
-    <file_column header="FIVE_PRIME_LINKER_NAME" object="CLONING_STRATEGY"  property_name="FIVE_PRIME_LINKER_NAME"/>
-    <file_column header="THREE_PRIME_LINKER_NAME" object="CLONING_STRATEGY"  property_name="THREE_PRIME_LINKER_NAME"/>
-    <file_column header="VECTOR_NAME" object="CLONING_STRATEGY"  property_name="VECTOR_NAME"/>
+    <file_column header="FIVE_PRIME_LINKER_NAME" object="CLONING_STRATEGY"  property_name="FIVE_PRIME_LINKER_NAME" dbcolumn_length="149"/>
+    <file_column header="THREE_PRIME_LINKER_NAME" object="CLONING_STRATEGY"  property_name="THREE_PRIME_LINKER_NAME" dbcolumn_length="149"/>
+    <file_column header="VECTOR_NAME" object="CLONING_STRATEGY"  property_name="VECTOR_NAME" dbcolumn_length="149"/>
 
    <file_column header="TYPE" object="CLONING_STRATEGY"   property_name="TYPE" />
-   <file_column header="STRATEGY_NAME" object="CLONING_STRATEGY"   property_name="STRATEGY_NAME" />
+   <file_column header="STRATEGY_NAME" object="CLONING_STRATEGY"   property_name="STRATEGY_NAME" dbcolumn_length="149"/>
 
 
 </file_map>

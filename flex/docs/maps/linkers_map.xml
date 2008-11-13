@@ -5,7 +5,7 @@
 
 <file_maps>
 <file_map file_type="FILE_TYPE_LINKER_INFO">
-    <file_column header="linker_name" object="LINKER"  property_name="LINKER_NAME" />
+    <file_column header="linker_name" object="LINKER"  property_name="LINKER_NAME" dbcolumn_length="149"/>
     <file_column header="linker_sequence" object="LINKER"   property_name="LINKER_SEQUENCE"/>	
     
 </file_map>

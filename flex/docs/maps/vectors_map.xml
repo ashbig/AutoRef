@@ -5,8 +5,8 @@
 
 <file_maps>
 <file_map file_type="FILE_TYPE_VECTOR_INFO">
-    <file_column header="vector_name" object="VECTOR"  property_name="VECTOR_NAME" key="1"/>
-    <file_column header="vector_source" object="VECTOR"   property_name="SOURCE"/>	
+    <file_column header="vector_name" object="VECTOR"  property_name="VECTOR_NAME" key="1" dbcolumn_length="149"/>
+    <file_column header="vector_source" object="VECTOR"   property_name="SOURCE" dbcolumn_length="49"/>	
     <file_column header="vector_type" object="VECTOR" property_name="TYPE"/>
     <file_column header="description" object="VECTOR" property_name="DESCRIPTION"   />
         <file_column header="restriction" object="VECTOR" property_name="RESTRICTIONS"   />
@@ -16,10 +16,10 @@
 </file_map>
 
 <file_map file_type="FILE_TYPE_VECTOR_FEATURE_INFO">
-    <file_column header="vector_name" object="VECTOR_FEATURE"  property_name="VECTOR_NAME" key="1"/>
-    <file_column header="feature_type" object="VECTOR_FEATURE" property_name="DESCRIPTION"/>	
-    <file_column header="name" object="VECTOR_FEATURE" property_name="FEATURE_NAME"/>	
-    <file_column header="status" object="VECTOR_FEATURE" property_name="STATUS"/>	
+    <file_column header="vector_name" object="VECTOR_FEATURE"  property_name="VECTOR_NAME" key="1" dbcolumn_length="149"/>
+    <file_column header="feature_type" object="VECTOR_FEATURE" property_name="DESCRIPTION" dbcolumn_length="249"/>	
+    <file_column header="name" object="VECTOR_FEATURE" property_name="FEATURE_NAME" dbcolumn_length="149"/>	
+    <file_column header="status" object="VECTOR_FEATURE" property_name="STATUS" dbcolumn_length="239"/>	
 
   
 </file_map>	
