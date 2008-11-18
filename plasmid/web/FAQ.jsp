@@ -58,7 +58,7 @@
        A. There are two ways to pay for shipping:
         <ul>
           <li>Provide us with you FedEx number.</li>
-          <li>Flat shiping rate of $10 for domestic orders and $20 for international orders.</li>
+          <li>Flat shipping rate of $10 for domestic orders and $20 for international orders.</li>
         </ul>
     
             <strong>Q. Why am I charged for  a plasmid?</strong> <br>
@@ -73,9 +73,9 @@
             <strong>Q. In what form will I  receive the plasmids?</strong> <br>
         A. We usually ship plasmids at  room temperature (no ice) as freshly-prepared bacterial glycerol stocks.&nbsp;  Our years of experience have shown that plasmids are stable in that format  during shipment (streak out and/or freeze at -80 upon arrival). We occasionally  ship plasmids as purified DNA dried on Sample Matrix from BioMatrica. For  international requests, we send DNA spotted to sterile filter paper (recover by  adding TE or a similar buffer, followed by transformation). </span></p>
         <p><strong>Q. Can I pick up my plasmids from your facility?<br>
-        </strong>A. Unfortunately we do not have pick-up from our facility.  However, we ship the plasmids to you by FedEx overnight, so you will recieve your order the day after it is processed.</p>
-        <p><strong>Q. How long will it take for me to recieve my plasmids?</strong><br>
-        A. You will recieve your plasmids with 1-4 weeks of your order.  There are several reasons for this amount of time. For each order, we pick the clones from our BioBank, grow them overnight, and then ship overnight.  We do not ship over the weekend to ensure that people are in your laboratory to receive the order.  At minimum filling your order will take three days, however, we fill orders based on when we receive them, so if there are 10 orders in front of you, it may take more time to get to picking your order.  Also if you place a large order it takes more time to pick the clones, and this can take up to 4 weeks. </p>
+        </strong>A. Unfortunately we do not have pick-up from our facility.  However, we ship the plasmids to you by FedEx overnight, so you will receive your order the day after it is processed.</p>
+        <p><strong>Q. How long will it take for me to receive my plasmids?</strong><br>
+        A. You will receive your plasmids with 1-4 weeks of your order.  There are several reasons for this amount of time. For each order, we pick the clones from our BioBank, grow them overnight, and then ship overnight.  We do not ship over the weekend to ensure that people are in your laboratory to receive the order.  At minimum filling your order will take three days, however, we fill orders based on when we receive them, so if there are 10 orders in front of you, it may take more time to get to picking your order.  Also if you place a large order it takes more time to pick the clones, and this can take up to 4 weeks. </p>
         <p><span class="mainbodytext"><strong>Q.&nbsp; Will I need to  get a signature on an MTA?</strong> <br>
           A. For certain plasmids, yes you will need  an MTA signature. We will be sure to identify the correct MTA and send it to you electronically to be signed by the appropriate official in your technology transfer office.&nbsp; An original signed copy of the MTA should be  returned to Catherine Cormier at Harvard Institute of Proteomics, 320 Charles Street, Cambridge MA 02141.&nbsp; We will ship your plasmids  within 2 days of receipt of the signed MTA.</span></p>
 <span class="mainbodytext">More specifically, if you are: <br> 
