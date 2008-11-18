@@ -61,7 +61,13 @@ public class ProjectWorkflowProtocolInfo {
     public Hashtable getProjects() {
         return s_projects;
     }
-
+public String getProjectCode(int projectid)
+{
+    String result = null;
+    Project pr = s_projects.get( String.valueOf(projectid));
+    result = pr.getCode();
+    return result;
+}
     public Hashtable getWorkflows() {
         return s_workflows;
     }
@@ -362,13 +368,18 @@ public class ProjectWorkflowProtocolInfo {
              ProjectWorkflowProtocolInfo.reloadProjectWorkflowProtocolInfo();// .getInstance();
    
              ProjectWorkflowProtocolInfo prf = ProjectWorkflowProtocolInfo.getInstance();
-   //Workflow w = new Workflow(65);
+             String res = ProjectWorkflowProtocolInfo.getInstance().getProjectCode(6);
+             System.out.println(res);
+             res = ProjectWorkflowProtocolInfo.getInstance().getProjectCode(23);
+             System.out.println(res);
+             //Workflow w = new Workflow(65);
        //     Workflow ww = new Workflow(w, "new name", 165);
-              DatabaseTransaction t = DatabaseTransaction.getInstance();
-             Connection conn = t.requestConnection();
+             
+            //  DatabaseTransaction t = DatabaseTransaction.getInstance();
+           //  Connection conn = t.requestConnection();
           
-              Workflow w=  edu.harvard.med.hip.flex.action.AddWorkflowItemsAction.createNewWorkflowFromTemplate
-          (65,159,"newworkflow", "TRANSFER_TO_EXPRESSION", conn);
+            //  Workflow w=  edu.harvard.med.hip.flex.action.AddWorkflowItemsAction.createNewWorkflowFromTemplate
+         //(65,159,"newworkflow", "TRANSFER_TO_EXPRESSION", conn);
           System.exit(0);
       }catch(Exception e)
       {
