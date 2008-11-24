@@ -151,7 +151,9 @@ public class GeneralReport extends ReportDefinition
                     case SPECIES :
                     case FLEXSEQUENCE_STATUS: {isRefSequence= true ; break;}
                     case NAMES   :   {isRefSequence= true ;isRefSequenceNames= true ; break;}
-                    case  CDS_TEXT  :    {isRefSequence= true ;isRefSequenceText= true ; break;}
+                    case  CDS_TEXT  :    
+                  case FS_SEQUENCE:    {isRefSequence= true ;isRefSequenceText= true ; break;}
+                  
                   case   PROJECT_NAME:
                   case         WORKFLOW_NAME :
                  // case         QUEUE_PROTOCOL_NAME:     { isPlateLabel = true; isProcessingStatus= true ; break;}
