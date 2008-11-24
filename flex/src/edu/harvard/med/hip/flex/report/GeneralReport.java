@@ -820,7 +820,7 @@ sql="select label as item1, '' || c.containerid as item2, '' || sampleid as item
                 }
                 break;
             }
-            case CDS_TEXT : {if ( refsequence != null && refsequence.getSequenceText() != null){ record[column_number]= refsequence.getSequenceText().substring(refsequence.getCDSStart()-1, refsequence.getCDSStop()-1);}break;}
+            case CDS_TEXT : {if ( refsequence != null && refsequence.getSequenceText() != null){ record[column_number]= refsequence.getSequenceText().substring(refsequence.getCDSStart()-1, refsequence.getCDSStop());}break;}
             case FS_SEQUENCE: {if ( refsequence != null && refsequence.getSequenceText() != null){  record[column_number]=refsequence.getSequenceText();}break;}
             case FLEXSEQUENCE_STATUS :     {if ( refsequence != null){record[column_number]=refsequence.getFlexStatus();}break;}
             case CONSTRUCT_TYPE:
