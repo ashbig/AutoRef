@@ -172,7 +172,7 @@ public String getTitle() {        return "Upload of information for third-party 
         }
         finally
          {
-          
+            if ( conn != null) DatabaseTransaction.closeConnection(conn);
             sendEmails("New plates upload into FLEX","New plates upload into FLEX");
          }
     
@@ -1048,13 +1048,13 @@ public String getTitle() {        return "Upload of information for third-party 
             
         }
         boolean isAllFlexsequenceNamesExists = checkNamesInDatabase(flexsequence_names, ConstantsImport.s_flex_names);
-        if ( !isAllFlexsequenceNamesExists) m_error_messages.add("Check 'NAMETYPE' table.");
+        if ( !isAllFlexsequenceNamesExists) m_error_messages.add("Check 'NAMETYPE' table."+ Algorithms.convertStringArrayToString(flexsequence_names,","));
         boolean isAllContainerNamesExists = checkNamesInDatabase(container_names, ConstantsImport.s_container_names);
-          if ( !isAllContainerNamesExists) m_error_messages.add("Check 'CONTAINERHEADER_NAMETYPE' table.");
+          if ( !isAllContainerNamesExists) m_error_messages.add("Check 'CONTAINERHEADER_NAMETYPE' table. "+ Algorithms.convertStringArrayToString(container_names,","));
          boolean isAllSampleExists = checkNamesInDatabase(sample_names, ConstantsImport.s_sample_type_names);
-         if ( !isAllSampleExists) m_error_messages.add("Check 'SAMPLE_NAMETYPE' table.");
+         if ( !isAllSampleExists) m_error_messages.add("Check 'SAMPLE_NAMETYPE' table."+ Algorithms.convertStringArrayToString(sample_names,","));
        boolean isSpeciesExists = checkNamesInDatabase(species_names, ConstantsImport.s_species_names);
-       if ( !isSpeciesExists ) m_error_messages.add("Check 'SPECIES' table.");
+       if ( !isSpeciesExists ) m_error_messages.add("Check 'SPECIES' table."+ Algorithms.convertStringArrayToString(species_names,","));
         return (isAllFlexsequenceNamesExists && isAllContainerNamesExists && isAllSampleExists && isSpeciesExists);
     }
     
