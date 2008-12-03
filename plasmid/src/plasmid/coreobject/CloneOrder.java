@@ -35,10 +35,10 @@ public class CloneOrder {
         CloneOrder.PENDING, 
         CloneOrder.PENDING_MTA,
         CloneOrder.PENDING_AQIS,
-        CloneOrder.PENDING_PAYMENT,
         CloneOrder.MTA_RECEIVED,
         CloneOrder.CANCEL, 
         CloneOrder.INPROCESS, 
+        CloneOrder.PENDING_PAYMENT,
         CloneOrder.PARTIALLY_SHIPPED,
         CloneOrder.SHIPPED, 
         CloneOrder.COMPLETE};
