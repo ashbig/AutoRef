@@ -1443,4 +1443,26 @@ public class OrderProcessManager {
         
         return mtas;
     }
+    
+    public boolean validatePonumber(String ponumber) {
+        if (ponumber == null || ponumber.trim().length() < 1 || ponumber.trim().toUpperCase().equals(Constants.PAYPAL.toUpperCase())) {
+            return false;
+        }
+        
+        StringTokenizer st = new StringTokenizer(ponumber);
+        String s1 = null;
+        if(st.hasMoreTokens()) {
+            s1 = st.nextToken();
+            if(s1.toUpperCase().equals("CREDIT")) {
+                if(st.hasMoreTokens()) {
+                    s1 = st.nextToken();
+                    if(s1.toUpperCase().equals("CARD")) {
+                        return false;
+                    }
+                }
+            }
+        }
+        
+        return true;
+    }
 }

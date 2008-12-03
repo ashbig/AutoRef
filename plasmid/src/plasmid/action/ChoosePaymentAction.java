@@ -153,7 +153,7 @@ public class ChoosePaymentAction extends UserAction {
         }
         if (Constants.PO.equals(payment)) {
             ponumber = ((CheckoutForm) form).getPonumber();
-            if (ponumber == null || ponumber.trim().length() < 1) {
+            if (!manager.validatePonumber(ponumber)) {
                 errors.add("ponumber", new ActionError("error.ponumber.required"));
                 saveErrors(request, errors);
 
