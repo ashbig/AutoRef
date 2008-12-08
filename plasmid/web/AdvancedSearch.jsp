@@ -24,6 +24,7 @@
     <td width="83%" align="left" valign="top">
 	<jsp:include page="advancedSearchTitle.jsp" />
       <html:form action="AdvancedSearch.do">
+          
 <table width="100%" border="0">
   <tr> 
     <td width="15%" class="formlabel">Gene name or symbol</td>
@@ -257,6 +258,8 @@
     <td>&nbsp;</td>
   </tr>
 </table>
+
+<input type="hidden" name="psi" value="<bean:write name="psi"/>"/>
       </html:form></td>
   </tr>
 </table> 

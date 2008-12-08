@@ -250,6 +250,18 @@ public class Clone implements Serializable {
         return cs.convertFromListToString(namesByType);
     }
     
+    public String getOriginalCloneid() {
+        return getNameString(CloneNameType.ORIGINAL_CLONE_ID);
+    }
+    
+    public String getPdbid() {
+        return getNameString(CloneNameType.PDB_ID);
+    }
+    
+    public String getTargetid() {
+        return getNameString(CloneNameType.TARGETDB_ID);
+    }
+    
     public String getTargetGenbankString() {
         String genbank = "";
         for(int i=0; i<inserts.size(); i++) {

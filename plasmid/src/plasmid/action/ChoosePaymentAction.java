@@ -50,7 +50,7 @@ public class ChoosePaymentAction extends UserAction {
         ActionErrors errors = new ActionErrors();
 
         String payment = ((CheckoutForm) form).getPaymentmethod();
-        String ponumber = null;
+        String ponumber = ((CheckoutForm) form).getPonumber();
 
         User user = (User) request.getSession().getAttribute(Constants.USER_KEY);
         List items = (List) request.getSession().getAttribute(Constants.CART);
@@ -80,7 +80,56 @@ public class ChoosePaymentAction extends UserAction {
         String billingfax = ((CheckoutForm) form).getBillingfax();
         boolean saveInfo = ((CheckoutForm) form).getSaveInfo();
         int orderid = ((CheckoutForm) form).getOrderid();
+        
+        OrderProcessManager manager = new OrderProcessManager();
+        List mtas = null;
+        try {
+            mtas = manager.getMTAs(items);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            errors.add(ActionErrors.GLOBAL_ERROR,
+                        new ActionError("error.database.error", "Error occured while getting MTAs from database."));
+            saveErrors(request, errors);
+            return (mapping.findForward("error"));
+        }
+        
+        String status = CloneOrder.PENDING;
+        String ismta = ((CheckoutForm)form).getIsmta();
+       
+        if(mtas.size()>0) {
+            if(ismta.equals(CloneOrder.ISMTA_NO) || ismta.equals(CloneOrder.ISMTA_YES)) {
+                ismta = CloneOrder.ISMTA_YES;
+                status = CloneOrder.PENDING_MTA;
+            }
+        }
 
+        Calendar c = Calendar.getInstance();
+        String time = c.getTime().toString();
+        if (Constants.PO.equals(payment)) {
+            if (!manager.validatePonumber(ponumber)) {
+                errors.add("ponumber", new ActionError("error.ponumber.required"));
+                saveErrors(request, errors);
+
+                request.setAttribute("date", time);
+
+                return (new ActionForward(mapping.getInput()));
+            }
+            if (country.equals("Australia")) {
+                status = CloneOrder.PENDING_AQIS;
+            }
+        } else {
+            if(ponumber != null && ponumber.trim().length()>0) {
+                errors.add("ponumber", new ActionError("error.ponumber.notempty"));
+                saveErrors(request, errors);
+
+                request.setAttribute("date", time);
+
+                return (new ActionForward(mapping.getInput()));
+            }
+            status = CloneOrder.PENDING_PAYMENT;
+            ponumber = Constants.PAYPAL;
+        }
+        
         String shippingAddress = "";
         if (organization != null) {
             shippingAddress += organization + "\n";
@@ -126,48 +175,6 @@ public class ChoosePaymentAction extends UserAction {
         double costOfCollections = ((CheckoutForm) form).getCostOfCollections();
         double shippingCost = ((CheckoutForm) form).getCostForShipping();
         double totalCost = ((CheckoutForm) form).getTotalPrice();
-
-        Calendar c = Calendar.getInstance();
-        String time = c.getTime().toString();
-
-        OrderProcessManager manager = new OrderProcessManager();
-        List mtas = null;
-        try {
-            mtas = manager.getMTAs(items);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            errors.add(ActionErrors.GLOBAL_ERROR,
-                        new ActionError("error.database.error", "Error occured while getting MTAs from database."));
-            saveErrors(request, errors);
-            return (mapping.findForward("error"));
-        }
-        
-        String status = CloneOrder.PENDING;
-        String ismta = ((CheckoutForm)form).getIsmta();
-       
-        if(mtas.size()>0) {
-            if(ismta.equals(CloneOrder.ISMTA_NO) || ismta.equals(CloneOrder.ISMTA_YES)) {
-                ismta = CloneOrder.ISMTA_YES;
-                status = CloneOrder.PENDING_MTA;
-            }
-        }
-        if (Constants.PO.equals(payment)) {
-            ponumber = ((CheckoutForm) form).getPonumber();
-            if (!manager.validatePonumber(ponumber)) {
-                errors.add("ponumber", new ActionError("error.ponumber.required"));
-                saveErrors(request, errors);
-
-                request.setAttribute("date", time);
-
-                return (new ActionForward(mapping.getInput()));
-            }
-            if (country.equals("Australia")) {
-                status = CloneOrder.PENDING_AQIS;
-            }
-        } else {
-            status = CloneOrder.PENDING_PAYMENT;
-            ponumber = Constants.PAYPAL;
-        }
 
         CloneOrder order = new CloneOrder(orderid, time, status, ponumber, shippingto, billingto, shippingAddress, billingAddress, numOfClones, numOfCollections, costOfClones, costOfCollections, shippingCost, totalCost, user.getUserid());
         order.setShippingmethod(shippingMethod);

@@ -213,6 +213,7 @@
                name="advancedSearchForm"
               input="/AdvancedSearch.jsp">
       <forward  name="success"  path="/DisplayVectorSearchResults.jsp"/>
+      <forward  name="success_psi"  path="/DisplayVectorSearchResultsPSI.jsp"/>
       <forward  name="empty"  path="/DisplayEmptySearchResults.jsp"/>
     </action>
     

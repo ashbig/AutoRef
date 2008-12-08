@@ -59,14 +59,14 @@
   <tr>
     <td class="tableheader">&nbsp;</td>
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=cloneid">Clone ID</a></td>
-    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=clonetype">Clone Type</a></td>
+    <td class="tableheader">Original Clone ID</td>
+    <td class="tableheader">PDB ID</td>
+    <td class="tableheader">PepcDB ID</td>
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=geneid">Species Specific ID</a></td>
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=genesymbol">Gene Symbol</a></td>
-    <td class="tableheader">Keywords</td>
     <td class="tableheader">Gene Name</td>
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=targetseq">Reference Sequence</a></td>
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=mutdis">Mutation/ Discrepancy</a></td>
-    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=insertformat">Insert Format</a></td>
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=vectorname">Vector</a></td>
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=selection">Selection Markers</a></td>
     <td class="tableheader">&nbsp;</td>
@@ -79,10 +79,10 @@
   <tr class="tableinfo"> 
     <td><%=++i%></td>
     <td><a target="_blank" href="GetCloneDetail.do?cloneid=<bean:write name="clone" property="cloneid"/>&species=<bean:write name="refseqSearchForm" property="species"/>"><bean:write name="clone" property="name"/></a></td>
-    <td><bean:write name="clone" property="type"/></td>
+    <td><bean:write name="clone" property="originalCloneid"/></td>
+    <td><a target="_blank" href="http://www.rcsb.org/pdb/explore/explore.do?structureId=<bean:write name="clone" property="pdbid"/>"><bean:write name="clone" property="pdbid"/></a></td>
+    <td><a target="_blank" href="http://pepcdb.pdb.org/servlet/PepcSearch?pdbid=&which_lab=&status=&statusinhistory=&stopstatus=&seqname=Query&which_seq=SG&Aftermonth=&Afterday=&Afteryear=&Beforemonth=&Beforeday=&Beforeyear=&p_name=&org_name=&protocol_id=&p_type=&p_text=&Sequence=&format=html&pfamid=&cp=1&target_category=&id=<bean:write name="clone" property="targetid"/>"><bean:write name="clone" property="targetid"/></a></td>
     <logic:equal name="clone" property="type" value="<%=Clone.NOINSERT%>">
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
     <td>&nbsp;</td>
     <td>&nbsp;</td>
     <td>&nbsp;</td>
@@ -126,11 +126,9 @@
     <td><bean:write name="insert" property="geneid"/></td>
     </logic:equal>
     <td><bean:write name="insert" property="name"/></td>
-    <td><bean:write name="insert" property="annotation"/></td>
     <td><bean:write name="insert" property="description"/></td>
     <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=nucleotide&val=<bean:write name="insert" property="targetseqidForNCBI"/>"><bean:write name="insert" property="targetgenbank"/></a></td>
     <td><bean:write name="insert" property="hasmutdis"/></td>
-    <td><bean:write name="insert" property="format"/></td>
     </logic:iterate>
     </logic:notEqual>
     <td><a target="_blank" href="GetVectorDetail.do?vectorid=<bean:write name="clone" property="vectorid"/>"><bean:write name="clone" property="vectorname"/></a></td>

@@ -108,6 +108,7 @@ public class AdvancedSearchForm extends ActionForm {
         pmid=null;
         pmidOp=Constants.OPERATOR_EQUALS;
         species = Constants.ALL;
+        psi = 0;
     }
 
     public String getProteinExpress() {

@@ -7,11 +7,8 @@ package plasmid.action;
 
 import java.util.*;
 import java.io.*;
-import java.sql.*;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionError;
@@ -19,8 +16,6 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionServlet;
-import org.apache.struts.util.MessageResources;
 
 import plasmid.form.AdvancedSearchForm;
 import plasmid.form.RefseqSearchForm;
@@ -30,7 +25,6 @@ import plasmid.Constants;
 import plasmid.process.QueryProcessManager;
 import plasmid.database.DatabaseManager.UserManager;
 import plasmid.query.handler.*;
-import plasmid.util.CloneInfoComparator;
 
 /**
  *
@@ -121,7 +115,12 @@ public class AdvancedSearchAction extends Action {
             species = null;
         }
         String psicenter = ((AdvancedSearchForm) form).getPsicenter();
-
+        int psi = ((AdvancedSearchForm) form).getPsi();
+        
+        boolean isClonename = false;
+        if(psi == 1)
+            isClonename = true;
+        
         GeneQueryHandler handler = null;
         Set foundSet = null;
         QueryProcessManager manager = new QueryProcessManager();
@@ -139,7 +138,7 @@ public class AdvancedSearchAction extends Action {
                     return (mapping.findForward("error"));
                 }
 
-                foundSet = manager.processAdvancedQuery(foundSet, handler, restrictions, species);
+                foundSet = manager.processAdvancedQuery(foundSet, handler, restrictions, species, isClonename);
 
                 if (foundSet.size() == 0) {
                     return (mapping.findForward("empty"));
@@ -158,7 +157,7 @@ public class AdvancedSearchAction extends Action {
                     return (mapping.findForward("error"));
                 }
 
-                foundSet = manager.processAdvancedQuery(foundSet, handler, restrictions, species);
+                foundSet = manager.processAdvancedQuery(foundSet, handler, restrictions, species, isClonename);
 
                 if (foundSet.size() == 0) {
                     return (mapping.findForward("empty"));
@@ -177,7 +176,7 @@ public class AdvancedSearchAction extends Action {
                     return (mapping.findForward("error"));
                 }
 
-                foundSet = manager.processAdvancedQuery(foundSet, handler, restrictions, species);
+                foundSet = manager.processAdvancedQuery(foundSet, handler, restrictions, species, isClonename);
 
                 if (foundSet.size() == 0) {
                     return (mapping.findForward("empty"));
@@ -196,7 +195,7 @@ public class AdvancedSearchAction extends Action {
                     return (mapping.findForward("error"));
                 }
 
-                foundSet = manager.processAdvancedQuery(foundSet, handler, restrictions, species);
+                foundSet = manager.processAdvancedQuery(foundSet, handler, restrictions, species, isClonename);
 
                 if (foundSet.size() == 0) {
                     return (mapping.findForward("empty"));
@@ -214,7 +213,7 @@ public class AdvancedSearchAction extends Action {
                     return (mapping.findForward("error"));
                 }
 
-                foundSet = manager.processAdvancedQuery(foundSet, handler, restrictions, species);
+                foundSet = manager.processAdvancedQuery(foundSet, handler, restrictions, species, isClonename);
 
                 if (foundSet.size() == 0) {
                     return (mapping.findForward("empty"));
@@ -230,7 +229,7 @@ public class AdvancedSearchAction extends Action {
                     return (mapping.findForward("error"));
                 }
 
-                foundSet = manager.processAdvancedQuery(foundSet, handler, restrictions, species);
+                foundSet = manager.processAdvancedQuery(foundSet, handler, restrictions, species, isClonename);
 
                 if (foundSet.size() == 0) {
                     return (mapping.findForward("empty"));
@@ -247,7 +246,7 @@ public class AdvancedSearchAction extends Action {
                         return (mapping.findForward("error"));
                     }
 
-                    foundSet = manager.processAdvancedQuery(foundSet, handler, restrictions, species);
+                    foundSet = manager.processAdvancedQuery(foundSet, handler, restrictions, species, isClonename);
 
                     if (foundSet.size() == 0) {
                         return (mapping.findForward("empty"));
@@ -266,7 +265,7 @@ public class AdvancedSearchAction extends Action {
                     return (mapping.findForward("error"));
                 }
 
-                foundSet = manager.processAdvancedQuery(foundSet, handler, restrictions, species);
+                foundSet = manager.processAdvancedQuery(foundSet, handler, restrictions, species, isClonename);
 
                 if (foundSet.size() == 0) {
                     return (mapping.findForward("empty"));
@@ -282,7 +281,7 @@ public class AdvancedSearchAction extends Action {
                     return (mapping.findForward("error"));
                 }
 
-                foundSet = manager.processAdvancedQuery(foundSet, handler, restrictions, species);
+                foundSet = manager.processAdvancedQuery(foundSet, handler, restrictions, species, isClonename);
 
                 if (foundSet.size() == 0) {
                     return (mapping.findForward("empty"));
@@ -298,7 +297,7 @@ public class AdvancedSearchAction extends Action {
                     return (mapping.findForward("error"));
                 }
 
-                foundSet = manager.processAdvancedQuery(foundSet, handler, restrictions, species);
+                foundSet = manager.processAdvancedQuery(foundSet, handler, restrictions, species, isClonename);
 
                 if (foundSet.size() == 0) {
                     return (mapping.findForward("empty"));
@@ -314,7 +313,7 @@ public class AdvancedSearchAction extends Action {
                     return (mapping.findForward("error"));
                 }
 
-                foundSet = manager.processAdvancedQuery(foundSet, handler, restrictions, species);
+                foundSet = manager.processAdvancedQuery(foundSet, handler, restrictions, species, isClonename);
 
                 if (foundSet.size() == 0) {
                     return (mapping.findForward("empty"));
@@ -337,7 +336,7 @@ public class AdvancedSearchAction extends Action {
                     return (mapping.findForward("error"));
                 }
 
-                foundSet = manager.processAdvancedQuery(foundSet, handler, restrictions, species);
+                foundSet = manager.processAdvancedQuery(foundSet, handler, restrictions, species, isClonename);
 
                 if (foundSet.size() == 0) {
                     return (mapping.findForward("empty"));
@@ -362,6 +361,9 @@ public class AdvancedSearchAction extends Action {
         request.getSession().setAttribute("numOfFound", new Integer(founds.size()));
         request.getSession().setAttribute("found", founds);
 
+        if(psi==1)
+            return (mapping.findForward("success_psi"));
+        
         return (mapping.findForward("success"));
     }
 }

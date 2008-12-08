@@ -58,6 +58,7 @@ public abstract class GeneQueryHandler {
     protected int foundCloneCount;
     // protected int noFoundTotal;
     // protected List totalFoundCloneids;
+    private boolean isClonename;
     
     /** Creates a new instance of GeneQueryHandler */
     public GeneQueryHandler() {
@@ -164,9 +165,8 @@ public abstract class GeneQueryHandler {
             }
             DatabaseTransaction.closeResultSet(rs);
             DatabaseTransaction.closeStatement(stmt);
-            
             CloneManager manager = new CloneManager(conn);
-            foundClones = manager.queryClonesByCloneid(new ArrayList(cloneids), true, true, false, isGrowth, restrictions,clonetypes,species,status);
+            foundClones = manager.queryClonesByCloneid(new ArrayList(cloneids), true, true, false, isGrowth, restrictions,clonetypes,species,status,isIsClonename());
         } catch (Exception ex) {
             throw ex;
         } finally {
@@ -320,5 +320,13 @@ public abstract class GeneQueryHandler {
             sql += " and status='"+status+"'";
         
         return CloneManager.queryCloneCounts(totalFoundCloneids, nofound, sql);
+    }
+
+    public boolean isIsClonename() {
+        return isClonename;
+    }
+
+    public void setIsClonename(boolean isClonename) {
+        this.isClonename = isClonename;
     }
 }

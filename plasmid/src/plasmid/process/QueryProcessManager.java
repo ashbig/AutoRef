@@ -262,9 +262,10 @@ public class QueryProcessManager {
         return l;
     }
     
-    public Set processAdvancedQuery(Set foundSet, GeneQueryHandler handler, List restrictions, String species) throws Exception {
+    public Set processAdvancedQuery(Set foundSet, GeneQueryHandler handler, List restrictions, String species, boolean isClonename) throws Exception {
         StringConvertor sc = new StringConvertor();
-      
+        handler.setIsClonename(isClonename);
+        
         if(foundSet == null) {
             handler.doQuery(restrictions, null, species, -1, -1, null, Clone.AVAILABLE);
             foundSet = new TreeSet(new CloneInfoComparator());
