@@ -76,22 +76,35 @@ public class AddHTAction extends Action {
             }
             List ht = vm.getHTs("");
             session.removeAttribute("HT");
+            session.removeAttribute(Constants.HTS);
             if ((ht != null) && (ht.size() > 0)) {
                 session.setAttribute("HT", ht);
+                session.setAttribute(Constants.HTS, ht);
             }
+
+            String gcru = htf.getGCRU();
             String ru = htf.getRU();
             if ((ru != null) && (ru.length() > 0)) {
                 af = mapping.findForward(ru);
             }
 
             if (bReturn) {
+                if ((gcru != null) && (gcru.length() > 0)) {
+                    request.setAttribute("RU", gcru);
+                }
                 if ((ru == null) || (ru.length() < 1)) {
                     errors.add(ActionErrors.GLOBAL_ERROR,
                             new ActionError("success.HT.add"));
                 }
             } else {
+                if ((gcru != null) && (gcru.length() > 0)) {
+                    request.setAttribute("GCRU", gcru);
+                }
+
                 af = null;
-                request.setAttribute("RU", ru);
+                if ((ru != null) && (ru.length() > 0)) {
+                    request.setAttribute("RU", ru);
+                }
                 errors.add(ActionErrors.GLOBAL_ERROR,
                         new ActionError("failed.HT.add"));
             }

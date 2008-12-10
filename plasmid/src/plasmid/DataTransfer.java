@@ -45,7 +45,8 @@ public class DataTransfer {
         
         DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
         connection = DriverManager.getConnection(url, username, password);
-        connection.setAutoCommit(false);
+        // connection.setAutoCommit(false);
+        connection.setAutoCommit(true);
         return connection;
     }
     

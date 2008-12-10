@@ -25,8 +25,8 @@ import plasmid.database.DatabaseManager.*;
 import plasmid.database.DatabaseManager.UserManager;
 import plasmid.database.DatabaseManager.VectorManager;
 
-
 public class FindAuthorAction extends Action {
+
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
      * response (or forward to another web component that will create it).
@@ -43,27 +43,26 @@ public class FindAuthorAction extends Action {
      * @exception ServletException if a servlet exception occurs
      */
     public ActionForward perform(ActionMapping mapping,
-    ActionForm form,
-    HttpServletRequest request,
-    HttpServletResponse response)
-    throws ServletException, IOException {
-        
+            ActionForm form,
+            HttpServletRequest request,
+            HttpServletResponse response)
+            throws ServletException, IOException {
+
         // get the parameters specified by the customer
         ActionErrors errors = new ActionErrors();
         ActionForward af = null;
         HttpSession session = request.getSession();
         session.removeAttribute("Author");
-        FindAuthorForm vif = (FindAuthorForm)form;
+        FindAuthorForm vif = (FindAuthorForm) form;
         if (vif.getSubmit().equals("Select")) {
-        int aid = vif.getAID();
+            int aid = vif.getAID();
             List as = (List) session.getAttribute("Authors");
-        Authorinfo a = (Authorinfo) as.get(aid);
-        session.setAttribute("Author", a);
+            Authorinfo a = (Authorinfo) as.get(aid);
+            session.setAttribute("Author", a);
         }
-        
+
         af = mapping.findForward(vif.getRU());
         saveErrors(request, errors);
         return (af);
     }
-        
 }

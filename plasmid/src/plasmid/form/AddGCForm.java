@@ -102,7 +102,7 @@ public class AddGCForm extends ActionForm {
 
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
         ActionErrors errors = new ActionErrors();
-        if (!getSubmit().equals("Return")) {
+        if (submit.equals("Add Growth Condition")) {
             if (getGC() == null || getGC().length() < 1) {
                 errors.add("GC", new ActionError("error.GC.required"));
             // TODO: add 'error.GC.required' key to your resources

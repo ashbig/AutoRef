@@ -557,25 +557,6 @@ public class VectorManager extends TableManager {
                 }
             }
             stmt.close();
-
-            if (false) {
-                PreparedStatement stmt1 = conn.prepareStatement(sql1);
-                PreparedStatement stmt2 = conn.prepareStatement(sql2);
-
-                for (int i = 0; i < VFTs.size(); i++) {
-                    String v = (String) VFTs.get(i);
-                    stmt1.setString(1, v.toUpperCase());
-                    rs = stmt1.executeQuery();
-                    if ((rs != null) && rs.next()) {
-                        continue;
-                    }
-
-                    stmt2.setString(1, v);
-                    stmt2.executeUpdate();
-                }
-                stmt1.close();
-                stmt2.close();
-            }
         } catch (Exception ex) {
             handleError(ex, "Error occured while inserting into FEATUREMAPTYPE table");
             return false;
@@ -1677,7 +1658,7 @@ public class VectorManager extends TableManager {
         CloneVector vector = this.getVectorByName(name);
         if(vector != null)
         return vector;
-        
+
         String sql = "select vectorid,description,form,type,sizeinbp,mapfilename," +
         " sequencefilename,comments from vector where vectorid in ("+
         " select vectorid from vectorsynonym where vsynonym=?)";

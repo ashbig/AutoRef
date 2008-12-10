@@ -72,6 +72,8 @@ public class VInput4Action extends Action {
                 request.setAttribute("RU", "vInput4");
                 af = mapping.findForward("addHT");
             } else if (sAction.equals("Add New Growth Condition")) {
+                List ht = vm.getHTs("");
+                request.setAttribute(Constants.HTS, ht);
                 request.setAttribute("RU", "vInput4");
                 af = mapping.findForward("addGC");
             } else if (sAction.equals("Add New Marker")) {

@@ -11,9 +11,9 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 
 import java.sql.SQLException;
-import java.sql.Connection;
-import javax.sql.DataSource;
-import oracle.jdbc.driver.OracleDriver;
+// import java.sql.Connection;
+// import javax.sql.DataSource;
+// import oracle.jdbc.driver.OracleDriver;
 import org.apache.struts.util.GenericDataSource;
 
 /**
@@ -36,7 +36,8 @@ public class DBInitServlet extends HttpServlet {
             ds.setMaxCount(Integer.parseInt(getInitParameter("maxCount")));
             ds.setUser(getInitParameter("user"));               // oracle connection
             ds.setPassword(getInitParameter("password"));       // oracle connection
-            ds.setAutoCommit(false);           
+            // ds.setAutoCommit(false);           
+            ds.setAutoCommit(true);
             ds.open();
             DatabaseTransaction.init(ds);
         } catch(SQLException e){

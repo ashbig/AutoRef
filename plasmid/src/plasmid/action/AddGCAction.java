@@ -66,16 +66,29 @@ public class AddGCAction extends Action {
         DefTableManager m = new DefTableManager();
         int id = 0;
 
-        if (sAction.equals("Return")) {
+        if (sAction.equals("Add New Host Type")) {
+            request.setAttribute("RU", "addGC");
+            String ru = gcf.getRU();
+            if ((ru != null) && (ru.length() > 0)) {
+                request.setAttribute("GCRU", ru);
+            }
+            af = mapping.findForward("addHT");
+        } else if (sAction.equals("Return")) {
             try {
                 conn = DatabaseTransaction.getInstance().requestConnection();
                 VectorManager vm = new VectorManager(conn);
 
-                List gc = vm.getGCs("");
+                List gc = vm.getGCNs("");
+                List ht = vm.getHTs("");
                 session.removeAttribute("GC");
+                session.removeAttribute("HT");
                 if ((gc != null) && (gc.size() > 0)) {
                     session.setAttribute("GC", gc);
                 }
+                if ((ht != null) && (ht.size() > 0)) {
+                    session.setAttribute("HT", ht);
+                }
+
                 String ru = gcf.getRU();
                 if ((ru != null) && (ru.length() > 0)) {
                     af = mapping.findForward(ru);
@@ -124,11 +137,20 @@ public class AddGCAction extends Action {
                 bReturn = gcm.insertGrowthConditions(gcs);
 
                 VectorManager vm = new VectorManager(conn);
-                List lgc = vm.getGCs("");
+                List lgc = vm.getGCNs("");
                 session.removeAttribute("GC");
                 if ((lgc != null) && (lgc.size() > 0)) {
                     session.setAttribute("GC", lgc);
                 }
+
+                List ht = vm.getHTs("");
+                session.removeAttribute("HT");
+                session.removeAttribute(Constants.HTS);
+                if ((ht != null) && (ht.size() > 0)) {
+                    session.setAttribute("HT", ht);
+                    session.setAttribute(Constants.HTS, ht);
+                }
+
                 String ru = gcf.getRU();
                 if ((ru != null) && (ru.length() > 0)) {
                     af = mapping.findForward(ru);

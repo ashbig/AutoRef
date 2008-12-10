@@ -19,6 +19,7 @@ public class AddHTForm extends ActionForm {
     private String HT = null;
     private String button = null;
     private String RU = null;
+    private String GCRU = null;
     private String submit = null;
 
     public String getRU() {
@@ -27,6 +28,14 @@ public class AddHTForm extends ActionForm {
 
     public void setRU(String string) {
         RU = string;
+    }
+
+    public String getGCRU() {
+        return GCRU;
+    }
+
+    public void setGCRU(String string) {
+        GCRU = string;
     }
 
     public String getSubmit() {
@@ -61,17 +70,19 @@ public class AddHTForm extends ActionForm {
     public void reset(ActionMapping mapping, HttpServletRequest request) {
         reset();
     }
+
     public void reset() {
         HT = null;
         button = null;
         RU = null;
+        GCRU = null;
         submit = null;
     }
 
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
         ActionErrors errors = new ActionErrors();
         if (!getSubmit().equals("Return")) {
-            if (getHT() == null || getHT().length() < 1) {
+            if (HT == null || HT.length() < 1) {
                 errors.add("HT", new ActionError("error.HT.required"));
             // TODO: add 'error.HT.required' key to your resources
             }

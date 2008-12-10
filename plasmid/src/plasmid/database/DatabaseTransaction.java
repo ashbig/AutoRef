@@ -12,9 +12,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.3 $
- * $Date: 2008-03-05 19:38:54 $
- * $Author: dz4 $
+ * $Revision: 1.4 $
+ * $Date: 2008-12-10 16:11:05 $
+ * $Author: jx25 $
  *
  ******************************************************************************
  *
@@ -53,8 +53,8 @@ import sun.jdbc.rowset.*;
  *
  * DatabaseTransaction is implemented as a singleton.
  *
- * @author     $Author: dz4 $
- * @version    $Revision: 1.3 $ $Date: 2008-03-05 19:38:54 $
+ * @author     $Author: jx25 $
+ * @version    $Revision: 1.4 $ $Date: 2008-12-10 16:11:05 $
  */
 public class DatabaseTransaction {
 
@@ -125,7 +125,8 @@ public class DatabaseTransaction {
      */
     public Connection requestConnection() throws DatabaseException {
 
-        return requestConnection(false);
+        // return requestConnection(false);
+        return requestConnection(true);
 
     } // end requestConnection()
 

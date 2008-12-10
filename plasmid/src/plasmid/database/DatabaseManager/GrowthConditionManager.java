@@ -18,22 +18,33 @@ import plasmid.Constants;
  * @author  DZuo
  */
 public class GrowthConditionManager extends TableManager {
-    
+
+
+    public GrowthConditionManager() {
+        try {
+            this.conn = DatabaseTransaction.getInstance().requestConnection();
+        } catch (Exception ex) {
+            if (Constants.DEBUG) {
+                System.out.println(ex);
+            }
+        }
+    }
+
     /** Creates a new instance of GrowthConditionManager */
     public GrowthConditionManager(Connection conn) {
        super(conn);
     }
-    
+
     public boolean insertGrowthConditions(List conditions) {
         if(conditions == null)
             return true;
-        
+
         String sql = "insert into growthcondition"+
         " (growthid,name,hosttype,antibioticselection,growthcondition,comments)"+
         " values(?,?,?,?,?,?)";
         try {
             PreparedStatement stmt = conn.prepareStatement(sql);
-            
+
             for(int i=0; i<conditions.size(); i++) {
                 GrowthCondition g = (GrowthCondition)conditions.get(i);
                 stmt.setInt(1, g.getGrowthid());
@@ -42,7 +53,7 @@ public class GrowthConditionManager extends TableManager {
                 stmt.setString(4, g.getSelection());
                 stmt.setString(5, g.getCondition());
                 stmt.setString(6, g.getComments());
-                
+
                 DatabaseTransaction.executeUpdate(stmt);
             }
             DatabaseTransaction.closeStatement(stmt);
@@ -52,7 +63,7 @@ public class GrowthConditionManager extends TableManager {
         }
         return true;
     }
-    
+
     public int getGrowthid(String name) {
         String sql = "select growthid from growthcondition where name=?";
         int id = 0;
@@ -70,7 +81,42 @@ public class GrowthConditionManager extends TableManager {
                 System.out.println(ex);
             }
         }
-        
+
         return id;
+    }
+
+    public GrowthCondition getGrowthCondition(String name) {
+        if (name == null) {
+            return null;
+        }
+
+        String sql = "select growthid, name, hosttype, antibioticselection, growthcondition, comments from growthcondition where name=?";
+        GrowthCondition gc = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            stmt = conn.prepareStatement(sql);
+            rs = null;
+            stmt.setString(1, name);
+            rs = DatabaseTransaction.executeQuery(stmt);
+            if (rs.next()) {
+                int gcid = rs.getInt(1);
+                String gcname = rs.getString(2);
+                String hosttype = rs.getString(3);
+                String abs = rs.getString(4);
+                String sgc = rs.getString(5);
+                String cmt = rs.getString(6);
+                gc = new GrowthCondition(gcid, gcname, hosttype, abs, sgc, cmt);
+            }
+        } catch (Exception ex) {
+            if (Constants.DEBUG) {
+                System.out.println(ex);
+            }
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+        }
+
+        return gc;
     }
 }
