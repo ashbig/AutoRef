@@ -44,7 +44,7 @@ public class AddVPTForm extends ActionForm {
     }
 
     public void setVPT(String string) {
-        VPT = string;
+        VPT = string.trim();
     }
 
     public String getCAT() {
@@ -52,7 +52,7 @@ public class AddVPTForm extends ActionForm {
     }
 
     public void setCAT(String string) {
-        CAT = string;
+        CAT = string.trim();
     }
 
     public String getButton() {

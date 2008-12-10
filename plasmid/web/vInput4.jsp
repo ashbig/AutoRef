@@ -112,7 +112,7 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="red">
+                                                <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="black">
                                                     <tr bgcolor="white">
                                                         <td width="13%" align="right">Host Strain:</td>
                                                         <td width="87%" align="left">
@@ -146,7 +146,7 @@
                             <tr height="18px"><td>&nbsp;</td></tr>
                             <tr>
                                 <td>
-                                    <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="green">
+                                    <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="black">
                                         <tr bgcolor="white">
                                             <td width="3%">&nbsp;</td>
                                             <td width="30%"><strong>Host Strain</strong></td>
@@ -175,7 +175,7 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="red">
+                                                <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="black">
                                                     <tr bgcolor="white">                                    
                                                         <td  width="20%" align="right">Growth Condition:</td>
                                                         <td width="80%" align="left">
@@ -210,7 +210,7 @@
                             <tr height="18px"><td>&nbsp;</td></tr>
                             <tr>
                                 <td>
-                                    <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="green">
+                                    <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="black">
                                         <tr bgcolor="white">
                                             <td width="3%">&nbsp;</td>
                                             <td width="30%"><strong>Growth Condition</strong></td>
@@ -247,7 +247,7 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="red">
+                                                <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="black">
                                                     <tr bgcolor="white">
                                                         <td width="11%" align="right">Host Type:</td>
                                                         <td width="89%">
@@ -287,7 +287,7 @@
                             <tr height="18px"><td>&nbsp;</td></tr>
                             <tr>
                                 <td>
-                                    <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="green">
+                                    <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="black">
                                         <tr bgcolor="white">
                                             <td width="3%">&nbsp;</td>
                                             <td width="30%"><strong>Host Type</strong></td>
@@ -340,7 +340,7 @@
             <p><font color="#000000" size="-1"><strong>Selectable Marker:</strong></font></p>
             <p><font size="-1">Please list all selectable markers for this vector and 
             define in what organism this type of selection would be used. For example:</font></p>
-            <table border="0" cellpadding="5" cellspacing="1" bgcolor="green">
+            <table border="0" cellpadding="5" cellspacing="1" bgcolor="black">
                 <tr bgcolor="#FFFFCC">
                     <th><font size="-1">Host Type Marker</font></th>
                 </tr>

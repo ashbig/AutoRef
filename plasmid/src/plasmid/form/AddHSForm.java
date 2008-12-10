@@ -22,7 +22,7 @@ public class AddHSForm extends ActionForm {
     }
 
     public void setHS(String string) {
-        HS = string;
+        HS = string.trim();
     }
 
     public String getButton() {

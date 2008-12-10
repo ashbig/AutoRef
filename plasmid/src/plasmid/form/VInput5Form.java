@@ -53,7 +53,7 @@ public class VInput5Form extends ActionForm {
     }
     
     public void setDescription(String s) {
-        description = s;
+        description = s.trim();
     }
 
     

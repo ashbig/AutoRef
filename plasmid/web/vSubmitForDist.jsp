@@ -25,7 +25,9 @@
                     <jsp:include page="vSubmitForDistTitle.jsp" />
                     <logic:present name="Clone">
                         <p></p>
-                        <p>Clone <bean:write name="Clone" property="name"/> has been successfully submitted for distribution. Thank you.</p>
+                        <p>Clone vector <bean:write name="Clone" property="name"/> has been successfully submitted for distribution. <br>
+                            The Clone ID is <bean:write name="Clone" property="cloneid"/>.<br>
+                            Thank you.</p>
                     </logic:present>
                     <logic:notPresent name="Clone">
                         <html:form action="/vSubmitForDist" method="POST">
@@ -37,7 +39,7 @@
                             <p><em>If you would like to distribute this vector through us, please fill out
                             the following page.</em></p>
                             <p>*Required field is in bold</p>
-                            <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="red">
+                            <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="black">
                                 <tr bgcolor="white">
                                     <td align="right" width="21%"><strong>Verified</strong>:<img src="img/info.jpg" border="0" onmouseover="javascript: showTitle('divTitle', vrftitle, gx(this), gy(this));"/>&nbsp;</td>
                                     <td width="79%">
@@ -86,7 +88,7 @@
                                         <span id="vgca" name="vgca" style="display:block;">
                                             <table width="100%" border="0">
                                                 <tr><td>
-                                                        <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="red">
+                                                        <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="black">
                                                             <tr bgcolor="white">
                                                                 <td width="20%" align="right">
                                                                     Growth Condition:&nbsp;
@@ -120,7 +122,7 @@
                                                 <logic:present name="VGCA">
                                                     <tr bgcolor="white" height="12px"><td></td></tr>
                                                     <tr bgcolor="white"><td>
-                                                            <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="green">
+                                                            <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="black">
                                                                 <tr bgcolor="white">
                                                                     <th width="3%">&nbsp;</th>
                                                                     <th width="45%"><strong>Growth Condition</strong></th>
@@ -155,7 +157,7 @@
                                         <strong>Growth Condition for vector with insert:</strong>
                                 </td></tr>
                                 <tr bgcolor="white"><td>
-                                        <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="green">
+                                        <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="black">
                                             <tr bgcolor="white">
                                                 <th width="80%"><strong>Growth Condition</strong></th>
                                                 <th width="20%"><strong>Is Recommended</strong></th>

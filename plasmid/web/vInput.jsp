@@ -59,7 +59,7 @@
                         <h2>Submit Vector Information</h2>
                         <h4><em>Step 1: Basic information</em></h4>
                         <p>*Required field is in bold</p>
-                        <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="red">
+                        <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="black">
                             <tr bgcolor="white" valign="top"> 
                                 <td width="15%" align="right"><strong>Name</strong>:</td>
                                 <td width="85%">

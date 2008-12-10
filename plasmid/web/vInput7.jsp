@@ -38,6 +38,9 @@
                         <p>*Required field is in bold</p>
                         <table width="100%" border="0">
                             <tr>
+                                <td>
+                        <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="black">
+                            <tr bgcolor="white">
                                 <td width="21%" align="right"><strong>PMID</strong>: </td>
                                 <td width="79%">
                                     <logic:present name="PM">
@@ -49,7 +52,7 @@
                                     &nbsp;<html:submit value="Find"/>
                                 </td>
                             </tr>
-                            <tr>
+                            <tr bgcolor="white">
                                 <td width="21%" align="right"><strong>Title</strong>: </td>
                                 <td width="79%">
                                     <logic:present name="PM">
@@ -60,8 +63,10 @@
                                     </logic:notPresent>
                                 </td>
                             </tr>
+                        </table>
+                    </td>
+                </tr>
                             <tr>
-                                <td>&nbsp;</td>
                                 <td>
                                     <html:submit value="Add To List" onclick="return checkFormAdd();"/>
                                     <input type="button" value="Clear" onclick="return clearForm(false);"/>
@@ -69,8 +74,11 @@
                             </tr>
                         </table>
                         <p></p>
-                        <table width="100%" border="1">
+                        <table width="100%" border="0">
                             <tr>
+                                <td>
+                        <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="black">
+                            <tr bgcolor="white">
                                 <td width="3%">&nbsp;</td>
                                 <td width="7%"><strong>PMID</strong></td>
                                 <td width="90%"><strong>Title</strong></td>
@@ -78,7 +86,7 @@
                             </tr>
                             <logic:present name="VPM">
                                 <logic:iterate id="PM" name="VPM" indexId="PMNUM">
-                                    <tr>
+                                    <tr bgcolor="white">
                                         <td><input type="radio" id="PMNUM" name="PMNUM" value="<bean:write name="PMNUM"/>"></td>
                                         <td>
                                             <a href="http://www.ncbi.nlm.nih.gov/sites/entrez?db=pubmed&cmd=search&term=<bean:write name="PM" property="pmid"/>" target="PMIDInfo"><bean:write name="PM" property="pmid"/></a>
@@ -86,7 +94,10 @@
                                         <td><bean:write name="PM" property="title"/></td>
                                     </tr>
                                 </logic:iterate>
-                                <tr><td colSpan="3"><html:submit value="Remove From List" onclick="return checkForm();"/>&nbsp;</td></tr>
+                            </table>
+                        </td>
+                    </tr>
+                                <tr><td><html:submit value="Remove From List" onclick="return checkForm();"/>&nbsp;</td></tr>
                             </logic:present>
                         </table>
                         <p></p>

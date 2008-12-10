@@ -38,7 +38,7 @@ public class AddVFNForm extends ActionForm {
     }
 
     public void setVFN(String string) {
-        VFN = string;
+        VFN = string.trim();
     }
 
     public String getButton() {

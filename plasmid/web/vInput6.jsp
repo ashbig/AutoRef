@@ -36,7 +36,7 @@
                             of this vector. <em>Note: Please do not list researchers who subsequently used
                         this vector for cloning or additional experiments. </em></p>
                         <p>*Required field is in bold</p>
-                        <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="red">
+                        <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="black">
                             <tr bgcolor="white">
                                 <td width="21%" align="right"><strong>Name</strong>: </td>
                                 <td width="79%">
@@ -158,7 +158,7 @@
                             </tr>
                         </table>
                         <p></p>
-                        <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="green">
+                        <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="black">
                             <tr bgcolor="white">
                                 <th width="3%">&nbsp;</th>
                                 <th width="27%"><strong>Author Name</strong></th>
@@ -199,7 +199,7 @@
             <p><strong><font size="-1">Author Type:</font></strong></p>
             <p><font size="-1">This refers to the role of each author in the creation
             of the vector. </font> </p>
-            <table border="0" cellpadding="5" cellspacing="1" bgcolor="green">
+            <table border="0" cellpadding="5" cellspacing="1" bgcolor="black">
                 <tr bgcolor="#FFFFCC">
                     <th><font size="-1">Author type</font></th>
                     <th><font size="-1">Role</font></th>

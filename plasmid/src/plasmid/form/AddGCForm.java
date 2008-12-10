@@ -46,7 +46,7 @@ public class AddGCForm extends ActionForm {
     }
 
     public void setGC(String string) {
-        GC = string;
+        GC = string.trim();
     }
 
     public String getAB() {
@@ -54,7 +54,7 @@ public class AddGCForm extends ActionForm {
     }
 
     public void setAB(String string) {
-        AB = string;
+        AB = string.trim();
     }
 
     public String getHT() {
@@ -70,7 +70,7 @@ public class AddGCForm extends ActionForm {
     }
 
     public void setGCD(String string) {
-        GCD = string;
+        GCD = string.trim();
     }
 
     public String getGCC() {
@@ -78,7 +78,7 @@ public class AddGCForm extends ActionForm {
     }
 
     public void setGCC(String string) {
-        GCC = string;
+        GCC = string.trim();
     }
 
     public AddGCForm() {

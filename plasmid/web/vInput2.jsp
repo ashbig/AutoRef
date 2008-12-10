@@ -90,7 +90,7 @@
                                 <font size="-1">*Required field is in bold</font>
                         </td></tr>
                         <tr><td>
-                        <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="red">
+                        <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="black">
                             <tr bgcolor="white" valign="top">
                                 <td width="20%"><strong>Feature type</strong>: <img src="img/info.jpg" border="0" onmouseover="javascript: showTitle('divTitle', fttitle, gx(this), gy(this));"/></td>
                                 <td width="80%">
@@ -151,7 +151,7 @@
                             <table width="100%" border="0">
                                 <tr bgcolor="white">
                                     <td>
-                                        <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="green">
+                                        <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="black">
                                             <tr bgcolor="white" align="center">
                                                 <td width="3%">&nbsp;</td>
                                                 <td width="20%">Name</td>
@@ -201,7 +201,7 @@
             <p><strong>Feature type:</strong></p>
             <p><font size="-1">Feature Type refers to the general category that a vector
             feature belongs to. For example: </font></p>
-            <table border="0" cellpadding="5" cellspacing="1" bgcolor="red" width="100%">
+            <table border="0" cellpadding="5" cellspacing="1" bgcolor="black" width="100%">
                 <tr bgcolor="#FFFFCC">
                     <th><font size="-1">Feature Type</font></th>
                     <th><font size="-1">Feature Name</font></th>
@@ -235,7 +235,7 @@
             <p><strong>Feature name:</strong></p>
             <p><font size="-1">Feature Name refers to the specific feature of the
             plasmid that you are describing. For example:</font></p>
-            <table border="0" cellpadding="5" cellspacing="1" bgcolor="red" width="100%">
+            <table border="0" cellpadding="5" cellspacing="1" bgcolor="black" width="100%">
                 <tr bgcolor="#FFFFCC">
                     <th><font size="-1">Feature Type</font></th>
                     <th><font size="-1">Feature Name</font></th>

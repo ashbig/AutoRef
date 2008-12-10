@@ -75,7 +75,7 @@
                                     our database has your vector information, please continue your submission. Please
                                 note that vector names in our database have to be unique.</p>
                                 <p></p>
-                                <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="red">
+                                <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="black">
                                     <tr bgcolor="white">
                                         <td width="4%">&nbsp;</td>
                                         <td width="16%"><strong>Vector Name</strong></td>

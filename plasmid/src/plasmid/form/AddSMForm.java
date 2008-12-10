@@ -42,7 +42,7 @@ public class AddSMForm extends ActionForm {
     }
 
     public void setSM(String string) {
-        SM = string;
+        SM = string.trim();
     }
 
     public String getButton() {

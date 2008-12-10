@@ -124,9 +124,9 @@ public class VInputAction extends Action {
         String vtype = vif.getType();
         int vsize = vif.getSize();
         FormFile mf = vif.getMapfile();
-        String mapfilename = mf.getFileName();
+        String mapfilename = mf.getFileName().trim();
         FormFile sf = vif.getSeqfile();
-        String seqfilename = sf.getFileName();
+        String seqfilename = sf.getFileName().trim();
         String comments = ((vif.getComments().length() < 1) ? "" : "<CMT>" + vif.getComments() + "</CMT>");
         String syns = vif.getSyns();
         CloneVector vector = null;
@@ -160,6 +160,25 @@ public class VInputAction extends Action {
                 // Update Vector Submission
                 vm.updateVSubmission(vid, uid);
             }
+
+            // Save file on the server
+            String mfPath = getServlet().getServletContext().getRealPath("/") + "PlasmidRepository/file/map";
+            String sfPath = getServlet().getServletContext().getRealPath("/") + "PlasmidRepository/file/sequence";
+            if ((mapfilename != null) && (mapfilename.length() > 0)) {
+                File MapFile = new File(mfPath, mapfilename);
+                FileOutputStream mfOS = new FileOutputStream(MapFile);
+                mfOS.write(mf.getFileData());
+                mfOS.flush();
+                mfOS.close();
+            }
+            if ((seqfilename != null) && (seqfilename.length() > 0)) {
+                File SeqFile = new File(sfPath, seqfilename);
+                FileOutputStream sfOS = new FileOutputStream(SeqFile);
+                sfOS.write(sf.getFileData());
+                sfOS.flush();
+                sfOS.close();
+            }
+
         } catch (Exception ex) {
             if (Constants.DEBUG) {
                 System.out.println(ex);

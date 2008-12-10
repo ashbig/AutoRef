@@ -25,7 +25,6 @@ import plasmid.database.*;
 import plasmid.database.DatabaseManager.*;
 import plasmid.database.DatabaseManager.UserManager;
 
-
 public class PReceiveAction extends Action {
 
     /**
@@ -58,7 +57,7 @@ public class PReceiveAction extends Action {
         PReceiveForm vif = (PReceiveForm) form;
         String sAction = vif.getSubmit();
         int cloneid = vif.getCloneid();
-        
+
         DatabaseTransaction t = null;
         Connection conn = null;
         try {
@@ -74,9 +73,20 @@ public class PReceiveAction extends Action {
                     request.setAttribute("Clone", c);
                 }
             } else if (sAction.equals("Submit")) { //Submit
-                cm.updateCloneSubmission(cloneid, user.getUserid(), 
+                cm.updateCloneSubmission(cloneid, user.getUserid(),
                         vif.getStatus(), vif.getHs(), vif.getRestriction(), vif.getFile().getFileName(),
                         vif.getSender(), vif.getSdate(), vif.getReceiver(), vif.getRdate());
+
+                FormFile mtaf = vif.getFile();
+                String filename = mtaf.getFileName().trim();
+                String fPath = getServlet().getServletContext().getRealPath("/") + "PlasmidRepository/file/mta";
+                if ((filename != null) && (filename.length() > 0)) {
+                    File mtaFile = new File(fPath, filename);
+                    FileOutputStream mfOS = new FileOutputStream(mtaFile);
+                    mfOS.write(mtaf.getFileData());
+                    mfOS.flush();
+                    mfOS.close();
+                }
             }
 
         } catch (Exception ex) {

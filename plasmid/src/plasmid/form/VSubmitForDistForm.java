@@ -39,7 +39,7 @@ public class VSubmitForDistForm extends ActionForm {
     }
 
     public void setSource(String i) {
-        source = i;
+        source = i.trim();
     }
 
     public String getNonpsi() {
@@ -47,7 +47,7 @@ public class VSubmitForDistForm extends ActionForm {
     }
 
     public void setNonpsi(String i) {
-        nonpsi = i;
+        nonpsi = i.trim();
     }
 
     public String getPsi() {
@@ -55,7 +55,7 @@ public class VSubmitForDistForm extends ActionForm {
     }
 
     public void setPsi(String i) {
-        psi = i;
+        psi = i.trim();
     }
 
     public String getComments() {
@@ -63,7 +63,7 @@ public class VSubmitForDistForm extends ActionForm {
     }
 
     public void setComments(String i) {
-        comments = i;
+        comments = i.trim();
     }
 
     public String getSameasvector() {
@@ -71,7 +71,7 @@ public class VSubmitForDistForm extends ActionForm {
     }
 
     public void setSameasvector(String i) {
-        sameasvector = i;
+        sameasvector = i.trim();
     }
 
     public String getGrowthcondition() {
@@ -79,7 +79,7 @@ public class VSubmitForDistForm extends ActionForm {
     }
 
     public void setGrowthcondition(String i) {
-        growthcondition = i;
+        growthcondition = i.trim();
     }
 
     public int getGCID() {
@@ -111,7 +111,7 @@ public class VSubmitForDistForm extends ActionForm {
     }
 
     public void setVerifiedmethod(String i) {
-        verifiedmethod = i;
+        verifiedmethod = i.trim();
     }
 
     public String getStep() {

@@ -33,7 +33,7 @@ public class VInput7Form extends ActionForm {
     }
 
     public void setIPD(String i) {
-        IPD = i;
+        IPD = i.trim();
     }
 
     public String getTitle() {
@@ -41,7 +41,7 @@ public class VInput7Form extends ActionForm {
     }
 
     public void setTitle(String i) {
-        title = i;
+        title = i.trim();
     }
 
     public String getPmid() {
@@ -49,7 +49,7 @@ public class VInput7Form extends ActionForm {
     }
 
     public void setPmid(String i) {
-        pmid = i;
+        pmid = i.trim();
     }
 
     public int getPMNUM() {

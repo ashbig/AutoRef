@@ -27,9 +27,9 @@ public class VSearchForm extends ActionForm {
 
 
     public String getVN() {return VN;}
-    public void setVN(String string) {VN = string;}
+    public void setVN(String string) {VN = string.trim();}
     public String getSearch() {return search;}
-    public void setSearch(String string) {search = string;}
+    public void setSearch(String string) {search = string.trim();}
     public String getSubmit() {return submit;}
     public void setSubmit(String s) {this.submit = s;}
     public List getResults() {return results;}

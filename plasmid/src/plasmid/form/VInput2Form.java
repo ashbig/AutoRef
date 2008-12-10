@@ -69,7 +69,7 @@ public class VInput2Form extends ActionForm {
     }
 
     public void setName(String string) {
-        name = string;
+        name = string.trim();
     }
 
     public String getDescription() {
@@ -77,7 +77,7 @@ public class VInput2Form extends ActionForm {
     }
 
     public void setDescription(String string) {
-        description = string;
+        description = string.trim();
     }
 
     public int getStart() {

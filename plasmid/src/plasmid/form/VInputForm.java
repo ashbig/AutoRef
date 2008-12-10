@@ -41,29 +41,29 @@ public class VInputForm extends ActionForm {
     public int getVectorid() {return vectorid;}
     public void setVectorid(int v) {vectorid = v;}
     public String getName() {return name;}
-    public void setName(String string) {name = string;}
+    public void setName(String string) {name = string.trim();}
     public String getDescription() {return description;}
-    public void setDescription(String string) {description = string;}
+    public void setDescription(String string) {description = string.trim();}
     public String getSyns() {return syns;}
-    public void setSyns(String string) {syns = string;}
+    public void setSyns(String string) {syns = string.trim();}
     public String getForm() {return form;}
-    public void setForm(String string) {form = string;}
+    public void setForm(String string) {form = string.trim();}
     public String getType() {return type;}
-    public void setType(String string) {type = string;}
+    public void setType(String string) {type = string.trim();}
     public int getSize() {return size;}
     public void setSize(int string) {size = string;}
     public String getMapfilename() {return mapfilename;}
-    public void setMapfilename(String f) {mapfilename = f;}
+    public void setMapfilename(String f) {mapfilename = f.trim();}
     public String getSeqfilename() {return seqfilename;}
-    public void setSeqfilename(String f) {seqfilename = f;}
+    public void setSeqfilename(String f) {seqfilename = f.trim();}
     public FormFile getMapfile() {return mapfile;}
     public void setMapfile(FormFile f) {mapfile = f; mapfilename=f.getFileName();}
     public FormFile getSeqfile() {return seqfile;}
     public void setSeqfile(FormFile f) {seqfile = f; seqfilename=f.getFileName();}
     public String getComments() {return comments;}
-    public void setComments(String string) {comments = string;}
+    public void setComments(String string) {comments = string.trim();}
     public String getStatus() {return status;}
-    public void setStatus(String string) {status = string;}
+    public void setStatus(String string) {status = string.trim();}
     public String getSubmit() {return submit;}
     public void setSubmit(String s) {this.submit = s;}
     

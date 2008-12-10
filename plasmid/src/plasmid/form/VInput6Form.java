@@ -40,7 +40,7 @@ public class VInput6Form extends ActionForm {
     }
 
     public void setName(String i) {
-        name = i;
+        name = i.trim();
     }
 
     public String getFirstname() {
@@ -48,7 +48,7 @@ public class VInput6Form extends ActionForm {
     }
 
     public void setFirstname(String i) {
-        firstname = i;
+        firstname = i.trim();
     }
 
     public String getLastname() {
@@ -56,7 +56,7 @@ public class VInput6Form extends ActionForm {
     }
 
     public void setLastname(String i) {
-        lastname = i;
+        lastname = i.trim();
     }
 
     public String getEmail() {
@@ -64,7 +64,7 @@ public class VInput6Form extends ActionForm {
     }
 
     public void setEmail(String i) {
-        email = i;
+        email = i.trim();
     }
 
     public String getTel() {
@@ -72,7 +72,7 @@ public class VInput6Form extends ActionForm {
     }
 
     public void setTel(String i) {
-        tel = i;
+        tel = i.trim();
     }
 
     public String getFax() {
@@ -80,7 +80,7 @@ public class VInput6Form extends ActionForm {
     }
 
     public void setFax(String i) {
-        fax = i;
+        fax = i.trim();
     }
 
     public String getWww() {
@@ -88,7 +88,7 @@ public class VInput6Form extends ActionForm {
     }
 
     public void setWww(String i) {
-        www = i;
+        www = i.trim();
     }
 
     public String getAddress() {
@@ -96,7 +96,7 @@ public class VInput6Form extends ActionForm {
     }
 
     public void setAddress(String i) {
-        address = i;
+        address = i.trim();
     }
 
     public String getDescription() {
@@ -104,7 +104,7 @@ public class VInput6Form extends ActionForm {
     }
 
     public void setDescription(String i) {
-        description = i;
+        description = i.trim();
     }
 
     public String getAuthortype() {
@@ -112,7 +112,7 @@ public class VInput6Form extends ActionForm {
     }
 
     public void setAuthortype(String i) {
-        authortype = i;
+        authortype = i.trim();
     }
 
         public int getAuthorid() {

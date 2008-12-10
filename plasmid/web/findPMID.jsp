@@ -43,7 +43,7 @@
                                 <tr><td>Please select from the publication list and click "Select" button.</td></tr>
                                 <tr height="18px"><td></td></tr>                                
                                 <tr>
-                                    <td><html:submit value="Select" onclick="return checkForm();"/></td>
+                                    <td><html:submit value="Select" onclick="return checkForm();"/>&nbsp;<html:submit value="Search Again"/></td>
                                 </tr>
                                 <tr height="18px"><td></td></tr>                                
                                 <tr>
@@ -65,7 +65,7 @@
                                     </td>
                                 </tr>
                                 <tr height="18px"><td></td></tr>                                
-                                <tr><td><html:submit value="Select" onclick="return checkForm();"/></td></tr>
+                                <tr><td><html:submit value="Select" onclick="return checkForm();"/>&nbsp;<html:submit value="Search Again"/></td></tr>
                             </logic:present>
                             <logic:notPresent name="PMs">
                                 <tr><td>

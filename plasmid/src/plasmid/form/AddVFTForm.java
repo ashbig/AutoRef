@@ -42,7 +42,7 @@ public class AddVFTForm extends ActionForm {
     }
 
     public void setVFT(String string) {
-        VFT = string;
+        VFT = string.trim();
     }
 
     public String getButton() {

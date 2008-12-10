@@ -51,7 +51,7 @@ public class AddHTForm extends ActionForm {
     }
 
     public void setHT(String string) {
-        HT = string;
+        HT = string.trim();
     }
 
     public String getButton() {
