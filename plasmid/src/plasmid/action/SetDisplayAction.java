@@ -69,7 +69,7 @@ public class SetDisplayAction extends Action {
         request.setAttribute("displayPage", displayPage);
         request.setAttribute("species", species);
         request.setAttribute("refseqType", refseqType);
-        request.setAttribute("psi", psi);
+        request.setAttribute("psi", new Integer(psi));
         
         List clones = null;
         if("indirect".equals(displayPage)) {
