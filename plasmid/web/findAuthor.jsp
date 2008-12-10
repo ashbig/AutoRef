@@ -43,7 +43,7 @@
                     <tr><td>Please select from the author list and click "Select" button.</td></tr>
                     <tr height="18px"><td></td></tr>
                     <tr>
-                        <td><html:submit value="Select" onclick="return checkForm();"/></td>
+                        <td><html:submit value="Select" onclick="return checkForm();"/>&nbsp;<html:submit value="Search Again"/></td>
                     </tr>
                     <tr>
                         <td width="100%" align="center" valign="top">
@@ -78,7 +78,7 @@
 
                         </td>
                     </tr>
-                    <tr><td><html:submit value="Select" onclick="return checkForm();"/></td></tr>
+                    <tr><td><html:submit value="Select" onclick="return checkForm();"/>&nbsp;<html:submit value="Search Again"/></td></tr>
                 </logic:present>
                 <logic:notPresent name="Authors">
                     <tr><td>There is no author match the given name. Please return and try again.</td></tr>

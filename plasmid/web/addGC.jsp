@@ -26,11 +26,11 @@
                         <html:errors/>
                         <table width="100%" height="118" border="0" align="center">
                             <tr>
-                                <td height="50" colspan="2" class="tableheader"><strong>Please enter Growth Condition and click Add button to add growth condition to the system. Duplicate growth condition will be ignored.</strong></td>
+                                <td height="50" colspan="2" class="tableheader"><strong>Please enter Growth Condition information and click Add button to add growth condition to the system. Duplicate growth condition will be ignored.</strong></td>
                             </tr>
                             <tr>
                                 <td align="right" valign="top">Growth Condition&nbsp; </td>
-                                <td> <html:textarea property="GC" cols="30" rows="5"/>
+                                <td> <html:text property="GC"/>
                                 </td>
                             </tr>
                             <tr>
@@ -51,6 +51,7 @@
                                     <logic:notPresent name="<%=Constants.HTS%>">
                                         <html:text property="HT"/>
                                     </logic:notPresent>
+                                    <html:submit value="Add New Host Type"/>
                                 </td>
                             </tr>
                             <tr>
@@ -60,12 +61,12 @@
                             </tr>
                             <tr>
                                 <td align="right">Growth Condition Description&nbsp; </td>
-                                <td> <html:text property="GCD"/>
+                                <td> <html:textarea property="GCD" rows="5" cols="66"/>
                                 </td>
                             </tr>
                             <tr>
                                 <td align="right">Growth Condition Comment&nbsp; </td>
-                                <td> <html:text property="GCC"/>
+                                <td> <html:textarea property="GCC" rows="5" cols="66"/>
                                 </td>
                             </tr>
                             <tr>

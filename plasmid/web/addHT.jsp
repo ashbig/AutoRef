@@ -46,6 +46,9 @@
                                             <html:hidden property="RU"/>
                                         </logic:notEmpty>
                                     </logic:notPresent>
+                                    <logic:present name="GCRU">
+                                        <input type="hidden" name="GCRU" id="GCRU" value="<bean:write name="GCRU"/>"/>
+                                    </logic:present>
                                 </td>
                             </tr>
                         </table>

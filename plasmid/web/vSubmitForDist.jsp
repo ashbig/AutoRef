@@ -100,7 +100,7 @@
                                                                     <logic:notPresent name="GC">
                                                                         <html:text property="growthcondition" size="50"/>
                                                                     </logic:notPresent>
-                                                                    <input type="button" value="Info" onclick="showGC();"/>
+                                                                    <input type="button" value="Info" onclick="return showGC();"/>
                                                                     <html:submit value="Add New Growth Condition"/>
                                                                 </td>
                                                             </tr>
@@ -220,7 +220,17 @@
                     return false;
                 }
                 function showGC() {
-                    return true;
+                    var ogc = document.getElementById("growthcondition");
+                    if (typeof ogc != 'undefined') {
+                        var gc = ogc.options[ogc.selectedIndex].value;
+                        if (gc.length > 0) {
+                            var u = "gcinfo.jsp?GC=" + gc;
+                            window.open(u);
+                        } else {
+                            alert("Please select a growth condition first.");
+                        }
+                    }
+                    return false;
                 }
                 function sameVGC() {
                     c = document.getElementById("sameasvector");

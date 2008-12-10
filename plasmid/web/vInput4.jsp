@@ -13,10 +13,17 @@
         <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
         <script src="js/common.js"></script>
         <script>
-            function gcinfo() {
-                var gc = document.getElementById("growthcondition");
-                var u = "gcinfo.jsp?GC=" + gc;
-                window.open(u);
+            function showgc() {
+                var ogc = document.getElementById("growthcondition");
+                if (typeof ogc != 'undefined') {
+                    var gc = ogc.options[ogc.selectedIndex].value;
+                    if (gc.length > 0) {
+                        var u = "gcinfo.jsp?GC=" + gc;
+                        window.open(u);
+                    } else {
+                        alert("Please select a growth condition first.");
+                    }
+                }
                 return false;
             }
             
@@ -180,7 +187,7 @@
                                                                     <html:options name="GC"/>
                                                                 </html:select>
                                                             </logic:present>
-                                                            <input type="button" name="gcinfo" id="gcinfo" value="Info" onclick="gcinfo();"/>
+                                                            <input type="button" name="gcinfo" id="gcinfo" value="Info" onclick="return showgc();"/>
                                                         </td>
                                                     </tr>
                                                     <tr bgcolor="white">
