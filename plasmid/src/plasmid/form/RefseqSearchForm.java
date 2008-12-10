@@ -52,6 +52,7 @@ public class RefseqSearchForm extends ActionForm {
     protected String collectionName = null;
     protected String isDownload = null;
     protected int numOfClones;
+    protected int psi;
     
     public String getSpecies() {return species;}
     public String getRefseqType() {return refseqType;}
@@ -140,6 +141,7 @@ public class RefseqSearchForm extends ActionForm {
         displayPage = "indirect";
         display = "symbol";
         numOfClones = 0;
+        setPsi(0);
     }
     
     public void resetBooleanValues() {
@@ -148,6 +150,14 @@ public class RefseqSearchForm extends ActionForm {
         genomicfragment = true;
         tfbindsite = true;
         genome = true;
+    }
+
+    public int getPsi() {
+        return psi;
+    }
+
+    public void setPsi(int psi) {
+        this.psi = psi;
     }
 }
 

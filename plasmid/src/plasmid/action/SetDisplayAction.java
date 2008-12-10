@@ -8,11 +8,8 @@ package plasmid.action;
 
 import java.util.*;
 import java.io.*;
-import java.sql.*;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionError;
@@ -20,16 +17,12 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionServlet;
-import org.apache.struts.util.MessageResources;
 
-import plasmid.database.*;
 import plasmid.database.DatabaseManager.*;
 import plasmid.Constants;
 import plasmid.form.RefseqSearchForm;
 import plasmid.coreobject.*;
 import plasmid.util.*;
-import plasmid.query.handler.*;
 import plasmid.process.OrderProcessManager;
 import plasmid.process.QueryProcessManager;
 
@@ -69,12 +62,14 @@ public class SetDisplayAction extends Action {
         String forward = ((RefseqSearchForm)form).getForward();
         String collectionName = ((RefseqSearchForm)form).getCollectionName();
         String isDownload = ((RefseqSearchForm)form).getIsDownload();
+        int psi = ((RefseqSearchForm)form).getPsi();
         
         request.setAttribute("pagesize", new Integer(pagesize));
         request.setAttribute("page",  new Integer(page));
         request.setAttribute("displayPage", displayPage);
         request.setAttribute("species", species);
         request.setAttribute("refseqType", refseqType);
+        request.setAttribute("psi", psi);
         
         List clones = null;
         if("indirect".equals(displayPage)) {
@@ -104,6 +99,9 @@ public class SetDisplayAction extends Action {
             
             request.getSession().setAttribute(Constants.CART, shoppingcart);
             request.getSession().setAttribute(Constants.CART_STATUS, Constants.UPDATED);
+            
+            if(psi == 1)
+                return (mapping.findForward("success_vector_search_psi"));
             
             if("collection".equals(forward))
                 return (mapping.findForward("success_collection"));
@@ -162,6 +160,12 @@ public class SetDisplayAction extends Action {
             Collections.sort(clones, new CloneSpecialTreatmentComparator());
         if("genesymbol".equals(sortby))
             Collections.sort(clones, new InsertNameComparator());
+        if("originalcloneid".equals(sortby))
+            Collections.sort(clones, new OriginalCloneidComparator());
+        if("targetid".equals(sortby))
+            Collections.sort(clones, new TargetIDComparator());
+        if("pdbid".equals(sortby))
+            Collections.sort(clones, new PdbidComparator());
         
         if("indirect".equals(displayPage)) {
             request.getSession().setAttribute("found", clones);
@@ -169,6 +173,8 @@ public class SetDisplayAction extends Action {
             request.getSession().setAttribute("directFounds", clones);
         }
         
+        if(psi == 1)
+            return (mapping.findForward("success_vector_search_psi"));
         if("collection".equals(forward))
             return (mapping.findForward("success_collection"));
         if("vectorSearchResult".equals(forward))

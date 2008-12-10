@@ -58,17 +58,17 @@
 <table width="100%" border="0">
   <tr>
     <td class="tableheader">&nbsp;</td>
-    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=cloneid">Clone ID</a></td>
-    <td class="tableheader">Original Clone ID</td>
-    <td class="tableheader">PDB ID</td>
-    <td class="tableheader">PepcDB ID</td>
-    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=geneid">Species Specific ID</a></td>
-    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=genesymbol">Gene Symbol</a></td>
+    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=cloneid&psi=1">Clone ID</a></td>
+    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=originalcloneid&psi=1">Original Clone ID</a></td>
+    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=pdbid&psi=1">PDB ID</a></td>
+    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=targetid&psi=1">PepcDB ID</a></td>
+    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=geneid&psi=1">Species Specific ID</a></td>
+    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=genesymbol&psi=1">Gene Symbol</a></td>
     <td class="tableheader">Gene Name</td>
-    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=targetseq">Reference Sequence</a></td>
+    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=targetseq&psi=1">Reference Sequence</a></td>
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=mutdis">Mutation/ Discrepancy</a></td>
-    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=vectorname">Vector</a></td>
-    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=selection">Selection Markers</a></td>
+    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=vectorname&psi=1">Vector</a></td>
+    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=selection&psi=1">Selection Markers</a></td>
     <td class="tableheader">&nbsp;</td>
   </tr>
 
@@ -138,6 +138,7 @@
     </logic:iterate>
     </td>
     <html:form action="SetDisplay.do">
+        <input type="hidden" name="psi" value="<bean:write name="psi"/>"/>
         <input type="hidden" name="displayPage" value="indirect"/>
         <input type="hidden" name="forward" value="vectorSearchResult"/>
         <input type="hidden" name="cloneid" value="<bean:write name="clone" property="cloneid"/>"/>
@@ -158,6 +159,7 @@
 </html:form>
 
 <html:form action="SetDisplay.do">
+        <input type="hidden" name="psi" value="<bean:write name="psi"/>"/>
 <table width="100%" border="0">
     <tr class="mainbodytexthead">
         <td align="left" class="mainbodytexthead">Page: 

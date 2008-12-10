@@ -361,8 +361,10 @@ public class AdvancedSearchAction extends Action {
         request.getSession().setAttribute("numOfFound", new Integer(founds.size()));
         request.getSession().setAttribute("found", founds);
 
-        if(psi==1)
+        if(psi==1) {
+            request.setAttribute("psi", psi);
             return (mapping.findForward("success_psi"));
+        }
         
         return (mapping.findForward("success"));
     }
