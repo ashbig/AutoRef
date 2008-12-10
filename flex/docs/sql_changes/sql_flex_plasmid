@@ -80,3 +80,10 @@ ALTER TABLE FLEX_PLASMID_SPECIES_MAP ADD (CONSTRAINT
 ALTER TABLE SPECIES 
  ADD (IDNAME VARCHAR2(50)
  );
+
+update species set idname='SGD' where genusspecies='Saccharomyces cerevisiae';
+update species set idname='PANUMBER' where genusspecies='Pseudomonas aeruginosa';
+update species set idname='TIGR_ID' where genusspecies='Francisella tularensis';
+update species set idname='SYNONYM' where genusspecies='Vibrio cholerae';
+update species set idname='TAIR' where genusspecies='Arabidopsis thaliana Columbia';
+
