@@ -24,6 +24,7 @@ import plasmid.database.*;
 import plasmid.database.DatabaseManager.*;
 import plasmid.database.DatabaseManager.UserManager;
 import plasmid.database.DatabaseManager.VectorManager;
+import plasmid.database.DatabaseManager.GrowthConditionManager;
 
 public class VInput4Action extends Action {
 
@@ -53,7 +54,8 @@ public class VInput4Action extends Action {
         ActionForward af = null;
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute(Constants.USER_KEY);
-
+        CloneVector v = (CloneVector) session.getAttribute("Vector");
+        
         VInput4Form vif = (VInput4Form) form;
         String sAction = vif.getSubmit();
         int vid = vif.getVectorid();
@@ -105,7 +107,7 @@ public class VInput4Action extends Action {
                     }
                 }
                 if (!bExist) {
-                    vhs = new VectorHostStrain(vid, vif.getHoststrain(), "N", vif.getDescription());
+                    vhs = new VectorHostStrain(vid, vif.getHoststrain(), "N", vif.getDescription(), v.getName());
                     VHS.add(vhs);
                 }
 
@@ -129,9 +131,10 @@ public class VInput4Action extends Action {
                     }
                 }
                 if (!bExist) {
-                    DefTableManager dm = new DefTableManager();
-                    int gcid = dm.getNextid("growthid", t);
-                    vgc = new VectorGrowthCondition(vid, gcid, vif.getGrowthcondition(), vif.getIsrecommended());
+                    GrowthConditionManager gcm = new GrowthConditionManager(conn);
+                    String gcname = vif.getGrowthcondition();
+                    GrowthCondition gc = gcm.getGrowthCondition(gcname);
+                    vgc = new VectorGrowthCondition(vid, gc.getGrowthid(), gcname, vif.getIsrecommended(), v.getName());
                     VGC.add(vgc);
                 }
                 updateGC(session, vm, VGC);
@@ -153,7 +156,7 @@ public class VInput4Action extends Action {
                     }
                 }
                 if (!bExist) {
-                    vsm = new VectorSelectMarker(vid, vif.getHosttype(), vif.getMarker());
+                    vsm = new VectorSelectMarker(vid, v.getName(), vif.getHosttype(), vif.getMarker());
                     VSM.add(vsm);
                 }
                 updateSM(session, vm, VSM);
@@ -170,10 +173,10 @@ public class VInput4Action extends Action {
                 List VGC = (List) session.getAttribute("VGC");
                 VGC.remove(vif.getGCID());
 
-                updateHS(session, vm, VGC);
+                updateGC(session, vm, VGC);
 
                 af = new ActionForward(mapping.getInput());
-            } else if (sAction.equals("Remove From Selectable Marker List")) {
+            } else if (sAction.equals("Remove From Select Marker List")) {
                 List VSM = (List) session.getAttribute("VSM");
                 VSM.remove(vif.getSMID());
 

@@ -118,7 +118,7 @@ public class PublicationManager extends TableManager {
         return pms;
     }
 
-    public boolean updateVectorPublications(List publications) {
+    public boolean updateVectorPublications(int vid, List publications) {
         if(publications == null)
             return true;
         
@@ -126,12 +126,13 @@ public class PublicationManager extends TableManager {
         String sql2 = "insert into vectorpublication (vectorid, publicationid) values(?,?)";
         try {
             PreparedStatement stmt = conn.prepareStatement(sql1);
+            stmt.setInt(1, vid);
             DatabaseTransaction.executeUpdate(stmt);
             stmt = conn.prepareStatement(sql2);
             
             for(int i=0; i<publications.size(); i++) {
                 Publication p = (Publication) publications.get(i);
-                stmt.setInt(1, p.getVectorid());
+                stmt.setInt(1, vid);
                 stmt.setInt(2, p.getPublicationid());
                 
                 DatabaseTransaction.executeUpdate(stmt);

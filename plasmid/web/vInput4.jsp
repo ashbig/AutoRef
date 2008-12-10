@@ -143,6 +143,7 @@
                                         </tr>
                                     </table>
                             </td></tr>
+                            <logic:present name="VHS">
                             <tr height="18px"><td>&nbsp;</td></tr>
                             <tr>
                                 <td>
@@ -152,7 +153,7 @@
                                             <td width="30%"><strong>Host Strain</strong></td>
                                             <td width="67%">Description</td>
                                         </tr>
-                                        <logic:present name="VHS">
+                                        
                                             <logic:iterate id="vhs" name="VHS" indexId="HSID">
                                                 <tr bgcolor="white">
                                                     <td><input type="radio" name="HSID" id="HSID" value="<bean:write name="HSID"/>"/></td>
@@ -161,9 +162,10 @@
                                                 </tr>
                                             </logic:iterate>
                                             <tr bgcolor="white"><td colSpan="3"><html:submit value="Remove From Host Strain List" onclick="return checkHSL();"/></td></tr>
-                                        </logic:present>
+                                        
                                     </table>
                             </td></tr>
+                            </logic:present>
                             <tr height="18px"><td>&nbsp;</td></tr>
                             <tr>
                                 <td>
@@ -207,6 +209,7 @@
                                         </tr>
                                     </table>
                             </td></tr>
+                            <logic:present name="VGC">
                             <tr height="18px"><td>&nbsp;</td></tr>
                             <tr>
                                 <td>
@@ -216,7 +219,7 @@
                                             <td width="30%"><strong>Growth Condition</strong></td>
                                             <td width="67%"><strong>Is Recommended?</strong></td>
                                         </tr>
-                                        <logic:present name="VGC">
+                                        
                                             <logic:iterate id="vg" name="VGC" indexId="GCID">
                                                 <tr bgcolor="white">
                                                     <td><input type="radio" name="GCID" id="GCID" value="<bean:write name="GCID"/>"/></td>
@@ -233,9 +236,10 @@
                                                 </tr>
                                             </logic:iterate>
                                             <tr bgcolor="white"><td colSpan="3"><html:submit value="Remove From Growth Condition List" onclick="return checkGCL();"/></td></tr>
-                                        </logic:present>
+                                        
                                     </table>
                             </td></tr>
+                            </logic:present>
                             <tr height="18px"><td>&nbsp;</td></tr>
                             <tr>
                                 <td>
@@ -284,6 +288,7 @@
                                         </tr>
                                     </table>
                             </td></tr>
+                            <logic:present name="VSM">
                             <tr height="18px"><td>&nbsp;</td></tr>
                             <tr>
                                 <td>
@@ -293,7 +298,7 @@
                                             <td width="30%"><strong>Host Type</strong></td>
                                             <td width="67%"><strong>Marker</strong></td>
                                         </tr>
-                                        <logic:present name="VSM">
+                                        
                                             <logic:iterate id="vsm" name="VSM" indexId="SMID">
                                                 <tr bgcolor="white">
                                                     <td><input type="radio" name="SMID" id="SMID" value="<bean:write name="SMID"/>"/></td>
@@ -302,9 +307,10 @@
                                                 </tr>
                                             </logic:iterate>
                                             <tr bgcolor="white"><td colSpan="3"><html:submit value="Remove From Select Marker List" onclick="return checkSML();"/></td></tr>
-                                        </logic:present>
+                                        
                                     </table>
                             </td></tr>
+                            </logic:present>
                             <tr height="18px"><td>&nbsp;</td></tr>
                         </table>
                         <html:submit value="Continue" onclick="return checkForm();"/>

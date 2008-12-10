@@ -56,7 +56,6 @@ public class VInput7Action extends Action {
 
         VInput7Form vif = (VInput7Form) form;
         String sAction = vif.getSubmit();
-        int vid = vif.getVectorid();
 
         DatabaseTransaction t = null;
         Connection conn = null;
@@ -143,9 +142,10 @@ public class VInput7Action extends Action {
     }
 
     private void saveInfo(HttpSession session, VectorManager vm, PublicationManager pm, VInput7Form vif) {
+        int vid = vif.getVectorid();
         List pms = (List) session.getAttribute("VPM");
         if ((pms != null) && (pms.size() > 0)) {
-            pm.updateVectorPublications(pms);
+            pm.updateVectorPublications(vid, pms);
         }
         CloneVector v = (CloneVector) session.getAttribute("Vector");
         v.setIPD(vif.getIPD());

@@ -245,7 +245,7 @@ public class AuthorManager extends TableManager {
             return true;
         }
         String sql1 = "delete from vectorauthor where vectorid=?";
-        String sql2 = "insert into vectorauthor (vectorid, authorid, authortype, creationdate) values (?, ?, ?, ?)";
+        String sql2 = "insert into vectorauthor (vectorid, authorid, authortype) values (?, ?, ?)";
         try {
             PreparedStatement stmt1 = conn.prepareStatement(sql1);
             PreparedStatement stmt2 = conn.prepareStatement(sql2);
@@ -254,13 +254,11 @@ public class AuthorManager extends TableManager {
             DatabaseTransaction.executeUpdate(stmt1);
             DatabaseTransaction.closeStatement(stmt1);
             
-            // Date d = new Date(a.getCreationdate());
             for (int i = 0; i < as.size(); i++) {
                 a = (Authorinfo) as.get(i);
                 stmt2.setInt(1, a.getVectorid());
                 stmt2.setInt(2, a.getAuthorid());
                 stmt2.setString(3, a.getAuthortype());
-                stmt2.setString(4, a.getCreationdate());
 
                 DatabaseTransaction.executeUpdate(stmt2);
             }

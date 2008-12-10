@@ -210,8 +210,8 @@ public class VectorManager extends TableManager {
         String sql = new String("update vectorsubmission set status = ? where vectorid = ?");
         try {
             PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setInt(1, vid);
-            stmt.setString(2, s);
+            stmt.setInt(2, vid);
+            stmt.setString(1, s);
 
             DatabaseTransaction.executeUpdate(stmt);
             DatabaseTransaction.closeStatement(stmt);
@@ -318,7 +318,7 @@ public class VectorManager extends TableManager {
         }
 
         String sql1 = new String("delete from vectorfeature where vectorid=?");
-        String sql2 = new String("insert into vectorfeature (vectorid, featureid, maptype, name, description, startpos, stoppos) values (?,?,?,?,?,?)");
+        String sql2 = new String("insert into vectorfeature (vectorid, featureid, maptype, name, description, startpos, endpos) values (?,?,?,?,?,?,?)");
         try {
             PreparedStatement stmt1 = conn.prepareStatement(sql1);
             PreparedStatement stmt2 = conn.prepareStatement(sql2);
@@ -456,11 +456,17 @@ public class VectorManager extends TableManager {
             return true;
         }
 
-        String sql = "insert into vectorproperty" +
+        String sql1 = "delete from vectorproperty where vectorid=?";
+        String sql2 = "insert into vectorproperty" +
                 " (vectorid, propertytype)" +
                 " values(?,?)";
         try {
-            PreparedStatement stmt = conn.prepareStatement(sql);
+            PreparedStatement stmt = conn.prepareStatement(sql1);
+            stmt.setInt(1, vid);
+            DatabaseTransaction.executeUpdate(stmt);
+            DatabaseTransaction.closeStatement(stmt);
+            
+            stmt = conn.prepareStatement(sql2);
             stmt.setInt(1, vid);
             stmt.setString(2, vp);
             DatabaseTransaction.executeUpdate(stmt);
@@ -806,7 +812,7 @@ public class VectorManager extends TableManager {
         if (vid < 1) {
             return null;
         }
-        String sql = "select hosttype, marker from vectorsel where vectorid=?";
+        String sql = "select hosttype, marker, vectorname from vectorsel where vectorid=?";
         List VSMs = new ArrayList();
 
         try {
@@ -815,7 +821,7 @@ public class VectorManager extends TableManager {
             stmt.setInt(1, vid);
             rs = stmt.executeQuery();
             while (rs.next()) {
-                VectorSelectMarker v = new VectorSelectMarker(vid, rs.getString(1), rs.getString(2));
+                VectorSelectMarker v = new VectorSelectMarker(vid, rs.getString(3), rs.getString(1), rs.getString(2));
                 VSMs.add(v);
             }
             rs.close();
@@ -833,7 +839,7 @@ public class VectorManager extends TableManager {
         if (vid < 1) {
             return null;
         }
-        String sql = "select growthid, growthname, isrecommended from vectorgrowth where vectorid=?";
+        String sql = "select growthid, growthname, isrecommended, vectorname from vectorgrowth where vectorid=?";
         List VGCs = new ArrayList();
 
         try {
@@ -842,7 +848,7 @@ public class VectorManager extends TableManager {
             stmt.setInt(1, vid);
             rs = stmt.executeQuery();
             while (rs.next()) {
-                VectorGrowthCondition vgc = new VectorGrowthCondition(vid, rs.getInt(1), rs.getString(2), rs.getString(3));
+                VectorGrowthCondition vgc = new VectorGrowthCondition(vid, rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4));
                 VGCs.add(vgc);
             }
             rs.close();
@@ -860,7 +866,7 @@ public class VectorManager extends TableManager {
         if (vid < 1) {
             return null;
         }
-        String sql = "select hoststrain, isinuse, description from vectorhost where vectorid=?";
+        String sql = "select hoststrain, isinuse, description, vectorname from vectorhost where vectorid=?";
         List VHSs = new ArrayList();
 
         try {
@@ -869,7 +875,7 @@ public class VectorManager extends TableManager {
             stmt.setInt(1, vid);
             rs = stmt.executeQuery();
             while (rs.next()) {
-                VectorHostStrain vhs = new VectorHostStrain(vid, rs.getString(1), rs.getString(2), rs.getString(3));
+                VectorHostStrain vhs = new VectorHostStrain(vid, rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4));
                 VHSs.add(vhs);
             }
             rs.close();
