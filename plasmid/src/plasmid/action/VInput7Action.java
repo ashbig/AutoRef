@@ -84,6 +84,9 @@ public class VInput7Action extends Action {
                 af = new ActionForward(mapping.getInput());
                 vif.reset();
             }
+
+            DatabaseTransaction.commit(conn);
+
         } catch (Exception ex) {
             if (Constants.DEBUG) {
                 System.out.println(ex);

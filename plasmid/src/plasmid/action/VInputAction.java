@@ -97,6 +97,8 @@ public class VInputAction extends Action {
                 af = mapping.findForward("vSearch");
             }
 
+            DatabaseTransaction.commit(conn);
+
         } catch (Exception ex) {
             if (Constants.DEBUG) {
                 System.out.println(ex);

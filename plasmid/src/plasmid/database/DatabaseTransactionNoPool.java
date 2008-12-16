@@ -55,8 +55,7 @@ public class DatabaseTransactionNoPool {
         try {
             DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
             connection = DriverManager.getConnection(url, username, password);
-            // connection.setAutoCommit(false);
-            connection.setAutoCommit(true);
+            connection.setAutoCommit(false);
             return connection;
         }
         catch( SQLException e ) {

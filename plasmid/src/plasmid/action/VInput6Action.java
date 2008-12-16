@@ -95,6 +95,8 @@ public class VInput6Action extends Action {
                 af = mapping.findForward("back");
             }
 
+            DatabaseTransaction.commit(conn);
+
         } catch (Exception ex) {
             if (Constants.DEBUG) {
                 System.out.println(ex);

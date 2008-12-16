@@ -143,6 +143,9 @@ public class VInput2Action extends Action {
             } else {
                 af = new ActionForward(mapping.getInput());
             }
+
+            DatabaseTransaction.commit(conn);
+
         } catch (Exception ex) {
             if (Constants.DEBUG) {
                 System.out.println(ex);

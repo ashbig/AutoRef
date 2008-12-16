@@ -36,8 +36,7 @@ public class DBInitServlet extends HttpServlet {
             ds.setMaxCount(Integer.parseInt(getInitParameter("maxCount")));
             ds.setUser(getInitParameter("user"));               // oracle connection
             ds.setPassword(getInitParameter("password"));       // oracle connection
-            // ds.setAutoCommit(false);           
-            ds.setAutoCommit(true);
+            ds.setAutoCommit(false);           
             ds.open();
             DatabaseTransaction.init(ds);
         } catch(SQLException e){

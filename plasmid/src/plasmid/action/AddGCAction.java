@@ -93,6 +93,7 @@ public class AddGCAction extends Action {
                 if ((ru != null) && (ru.length() > 0)) {
                     af = mapping.findForward(ru);
                 }
+               
             } catch (Exception ex) {
                 if (Constants.DEBUG) {
                     System.out.println(ex);
@@ -167,6 +168,8 @@ public class AddGCAction extends Action {
                             new ActionError("failed.GC.add"));
                 }
 
+                DatabaseTransaction.commit(conn);
+                                
             } catch (Exception ex) {
                 if (Constants.DEBUG) {
                     System.out.println(ex);

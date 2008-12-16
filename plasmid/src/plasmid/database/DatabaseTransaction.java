@@ -12,8 +12,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.4 $
- * $Date: 2008-12-10 16:11:05 $
+ * $Revision: 1.5 $
+ * $Date: 2008-12-16 14:59:45 $
  * $Author: jx25 $
  *
  ******************************************************************************
@@ -54,7 +54,7 @@ import sun.jdbc.rowset.*;
  * DatabaseTransaction is implemented as a singleton.
  *
  * @author     $Author: jx25 $
- * @version    $Revision: 1.4 $ $Date: 2008-12-10 16:11:05 $
+ * @version    $Revision: 1.5 $ $Date: 2008-12-16 14:59:45 $
  */
 public class DatabaseTransaction {
 
@@ -125,8 +125,7 @@ public class DatabaseTransaction {
      */
     public Connection requestConnection() throws DatabaseException {
 
-        // return requestConnection(false);
-        return requestConnection(true);
+        return requestConnection(false);
 
     } // end requestConnection()
 

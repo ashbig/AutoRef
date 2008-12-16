@@ -74,7 +74,7 @@ public class AddVFTAction extends Action {
             if (sAction.equals("Add Feature Type")) {
                 bReturn = vm.insertVFTs(VFTs);
             }
-            
+
             List vft = vm.getFeatureTypes();
             session.removeAttribute("FT");
             if ((vft != null) && (vft.size() > 0)) {
@@ -95,6 +95,9 @@ public class AddVFTAction extends Action {
                 errors.add(ActionErrors.GLOBAL_ERROR,
                         new ActionError("failed.VFT.add"));
             }
+
+            DatabaseTransaction.commit(conn);
+
         } catch (Exception ex) {
             if (Constants.DEBUG) {
                 System.out.println(ex);

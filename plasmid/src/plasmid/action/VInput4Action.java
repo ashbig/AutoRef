@@ -55,7 +55,7 @@ public class VInput4Action extends Action {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute(Constants.USER_KEY);
         CloneVector v = (CloneVector) session.getAttribute("Vector");
-        
+
         VInput4Form vif = (VInput4Form) form;
         String sAction = vif.getSubmit();
         int vid = vif.getVectorid();
@@ -183,6 +183,8 @@ public class VInput4Action extends Action {
                 updateSM(session, vm, VSM);
                 af = new ActionForward(mapping.getInput());
             }
+
+            DatabaseTransaction.commit(conn);
 
         } catch (Exception ex) {
             if (Constants.DEBUG) {

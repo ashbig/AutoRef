@@ -66,7 +66,7 @@ public class VSubmitForDistAction extends Action {
                 addVGC(session, vif, errors);
 
                 af = new ActionForward(mapping.getInput());
-                // vif.reset();
+            // vif.reset();
             } else if (sAction.equals("Remove From List")) {
                 removeVGC(session, vif);
 
@@ -79,7 +79,7 @@ public class VSubmitForDistAction extends Action {
                 saveInfo(session, request, cm, vif);
 
                 af = new ActionForward(mapping.getInput());
-                //af = mapping.findForward("success");
+            //af = mapping.findForward("success");
             } else if (sAction.equals("Add New Growth Condition")) {
                 VectorManager vm = new VectorManager(conn);
                 List ht = vm.getHTs("");
@@ -92,6 +92,9 @@ public class VSubmitForDistAction extends Action {
                 request.setAttribute("RU", "vSubmitForDist");
                 af = mapping.findForward("addGC");
             }
+
+            DatabaseTransaction.commit(conn);
+
         } catch (Exception ex) {
             if (Constants.DEBUG) {
                 System.out.println(ex);

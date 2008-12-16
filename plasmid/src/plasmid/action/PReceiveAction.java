@@ -89,6 +89,8 @@ public class PReceiveAction extends Action {
                 }
             }
 
+            DatabaseTransaction.commit(conn);
+
         } catch (Exception ex) {
             if (Constants.DEBUG) {
                 System.out.println(ex);

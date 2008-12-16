@@ -91,6 +91,9 @@ public class AddVFNAction extends Action {
                 errors.add(ActionErrors.GLOBAL_ERROR,
                         new ActionError("failed.VFN.add"));
             }
+
+            DatabaseTransaction.commit(conn);
+            
         } catch (Exception ex) {
             if (Constants.DEBUG) {
                 System.out.println(ex);
