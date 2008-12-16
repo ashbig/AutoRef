@@ -1125,16 +1125,17 @@ public class OrderProcessManager {
     
     public void sendOrderEmail(CloneOrder order, String email) {
         String subject = "order "+order.getOrderid();
-        String text = "Thank you for placing a clone request at PlasmID. Clones are sent as glycerol stocks (most U.S. orders) or as purified DNA (most overseas orders). The turn-around time is currently two to four weeks (full collections may take additional time).\n";
+        String text = "Thank you for placing a clone request at PlasmID. Clones are sent as glycerol stocks (most U.S. orders) or as purified DNA (most overseas orders).\n";
         text += "\n"+formOrderText(order);
         text += "\n"+"Please sign in at PlasmID to view order status, "+
         "track your shipment, download clone information, cancel a request, "+
         "or view detailed information about the clones, "+
         "including growth conditions for the clones.\n\n"+
         "Thank you,\n"+
-        "The DF/HCC DNA Resource Core\n"+
-        "http://dnaseq.med.harvard.edu\n"+
-        "http://plasmid.med.harvard.edu/PLASMID/\n\n"+
+        "The DF/HCC DNA Resource Core PlasmID Respository\n"+
+        "The Protein Structure Initiative Material Repository (PSI-MR)\n"+
+        "http://plasmid.med.harvard.edu/PLASMID/\n"+
+        "http://www.hip.harvard.edu/PSIMR\n\n"+
         "If you have further questions, please contact us at plasmidhelp@hms.harvard.edu\n";
         
         try {
