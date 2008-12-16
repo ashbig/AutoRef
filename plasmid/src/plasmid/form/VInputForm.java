@@ -57,9 +57,19 @@ public class VInputForm extends ActionForm {
     public String getSeqfilename() {return seqfilename;}
     public void setSeqfilename(String f) {seqfilename = f.trim();}
     public FormFile getMapfile() {return mapfile;}
-    public void setMapfile(FormFile f) {mapfile = f; mapfilename=f.getFileName();}
+    public void setMapfile(FormFile f) {
+        if ((f != null) && (f.getFileName().trim().length() > 0) && (f.getFileSize() > 0)) {
+            mapfile = f;
+            mapfilename=mapfile.getFileName().trim();
+        }
+    }
     public FormFile getSeqfile() {return seqfile;}
-    public void setSeqfile(FormFile f) {seqfile = f; seqfilename=f.getFileName();}
+    public void setSeqfile(FormFile f) {
+        if ((f != null) && (f.getFileName().trim().length() > 0) && (f.getFileSize() > 0)) {
+            seqfile = f;
+            seqfilename=seqfile.getFileName().trim();
+        }
+    }
     public String getComments() {return comments;}
     public void setComments(String string) {comments = string.trim();}
     public String getStatus() {return status;}
@@ -73,6 +83,10 @@ public class VInputForm extends ActionForm {
    }
 
    public void reset(ActionMapping mapping, HttpServletRequest request) {
+        reset();
+    }
+    
+    public void reset() {
     step = null;
     vectorid=0;
     name = null;

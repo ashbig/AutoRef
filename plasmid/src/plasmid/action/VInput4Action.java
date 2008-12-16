@@ -182,6 +182,11 @@ public class VInput4Action extends Action {
 
                 updateSM(session, vm, VSM);
                 af = new ActionForward(mapping.getInput());
+            }  else {  // Cancel
+                vif.reset();
+                session.removeAttribute("Vector");
+                session.removeAttribute("VID");
+                af = mapping.findForward("vSearch");
             }
 
             DatabaseTransaction.commit(conn);

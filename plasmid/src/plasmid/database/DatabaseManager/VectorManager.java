@@ -931,7 +931,7 @@ public class VectorManager extends TableManager {
             return true;
         }
         ResultSet rs = null;
-        String sql1 = "select * from marker where upper(marker)=";
+        String sql1 = "select * from marker where upper(marker)=?";
         String sql2 = "insert into marker" +
                 " (marker)" +
                 " values(?)";

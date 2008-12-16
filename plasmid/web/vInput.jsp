@@ -186,36 +186,22 @@
                             <tr bgcolor="white" valign="top"> 
                                 <td align="right">Map:</td>
                                 <td>
-                                    <logic:empty name="vInputForm" property="step">
                                         <logic:present name="Vector">
                                             <logic:notEmpty name="Vector" property="mapfilename">
                                                 <font size="-1">Map file <bean:write name="Vector" property="mapfilename"/> has been uploaded.</font><br>
                                             </logic:notEmpty>
                                         </logic:present>
-                                    </logic:empty>
-                                    <logic:notEmpty name="vInputForm" property="step">
-                                        <logic:notEmpty name="vInputForm" property="mapfilename">
-                                            <font size="-1">Map file <bean:write name="vInputForm" property="mapfilename"/> has been uploaded.</font><br>
-                                        </logic:notEmpty>
-                                    </logic:notEmpty>
                                     <html:file property="mapfile" maxlength="128" size="50"/>
                                 </td>
                             </tr>
                             <tr bgcolor="white" valign="top"> 
                                 <td align="right">Sequence:</td>
                                 <td>
-                                    <logic:empty name="vInputForm" property="step">
                                         <logic:present name="Vector">
                                             <logic:notEmpty name="Vector" property="seqfilename">
                                                 <font size="-1">Squence file <bean:write name="Vector" property="seqfilename"/> has been uploaded.</font><br>
                                             </logic:notEmpty>
                                         </logic:present>
-                                    </logic:empty>
-                                    <logic:notEmpty name="vInputForm" property="step">
-                                        <logic:notEmpty name="vInputForm" property="seqfilename">
-                                            <font size="-1">Squence file <bean:write name="vInputForm" property="seqfilename"/> has been uploaded.</font><br>
-                                        </logic:notEmpty>
-                                    </logic:notEmpty>
                                     <html:file property="seqfile" maxlength="128" size="50"/>
                                 </td>
                             </tr>

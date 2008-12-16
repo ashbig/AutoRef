@@ -91,7 +91,8 @@ public class VInputAction extends Action {
                 nextPage(session, vm);
 
                 af = mapping.findForward("continue");
-            } else {
+            } else {  // Cancel
+                vif.reset();
                 session.removeAttribute("Vector");
                 session.removeAttribute("VID");
                 af = mapping.findForward("vSearch");
@@ -126,9 +127,19 @@ public class VInputAction extends Action {
         String vtype = vif.getType();
         int vsize = vif.getSize();
         FormFile mf = vif.getMapfile();
-        String mapfilename = mf.getFileName().trim();
+        String mapfilename = null, seqfilename = null;
+        CloneVector v = (CloneVector) session.getAttribute("Vector");
+        if ((mf != null) && (mf.getFileName().trim().length() > 0) && (mf.getFileSize() > 0))
+            mapfilename = mf.getFileName().trim();
+        else {
+            mapfilename = v.getMapfilename();
+        }
         FormFile sf = vif.getSeqfile();
-        String seqfilename = sf.getFileName().trim();
+        if ((sf != null) && (sf.getFileName().trim().length() > 0) && (sf.getFileSize() > 0))
+            seqfilename = sf.getFileName().trim();
+        else {
+            seqfilename = v.getSeqfilename();
+        }
         String comments = ((vif.getComments().length() < 1) ? "" : "<CMT>" + vif.getComments() + "</CMT>");
         String syns = vif.getSyns();
         CloneVector vector = null;
@@ -166,14 +177,14 @@ public class VInputAction extends Action {
             // Save file on the server
             String mfPath = getServlet().getServletContext().getRealPath("/") + "PlasmidRepository/file/map";
             String sfPath = getServlet().getServletContext().getRealPath("/") + "PlasmidRepository/file/sequence";
-            if ((mapfilename != null) && (mapfilename.length() > 0)) {
+            if ((mf != null) && (mf.getFileName().trim().length() > 0) && (mf.getFileSize() > 0)) {
                 File MapFile = new File(mfPath, mapfilename);
                 FileOutputStream mfOS = new FileOutputStream(MapFile);
                 mfOS.write(mf.getFileData());
                 mfOS.flush();
                 mfOS.close();
             }
-            if ((seqfilename != null) && (seqfilename.length() > 0)) {
+            if ((sf != null) && (sf.getFileName().trim().length() > 0) && (sf.getFileSize() > 0)) {
                 File SeqFile = new File(sfPath, seqfilename);
                 FileOutputStream sfOS = new FileOutputStream(SeqFile);
                 sfOS.write(sf.getFileData());

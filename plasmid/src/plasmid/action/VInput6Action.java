@@ -93,6 +93,11 @@ public class VInput6Action extends Action {
                 af = mapping.findForward("continue");
             } else if (sAction.equals("Back")) { //Back }
                 af = mapping.findForward("back");
+            } else {  // Cancel
+                vif.reset();
+                session.removeAttribute("Vector");
+                session.removeAttribute("VID");
+                af = mapping.findForward("vSearch");
             }
 
             DatabaseTransaction.commit(conn);

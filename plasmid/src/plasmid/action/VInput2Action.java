@@ -140,8 +140,12 @@ public class VInput2Action extends Action {
                     }
                 }
                 af = updateSession(mapping, session, vm, features);
-            } else {
-                af = new ActionForward(mapping.getInput());
+            } else { // Cancel
+                // af = new ActionForward(mapping.getInput());
+                vif.reset();
+                session.removeAttribute("Vector");
+                session.removeAttribute("VID");
+                af = mapping.findForward("vSearch");
             }
 
             DatabaseTransaction.commit(conn);

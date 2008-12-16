@@ -83,6 +83,11 @@ public class VInput7Action extends Action {
 
                 af = new ActionForward(mapping.getInput());
                 vif.reset();
+            } else {  // Cancel
+                vif.reset();
+                session.removeAttribute("Vector");
+                session.removeAttribute("VID");
+                af = mapping.findForward("vSearch");
             }
 
             DatabaseTransaction.commit(conn);
