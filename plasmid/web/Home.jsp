@@ -25,9 +25,10 @@
   <tr>
     <td width="550" height="300"><table width="578" height="259" border="0" align="center" bgcolor="#EFEFEF" id="form">
       <tr>
-        <td width="572" height="112"><p align="center"><span class="mainbodytext">Plasmid Information Database (PlasmID) is a central repository for plasmid clone collections and distribution based at the <a href="http://www.hip.harvard.edu/" target="_blank">Harvard Institute of Proteomics (HIP)</a>. We are also the <a href="http://www.hip.harvard.edu/PSIMR/index.htm" target="_blank" class="style1">Protein Structure Initiative (PSI) Material Repository</a>.&nbsp;        
+        <td width="572" height="112"><p align="center"><span class="mainbodytext">Plasmid Information Database (PlasmID) is a central repository for plasmid clone collections and distribution as part of the DF/HCC DNA Resource Core based at the <a href="http://www.hip.harvard.edu/" target="_blank">Harvard Institute of Proteomics (HIP)</a>. We are also the <a href="http://www.hip.harvard.edu/PSIMR/index.htm" target="_blank">Protein Structure Initiative (PSI) Material Repository</a>.&nbsp;        
         </span>
-        <p align="center"><span class="mainbodytext"><a href="http://hms.harvard.edu" target="_blank"><img src="HMS_logo.jpg" width="66" height="63"></a>&nbsp;<a href="http://www.hip.harvard.edu/PSIMR" target="_blank"><img src="psilogo.jpg" width="150" height="63"></a>&nbsp;<a href="http://www.dfhcc.harvard.edu" target="_blank"><img src="DFHCC_logo_square.jpg" width="64" height="63"></a><br>
+        <p align="center"><span class="mainbodytext">
+          <a href="http://hms.harvard.edu" target="_blank"><img src="HMS_logo.jpg" width="66" height="63"></a>&nbsp;<a href="http://www.hip.harvard.edu/PSIMR" target="_blank"><img src="psilogo.jpg" width="150" height="63"></a><br><a href="http://www.dfhcc.harvard.edu" target="_blank"><img src="DFHCC_NCI_logo.jpg" width="379" height="46"></a>
         </span>
         <p align="center" class="mainbodytext">To search for plasmids, please go to <a href="OrderOverview.jsp">Plasmid Request</a>  
           or find a list of our large collections <a href="collection_overview.jsp" target="_blank">here</a>. </p>
