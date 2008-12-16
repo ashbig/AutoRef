@@ -43,11 +43,11 @@
           <span class="mainbodytext">Search by CloneID/PlasmID or all other IDs.</span></p></td>
     <td width="45%" valign="top">
       <p><span align="left" class="homepageText2">PSI search</span>
-            <span class="mainbodytext"><a href="PrepareAdvancedSearch.do">Advanced search</a></span><br>
+            <span class="mainbodytext"><a href="PrepareAdvancedSearch.do?psi=1">Advanced search</a></span><br>
         <span class="mainbodytext">Search by PDB ID, TargetDB ID, PSI site or by ability of protein to express, be solube or purify.</span><br>
         <br>
             <span align="left" class="homepageText2">Advanced search options</span> 
-            <span class="mainbodytext"><a href="PrepareAdvancedSearch.do">Advanced search</a></span> <br>
+            <span class="mainbodytext"><a href="PrepareAdvancedSearch.do?psi=0">Advanced search</a></span> <br>
              <span class="mainbodytext">Search by gene name, gene symbol, vector name, vector feature, author name, publication, or species.</span><br>
           <br>
           <span class="homepageText2">Looking for an 'empty vector'? </span>
