@@ -566,10 +566,13 @@ public class DiscrepancyFinderRunner extends ProcessRunner
              oligos = Container.findEndReadsOligos(clone_description.getContainerId());
              linker5_length= cloning_strategy.getLinker5().getSequence().length();      
              linker3_length= cloning_strategy.getLinker3().getSequence().length();      
-             oligo_params[0]= oligos[0].getLeaderLength() + linker5_length + Constants.NUMBER_OF_BASES_ADD_TO_LINKER_FORREAD_QUALITY_DEFINITION;
-             oligo_params[1]= oligos[0].getOrientation() ;
-             oligo_params[2]= oligos[1].getLeaderLength() + linker3_length + Constants.NUMBER_OF_BASES_ADD_TO_LINKER_FORREAD_QUALITY_DEFINITION;
-             oligo_params[3]= oligos[1].getOrientation() ;
+             if ( oligos[0] != null)
+             {oligo_params[0]= oligos[0].getLeaderLength() + linker5_length + Constants.NUMBER_OF_BASES_ADD_TO_LINKER_FORREAD_QUALITY_DEFINITION;
+             oligo_params[1]= oligos[0].getOrientation() ;}
+             if ( oligos[1] != null)
+             {
+                 oligo_params[2]= oligos[1].getLeaderLength() + linker3_length + Constants.NUMBER_OF_BASES_ADD_TO_LINKER_FORREAD_QUALITY_DEFINITION;
+                 oligo_params[3]= oligos[1].getOrientation() ;}
              
              m_eroligo_defined_parameters.put(new Integer(clone_description.getContainerId() ), oligo_params);
         }
@@ -657,7 +660,7 @@ public class DiscrepancyFinderRunner extends ProcessRunner
         runner = new DiscrepancyFinderRunner();
 
        
-        runner.setInputData( Constants.ITEM_TYPE_CLONEID, "     171322 ");
+        runner.setInputData( Constants.ITEM_TYPE_CLONEID, "     480886 ");
        runner.setProcessType(Constants.PROCESS_RUN_DISCREPANCY_FINDER);
         runner.setUser(user);
         runner.run();
