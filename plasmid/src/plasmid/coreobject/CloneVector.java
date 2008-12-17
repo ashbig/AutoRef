@@ -154,7 +154,7 @@ public class CloneVector implements Serializable {
         if (bpos > -1) {  // Has <CMT></CMT> tag
             epos = comments.indexOf(ecm);
             if (bpos < epos) {
-                cmt = comments.substring(bpos + 5, epos - 6);
+                cmt = comments.substring(bpos + 5, epos);
             }
         } else { // No <CMT></CMT> tag
             bpos = comments.indexOf(bim);
@@ -224,7 +224,7 @@ public class CloneVector implements Serializable {
         if (bpos > -1) {  // Has <IPD></IPD> tag
             epos = comments.indexOf(eim);
             if (bpos < epos) {
-                cmt = comments.substring(bpos + 5, epos - 6);
+                cmt = comments.substring(bpos + 5, epos);
             }
         } else { // No <IPD></IPD> tag
             bpos = comments.indexOf(bcm);

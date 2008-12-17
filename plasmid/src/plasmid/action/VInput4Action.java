@@ -182,7 +182,7 @@ public class VInput4Action extends Action {
 
                 updateSM(session, vm, VSM);
                 af = new ActionForward(mapping.getInput());
-            }  else {  // Cancel
+            } else {  // Cancel
                 vif.reset();
                 session.removeAttribute("Vector");
                 session.removeAttribute("VID");
@@ -258,75 +258,78 @@ public class VInput4Action extends Action {
     private void nextPage(HttpSession session) {
         // Prepare for next page
         CloneVector v = (CloneVector) session.getAttribute("Vector");
-        session.removeAttribute("Vector");
-        String desp = "<VPT> with <VFT>; <SM>; <CLONE>";
-         String  desp1 = "", desp2 = "", desp3 = "", desp4 = "";
-        List vpta = (List) session.getAttribute("VPA");
-        List vptc = (List) session.getAttribute("VPC");
-        List vpte = (List) session.getAttribute("VPE");
-        List vf = (List) session.getAttribute("Features");
-        List vsm = (List) session.getAttribute("VSM");
-        if ((vpta != null) && (vpta.size() > 0)) {
-            for (int i = 0; i < vpta.size(); i++) {
-                VectorProperty vpt = (VectorProperty) vpta.get(i);
-                if (vpt.getVectorid() > 0) {
-                    desp1 += (", " + vpt.getDisplayValue());
+        String desp = v.getDescription();
+        if ((desp == null) || (desp.trim().length() < 1)) {
+            session.removeAttribute("Vector");
+            desp = "<VPT> with <VFT>; <SM>; <CLONE>";
+            String desp1 = "", desp2 = "", desp3 = "", desp4 = "";
+            List vpta = (List) session.getAttribute("VPA");
+            List vptc = (List) session.getAttribute("VPC");
+            List vpte = (List) session.getAttribute("VPE");
+            List vf = (List) session.getAttribute("Features");
+            List vsm = (List) session.getAttribute("VSM");
+            if ((vpta != null) && (vpta.size() > 0)) {
+                for (int i = 0; i < vpta.size(); i++) {
+                    VectorProperty vpt = (VectorProperty) vpta.get(i);
+                    if (vpt.getVectorid() > 0) {
+                        desp1 += (", " + vpt.getDisplayValue());
+                    }
+                }
+                if (desp1.length() > 0) {
+                    desp1 = (desp1 + " assay");
+                }
+            }
+            if ((vptc != null) && (vptc.size() > 0)) {
+                for (int i = 0; i < vptc.size(); i++) {
+                    VectorProperty vpt = (VectorProperty) vptc.get(i);
+                    if (vpt.getVectorid() > 0) {
+                        desp2 += (", " + vpt.getDisplayValue());
+                    }
+                }
+                if (desp2.length() > 0) {
+                    desp1 += (desp2 + " clone");
+                    desp2 = "";
+                }
+            }
+            if ((vpte != null) && (vpte.size() > 0)) {
+                for (int i = 0; i < vpte.size(); i++) {
+                    VectorProperty vpt = (VectorProperty) vpte.get(i);
+                    if (vpt.getVectorid() > 0) {
+                        desp2 += (", " + vpt.getDisplayValue());
+                    }
+                }
+                if (desp2.length() > 0) {
+                    desp1 += (desp2 + " expression");
+                    desp2 = "";
                 }
             }
             if (desp1.length() > 0) {
-                desp1 = (desp1 + " assay");
+                desp1 = desp1.substring(2);
             }
-        }
-        if ((vptc != null) && (vptc.size() > 0)) {
-            for (int i = 0; i < vptc.size(); i++) {
-                VectorProperty vpt = (VectorProperty) vptc.get(i);
-                if (vpt.getVectorid() > 0) {
-                    desp2 += (", " + vpt.getDisplayValue());
+
+            if ((vf != null) && (vf.size() > 0)) {
+                for (int i = 0; i < vf.size(); i++) {
+                    VectorFeature vft = (VectorFeature) vf.get(i);
+                    desp2 += (" and " + vft.getName());
+                }
+                if (desp2.length() > 0) {
+                    desp2 = desp2.substring(5);
                 }
             }
-            if (desp2.length() > 0) {
-                desp1 += (desp2 + " clone");
-                desp2 = "";
-            }
-        }
-        if ((vpte != null) && (vpte.size() > 0)) {
-            for (int i = 0; i < vpte.size(); i++) {
-                VectorProperty vpt = (VectorProperty) vpte.get(i);
-                if (vpt.getVectorid() > 0) {
-                    desp2 += (", " + vpt.getDisplayValue());
+
+            if ((vsm != null) && (vsm.size() > 0)) {
+                for (int i = 0; i < vsm.size(); i++) {
+                    VectorSelectMarker sm = (VectorSelectMarker) vsm.get(i);
+                    desp3 += (", " + sm.getMarker() + " resistance in " + sm.getHosttype());
+                }
+                if (desp3.length() > 0) {
+                    desp3 = desp3.substring(2);
                 }
             }
-            if (desp2.length() > 0) {
-                desp1 += (desp2 + " expression");
-                desp2 = "";
-            }
-        }
-        if (desp1.length() > 0) {
-            desp1 = desp1.substring(2);
-        }
 
-        if ((vf != null) && (vf.size() > 0)) {
-            for (int i = 0; i < vf.size(); i++) {
-                VectorFeature vft = (VectorFeature) vf.get(i);
-                desp2 += (" and " + vft.getName());
-            }
-            if (desp2.length() > 0) {
-                desp2 = desp2.substring(5);
-            }
+            desp = desp.replaceAll("<VPT>", desp1).replaceAll("<VFT>", desp2).replaceAll("<SM>", desp3).replaceAll("<CLONE>", desp4);
+            v.setDescription(desp);
+            session.setAttribute("Vector", v);
         }
-
-        if ((vsm != null) && (vsm.size() > 0)) {
-            for (int i = 0; i < vsm.size(); i++) {
-                VectorSelectMarker sm = (VectorSelectMarker) vsm.get(i);
-                desp3 += (", " + sm.getMarker() + " resistance in " + sm.getHosttype());
-            }
-            if (desp3.length() > 0) {
-                desp3 = desp3.substring(2);
-            }
-        }
-
-        desp = desp.replaceAll("<VPT>", desp1).replaceAll("<VFT>", desp2).replaceAll("<SM>", desp3).replaceAll("<CLONE>", desp4);
-        v.setDescription(desp);
-        session.setAttribute("Vector", v);
     }
 }

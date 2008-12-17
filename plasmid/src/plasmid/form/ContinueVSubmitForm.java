@@ -38,9 +38,15 @@ public class ContinueVSubmitForm extends ActionForm {
    }
 
    public void reset(ActionMapping mapping, HttpServletRequest request) {
+       reset();
+   }
+   
+   public void reset() {
        VID = null;
+       user = null;
        submit = null;
    }
+   
    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
        ActionErrors errors = new ActionErrors();
        return errors;

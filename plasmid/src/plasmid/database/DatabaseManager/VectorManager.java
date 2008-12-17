@@ -124,10 +124,12 @@ public class VectorManager extends TableManager {
 
     public boolean updateVector(CloneVector vector) {
         String sql = new String("update vector set name=?, description=?, form=?, type=?, sizeinbp=?, comments=?");
-        if (vector.getMapfilename().length() > 0) {
+        String mapFilename = vector.getMapfilename(), seqFilename = vector.getSeqfilename();
+        
+        if ((mapFilename != null) && (mapFilename.length() > 0)) {
             sql = sql + ", mapfilename=?";
         }
-        if (vector.getSeqfilename().length() > 0) {
+        if ((seqFilename != null) && (seqFilename.length() > 0)) {
             sql = sql + ", sequencefilename=?";
         }
         sql = sql + " where vectorid=?";
@@ -140,11 +142,11 @@ public class VectorManager extends TableManager {
             stmt.setInt(5, vector.getSize());
             stmt.setString(6, vector.getFullComments());
             int i = 7;
-            if (vector.getMapfilename().length() > 0) {
-                stmt.setString(i++, vector.getMapfilename());
+            if ((mapFilename != null) && (mapFilename.length() > 0)) {
+                stmt.setString(i++, mapFilename);
             }
-            if (vector.getSeqfilename().length() > 0) {
-                stmt.setString(i++, vector.getSeqfilename());
+            if ((seqFilename != null) && (seqFilename.length() > 0)) {
+                stmt.setString(i++, seqFilename);
             }
             stmt.setInt(i, vector.getVectorid());
 

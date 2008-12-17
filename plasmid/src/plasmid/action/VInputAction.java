@@ -89,7 +89,7 @@ public class VInputAction extends Action {
                 saveInfo(session, t, vm, form, uid); // Save the info before continue.
 
                 nextPage(session, vm);
-
+                vif.reset();
                 af = mapping.findForward("continue");
             } else {  // Cancel
                 vif.reset();
@@ -128,21 +128,21 @@ public class VInputAction extends Action {
         int vsize = vif.getSize();
         FormFile mf = vif.getMapfile();
         String mapfilename = null, seqfilename = null;
-        CloneVector v = (CloneVector) session.getAttribute("Vector");
+        CloneVector vector = (CloneVector) session.getAttribute("Vector");
         if ((mf != null) && (mf.getFileName().trim().length() > 0) && (mf.getFileSize() > 0))
             mapfilename = mf.getFileName().trim();
-        else {
-            mapfilename = v.getMapfilename();
+        else if (vector != null) {
+            mapfilename = vector.getMapfilename();
         }
         FormFile sf = vif.getSeqfile();
         if ((sf != null) && (sf.getFileName().trim().length() > 0) && (sf.getFileSize() > 0))
             seqfilename = sf.getFileName().trim();
-        else {
-            seqfilename = v.getSeqfilename();
+        else if (vector != null) {
+            seqfilename = vector.getSeqfilename();
         }
         String comments = ((vif.getComments().length() < 1) ? "" : "<CMT>" + vif.getComments() + "</CMT>");
         String syns = vif.getSyns();
-        CloneVector vector = null;
+        vector = null;
 
         try {
             if (vid == 0) {  // New Vector

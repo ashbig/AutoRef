@@ -87,6 +87,7 @@ public class ContinueVSubmitAction extends Action {
             if (vt != null) {
                 session.setAttribute("VTypes", vt);
             }
+            vsf.reset();
             
         } catch (Exception ex) {
             if(Constants.DEBUG) {

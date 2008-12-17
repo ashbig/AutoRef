@@ -348,13 +348,13 @@
             define in what organism this type of selection would be used. For example:</font></p>
             <table border="0" cellpadding="5" cellspacing="1" bgcolor="black">
                 <tr bgcolor="#FFFFCC">
-                    <th><font size="-1">Host Type Marker</font></th>
+                    <th><font size="-1">Host Type</font></th><th><font size="-1">Marker</font></th>
                 </tr>
                 <tr bgcolor="#FFFFCC">
-                    <td><font size="-1">Mammalian puromycin</font></td>
+                    <td><font size="-1">Mammalian</font></td><td><font size="-1">puromycin</font></td>
                 </tr>
                 <tr bgcolor="#FFFFCC">
-                    <td><font size="-1">Bacterial ampicillin</font></td>
+                    <td><font size="-1">Bacterial</font></td><td><font size="-1">ampicillin</font></td>
                 </tr>
             </table>
         </span>

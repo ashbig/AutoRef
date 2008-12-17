@@ -111,7 +111,7 @@
         <jsp:include page="footer.jsp" />
         <script>
             function checkFind() {
-                t = document.getElementById("cloneid");
+                t = document.getElementById("cloneid").value;
                 if ((t == null) || (t.length < 1)) {
                     alert("Please enter clone id before continue.");
                     return false;
