@@ -34,6 +34,7 @@ public class Clone implements Serializable {
     public static final String VERIFIED_YES = "Y";
     public static final String VERIFIED_NO = "N";
     public static final String VERIFIED_UNKNOWN = "U";
+    public static final String FASTAIDDELIM = ":";
     
     protected int cloneid;
     protected String name;
@@ -334,5 +335,13 @@ public class Clone implements Serializable {
             desc += insert.getSequence();
         }
         return desc;  
+    }
+    
+    public String getFastaID() {
+        return ">"+getCloneid();
+    }
+    
+    public String getLongFastaID() {
+        return ">PlasmID|"+getName()+"|"+getCloneDescription();
     }
 }

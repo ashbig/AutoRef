@@ -164,6 +164,9 @@
     <form-bean      name="queryVectorForm"
                     type="plasmid.form.QueryVectorForm"/>
                     
+    <form-bean      name="blastForm"
+                    type="plasmid.form.BlastForm"/>
+                    
  </form-beans>
 
   <!-- ========== Global Forward Definitions ============================== -->
@@ -223,6 +226,14 @@
                scope="request"
               input="/BatchOrder.jsp">
       <forward  name="success"  path="/DisplayCart.jsp"/>
+    </action>
+    
+    <action     path="/BlastSearch"
+                type="plasmid.action.BlastSearchAction"
+               name="blastForm"
+              input="/PrepareBlast.do">
+      <forward  name="success"  path="/BlastSearchResult.jsp"/>
+      <forward  name="empty"  path="/DisplayEmptySearchResults.jsp"/>
     </action>
     
     <action     path="/CancelOrder"
@@ -345,6 +356,12 @@
               validate="false">
       <forward  name="success"   path="/GenerateContainersSuccessful.txt"/>
       <forward  name="fail"   path="/GenerateContainersFail.txt"/>
+    </action>
+         
+    <action    path="/GetAlignment"
+               type="plasmid.action.GetAlignmentAction"
+              name="blastForm">
+      <forward  name="success"   path="/ViewAlignment.jsp"/>
     </action>
          
     <action    path="/GetAllVectors"
@@ -476,6 +493,12 @@
                 type="plasmid.action.PrepareAdvancedSearchAction"
                name="advancedSearchForm">
       <forward  name="success"  path="/AdvancedSearch.jsp"/>
+    </action>
+    
+    <action    path="/PrepareBlast"
+               type="plasmid.action.PrepareBlastAction"
+               name="blastForm">
+      <forward  name="success"   path="/BlastInput.jsp"/>
     </action>
     
     <action    path="/PrepareRegistration"

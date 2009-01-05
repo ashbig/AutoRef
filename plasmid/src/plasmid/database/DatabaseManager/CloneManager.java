@@ -97,6 +97,7 @@ public class CloneManager extends TableManager {
     }
 
     public boolean insertCloneGrowths(int cloneid, List growths) {  // With cloneid and vectorgrowthconditions
+
         if ((cloneid < 1) || (growths == null)) {
             return true;
         }
@@ -575,6 +576,26 @@ public class CloneManager extends TableManager {
         return queryClonesByCloneid(cloneids, isInsert, isSelection, isWorkingStorage, restrictions, clonetypes, species, Clone.AVAILABLE);
     }
 
+    public String queryCloneSequenceByCloneid(int cloneid) {
+        String sql = "select seqtext from seqtext t, dnasequence d where t.sequenceid=d.sequenceid and d.insertid in (select insertid from cloneinsert where cloneid=" + cloneid + ") order by seqorder";
+        String seq = "";
+        
+        try {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            ResultSet rs = t.executeQuery(sql);
+            
+            while (rs.next()) {
+                String seqtext = rs.getString(1);
+                seq += seqtext;
+            }
+            DatabaseTransaction.closeResultSet(rs);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            handleError(ex, "Error occured while query clone sequence by cloneid: " + cloneid);
+        } 
+        return seq;
+    }
+
     public Clone queryCloneByCloneid(int cloneid) {
         String sql = "select clonename, clonetype, verified, vermethod," +
                 " domain, subdomain, restriction, comments, vectorid, vectorname, clonemapfilename, status,specialtreatment,source,description" +
@@ -821,9 +842,9 @@ public class CloneManager extends TableManager {
     }
 
     private Map performQueryClones(List cloneids, boolean isInsert, boolean isSelection, boolean isWorkingStorage, boolean isGrowth, String sql, boolean isInsertseq) {
-        return performQueryClones(cloneids,isInsert,isSelection,isWorkingStorage,isGrowth,sql,isInsertseq,false);
+        return performQueryClones(cloneids, isInsert, isSelection, isWorkingStorage, isGrowth, sql, isInsertseq, false);
     }
-    
+
     private Map performQueryClones(List cloneids, boolean isInsert, boolean isSelection, boolean isWorkingStorage, boolean isGrowth, String sql, boolean isInsertseq, boolean isClonename) {
         Map clones = new TreeMap();
         if (cloneids == null || cloneids.size() == 0) {
@@ -846,7 +867,6 @@ public class CloneManager extends TableManager {
         PreparedStatement stmt7 = null;
 
         ResultSet rs = null;
-
         int currentCloneid = 0;
         try {
             stmt = conn.prepareStatement(sql);
@@ -862,7 +882,7 @@ public class CloneManager extends TableManager {
             if (isGrowth) {
                 stmt5 = conn.prepareStatement(sql5);
             }
-            if(isClonename) {
+            if (isClonename) {
                 stmt7 = conn.prepareStatement(sql7);
             }
 
@@ -933,12 +953,12 @@ public class CloneManager extends TableManager {
                         c.setRecommendedGrowthCondition(g);
                     }
 
-                    if(isClonename) {
+                    if (isClonename) {
                         stmt7.setInt(1, cloneid);
                         List names = getClonenames(stmt7, cloneid);
                         c.setNames(names);
                     }
-                    
+
                     clones.put(cid, c);
                 } else {
                     clones.put(cid, null);
@@ -1110,11 +1130,11 @@ public class CloneManager extends TableManager {
     }
 
     private String getClonenameSql() {
-        String s = "select nametype,namevalue,nameurl"+
+        String s = "select nametype,namevalue,nameurl" +
                 " from clonename where cloneid=?";
         return s;
     }
-    
+
     private List getInserts(PreparedStatement stmt, int cloneid) throws Exception {
         List inserts = new ArrayList();
         ResultSet rs2 = DatabaseTransaction.executeQuery(stmt);
@@ -1157,17 +1177,17 @@ public class CloneManager extends TableManager {
 
         return selections;
     }
-    
+
     private List getClonenames(PreparedStatement stmt, int cloneid) throws Exception {
         List names = new ArrayList();
         ResultSet rs = DatabaseTransaction.executeQuery(stmt);
-        while(rs.next()) {
+        while (rs.next()) {
             String nametype = rs.getString(1);
             String namevalue = rs.getString(2);
             String nameurl = rs.getString(3);
-            CloneName name = new CloneName(cloneid,nametype,namevalue,nameurl);
+            CloneName name = new CloneName(cloneid, nametype, namevalue, nameurl);
             names.add(name);
-        } 
+        }
         DatabaseTransaction.closeResultSet(rs);
         return names;
     }
@@ -1282,7 +1302,7 @@ public class CloneManager extends TableManager {
     public List queryCloneidsByCloneType(List clonetypes) {
         return queryCloneidsByCloneType(clonetypes, false);
     }
-    
+
     public List queryCloneidsByCloneType(List clonetypes, boolean isPSI) {
         String sql = "select cloneid from clone";
 
@@ -1291,10 +1311,10 @@ public class CloneManager extends TableManager {
             sql = sql + " where clonetype in (" + s + ")";
         }
 
-        if(isPSI) {
-            sql = sql+" and cloneid in (select cloneid from cloneproperty where propertytype='Collection' and propertyvalue='PSI')";
+        if (isPSI) {
+            sql = sql + " and cloneid in (select cloneid from cloneproperty where propertytype='Collection' and propertyvalue='PSI')";
         }
-        
+
         PreparedStatement stmt = null;
 
         List cloneids = new ArrayList();
@@ -1637,14 +1657,10 @@ public class CloneManager extends TableManager {
         return cs;
     }
 
-    public boolean updateCloneSubmission(int cloneid, int userid, 
+    public boolean updateCloneSubmission(int cloneid, int userid,
             String st, String hs, String re, String f,
             String s, String sd, String r, String rd) {
-        if ((cloneid < 1) || (userid < 1) 
-                || (s == null) || (s.length() < 1) || (sd == null) || (sd.length()<1)
-                || (r == null) || (r.length() < 1) || (rd == null) || (rd.length()<1)
-                || (st == null) || (st.length() < 1) || (hs == null) || (hs.length() < 1)
-                || (re == null) || (re.length() < 1) || (f == null) || (f.length() < 1)) {
+        if ((cloneid < 1) || (userid < 1) || (s == null) || (s.length() < 1) || (sd == null) || (sd.length() < 1) || (r == null) || (r.length() < 1) || (rd == null) || (rd.length() < 1) || (st == null) || (st.length() < 1) || (hs == null) || (hs.length() < 1) || (re == null) || (re.length() < 1) || (f == null) || (f.length() < 1)) {
             return true;
         }
 
@@ -1658,11 +1674,11 @@ public class CloneManager extends TableManager {
 
             stmt1.setString(1, st);
             stmt1.setInt(2, cloneid);
-            
+
             stmt2.setString(1, "Y");
             stmt2.setInt(2, cloneid);
             stmt2.setString(3, hs);
-            
+
             stmt3.setInt(1, cloneid);
             stmt3.setInt(2, userid);
             stmt3.setString(3, s);
@@ -1674,7 +1690,7 @@ public class CloneManager extends TableManager {
             DatabaseTransaction.executeUpdate(stmt2);
             DatabaseTransaction.closeStatement(stmt2);
             DatabaseTransaction.executeUpdate(stmt3);
-            DatabaseTransaction.closeStatement(stmt3);            
+            DatabaseTransaction.closeStatement(stmt3);
         } catch (Exception ex) {
             handleError(ex, "Error occured while updating CLONE,HOST,CLONESUBMISSION table");
             return false;
@@ -1682,7 +1698,7 @@ public class CloneManager extends TableManager {
 
         return true;
     }
-    
+
     public static void main(String args[]) {
         DatabaseTransaction dt = null;
         Connection conn = null;

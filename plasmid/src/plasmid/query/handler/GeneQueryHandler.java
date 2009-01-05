@@ -8,7 +8,6 @@ package plasmid.query.handler;
 
 import java.util.*;
 import java.sql.*;
-import javax.sql.*;
 
 import plasmid.database.*;
 import plasmid.database.DatabaseManager.*;
