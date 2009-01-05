@@ -20,7 +20,7 @@ public class BlastParser {
     public static final int DEFAULT_ALENGTH = 100;
     public static final double DEFAULT_PID = 90.0;
     private String file;
-    private List<BlastHit> infos;
+    private List infos;
     private int alength;
     private double pid;
 
@@ -104,11 +104,11 @@ public class BlastParser {
         this.file = file;
     }
 
-    public List<BlastHit> getInfos() {
+    public List getInfos() {
         return infos;
     }
 
-    public void setInfos(List<BlastHit> infos) {
+    public void setInfos(List infos) {
         this.infos = infos;
     }
 
