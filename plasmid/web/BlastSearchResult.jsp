@@ -25,7 +25,6 @@
                     
                     <bean:define id="size" name="blastForm" property="pagesize"/>
                     <bean:define id="p" name="blastForm" property="page"/>
-                    <bean:define id="found" name="blastForm" property="infos"/>
                     <bean:define id="total" name="blastForm" property="total"/>
                     
                     <h:form action="GetAlignment.do">
@@ -57,7 +56,6 @@
                                     </html:select>
                                     <html:submit property="button" value="Display"/>
                                 </td>
-                                <td class="mainbodytexthead"><html:submit property="button" value="<%=Constants.DOWNLOAD%>"/></td>
                                 <td align="right" class="mainbodytexthead"><a target="_blank" href="TermDefinition.jsp">Explanation of Terms</a></td>
                             </tr>
                         </table>
@@ -70,7 +68,7 @@
                             <td class="tableheader">PlasmID ID</td>
                             <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=clonetype">Clone Type</a></td>
                             <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=geneid">Species Specific ID</a></td>
-                            <td class="tableheader">Gene Symbol</td>
+                            <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=genesymbol">Gene Symbol</a></td>
                             <td class="tableheader">Gene Name</td>
                             <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=mutdis">Mutation/ Discrepancy</a></td>
                             <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=vectorname">Vector</a></td>
@@ -86,10 +84,10 @@
                         
                             <tr class="tableinfo"> 
                                 <td><%=++i%></td>
-                                <td><a target="_blank" href="GetAlignment.do?queryid=<bean:write name="clone" property="queryid"/>&subjectid=<bean:write name="clone" property="subjectid"/>&clonename=<bean:write name="clone" property="cloneinfo.name"/>"><bean:write name="clone" property="queryid"/></a></td>
-                                <td><a target="_blank" href="GetCloneDetail.do?cloneid=<bean:write name="clone" property="cloneinfo.cloneid"/>&species="><bean:write name="clone" property="cloneinfo.name"/></a></td>
-                                <td><bean:write name="clone" property="cloneinfo.type"/></td>
-                                <logic:iterate name="clone" property="cloneinfo.inserts" id="insert">
+                                <td><a target="_blank" href="GetAlignment.do?queryid=<bean:write name="clone" property="queryid"/>&subjectid=<bean:write name="clone" property="subjectid"/>&clonename=<bean:write name="clone" property="name"/>"><bean:write name="clone" property="queryid"/></a></td>
+                                <td><a target="_blank" href="GetCloneDetail.do?cloneid=<bean:write name="clone" property="cloneid"/>&species="><bean:write name="clone" property="name"/></a></td>
+                                <td><bean:write name="clone" property="type"/></td>
+                                <logic:iterate name="clone" property="inserts" id="insert">
                                     <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.GENEID%>">
                                         <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=gene&cmd=Retrieve&dopt=Graphics&list_uids=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
                                     </logic:equal>
@@ -127,9 +125,9 @@
                                     <td><bean:write name="insert" property="description"/></td>
                                     <td><bean:write name="insert" property="hasmutdis"/></td>
                                 </logic:iterate>
-                                <td><a target="_blank" href="GetVectorDetail.do?vectorid=<bean:write name="clone" property="cloneinfo.vectorid"/>"><bean:write name="clone" property="cloneinfo.vectorname"/></a></td>
+                                <td><a target="_blank" href="GetVectorDetail.do?vectorid=<bean:write name="clone" property="vectorid"/>"><bean:write name="clone" property="vectorname"/></a></td>
                                 <td>
-                                    <logic:iterate name="clone" property="cloneinfo.selections" id="selection">
+                                    <logic:iterate name="clone" property="selections" id="selection">
                                         <bean:write name="selection" property="hosttype"/>: <bean:write name="selection" property="marker"/>
                                     </logic:iterate>
                                 </td>
@@ -137,12 +135,12 @@
                                 <td><bean:write name="clone" property="maxAlength"/>/<bean:write name="clone" property="maxAlengthpid"/></td>
                                 <html:form action="SetDisplay.do">
                                     <input type="hidden" name="cloneid" value="<bean:write name="clone" property="subjectid"/>"/>
-                                    <logic:equal name="clone" property="cloneinfo.isAddedToCart" value="true">
+                                    <logic:equal name="clone" property="isAddedToCart" value="true">
                                         <TD valign="center" bgcolor="blue">
                                             <input name="button" type="submit" class="itemtext" value="Add To Cart"/>
                                         </td>
                                     </logic:equal>
-                                    <logic:notEqual name="clone" property="cloneinfo.isAddedToCart" value="true">
+                                    <logic:notEqual name="clone" property="isAddedToCart" value="true">
                                         <TD valign="center">
                                             <input name="button" type="submit" class="itemtext" value="Add To Cart"/>
                                         </td>
@@ -169,7 +167,6 @@
                                     </html:select>
                                     <html:submit property="button" value="Display"/>
                                 </td>
-                                <td class="mainbodytexthead"><html:submit property="button" value="<%=Constants.DOWNLOAD%>"/></td>
                                 <td align="right" class="mainbodytexthead"><a target="_blank" href="TermDefinition.jsp">Explanation of Terms</a></td>
                             </tr>
                         </table>

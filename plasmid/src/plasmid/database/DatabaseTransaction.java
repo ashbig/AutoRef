@@ -12,9 +12,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.5 $
- * $Date: 2008-12-16 14:59:45 $
- * $Author: jx25 $
+ * $Revision: 1.6 $
+ * $Date: 2009-01-06 18:34:44 $
+ * $Author: dz4 $
  *
  ******************************************************************************
  *
@@ -38,9 +38,7 @@ package plasmid.database;
 
 import java.sql.*;
 import java.util.*;
-import java.math.BigDecimal;
 
-import javax.naming.*;
 import javax.sql.*;
 
 
@@ -53,8 +51,6 @@ import sun.jdbc.rowset.*;
  *
  * DatabaseTransaction is implemented as a singleton.
  *
- * @author     $Author: jx25 $
- * @version    $Revision: 1.5 $ $Date: 2008-12-16 14:59:45 $
  */
 public class DatabaseTransaction {
 

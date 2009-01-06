@@ -49,7 +49,7 @@ public class Dnasequence {
         StringBuffer seqBuff = new StringBuffer();
         
         for (int i=0; i < sequenceString.length(); i++){
-            if(i%FASTALENGTH == 0) {
+            if(i>0 && i%FASTALENGTH == 0) {
                 seqBuff.append("\n");
             }
             

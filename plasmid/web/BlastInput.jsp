@@ -27,7 +27,7 @@
                     
                         <table width="100%" border="0">
                             <tr> 
-                                <td width="20%" class="formlabel">Choose program</td>
+                                <td width="20%" class="formlabel">Choose program:</td>
                                 <td>
                                     <html:select property="program" styleClass="itemtext">
                                         <html:options name="programs"/>
@@ -35,7 +35,7 @@
                                 </td>
                             </tr>
                             <tr> 
-                                <td width="20%" class="formlabel">Choose database</td>
+                                <td width="20%" class="formlabel">Choose database:</td>
                                 <td>
                                     <html:select property="database" styleClass="itemtext">
                                         <html:options name="dbs"/>
@@ -88,7 +88,7 @@
                             </tr>
                             <tr> 
                                 <td width="20%" class="text">Minumum percent (%) identity:</td>
-                                <td>
+                                <td class="itemtext">
                                     <html:text property="pid" styleClass="itemtext"/>%
                                 </td>
                             </tr>

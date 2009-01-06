@@ -14,7 +14,7 @@ import plasmid.query.coreobject.CloneInfo;
  *
  * @author DZuo
  */
-public class BlastHit implements Serializable {
+public class BlastHit extends CloneInfo implements Serializable {
     private String queryid;
     private String subjectid;
     private double maxpid;
@@ -23,9 +23,8 @@ public class BlastHit implements Serializable {
     private double maxAlengthpid;
     private List blastinfos;
 
-    private CloneInfo cloneinfo;
-
     public BlastHit() {
+        super();
         this.blastinfos = new ArrayList();
     }
     
@@ -33,6 +32,34 @@ public class BlastHit implements Serializable {
         setQueryid(queryid);
         setSubjectid(subjectid);
         this.blastinfos = new ArrayList();
+    }
+    
+    public void setCloneinfo(CloneInfo c) {
+        this.setCloneid(c.getCloneid());
+        this.setName(c.getName());
+        this.setType(c.getType());
+        this.setVerified(c.getVerified());
+        this.setVermethod(c.getVermethod());
+        this.setDomain(c.getDomain());
+        this.setSubdomain(c.getSubdomain());
+        this.setRestriction(c.getRestriction());
+        this.setComments(c.getComments());
+        this.setVectorid(c.getVectorid());
+        this.setVectorname(c.getVectorname());
+        this.setClonemap(c.getClonemap());
+        this.setStatus(c.getStatus());
+        this.setSpecialtreatment(c.getSpecialtreatment());
+        this.setSource(c.getSource());
+        this.setDescription(c.getDescription());
+        this.setAuthors(c.getAuthors());
+        this.setGrowths(c.getGrowths());
+        this.setHosts(c.getHosts());
+        this.setInserts(c.getInserts());
+        this.setNames(c.getNames());
+        this.setProperties(c.getProperties());
+        this.setPublications(c.getPublications());
+        this.setSelections(c.getSelections());
+        this.setSynonyms(c.getSynonyms());
     }
     
     public void addBlastinfo(BlastInfo info) {
@@ -113,13 +140,4 @@ public class BlastHit implements Serializable {
     public void setMaxAlengthpid(double maxAlengthpid) {
         this.maxAlengthpid = maxAlengthpid;
     }
-
-    public CloneInfo getCloneinfo() {
-        return cloneinfo;
-    }
-
-    public void setCloneinfo(CloneInfo cloneinfo) {
-        this.cloneinfo = cloneinfo;
-    }
-    
 }

@@ -591,6 +591,7 @@
       <forward  name="success_collection"   path="/ViewCollection.jsp"/>
       <forward  name="success_vector_search"   path="/DisplayVectorSearchResults.jsp"/>
       <forward  name="success_vector_search_psi"   path="/DisplayVectorSearchResultsPSI.jsp"/>
+      <forward  name="success_blast"   path="/BlastSearchResult.jsp"/>
     </action>
          
     <action    path="/SetVectorDisplay"

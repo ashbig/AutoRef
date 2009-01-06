@@ -21,6 +21,7 @@ import plasmid.coreobject.Clone;
 import plasmid.coreobject.User;
 import plasmid.database.DatabaseManager.UserManager;
 import plasmid.form.BlastForm;
+import plasmid.form.RefseqSearchForm;
 import plasmid.process.BlastManager;
 
 /**
@@ -87,6 +88,15 @@ public class BlastSearchAction extends Action {
                 return (mapping.findForward("empty"));
             }
             ((BlastForm)form).setInfos(infos);
+            
+            RefseqSearchForm f = (RefseqSearchForm)request.getSession().getAttribute("refseqSearchForm");
+            if(f == null) {
+                f = new RefseqSearchForm();
+                request.getSession().setAttribute("refseqSearchForm", f);
+            }
+            f.setForward("blast");
+            request.getSession().setAttribute("found", infos);
+            
             return (mapping.findForward("success"));
         } catch (Exception ex) {
             ex.printStackTrace();

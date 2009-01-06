@@ -3,7 +3,6 @@
  *
  * Created on April 29, 2005, 10:12 AM
  */
-
 package plasmid.action;
 
 import java.util.*;
@@ -31,6 +30,7 @@ import plasmid.process.QueryProcessManager;
  * @author  DZuo
  */
 public class SetDisplayAction extends Action {
+
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
      * response (or forward to another web component that will create it).
@@ -47,78 +47,84 @@ public class SetDisplayAction extends Action {
      * @exception ServletException if a servlet exception occurs
      */
     public ActionForward perform(ActionMapping mapping,
-    ActionForm form,
-    HttpServletRequest request,
-    HttpServletResponse response)
-    throws ServletException, IOException {
+            ActionForm form,
+            HttpServletRequest request,
+            HttpServletResponse response)
+            throws ServletException, IOException {
         // get the parameters specified by the customer
         ActionErrors errors = new ActionErrors();
-        
-        int pagesize = ((RefseqSearchForm)form).getPagesize();
-        int page = ((RefseqSearchForm)form).getPage();
-        String displayPage = ((RefseqSearchForm)form).getDisplayPage();
-        String species = ((RefseqSearchForm)form).getSpecies();
-        String refseqType = ((RefseqSearchForm)form).getRefseqType();
-        String forward = ((RefseqSearchForm)form).getForward();
-        String collectionName = ((RefseqSearchForm)form).getCollectionName();
-        String isDownload = ((RefseqSearchForm)form).getIsDownload();
-        int psi = ((RefseqSearchForm)form).getPsi();
-        
+
+        int pagesize = ((RefseqSearchForm) form).getPagesize();
+        int page = ((RefseqSearchForm) form).getPage();
+        String displayPage = ((RefseqSearchForm) form).getDisplayPage();
+        String species = ((RefseqSearchForm) form).getSpecies();
+        String refseqType = ((RefseqSearchForm) form).getRefseqType();
+        String forward = ((RefseqSearchForm) form).getForward();
+        String collectionName = ((RefseqSearchForm) form).getCollectionName();
+        String isDownload = ((RefseqSearchForm) form).getIsDownload();
+        int psi = ((RefseqSearchForm) form).getPsi();
+
         request.setAttribute("pagesize", new Integer(pagesize));
-        request.setAttribute("page",  new Integer(page));
+        request.setAttribute("page", new Integer(page));
         request.setAttribute("displayPage", displayPage);
         request.setAttribute("species", species);
         request.setAttribute("refseqType", refseqType);
         request.setAttribute("psi", new Integer(psi));
-        
+
         List clones = null;
-        if("indirect".equals(displayPage)) {
-            clones = (List)request.getSession().getAttribute("found");
-        } else {
-            clones = (List)request.getSession().getAttribute("directFounds");
+        if("blast".equals(forward)) {
+            displayPage = "indirect";
         }
-        
-        String button = ((RefseqSearchForm)form).getButton();
-        if(button != null && button.equals("Add To Cart")) {
-            String cloneid = ((RefseqSearchForm)form).getCloneid();
-            if(Integer.parseInt(cloneid) <= 0) {
+        if ("indirect".equals(displayPage)) {
+            clones = (List) request.getSession().getAttribute("found");
+        } else {
+            clones = (List) request.getSession().getAttribute("directFounds");
+        }
+
+        String button = ((RefseqSearchForm) form).getButton();
+        if (button != null && button.equals("Add To Cart")) {
+            String cloneid = ((RefseqSearchForm) form).getCloneid();
+            if (Integer.parseInt(cloneid) <= 0) {
                 errors.add(ActionErrors.GLOBAL_ERROR,
-                new ActionError("error.database.error","Invalid clone ID."));
+                        new ActionError("error.database.error", "Invalid clone ID."));
                 return (mapping.findForward("error"));
             }
-            
-            List shoppingcart = (List)request.getSession().getAttribute(Constants.CART);
-            if(shoppingcart == null) {
+
+            List shoppingcart = (List) request.getSession().getAttribute(Constants.CART);
+            if (shoppingcart == null) {
                 shoppingcart = new ArrayList();
             }
             ShoppingCartItem item = new ShoppingCartItem(0, cloneid, 1, ShoppingCartItem.CLONE);
             ShoppingCartItem.addToCart(shoppingcart, item);
-            
+
             OrderProcessManager m = new OrderProcessManager();
             m.setAddToCartStatus(clones, Integer.parseInt(cloneid), true);
-            
+
             request.getSession().setAttribute(Constants.CART, shoppingcart);
             request.getSession().setAttribute(Constants.CART_STATUS, Constants.UPDATED);
-            
-            if(psi == 1)
+
+            if (psi == 1) {
                 return (mapping.findForward("success_vector_search_psi"));
-            
-            if("collection".equals(forward))
+            }
+            if ("collection".equals(forward)) {
                 return (mapping.findForward("success_collection"));
-            
-            if("vectorSearchResult".equals(forward))
+            }
+            if ("vectorSearchResult".equals(forward)) {
                 return (mapping.findForward("success_vector_search"));
-            
+            }
+            if ("blast".equals(forward)) {
+                return (mapping.findForward("success_blast"));
+            }
             return (mapping.findForward("success"));
         }
-        if(button != null && button.equals(Constants.DOWNLOAD)) {
-            if(clones == null && Constants.BOOLEAN_ISDOWNLOAD_YES.equals(isDownload)) {
-                QueryProcessManager manager = new QueryProcessManager();                
-                User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
+        if (button != null && button.equals(Constants.DOWNLOAD)) {
+            if (clones == null && Constants.BOOLEAN_ISDOWNLOAD_YES.equals(isDownload)) {
+                QueryProcessManager manager = new QueryProcessManager();
+                User user = (User) request.getSession().getAttribute(Constants.USER_KEY);
                 List restrictions = new ArrayList();
                 restrictions.add(Clone.NO_RESTRICTION);
                 restrictions.add(Clone.NON_PROFIT);
-                if(user != null) {
+                if (user != null) {
                     List ress = UserManager.getUserRestrictions(user);
                     restrictions.addAll(ress);
                 }
@@ -132,54 +138,74 @@ public class SetDisplayAction extends Action {
             manager.writeCloneList(clones, out, false, false);
             return null;
         }
-        
-        String sortby = ((RefseqSearchForm)form).getSortby();
-        if("searchterm".equals(sortby))
+
+        String sortby = ((RefseqSearchForm) form).getSortby();
+        if ("searchterm".equals(sortby)) {
             Collections.sort(clones, new CloneSearchTermComparator());
-        if("cloneid".equals(sortby))
+        }
+        if ("cloneid".equals(sortby)) {
             Collections.sort(clones, new ClonenameComparator());
-        if("clonetype".equals(sortby))
+        }
+        if ("clonetype".equals(sortby)) {
             Collections.sort(clones, new ClonetypeComparator());
-        if("geneid".equals(sortby))
+        }
+        if ("geneid".equals(sortby)) {
             Collections.sort(clones, new GeneidComparator());
-        if("targetseq".equals(sortby))
+        }
+        if ("targetseq".equals(sortby)) {
             Collections.sort(clones, new TargetSeqidComparator());
-        if("insertmutation".equals(sortby))
+        }
+        if ("insertmutation".equals(sortby)) {
             Collections.sort(clones, new InsertMutationComparator());
-        if("mutdis".equals(sortby)) 
+        }
+        if ("mutdis".equals(sortby)) {
             Collections.sort(clones, new InsertMutDisComparator());
-        if("insertdiscrepancy".equals(sortby))
+        }
+        if ("insertdiscrepancy".equals(sortby)) {
             Collections.sort(clones, new InsertDiscrepancyComparator());
-        if("insertformat".equals(sortby))
+        }
+        if ("insertformat".equals(sortby)) {
             Collections.sort(clones, new InsertFormatComparator());
-        if("vectorname".equals(sortby))
+        }
+        if ("vectorname".equals(sortby)) {
             Collections.sort(clones, new VectorNameComparator());
-        if("selection".equals(sortby))
+        }
+        if ("selection".equals(sortby)) {
             Collections.sort(clones, new SelectionMarkerComparator());
-        if("specialtreatment".equals(sortby))
+        }
+        if ("specialtreatment".equals(sortby)) {
             Collections.sort(clones, new CloneSpecialTreatmentComparator());
-        if("genesymbol".equals(sortby))
+        }
+        if ("genesymbol".equals(sortby)) {
             Collections.sort(clones, new InsertNameComparator());
-        if("originalcloneid".equals(sortby))
+        }
+        if ("originalcloneid".equals(sortby)) {
             Collections.sort(clones, new OriginalCloneidComparator());
-        if("targetid".equals(sortby))
+        }
+        if ("targetid".equals(sortby)) {
             Collections.sort(clones, new TargetIDComparator());
-        if("pdbid".equals(sortby))
+        }
+        if ("pdbid".equals(sortby)) {
             Collections.sort(clones, new PdbidComparator());
-        
-        if("indirect".equals(displayPage)) {
+        }
+        if ("indirect".equals(displayPage)) {
             request.getSession().setAttribute("found", clones);
         } else {
             request.getSession().setAttribute("directFounds", clones);
         }
-        
-        if(psi == 1)
+
+        if (psi == 1) {
             return (mapping.findForward("success_vector_search_psi"));
-        if("collection".equals(forward))
+        }
+        if ("collection".equals(forward)) {
             return (mapping.findForward("success_collection"));
-        if("vectorSearchResult".equals(forward))
+        }
+        if ("vectorSearchResult".equals(forward)) {
             return (mapping.findForward("success_vector_search"));
-        
+        }
+        if ("blast".equals(forward)) {
+            return (mapping.findForward("success_blast"));
+        }
         return (mapping.findForward("success"));
     }
 }

@@ -577,13 +577,26 @@ public class CloneManager extends TableManager {
     }
 
     public String queryCloneSequenceByCloneid(int cloneid) {
-        String sql = "select seqtext from seqtext t, dnasequence d where t.sequenceid=d.sequenceid and d.insertid in (select insertid from cloneinsert where cloneid=" + cloneid + ") order by seqorder";
+        String sql = "select insertid from cloneinsert where cloneid=" + cloneid;
         String seq = "";
         
         try {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             ResultSet rs = t.executeQuery(sql);
+            String insertid=null;
+            while (rs.next()) {
+                if(insertid == null)
+                    insertid = rs.getString(1);
+                else 
+                    insertid = insertid+","+rs.getString(1);
+            }
+            DatabaseTransaction.closeResultSet(rs);
             
+            if(insertid == null)
+                return seq;
+            
+            sql = "select seqtext from seqtext t, dnasequence d where t.sequenceid=d.sequenceid and d.insertid in ("+insertid+") order by seqorder";
+            rs = t.executeQuery(sql);
             while (rs.next()) {
                 String seqtext = rs.getString(1);
                 seq += seqtext;

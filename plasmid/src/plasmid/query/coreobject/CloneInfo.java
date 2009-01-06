@@ -23,6 +23,10 @@ public class CloneInfo extends Clone implements Serializable{
     protected String targetPlate;
     protected String targetWell;
     
+    public CloneInfo() {
+        super();
+    }
+    
     public CloneInfo(int cloneid, String name, String type, String verified,
     String vermethod, String domain, String subdomain, String restriction, 
     String comments, int vectorid, String vectorname, String clonemap, String status,
