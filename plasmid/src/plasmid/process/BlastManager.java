@@ -9,6 +9,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,12 +28,15 @@ import plasmid.coreobject.Dnasequence;
 import plasmid.database.DatabaseManager.CloneManager;
 import plasmid.database.DatabaseTransaction;
 import plasmid.query.coreobject.CloneInfo;
+import plasmid.util.StringConvertor;
 
 /**
  *
  * @author DZuo
  */
 public class BlastManager {   
+    public static final String INPUT_SEQUENCE = "Sequence";
+    public static final String INPUT_ID = "Accession or GI";
     
     public static List getPrograms() {
         List programs = new ArrayList();
@@ -53,6 +59,41 @@ public class BlastManager {
         seqs.add("50");
         seqs.add("100");
         return seqs;
+    }
+    
+    public static List getInputFormats() {
+        List formats = new ArrayList();
+        formats.add(INPUT_SEQUENCE);
+        formats.add(INPUT_ID);
+        return formats;
+    }
+    
+    public String fetchNCBIseqs(String ids) throws Exception {
+        String s = parseIds(ids);
+        URL url = new URL("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&rettype=fasta&id="+s);
+        URLConnection c = url.openConnection();
+        BufferedReader in = new BufferedReader(
+                                new InputStreamReader(
+                                c.getInputStream()));
+        String seqs = "";
+        String inputLine = null;
+        while ((inputLine = in.readLine()) != null) {
+            seqs += inputLine+"\n";
+        }
+        in.close();
+        
+        return seqs;
+    }
+    
+    public String parseIds(String ids) throws Exception {
+        StringTokenizer st = new StringTokenizer(ids);
+        List l = new ArrayList();
+        while(st.hasMoreTokens()) {
+            String s = st.nextToken();
+            l.add(s);
+        }
+        
+        return StringConvertor.convertFromListToSqlList(l).replaceAll(" ", "");
     }
     
     public List runBlast(String program, String database, String sequence,

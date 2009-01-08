@@ -51,10 +51,12 @@ public class PrepareBlastAction extends Action {
         List programs = BlastManager.getPrograms();
         List dbs = BlastManager.getDatabases();
         List seqs = BlastManager.getMaxseqs();
+        List formats = BlastManager.getInputFormats();
         
         request.setAttribute("programs", programs);
         request.setAttribute("dbs", dbs);
         request.setAttribute("seqs", seqs);
+        request.setAttribute("formats", formats);
         
         ((BlastForm)form).reset();
         

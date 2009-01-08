@@ -6,11 +6,10 @@
 package plasmid.form;
 
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionMapping;
 import plasmid.Constants;
 import plasmid.blast.BlastWrapper;
+import plasmid.process.BlastManager;
 
 /**
  *
@@ -30,6 +29,7 @@ public class BlastForm extends ActionForm {
     private int pagesize;
     private int page;
     private List infos;
+    private String inputformat;
             
     private String queryid;
     private String subjectid;
@@ -54,6 +54,7 @@ public class BlastForm extends ActionForm {
         pagesize = Constants.PAGESIZE;
         page = 1;
         infos = null;
+        inputformat = BlastManager.INPUT_SEQUENCE;
     }   
     
     public int getTotal() {
@@ -194,5 +195,13 @@ public class BlastForm extends ActionForm {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getInputformat() {
+        return inputformat;
+    }
+
+    public void setInputformat(String inputformat) {
+        this.inputformat = inputformat;
     }
 }

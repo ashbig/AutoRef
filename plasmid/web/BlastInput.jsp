@@ -43,7 +43,12 @@
                                 </td>
                             </tr>
                             <tr> 
-                                <td colspan="2" width="20%" class="formlabel">Enter sequence:</td>
+                                <td colspan="2" width="20%" class="formlabel">Enter sequence or Accession/GI: 
+                                    <html:select property="inputformat" styleClass="itemtext">
+                                        <html:options name="formats"/>
+                                    </html:select>
+                                <br>(Multiple sequences should be in FASTA format. Multiple Accession/GI numbers should be separated by white space)
+                                </td>
                             </tr>
                             <tr> 
                                 <td colspan="2" class="itemtext">
@@ -93,9 +98,9 @@
                                 </td>
                             </tr>
                             <tr> 
-                                <td width="20%" class="text">Minumum alignment length:</td>
+                                <td width="20%" class="text">Minimum alignment length:</td>
                                 <td>
-                                    <html:text property="alength" styleClass="itemtext"/>
+                                    <html:text property="alength" styleClass="itemtext"/>nt
                                 </td>
                             </tr>
                         </table>

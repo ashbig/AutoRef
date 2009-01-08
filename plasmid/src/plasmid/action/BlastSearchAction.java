@@ -63,40 +63,45 @@ public class BlastSearchAction extends Action {
         int alength = ((BlastForm) form).getAlength();
         double pid = ((BlastForm) form).getPid();
         boolean isMegablast = ((BlastForm) form).isIsMegablast();
-                    
-        if(sequence==null || sequence.trim().length()==0) {
+        String inputformat = ((BlastForm) form).getInputformat();
+
+        if (sequence == null || sequence.trim().length() == 0) {
             errors.add("sequence", new ActionError("error.sequence.required"));
             saveErrors(request, errors);
             return (new ActionForward(mapping.getInput()));
         }
-        
-        User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
+
+        User user = (User) request.getSession().getAttribute(Constants.USER_KEY);
         List restrictions = new ArrayList();
         restrictions.add(Clone.NO_RESTRICTION);
         restrictions.add(Clone.NON_PROFIT);
-        if(user != null) {
+        if (user != null) {
             List ress = UserManager.getUserRestrictions(user);
             restrictions.addAll(ress);
         }
 
         BlastManager manager = new BlastManager();
         try {
-            List infos = manager.runBlast(program, database, sequence, maxseqs, expect, pid, alength, isLowcomp, isMaskLowercase, isMegablast);
-            manager. getFoundClones(infos, restrictions, null, null);
+            if (BlastManager.INPUT_ID.equals(inputformat)) {
+                sequence = manager.fetchNCBIseqs(sequence);
+            }
             
-            if(infos == null || infos.size()==0) {
+            List infos = manager.runBlast(program, database, sequence, maxseqs, expect, pid, alength, isLowcomp, isMaskLowercase, isMegablast);
+            manager.getFoundClones(infos, restrictions, null, null);
+
+            if (infos == null || infos.size() == 0) {
                 return (mapping.findForward("empty"));
             }
-            ((BlastForm)form).setInfos(infos);
-            
-            RefseqSearchForm f = (RefseqSearchForm)request.getSession().getAttribute("refseqSearchForm");
-            if(f == null) {
+            ((BlastForm) form).setInfos(infos);
+
+            RefseqSearchForm f = (RefseqSearchForm) request.getSession().getAttribute("refseqSearchForm");
+            if (f == null) {
                 f = new RefseqSearchForm();
                 request.getSession().setAttribute("refseqSearchForm", f);
             }
             f.setForward("blast");
             request.getSession().setAttribute("found", infos);
-            
+
             return (mapping.findForward("success"));
         } catch (Exception ex) {
             ex.printStackTrace();
