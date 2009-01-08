@@ -27,7 +27,7 @@
                     
                         <table width="100%" border="0">
                             <tr> 
-                                <td width="20%" class="formlabel">Choose program:</td>
+                                <td width="20%" class="formlabel">Choose program: <a href="blasthelp.html#program" target="blasthelp">[i]</a></td>
                                 <td>
                                     <html:select property="program" styleClass="itemtext">
                                         <html:options name="programs"/>
@@ -43,7 +43,7 @@
                                 </td>
                             </tr>
                             <tr> 
-                                <td colspan="2" width="20%" class="formlabel">Enter sequence or Accession/GI: 
+                                <td colspan="2" width="20%" class="formlabel">Enter sequence or Accession/GI:  <a href="blasthelp.html#input" target="blasthelp">[i]</a>
                                     <html:select property="inputformat" styleClass="itemtext">
                                         <html:options name="formats"/>
                                     </html:select>
@@ -56,7 +56,7 @@
                                 </td>
                             </tr>
                             <tr> 
-                                <td width="20%" class="formlabel">Optimize for: </td>
+                                <td width="20%" class="formlabel">Optimize for: <a href="blasthelp.html#optimization" target="blasthelp">[i]</a></td>
                                 <td class="itemtext">
                                     <html:checkbox property="isMegablast">Highly similar sequences (megablast)</html:checkbox>
                                 </td>
@@ -75,7 +75,7 @@
                             </tr>
                         </table>
                         
-                        <p class="formlabelitalic">Parameters</p>
+                        <p class="formlabelitalic">Parameters <a href="blasthelp.html#parameters" target="blasthelp">[i]</a></p>
                         <table width="100%" border="0">
                             <tr> 
                                 <td width="20%" class="text">Max target sequences:</td>

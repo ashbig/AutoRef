@@ -1,0 +1,102 @@
+<!-- 
+    Document   : blasthelp
+    Created on : Jan 8, 2009, 1:47:01 PM
+    Author     : DZuo
+-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+    <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+  <table border="0">
+<thead>
+<tr>
+    <th colspan="2" align="left"><a name="program">Blast programs</a></th>
+</tr>
+</thead>
+<tbody>
+<tr valign="top">
+<td width="200" class="formlabel">blastn</td>
+<td class="itemtext">Search nucleotide databases using nucleotide query</td>
+</tr>
+<tr valign="top">
+<td class="formlabel">tblastn</td>
+<td class="itemtext">Search translated nucleotide databases using a protein query</td>
+</tr>
+<tr valign="top">
+<td class="formlabel">tblastx</td>
+<td class="itemtext">search translated nucleotide databases using a translated nucleotide query</td>
+</tr>
+</tbody>
+</table>
+<p>
+  <table border="0">
+<thead>
+<tr>
+    <th colspan="2" align="left"><a name="input">Query Input</a></th>
+</tr>
+</thead>
+<tbody>
+<tr valign="top">
+<td width="200" class="formlabel">Sequence</td>
+<td class="itemtext">Paste the query sequence(s) in the text area. Single sequence query can be in FASTA format or simple lines of sequence data. Multiple sequences should be in FASTA format.</td>
+</tr>
+<tr valign="top">
+<td class="formlabel">Accession or GI</td>
+<td class="itemtext">Accept GenBank Accession, Accession.version or GI as identifiers.</td>
+</tr>
+</tbody>
+</table>
+<p>
+  <table border="0">
+<thead>
+<tr>
+    <th colspan="2" align="left"><a name="optimization">Optimization</a></th>
+</tr>
+</thead>
+<tbody>
+<tr valign="top">
+<td width="200" class="formlabel">megablast</td>
+<td class="itemtext">megablast is specifically designed to efficiently find long alignments between very similar sequences.</td>
+</tr>
+<tr valign="top">
+<td class="formlabel">Filter low complexity regions</td>
+<td class="itemtext">Mask regions of low compositional complexity that may cause spurious or misleading results.</td>
+</tr>
+<tr valign="top">
+<td class="formlabel">Mask lower case letters </td>
+<td class="itemtext">Mask any letters that were lower-case in the FASTA input. With this option selected you can cut and paste a FASTA sequence in upper case characters and denote areas you would like filtered with lower case. This allows you to customize what is filtered from the sequence during the comparison to the BLAST databases. </td>
+</tr>
+</tbody>
+</table>
+<p>
+  <table border="0">
+<thead>
+<tr>
+    <th colspan="2" align="left"><a name="parameters">Parameters</a></th>
+</tr>
+</thead>
+<tbody>
+<tr valign="top">
+<td width="200" class="formlabel">Max target sequences</td>
+<td class="itemtext">Maximum number of hits returned.</td>
+</tr>
+<tr valign="top">
+<td class="formlabel">Expect threshold</td>
+<td class="itemtext">The E-value gives an indication of the statistical significance of a given pairwise alignment and reflects the size of the database and the scoring system used. The lower the E-value, the more significant the hit. </td>
+</tr>
+<tr valign="top">
+<td class="formlabel">Minumum percent (%) identity</td>
+<td class="itemtext">For each hit, if there is at least one alignment that is greater or equal to (>=) the minimum percent identity, the hit will be returned.</td>
+</tr>
+<tr valign="top">
+<td class="formlabel">Minimum alignment length</td>
+<td class="itemtext">For each hit, if there is at least one alignment that is longer or equal to (>=) the minimus alignment length, the hit will be returned.</td>
+</tr>
+</tbody>
+</table>
+  </body>
+</html>

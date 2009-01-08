@@ -31,6 +31,9 @@
         <tr> 
           <td height="15" class="lftsubtxt">- <a href="PrepareAdvancedSearch.do?psi=1" class="leftsubnavtext">PSI-MR search</a></td>
         </tr>
+        <tr> 
+          <td height="15" class="lftsubtxt">- <a href="PrepareBlast.do" class="leftsubnavtext">blast search</a></td>
+        </tr>
       </table></td>
   </tr>
   <tr> 
