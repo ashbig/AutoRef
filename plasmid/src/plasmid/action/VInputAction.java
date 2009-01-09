@@ -86,26 +86,27 @@ public class VInputAction extends Action {
                     }
                 }
             } else if (sAction.equals("Continue")) { //Continue
+                af = mapping.findForward("continue");
                 if (vid == 0) {  // New Vector
-
                     if (vm.getVectorByName(name) != null) {  //Duplicate name, exit error
                         errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("failed.VIA.duplicatename"));
+                        af = new ActionForward(mapping.getInput());
                     } else {
                         saveInfo(session, t, vm, form, uid);
+                        nextPage(session, vm);
+                        vif.reset();
                     }
                 } else { // Update Vector
-
                     CloneVector v = vm.getVectorByName(name);
                     if ((v != null) && (v.getVectorid() != vid)) { // Check for duplicate name
                         errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("failed.VIA.duplicatename"));
+                        af = new ActionForward(mapping.getInput());
                     } else {
                         saveInfo(session, t, vm, form, uid);
+                        nextPage(session, vm);
+                        vif.reset();
                     }
                 }
-
-                nextPage(session, vm);
-                vif.reset();
-                af = mapping.findForward("continue");
             } else {  // Cancel
                 vif.reset();
                 session.removeAttribute("Vector");
@@ -142,7 +143,7 @@ public class VInputAction extends Action {
         String vtype = vif.getType();
         int vsize = vif.getSize();
         FormFile mf = vif.getMapfile();
-        String mapfilename = null, seqfilename = null;
+         String  mapfilename = null, seqfilename = null;
         CloneVector vector = (CloneVector) session.getAttribute("Vector");
         if ((mf != null) && (mf.getFileName().trim().length() > 0) && (mf.getFileSize() > 0)) {
             mapfilename = mf.getFileName().trim();
