@@ -237,6 +237,7 @@
         <script>
             var attitle = document.getElementById("attitle").innerHTML;
 
+            var a = document.forms["vInput6Form"].elements["authorid"].value;
             if (parseInt(a) > 0) {
                 showInput(true);
             } else {
@@ -244,26 +245,27 @@
             }
 
             function showInput(t) {
+                var f = document.forms["vInput6Form"];
                 if (t) {
-                    document.getElementById("name").readOnly = true;
-                    document.getElementById("firstname").readOnly = true;
-                    document.getElementById("lastname").readOnly = true;
-                    document.getElementById("email").readOnly = true;
-                    document.getElementById("tel").readOnly = true;
-                    document.getElementById("fax").readOnly = true;
-                    document.getElementById("www").readOnly = true;
-                    document.getElementById("address").readOnly = true;
-                    document.getElementById("description").readOnly = true;
+                    f.elements["name"].readOnly = true;
+                    f.elements["firstname"].readOnly = true;
+                    f.elements["lastname"].readOnly = true;
+                    f.elements["email"].readOnly = true;
+                    f.elements["tel"].readOnly = true;
+                    f.elements["fax"].readOnly = true;
+                    f.elements["www"].readOnly = true;
+                    f.elements["address"].readOnly = true;
+                    f.elements["description"].readOnly = true;
                 } else {
-                    document.getElementById("name").readOnly = false;
-                    document.getElementById("firstname").readOnly = false;
-                    document.getElementById("lastname").readOnly = false;
-                    document.getElementById("email").readOnly = false;
-                    document.getElementById("tel").readOnly = false;
-                    document.getElementById("fax").readOnly = false;
-                    document.getElementById("www").readOnly = false;
-                    document.getElementById("address").readOnly = false;
-                    document.getElementById("description").readOnly = false;
+                    f.elements["name"].readOnly = false;
+                    f.elements["firstname"].readOnly = false;
+                    f.elements["lastname"].readOnly = false;
+                    f.elements["email"].readOnly = false;
+                    f.elements["tel"].readOnly = false;
+                    f.elements["fax"].readOnly = false;
+                    f.elements["www"].readOnly = false;
+                    f.elements["address"].readOnly = false;
+                    f.elements["description"].readOnly = false;
                 }
             }
 
@@ -278,7 +280,8 @@
             }
 
             function checkForm1() {
-                an = document.getElementById("name").value;
+                var f = document.forms["vInput6Form"];
+                an = f.elements["name"].value;
                 if ((an == null) || (an.length < 1)) {
                     alert("Please enter a name before continue.");
                     return false;
@@ -287,12 +290,13 @@
             }
 
             function checkForm2() {
-                an = document.getElementById("name").value;
+                var f = document.forms["vInput6Form"];
+                an = f.elements["name"].value;
                 if ((an == null) || (an.length < 1)) {
                     alert("Please enter a name before continue.");
                     return false;
                 }
-                at = document.getElementById("authortype").value;
+                at = f.elements["authortype"].value;
                 if ((an == null) || (an.length < 1)) {
                     alert("Please select author type before continue.");
                     return false;
@@ -302,16 +306,17 @@
 
             function clearForm(t) {
                 showInput(t);
-                document.getElementById("authorid").value = "0";
-                document.getElementById("name").value = "";
-                document.getElementById("firstname").value = "";
-                document.getElementById("lastname").value = "";
-                document.getElementById("email").value = "";
-                document.getElementById("tel").value = "";
-                document.getElementById("fax").value = "";
-                document.getElementById("www").value = "";
-                document.getElementById("address").value = "";
-                document.getElementById("description").value = "";
+                var f = document.forms["vInput6Form"];
+                f.elements["authorid"].value = "0";
+                f.elements["name"].value = "";
+                f.elements["firstname"].value = "";
+                f.elements["lastname"].value = "";
+                f.elements["email"].value = "";
+                f.elements["tel"].value = "";
+                f.elements["fax"].value = "";
+                f.elements["www"].value = "";
+                f.elements["address"].value = "";
+                f.elements["description"].value = "";
             }
 
             function checkNext() {

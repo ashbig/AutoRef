@@ -132,25 +132,26 @@
         
     <jsp:include page="footer.jsp" /></body>
     <script>
-        a = document.getElementById("publicationid").value;
+        var a = document.getElementById("publicationid").value;
         if (parseInt(a) > 0) {
             showInput(true);
         } else {
             showInput(false);
         }
 
+        var f = document.forms["vInput7Form"];
         function showInput(t) {
             if (t) {
-                document.getElementById("pmid").readOnly = true;
-                document.getElementById("title").readOnly = true;
+                f.elements["pmid"].readOnly = true;
+                f.elements["title"].readOnly = true;
             } else {
-                document.getElementById("pmid").readOnly = false;
-                document.getElementById("title").readOnly = false;
+                f.elements["pmid"].readOnly = false;
+                f.elements["title"].readOnly = false;
             }
         }
 
         function checkForm() {
-            t = document.getElementById("PMNUM").value;
+            t = f.elements["PMNUM"].value;
             if (t.length < 1) {
                 alert("Please select publication before continue.");
                 return false;
@@ -159,12 +160,12 @@
         }
 
         function checkFormAdd() {
-            t = document.getElementById("pmid").value;
+            t = f.elements["pmid"].value;
             if ((t == null) || (t.length < 1)) {
                 alert("Please enter PMID before continue.");
                 return false;
             }
-            t = document.getElementById("title").value;
+            t = f.elements["title"].value;
             if ((t == null) || (t.length < 1)) {
                 alert("Please enter title before continue.");
                 return false;
@@ -174,8 +175,8 @@
 
         function clearForm(t) {
             showInput(t);
-            document.getElementById("pmid").value = "";
-            document.getElementById("title").value = "";
+            f.elements["pmid"].value = "";
+            f.elements["title"].value = "";
             document.getElementById("publicationid") = "0";
         }
         

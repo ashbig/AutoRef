@@ -124,9 +124,11 @@
                                                                     <html:text property="hoststrain"/>
                                                                 </logic:empty>
                                                                 <logic:notEmpty name="HS">
-                                                                    <html:select property="hoststrain">
-                                                                        <html:options name="HS"/>
-                                                                    </html:select>
+                                                                <select id="hoststrain" name="hoststrain">
+                                                                    <logic:iterate id="hs" name="HS">
+                                                                        <option value="<bean:write name="hs" />"><bean:write name="hs" /></option>
+                                                                    </logic:iterate>
+                                                                </select>                                                                    
                                                                 </logic:notEmpty>
                                                             </logic:present>
                                                         </td>
@@ -185,9 +187,11 @@
                                                                 <html:text property="growthcondition"/>
                                                             </logic:notPresent>
                                                             <logic:present name="GC">
-                                                                <html:select property="growthcondition">
-                                                                    <html:options name="GC"/>
-                                                                </html:select>
+                                                                <select id="growthcondition" name="growthcondition">
+                                                                    <logic:iterate id="gc" name="GC">
+                                                                        <option value="<bean:write name="gc" />"><bean:write name="gc" /></option>
+                                                                    </logic:iterate>
+                                                                </select>
                                                             </logic:present>
                                                             <input type="button" name="gcinfo" id="gcinfo" value="Info" onclick="return showgc();"/>
                                                         </td>
@@ -259,9 +263,11 @@
                                                                 <html:text property="hosttype"/>
                                                             </logic:notPresent>
                                                             <logic:present name="HT">
-                                                                <html:select property="hosttype">
-                                                                    <html:options name="HT"/>
-                                                                </html:select>
+                                                                <select id="hosttype" name="hosttype">
+                                                                    <logic:iterate id="ht" name="HT">
+                                                                        <option value="<bean:write name="ht" />"><bean:write name="ht" /></option>
+                                                                    </logic:iterate>
+                                                                </select>
                                                             </logic:present>
                                                             <html:submit value="Add New Host Type"/>
                                                         </td>
@@ -273,9 +279,11 @@
                                                                 <html:text property="marker"/>
                                                             </logic:notPresent>
                                                             <logic:present name="SM">
-                                                                <html:select property="marker">
-                                                                    <html:options name="SM"/>
-                                                                </html:select>
+                                                                <select id="marker" name="marker">
+                                                                    <logic:iterate id="sm" name="SM">
+                                                                        <option value="<bean:write name="sm" />"><bean:write name="sm" /></option>
+                                                                    </logic:iterate>
+                                                                </select>
                                                             </logic:present>
                                                             <html:submit value="Add New Marker"/>
                                                         </td>
