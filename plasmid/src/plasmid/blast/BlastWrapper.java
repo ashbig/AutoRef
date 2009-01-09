@@ -8,17 +8,16 @@ package plasmid.blast;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
+import plasmid.util.FlexProperties;
 
 /**
  *
  * @author DZuo
  */
 public class BlastWrapper {
-    //public static final String BLAST_DB_PATH = "/www/dev.plasmid.med.harvard.edu/docroot/blast/db/";
-    //public static final String BLAST_FILE_PATH = "/www/dev.plasmid.med.harvard.edu/docroot/blast/file/";
-    public static final String BLAST_PROGRAM_PATH = "D:\\dev\\Test\\blast\\bin\\";
-    public static final String BLAST_DB_PATH = "D:\\dev\\Test\\blast\\database\\";
-    public static final String BLAST_FILE_PATH = "D:\\dev\\Test\\blast\\files\\";
+    public static final String BLAST_PROGRAM_PATH = FlexProperties.getInstance().getProperty("blastprogrampath");
+    public static final String BLAST_DB_PATH = FlexProperties.getInstance().getProperty("blastdbpath");
+    public static final String BLAST_FILE_PATH = FlexProperties.getInstance().getProperty("blastfilepath");
 
     public static final String PROGRAM_BLASTN = "blastn";
     public static final String PROGRAM_TBLASTN = "tblastn";
