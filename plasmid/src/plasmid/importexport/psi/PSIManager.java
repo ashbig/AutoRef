@@ -6,6 +6,7 @@
 package plasmid.importexport.psi;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -47,7 +48,7 @@ public class PSIManager {
 
         PrintWriter out = null;
         try {
-            out = new PrintWriter(new File(file));
+            out = new PrintWriter(new FileOutputStream(new File(file)));
             out.println("Target ID\tClone ID\tClone Name\tVector ID\tVector Name\tDescription\tInsert Sequence\tCDS Start\tCDS Stop\tPSI Center");
             t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
