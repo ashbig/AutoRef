@@ -46,7 +46,7 @@
                                 don&#8217;t forget to SAVE your work. Then you can come back and finish it later.
                             </li>
                         </ul>
-                        <p><em>If you have any questions, please contact the <a href="#">scientific liaison</a></em>.</p>
+                        <p><em>If you have any questions, please contact the <a href="mailto:Catherine_Cormier@hms.harvard.edu">scientific liaison</a></em>.</p>
                         <p>Before you start submitting the vector information, please check whether the
                         vector has existed in our database. Search is NOT case sensitive. </p>
                         <table width="100%" border="0">

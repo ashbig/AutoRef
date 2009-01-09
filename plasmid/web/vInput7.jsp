@@ -116,7 +116,11 @@
                         <logic:notEmpty name="vInput7Form" property="step">
                             <html:textarea property="IPD" rows="8" cols="80"/>
                         </logic:notEmpty>
-                        <p><html:submit value="Finish"/></p>
+                        <p>
+                            <html:submit value="Finish"/>
+                            <html:submit value="Back"/>
+                            <html:submit value="Save..."/>
+                        </p>
                     </html:form>
                 </td>
             </tr>
