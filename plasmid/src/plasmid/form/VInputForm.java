@@ -123,7 +123,7 @@ public class VInputForm extends ActionForm {
     public void setMapfile(FormFile f) {
         if ((f != null) && (f.getFileName().trim().length() > 0) && (f.getFileSize() > 0)) {
             mapfile = f;
-            mapfilename = mapfile.getFileName().trim();
+            // mapfilename = mapfile.getFileName().trim();
         }
     }
 
@@ -134,7 +134,7 @@ public class VInputForm extends ActionForm {
     public void setSeqfile(FormFile f) {
         if ((f != null) && (f.getFileName().trim().length() > 0) && (f.getFileSize() > 0)) {
             seqfile = f;
-            seqfilename = seqfile.getFileName().trim();
+            // seqfilename = seqfile.getFileName().trim();
         }
     }
 

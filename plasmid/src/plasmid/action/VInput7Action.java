@@ -66,8 +66,14 @@ public class VInput7Action extends Action {
             PublicationManager pm = new PublicationManager(conn);
             if (sAction.equals("Finish")) {
                 saveInfo(session, vm, pm, vif);
-
+                vm.updatetVSubmissionStatus(vif.getVectorid(), "COMPLETE");                
                 af = mapping.findForward("continue");
+            } else if (sAction.equals("Save")) {
+                saveInfo(session, vm, pm, vif);
+                af = mapping.findForward("save");
+            } else if (sAction.equals("Back")) {
+                saveInfo(session, vm, pm, vif);
+                af = mapping.findForward("back");
             } else if (sAction.equals("Find")) {
                 nextPageFind(session, pm, vif.getPmid().trim());
                 request.setAttribute("RU", "vInput7");
@@ -156,9 +162,11 @@ public class VInput7Action extends Action {
             pm.updateVectorPublications(vid, pms);
         }
         CloneVector v = (CloneVector) session.getAttribute("Vector");
-        v.setIPD(vif.getIPD());
-        vm.updateVector(v);
-        vm.updatetVSubmissionStatus(vif.getVectorid(), "COMPLETE");
+        String ipd = vif.getIPD();
+        if ((ipd != null) && (ipd.length() > 0)) {
+            v.setIPD(vif.getIPD());
+            vm.updateVector(v);
+        }
     }
 
     private void nextPageFind(HttpSession session, PublicationManager pm, String PMID) {

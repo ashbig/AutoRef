@@ -76,7 +76,8 @@ public class VInput5Action extends Action {
                 nextPage(session, am, vid);
 
                 af = mapping.findForward("continue");
-            } else if (sAction.equals("Back")) { //Back }
+            } else if (sAction.equals("Back")) { //Back
+                saveInfo(session, vm, form);
                 af = mapping.findForward("back");
             }  else {  // Cancel
                 vif.reset();

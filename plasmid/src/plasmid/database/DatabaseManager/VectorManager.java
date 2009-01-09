@@ -125,7 +125,7 @@ public class VectorManager extends TableManager {
     public boolean updateVector(CloneVector vector) {
         String sql = new String("update vector set name=?, description=?, form=?, type=?, sizeinbp=?, comments=?");
         String mapFilename = vector.getMapfilename(), seqFilename = vector.getSeqfilename();
-        
+
         if ((mapFilename != null) && (mapFilename.length() > 0)) {
             sql = sql + ", mapfilename=?";
         }
@@ -225,7 +225,8 @@ public class VectorManager extends TableManager {
     }
 
     public boolean updateVHS(int vid, List VHS) {
-        if ((vid < 1) || (VHS.size() < 1)) {
+        // if ((vid < 1) || (VHS.size() < 1)) {
+        if (vid < 1) {
             return true;
         }
 
@@ -234,18 +235,21 @@ public class VectorManager extends TableManager {
 
         try {
             PreparedStatement stmt1 = conn.prepareStatement(sql1);
-            PreparedStatement stmt2 = conn.prepareStatement(sql2);
             stmt1.setInt(1, vid);
             DatabaseTransaction.executeUpdate(stmt1);
             DatabaseTransaction.closeStatement(stmt1);
-            for (int i = 0; i < VHS.size(); i++) {
-                VectorHostStrain vhs = (VectorHostStrain) VHS.get(i);
-                stmt2.setInt(1, vid);
-                stmt2.setString(2, vhs.getVectorame());
-                stmt2.setString(3, vhs.getHoststrain());
-                stmt2.setString(4, vhs.getIsinuse());
-                stmt2.setString(5, vhs.getDescription());
-                DatabaseTransaction.executeUpdate(stmt2);
+            if ((VHS != null) && (VHS.size() > 0)) {
+                PreparedStatement stmt2 = conn.prepareStatement(sql2);
+                for (int i = 0; i < VHS.size(); i++) {
+                    VectorHostStrain vhs = (VectorHostStrain) VHS.get(i);
+                    stmt2.setInt(1, vid);
+                    stmt2.setString(2, vhs.getVectorame());
+                    stmt2.setString(3, vhs.getHoststrain());
+                    stmt2.setString(4, vhs.getIsinuse());
+                    stmt2.setString(5, vhs.getDescription());
+                    DatabaseTransaction.executeUpdate(stmt2);
+                }
+                DatabaseTransaction.closeStatement(stmt2);
             }
         } catch (Exception ex) {
             handleError(ex, "Error occured while updating VECTORHOST table");
@@ -255,7 +259,8 @@ public class VectorManager extends TableManager {
     }
 
     public boolean updateVGC(int vid, List VGC) {
-        if ((vid < 1) || (VGC.size() < 1)) {
+        // if ((vid < 1) || (VGC.size() < 1)) {
+        if (vid < 1) {
             return true;
         }
 
@@ -264,18 +269,22 @@ public class VectorManager extends TableManager {
 
         try {
             PreparedStatement stmt1 = conn.prepareStatement(sql1);
-            PreparedStatement stmt2 = conn.prepareStatement(sql2);
+
             stmt1.setInt(1, vid);
             DatabaseTransaction.executeUpdate(stmt1);
             DatabaseTransaction.closeStatement(stmt1);
-            for (int i = 0; i < VGC.size(); i++) {
-                VectorGrowthCondition vgc = (VectorGrowthCondition) VGC.get(i);
-                stmt2.setInt(1, vid);
-                stmt2.setInt(2, vgc.getGrowthid());
-                stmt2.setString(3, vgc.getVectorame());
-                stmt2.setString(4, vgc.getGrowthname());
-                stmt2.setString(5, vgc.getIsrecommended());
-                DatabaseTransaction.executeUpdate(stmt2);
+            if ((VGC != null) && (VGC.size() > 0)) {
+                PreparedStatement stmt2 = conn.prepareStatement(sql2);
+                for (int i = 0; i < VGC.size(); i++) {
+                    VectorGrowthCondition vgc = (VectorGrowthCondition) VGC.get(i);
+                    stmt2.setInt(1, vid);
+                    stmt2.setInt(2, vgc.getGrowthid());
+                    stmt2.setString(3, vgc.getVectorame());
+                    stmt2.setString(4, vgc.getGrowthname());
+                    stmt2.setString(5, vgc.getIsrecommended());
+                    DatabaseTransaction.executeUpdate(stmt2);
+                }
+                DatabaseTransaction.closeStatement(stmt2);
             }
         } catch (Exception ex) {
             handleError(ex, "Error occured while updating VECTORGROWTH table");
@@ -285,7 +294,8 @@ public class VectorManager extends TableManager {
     }
 
     public boolean updateVSM(int vid, List VSM) {
-        if ((vid < 1) || (VSM.size() < 1)) {
+        // if ((vid < 1) || (VSM.size() < 1)) {
+        if (vid < 1) {
             return true;
         }
 
@@ -294,17 +304,21 @@ public class VectorManager extends TableManager {
 
         try {
             PreparedStatement stmt1 = conn.prepareStatement(sql1);
-            PreparedStatement stmt2 = conn.prepareStatement(sql2);
+
             stmt1.setInt(1, vid);
             DatabaseTransaction.executeUpdate(stmt1);
             DatabaseTransaction.closeStatement(stmt1);
-            for (int i = 0; i < VSM.size(); i++) {
-                VectorSelectMarker vsm = (VectorSelectMarker) VSM.get(i);
-                stmt2.setInt(1, vid);
-                stmt2.setString(2, vsm.getVectorname());
-                stmt2.setString(3, vsm.getHosttype());
-                stmt2.setString(4, vsm.getMarker());
-                DatabaseTransaction.executeUpdate(stmt2);
+            if ((VSM != null) && (VSM.size() > 0)) {
+                PreparedStatement stmt2 = conn.prepareStatement(sql2);
+                for (int i = 0; i < VSM.size(); i++) {
+                    VectorSelectMarker vsm = (VectorSelectMarker) VSM.get(i);
+                    stmt2.setInt(1, vid);
+                    stmt2.setString(2, vsm.getVectorname());
+                    stmt2.setString(3, vsm.getHosttype());
+                    stmt2.setString(4, vsm.getMarker());
+                    DatabaseTransaction.executeUpdate(stmt2);
+                }
+                DatabaseTransaction.closeStatement(stmt2);
             }
         } catch (Exception ex) {
             handleError(ex, "Error occured while updating VECTORSEL table");
@@ -467,7 +481,7 @@ public class VectorManager extends TableManager {
             stmt.setInt(1, vid);
             DatabaseTransaction.executeUpdate(stmt);
             DatabaseTransaction.closeStatement(stmt);
-            
+
             stmt = conn.prepareStatement(sql2);
             stmt.setInt(1, vid);
             stmt.setString(2, vp);
@@ -1275,12 +1289,12 @@ public class VectorManager extends TableManager {
             sql = "select a.vectorid,a.description,a.form,a.type,a.sizeinbp,a.mapfilename," +
                     " a.sequencefilename,a.comments,nvl(b.userid, 0) userid,nvl(b.status, '') status, a.name " +
                     " from vector a left join vectorsubmission b on a.vectorid=b.vectorid " +
-                    " where name like ?";
+                    " where a.name like ? order by a.name";
         } else {
             sql = "select a.vectorid,a.description,a.form,a.type,a.sizeinbp,a.mapfilename," +
                     " a.sequencefilename,a.comments,nvl(b.userid, 0) userid,nvl(b.status, '') status, a.name " +
                     " from vector a left join vectorsubmission b on a.vectorid=b.vectorid " +
-                    " where name=?";
+                    " where a.name=? order by a.name";
         }
 
         try {
@@ -1666,7 +1680,7 @@ public class VectorManager extends TableManager {
         CloneVector vector = this.getVectorByName(name);
         if(vector != null)
         return vector;
-
+        
         String sql = "select vectorid,description,form,type,sizeinbp,mapfilename," +
         " sequencefilename,comments from vector where vectorid in ("+
         " select vectorid from vectorsynonym where vsynonym=?)";

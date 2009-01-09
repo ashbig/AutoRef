@@ -90,7 +90,8 @@ public class VInput4Action extends Action {
                 nextPage(session);
 
                 af = mapping.findForward("continue");
-            } else if (sAction.equals("Back")) { //Back }
+            } else if (sAction.equals("Back")) { //Back
+                saveInfo(session, vm, vid);
                 af = mapping.findForward("back");
             } else if (sAction.equals("Add To Host Strain List")) {
                 boolean bExist = false;
@@ -242,17 +243,17 @@ public class VInput4Action extends Action {
     private void saveInfo(HttpSession session, VectorManager vm, int vid) {
         // Save features
         List vhs = (List) session.getAttribute("VHS");
-        if ((vhs != null) && (vhs.size() > 0)) {
+        // if ((vhs != null) && (vhs.size() > 0)) {
             vm.updateVHS(vid, vhs);
-        }
+        // }
         List vgc = (List) session.getAttribute("VGC");
-        if ((vgc != null) && (vgc.size() > 0)) {
+        // if ((vgc != null) && (vgc.size() > 0)) {
             vm.updateVGC(vid, vgc);
-        }
+        // }
         List vsm = (List) session.getAttribute("VSM");
-        if ((vsm != null) && (vsm.size() > 0)) {
+        // if ((vsm != null) && (vsm.size() > 0)) {
             vm.updateVSM(vid, vsm);
-        }
+        // }
     }
 
     private void nextPage(HttpSession session) {

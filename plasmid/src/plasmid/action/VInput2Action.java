@@ -83,6 +83,8 @@ public class VInput2Action extends Action {
 
                 af = mapping.findForward("continue");
             } else if (sAction.equals("Back")) { //Back }
+                saveInfo(session, vm, vid);
+                
                 af = mapping.findForward("back");
             } else if (sAction.equals("Add To List")) {
                 VectorFeature vf;

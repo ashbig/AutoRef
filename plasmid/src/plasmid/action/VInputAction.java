@@ -86,7 +86,22 @@ public class VInputAction extends Action {
                     }
                 }
             } else if (sAction.equals("Continue")) { //Continue
-                saveInfo(session, t, vm, form, uid); // Save the info before continue.
+                if (vid == 0) {  // New Vector
+
+                    if (vm.getVectorByName(name) != null) {  //Duplicate name, exit error
+                        errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("failed.VIA.duplicatename"));
+                    } else {
+                        saveInfo(session, t, vm, form, uid);
+                    }
+                } else { // Update Vector
+
+                    CloneVector v = vm.getVectorByName(name);
+                    if ((v != null) && (v.getVectorid() != vid)) { // Check for duplicate name
+                        errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("failed.VIA.duplicatename"));
+                    } else {
+                        saveInfo(session, t, vm, form, uid);
+                    }
+                }
 
                 nextPage(session, vm);
                 vif.reset();
@@ -129,15 +144,15 @@ public class VInputAction extends Action {
         FormFile mf = vif.getMapfile();
         String mapfilename = null, seqfilename = null;
         CloneVector vector = (CloneVector) session.getAttribute("Vector");
-        if ((mf != null) && (mf.getFileName().trim().length() > 0) && (mf.getFileSize() > 0))
+        if ((mf != null) && (mf.getFileName().trim().length() > 0) && (mf.getFileSize() > 0)) {
             mapfilename = mf.getFileName().trim();
-        else if (vector != null) {
+        } else if (vector != null) {
             mapfilename = vector.getMapfilename();
         }
         FormFile sf = vif.getSeqfile();
-        if ((sf != null) && (sf.getFileName().trim().length() > 0) && (sf.getFileSize() > 0))
+        if ((sf != null) && (sf.getFileName().trim().length() > 0) && (sf.getFileSize() > 0)) {
             seqfilename = sf.getFileName().trim();
-        else if (vector != null) {
+        } else if (vector != null) {
             seqfilename = vector.getSeqfilename();
         }
         String comments = ((vif.getComments().length() < 1) ? "" : "<CMT>" + vif.getComments() + "</CMT>");
@@ -183,6 +198,7 @@ public class VInputAction extends Action {
                 mfOS.write(mf.getFileData());
                 mfOS.flush();
                 mfOS.close();
+                vif.setMapfilename(mapfilename);
             }
             if ((sf != null) && (sf.getFileName().trim().length() > 0) && (sf.getFileSize() > 0)) {
                 File SeqFile = new File(sfPath, seqfilename);
@@ -190,6 +206,7 @@ public class VInputAction extends Action {
                 sfOS.write(sf.getFileData());
                 sfOS.flush();
                 sfOS.close();
+                vif.setSeqfilename(seqfilename);
             }
 
         } catch (Exception ex) {
@@ -222,7 +239,7 @@ public class VInputAction extends Action {
         session.removeAttribute("Features");
         session.removeAttribute("FT");
         session.removeAttribute("FN");
-        if (features != null) {
+        if ((features != null) && (features.size() > 0)) {
             session.setAttribute("Features", features);
         }
         if (featuretypes != null) {
