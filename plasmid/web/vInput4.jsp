@@ -18,7 +18,7 @@
                 if (typeof ogc != 'undefined') {
                     var gc = ogc.options[ogc.selectedIndex].value;
                     if (gc.length > 0) {
-                        var u = "gcinfo.jsp?GC=" + escape(gc);
+                        var u = "gcinfo.jsp?GC=" + encodeURIComponent(gc);
                         window.open(u);
                     } else {
                         alert("Please select a growth condition first.");
