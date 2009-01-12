@@ -26,6 +26,7 @@ public class VInput4Form extends ActionForm {
     private String hosttype = null;
     private String marker = null;
     private int SMID = -1;
+    private String gciry = "N";
 
     public String getStep() {
         return step;
@@ -81,6 +82,14 @@ public class VInput4Form extends ActionForm {
 
     public void setIsrecommended(String i) {
         isrecommended = i;
+    }
+    
+    public String getGciry() {
+        return gciry;
+    }
+
+    public void setGciry(String i) {
+        gciry = i;
     }
 
     public String getHosttype() {
@@ -145,6 +154,7 @@ public class VInput4Form extends ActionForm {
         hosttype = null;
         marker = null;
         SMID = -1;
+        String gciry = "N";
     }
 
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
@@ -180,20 +190,22 @@ public class VInput4Form extends ActionForm {
             if (SMID < 0) {
                 errors.add("VIF4", new ActionError("error.SMID.required"));
             }
-        } else if (submit.equals("Continue") || (submit.equals("Save..."))) {
+        } else if (submit.equals("Continue")) {
             HttpSession session = request.getSession();
             List VHS = (List) session.getAttribute("VHS");
             if ((VHS == null) || (VHS.size() < 1)) {
-                errors.add("VIF9", new ActionError("error.VHS.required"));
+                errors.add("VIF4", new ActionError("error.VHS.required"));
             }
             List VGC = (List) session.getAttribute("VGC");
             if ((VGC == null) || (VGC.size() < 1)) {
-                errors.add("VIF9", new ActionError("error.VGC.required"));
+                errors.add("VIF4", new ActionError("error.VGC.required"));
             }
             List VSM = (List) session.getAttribute("VSM");
             if ((VSM == null) || (VSM.size() < 1)) {
-                errors.add("VIF9", new ActionError("error.VSM.required"));
+                errors.add("VIF4", new ActionError("error.VSM.required"));
             }
+            if (gciry.equals("N"))
+                errors.add("VIF4", new ActionError("error.VGC.gciryrequired"));
         }
         return errors;
     }

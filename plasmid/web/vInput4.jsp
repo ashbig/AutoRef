@@ -18,7 +18,7 @@
                 if (typeof ogc != 'undefined') {
                     var gc = ogc.options[ogc.selectedIndex].value;
                     if (gc.length > 0) {
-                        var u = "gcinfo.jsp?GC=" + gc;
+                        var u = "gcinfo.jsp?GC=" + escape(gc);
                         window.open(u);
                     } else {
                         alert("Please select a growth condition first.");
@@ -76,9 +76,21 @@
                     alert("Please enter at least one selectable marker before continue.")
                     return false;
                 }
+                
+                if (document.getElementById("gciry").value == 'N') {
+                    alert("Please enter at least one recommended growth condition before continue.");
+                    return false;
+                }
                     
                 return true;
             }
+            
+            function chkgciry() {
+                var gciry = document.getElementById("gciry");
+                if ((gciry.value != 'Y') && (document.forms["vInput4Form"].elements["isrecommended"].value == 'Y'))
+                        gciry.value = 'Y';
+            }
+            
         </script>
     </head>
     
@@ -206,7 +218,10 @@
                                                         </td>
                                                     </tr>
                                                     <tr bgcolor="white">
-                                                        <td colspan="2"><html:submit value="Add To Growth Condition List"/></td>
+                                                        <td colspan="2">
+                                                            <html:submit value="Add To Growth Condition List" onclick="return chkgciry();"/>
+                                                            <input type="hidden" id="gciry" name="gciry" value="<bean:write name="vInput4Form" property="gciry"/>"/>
+                                                        </td>
                                                     </tr>
                                                 </table>
                                             </td>
@@ -323,7 +338,7 @@
                         </table>
                         <html:submit value="Continue" onclick="return checkForm();"/>
                         <html:submit value="Back"/>
-                        <html:submit value="Save..." onclick="return checkForm();"/>
+                        <html:submit value="Save..."/>
                     </html:form>
                 </td>
             </tr>
