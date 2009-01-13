@@ -56,6 +56,6 @@ public class Dnasequence {
             seqBuff.append(sequenceString.charAt(i));
         }
         
-        return seqBuff.toString();
+        return seqBuff.toString().toUpperCase();
     }           
 }
