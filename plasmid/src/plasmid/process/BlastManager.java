@@ -145,8 +145,8 @@ public class BlastManager {
             String cloneid = info.getSubjectid();
             cloneids.add(cloneid);
         }
-        Map foundClones = manager.queryClonesByCloneid(new ArrayList(cloneids), true, true, false, restrictions, clonetypes, species, Clone.AVAILABLE);
-
+        Map foundClones = manager.queryClonesByCloneid(new ArrayList(cloneids), true, true, false, true, restrictions, clonetypes, species, Clone.AVAILABLE, true);
+        
         try {
             DatabaseTransaction.closeConnection(conn);
         } catch (Exception ex) {

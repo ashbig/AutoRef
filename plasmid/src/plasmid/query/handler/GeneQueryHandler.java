@@ -61,6 +61,7 @@ public abstract class GeneQueryHandler {
     
     /** Creates a new instance of GeneQueryHandler */
     public GeneQueryHandler() {
+        setIsClonename(true);
     }
     
     public GeneQueryHandler(List terms) {
@@ -70,6 +71,7 @@ public abstract class GeneQueryHandler {
         this.nofound = new ArrayList();
         this.foundCounts = new HashMap();
         //this.totalFoundCloneids = new ArrayList();
+        setIsClonename(true);
     }
     
     public Map getFound() {return found;}

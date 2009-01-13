@@ -117,9 +117,7 @@ public class AdvancedSearchAction extends Action {
         String psicenter = ((AdvancedSearchForm) form).getPsicenter();
         int psi = ((AdvancedSearchForm) form).getPsi();
         
-        boolean isClonename = false;
-        if(psi == 1)
-            isClonename = true;
+        boolean isClonename = true;
         
         GeneQueryHandler handler = null;
         Set foundSet = null;

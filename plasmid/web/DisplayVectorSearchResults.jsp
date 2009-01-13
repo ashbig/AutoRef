@@ -59,6 +59,7 @@
   <tr>
     <td class="tableheader">&nbsp;</td>
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=cloneid">Clone ID</a></td>
+    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=originalcloneid">Original Clone ID</a></td>
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=clonetype">Clone Type</a></td>
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=geneid">Species Specific ID</a></td>
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=genesymbol">Gene Symbol</a></td>
@@ -79,6 +80,7 @@
   <tr class="tableinfo"> 
     <td><%=++i%></td>
     <td><a target="_blank" href="GetCloneDetail.do?cloneid=<bean:write name="clone" property="cloneid"/>&species=<bean:write name="refseqSearchForm" property="species"/>"><bean:write name="clone" property="name"/></a></td>
+    <td><bean:write name="clone" property="originalCloneid"/></td>
     <td><bean:write name="clone" property="type"/></td>
     <logic:equal name="clone" property="type" value="<%=Clone.NOINSERT%>">
     <td>&nbsp;</td>

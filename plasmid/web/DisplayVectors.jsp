@@ -33,6 +33,7 @@ Many other vectors are represented in the repository
   <tr>
     <td class="tableheader">&nbsp;</td>
     <td class="tableheader"><a href="SetVectorDisplay.do?sortby=cloneid">Clone ID</a></td>
+    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=originalcloneid">Original Clone ID</a></td>
     <td class="tableheader"><a href="SetVectorDisplay.do?sortby=clonetype">Clone Type</a></td>
     <td class="tableheader"><a href="SetVectorDisplay.do?sortby=vectorname">Vector Name</a></td>
     <td class="tableheader">Description</td>
@@ -46,6 +47,7 @@ Many other vectors are represented in the repository
   <tr class="tableinfo"> 
     <td><%=++i%></td>
     <td><a target="_blank" href="GetCloneDetail.do?cloneid=<bean:write name="clone" property="cloneid"/>"><bean:write name="clone" property="name"/></a></td>
+    <td><bean:write name="clone" property="originalCloneid"/></td>
     <td><bean:write name="clone" property="type"/></td>
     <td><a target="_blank" href="GetVectorDetail.do?vectorid=<bean:write name="clone" property="vectorid"/>"><bean:write name="clone" property="vectorname"/></a></td>
     <td><bean:write name="clone" property="description"/></td>

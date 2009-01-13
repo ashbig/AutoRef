@@ -7,11 +7,7 @@
 package plasmid.query.handler;
 
 import java.util.*;
-import java.sql.*;
 import plasmid.util.StringConvertor;
-import plasmid.database.DatabaseManager.*;
-import plasmid.database.*;
-import plasmid.Constants;
 import plasmid.coreobject.Clone;
 
 /**
@@ -22,6 +18,7 @@ public class VectorQueryHandler extends GeneQueryHandler {
     
     /** Creates a new instance of VectorQueryHandler */
     public VectorQueryHandler() {
+        super();
     }
     
     /**

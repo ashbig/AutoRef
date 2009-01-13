@@ -138,7 +138,7 @@ public class QueryProcessManager {
             t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
             CloneManager manager = new CloneManager(conn);
-            found = manager.performQueryClones(clones, true, true, true, false);
+            found = manager.performQueryClones(clones, true, true, true, false, true);
         } catch (Exception ex) {
             if(Constants.DEBUG) {
                 System.out.println(ex);
