@@ -30,7 +30,6 @@
                     <h:form action="GetAlignment.do">
                         <html:hidden name="blastForm" property="program"/>
                         <html:hidden name="blastForm" property="sequence"/>
-                        <html:hidden name="blastForm" property="maxseqs"/>
                         <html:hidden name="blastForm" property="expect"/>
                         <html:hidden name="blastForm" property="isLowcomp"/>
                         <html:hidden name="blastForm" property="isMaskLowercase"/>
