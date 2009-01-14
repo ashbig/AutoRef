@@ -84,6 +84,7 @@ public class BlastSearchAction extends Action {
         try {
             if (BlastManager.INPUT_ID.equals(inputformat)) {
                 sequence = manager.fetchNCBIseqs(sequence);
+                ((BlastForm)form).setSequence(sequence);
             }
             
             List l = manager.runBlast(program, database, sequence, maxseqs, expect, pid, alength, isLowcomp, isMaskLowercase, isMegablast);
