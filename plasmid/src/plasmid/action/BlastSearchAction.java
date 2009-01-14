@@ -86,8 +86,8 @@ public class BlastSearchAction extends Action {
                 sequence = manager.fetchNCBIseqs(sequence);
             }
             
-            List infos = manager.runBlast(program, database, sequence, maxseqs, expect, pid, alength, isLowcomp, isMaskLowercase, isMegablast);
-            manager.getFoundClones(infos, restrictions, null, null);
+            List l = manager.runBlast(program, database, sequence, maxseqs, expect, pid, alength, isLowcomp, isMaskLowercase, isMegablast);
+            List infos = manager.getFoundClones(l, restrictions, null, null);
 
             if (infos == null || infos.size() == 0) {
                 return (mapping.findForward("empty"));

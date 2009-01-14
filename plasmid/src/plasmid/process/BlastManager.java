@@ -127,7 +127,7 @@ public class BlastManager {
         return infos;
     }
     
-    public void getFoundClones(List infos, List restrictions, List clonetypes, String species) throws Exception {
+    public List getFoundClones(List infos, List restrictions, List clonetypes, String species) throws Exception {
         DatabaseTransaction t = null;
         Connection conn = null;
         try {
@@ -153,12 +153,17 @@ public class BlastManager {
             ex.printStackTrace();
         }
         
+        List found = new ArrayList();
         for(int i=0; i<infos.size(); i++) {
             BlastHit info = (BlastHit)infos.get(i);
             String cloneid = info.getSubjectid();
             CloneInfo clone = (CloneInfo)foundClones.get(cloneid);
-            info.setCloneinfo(clone);
+            if(clone!=null) {
+                info.setCloneinfo(clone);
+                found.add(info);
+            } 
         }
+        return found;
     }
             
     public String runBl2seq(String program, String seq1, String seq2,
