@@ -78,14 +78,6 @@
                         <p class="formlabelitalic">Parameters <a href="blasthelp.html#parameters" target="blasthelp">[i]</a></p>
                         <table width="100%" border="0">
                             <tr> 
-                                <td width="20%" class="text">Max target sequences:</td>
-                                <td>
-                                    <html:select property="maxseqs" styleClass="itemtext">
-                                        <html:options name="seqs"/>
-                                    </html:select>
-                                </td>
-                            </tr>
-                            <tr> 
                                 <td width="20%" class="text">Expect threshold:</td>
                                 <td>
                                     <html:text property="expect" styleClass="itemtext"/>

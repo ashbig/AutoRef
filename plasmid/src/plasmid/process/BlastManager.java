@@ -97,13 +97,12 @@ public class BlastManager {
     }
     
     public List runBlast(String program, String database, String sequence,
-            int maxseqs, double expect,double pid, int alength, 
+            double expect,double pid, int alength, 
             boolean isLowcomp, boolean ismaskLowercase, boolean isMegablast) throws Exception {
         String queryfile = makeQueryFile(sequence);
         String outputfile = queryfile+".out";
             
         BlastWrapper blaster = new BlastWrapper(program, BlastWrapper.BLAST_DB_PATH+database, queryfile, outputfile);
-        blaster.setMaxseqs(maxseqs);
         blaster.setExpect(expect);
         blaster.setIsLowcomp(getBooleanValue(isLowcomp));
         blaster.setIsMaskLowercase(getBooleanValue(ismaskLowercase));
@@ -167,7 +166,7 @@ public class BlastManager {
     }
             
     public String runBl2seq(String program, String seq1, String seq2,
-            int maxseqs, double expect, boolean isLowcomp, 
+            double expect, boolean isLowcomp, 
             boolean ismaskLowercase, boolean isMegablast) throws Exception {
         String file1 = makeQueryFile(seq1);
         String file2 = makeQueryFile(seq2);
@@ -178,7 +177,7 @@ public class BlastManager {
         blaster.setInput(file1);
         blaster.setInput2(file2);
         blaster.setBl2seqOutput(output);
-        blaster.setMaxseqs(maxseqs);
+        //blaster.setMaxseqs(maxseqs);
         blaster.setExpect(expect);
         blaster.setIsLowcomp(getBooleanValue(isLowcomp));
         blaster.setIsMaskLowercase(getBooleanValue(ismaskLowercase));

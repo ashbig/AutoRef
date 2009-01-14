@@ -36,7 +36,7 @@ public class BlastWrapper {
     private String program;
     private String database;
     private String sequence;
-    private int maxseqs;
+    //private int maxseqs;
     private double expect;
     private String isLowcomp;
   //  private String isSpeciesForRepeats;
@@ -55,7 +55,7 @@ public class BlastWrapper {
     public BlastWrapper() {
         setProgram(PROGRAM_BLASTN);
         setDatabase(DATABASE_ALL);
-        setMaxseqs(DEFAULT_MAXSEQ);
+        //setMaxseqs(DEFAULT_MAXSEQ);
         setExpect(DEFAULT_EXPECT);
         setAlignmentview(DEFAULT_OUTPUT);
         setIsLowcomp(BOOLEAN_TRUE);
@@ -73,7 +73,7 @@ public class BlastWrapper {
         setDatabase(database);
         setInput(input);
         setOutput(output);
-        setMaxseqs(DEFAULT_MAXSEQ);
+        //setMaxseqs(DEFAULT_MAXSEQ);
         setExpect(DEFAULT_EXPECT);
         setAlignmentview(DEFAULT_OUTPUT);
         setIsLowcomp(BOOLEAN_TRUE);
@@ -87,7 +87,7 @@ public class BlastWrapper {
         String cmd = BLAST_PROGRAM_PATH+"blastall -p "+getProgram()+" -d "+getDatabase()+
                 " -e "+getExpect()+" -m "+getAlignmentview()+" -F "+getIsLowcomp()+
                 " -U "+getIsMaskLowercase()+" -n "+getIsMegablast()+
-                " -b "+getMaxseqs()+" -i "+getInput()+" -o "+getOutput();
+                " -i "+getInput()+" -o "+getOutput();
    
         return cmd;
     }
@@ -160,14 +160,6 @@ public class BlastWrapper {
 
     public void setSequence(String sequence) {
         this.sequence = sequence;
-    }
-
-    public int getMaxseqs() {
-        return maxseqs;
-    }
-
-    public void setMaxseqs(int maxseqs) {
-        this.maxseqs = maxseqs;
     }
 
     public double getExpect() {

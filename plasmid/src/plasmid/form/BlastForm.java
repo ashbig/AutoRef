@@ -19,7 +19,7 @@ public class BlastForm extends ActionForm {
     private String program;
     private String database;
     private String sequence;
-    private int maxseqs;
+    //private int maxseqs;
     private double expect;
     private boolean isLowcomp;
     private boolean isMaskLowercase;
@@ -44,7 +44,7 @@ public class BlastForm extends ActionForm {
         program = BlastWrapper.PROGRAM_BLASTN;
         database = BlastWrapper.DATABASE_ALL;
         sequence = "";
-        maxseqs = BlastWrapper.DEFAULT_MAXSEQ;
+        //maxseqs = BlastWrapper.DEFAULT_MAXSEQ;
         expect = BlastWrapper.DEFAULT_EXPECT;
         isLowcomp = true;
         isMaskLowercase = false;
@@ -83,14 +83,6 @@ public class BlastForm extends ActionForm {
 
     public void setSequence(String sequence) {
         this.sequence = sequence;
-    }
-
-    public int getMaxseqs() {
-        return maxseqs;
-    }
-
-    public void setMaxseqs(int maxseqs) {
-        this.maxseqs = maxseqs;
     }
 
     public double getExpect() {

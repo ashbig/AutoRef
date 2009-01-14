@@ -56,7 +56,7 @@ public class BlastSearchAction extends Action {
         String program = ((BlastForm) form).getProgram();
         String database = ((BlastForm) form).getDatabase();
         String sequence = ((BlastForm) form).getSequence();
-        int maxseqs = ((BlastForm) form).getMaxseqs();
+        //int maxseqs = ((BlastForm) form).getMaxseqs();
         double expect = ((BlastForm) form).getExpect();
         boolean isLowcomp = ((BlastForm) form).isIsLowcomp();
         boolean isMaskLowercase = ((BlastForm) form).getIsMaskLowercase();
@@ -87,7 +87,7 @@ public class BlastSearchAction extends Action {
                 ((BlastForm)form).setSequence(sequence);
             }
             
-            List l = manager.runBlast(program, database, sequence, maxseqs, expect, pid, alength, isLowcomp, isMaskLowercase, isMegablast);
+            List l = manager.runBlast(program, database, sequence, expect, pid, alength, isLowcomp, isMaskLowercase, isMegablast);
             List infos = manager.getFoundClones(l, restrictions, null, null);
 
             if (infos == null || infos.size() == 0) {
