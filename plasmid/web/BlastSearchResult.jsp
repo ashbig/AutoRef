@@ -66,10 +66,10 @@
                             <td class="tableheader">Search Term</td>
                             <td class="tableheader">PlasmID ID</td>
                             <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=originalcloneid">Original Clone ID</a></td>
-                            <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=clonetype">Clone Type</a></td>
                             <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=geneid">Species Specific ID</a></td>
                             <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=genesymbol">Gene Symbol</a></td>
                             <td class="tableheader">Gene Name</td>
+                            <td class="tableheader">Keywords</td>
                             <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=mutdis">Mutation/ Discrepancy</a></td>
                             <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=vectorname">Vector</a></td>
                             <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=selection">Selection Markers</a></td>
@@ -87,7 +87,6 @@
                                 <td><a target="_blank" href="GetAlignment.do?queryid=<bean:write name="clone" property="queryid"/>&subjectid=<bean:write name="clone" property="subjectid"/>&clonename=<bean:write name="clone" property="name"/>"><bean:write name="clone" property="queryid"/></a></td>
                                 <td><a target="_blank" href="GetCloneDetail.do?cloneid=<bean:write name="clone" property="cloneid"/>&species="><bean:write name="clone" property="name"/></a></td>
                                 <td><bean:write name="clone" property="originalCloneid"/></td>
-                                <td><bean:write name="clone" property="type"/></td>
                                 <logic:iterate name="clone" property="inserts" id="insert">
                                     <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.GENEID%>">
                                         <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=gene&cmd=Retrieve&dopt=Graphics&list_uids=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
@@ -124,6 +123,7 @@
                                     </logic:equal>
                                     <td><bean:write name="insert" property="name"/></td>
                                     <td><bean:write name="insert" property="description"/></td>
+                                    <td><bean:write name="insert" property="annotation"/></td>
                                     <td><bean:write name="insert" property="hasmutdis"/></td>
                                 </logic:iterate>
                                 <td><a target="_blank" href="GetVectorDetail.do?vectorid=<bean:write name="clone" property="vectorid"/>"><bean:write name="clone" property="vectorname"/></a></td>

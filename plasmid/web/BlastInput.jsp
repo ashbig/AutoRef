@@ -12,6 +12,50 @@
         <title>PlasmID Database</title>
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
         <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
+            <script type="text/javascript">
+            function adjustAlignment(form)
+            {
+                var s = document.blastForm.sequence.value;
+                s = trimAll(s);
+                if(s.length<100 && document.blastForm.inputformat.value=="Sequence") {
+                    document.blastForm.alength.value=s.length;
+                } else {
+                    document.blastForm.alength.value=100;
+                }
+            }
+            
+            function leftTrim(sString) 
+                {
+                while (sString.substring(0,1) == ' ')
+                {
+                sString = sString.substring(1, sString.length);
+                }
+                return sString;
+            }
+
+            function rightTrim(sString) 
+            {
+                while (sString.substring(sString.length-1, sString.length) == ' ')
+                {
+                sString = sString.substring(0,sString.length-1);
+                }
+                return sString;
+            } 
+
+            function trimAll(sString) 
+            {
+                while (sString.substring(0,1) == ' ')
+                {
+                sString = sString.substring(1, sString.length);
+                }
+                while (sString.substring(sString.length-1, sString.length) == ' ')
+                {
+                sString = sString.substring(0,sString.length-1);
+                }
+                return sString;  
+            }
+            
+            </script>
     </head>
     
     <body>
@@ -44,7 +88,7 @@
                             </tr>
                             <tr> 
                                 <td colspan="2" width="20%" class="formlabel">Enter sequence or Accession/GI:  <a href="blasthelp.html#input" target="blasthelp">[i]</a>
-                                    <html:select property="inputformat" styleClass="itemtext">
+                                    <html:select property="inputformat" styleClass="itemtext" onchange="adjustAlignment()">
                                         <html:options name="formats"/>
                                     </html:select>
                                 <br>(Multiple sequences should be in FASTA format. Multiple Accession/GI numbers should be separated by white space)
@@ -52,7 +96,7 @@
                             </tr>
                             <tr> 
                                 <td colspan="2" class="itemtext">
-                                    <html:textarea rows="10" cols="80" property="sequence"/>
+                                    <html:textarea rows="10" cols="80" property="sequence" onkeyup="adjustAlignment()"/>
                                 </td>
                             </tr>
                             <tr> 
