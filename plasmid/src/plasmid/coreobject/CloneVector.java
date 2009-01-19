@@ -18,6 +18,7 @@ import plasmid.util.StringConvertor;
 public class CloneVector implements Serializable {
 
     private int vectorid;
+    private int cloneid;
     private String name;
     private String description;
     private String form;
@@ -50,6 +51,12 @@ public class CloneVector implements Serializable {
 
     public CloneVector(int vectorid, String name, String description, String form, String type,
             int size, String mapfilename, String seqfilename, String comments, String status, int userid) {
+        this(vectorid, name, description, form, type,
+                size, mapfilename, seqfilename, comments, status, userid, 0);
+    }
+    
+    public CloneVector(int vectorid, String name, String description, String form, String type,
+            int size, String mapfilename, String seqfilename, String comments, String status, int userid, int cloneid) {    
         this.vectorid = vectorid;
         this.name = name;
         this.description = description;
@@ -61,10 +68,15 @@ public class CloneVector implements Serializable {
         this.comments = comments;
         this.status = status;
         this.userid = userid;
+        this.cloneid = cloneid;
     }
 
     public int getVectorid() {
         return vectorid;
+    }
+
+    public int getCloneid() {
+        return cloneid;
     }
 
     public String getName() {
@@ -105,6 +117,10 @@ public class CloneVector implements Serializable {
 
     public void setVectorid(int id) {
         this.vectorid = id;
+    }
+
+    public void setCloneid(int id) {
+        this.cloneid = id;
     }
 
     public void setName(String s) {

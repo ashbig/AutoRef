@@ -156,24 +156,29 @@ public class VSubmitForDistAction extends Action {
 
     private void saveInfo(HttpSession session, HttpServletRequest request, CloneManager cm, VSubmitForDistForm vif) {
         CloneVector v = (CloneVector) session.getAttribute("Vector");
+        Clone c = null;
 
-        int cloneid = -1;
-        try {
-            DefTableManager dm = new DefTableManager();
-            cloneid = dm.getNextid("cloneid", DatabaseTransaction.getInstance());
-        } catch (Exception ex) {
-            if (Constants.DEBUG) {
-                System.out.println(ex);
+        int cloneid = v.getCloneid();
+        if (cloneid < 1) {
+            try {
+                DefTableManager dm = new DefTableManager();
+                cloneid = dm.getNextid("cloneid", DatabaseTransaction.getInstance());
+            } catch (Exception ex) {
+                if (Constants.DEBUG) {
+                    System.out.println(ex);
+                }
             }
-        }
 
-        Clone c = new Clone(cloneid, v.getName(), Clone.NOINSERT, vif.getVerified(), vif.getVerifiedmethod(),
-                Clone.NOINSERT, null, Clone.NON_PROFIT, vif.getComments().trim(), v.getVectorid(),
-                v.getName(), v.getMapfilename(), Clone.AVAILABLE, null, vif.getSource(), v.getDescription());
-
+            c = new Clone(cloneid, v.getName(), Clone.NOINSERT, vif.getVerified(), vif.getVerifiedmethod(),
+                    Clone.NOINSERT, null, Clone.NON_PROFIT, vif.getComments().trim(), v.getVectorid(),
+                    v.getName(), v.getMapfilename(), Clone.NOT_AVAILABLE, null, vif.getSource(), v.getDescription());
         List cs = new ArrayList();
         cs.add(c);
-        cm.insertClones(cs);
+              cm.insertClones(cs);
+        } else {
+            cm.updateCloneSFD(cloneid, vif.getVerified(), vif.getVerifiedmethod(), Clone.NON_PROFIT, vif.getComments().trim(), vif.getSource());
+            c = cm.getCloneInfoByCloneid(cloneid);
+        }
 
         List VGCA = (List) session.getAttribute("VGCA");
         List VGC = (List) session.getAttribute("VGC");

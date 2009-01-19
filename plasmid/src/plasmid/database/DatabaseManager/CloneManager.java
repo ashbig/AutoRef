@@ -1617,6 +1617,67 @@ public class CloneManager extends TableManager {
         return mtalist;
     }
 
+    public Clone getCloneInfoByCloneid(int cloneid) {
+        if (cloneid < 1) {
+            return null;
+        }
+
+        Clone c = null;
+        String sql = "select clonename, clonetype, verified, vermethod," +
+                " domain, subdomain, restriction, comments, vectorid, vectorname," +
+                " clonemapfilename,status,specialtreatment,source,description,cloneid" +
+                " from clone where cloneid =?";
+
+        String sql2 = "select h.hoststrain, h.isinuse, h.description" +
+                " from host h where h.cloneid=?";
+
+        ResultSet rs = null, rs2 = null;
+        PreparedStatement stmt = null, stmt2 = null;
+        try {
+            stmt = conn.prepareStatement(sql);
+            stmt2 = conn.prepareStatement(sql2);
+
+            stmt.setInt(1, cloneid);
+            stmt2.setInt(1, cloneid);
+            rs = DatabaseTransaction.executeQuery(stmt);
+            rs2 = DatabaseTransaction.executeQuery(stmt2);
+            if (rs.next()) {
+                String clonename = rs.getString(1);
+                String clonetype = rs.getString(2);
+                String verified = rs.getString(3);
+                String vermethod = rs.getString(4);
+                String domain = rs.getString(5);
+                String subdomain = rs.getString(6);
+                String restriction = rs.getString(7);
+                String comments = rs.getString(8);
+                int vectorid = rs.getInt(9);
+                String vectorname = rs.getString(10);
+                String clonemap = rs.getString(11);
+                String status = rs.getString(12);
+                String specialtreatment = rs.getString(13);
+                String src = rs.getString(14);
+                String des = rs.getString(15);
+                c = new Clone(cloneid, clonename, clonetype, verified, vermethod, domain, subdomain, restriction, comments, vectorid, vectorname, clonemap, status, specialtreatment, src, des);
+                List hs = new ArrayList();
+                while (rs2.next()) {
+                    CloneHost h = new CloneHost(cloneid, rs2.getString(1), rs2.getString(2), rs2.getString(3));
+                    hs.add(h);
+                }
+                if (hs.size() > 0) {
+                    c.setHosts(hs);
+                }
+            }
+            DatabaseTransaction.closeResultSet(rs);
+        } catch (Exception ex) {
+            handleError(ex, "Error occured while query clones");
+            return null;
+        } finally {
+            DatabaseTransaction.closeStatement(stmt);
+        }
+
+        return c;
+    }
+
     public List getCloneInfoByCloneids(List cloneids) {
         if ((cloneids == null) || (cloneids.size() < 1)) {
             return null;
@@ -1685,6 +1746,30 @@ public class CloneManager extends TableManager {
         return cs;
     }
 
+    public boolean updateCloneSFD(int cloneid, String verified, String vermethod, String restriction, String comments, String source) {
+        if ((cloneid < 1) || (verified == null) || (verified.length() < 1) || (source == null) || (source.length() < 1)) {
+            return true;
+        }
+        
+        String sql = "update clone set verified=?, vermethod=?, restriction=?, comments=?, source=? where cloneid=?";
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, verified);
+            stmt.setString(2, vermethod);
+            stmt.setString(3, restriction);
+            stmt.setString(4, comments);
+            stmt.setString(5, source);
+            stmt.setInt(6, cloneid);
+            DatabaseTransaction.executeUpdate(stmt);
+            DatabaseTransaction.closeStatement(stmt);
+        } catch (Exception ex) {
+            handleError(ex, "Error occured while updating CLONE table");
+            return false;
+        }
+
+        return true;
+    }
+    
     public boolean updateCloneSubmission(int cloneid, int userid,
             String st, String hs, String re, String f,
             String s, String sd, String r, String rd) {

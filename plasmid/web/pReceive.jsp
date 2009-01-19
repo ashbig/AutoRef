@@ -28,7 +28,10 @@
                             <tr><td><h2>Receive Plasmids</h2></td></tr>
                             <tr><td><font size="-2">*Required field is in bold</font></td></tr>
                             <tr><td>Please enter the clone IDs (separate each clone ID by new line or white space):</td></tr>
-                            <tr><td><html:text property="cloneid" size="60"/>&nbsp;<html:submit value="Find" onclick="checkFind();"/></td></tr>
+                            <tr><td>
+                                <input type="text" size="60" id="cloneid" name="cloneid" />
+                                &nbsp;<html:submit value="Find" onclick="checkFind();"/>
+                            </td></tr>
                             <logic:present name="Clone">
                                 <tr height="18px"><td></td></tr>
                                 <tr><td>
@@ -57,7 +60,7 @@
                                                     <logic:notEmpty name="Clone" property="hosts">
                                                         <html:select property="hs">
                                                             <logic:iterate id="host" name="Clone" property="hosts">
-                                                                <option value="<bean:write name="host" property="hoststrain"/>"/>
+                                                                <option value="<bean:write name="host" property="hoststrain"/>"><bean:write name="host" property="hoststrain"/></option>
                                                             </logic:iterate>
                                                         </html:select>
                                                     </logic:notEmpty>
@@ -83,7 +86,7 @@
                                                 </td>
                                                 <td width="16%" align="right"><strong>When submitted:</strong></td>
                                                 <td width="24%">
-                                                    <input type="text" name="sdate" id="sdate">
+                                                    <input type="text" name="sdate" id="sdate"><br><font size="-1">(Please enter like 01-DEC-2008)</font>
                                                 </td>
                                             </tr>
                                             <tr bgcolor="white">
@@ -93,7 +96,7 @@
                                                 </td>
                                                 <td align="right"><strong>When received:</strong></td>
                                                 <td>
-                                                    <input type="text" name="rdate" id="rdate">
+                                                    <input type="text" name="rdate" id="rdate"><br><font size="-1">(Please enter like 01-DEC-2008)</font>
                                                 </td>
                                             </tr>
                                         </table>

@@ -27,7 +27,7 @@
                         <p></p>
                         <p>Clone vector <bean:write name="Clone" property="name"/> has been successfully submitted for distribution. <br>
                             The Clone ID is <bean:write name="Clone" property="cloneid"/>.<br>
-                            Thank you.</p>
+                        Thank you.</p>
                     </logic:present>
                     <logic:notPresent name="Clone">
                         <html:form action="/vSubmitForDist" method="POST">
@@ -82,7 +82,7 @@
                                         vector with insert, please indicate below:</font></strong>
                                 </td></tr>
                                 <tr><td>
-                                        <html:checkbox property="sameasvector" onclick="sameVGC();"/>Same as vector with insert
+                                        <input type="checkbox" id="sameasvector" name="sameasvector" onclick="sameVGC();"/>Same as vector with insert
                                 </td></tr>
                                 <tr><td>
                                         <span id="vgca" name="vgca" style="display:block;">
@@ -190,11 +190,11 @@
                 </td>
             </tr>
         </table>
-        <div id="divTitle"
-             onmouseout="showTitle(this.id, null, 0, 0);"
-             style="visibility: hidden; position: absolute; float: left; left: 0; top: 0; z-index: 999; border: none 0px black; background-color: #FFFFCC; padding: 10px;">
-        </div>
         <logic:notPresent name="Clone">
+            <div id="divTitle"
+                 onmouseout="showTitle(this.id, null, 0, 0);"
+                 style="visibility: hidden; position: absolute; float: left; left: 0; top: 0; z-index: 999; border: none 0px black; background-color: #FFFFCC; padding: 10px;">
+            </div>
             <span id="verifiedtitle" style="display:none;">
                 Indicate if the vector has been verified by sequencing or restriction digest. Indicate which method in the "Verification Method" box.
             </span>
@@ -285,6 +285,7 @@
                 }
             </script>
         </logic:notPresent>
-    <jsp:include page="footer.jsp" /></body>
+        <jsp:include page="footer.jsp" />
+    </body>
 </html>
 

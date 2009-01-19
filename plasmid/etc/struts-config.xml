@@ -38,8 +38,12 @@
                 type="plasmid.form.AddVPTForm"/>
         <form-bean name="vSearchForm" 
                 type="plasmid.form.VSearchForm"/>
+        <form-bean name="vSearchSFDForm" 
+                type="plasmid.form.VSearchSFDForm"/>
         <form-bean name="continueVSubmitForm" 
                 type="plasmid.form.ContinueVSubmitForm"/>
+        <form-bean name="continueVSFDForm" 
+                type="plasmid.form.ContinueVSFDForm"/>
         <form-bean name="vInputForm" 
                 type="plasmid.form.VInputForm"/>
         <form-bean name="vInput2Form" 
@@ -179,6 +183,7 @@
     <forward    name="findRegistration" path="/FindRegistration.jsp"/>
     <forward    name="error"        path="/ProcessError.do"/>
     <forward    name="vSearch"      path="/vSearch.jsp"/>
+    <forward    name="vSearchSFD"      path="/vSearchSFD.jsp"/>
     <forward    name="vInput1"      path="/vInput.jsp"/>
     <forward    name="vInput2"      path="/vInput2.jsp"/>
     <forward    name="vInput3"      path="/vInput3.jsp"/>
@@ -761,6 +766,20 @@
             validate="true">
             <forward  name="success"   path="/vInput.jsp"/>
         </action>
+        <action path="/vSearchSFD" 
+            type="plasmid.action.VSearchSFDAction"
+            name="vSearchSFDForm" 
+            input="/vSearchSFD.jsp" 
+            validate="true">
+        </action>
+        <action path="/continueVSFD" 
+            type="plasmid.action.ContinueVSFDAction"
+            input="/vSearchSFD.jsp"
+            name="continueVSFDForm"
+            validate="true">
+            <forward  name="success"   path="/vSubmitForDist.jsp"/>
+        </action>
+
         <action path="/vInput" 
             type="plasmid.action.VInputAction"
             name="vInputForm" 
@@ -837,7 +856,7 @@
             name="vSubmitForDistForm" 
             input="/vSubmitForDist.jsp" 
             validate="true">
-            <forward name="success" path="/vSearch.jsp"/>
+            <forward name="success" path="/vSubmitForDistSucc.jsp"/>
         </action>        
         <action path="/pReceive" 
             type="plasmid.action.PReceiveAction"
