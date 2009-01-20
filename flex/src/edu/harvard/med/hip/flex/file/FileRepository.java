@@ -13,9 +13,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.5 $
- * $Date: 2005-02-10 19:52:02 $
- * $Author: dzuo $
+ * $Revision: 1.6 $
+ * $Date: 2009-01-20 15:23:43 $
+ * $Author: et15 $
  *
  ******************************************************************************
  *
@@ -47,8 +47,8 @@ import edu.harvard.med.hip.flex.core.Container;
  * Reresents the file repository.
  *
  *
- * @author     $Author: dzuo $
- * @version    $Revision: 1.5 $ $Date: 2005-02-10 19:52:02 $
+ * @author     $Author: et15 $
+ * @version    $Revision: 1.6 $ $Date: 2009-01-20 15:23:43 $
  */
 
 public class FileRepository {
@@ -66,6 +66,8 @@ public class FileRepository {
     public final static String EXP_LOCAL_PATH = FlexProperties.getInstance().getProperty("flex.repository.expfile.relativedir");
     
     public final static String CULTURE_LOCAL_PATH = FlexProperties.getInstance().getProperty("flex.repository.culture.relativedir");
+    
+    public static final String NORGREN_LOG_FILE_PATH=FlexProperties.getInstance().getProperty("flex.repository.norgren.relativedir");
     /**
      * Uploads a file to the server.
      *

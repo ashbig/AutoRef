@@ -208,7 +208,7 @@ public class SelectProtocolAction extends FlexAction {
                 
             }
             items = queue.getQueueItems(protocol, project, workflow);
-            
+  
             storeInSession(request, items, protocol);
             
             if(Protocol.GENERATE_CULTURE_BLOCKS_FOR_ISOLATES.equals(processname)) {
@@ -236,7 +236,40 @@ public class SelectProtocolAction extends FlexAction {
                     Protocol.GENERATE_GLYCEROL_PLATES_FROM_PLATES_WITH_CLONES.equals(processname) )
             {
                 return (mapping.findForward("success_glycerol"));
-            } else {
+            } 
+            else if  (Protocol.GENERATE_EMPTY_CONTAINERS.equals(processname) )
+            {
+                 items = queue.getQueueItems((Protocol)workflow.getNextProtocol(protocol).get(0), project, workflow);
+  
+                  storeInSession(request, items, protocol);
+                 Vector locationList = Location.getLocations();
+             //rearrange by puttin 'WORKBENCH' as first
+                ArrayList locationList_ordered = new ArrayList(locationList.size());
+                for ( int count = 0; count < locationList.size(); count++)
+                {    if ( ((Location)locationList.get(count)).getType().intern()== Location.WORKBENCH)
+                {    locationList_ordered.add(0,locationList.get(count));                }
+                else        locationList_ordered.add(locationList.get(count));   }
+                request.setAttribute("EnterSourcePlateAction.locations", locationList_ordered);
+                request.setAttribute("protocolname", processname);
+                request.setAttribute("protocolid", protocol.getId());
+               
+                return (mapping.findForward("generate_empty_containers"));
+            } 
+            else if (Protocol.POPULATE_CONTAINERS_FROM_NORGEN_LOG_FILE.equals(processname) )
+            {
+                request.setAttribute("protocolname", processname);
+                request.setAttribute("protocolid", protocol.getId());
+                return (mapping.findForward("populate_containers_norgen"));
+            } 
+            /*
+            else if (Protocol.GENERATE_WORKING_AND_COPY_GLYCEROL_PLATE.equals(processname) )
+            {
+                request.setAttribute("protocolname", processname);
+                request.setAttribute("protocolid", protocol.getId());
+                return (mapping.findForward("generate_working_copy_glycerol"));
+            } 
+   */
+            else {
                 return (mapping.findForward("success"));
             }
         } catch (FlexDatabaseException ex) {

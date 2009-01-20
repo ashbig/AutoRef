@@ -16,9 +16,9 @@
  *              Added static method findFile (Container container)
  *              Added static method findFile (Result result)
  * The following information is used by CVS
- * $Revision: 1.4 $
- * $Date: 2005-02-10 19:46:32 $
- * $Author: dzuo $
+ * $Revision: 1.5 $
+ * $Date: 2009-01-20 15:23:43 $
+ * $Author: et15 $
  *
  ******************************************************************************
  *
@@ -55,8 +55,8 @@ import edu.harvard.med.hip.flex.process.*;
  * To get an instance of a file reference you must either create one with a 
  * create method or use one of the find methods.
  *
- * @author     $Author: dzuo $
- * @version    $Revision: 1.4 $ $Date: 2005-02-10 19:46:32 $
+ * @author     $Author: et15 $
+ * @version    $Revision: 1.5 $ $Date: 2009-01-20 15:23:43 $
  */
 
 public class FileReference {
@@ -78,6 +78,8 @@ public class FileReference {
     public static final String EXP_FLO = "EXP_FLORESCENCE";
     
     public static final String CULTURE_TYPE = "CULTURE_RESULT";
+    
+    public static final String NORGREN_LOG_FILE="NORGREN_LOG_FILE";
     
     // id for the file reference
     private int id;
