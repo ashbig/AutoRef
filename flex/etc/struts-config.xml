@@ -69,7 +69,7 @@
     <form-bean      name="createPCRPlateForm"
                     type="edu.harvard.med.hip.flex.form.CreatePCRPlateForm"/>
 
-    <!-- Create process plate form bean -->
+    <!-- Create process plate fFForm bean -->
     <form-bean      name="createCultureBlockForm"
                     type="edu.harvard.med.hip.flex.form.CreateCultureBlockForm"/>
     
@@ -273,7 +273,19 @@
                     type="edu.harvard.med.hip.flex.form.ReportRunForm"/>
    <form-bean      name="addWorkflowItemsForm"
                     type="edu.harvard.med.hip.flex.form.AddWorkflowItemsForm"/>
-  
+   <!--
+   <form-bean      name="addGrowthConditionItemsForm"
+                    type="edu.harvard.med.hip.flex.form.AddGrowthConditionItemsForm"/>
+  <form-bean      name="flexToPlasmidTransferForm"
+                    type="edu.harvard.med.hip.flex.form.FlexToPlasmidTransferForm"/>
+  <form-bean      name="flexToPlasmidFileForm"
+                    type="edu.harvard.med.hip.flex.form.FlexToPlasmidFileForm"/>
+         -->           
+                    
+                    <!-- norgen rearray-->
+                    
+<form-bean      name="norgenRearrayForm"
+                    type="edu.harvard.med.hip.flex.form.NorgenRearrayForm"/>
  
  </form-beans>
 
@@ -320,8 +332,11 @@
     <forward    name="containerDetails" path="/ContainerScan.jsp?forwardName=VIEW_CONTAINER"/>
     <forward    name="printSubmittedContainerLAbels" path="/GetProjects.do?forwardName=Constants.NEW_PLATE_LABELS"/>
     <forward    name="addItems" path="/AddItems.jsp"/>  
-   
-  </global-forwards>
+    
+   <!--
+   <forward    name="transferFLEXtoPLASMID" path="/FLEXtoPLASMIDOptions.jsp"/>
+   -->
+     </global-forwards>
   
 
   <!-- ========== Action Mapping Definitions ============================== -->
@@ -555,6 +570,10 @@
     <forward  name="success_upload_containers_from_file" path="/AddNewPlatesFromFile.jsp" />
      <forward  name="put_plates_in_pipeline" path="/AddItemsEntryParameters.jsp" />
     
+    <!-- new for Norgen-->
+    <forward  name="generate_empty_containers" path="/NorgenRearray/GenerateEmptyContainers.jsp" />
+<forward  name="populate_containers_norgen" path="/NorgenRearray/PopulateEmptyContainers.jsp" />
+<forward  name="generate_working_copy_glycerol" path="/NorgenRearray/CreateWorkingWithCopyContainers.jsp" />
     </action> 
     
     <!-- Process the source plate input -->
@@ -1140,6 +1159,9 @@
     </action>
 
 
+
+
+
 <!-- Process of rearraying plates -->
 <action    path="/RearrayPlates"
                type="edu.harvard.med.hip.flex.action.RearrayPlatesAction"
@@ -1150,6 +1172,33 @@
 
     
 <!-- Process of rearraying plates -->
+
+  <action    path="/RearraySelection"
+               type="edu.harvard.med.hip.flex.action.RearraySelectionAction"
+               name="genericRearrayForm"
+               scope="request"
+               input="/RearraySelection.jsp">
+      <forward  name="rearraySample"   path="/RearrayFileInput.jsp"/>
+      <forward  name="rearrayClone"   path="/CloneRearrayFileInput.jsp"/>
+    </action>  
+    
+     <action    path="/RearrayFileInput"
+               type="edu.harvard.med.hip.flex.action.RearrayFileInputAction"
+               name="genericRearrayForm"
+               scope="request"
+               input="/RearrayFileInput.jsp">
+      <forward  name="success"   path="/RearrayParamSet.jsp"/>
+    </action> 
+
+    <action    path="/CloneRearrayFileInput"
+               type="edu.harvard.med.hip.flex.action.CloneRearrayFileInputAction"
+               name="genericRearrayForm"
+               scope="request"
+               input="/CloneRearrayFileInput.jsp">
+      <forward  name="success"   path="/CloneRearrayParamSet.jsp"/>
+    </action>  
+    
+    
 <action    path="/GetWorkflowForRearray"
                type="edu.harvard.med.hip.flex.action.GetWorkflowForRearrayAction">
       <forward  name="success"   path="/Rearray.jsp"/>
@@ -1171,30 +1220,9 @@
       <forward  name="success"   path="/PrintBarcode.jsp"/>
     </action> 
     
-    <action    path="/RearraySelection"
-               type="edu.harvard.med.hip.flex.action.RearraySelectionAction"
-               name="genericRearrayForm"
-               scope="request"
-               input="/RearraySelection.jsp">
-      <forward  name="rearraySample"   path="/RearrayFileInput.jsp"/>
-      <forward  name="rearrayClone"   path="/CloneRearrayFileInput.jsp"/>
-    </action>  
+  
    
-    <action    path="/RearrayFileInput"
-               type="edu.harvard.med.hip.flex.action.RearrayFileInputAction"
-               name="genericRearrayForm"
-               scope="request"
-               input="/RearrayFileInput.jsp">
-      <forward  name="success"   path="/RearrayParamSet.jsp"/>
-    </action> 
-
-    <action    path="/CloneRearrayFileInput"
-               type="edu.harvard.med.hip.flex.action.CloneRearrayFileInputAction"
-               name="genericRearrayForm"
-               scope="request"
-               input="/CloneRearrayFileInput.jsp">
-      <forward  name="success"   path="/CloneRearrayParamSet.jsp"/>
-    </action>     
+      
     
     <action    path="/RearrayParamSet"
                type="edu.harvard.med.hip.flex.action.RearrayParamSetAction"
@@ -1469,6 +1497,9 @@
                 type="edu.harvard.med.hip.flex.action.ViewItemsAction">
             <forward name="view_items" path="/ViewItems.jsp"/>
           <forward name="view_nametypes" path="/DisplayNametype.jsp"/>
+       <!--
+       <forward name="view_growthcondition_items" path="/ViewGrowthConditionItems.jsp"/>
+        -->
             
   </action>
   <!-- add new items-->
@@ -1493,6 +1524,19 @@
            
            <forward name="add_workflow_items" path="/AddWorkflowItemsEntryParameters.jsp"/>         
 </action>
+
+<!--
+<action     path="/AddGrowthConditionItems"
+        name="addGrowthConditionItemsForm"
+        scope="request"
+        input="/AddGrowthConditionItemsEntryParameters.jsp"
+        validate="true"
+        type="edu.harvard.med.hip.flex.action.AddGrowthConditionItemsAction">
+            <forward name="verify_growth_condition_items" path="/AddGrowthConditionItemsVerify.jsp"/>
+           <forward name="confirm_growth_condition_items"  path="/AddGrowthConditionItemsConfirm.jsp"/>
+           <forward name="add_growth_condition_items"  path="/AddGrowthConditionItemsEntryParameters.jsp"/> 
+</action>
+-->
 
  <!-- add new items-->
    <action     path="/AddNewPlatesFromFile"
@@ -1523,6 +1567,71 @@
                validate="true">
       <forward  name="success"   path="/AddItemsConfirm.jsp"/>
     </action>  
+    
+    
+     <!-- Process the create empty containers -->
+    <action    path="/norgenrearray/GenerateEmptyContainers"
+               type="edu.harvard.med.hip.flex.action.norgenrearray.GenerateEmptyContainersAction"
+               name="norgenRearrayForm"
+               scope="request"
+               validate="false"
+               input="/NorgenRearray/GenerateEmptyContainers.jsp">
+      <forward  name="success"   path="/NorgenRearray/PrintEmpryContainersBarcode.jsp"/>
+       
+    </action> 
+    
+     <action path="/PopulateEmptyContainers"
+            type="edu.harvard.med.hip.flex.action.norgenrearray.PopulateEmptyContainersAction"
+            name="norgenRearrayForm"
+            scope="request"
+            input="/NorgenRearray/PopulateEmptyContainers.jsp">
+      <forward name="success" path="/NorgenRearray/PopulateEmptyContainersSuccess.jsp"/>
+    </action>
+    
+    
+     <action path="/GenerateGlycerolContainers"
+            type="edu.harvard.med.hip.flex.action.norgenrearray.GenerateGlycerolContainers"
+            name="norgenRearrayForm"
+            scope="request"
+            input="/NorgenRearray/CreateWorkingWithCopyContainers.jsp">
+       <forward  name="success"   path="/PrintBarcode.jsp"/>"/>
+    </action>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+         <!-- Action mapping for data import from FLEX to PLASMID 
+    <action path="/FlexToPlasmidTransfer"
+            type="edu.harvard.med.hip.flex.action.FlexToPlasmidTransferAction"
+            name="flexToPlasmidTransferForm"
+            scope="request"
+            input="/FLEXtoPLASMIDOptions.jsp">
+      <forward name="update_clone_status" path="/FlexToPlasmid/UpdateCloneStatus.jsp"/>
+     <forward name="update_clone_status_confirm" path="/AddItemsConfirm.jsp"/>
+     <forward name="create_submission_files" path="/FlexToPlasmid/CreateSumissionFiles.jsp"/>
+    <forward name="connect_flex_plasmid_items" path="/FlexToPlasmid/MapFLEXToPLASMIDItems.jsp"/>
+    <forward name="confirm_connect_flex_plasmid_items" path="/FlexToPlasmid/FlexToPlasmidConfirm.jsp"/>
+    </action>
+    
+     <action path="/FlexToPlasmidFileSubmission"
+            type="edu.harvard.med.hip.flex.action.FlexToPlasmidFileSubmissionAction"
+            name="flexToPlasmidFileForm"
+            scope="request"
+            input="/TransferCloneDataFromFiles.jsp">
+      <forward name="confirm" path="/FlexToPlasmid/FlexToPlasmidConfirm.jsp"/>
+     <forward name="proccessing" path="/ImportMgcMasterListResponse.jsp"/>
+
+     
+    </action>
+     new rearray -->
+   
      
     <!-- The standard administrative actions available with Struts -->
     <!-- These would be either omitted or protected by security -->
