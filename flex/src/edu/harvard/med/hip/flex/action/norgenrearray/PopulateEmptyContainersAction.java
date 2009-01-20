@@ -130,24 +130,27 @@ public class PopulateEmptyContainersAction extends ResearcherAction {
             int next_protocolid=((Protocol)nextProtocols.get(0)).getId();
             synchronized (this)
             {  
+                 verifyPlates(conn,dest_plates, projectid, workflowid,protocolid );
+                
                 edu.harvard.med.hip.flex.process.Process process = 
                          new edu.harvard.med.hip.flex.process.Process(protocol, 
                          edu.harvard.med.hip.flex.process.Process.SUCCESS, 
                          researcher, project, workflow);
                  process.insert(conn);
-                 verifyPlates(conn,dest_plates, projectid, workflowid,protocolid );
                   getDataForOrgPlates(conn,dest_plates);
                  populatePlatesWithSamples(conn,dest_plates ,sample_type,process.getExecutionid());
                  putItemsOnQueue(conn,dest_plates, projectid, workflowid,protocolid, next_protocolid);
                  Container container=null;
+                  ArrayList labels = new ArrayList();
                  for( NorgenDestinationPlate dest_plate:   dest_plates)
                  {
                      container = new Container(dest_plate.getId(), null, null, dest_plate.getLabel());
-                     System.out.println("99");
-                     FileReference fileRef =   handleFileReference(conn, logFile, container, FileReference.NORGREN_LOG_FILE);
-                     System.out.println("l");
+                      FileReference fileRef =   handleFileReference(conn, logFile, container, FileReference.NORGREN_LOG_FILE);
+                     labels.add(container.getLabel())    ;
                  }
                  conn.commit();
+                  request.setAttribute("LABELS", labels);
+                  
             }
              
            //build process record
@@ -157,6 +160,9 @@ public class PopulateEmptyContainersAction extends ResearcherAction {
     catch(Exception e)
     {
             DatabaseTransaction.rollback(conn);
+            errors.add("cultureFile", new ActionError("flex.infoimport.file", e.getMessage()));
+            saveErrors(request,errors);
+               
             request.setAttribute(Action.EXCEPTION_KEY, e);
             return (mapping.findForward("error"));
         } finally {
