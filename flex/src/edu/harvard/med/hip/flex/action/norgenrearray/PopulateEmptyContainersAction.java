@@ -140,12 +140,14 @@ public class PopulateEmptyContainersAction extends ResearcherAction {
                   getDataForOrgPlates(conn,dest_plates);
                  populatePlatesWithSamples(conn,dest_plates ,sample_type,process.getExecutionid());
                  putItemsOnQueue(conn,dest_plates, projectid, workflowid,protocolid, next_protocolid);
+                 populateProcessObjects( conn,dest_plates,process.getExecutionid());
                  Container container=null;
                   ArrayList labels = new ArrayList();
                  for( NorgenDestinationPlate dest_plate:   dest_plates)
                  {
                      container = new Container(dest_plate.getId(), null, null, dest_plate.getLabel());
-                      FileReference fileRef =   handleFileReference(conn, logFile, container, FileReference.NORGREN_LOG_FILE);
+                      
+                     FileReference fileRef =   handleFileReference(conn, logFile, container, FileReference.NORGREN_LOG_FILE);
                      labels.add(container.getLabel())    ;
                  }
                  conn.commit();
