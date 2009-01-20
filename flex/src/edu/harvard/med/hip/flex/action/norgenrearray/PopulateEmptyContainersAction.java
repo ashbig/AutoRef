@@ -57,8 +57,11 @@ public class PopulateEmptyContainersAction extends ResearcherAction {
     HttpServletResponse response)
     throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
+         System.out.println("l1");
+        
         NorgenRearrayForm curForm = (NorgenRearrayForm)form;
        int sourceLocation = curForm.getSourceLocation(); 
+        System.out.println("l2");
        FormFile logFile = curForm.getLogFile();
        
        //can come as user params
@@ -70,10 +73,14 @@ public class PopulateEmptyContainersAction extends ResearcherAction {
         ArrayList<NorgenDestinationPlate> dest_plates =null;
                 
         int projectid = curForm.getProjectid();
+         System.out.println("l2");
         int workflowid = curForm.getWorkflowid();
+         System.out.println("l");
         int protocolid = curForm.getProtocolid();
+        
         Researcher researcher = null;Connection conn=null;
              // Validate the researcher barcode.
+        System.out.println("l");
         try {
             researcher = new Researcher(curForm.getResearcherBarcode());
         } catch (FlexProcessException ex) {
@@ -87,18 +94,22 @@ public class PopulateEmptyContainersAction extends ResearcherAction {
             request.setAttribute(Action.EXCEPTION_KEY, ex);
             return (mapping.findForward("error"));
         }
+        System.out.println("LLL");
         try
         {
             NorgenLogFile parced_file;String err_message;
              //read file & verify its content
              parced_file = new NorgenLogFile();
+             System.out.println("KKKK");
             parced_file.parseLogFile(  logFile.getInputStream());
             dest_plates = parced_file.getDestinationPlates();
+            System.out.println(dest_plates.size());
             if (dest_plates != null)
             {
                 for (NorgenDestinationPlate plate : dest_plates)
                 {
                       err_message =  plate.verify();
+                       System.out.println(err_message);
                       if (err_message!= null)
                       { errors.add("cultureFile", new ActionError("flex.infoimport.file", "Wells are not in sequence: "+err_message));
                         saveErrors(request,errors); 
@@ -107,6 +118,7 @@ public class PopulateEmptyContainersAction extends ResearcherAction {
                     if ( plate.getRecords().size() != max_number_of_wells_per_plate)
                     {
                         err_message= "Well number over the limit: "+plate.getLabel()+" : "+plate.getRecords().size();
+                        System.out.println(err_message);
                         errors.add("cultureFile", new ActionError("flex.infoimport.file", err_message));
                         saveErrors(request,errors); 
                         return new ActionForward(mapping.getInput()); 
@@ -160,6 +172,7 @@ public class PopulateEmptyContainersAction extends ResearcherAction {
     catch(Exception e)
     {
             DatabaseTransaction.rollback(conn);
+            System.out.println(e.getMessage());
             errors.add("cultureFile", new ActionError("flex.infoimport.file", e.getMessage()));
             saveErrors(request,errors);
                
@@ -208,36 +221,47 @@ public class PopulateEmptyContainersAction extends ResearcherAction {
     public static  void     verifyPlates(Connection conn,ArrayList<NorgenDestinationPlate> dest_plates,
             int projectid, int workflowid, int protocolid)throws Exception
     {
-        String sql_check="select label, c.containerid as containerid, q.containerid as qcontainerid,"
-+" (select count(sampleid) from sample where containerid=c.containerid) as samplenumber "
-+" from queue q, containerheader c ,sample s "
-+" where q.containerid(+)=c.containerid and s.containerid(+)=c.containerid   "
-  +" and workflowid="+workflowid+" and projectid="+projectid
- +"  and protocolid="+protocolid +" and label =?";
+        String sql_check="select  count(sampleid) as samplenumber from sample where containerid=?";
+        
+        
+        String sql_check_plateonqueue="select containerid from queue  where  "
+  +"   workflowid="+workflowid+" and projectid="+projectid +"  and protocolid="+protocolid 
+                +" and containerid =(select containerid from containerheader where label=?)" ;
          PreparedStatement stmt = null;ResultSet rs;
+         PreparedStatement stmt_check_plateonqueue=null;ResultSet rr;
         try {
             stmt = conn.prepareStatement(sql_check);
+            stmt_check_plateonqueue =conn.prepareStatement(sql_check_plateonqueue);
             for( NorgenDestinationPlate dest_plate:   dest_plates)
             {
-                stmt.setString(1, dest_plate.getLabel());
-                
-                rs=DatabaseTransaction.executeQuery(stmt);
-                while (rs.next())
+                stmt_check_plateonqueue.setString(1, dest_plate.getLabel());
+                rs=DatabaseTransaction.executeQuery(stmt_check_plateonqueue);
+                if ( rs.next())
                 {
-                    int samplenumber = rs.getInt("samplenumber");
                     int containerid = rs.getInt("containerid");
-                    int qcontainerid = rs.getInt("qcontainerid");
-                    if ( qcontainerid != containerid )
-                    {
-                        throw new Exception("Plate "+dest_plate.getLabel()+" is not on queue.");
-                    }
-                    if (  samplenumber != 0)
-                    {
-                        throw new Exception("Plate "+dest_plate.getLabel()+" is not empty");
-                    }
                     dest_plate.setId(containerid);
-                    
+                    stmt.setInt(1,containerid);
+                    rs=DatabaseTransaction.executeQuery(stmt);
+                    if (rs.next())
+                    {
+                        int samplenumber = rs.getInt("samplenumber");
+                        if (  samplenumber != 0)
+                        {
+                            System.out.println("Plate "+dest_plate.getLabel()+" is not empty");
+                            throw new Exception("Plate "+dest_plate.getLabel()+" is not empty");
+                        }
+                       
+                    }
                 }
+                else
+                {
+                      System.out.println("Plate "+dest_plate.getLabel()+" is not on queue.");
+                       throw new Exception("Plate "+dest_plate.getLabel()+" is not on queue.");
+                  
+                }
+                
+                
+               
             }
         
         } catch (SQLException sqlE) {
@@ -431,12 +455,13 @@ String sql_sample_lin = "insert into samplelineage (executionid, sampleid_from, 
               conn = t.requestConnection();
             
             {  
+                    PopulateEmptyContainersAction.verifyPlates(conn,dest_plates, projectid, workflowid,protocolid );
+               
                 edu.harvard.med.hip.flex.process.Process process = 
                          new edu.harvard.med.hip.flex.process.Process(new Protocol(protocolid), 
                          edu.harvard.med.hip.flex.process.Process.SUCCESS, 
                          researcher, new Project(projectid), new Workflow(workflowid));
                  process.insert(conn);
-                 PopulateEmptyContainersAction.verifyPlates(conn,dest_plates, projectid, workflowid,protocolid );
                  PopulateEmptyContainersAction.getDataForOrgPlates(conn,dest_plates);
                  PopulateEmptyContainersAction.populatePlatesWithSamples(conn,dest_plates ,"ISOLATE",process.getExecutionid());
                  PopulateEmptyContainersAction.putItemsOnQueue(conn,dest_plates, projectid, workflowid,protocolid, 60);
