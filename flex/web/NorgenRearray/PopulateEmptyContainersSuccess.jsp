@@ -35,7 +35,7 @@
 <p>
 <!-- create main table -->
  <% ArrayList containers = (ArrayList)request.getAttribute("LABELS"); 
- if (containers != null ){ 
+ if (containers != null ){ %>
  
 <table  cellpadding=2 cellspacing=2 border=1>
      
