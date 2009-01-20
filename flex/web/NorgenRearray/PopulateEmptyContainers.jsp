@@ -13,11 +13,11 @@
 
 <body>
     
-<h2><bean:message key="flex.name"/> : Populate empty plates </h2>
+
+<html:form action="PopulateEmptyContainers.do" focus="logFile" enctype="multipart/form-data">
+   <h2><bean:message key="flex.name"/> : Populate empty plates </h2>
     <hr>
     <html:errors/>
-<html:form action="PopulateEmptyContainers.do" focus="logFile" enctype="multipart/form-data">
-   
 <input type="hidden" name="projectid" value="<bean:write name="projectid"/>">
 <input type="hidden" name="workflowid" value="<bean:write name="workflowid"/>">
 <input type="hidden" name="workflowname" value="<%= request.getAttribute("workflowname")%>" >
