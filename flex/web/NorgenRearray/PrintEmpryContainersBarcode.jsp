@@ -14,7 +14,7 @@
 <head>
     <title><bean:message key="flex.name"/> : New Containers</title>
     <LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
-<%System.out.println("JJJJ");%>
+
 <script language="JavaScript">
 <!--
 function SetChecked(e, val) {
