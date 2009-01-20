@@ -129,7 +129,7 @@ public class GenerateEmptyContainersAction extends ResearcherAction {
             containerQueue.addQueueItems(queueItems, conn);
             process.insert(conn); 
             request.setAttribute("LABELS", labels);
-        
+            conn.commit();
         }
            
             
