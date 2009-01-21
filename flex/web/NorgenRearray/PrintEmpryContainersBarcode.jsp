@@ -1,7 +1,7 @@
 
 <%@ page language="java" %>
 <%@ page errorPage="../ProcessError.do"%>
-
+<%@ page import="edu.harvard.med.hip.flex.core.*"%>
 <%@ page import="edu.harvard.med.hip.flex.Constants"%>
 <%@ page import="java.util.*"%>
 <%@ page import="edu.harvard.med.hip.flex.util.*"%>

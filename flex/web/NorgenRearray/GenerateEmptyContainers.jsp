@@ -6,7 +6,7 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 
 <html>
-<head><%System.out.println("LLL");%>
+<head>
 <title><bean:message key="flex.name"/> : Create Empty Plates </title>
 <LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
 </head>
@@ -16,7 +16,7 @@
 <hr>
 <html:errors/>
 
-<html:form action="/norgenrearray/GenerateEmptyContainers.do" focus="numberOfPlates">
+<html:form action="GenerateEmptyContainers.do" focus="numberOfPlates">
 <input type="hidden" name="projectid" value="<bean:write name="projectid"/>">
 <input type="hidden" name="workflowid" value="<bean:write name="workflowid"/>">
 <input type="hidden" name="workflowname" value="<%= request.getAttribute("workflowname")%>" >
@@ -63,7 +63,7 @@
     </tr>
 </table>
 </html:form>
-<%System.out.println("LLL1");%>
+
 <jsp:include page="../QueueItemsDisplay.jsp" flush="true" />
 
 </body>

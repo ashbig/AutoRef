@@ -1570,7 +1570,7 @@
     
     
      <!-- Process the create empty containers -->
-    <action    path="/norgenrearray/GenerateEmptyContainers"
+    <action    path="/GenerateEmptyContainers"
                type="edu.harvard.med.hip.flex.action.norgenrearray.GenerateEmptyContainersAction"
                name="norgenRearrayForm"
                scope="request"
@@ -1584,6 +1584,7 @@
             type="edu.harvard.med.hip.flex.action.norgenrearray.PopulateEmptyContainersAction"
             name="norgenRearrayForm"
             scope="request"
+            validate="true"
             input="/NorgenRearray/PopulateEmptyContainers.jsp">
       <forward name="success" path="/NorgenRearray/PopulateEmptyContainersSuccess.jsp"/>
     </action>

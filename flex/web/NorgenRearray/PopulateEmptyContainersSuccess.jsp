@@ -3,6 +3,7 @@
 <%@ page errorPage="../ProcessError.do"%>
 
 <%@ page import="edu.harvard.med.hip.flex.Constants"%>
+<%@ page import="edu.harvard.med.hip.flex.core.*"%>
 <%@ page import="java.util.*"%>
 <%@ page import="edu.harvard.med.hip.flex.util.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
@@ -14,9 +15,6 @@
 <head>
     <title><bean:message key="flex.name"/> : New Containers</title>
     <LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
-
- 
-
  </head>
 <body>
     
@@ -35,15 +33,13 @@
 <p>
 <!-- create main table -->
  <% ArrayList containers = (ArrayList)request.getAttribute("LABELS"); 
+ System.out.println(containers.size());
  if (containers != null ){ %>
  
 <table  cellpadding=2 cellspacing=2 border=1>
      
-     <tr class="headerRow">
-        
-        <TH ALIGN="center">Container ID</TH>
-        <TH ALIGN="center">Container Label</TH>
-       </TR>
+     <tr class="headerRow"> <TH ALIGN="center">Container ID</TH>
+        <TH ALIGN="center">Container Label</TH>      </TR>
       
  <logic:iterate  id="curPlate" name="LABELS"> 
         <flex:row oddStyleClass="oddRow" evenStyleClass="evenRow">
@@ -52,7 +48,7 @@
                   <bean:write name="curPlate" property="id"/> </a>
             </TD>
  <TD><bean:write name="curPlate" property="label"/>   </TD>
- </flex:row>
+  </flex:row>
 </logic:iterate> 
 
 </TABLE>

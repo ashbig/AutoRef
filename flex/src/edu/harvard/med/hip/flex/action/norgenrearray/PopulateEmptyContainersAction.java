@@ -148,7 +148,7 @@ public class PopulateEmptyContainersAction extends ResearcherAction {
                      container = new Container(dest_plate.getId(), null, null, dest_plate.getLabel());
                       
                      FileReference fileRef =   handleFileReference(conn, logFile, container, FileReference.NORGREN_LOG_FILE);
-                     labels.add(container.getLabel())    ;
+                     labels.add(container)    ;
                  }
                  conn.commit();
                   request.setAttribute("LABELS", labels);
@@ -329,7 +329,7 @@ String sql_sample_lin = "insert into samplelineage (executionid, sampleid_from, 
               int executionid)throws Exception
      {
            String sql = "insert into processobject (executionid, inputoutputflag, containerid)"
-                   +" values ("+executionid+"?,?)" ;
+                   +" values ("+executionid+",?,?)" ;
  
            PreparedStatement stmt = null;
            ArrayList<String> orglabels=new ArrayList<String>();
