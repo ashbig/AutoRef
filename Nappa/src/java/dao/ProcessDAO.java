@@ -15,7 +15,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Date;
 import java.util.List;
-import transfer.ConfigTO;
 import transfer.ProcessexecutionTO;
 import transfer.ProcessobjectTO;
 import transfer.ProcessprotocolTO;
@@ -23,6 +22,7 @@ import transfer.ResearcherTO;
 import transfer.ResultTO;
 import transfer.SampleTO;
 import transfer.SamplelineageTO;
+import transfer.VariableTO;
 
 /**
  *
@@ -43,8 +43,8 @@ public class ProcessDAO {
         int id = SequenceDAO.getNextid("processexecution", "executionid");
         p.setExecutionid(id);
       
-        String sql = "insert into processexecution (executionid,protocol,when,who,outcome,config)"+
-                " values(?,?,sysdate,?,?,?)";
+        String sql = "insert into processexecution (executionid,protocol,when,who,outcome)"+
+                " values(?,?,sysdate,?,?)";
         String sql2 = "insert into processobject(executionid,objectid,objecttype,ioflag, objectorder, objectlevel,objectname)"+
                 " values(?,?,?,?,?,?,?)";
         String sql3 = "insert into samplelineage(executionid, sampleid_from, sampleid_to)"+
@@ -52,11 +52,12 @@ public class ProcessDAO {
         String sql4 = "insert into result(resultid,resulttype,resultvalue,executionid,sampleid)  values(?,?,?,?,?)";
         //String sql4 = "insert into containerheaderlineage(executionid, containerid_from, containerid_to, lineageorder)"+
         //        " values(?,?,?,?)";
-        
+        String sql5 = "insert into variables(executionid,vartype,varvalue,extra) values(?,?,?,?)";
         PreparedStatement stmt = null;
         PreparedStatement stmt2 = null;
         PreparedStatement stmt3 = null;
         PreparedStatement stmt4 = null;
+        PreparedStatement stmt5 = null;
         
         try {
             stmt = conn.prepareStatement(sql);
@@ -64,11 +65,6 @@ public class ProcessDAO {
             stmt.setString(2, p.getProtocol().getName());
             stmt.setString(3, p.getWho().getName());
             stmt.setString(4, p.getOutcome());
-            ConfigTO config = p.getConfig();
-            if(config != null)
-                stmt.setString(5, p.getConfig().getName());
-            else 
-                stmt.setString(5, null);
             DatabaseTransaction.executeUpdate(stmt);
             
             List<ProcessobjectTO> objects = p.getObjects();
@@ -118,6 +114,16 @@ public class ProcessDAO {
                     resultid++;
                 }
             }
+            
+            List<VariableTO> variables = p.getVariables();
+            stmt5 = conn.prepareStatement(sql5);
+            for(VariableTO v:variables) {
+                stmt5.setInt(1, p.getExecutionid());
+                stmt5.setString(2, v.getType());
+                stmt5.setString(3, v.getValue());
+                stmt5.setString(4, v.getExtra());
+                DatabaseTransaction.executeUpdate(stmt5);
+            }
         } catch (Exception ex) {
             throw new DaoException("Error occured while inserting into database."+ex.getMessage());
         } finally {
@@ -130,7 +136,7 @@ public class ProcessDAO {
     }
     
     public static ProcessexecutionTO getProcess(int executionid, boolean isObject, boolean isLineage) throws DaoException {
-        String sql = "select protocol,when,who,outcome,config from processexecution where executionid="+executionid;
+        String sql = "select protocol,when,who,outcome from processexecution where executionid="+executionid;
         String sql2 = "select objectid,objecttype,ioflag, objectorder, objectlevel, objectname from processobject where executionid="+executionid+
                 " order by objectlevel, ioflag, objectorder";
         String sql3 = "select sampleid_from, sampleid_to from samplelineage where executionid="+executionid;  
@@ -151,7 +157,6 @@ public class ProcessDAO {
                 Date when = rs.getDate(2);
                 String who = rs.getString(3);
                 String outcome = rs.getString(4);
-                String config = rs.getString(5);
                 p = new ProcessexecutionTO(new ProcessprotocolTO(protocol, null, null), when, new ResearcherTO(who, null, null, null, null), outcome);
                 
                 if(isObject) {

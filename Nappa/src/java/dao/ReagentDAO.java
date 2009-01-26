@@ -97,7 +97,10 @@ public class ReagentDAO {
             c = t.requestConnection();
             stmt = c.prepareStatement(sql);
             for (String n : names) {
-                stmt.setString(1, n);
+                if(n==null || n.trim().length()==0)
+                    continue;
+                
+                stmt.setString(1, n.trim());
                 rs = DatabaseTransaction.executeQuery(stmt);
                 if (rs.next()) {
                     int id = rs.getInt(1);

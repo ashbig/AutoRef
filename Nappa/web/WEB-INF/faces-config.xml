@@ -49,6 +49,12 @@
     </managed-bean>
     
     <managed-bean>
+        <managed-bean-name>experimentBean</managed-bean-name>
+        <managed-bean-class>bean.ExperimentBean</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    
+    <managed-bean>
         <managed-bean-name>exportBean</managed-bean-name>
         <managed-bean-class>bean.ExportBean</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
@@ -102,6 +108,12 @@
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
     
+    <managed-bean>
+        <managed-bean-name>uploadMicrovigeneBean</managed-bean-name>
+        <managed-bean-class>bean.UploadMicrovigeneBean</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    
     <navigation-rule>
         <from-view-id>/AddControls.jsp</from-view-id>
         <navigation-case>
@@ -139,6 +151,14 @@
         <navigation-case>
             <from-outcome>successful</from-outcome>
             <to-view-id>/EnterResults.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <from-view-id>/ExperimentInput.jsp</from-view-id>
+        <navigation-case>
+            <from-outcome>successful</from-outcome>
+            <to-view-id>/ExperimentOutput.jsp</to-view-id>
         </navigation-case>
     </navigation-rule>
     

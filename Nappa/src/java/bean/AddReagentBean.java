@@ -36,6 +36,10 @@ public class AddReagentBean {
     }
 
     public void addReagent() {
+        if(getName()==null || getName().trim().length()==0)
+            return;
+        
+        getName().trim();
         AddReagentsController controller = new AddReagentsController();
 
         try {

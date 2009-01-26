@@ -60,6 +60,9 @@
                     <h:outputLabel rendered="#{directContainerMapBean.shownumofslide}" styleClass="prompt" value="#{msgs.numofslidePrompt}:" for="numofslideid"/>
                     <h:inputText rendered="#{directContainerMapBean.shownumofslide}" id="numofslideid" value="#{directContainerMapBean.numofslide}" required="true"/>
                     
+                    <h:outputLabel rendered="#{directContainerMapBean.shownumofslide}" styleClass="prompt" value="#{msgs.slideStartingNumber}:" for="startnumid"/>
+                    <h:inputText rendered="#{directContainerMapBean.shownumofslide}" id="startnumid" value="#{directContainerMapBean.startnum}" required="true"/>
+                    
                 </h:panelGrid>
                 
                 <h:commandButton value="#{msgs.submitButton}" action="#{directContainerMapBean.doMapping}"/>    

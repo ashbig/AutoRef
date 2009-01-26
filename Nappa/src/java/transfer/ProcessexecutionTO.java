@@ -27,12 +27,13 @@ public class ProcessexecutionTO implements Serializable {
     private Date when;
     private ResearcherTO who;
     private String outcome;
-    private ConfigTO config;
-    private List<ParamTO> params;
+    //private ConfigTO config;
+    //private List<ParamTO> params;
     private List<ProcessobjectTO> objects;
     private List<SamplelineageTO> slineages;
     private List<ResultTO> results;
     //private List<ContainerlineageTO> clineages;
+    private List<VariableTO> variables;
     
     /**
      * Creates a new instance of ProcessexecutionTO
@@ -41,6 +42,7 @@ public class ProcessexecutionTO implements Serializable {
         this.setObjects(new ArrayList<ProcessobjectTO>());
         this.setSlineages(new ArrayList<SamplelineageTO>());
         this.setResults(new ArrayList<ResultTO>());
+        this.setVariables(new ArrayList<VariableTO>());
         //this.setClineages(new ArrayList<ContainerlineageTO>());
     }
     
@@ -52,6 +54,7 @@ public class ProcessexecutionTO implements Serializable {
         this.setObjects(new ArrayList<ProcessobjectTO>());
         this.setSlineages(new ArrayList<SamplelineageTO>());
         this.setResults(new ArrayList<ResultTO>());
+        this.setVariables(new ArrayList<VariableTO>());
         //this.setClineages(new ArrayList<ContainerlineageTO>());
     }
     
@@ -93,22 +96,6 @@ public class ProcessexecutionTO implements Serializable {
     
     public void setOutcome(String outcome) {
         this.outcome = outcome;
-    }
-    
-    public ConfigTO getConfig() {
-        return config;
-    }
-    
-    public void setConfig(ConfigTO config) {
-        this.config = config;
-    }
-    
-    public List<ParamTO> getParams() {
-        return params;
-    }
-    
-    public void setParams(List<ParamTO> params) {
-        this.params = params;
     }
     
     public void addProcessobject(ProcessobjectTO p) {
@@ -178,5 +165,13 @@ public class ProcessexecutionTO implements Serializable {
     
     public void addResult(ResultTO r) {
         getResults().add(r);
+    }
+
+    public List<VariableTO> getVariables() {
+        return variables;
+    }
+
+    public void setVariables(List<VariableTO> variables) {
+        this.variables = variables;
     }
 }

@@ -4,7 +4,7 @@
  */
 package io;
 
-import core.Spotinfo;
+import transfer.MicrovigeneresultTO;
 import core.Vigeneslide;
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -53,21 +53,39 @@ public class MicrovigeneFileParser {
     public static final String ROUNDNESS = "roundness";
     public static final String ASPECT = "aspect";	 
 
+    protected InputStream input;
+    
+    public MicrovigeneFileParser() {}
+    
+    public MicrovigeneFileParser(InputStream input) {
+        setInput(input);
+    }
+    
     public Vigeneslide parseFile(InputStream input) throws NappaIOException {
+        setInput(input);
+        return parseFile();
+    }
+    
+    public Vigeneslide parseFile() throws NappaIOException {
         BufferedReader in = new BufferedReader(new InputStreamReader(input));
         String line = null;
 
         try {
-            for (int i = 0; i < 2; i++) {
-                in.readLine();
+            line = in.readLine();
+            StringTokenizer tokenizer = new StringTokenizer(line, "\t");
+            String version = null;
+            while(tokenizer.hasMoreTokens()) {
+                version = tokenizer.nextToken();
             }
+                
+            in.readLine();
 
             String date = in.readLine().trim();
 
             in.readLine();
 
             line = in.readLine().trim();
-            StringTokenizer tokenizer = new StringTokenizer(line, "\t");
+            tokenizer = new StringTokenizer(line, "\t");
             tokenizer.nextToken();
             int roirow = Integer.parseInt(tokenizer.nextToken());
             tokenizer.nextToken();
@@ -81,14 +99,7 @@ public class MicrovigeneFileParser {
             tokenizer.nextToken();
             int subcol = Integer.parseInt(tokenizer.nextToken());
             
-            if(roirow != 1 || roicol != 1) {
-                subrow = mainrow;
-                subcol = maincol;
-                mainrow = roirow;
-                maincol = roicol;
-            }
-
-            Vigeneslide slide = new Vigeneslide(date,mainrow,maincol,subrow,subcol);
+            Vigeneslide slide = new Vigeneslide(version,date,roirow,roicol,mainrow,maincol,subrow,subcol);
             
             List<String> titles = new ArrayList<String>();
             line = in.readLine().trim();
@@ -101,7 +112,7 @@ public class MicrovigeneFileParser {
             while ((line = in.readLine()) != null) {
                 tokenizer = new StringTokenizer(line.trim(), "\t");
                 int index = 0;
-                Spotinfo spot = new Spotinfo();
+                MicrovigeneresultTO spot = new MicrovigeneresultTO();
                 while(tokenizer.hasMoreTokens()) {
                     String s = tokenizer.nextToken();
                     String title = titles.get(index);
@@ -176,6 +187,7 @@ public class MicrovigeneFileParser {
                     
                     index++;
                 }
+                int pos = slide.calculatePosition(mainrow,maincol,subrow,subcol);
                 slide.addSpotinfo(spot);
             }
             return slide;
@@ -183,5 +195,13 @@ public class MicrovigeneFileParser {
             ex.printStackTrace();
             throw new NappaIOException("Error parsing file.\n"+ex.getMessage());
         }
+    }
+
+    public InputStream getInput() {
+        return input;
+    }
+
+    public void setInput(InputStream input) {
+        this.input = input;
     }
 }

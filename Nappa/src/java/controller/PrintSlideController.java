@@ -40,6 +40,7 @@ public class PrintSlideController extends FileMapContainerController {
     private String programname;
     private String startdate;
     private int numofslides;
+    private int startnum;
     
     /** Creates a new instance of PrintSlideController */
     public PrintSlideController() {
@@ -126,7 +127,7 @@ public class PrintSlideController extends FileMapContainerController {
         List removeObjects = new ArrayList();
         for(ContainerheaderTO c:getMapper().getDestContainers()) {
             for(int i=0; i<getNumofslides(); i++) {
-                int num = i+1;
+                int num = getStartnum()+i;
                 SlideTO s = new SlideTO(num, c.getBarcode()+"-"+num, null, getProgramname(), getStartdate(), c);
                 c.addSlide(s);
             }
@@ -250,5 +251,13 @@ public class PrintSlideController extends FileMapContainerController {
 
     public void setLogfileInputCopy(InputStream logfileInputCopy) {
         this.logfileInputCopy = logfileInputCopy;
+    }
+
+    public int getStartnum() {
+        return startnum;
+    }
+
+    public void setStartnum(int startnum) {
+        this.startnum = startnum;
     }
 }

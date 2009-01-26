@@ -52,6 +52,7 @@ public class DirectContainerMapBean implements Serializable {
     private String format;
     private int numofslide;
     private int executionid;
+    private int startnum;
     
     /** Creates a new instance of DirectContainerMapBean */
     public DirectContainerMapBean() {
@@ -72,6 +73,7 @@ public class DirectContainerMapBean implements Serializable {
         setShowsrc(true);
         setNumofslide(90);
         setFormat(Constants.MAPFILE_NUMBER);
+        setStartnum(1);
     }
 
     public String getProtocol() {
@@ -325,6 +327,7 @@ public class DirectContainerMapBean implements Serializable {
                 ((PrintSlideController) controller).setLogfileInputCopy(logfileinputcopy);
                 ((PrintSlideController) controller).setIsNumber(true);
                 ((PrintSlideController) controller).setNumofslides(getNumofslide());
+                ((PrintSlideController) controller).setStartnum(getStartnum());
                 ((PrintSlideController) controller).parseLogfile();
             }
 
@@ -349,5 +352,13 @@ public class DirectContainerMapBean implements Serializable {
             ex.printStackTrace();
             setMessage(ex.getMessage());
         }
+    }
+
+    public int getStartnum() {
+        return startnum;
+    }
+
+    public void setStartnum(int startnum) {
+        this.startnum = startnum;
     }
 }
