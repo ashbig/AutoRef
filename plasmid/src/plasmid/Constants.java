@@ -79,6 +79,7 @@ public class Constants {
     
     public static final String MEMBER = "Member";
     public static final String NONMEMBER = "Non member";
+    public static final String MTAMEMBER = "EP-MTA in Network";
     
     public static final String SORTBY_ORDERID = "Order ID";
     public static final String SORTBY_USERNAME = "User Last Name";

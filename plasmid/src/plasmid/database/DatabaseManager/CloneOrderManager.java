@@ -474,21 +474,21 @@ public class CloneOrderManager extends TableManager {
 
     public List queryCloneOrders(List orderids, String orderDateFrom, String orderDateTo,
             String shippingDateFrom, String shippingDateTo, String status, List lastnames,
-            List groups, boolean isMember, String sort, String provider) {
-        return queryCloneOrders(orderids, orderDateFrom, orderDateTo, shippingDateFrom, shippingDateTo, status, lastnames, groups, isMember, sort, provider, false);
+            List groups, boolean isMember, String sort, String provider, boolean isMtamember) {
+        return queryCloneOrders(orderids, orderDateFrom, orderDateTo, shippingDateFrom, shippingDateTo, status, lastnames, groups, isMember, sort, provider, false, isMtamember);
     }
 
     public List queryCloneOrders(List orderids, String orderDateFrom, String orderDateTo,
             String shippingDateFrom, String shippingDateTo, String status, List lastnames,
-            List groups, boolean isMember, String sort, String provider, boolean isPI) {
+            List groups, boolean isMember, String sort, String provider, boolean isPI, boolean isMtamember) {
         String sql = "select c.orderid,to_char(c.orderdate, 'MON-DD-YYYY HH24:MI:SS'),c.orderstatus,c.ponumber,c.shippingto,c.billingto," +
                 " c.shippingaddress,c.billingaddress,c.numofclones,c.numofcollection,c.costforclones," +
                 " c.costforcollection,c.costforshipping,c.totalprice,c.userid,u.firstname,u.lastname," +
                 " c.shippingdate, c.whoshipped, c.shippingmethod,c.shippingaccount,c.trackingnumber," +
                 " c.receiveconfirmationdate, c.whoconfirmed,c.whoreceivedconfirmation,u.email," +
-                " c.shippedcontainers, u.piname, u.piemail, u.phone, c.isbatch, c.comments, c.isaustralia, c.ismta" +
+                " c.shippedcontainers, u.piname, u.piemail, u.phone, c.isbatch, c.comments, c.isaustralia, c.ismta, u.institution" +
                 " from cloneorder c, userprofile u where c.userid=u.userid";
-        String sql2 = "select institution, department from pi where name=?";
+        String sql2 = "select department from pi where name=?";
 
         if (orderids != null) {
             sql += " and c.orderid in (" + StringConvertor.convertFromListToSqlList(orderids) + ")";
@@ -517,6 +517,9 @@ public class CloneOrderManager extends TableManager {
             } else {
                 sql += " and u.usergroup not in (" + StringConvertor.convertFromListToSqlString(groups) + ")";
             }
+        }
+        if(isMtamember) {
+            sql += " and u.institution in (select name from institution where ismember='Y')";
         }
         if(!Constants.ALL.equals(provider)) {
             sql += " and c.orderid in (select orderid from orderclones where cloneid in (select cloneid from cloneauthor where authorid in (select authorid from authorinfo where authorname='"+provider+"')))";
@@ -582,6 +585,7 @@ public class CloneOrderManager extends TableManager {
                 String comments = rs.getString(32);
                 String isaustralia = rs.getString(33);
                 String ismta = rs.getString(34);
+                String institution = rs.getString(35);
                 CloneOrder order = new CloneOrder(orderid, date, st, ponumber, shippingto, billingto, shippingaddress, billingaddress, numofclones, numofcollection, costforclones, costforcollection, costforshipping, total, userid);
 
                 order.setFirstname(firstname);
@@ -600,6 +604,7 @@ public class CloneOrderManager extends TableManager {
                 order.setPiemail(piemail);
                 order.setPhone(phone);
                 order.setComments(comments);
+                order.setPiinstitution(institution);
                 if (isbatch != null) {
                     order.setIsBatch(isbatch);
                 }
@@ -609,9 +614,7 @@ public class CloneOrderManager extends TableManager {
                     stmt.setString(1, piname);
                     rs2 = DatabaseTransaction.executeQuery(stmt);
                     if (rs2.next()) {
-                        String institution = rs2.getString(1);
-                        String department = rs2.getString(2);
-                        order.setPiinstitution(institution);
+                        String department = rs2.getString(1);
                         order.setPidepartment(department);
                     }
                 }

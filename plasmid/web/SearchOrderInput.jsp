@@ -77,6 +77,7 @@
             <html:option value="<%=Constants.ALL%>"/>
             <html:option value="<%=Constants.MEMBER%>"/>
             <html:option value="<%=Constants.NONMEMBER%>"/>
+            <html:option value="<%=Constants.MTAMEMBER%>"/>
         </html:select>
     </td>
   </tr>
