@@ -17,6 +17,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import plasmid.Constants;
+import plasmid.blast.BlastWrapper;
 import plasmid.coreobject.Clone;
 import plasmid.coreobject.User;
 import plasmid.database.DatabaseManager.UserManager;
@@ -87,12 +88,51 @@ public class BlastSearchAction extends Action {
                 ((BlastForm)form).setSequence(sequence);
             }
             
-            List l = manager.runBlast(program, database, sequence, expect, pid, alength, isLowcomp, isMaskLowercase, isMegablast);
-            List infos = manager.getFoundClones(l, restrictions, null, null);
-
-            if (infos == null || infos.size() == 0) {
-                return (mapping.findForward("empty"));
+            /**
+            boolean isCorrectSeqForm = true;
+            if(BlastWrapper.PROGRAM_TBLASTN.equals(program)) {
+                isCorrectSeqForm = BlastManager.isAminoAcidSeq(sequence);
+            } else {
+                isCorrectSeqForm = BlastManager.isNucleotideSeq(sequence);
             }
+            
+            if(!isCorrectSeqForm) {
+                errors.add("sequence", new ActionError("error.blast.wrongseqformat"));
+                saveErrors(request, errors);
+                return (new ActionForward(mapping.getInput()));
+            }
+            */
+            List l = null;
+            try {
+                l = manager.runBlast(program, database, sequence, expect, pid, alength, isLowcomp, isMaskLowercase, isMegablast);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+
+            if (l == null || l.size() == 0) {
+                if(program.equals(BlastWrapper.PROGRAM_BLASTN)||program.equals(BlastWrapper.PROGRAM_TBLASTX))
+                    program = BlastWrapper.PROGRAM_TBLASTN;
+                else
+                    program = BlastWrapper.PROGRAM_BLASTN;
+                
+                try {
+                    l = manager.runBlast(program, database, sequence, expect, pid, alength, isLowcomp, isMaskLowercase, isMegablast);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                
+                if(l == null || l.size() == 0)
+                    return (mapping.findForward("empty"));
+                else {
+                    ((BlastForm) form).setProgram(program);
+                }
+            }
+            
+            List infos = manager.getFoundClones(l, restrictions, null, null);
+            if(infos == null || infos.size() == 0) {
+                    return (mapping.findForward("empty"));
+            }
+                
             ((BlastForm) form).setInfos(infos);
 
             RefseqSearchForm f = (RefseqSearchForm) request.getSession().getAttribute("refseqSearchForm");

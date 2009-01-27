@@ -22,9 +22,9 @@ public class BlastWrapper {
     public static final String PROGRAM_BLASTN = "blastn";
     public static final String PROGRAM_TBLASTN = "tblastn";
     public static final String PROGRAM_TBLASTX = "tblastx";
-    public static final String PROGRAM_DISPLAY_BLASTN = "BLASTN - nucleotide query to nucleotide db";
-    public static final String PROGRAM_DISPLAY_TBLASTX = "TBLASTX - transl. (6 frames) nucl. query to transl (6) nt db";
-    public static final String PROGRAM_DISPLAY_TBLASTN = "TBLASTN - protein query to translated (6 frames) nt db</option>";
+    public static final String PROGRAM_DISPLAY_BLASTN = "BLASTN - nt query to nt db";
+    public static final String PROGRAM_DISPLAY_TBLASTX = "TBLASTX - transl. (6 frames) nt query to transl (6) nt db";
+    public static final String PROGRAM_DISPLAY_TBLASTN = "TBLASTN - protein query to translated (6 frames) nt db";
  
     public static final String DATABASE_ALL = "plasmid_all";
     

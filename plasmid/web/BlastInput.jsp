@@ -68,7 +68,7 @@
                 <td width="83%" align="left" valign="top">
                     <jsp:include page="blastSearchTitle.jsp" />
                     <html:form action="BlastSearch.do">
-                    
+                    <html:errors/>
                         <table width="100%" border="0">
                             <tr> 
                                 <td width="20%" class="formlabel">Choose program: <a href="blasthelp.html#program" target="blasthelp">[i]</a></td>
