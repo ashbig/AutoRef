@@ -33,10 +33,20 @@ public class ExperimentBean implements Serializable {
     private List<VariableTO> variables;
     private boolean showVariables;
     private String message;
+    private List<String> barcodes;
 
     public ExperimentBean() {
+        reset();
+    }
+    
+    public void reset() {
         variables = new ArrayList<VariableTO>();
         message = null;
+        labels = null;
+        date = null;
+        value = null;
+        extra = null;
+        showVariables = false;
     }
     
     public List<SelectItem> getVariableTypes() {
@@ -57,6 +67,7 @@ public class ExperimentBean implements Serializable {
         VariableTO v = new VariableTO(type,value,extra);
         this.variables.add(v);
         setValue(null);
+        setExtra(null);
         return null;
     }
     
@@ -71,18 +82,21 @@ public class ExperimentBean implements Serializable {
         }
         
         try {
-            List barcodes = StringConvertor.convertFromStringToList(labels, null);
+            setBarcodes((List<String>) StringConvertor.convertFromStringToList(labels, null));
             String username = ((HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest()).getUserPrincipal().getName();
             ResearcherTO researcher = ResearcherDAO.getResearcher(username);
             ProcessprotocolTO protocol = new ProcessprotocolTO(ProcessprotocolTO.SET_EXP, null, null);
             ExperimentController controller = new ExperimentController(protocol, researcher, date, ProcessexecutionTO.getOUTCOME_SUCCESS());
             controller.setVariables(variables);
-            controller.setLabels(barcodes);
+            controller.setLabels(getBarcodes());
             List<String> invalidLabels = controller.getSlideinfo();
             if(invalidLabels.size()>0) {
-                setMessage("The following barcodes are invalid: "+StringConvertor.convertFromListToString(invalidLabels));
+                setMessage("The following slides are not printed: "+StringConvertor.convertFromListToString(invalidLabels));
                 return null;
             }
+            controller.doProcess();
+            controller.persistProcess();
+            setMessage("The following experiement is successfully stored.");
         } catch (Exception ex) {
             setMessage(ex.getMessage());
             return null;
@@ -156,6 +170,14 @@ public class ExperimentBean implements Serializable {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public List<String> getBarcodes() {
+        return barcodes;
+    }
+
+    public void setBarcodes(List<String> barcodes) {
+        this.barcodes = barcodes;
     }
 
 }

@@ -30,6 +30,9 @@ public class StringConvertor {
             return null;
         
         StringTokenizer tok = new StringTokenizer(s.trim(), dilim);
+        if(dilim==null)
+            tok = new StringTokenizer(s.trim());
+        
         List l = new ArrayList();
         
         try {

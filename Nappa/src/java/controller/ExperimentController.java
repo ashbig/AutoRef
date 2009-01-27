@@ -5,14 +5,17 @@
 
 package controller;
 
+import dao.ContainerDAO;
 import dao.VariableDAO;
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import transfer.ContainerheaderTO;
+import transfer.ProcessobjectTO;
 import transfer.ProcessprotocolTO;
 import transfer.ResearcherTO;
-import transfer.SlideTO;
 import transfer.VariableTO;
 
 /**
@@ -22,7 +25,7 @@ import transfer.VariableTO;
 public class ExperimentController extends ProcessController {
     private List<String> labels;
     private List<VariableTO> variables;
-    private List<SlideTO> slides;
+    private Collection<ContainerheaderTO> slides;
     
     public ExperimentController() {
         super();
@@ -36,18 +39,38 @@ public class ExperimentController extends ProcessController {
         return VariableDAO.getVariableTypes();
     }
     
-    public List<String> getSlideinfo() {
+    public List<String> getSlideinfo() throws ControllerException {
         List<String> invalidLabels = new ArrayList<String>();
-        //get slide with sample from db
-        //return list of invalid labels
+        invalidLabels.addAll(labels);
+        
+        try {
+            slides = ContainerDAO.getSlides(labels, false, false, false, false);
+            List<String> validLabels = new ArrayList<String>();
+          
+            for(ContainerheaderTO c:slides) {
+                if(ContainerheaderTO.getSTATUS_GOOD().equals(c.getStatus()))
+                    validLabels.add(c.getBarcode());
+            }
+            invalidLabels.removeAll(validLabels);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new ControllerException("Error getting slide information.\n"+ex.getMessage());
+        }
         return invalidLabels;
     }
     
     public void doSpecificProcess() throws ControllerException {
+        for(ContainerheaderTO c:slides) {
+            c.setObjecttype(ProcessobjectTO.getTYPE_SLIDE());
+            c.setIoflag(ProcessobjectTO.getIO_BOTH());
+            getPe().addProcessobject(c);
+        }
+        
         getPe().setVariables(getVariables());
     }
     
     public void persistSpecificProcess(Connection conn) throws ControllerException {
+        return;
     }
 
     public List<VariableTO> getVariables() {
@@ -66,11 +89,11 @@ public class ExperimentController extends ProcessController {
         this.labels = labels;
     }
 
-    public List<SlideTO> getSlides() {
+    public Collection<ContainerheaderTO> getSlides() {
         return slides;
     }
 
-    public void setSlides(List<SlideTO> slides) {
+    public void setSlides(Collection<ContainerheaderTO> slides) {
         this.slides = slides;
     }
 }

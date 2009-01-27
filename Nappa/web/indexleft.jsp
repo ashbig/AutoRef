@@ -31,6 +31,11 @@ on Libraries node in Projects view can be used to add the JSTL 1.1 library.
                 <li><a href="./faces/RegisterLabels.jsp" target="rightFrame">Register Container Labels</a></li>
                 <li><a href="./faces/DirectContainerMapping.jsp" target="rightFrame">Generate New Containers</a></li>
                 <li><a href="./faces/EnterResults.jsp" target="rightFrame">Enter Results</a></li>
+            </ul>
+            <ul>Experiment
+                <li><a href="./faces/ExperimentInput.jsp" target="rightFrame">Perform Experiment</a></li>
+            </ul>
+            <ul>Add
                 <li><a href="./faces/SearchContainer.jsp" target="rightFrame">Add Controls</a></li>
                 <li><a href="./faces/AddReagent.jsp" target="rightFrame">Add New Reagent</a></li>
             </ul>

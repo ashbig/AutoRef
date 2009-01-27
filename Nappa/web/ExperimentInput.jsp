@@ -25,7 +25,7 @@
             <t:saveState id="experimentBeanID" value="#{experimentBean}"/>
             
             <h:outputText styleClass="errors" value="#{experimentBean.message}" />
-            <h:form id="experimentForm" enctype="multipart/form-data">
+            <h:form id="experimentForm">
                 <h:panelGrid columns="2" columnClasses="top, top"> 
                     
                     <h:outputLabel styleClass="prompt" value="#{msgs.experimentDatePrompt}:" for="dateid"/>

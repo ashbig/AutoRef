@@ -263,12 +263,13 @@ public class ContainerDAO {
                 DatabaseTransaction.executeUpdate(stmt);
             }
         } catch (Exception ex) {
+            ex.printStackTrace();
             throw new DaoException("Error occured while inserting into sampleproperty table." + ex.getMessage());
         } finally {
             DatabaseTransaction.closeStatement(stmt);
         }
     }
-
+    
     public static SlideTO getSlideWithBlocks(int slideid) throws DaoException {
         String sql = "select barcode, printorder, surfacechem, program, startdate, containerid from slide where slideid=" + slideid;
 
@@ -1161,7 +1162,7 @@ public class ContainerDAO {
         return containers;
     }
 
-    public static Collection<ContainerheaderTO> getSlides(Collection labels, boolean isSample, boolean isReagent) throws DaoException {
+    public static Collection<ContainerheaderTO> getSlides(Collection labels, boolean isSample, boolean isReagent, boolean isCell, boolean isProperty) throws DaoException {
         String sql2 = "select pos,posx,posy,type from containercell where containerid=? and sampleid=?";
         String sql3 = "select sampleid,name,description,volume,quantity,unit,type,form,status,pos from sample where containerid=?";
         String sql5 = "select reagentid from samplereagent where sampleid=?";
@@ -1187,9 +1188,11 @@ public class ContainerDAO {
             conn = t.requestConnection();
             stmt6 = conn.prepareStatement(sql6);
             if (isSample) {
-                stmt2 = conn.prepareStatement(sql2);
                 stmt3 = conn.prepareStatement(sql3);
-                stmt7 = conn.prepareStatement(sql7);
+                if(isCell)
+                    stmt2 = conn.prepareStatement(sql2);
+                if(isProperty)
+                    stmt7 = conn.prepareStatement(sql7);
             }
             if (isReagent) {
                 stmt5 = conn.prepareStatement(sql5);
@@ -1237,25 +1240,29 @@ public class ContainerDAO {
                         int pos = rs3.getInt(10);
                         SampleTO sample = new SampleTO(sampleid, name, description, volume, quantity, unit, stype, form, sstatus, containerid, pos);
 
-                        stmt2.setInt(1, containerid);
-                        stmt2.setInt(2, sampleid);
-                        rs2 = t.executeQuery(stmt2);
-                        if (rs2.next()) {
-                            int position = rs2.getInt(1);
-                            String posx = rs2.getString(2);
-                            String posy = rs2.getString(3);
-                            String celltype = rs2.getString(4);
-                            ContainercellTO cell = new ContainercellTO(position, posx, posy, celltype, containerid, sampleid);
-                            sample.setCell(cell);
+                        if(isCell) {
+                            stmt2.setInt(1, containerid);
+                            stmt2.setInt(2, sampleid);
+                            rs2 = t.executeQuery(stmt2);
+                            if (rs2.next()) {
+                                int position = rs2.getInt(1);
+                                String posx = rs2.getString(2);
+                                String posy = rs2.getString(3);
+                                String celltype = rs2.getString(4);
+                                ContainercellTO cell = new ContainercellTO(position, posx, posy, celltype, containerid, sampleid);
+                                sample.setCell(cell);
+                            }
                         }
 
-                        stmt7.setInt(1, sampleid);
-                        rs7 = DatabaseTransaction.executeQuery(stmt7);
-                        while (rs7.next()) {
-                            String ptype = rs7.getString(1);
-                            String pvalue = rs7.getString(2);
-                            SamplepropertyTO property = new SamplepropertyTO(sampleid, ptype, pvalue);
-                            sample.addProperty(property);
+                        if(isProperty) {
+                            stmt7.setInt(1, sampleid);
+                            rs7 = DatabaseTransaction.executeQuery(stmt7);
+                            while (rs7.next()) {
+                                String ptype = rs7.getString(1);
+                                String pvalue = rs7.getString(2);
+                                SamplepropertyTO property = new SamplepropertyTO(sampleid, ptype, pvalue);
+                                sample.addProperty(property);
+                            }
                         }
 
                         if (isReagent) {
