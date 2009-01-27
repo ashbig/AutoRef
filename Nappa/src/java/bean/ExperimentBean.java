@@ -6,12 +6,19 @@
 package bean;
 
 import controller.ExperimentController;
+import dao.ResearcherDAO;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.servlet.http.HttpServletRequest;
+import transfer.ProcessexecutionTO;
+import transfer.ProcessprotocolTO;
+import transfer.ResearcherTO;
 import transfer.VariableTO;
+import util.StringConvertor;
 
 /**
  *
@@ -60,6 +67,24 @@ public class ExperimentBean implements Serializable {
         }
         if(this.labels == null || this.labels.trim().length()==0) {
             message = "Please enter at least one valid barcode.";
+            return null;
+        }
+        
+        try {
+            List barcodes = StringConvertor.convertFromStringToList(labels, null);
+            String username = ((HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest()).getUserPrincipal().getName();
+            ResearcherTO researcher = ResearcherDAO.getResearcher(username);
+            ProcessprotocolTO protocol = new ProcessprotocolTO(ProcessprotocolTO.SET_EXP, null, null);
+            ExperimentController controller = new ExperimentController(protocol, researcher, date, ProcessexecutionTO.getOUTCOME_SUCCESS());
+            controller.setVariables(variables);
+            controller.setLabels(barcodes);
+            List<String> invalidLabels = controller.getSlideinfo();
+            if(invalidLabels.size()>0) {
+                setMessage("The following barcodes are invalid: "+StringConvertor.convertFromListToString(invalidLabels));
+                return null;
+            }
+        } catch (Exception ex) {
+            setMessage(ex.getMessage());
             return null;
         }
         

@@ -9,7 +9,7 @@
             <name>Nappa</name>
             <minimum-ant-version>1.6</minimum-ant-version>
             <web-module-libraries>
-                <library files="17">
+                <library files="30">
                     <file>${libs.MyFaces.classpath}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>

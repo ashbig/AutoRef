@@ -37,6 +37,13 @@ public abstract class ProcessController  {
     public ProcessController() {
     }
     
+    public ProcessController(ProcessprotocolTO p, ResearcherTO r, Date d, String outcome) {
+        setProtocol(p);
+        setWho(r);
+        setWhen(d);
+        setOutcome(outcome);
+    }
+    
     public void persistProcess() throws ControllerException {
         DatabaseTransaction t = null;
         Connection conn = null;

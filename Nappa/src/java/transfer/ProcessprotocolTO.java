@@ -25,6 +25,8 @@ public class ProcessprotocolTO implements Serializable {
     public static final String CULTURE_RESULT = "Enter Culture Results";
     public static final String DNA_RESULT = "Enter DNA Results";
     
+    public static final String SET_EXP = "Set up experiment";
+    
     private String name;
     private String type;
     private String description;

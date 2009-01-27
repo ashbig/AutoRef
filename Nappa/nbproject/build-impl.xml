@@ -510,6 +510,19 @@ or ant -Dj2ee.platform.classpath=&lt;server_classpath&gt; (where no properties f
     </target>
     <target depends="init,compile,compile-jsps,-pre-dist,-do-dist-with-manifest,-do-dist-without-manifest" name="do-dist"/>
     <target depends="init" if="dist.ear.dir" name="library-inclusion-in-manifest">
+        <basename file="${libs.MyFaces.classpath.libfile.30}" property="included.lib.libs.MyFaces.classpath.30"/>
+        <basename file="${libs.MyFaces.classpath.libfile.29}" property="included.lib.libs.MyFaces.classpath.29"/>
+        <basename file="${libs.MyFaces.classpath.libfile.28}" property="included.lib.libs.MyFaces.classpath.28"/>
+        <basename file="${libs.MyFaces.classpath.libfile.27}" property="included.lib.libs.MyFaces.classpath.27"/>
+        <basename file="${libs.MyFaces.classpath.libfile.26}" property="included.lib.libs.MyFaces.classpath.26"/>
+        <basename file="${libs.MyFaces.classpath.libfile.25}" property="included.lib.libs.MyFaces.classpath.25"/>
+        <basename file="${libs.MyFaces.classpath.libfile.24}" property="included.lib.libs.MyFaces.classpath.24"/>
+        <basename file="${libs.MyFaces.classpath.libfile.23}" property="included.lib.libs.MyFaces.classpath.23"/>
+        <basename file="${libs.MyFaces.classpath.libfile.22}" property="included.lib.libs.MyFaces.classpath.22"/>
+        <basename file="${libs.MyFaces.classpath.libfile.21}" property="included.lib.libs.MyFaces.classpath.21"/>
+        <basename file="${libs.MyFaces.classpath.libfile.20}" property="included.lib.libs.MyFaces.classpath.20"/>
+        <basename file="${libs.MyFaces.classpath.libfile.19}" property="included.lib.libs.MyFaces.classpath.19"/>
+        <basename file="${libs.MyFaces.classpath.libfile.18}" property="included.lib.libs.MyFaces.classpath.18"/>
         <basename file="${libs.MyFaces.classpath.libfile.17}" property="included.lib.libs.MyFaces.classpath.17"/>
         <basename file="${libs.MyFaces.classpath.libfile.16}" property="included.lib.libs.MyFaces.classpath.16"/>
         <basename file="${libs.MyFaces.classpath.libfile.15}" property="included.lib.libs.MyFaces.classpath.15"/>
@@ -527,6 +540,19 @@ or ant -Dj2ee.platform.classpath=&lt;server_classpath&gt; (where no properties f
         <basename file="${libs.MyFaces.classpath.libfile.3}" property="included.lib.libs.MyFaces.classpath.3"/>
         <basename file="${libs.MyFaces.classpath.libfile.2}" property="included.lib.libs.MyFaces.classpath.2"/>
         <basename file="${libs.MyFaces.classpath.libfile.1}" property="included.lib.libs.MyFaces.classpath.1"/>
+        <copy-ear-war file="${libs.MyFaces.classpath.libfile.30}" propname="included.lib.libs.MyFaces.classpath.30.X"/>
+        <copy-ear-war file="${libs.MyFaces.classpath.libfile.29}" propname="included.lib.libs.MyFaces.classpath.29.X"/>
+        <copy-ear-war file="${libs.MyFaces.classpath.libfile.28}" propname="included.lib.libs.MyFaces.classpath.28.X"/>
+        <copy-ear-war file="${libs.MyFaces.classpath.libfile.27}" propname="included.lib.libs.MyFaces.classpath.27.X"/>
+        <copy-ear-war file="${libs.MyFaces.classpath.libfile.26}" propname="included.lib.libs.MyFaces.classpath.26.X"/>
+        <copy-ear-war file="${libs.MyFaces.classpath.libfile.25}" propname="included.lib.libs.MyFaces.classpath.25.X"/>
+        <copy-ear-war file="${libs.MyFaces.classpath.libfile.24}" propname="included.lib.libs.MyFaces.classpath.24.X"/>
+        <copy-ear-war file="${libs.MyFaces.classpath.libfile.23}" propname="included.lib.libs.MyFaces.classpath.23.X"/>
+        <copy-ear-war file="${libs.MyFaces.classpath.libfile.22}" propname="included.lib.libs.MyFaces.classpath.22.X"/>
+        <copy-ear-war file="${libs.MyFaces.classpath.libfile.21}" propname="included.lib.libs.MyFaces.classpath.21.X"/>
+        <copy-ear-war file="${libs.MyFaces.classpath.libfile.20}" propname="included.lib.libs.MyFaces.classpath.20.X"/>
+        <copy-ear-war file="${libs.MyFaces.classpath.libfile.19}" propname="included.lib.libs.MyFaces.classpath.19.X"/>
+        <copy-ear-war file="${libs.MyFaces.classpath.libfile.18}" propname="included.lib.libs.MyFaces.classpath.18.X"/>
         <copy-ear-war file="${libs.MyFaces.classpath.libfile.17}" propname="included.lib.libs.MyFaces.classpath.17.X"/>
         <copy-ear-war file="${libs.MyFaces.classpath.libfile.16}" propname="included.lib.libs.MyFaces.classpath.16.X"/>
         <copy-ear-war file="${libs.MyFaces.classpath.libfile.15}" propname="included.lib.libs.MyFaces.classpath.15.X"/>
@@ -550,11 +576,24 @@ or ant -Dj2ee.platform.classpath=&lt;server_classpath&gt; (where no properties f
         <copy-ear-war file="${file.reference.ojdbc6.jar}" propname="included.lib.file.reference.ojdbc6.jar.X"/>
         <mkdir dir="${build.web.dir}/META-INF"/>
         <manifest file="${build.web.dir}/META-INF/MANIFEST.MF" mode="update">
-            <attribute name="Class-Path" value="${included.lib.libs.MyFaces.classpath.1.X} ${included.lib.libs.MyFaces.classpath.2.X} ${included.lib.libs.MyFaces.classpath.3.X} ${included.lib.libs.MyFaces.classpath.4.X} ${included.lib.libs.MyFaces.classpath.5.X} ${included.lib.libs.MyFaces.classpath.6.X} ${included.lib.libs.MyFaces.classpath.7.X} ${included.lib.libs.MyFaces.classpath.8.X} ${included.lib.libs.MyFaces.classpath.9.X} ${included.lib.libs.MyFaces.classpath.10.X} ${included.lib.libs.MyFaces.classpath.11.X} ${included.lib.libs.MyFaces.classpath.12.X} ${included.lib.libs.MyFaces.classpath.13.X} ${included.lib.libs.MyFaces.classpath.14.X} ${included.lib.libs.MyFaces.classpath.15.X} ${included.lib.libs.MyFaces.classpath.16.X} ${included.lib.libs.MyFaces.classpath.17.X} ${included.lib.file.reference.sftp.jar} ${included.lib.file.reference.ojdbc6.jar} "/>
+            <attribute name="Class-Path" value="${included.lib.libs.MyFaces.classpath.1.X} ${included.lib.libs.MyFaces.classpath.2.X} ${included.lib.libs.MyFaces.classpath.3.X} ${included.lib.libs.MyFaces.classpath.4.X} ${included.lib.libs.MyFaces.classpath.5.X} ${included.lib.libs.MyFaces.classpath.6.X} ${included.lib.libs.MyFaces.classpath.7.X} ${included.lib.libs.MyFaces.classpath.8.X} ${included.lib.libs.MyFaces.classpath.9.X} ${included.lib.libs.MyFaces.classpath.10.X} ${included.lib.libs.MyFaces.classpath.11.X} ${included.lib.libs.MyFaces.classpath.12.X} ${included.lib.libs.MyFaces.classpath.13.X} ${included.lib.libs.MyFaces.classpath.14.X} ${included.lib.libs.MyFaces.classpath.15.X} ${included.lib.libs.MyFaces.classpath.16.X} ${included.lib.libs.MyFaces.classpath.17.X} ${included.lib.libs.MyFaces.classpath.18.X} ${included.lib.libs.MyFaces.classpath.19.X} ${included.lib.libs.MyFaces.classpath.20.X} ${included.lib.libs.MyFaces.classpath.21.X} ${included.lib.libs.MyFaces.classpath.22.X} ${included.lib.libs.MyFaces.classpath.23.X} ${included.lib.libs.MyFaces.classpath.24.X} ${included.lib.libs.MyFaces.classpath.25.X} ${included.lib.libs.MyFaces.classpath.26.X} ${included.lib.libs.MyFaces.classpath.27.X} ${included.lib.libs.MyFaces.classpath.28.X} ${included.lib.libs.MyFaces.classpath.29.X} ${included.lib.libs.MyFaces.classpath.30.X} ${included.lib.file.reference.sftp.jar} ${included.lib.file.reference.ojdbc6.jar} "/>
         </manifest>
         <delete dir="${dist.ear.dir}/temp"/>
     </target>
     <target depends="init" name="library-inclusion-in-archive" unless="dist.ear.dir">
+        <copy file="${libs.MyFaces.classpath.libfile.30}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copy file="${libs.MyFaces.classpath.libfile.29}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copy file="${libs.MyFaces.classpath.libfile.28}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copy file="${libs.MyFaces.classpath.libfile.27}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copy file="${libs.MyFaces.classpath.libfile.26}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copy file="${libs.MyFaces.classpath.libfile.25}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copy file="${libs.MyFaces.classpath.libfile.24}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copy file="${libs.MyFaces.classpath.libfile.23}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copy file="${libs.MyFaces.classpath.libfile.22}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copy file="${libs.MyFaces.classpath.libfile.21}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copy file="${libs.MyFaces.classpath.libfile.20}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copy file="${libs.MyFaces.classpath.libfile.19}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copy file="${libs.MyFaces.classpath.libfile.18}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copy file="${libs.MyFaces.classpath.libfile.17}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copy file="${libs.MyFaces.classpath.libfile.16}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copy file="${libs.MyFaces.classpath.libfile.15}" todir="${build.web.dir}/WEB-INF/lib"/>

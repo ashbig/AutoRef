@@ -2,8 +2,8 @@
 <Scene Scope="Project" version="2">
     <Scope Scope="Faces Configuration Only"/>
     <Scope Scope="Project">
-        <Node id="RegisterLabels.jsp" x="1150" y="150" zoom="false"/>
         <Node id="LayoutContainerDetailView.jsp" x="1650" y="150" zoom="true"/>
+        <Node id="RegisterLabels.jsp" x="1150" y="150" zoom="false"/>
         <Node id="EnterResultsContinue.jsp" x="150" y="450" zoom="true"/>
         <Node id="TemplateView.jsp" x="650" y="750" zoom="true"/>
         <Node id="DirectContainerMapping.jsp" x="650" y="450" zoom="true"/>
@@ -21,18 +21,18 @@
         <Node id="SearchContainers.jsp" x="400" y="600" zoom="true"/>
         <Node id="ListContainers.jsp" x="650" y="150" zoom="true"/>
         <Node id="welcomeJSF.jsp" x="150" y="600" zoom="true"/>
-        <Node id="SearchTemplate.jsp" x="400" y="900" zoom="true"/>
         <Node id="BlockView.jsp" x="900" y="300" zoom="true"/>
+        <Node id="SearchTemplate.jsp" x="400" y="900" zoom="true"/>
         <Node id="TemplateDesign.jsp" x="150" y="300" zoom="true"/>
         <Node id="FileView.jsp" x="150" y="150" zoom="true"/>
         <Node id="ImportClones.jsp" x="650" y="300" zoom="true"/>
         <Node id="indexright.jsp" x="1150" y="300" zoom="true"/>
-        <Node id="EnterResults.jsp" x="400" y="150" zoom="true"/>
         <Node id="SearchContainer.jsp" x="1400" y="450" zoom="true"/>
+        <Node id="EnterResults.jsp" x="400" y="150" zoom="true"/>
         <Node id="ContainerView.jsp" x="900" y="150" zoom="true"/>
         <Node id="SlideView.jsp" x="400" y="300" zoom="true"/>
-        <Node id="AddControls.jsp" x="1150" y="600" zoom="true"/>
         <Node id="indexleft.jsp" x="1400" y="150" zoom="true"/>
+        <Node id="AddControls.jsp" x="1150" y="600" zoom="true"/>
         <Node id="welcome.jsp" x="900" y="450" zoom="true"/>
     </Scope>
     <Scope Scope="All Faces Configurations"/>
