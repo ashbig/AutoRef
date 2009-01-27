@@ -74,7 +74,7 @@
                                 <td width="20%" class="formlabel">Choose program: <a href="blasthelp.html#program" target="blasthelp">[i]</a></td>
                                 <td>
                                     <html:select property="program" styleClass="itemtext">
-                                        <html:options name="programs"/>
+                                        <html:options collection="programs" property="name" labelProperty="value"/>
                                     </html:select>
                                 </td>
                             </tr>

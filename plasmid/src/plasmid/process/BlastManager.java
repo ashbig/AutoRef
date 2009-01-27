@@ -22,6 +22,7 @@ import java.util.StringTokenizer;
 import java.util.TreeSet;
 import plasmid.blast.BlastHit;
 import plasmid.blast.BlastParser;
+import plasmid.blast.BlastProgram;
 import plasmid.blast.BlastWrapper;
 import plasmid.coreobject.Clone;
 import plasmid.coreobject.Dnasequence;
@@ -40,9 +41,9 @@ public class BlastManager {
     
     public static List getPrograms() {
         List programs = new ArrayList();
-        programs.add(BlastWrapper.PROGRAM_BLASTN);
-        programs.add(BlastWrapper.PROGRAM_TBLASTN);
-        programs.add(BlastWrapper.PROGRAM_TBLASTX);
+        programs.add(new BlastProgram(BlastWrapper.PROGRAM_BLASTN, BlastWrapper.PROGRAM_DISPLAY_BLASTN));
+        programs.add(new BlastProgram(BlastWrapper.PROGRAM_TBLASTN, BlastWrapper.PROGRAM_DISPLAY_TBLASTN));
+        programs.add(new BlastProgram(BlastWrapper.PROGRAM_TBLASTX, BlastWrapper.PROGRAM_DISPLAY_TBLASTX));
         return programs;
     }
     
