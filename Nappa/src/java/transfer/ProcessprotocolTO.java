@@ -26,6 +26,7 @@ public class ProcessprotocolTO implements Serializable {
     public static final String DNA_RESULT = "Enter DNA Results";
     
     public static final String SET_EXP = "Set up experiment";
+    public static final String UPLOAD_VIGENE_RESULT = "Upload MicroVigene Results";
     
     private String name;
     private String type;

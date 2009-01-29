@@ -5,11 +5,11 @@
 
 package bean;
 
+import controller.UploadVigeneResultController;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.myfaces.custom.fileupload.UploadedFile;
-import process.VigeneResultUploader;
 import transfer.VariableTO;
 
 /**
@@ -34,13 +34,26 @@ public class UploadMicrovigeneBean {
     }
     
     public String runUpload() {
-        VigeneResultUploader uploader = new VigeneResultUploader();
+        UploadVigeneResultController controller = new UploadVigeneResultController();
         try {
-            InputStream input = this.getFile().getInputStream();
-            uploader.uploadVigeneResult(input);
+            InputStream file1 = file.getInputStream();
+            InputStream file2 = file.getInputStream();
+            String filename = file.getName();
+            
+            controller.setFile(file1);
+            controller.setFile(file2);
+            controller.setFilename(filename);
+            controller.setLabel(label);
+            
+            controller.doProcess();
+            controller.persistProcess();
+            
+            file1.close();
+            file2.close();
         } catch (Exception ex) {
             ex.printStackTrace();
-        }
+        } 
+        
         return null;
     }
     

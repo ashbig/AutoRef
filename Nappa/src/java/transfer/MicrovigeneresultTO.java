@@ -8,7 +8,7 @@ package transfer;
  *
  * @author DZuo
  */
-public class MicrovigeneresultTO {
+public class MicrovigeneresultTO extends ResultTO {
     private int mainRow;
     private int mainCol;
     private int subRow;
@@ -33,7 +33,7 @@ public class MicrovigeneresultTO {
     private double bkgskew;
     private double kurtosis;
     private int rank;
-    private int type;
+    private int spottype;
     private int xcenter;
     private int ycenter;
     private int areasignal;
@@ -71,7 +71,7 @@ public class MicrovigeneresultTO {
         setBkgskew(bkgskew);
         setKurtosis(kurtosis);
         setRank(rank);
-        setType(type);
+        setSpottype(type);
         setXcenter(xcenter);
         setYcenter(ycenter);
         setAreasignal(areasignal);
@@ -274,15 +274,7 @@ public class MicrovigeneresultTO {
     public void setRank(int rank) {
         this.rank = rank;
     }
-
-    public int getType() {
-        return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
-    }
-
+    
     public int getXcenter() {
         return xcenter;
     }
@@ -353,5 +345,13 @@ public class MicrovigeneresultTO {
 
     public void setAspect(double aspect) {
         this.aspect = aspect;
+    }
+
+    public int getSpottype() {
+        return spottype;
+    }
+
+    public void setSpottype(int spottype) {
+        this.spottype = spottype;
     }
 }

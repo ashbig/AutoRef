@@ -18,6 +18,7 @@ import java.io.Serializable;
 public class ResultTO implements Serializable {
     public static final String TYPE_CULTURE = "Culture";
     public static final String TYPE_DNA = "DNA";
+    public static final String TYPE_MICROVIGENE = "MicroVigene";
     
     private int resultid;
     private String type;

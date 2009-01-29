@@ -165,7 +165,7 @@ public class MicrovigeneFileParser {
                     if(RANK.equals(title))
                         spot.setRank(Integer.parseInt(s));
                     if(TYPE.equals(title))
-                        spot.setType(Integer.parseInt(s));
+                        spot.setSpottype(Integer.parseInt(s));
                     if(XCENTER.equals(title))
                         spot.setXcenter(Integer.parseInt(s));
                     if(YCENTER.equals(title))
