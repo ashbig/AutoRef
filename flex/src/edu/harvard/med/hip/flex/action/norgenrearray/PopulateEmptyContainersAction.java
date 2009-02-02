@@ -82,10 +82,10 @@ public class PopulateEmptyContainersAction extends ResearcherAction {
             
             errors.add("researcherBarcode", new ActionError("error.researcher.invalid.barcode", curForm.getResearcherBarcode()));
             saveErrors(request, errors);
-            return (new ActionForward(mapping.getInput()));
+            return  mapping.findForward("error");
         } catch (FlexDatabaseException ex) {
             request.setAttribute(Action.EXCEPTION_KEY, ex);
-            return (mapping.findForward("error"));
+            return mapping.findForward("error");
         }
          try
         {
@@ -102,14 +102,14 @@ public class PopulateEmptyContainersAction extends ResearcherAction {
                        if (err_message!= null)
                       { errors.add("cultureFile", new ActionError("flex.infoimport.file", "Wells are not in sequence: "+err_message));
                         saveErrors(request,errors); 
-                        return new ActionForward(mapping.getInput()); 
+                        return (mapping.findForward("error"));
                       }
                     if ( plate.getRecords().size() != max_number_of_wells_per_plate)
                     {
                         err_message= "Well number over the limit: "+plate.getLabel()+" : "+plate.getRecords().size();
                         errors.add("cultureFile", new ActionError("flex.infoimport.file", err_message));
                         saveErrors(request,errors); 
-                        return new ActionForward(mapping.getInput()); 
+                       return (mapping.findForward("error"));
                     }
                  }
             }
@@ -117,7 +117,7 @@ public class PopulateEmptyContainersAction extends ResearcherAction {
          catch (Exception ex) {
                 errors.add("cultureFile", new ActionError("flex.infoimport.file", ex.getMessage()));
                 saveErrors(request,errors);
-                return new ActionForward(mapping.getInput());}
+                return (mapping.findForward("error"));}
         
         try
         {
