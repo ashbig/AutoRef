@@ -5,11 +5,14 @@
 package io;
 
 import transfer.MicrovigeneresultTO;
-import core.Vigeneslide;
+import transfer.MicrovigeneslideTO;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -61,12 +64,12 @@ public class MicrovigeneFileParser {
         setInput(input);
     }
     
-    public Vigeneslide parseFile(InputStream input) throws NappaIOException {
+    public MicrovigeneslideTO parseFile(InputStream input) throws NappaIOException {
         setInput(input);
         return parseFile();
     }
     
-    public Vigeneslide parseFile() throws NappaIOException {
+    public MicrovigeneslideTO parseFile() throws NappaIOException {
         BufferedReader in = new BufferedReader(new InputStreamReader(input));
         String line = null;
 
@@ -75,7 +78,7 @@ public class MicrovigeneFileParser {
             StringTokenizer tokenizer = new StringTokenizer(line, "\t");
             String version = null;
             while(tokenizer.hasMoreTokens()) {
-                version = tokenizer.nextToken();
+                version = tokenizer.nextToken().trim();
             }
                 
             in.readLine();
@@ -99,23 +102,25 @@ public class MicrovigeneFileParser {
             tokenizer.nextToken();
             int subcol = Integer.parseInt(tokenizer.nextToken());
             
-            Vigeneslide slide = new Vigeneslide(version,date,roirow,roicol,mainrow,maincol,subrow,subcol);
+            MicrovigeneslideTO slide = new MicrovigeneslideTO(version,date,roirow,roicol,mainrow,maincol,subrow,subcol);
             
             List<String> titles = new ArrayList<String>();
             line = in.readLine().trim();
             tokenizer = new StringTokenizer(line, "\t");
             while(tokenizer.hasMoreTokens()) {
-                String s = tokenizer.nextToken();
+                String s = tokenizer.nextToken().trim();
                 titles.add(s);
             }
             
             while ((line = in.readLine()) != null) {
+                //System.out.print(line);
                 tokenizer = new StringTokenizer(line.trim(), "\t");
                 int index = 0;
                 MicrovigeneresultTO spot = new MicrovigeneresultTO();
                 while(tokenizer.hasMoreTokens()) {
                     String s = tokenizer.nextToken();
                     String title = titles.get(index);
+                    //System.out.println("s="+s+",title="+title);
                     if(MAINROW.equals(title)) 
                         spot.setMainRow(Integer.parseInt(s));
                     if(MAINCOL.equals(title))
@@ -149,7 +154,7 @@ public class MicrovigeneFileParser {
                     if(VOLBKG.equals(title))
                         spot.setVolbkg(Integer.parseInt(s));
                     if(VOLDUST.equals(title))
-                        spot.setVoldust(Integer.parseInt(s));
+                        spot.setVoldust(Double.parseDouble(s));
                     if(CVSPOT.equals(title))
                         spot.setCvspot(Double.parseDouble(s));
                     if(CVBKG.equals(title))
@@ -203,5 +208,28 @@ public class MicrovigeneFileParser {
 
     public void setInput(InputStream input) {
         this.input = input;
+    }
+    
+    public static final void main(String args[]) {
+        String filename = "D:\\dev\\Test\\59_Nov7_441_122308_1306_3580 20um_allcolumns.txt";
+        try {
+            InputStream input = new FileInputStream(new File(filename));
+            MicrovigeneFileParser parser = new MicrovigeneFileParser(input);
+            MicrovigeneslideTO slide = parser.parseFile();
+            System.out.println("Date="+slide.getDate());
+            System.out.println("Version="+slide.getVersion());
+            System.out.println("Main row="+slide.getMainRow());
+            System.out.println("Main col="+slide.getMainCol());
+            System.out.println("Sub row="+slide.getSubRow());
+            System.out.println("Sub col="+slide.getSubCol());
+            
+            Collection<MicrovigeneresultTO> spots = slide.getSpots();
+            for(MicrovigeneresultTO spot:spots) {
+                System.out.println("Vol="+spot.getVoltotal());
+                System.out.println("pos="+slide.calculatePosition(spot.getMainRow(), spot.getMainCol(), spot.getSubRow(), spot.getSubCol()));
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 }
