@@ -65,6 +65,11 @@
                     <html:form action="/continueVSubmit">
                         <html:submit value="Continue to Vector Submission Page"/>
                         <p></p>
+                        <logic:notPresent name="vSearchForm" property="results">
+                            <logic:notEmpty name="vSearchForm" property="VN">
+                                <center><font color="red"><b>No Vector Found. Please try again.</b></font></center>
+                            </logic:notEmpty>
+                        </logic:notPresent>
                         <logic:present name="vSearchForm" property="results">
                             <logic:empty name="vSearchForm" property="results">
                                 <center><font color="red"><b>No Vector Found. Please try again.</b></font></center>

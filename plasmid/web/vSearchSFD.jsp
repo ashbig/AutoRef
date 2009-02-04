@@ -11,7 +11,7 @@
         <title>Search vector by name for distribution</title>
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
         <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
-            <script src="js/common.js"></script>
+        <script src="js/common.js"></script>
     </head>
     
     <body>
@@ -46,41 +46,78 @@
                     </html:form>
                     <p></p>
                     <html:form action="/continueVSFD">
-                        <logic:notPresent name="vSearchSFDForm" property="results">
-                        <center><font color="red"><b>No Vector Found. Please try again.</b></font></center>
-                        </logic:notPresent>
-                        <logic:present name="vSearchSFDForm" property="results">
-                            <logic:empty name="vSearchSFDForm" property="results">
+                        <logic:notEmpty name="vSearchSFDForm" property="VN">
+                            <logic:notPresent name="vSearchSFDForm" property="results">
                                 <center><font color="red"><b>No Vector Found. Please try again.</b></font></center>
-                            </logic:empty>
-                            <logic:notEmpty name="vSearchSFDForm" property="results">
-                                <p>We found the following vectors. Please click the vector name to review the
+                            </logic:notPresent>
+                            <logic:present name="vSearchSFDForm" property="results">
+                                <logic:empty name="vSearchSFDForm" property="results">
+                                    <center><font color="red"><b>No Vector Found. Please try again.</b></font></center>
+                                </logic:empty>
+                                <logic:notEmpty name="vSearchSFDForm" property="results">
+                                    <p>We found the following vectors. Please click the vector name to review the
                                     detailed information to make sure it is the same vector.</p>
-                                <p></p>
-                                <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="black">
-                                    <tr bgcolor="white">
-                                        <td width="4%">&nbsp;</td>
-                                        <td width="16%"><strong>Vector Name</strong></td>
-                                        <td width="80%"><strong>Description</strong></td>
-                                    </tr>
-                                    <logic:iterate id="result" name="vSearchSFDForm" property="results">
+                                    <p></p>
+                                    <table>
+                                        <tr><td bgcolor="#FFFFFCC" width="20px"></td><td>&nbsp;&nbsp;Vector submission has not been finished. Please continue <a href="vSearch.jsp">vector submission</a> before continue.</td></tr>
+                                        <tr><td bgcolor="#FFCCCC" width="20px"></td><td>&nbsp;&nbsp;This vector has been submitted for distribution as empty vector.</td></tr>
+                                        <tr><td bgcolor="#CCFFCC" width="20px"></td><td>&nbsp;&nbsp;This vector can be submitted for distribution.</td></tr>
+                                    </table>
+                                    
+                                    <p></p>
+                                    <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="black">
                                         <tr bgcolor="white">
-                                            <td>
-                                                <input type="radio" id="VID" name="VID" value="<bean:write name="result" property="vectorid"/>">&nbsp;
-                                            </td>
-                                            <td align="left">
-                                                <html:link href="GetVectorDetail.do" paramId="vectorid" paramName="result" paramProperty="vectorid" target="VectorDetail">
-                                                    <bean:write name="result" property="name"/>&nbsp;
-                                                </html:link>
-                                            </td>
-                                            <td><bean:write name="result" property="description"/>&nbsp;</td>
+                                            <td width="4%">&nbsp;</td>
+                                            <td width="16%"><strong>Vector Name</strong></td>
+                                            <td width="80%"><strong>Description</strong></td>
                                         </tr>
-                                    </logic:iterate>
-                                </table>
-                                <p></p>
-                                <html:submit value="Continue to Vector Submission For Distribution"/>
-                            </logic:notEmpty>
-                        </logic:present>
+                                        <logic:iterate id="result" name="vSearchSFDForm" property="results">
+                                            <logic:equal name="result" property="status" value="PENDING">
+                                                <tr bgcolor="#FFFFFCC">
+                                                    <td>
+                                                        &nbsp;
+                                                    </td>
+                                                    <td align="left">
+                                                        <html:link href="GetVectorDetail.do" paramId="vectorid" paramName="result" paramProperty="vectorid" target="VectorDetail">
+                                                            <bean:write name="result" property="name"/>&nbsp;
+                                                        </html:link>
+                                                    </td>
+                                                    <td><bean:write name="result" property="description"/>&nbsp;</td>
+                                                </tr>
+                                            </logic:equal>
+                                            <logic:notEqual name="result" property="status" value="PENDING">
+                                                <logic:equal name="result" property="cloneid" value="-1">
+                                                    <tr bgcolor="#CCFFCC">
+                                                        <td>
+                                                            <input type="radio" id="VID" name="VID" value="<bean:write name="result" property="vectorid"/>">&nbsp;
+                                                        </td>
+                                                        <td align="left">
+                                                            <html:link href="GetVectorDetail.do" paramId="vectorid" paramName="result" paramProperty="vectorid" target="VectorDetail">
+                                                                <bean:write name="result" property="name"/>&nbsp;
+                                                            </html:link>
+                                                        </td>
+                                                        <td><bean:write name="result" property="description"/>&nbsp;</td>
+                                                    </tr>
+                                                </logic:equal>
+                                                <logic:notEqual name="result" property="cloneid" value="-1">
+                                                    <tr bgcolor="#FFCCCC">
+                                                        <td>&nbsp;</td>
+                                                        <td align="left">
+                                                            <html:link href="GetVectorDetail.do" paramId="vectorid" paramName="result" paramProperty="vectorid" target="VectorDetail">
+                                                                <bean:write name="result" property="name"/>&nbsp;
+                                                            </html:link>
+                                                        </td>
+                                                        <td><bean:write name="result" property="description"/>&nbsp;</td>
+                                                    </tr>
+                                                </logic:notEqual>
+                                            </logic:notEqual>
+                                        </logic:iterate>
+                                    </table>
+                                    <p></p>
+                                    <html:submit value="Continue to Vector Submission For Distribution"/>
+                                </logic:notEmpty>
+                            </logic:present>
+                        </logic:notEmpty>
                     </html:form>
                 </td>
             </tr>

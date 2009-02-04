@@ -52,7 +52,7 @@ public class CloneVector implements Serializable {
     public CloneVector(int vectorid, String name, String description, String form, String type,
             int size, String mapfilename, String seqfilename, String comments, String status, int userid) {
         this(vectorid, name, description, form, type,
-                size, mapfilename, seqfilename, comments, status, userid, 0);
+                size, mapfilename, seqfilename, comments, status, userid, -1);
     }
     
     public CloneVector(int vectorid, String name, String description, String form, String type,

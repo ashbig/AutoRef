@@ -1289,12 +1289,12 @@ public class VectorManager extends TableManager {
             sql = "select a.vectorid,a.description,a.form,a.type,a.sizeinbp,a.mapfilename," +
                     " a.sequencefilename,a.comments,nvl(b.userid, 0) userid,nvl(b.status, '') status, a.name " +
                     " from vector a left join vectorsubmission b on a.vectorid=b.vectorid " +
-                    " where a.name like ? order by a.name";
+                    " where upper(a.name) like ? order by a.name";
         } else {
             sql = "select a.vectorid,a.description,a.form,a.type,a.sizeinbp,a.mapfilename," +
                     " a.sequencefilename,a.comments,nvl(b.userid, 0) userid,nvl(b.status, '') status, a.name " +
                     " from vector a left join vectorsubmission b on a.vectorid=b.vectorid " +
-                    " where a.name=? order by a.name";
+                    " where upper(a.name)=? order by a.name";
         }
 
         try {
@@ -1305,9 +1305,9 @@ public class VectorManager extends TableManager {
             while (iter.hasNext()) {
                 name = (String) iter.next();
                 if (bLike) {
-                    stmt.setString(1, "%" + name + "%");
+                    stmt.setString(1, "%" + name.toUpperCase() + "%");
                 } else {
-                    stmt.setString(1, name);
+                    stmt.setString(1, name.toUpperCase());
                 }
 
                 rs = DatabaseTransaction.executeQuery(stmt);
@@ -1367,23 +1367,25 @@ public class VectorManager extends TableManager {
         String sql = null;
         if (bLike) {
             sql = "select a.vectorid,a.description,a.form,a.type,a.sizeinbp,a.mapfilename," +
-                    " a.sequencefilename,a.comments,nvl(b.userid, 0) userid,nvl(b.status, '') status, a.name, c.cloneid " +
-                    " from (vector a left join vectorsubmission b on a.vectorid=b.vectorid), clone c " +
-                    " where a.name like ? and a.vectorid=c.vectorid and c.CLONETYPE='" + Clone.NOINSERT + "' order by a.name";
+                    "  a.sequencefilename,a.comments,nvl(b.userid, 0) userid,nvl(b.status, '') status," +
+                    "  a.name, nvl(c.cloneid, -1) cloneid" +
+                    "  from (vector a left join vectorsubmission b on a.vectorid=b.vectorid)" +
+                    "  left join clone c on a.vectorid=c.vectorid where upper(a.name) like ? order by a.name";
         } else {
             sql = "select a.vectorid,a.description,a.form,a.type,a.sizeinbp,a.mapfilename," +
-                    " a.sequencefilename,a.comments,nvl(b.userid, 0) userid,nvl(b.status, '') status, a.name, c.cloneid " +
-                    " from (vector a left join vectorsubmission b on a.vectorid=b.vectorid), clone c " +
-                    " where a.name=? and a.vectorid=c.vectorid and c.CLONETYPE='" + Clone.NOINSERT + "'  order by a.name";
+                    "  a.sequencefilename,a.comments,nvl(b.userid, 0) userid,nvl(b.status, '') status," +
+                    "  a.name, nvl(c.cloneid, -1) cloneid" +
+                    "  from (vector a left join vectorsubmission b on a.vectorid=b.vectorid)" +
+                    "  left join clone c on a.vectorid=c.vectorid where upper(a.name) = ? order by a.name";
         }
 
         try {
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = null;
             if (bLike) {
-                stmt.setString(1, "%" + name + "%");
+                stmt.setString(1, "%" + name.toUpperCase() + "%");
             } else {
-                stmt.setString(1, name);
+                stmt.setString(1, name.toUpperCase());
             }
 
             rs = DatabaseTransaction.executeQuery(stmt);
@@ -1400,12 +1402,7 @@ public class VectorManager extends TableManager {
                 String status = rs.getString(10);
                 String vname = rs.getString(11);
                 int cloneid = rs.getInt(12);
-                if (status == null) {
-                    status = "";
-                }
-                if (status.equals(Constants.PENDING)) {
 
-                }
                 CloneVector v = new CloneVector(vectorid, vname, description, form, type, size, mapfilename, seqfilename, comments, status, userid, cloneid);
                 vectors.add(v);
             }
