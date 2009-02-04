@@ -1370,13 +1370,13 @@ public class VectorManager extends TableManager {
                     "  a.sequencefilename,a.comments,nvl(b.userid, 0) userid,nvl(b.status, '') status," +
                     "  a.name, nvl(c.cloneid, -1) cloneid" +
                     "  from (vector a left join vectorsubmission b on a.vectorid=b.vectorid)" +
-                    "  left join clone c on a.vectorid=c.vectorid where upper(a.name) like ? order by a.name";
+                    "  left join clone c on a.vectorid=c.vectorid and c.clonetype='" + Clone.NOINSERT + "' where upper(a.name) like ? order by a.name";
         } else {
             sql = "select a.vectorid,a.description,a.form,a.type,a.sizeinbp,a.mapfilename," +
                     "  a.sequencefilename,a.comments,nvl(b.userid, 0) userid,nvl(b.status, '') status," +
                     "  a.name, nvl(c.cloneid, -1) cloneid" +
                     "  from (vector a left join vectorsubmission b on a.vectorid=b.vectorid)" +
-                    "  left join clone c on a.vectorid=c.vectorid where upper(a.name) = ? order by a.name";
+                    "  left join clone c on a.vectorid=c.vectorid and c.clonetype='" + Clone.NOINSERT + "' where upper(a.name) = ? order by a.name";
         }
 
         try {
