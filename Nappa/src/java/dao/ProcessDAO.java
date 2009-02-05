@@ -42,7 +42,7 @@ public class ProcessDAO {
     }
     
     public void addProcess(ProcessexecutionTO p) throws DaoException {
-        int id = SequenceDAO.getNextid("processexecution", "executionid");
+        int id = SequenceDAO.getNextid("executionid");
         p.setExecutionid(id);
       
         String sql = "insert into processexecution (executionid,protocol,when,who,outcome)"+
@@ -128,8 +128,10 @@ public class ProcessDAO {
             }*/
             
             List<ResultTO> results = p.getResults();
+            List<Integer> resultids = SequenceDAO.getNextids("resultid", results.size());
+            int i=0;
             if(results.size()>0) {
-                int resultid = SequenceDAO.getNextid("result", "resultid");
+                int resultid = (Integer)resultids.get(i);
                 stmt4 = conn.prepareStatement(sql4);
                 stmt6 = conn.prepareStatement(sql6);
                 for(ResultTO r:results) {
@@ -175,7 +177,7 @@ public class ProcessDAO {
                         stmt6.setDouble(30, ((MicrovigeneresultTO)r).getAspect());
                         DatabaseTransaction.executeUpdate(stmt6);
                     }
-                    resultid++;
+                    i++;
                 }
             }
             

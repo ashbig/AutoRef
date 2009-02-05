@@ -72,27 +72,6 @@ public class SequenceDAO {
         return id;
     }
     
-    public static int getNextid(String table, String column) throws DaoException {
-        String sql = "select max("+column+") from "+table;
-        
-        DatabaseTransaction t = null;
-        ResultSet rs = null;
-        int id = -1;
-        try {
-            t = DatabaseTransaction.getInstance();
-            rs = t.executeQuery(sql);
-            if(rs.next()) {
-                id = rs.getInt(1);
-            }
-        } catch (Exception ex) {
-            throw new DaoException("Cannot get max number."+ex.getMessage());
-        } finally {
-            t.closeResultSet(rs);
-        }
-        
-        return ++id;
-    }
-    
     public int getNextid(String seqname, DatabaseTransaction t) throws DaoException {
         String sql = "select "+seqname+".nextval from dual";
         ResultSet rs = null;
@@ -199,6 +178,33 @@ public class SequenceDAO {
         }
         
         return id;
+    }
+    
+    public static List<Integer> getNextids(String seqname, int count) throws DaoException {
+        List<Integer> ids = new ArrayList<Integer>();
+        String sql = "select "+seqname+".nextval from dual";
+        DatabaseTransaction t = null;
+        ResultSet rs = null;
+        int id = -1;
+        try {
+            t = DatabaseTransaction.getInstance();
+            int index=0;
+            while(index<count) {
+                rs = t.executeQuery(sql);
+                if(rs.next()) {
+                    id = rs.getInt(1);
+                    ids.add(new Integer(id));
+                } else {
+                    throw new DaoException("Error occured while querying sequence "+seqname);
+                }
+            }
+        } catch (Exception ex) {
+            throw new DaoException("Error occured while querying sequence "+seqname+ex.getMessage());
+        } finally {
+            t.closeResultSet(rs);
+        }
+        
+        return ids;
     }
     
     public static String getVocabulary(String table, String columnKnown, String columnUnknown, String column) throws DaoException {

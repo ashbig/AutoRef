@@ -47,35 +47,43 @@ public class ContainerDAO {
     }
 
     public void setContainerAndSampleids(Collection<ContainerheaderTO> containers) throws DaoException {
-        int containerid = SequenceDAO.getNextid("containerheader", "containerid");
-        int sampleid = SequenceDAO.getNextid("Sample", "sampleid");
+        List<Integer> containerids = SequenceDAO.getNextids("containerid", containers.size());
+        int i=0;
         for (ContainerheaderTO c : containers) {
+            int containerid = (Integer)containerids.get(i);
             c.setContainerid(containerid);
             Collection<SampleTO> samples = c.getSamples();
+            List<Integer> sampleids = SequenceDAO.getNextids("sampleid", samples.size());
+            int j=0;
             for (SampleTO s : samples) {
+                int sampleid = (Integer)sampleids.get(j);
                 s.setSampleid(sampleid);
-                sampleid++;
+                j++;
             }
-            containerid++;
+            i++;
         }
     }
 
     public void setSampleids(Collection<ContainerheaderTO> containers) throws DaoException {
-        int sampleid = SequenceDAO.getNextid("Sample", "sampleid");
         for (ContainerheaderTO c : containers) {
             Collection<SampleTO> samples = c.getSamples();
+            List<Integer> sampleids = SequenceDAO.getNextids("sampleid", samples.size());
+            int i = 0;
             for (SampleTO s : samples) {
+                int sampleid = (Integer)sampleids.get(i);
                 s.setSampleid(sampleid);
-                sampleid++;
+                i++;
             }
         }
     }
 
     public void setSlideids(Collection<SlideTO> slides) throws DaoException {
-        int slideid = SequenceDAO.getNextid("Slide", "slideid");
+        List<Integer> slideids = SequenceDAO.getNextids("slideid", slides.size());
+        int i=0;
         for (SlideTO s : slides) {
+            int slideid = (Integer)slideids.get(i);
             s.setSlideid(slideid);
-            slideid++;
+            i++;
         }
     }
 
@@ -351,7 +359,7 @@ public class ContainerDAO {
             conn = t.requestConnection();
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, label);
-            rs = t.executeQuery(sql);
+            rs = t.executeQuery(stmt); 
             if (rs.next()) {
                 int slideid = rs.getInt(1);
                 int printorder = rs.getInt(2);

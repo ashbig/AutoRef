@@ -32,10 +32,12 @@ public class FilereferenceDAO {
     }
     
 public void setFilereferenceids(List<FilereferenceTO> files) throws DaoException   {
-        int id = SequenceDAO.getNextid("filereference", "filereferenceid");
+        List<Integer> filereferenceids = SequenceDAO.getNextids("filereferenceid", files.size());
+        int i=0;
         for(FilereferenceTO f:files) {
+            int id = (Integer)filereferenceids.get(i).intValue();
             f.setFilereferenceid(id);
-            id++;
+            i++;
         }
     }
     public void addFilereferences(List<FilereferenceTO> files) throws DaoException {

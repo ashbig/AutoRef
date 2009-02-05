@@ -37,11 +37,11 @@ public class ReagentDAO {
     }
 
     public void setReagentids(List reagents) throws DaoException {
-        int id = SequenceDAO.getNextid("Reagent", "reagentid");
+        List<Integer> ids = SequenceDAO.getNextids("reagentid", reagents.size());
         for (int i = 0; i < reagents.size(); i++) {
+            int id = (Integer)ids.get(i).intValue();
             ReagentTO r = (ReagentTO) reagents.get(i);
             r.setReagentid(id);
-            id++;
         }
     }
 
