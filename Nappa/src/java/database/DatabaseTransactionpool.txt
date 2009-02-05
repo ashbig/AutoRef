@@ -19,8 +19,8 @@ import com.sun.rowset.CachedRowSetImpl;
  * //////////  This version of DatabaseTransaction is used only for local code developing and testing /////////////////
  * ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
  *
- * @author     $Author: et15 $
- * @version    $Revision: 1.1 $ $Date: 2008-07-30 20:40:11 $
+ * @author     $Author: dz4 $
+ * @version    $Revision: 1.2 $ $Date: 2009-02-05 20:05:37 $
  */
 
 public class DatabaseTransaction {    ///////// need to change DatabaseTransaction2 ///////////
@@ -128,7 +128,7 @@ public class DatabaseTransaction {    ///////// need to change DatabaseTransacti
             // release database resources
             closeResultSet(rs);
             closeStatement(stmt);
- //           closeConnection(conn);
+            closeConnection(conn);
         }
         return crs;
     } //end executeSQL
