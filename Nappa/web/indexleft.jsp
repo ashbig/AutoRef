@@ -34,6 +34,7 @@ on Libraries node in Projects view can be used to add the JSTL 1.1 library.
             </ul>
             <ul>Experiment
                 <li><a href="./faces/ExperimentInput.jsp" target="rightFrame">Perform Experiment</a></li>
+                <li><a href="./faces/UploadMicrovigeneFile.jsp" target="rightFrame">Upload Microvigene File</a></li>
             </ul>
             <ul>Add
                 <li><a href="./faces/SearchContainer.jsp" target="rightFrame">Add Controls</a></li>

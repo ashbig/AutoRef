@@ -4,7 +4,7 @@
  */
 package controller;
 
-import core.Vigeneslide;
+import transfer.MicrovigeneslideTO;
 import dao.DaoException;
 import dao.FilereferenceDAO;
 import io.FileRepository;
@@ -17,7 +17,6 @@ import java.util.List;
 import process.VigeneResultUploader;
 import transfer.FilereferenceTO;
 import transfer.ProcessobjectTO;
-import transfer.ProcessprotocolTO;
 import transfer.ResultTO;
 import transfer.SampleTO;
 import transfer.SlideTO;
@@ -32,12 +31,14 @@ public class UploadVigeneResultController extends ProcessController implements S
     private String filename;
     private List<FilereferenceTO> filerefs;
     private String label;
+    private InputStream imagefile;
+    private String imagefilename;
 
     @Override
     public void doSpecificProcess() throws ControllerException {
         VigeneResultUploader loader = new VigeneResultUploader();
         try {
-            Vigeneslide vslide = loader.readFile(file);
+            MicrovigeneslideTO vslide = loader.readFile(file);
             SlideTO slide = loader.getSlide(getLabel());
             loader.populateResultForSlide(vslide, slide);
 
@@ -48,15 +49,27 @@ public class UploadVigeneResultController extends ProcessController implements S
                 results.addAll(rs);
             }
             getPe().setResults(results);
-            getPe().setProtocol(new ProcessprotocolTO(ProcessprotocolTO.UPLOAD_VIGENE_RESULT, null, null));
 
-            FilereferenceTO fileref = new FilereferenceTO(getFilename(), FilereferenceTO.RESULTFILEPATH, FilereferenceTO.TYPE_RESULT);
+            FilereferenceTO fileref = new FilereferenceTO(getFilename().substring(getFilename().lastIndexOf("\\")+1), FilereferenceTO.RESULTFILEPATH, FilereferenceTO.TYPE_RESULT);
             FileRepository.uploadFile(fileref, filecopy);
             fileref.setObjecttype(ProcessobjectTO.getTYPE_FILEREFERENCE());
             fileref.setIoflag(ProcessobjectTO.getIO_INPUT());
             getPe().addProcessobject(fileref);
             setFilerefs(new ArrayList<FilereferenceTO>());
             getFilerefs().add(fileref);
+            
+            FilereferenceTO fileref1 = new FilereferenceTO(getImagefilename().substring(getFilename().lastIndexOf("\\")+1), FilereferenceTO.RESULTFILEPATH, FilereferenceTO.TYPE_SLIDE_IMAGE);
+            FileRepository.uploadFile(fileref1, imagefile);
+            fileref1.setObjecttype(ProcessobjectTO.getTYPE_FILEREFERENCE());
+            fileref1.setIoflag(ProcessobjectTO.getIO_INPUT());
+            getPe().addProcessobject(fileref1);
+            getFilerefs().add(fileref1);
+            
+            ProcessobjectTO o = new ProcessobjectTO(ProcessobjectTO.getTYPE_SLIDE(), ProcessobjectTO.getIO_BOTH());
+            o.setObjectid(slide.getSlideid());
+            o.setObjectname(slide.getBarcode());
+            o.setVslide(vslide);
+            getPe().addProcessobject(o);
         } catch (Exception ex) {
             throw new ControllerException(ex.getMessage());
         }
@@ -67,7 +80,6 @@ public class UploadVigeneResultController extends ProcessController implements S
         try {
             FilereferenceDAO dao = new FilereferenceDAO(conn);
             dao.addFilereferences(getFilerefs());
-            //add Vigeneslide and spot info
         } catch (DaoException ex) {
             throw new ControllerException("DaoException: " + ex.getMessage());
         }
@@ -111,5 +123,21 @@ public class UploadVigeneResultController extends ProcessController implements S
 
     public void setLabel(String label) {
         this.label = label;
+    }
+
+    public InputStream getImagefile() {
+        return imagefile;
+    }
+
+    public void setImagefile(InputStream imagefile) {
+        this.imagefile = imagefile;
+    }
+
+    public String getImagefilename() {
+        return imagefilename;
+    }
+
+    public void setImagefilename(String imagefilename) {
+        this.imagefilename = imagefilename;
     }
 }

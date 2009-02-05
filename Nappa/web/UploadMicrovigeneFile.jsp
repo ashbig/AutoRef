@@ -24,6 +24,7 @@
             </table>
             <t:saveState id="uploadMicrovigeneBeanID" value="#{uploadMicrovigeneBean}"/>
             
+            <h:outputText styleClass="errors" value="#{uploadMicrovigeneBean.message}"/>
             <h:form id="uploadMicrovigeneForm" enctype="multipart/form-data">
                 <h:panelGrid columns="2"> 
                     
@@ -44,52 +45,6 @@
                         <t:inputFileUpload id="imagefile" value="#{uploadMicrovigeneBean.imagefile}" required="true"/> 
                         <h:message styleClass="errors" for="imagefile" />
                     </h:panelGroup>
-                                        
-                    <h:outputLabel styleClass="prompt" value="#{msgs.addVariables}" />
-                    <h:panelGroup>
-                        <h:panelGrid columns="2"> 
-                            <h:outputLabel styleClass="prompt" value="#{msgs.enterTypePrompt}:" for="typeid" />
-                            <h:panelGroup>
-                                <h:inputText styleClass="text" id="typeid" value="#{uploadMicrovigeneBean.type}" required="true"/>
-                                <h:message styleClass="errors" for="typeid" />
-                            </h:panelGroup>
-                        </h:panelGrid> 
-                        <h:panelGrid columns="2"> 
-                            <h:outputLabel styleClass="prompt" value="#{msgs.enterValuePrompt}:" for="valueid" />
-                            <h:panelGroup>
-                                <h:inputText styleClass="text" id="valueid" value="#{uploadMicrovigeneBean.value}" required="true"/>
-                                <h:message styleClass="errors" for="valueid" />
-                            </h:panelGroup>
-                        </h:panelGrid> 
-                        <h:panelGrid columns="2"> 
-                            <h:outputLabel styleClass="prompt" value="#{msgs.enterExtrainfoPrompt}:" for="extraid" />
-                            <h:panelGroup>
-                                <h:inputText styleClass="text" id="extraid" value="#{uploadMicrovigeneBean.extra}" required="false"/>
-                                <h:message styleClass="errors" for="extraid" />
-                            </h:panelGroup>
-                        </h:panelGrid> 
-                    </h:panelGroup>
-                    
-                    <t:dataTable value="uploadMicrovigeneBean.variables" var="expvar">    
-                        <t:column>
-                        <f:facet name="header">
-                            <h:outputText value="Type"/>
-                        </f:facet>
-                        <h:outputText value="#{var.type}"/>
-                        </t:column>                        
-                        <t:column>
-                        <f:facet name="header">
-                            <h:outputText value="Value"/>
-                        </f:facet>
-                        <h:outputText value="#{var.value}"/>
-                        </t:column>
-                        <t:column>
-                        <f:facet name="header">
-                            <h:outputText value="Extra Information"/>
-                        </f:facet>
-                        <h:outputText value="#{var.extra}"/>
-                        </t:column>
-                </t:dataTable>
                 
                 </h:panelGrid>
                 

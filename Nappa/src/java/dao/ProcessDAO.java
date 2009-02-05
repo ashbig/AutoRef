@@ -15,6 +15,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Date;
 import java.util.List;
+import transfer.MicrovigeneresultTO;
+import transfer.MicrovigeneslideTO;
 import transfer.ProcessexecutionTO;
 import transfer.ProcessobjectTO;
 import transfer.ProcessprotocolTO;
@@ -49,15 +51,25 @@ public class ProcessDAO {
                 " values(?,?,?,?,?,?,?)";
         String sql3 = "insert into samplelineage(executionid, sampleid_from, sampleid_to)"+
                 " values(?,?,?)";
-        String sql4 = "insert into result(resultid,resulttype,resultvalue,executionid,sampleid)  values(?,?,?,?,?)";
+        String sql4 = "insert into result(resultid,resulttype,resultvalue,executionid,sampleid,slideid) values(?,?,?,?,?,?)";
         //String sql4 = "insert into containerheaderlineage(executionid, containerid_from, containerid_to, lineageorder)"+
         //        " values(?,?,?,?)";
         String sql5 = "insert into variables(executionid,vartype,varvalue,extra) values(?,?,?,?)";
+        String sql6 = "insert into microvigeneresult(resultid,meannet,meantotal,meanbkg,"+
+                "bkgused,meandust,mediannet,mediantotal,medianbkg,volnet,voltotal,volbkg,"+
+                "voldust,cvspot,cvbkg,dustiness,spotskew,bkgskew,kurtosis,rank,type,xcenter,"+
+                "ycenter,areasignal,areaspot,areabkg,solidity,circularity,roundness,aspect)"+
+                " values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        String sql7 = "insert into microvigeneslide(executionid,slideid,vdate,version,"+
+                "roirow,roicol,mainrow,maincol,subrow,subcol) values(?,?,?,?,?,?,?,?,?,?)";
+        
         PreparedStatement stmt = null;
         PreparedStatement stmt2 = null;
         PreparedStatement stmt3 = null;
         PreparedStatement stmt4 = null;
         PreparedStatement stmt5 = null;
+        PreparedStatement stmt6 = null;
+        PreparedStatement stmt7 = null;
         
         try {
             stmt = conn.prepareStatement(sql);
@@ -66,9 +78,10 @@ public class ProcessDAO {
             stmt.setString(3, p.getWho().getName());
             stmt.setString(4, p.getOutcome());
             DatabaseTransaction.executeUpdate(stmt);
-            
+           
             List<ProcessobjectTO> objects = p.getObjects();
             stmt2 = conn.prepareStatement(sql2);
+            stmt7 = conn.prepareStatement(sql7);
             for(ProcessobjectTO o:objects) {
                 stmt2.setInt(1,p.getExecutionid());
                 stmt2.setInt(2,o.getObjectid());
@@ -78,6 +91,21 @@ public class ProcessDAO {
                 stmt2.setInt(6, o.getLevel());
                 stmt2.setString(7, o.getObjectname());
                 DatabaseTransaction.executeUpdate(stmt2);
+                
+                MicrovigeneslideTO vslide = o.getVslide();
+                if(vslide != null) {
+                    stmt7.setInt(1, p.getExecutionid());
+                    stmt7.setInt(2, vslide.getSlideid());
+                    stmt7.setString(3, vslide.getDate());
+                    stmt7.setString(4, vslide.getVersion());
+                    stmt7.setInt(5, vslide.getRoiRowInFile());
+                    stmt7.setInt(6, vslide.getRoiColInFile());
+                    stmt7.setInt(7, vslide.getMainRowInFile());
+                    stmt7.setInt(8, vslide.getMainColInFile());
+                    stmt7.setInt(9, vslide.getSubRowInFile());
+                    stmt7.setInt(10, vslide.getSubColInFile());
+                    DatabaseTransaction.executeUpdate(stmt7);
+                }
             }
             
             List<SamplelineageTO> slineages = p.getSlineages();
@@ -103,6 +131,7 @@ public class ProcessDAO {
             if(results.size()>0) {
                 int resultid = SequenceDAO.getNextid("result", "resultid");
                 stmt4 = conn.prepareStatement(sql4);
+                stmt6 = conn.prepareStatement(sql6);
                 for(ResultTO r:results) {
                     r.setResultid(resultid);
                     stmt4.setInt(1, resultid);
@@ -110,7 +139,42 @@ public class ProcessDAO {
                     stmt4.setString(3, r.getValue());
                     stmt4.setInt(4, p.getExecutionid());
                     stmt4.setInt(5, r.getSampleid());
+                    stmt4.setInt(6, r.getSlideid());
                     DatabaseTransaction.executeUpdate(stmt4);
+                    
+                    if(ResultTO.TYPE_MICROVIGENE.equals(r.getType())) {
+                        stmt6.setInt(1, resultid);
+                        stmt6.setDouble(2, ((MicrovigeneresultTO)r).getMeannet());
+                        stmt6.setDouble(3, ((MicrovigeneresultTO)r).getMeantotal());
+                        stmt6.setDouble(4, ((MicrovigeneresultTO)r).getMeanbkg());
+                        stmt6.setInt(5, ((MicrovigeneresultTO)r).getBkgused());
+                        stmt6.setInt(6, ((MicrovigeneresultTO)r).getMeandust());
+                        stmt6.setInt(7, ((MicrovigeneresultTO)r).getMediannet());
+                        stmt6.setInt(8, ((MicrovigeneresultTO)r).getMediantotal());
+                        stmt6.setInt(9, ((MicrovigeneresultTO)r).getMedianbkg());
+                        stmt6.setInt(10, ((MicrovigeneresultTO)r).getVolnet());
+                        stmt6.setInt(11, ((MicrovigeneresultTO)r).getVoltotal());
+                        stmt6.setInt(12, ((MicrovigeneresultTO)r).getVolbkg());
+                        stmt6.setDouble(13, ((MicrovigeneresultTO)r).getVoldust());
+                        stmt6.setDouble(14, ((MicrovigeneresultTO)r).getCvspot());
+                        stmt6.setDouble(15, ((MicrovigeneresultTO)r).getCvbkg());
+                        stmt6.setInt(16, ((MicrovigeneresultTO)r).getDustiness());
+                        stmt6.setDouble(17, ((MicrovigeneresultTO)r).getSpotskew());
+                        stmt6.setDouble(18, ((MicrovigeneresultTO)r).getBkgskew());
+                        stmt6.setDouble(19, ((MicrovigeneresultTO)r).getKurtosis());
+                        stmt6.setInt(20, ((MicrovigeneresultTO)r).getRank());
+                        stmt6.setInt(21, ((MicrovigeneresultTO)r).getSpottype());
+                        stmt6.setInt(22, ((MicrovigeneresultTO)r).getXcenter());
+                        stmt6.setInt(23, ((MicrovigeneresultTO)r).getYcenter());
+                        stmt6.setInt(24, ((MicrovigeneresultTO)r).getAreasignal());
+                        stmt6.setInt(25, ((MicrovigeneresultTO)r).getAreaspot());
+                        stmt6.setInt(26, ((MicrovigeneresultTO)r).getAreabkg());
+                        stmt6.setInt(27, ((MicrovigeneresultTO)r).getSolidity());
+                        stmt6.setDouble(28, ((MicrovigeneresultTO)r).getCircularity());
+                        stmt6.setDouble(29, ((MicrovigeneresultTO)r).getRoundness());
+                        stmt6.setDouble(30, ((MicrovigeneresultTO)r).getAspect());
+                        DatabaseTransaction.executeUpdate(stmt6);
+                    }
                     resultid++;
                 }
             }
@@ -125,6 +189,7 @@ public class ProcessDAO {
                 DatabaseTransaction.executeUpdate(stmt5);
             }
         } catch (Exception ex) {
+            ex.printStackTrace();
             throw new DaoException("Error occured while inserting into database."+ex.getMessage());
         } finally {
             DatabaseTransaction.closeStatement(stmt);
@@ -132,6 +197,12 @@ public class ProcessDAO {
             DatabaseTransaction.closeStatement(stmt3);
             if(stmt4 != null)
                 DatabaseTransaction.closeStatement(stmt4);
+            if(stmt5 != null)
+                DatabaseTransaction.closeStatement(stmt5);
+            if(stmt6 != null)
+                DatabaseTransaction.closeStatement(stmt6);
+            if(stmt7 != null)
+                DatabaseTransaction.closeStatement(stmt7);
         }
     }
     
