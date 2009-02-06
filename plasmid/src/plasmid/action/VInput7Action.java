@@ -68,7 +68,7 @@ public class VInput7Action extends Action {
                 saveInfo(session, vm, pm, vif);
                 vm.updatetVSubmissionStatus(vif.getVectorid(), "COMPLETE");                
                 af = mapping.findForward("continue");
-            } else if (sAction.equals("Save")) {
+            } else if (sAction.equals("Save...")) {
                 saveInfo(session, vm, pm, vif);
                 af = mapping.findForward("save");
             } else if (sAction.equals("Back")) {

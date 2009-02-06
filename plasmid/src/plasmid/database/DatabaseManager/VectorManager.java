@@ -367,7 +367,7 @@ public class VectorManager extends TableManager {
         }
 
         StringConvertor sc = new StringConvertor();
-        List syns = sc.convertFromStringToCapList(synonyms, ",");
+        List syns = sc.convertFromStringToList(synonyms, ",");
 
         return (updateSynonyms(vid, syns));
     }
@@ -436,7 +436,7 @@ public class VectorManager extends TableManager {
         }
 
         StringConvertor sc = new StringConvertor();
-        List syns = sc.convertFromStringToCapList(synonyms, ",");
+        List syns = sc.convertFromStringToList(synonyms, ",");
 
         return insertSynonyms(vid, syns);
     }

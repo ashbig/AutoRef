@@ -158,8 +158,9 @@ public class CloneVector implements Serializable {
     public void setUserid(int userid) {
         this.userid = userid;
     }
+    
     // Regular comments. Within <CMT></CMT>
-    public String getComments() {
+    public String getTaggedComments() {
         if ((comments == null) || (comments.length() < 1)) {
             return null;
         }
@@ -189,7 +190,7 @@ public class CloneVector implements Serializable {
         return cmt;
     }
     // Return Full comments contents include <CMT></CMT> and <IPD></IPD>
-    public void setComments(String s) {
+    public void setTaggedComments(String s) {
         if ((s != null) && s.length() > 0) {
             String bcm = "<CMT>", ecm = "</CMT>", bim = "<IPD>", eim = "</IPD>";
 
@@ -228,8 +229,23 @@ public class CloneVector implements Serializable {
     public void setFullComments(String s) {
         this.comments = s;
     }
-    // Return IPD. Within <IPD></IPD>
+
+    public String getComments() {
+        return getFullComments();
+    }
+    public void setComments(String s) {
+        setFullComments(s);
+    }
+
     public String getIPD() {
+        return getFullComments();
+    }
+    public void setIPD(String s) {
+        setFullComments(s);
+    }
+    
+    // Return IPD. Within <IPD></IPD>
+    public String getTaggedIPD() {
         if ((comments == null) || (comments.length() < 1)) {
             return null;
         }
@@ -259,7 +275,7 @@ public class CloneVector implements Serializable {
         return cmt;
     }
 
-    public void setIPD(String s) {
+    public void setTaggedIPD(String s) {
         if ((s != null) && s.length() > 0) {
             String bcm = "<CMT>", ecm = "</CMT>", bim = "<IPD>", eim = "</IPD>";
             if ((comments == null) || (comments.length() < 1)) {
@@ -343,7 +359,7 @@ public class CloneVector implements Serializable {
     public void setSyns(String s) {
         this.syns = s;
         StringConvertor sc = new StringConvertor();
-        synonyms = sc.convertFromStringToCapList(s, ",");
+        synonyms = sc.convertFromStringToList(s, ",");
     }
 
     public String getSyns() {

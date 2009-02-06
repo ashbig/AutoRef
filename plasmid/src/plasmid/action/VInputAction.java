@@ -156,7 +156,7 @@ public class VInputAction extends Action {
         } else if (vector != null) {
             seqfilename = vector.getSeqfilename();
         }
-        String comments = ((vif.getComments().length() < 1) ? "" : "<CMT>" + vif.getComments() + "</CMT>");
+        String comments = ((vif.getComments() == null) ? "" : vif.getComments());
         String syns = vif.getSyns();
         vector = null;
 

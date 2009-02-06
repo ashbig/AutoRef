@@ -64,6 +64,7 @@ public class PReceiveAction extends Action {
             t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
             CloneManager cm = new CloneManager(conn);
+            VectorManager vm = new VectorManager(conn);
 
             if (sAction.equals("Find")) {
                 Clone c = cm.queryCloneByCloneid(cloneid);
@@ -72,6 +73,11 @@ public class PReceiveAction extends Action {
                 } else {
                     request.setAttribute("Clone", c);
                 }
+                List hs = vm.getHSs("");
+                session.removeAttribute("HS");
+                if ((hs != null) && (hs.size() > 0)) {
+                    session.setAttribute("HS", hs);
+                }    
             } else if (sAction.equals("Submit")) { //Submit
                 cm.updateCloneSubmission(cloneid, user.getUserid(),
                         vif.getStatus(), vif.getHs(), vif.getRestriction(), vif.getFile().getFileName(),
