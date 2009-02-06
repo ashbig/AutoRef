@@ -12,7 +12,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
         <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
     </head>
-    
+
     <body>
         <jsp:include page="homeTitle.jsp" />
         <table width="1000" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
@@ -54,7 +54,9 @@
                                                 <td>
                                                     <logic:empty name="Clone" property="hosts">
                                                         <html:select name="pReceiveForm" property="hs">
-                                                            <option selected>DH5-alpha T1 phage resistant</option>
+                                                            <logic:iterate id="hs" name="HS">
+                                                                        <option value="<bean:write name="hs" />"><bean:write name="hs" /></option>
+                                                                    </logic:iterate>
                                                         </html:select>
                                                     </logic:empty>
                                                     <logic:notEmpty name="Clone" property="hosts">
@@ -100,7 +102,7 @@
                                                 </td>
                                             </tr>
                                         </table>
-                                        
+
                                 </td></tr>
                                 <tr bgcolor="white" height="18px"><td></td></tr>
                                 <tr bgcolor="white"><td><html:submit value="Submit" onclick="return checkForm();"/></td></tr>
@@ -110,7 +112,7 @@
                 </td>
             </tr>
         </table>
-        
+
         <jsp:include page="footer.jsp" />
         <script>
             function checkFind() {
