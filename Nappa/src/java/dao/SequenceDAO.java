@@ -197,6 +197,7 @@ public class SequenceDAO {
                 } else {
                     throw new DaoException("Error occured while querying sequence "+seqname);
                 }
+                index++;
             }
         } catch (Exception ex) {
             throw new DaoException("Error occured while querying sequence "+seqname+ex.getMessage());
