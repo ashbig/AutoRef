@@ -52,18 +52,9 @@
                                                     </html:select>
                                                 </td>
                                                 <td>
-                                                    <logic:empty name="Clone" property="hosts">
-                                                        <html:select name="pReceiveForm" property="hs">
-                                                            <logic:iterate id="hs" name="HS">
-                                                                        <option value="<bean:write name="hs" />"><bean:write name="hs" /></option>
-                                                                    </logic:iterate>
-                                                        </html:select>
-                                                    </logic:empty>
-                                                    <logic:notEmpty name="Clone" property="hosts">
                                                         <html:select property="hs">
                                                             <html:options name="HS"/>
                                                         </html:select>
-                                                    </logic:notEmpty>
                                                 </td>
                                                 <td><html:select property="restriction">
                                                     <option value="Academic and non-profit lab" selected>Academic and non-profit lab</option>
