@@ -158,26 +158,20 @@ public class VSubmitForDistAction extends Action {
         CloneVector v = (CloneVector) session.getAttribute("Vector");
         Clone c = null;
 
-        int cloneid = v.getCloneid();
-        if (cloneid < 1) {
-            try {
-                DefTableManager dm = new DefTableManager();
-                cloneid = dm.getNextid("cloneid", DatabaseTransaction.getInstance());
-            } catch (Exception ex) {
-                if (Constants.DEBUG) {
-                    System.out.println(ex);
-                }
-            }
-
+        int cloneid = -1;
+        try {
+            DefTableManager dm = new DefTableManager();
+            cloneid = dm.getNextid("cloneid", DatabaseTransaction.getInstance());
             c = new Clone(cloneid, v.getName(), Clone.NOINSERT, vif.getVerified(), vif.getVerifiedmethod(),
                     Clone.NOINSERT, null, Clone.NON_PROFIT, vif.getComments().trim(), v.getVectorid(),
                     v.getName(), v.getMapfilename(), Clone.NOT_AVAILABLE, null, vif.getSource(), v.getDescription());
-        List cs = new ArrayList();
-        cs.add(c);
-              cm.insertClones(cs);
-        } else {
-            cm.updateCloneSFD(cloneid, vif.getVerified(), vif.getVerifiedmethod(), Clone.NON_PROFIT, vif.getComments().trim(), vif.getSource());
-            c = cm.getCloneInfoByCloneid(cloneid);
+            List cs = new ArrayList();
+            cs.add(c);
+            cm.insertClones(cs);
+        } catch (Exception ex) {
+            if (Constants.DEBUG) {
+                System.out.println(ex);
+            }
         }
 
         List VGCA = (List) session.getAttribute("VGCA");
