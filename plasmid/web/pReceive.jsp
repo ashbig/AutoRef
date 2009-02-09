@@ -61,9 +61,7 @@
                                                     </logic:empty>
                                                     <logic:notEmpty name="Clone" property="hosts">
                                                         <html:select property="hs">
-                                                            <logic:iterate id="host" name="Clone" property="hosts">
-                                                                <option value="<bean:write name="host" property="hoststrain"/>"><bean:write name="host" property="hoststrain"/></option>
-                                                            </logic:iterate>
+                                                            <html:options name="HS"/>
                                                         </html:select>
                                                     </logic:notEmpty>
                                                 </td>
