@@ -16,9 +16,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.2 $
- * $Date: 2008-10-14 14:39:38 $
- * $Author: jx25 $
+ * $Revision: 1.3 $
+ * $Date: 2009-02-10 20:51:53 $
+ * $Author: dz4 $
  *
  ******************************************************************************
  *
@@ -36,7 +36,7 @@
 |<---            this code is formatted to fit into 80 columns             --->|
 |<---            this code is formatted to fit into 80 columns             --->|
  */
-package edu.harvard.med.hip.flex.action;
+package plasmid.action;
 
 import java.io.*;
 import java.util.*;
@@ -54,8 +54,8 @@ import org.apache.struts.action.*;
  * Whenever an exception is encountered, controll should be forwarded
  * to this action to process the exception.
  *
- * @author     $Author: jx25 $
- * @version    $Revision: 1.2 $ $Date: 2008-10-14 14:39:38 $
+ * @author     $Author: dz4 $
+ * @version    $Revision: 1.3 $ $Date: 2009-02-10 20:51:53 $
  */
 public class ProcessErrorAction extends Action {
 
