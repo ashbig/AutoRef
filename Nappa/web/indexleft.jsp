@@ -38,7 +38,8 @@ on Libraries node in Projects view can be used to add the JSTL 1.1 library.
             </ul>
             <ul>Add
                 <li><a href="./faces/SearchContainer.jsp" target="rightFrame">Add Controls</a></li>
-                <li><a href="./faces/AddReagent.jsp" target="rightFrame">Add New Reagent</a></li>
+                <li><a href="./faces/AddReagent.jsp" target="rightFrame">Add Reagent</a></li>
+                <li><a href="./faces/AddVarType.jsp" target="rightFrame">Add Variable Type</a></li>
             </ul>
             <ul>Search
                 <li><a href="./faces/SearchLayout.jsp" target="rightFrame">Search Slide Layout</a></li>
