@@ -240,6 +240,7 @@ public class ContainerDAO {
                 }
             }
         } catch (Exception ex) {
+            ex.printStackTrace();
             throw new DaoException("Error occured while inserting containers into database." + ex.getMessage());
         } finally {
             DatabaseTransaction.closeStatement(stmt);

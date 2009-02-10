@@ -8,7 +8,8 @@ import java.util.*;
 import javax.naming.*;
 import javax.sql.*;
 import javax.sql.rowset.CachedRowSet;
-import com.sun.rowset.CachedRowSetImpl;
+//import com.sun.rowset.CachedRowSetImpl;
+import oracle.jdbc.rowset.OracleCachedRowSet;
 
 /**
  *
@@ -20,7 +21,7 @@ import com.sun.rowset.CachedRowSetImpl;
  * ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
  *
  * @author     $Author: dz4 $
- * @version    $Revision: 1.2 $ $Date: 2009-02-05 20:39:54 $
+ * @version    $Revision: 1.3 $ $Date: 2009-02-10 19:12:19 $
  */
 
 public class DatabaseTransaction {    ///////// need to change DatabaseTransaction2 ///////////
@@ -115,7 +116,8 @@ public class DatabaseTransaction {    ///////// need to change DatabaseTransacti
         try {
 
             conn = requestConnection();
-            crs = new CachedRowSetImpl();
+            //crs = new CachedRowSetImpl();
+            crs = new OracleCachedRowSet();
             stmt = conn.createStatement();
 
             rs = stmt.executeQuery(sql);
@@ -149,7 +151,8 @@ public class DatabaseTransaction {    ///////// need to change DatabaseTransacti
         CachedRowSet crs = null;
         ResultSet results = null;
         try {
-            crs = new CachedRowSetImpl();
+            //crs = new CachedRowSetImpl();
+            crs = new OracleCachedRowSet();
             results = stmt.executeQuery();
             crs.populate(results);
 
