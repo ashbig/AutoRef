@@ -40,7 +40,7 @@ public class ControlFileParser extends ReagentFileParser {
             
             while((line = in.readLine()) != null && line.trim().length()>0) {
                 StringTokenizer tokenizer = new StringTokenizer(line, "\t");
-                String name = tokenizer.nextToken();
+                String name = tokenizer.nextToken().trim();
                 String plate = tokenizer.nextToken();
                 String well = tokenizer.nextToken();
                 ReagentInfo r = new ReagentInfo(name,ReagentTO.getTYPE_CONTROL(), null,plate,well);
