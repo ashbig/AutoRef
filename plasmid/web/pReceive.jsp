@@ -12,7 +12,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
         <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
     </head>
-
+    
     <body>
         <jsp:include page="homeTitle.jsp" />
         <table width="1000" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
@@ -22,15 +22,15 @@
                 </td>
                 <td width="83%" align="left" valign="top">
                     <jsp:include page="pReceiveTitle.jsp" />
-                    <html:form action="/pReceive" method="POST" enctype="multipart/form-data">
+                    <html:form action="/pReceive" method="POST">
                         <html:errors/>
                         <table width="100%" border="0">
                             <tr><td><h2>Receive Plasmids</h2></td></tr>
                             <tr><td><font size="-2">*Required field is in bold</font></td></tr>
                             <tr><td>Please enter the clone IDs (separate each clone ID by new line or white space):</td></tr>
                             <tr><td>
-                                <input type="text" size="60" id="cloneid" name="cloneid" />
-                                &nbsp;<html:submit value="Find" onclick="checkFind();"/>
+                                    <input type="text" size="60" id="cloneid" name="cloneid" />
+                                    &nbsp;<html:submit value="Find" onclick="checkFind();"/>
                             </td></tr>
                             <logic:present name="Clone">
                                 <tr height="18px"><td></td></tr>
@@ -47,22 +47,24 @@
                                                 <td><bean:write name="Clone" property="cloneid"/></td>
                                                 <td>
                                                     <html:select property="status">
-                                                        <option selected>AVAILABLE</option>
-                                                        <option>NOT AVAILABLE</option>
+                                                        <option value="AVAILABLE" selected>AVAILABLE</option>
+                                                        <option value="NOT AVAILABLE">NOT AVAILABLE</option>
                                                     </html:select>
                                                 </td>
                                                 <td>
-                                                        <html:select property="hs">
-                                                            <html:options name="HS"/>
-                                                        </html:select>
+                                                    <html:select property="hs">
+                                                        <html:options name="HS"/>
+                                                    </html:select>
                                                 </td>
-                                                <td><html:select property="restriction">
-                                                    <option value="Academic and non-profit lab" selected>Academic and non-profit lab</option>
-                                                    <option value="Hip only">Hip only</option>
-                                                    <option value="No restriction">No restriction</option>
-                                                </html:select></td>
                                                 <td>
-                                                    <html:file property="file"/>
+                                                    <html:select property="restriction">
+                                                        <html:options name="RES"/>
+                                                    </html:select>
+                                                </td>
+                                                <td>
+                                                    <html:select property="mta">
+                                                        <html:options name="MTA"/>
+                                                    </html:select>
                                                 </td>
                                             </tr>
                                         </table>
@@ -73,25 +75,31 @@
                                             <tr bgcolor="white">
                                                 <td width="17%" align="right"><strong>Who submitted:</strong></td>
                                                 <td width="24%">
-                                                    <input type="text" name="sender" id="sender">
+                                                    <!--<input type="text" name="sender" id="sender"> -->
+                                                    <html:text name="Clone" property="sender"/>
                                                 </td>
                                                 <td width="16%" align="right"><strong>When submitted:</strong></td>
                                                 <td width="24%">
-                                                    <input type="text" name="sdate" id="sdate"><br><font size="-1">(Please enter like 01-DEC-2008)</font>
+                                                    <!-- <input type="text" name="sdate" id="sdate">-->
+                                                    <html:text name="Clone" property="sdate"/>
+                                                    <br><font size="-1">(Please enter like 01-DEC-2008)</font>
                                                 </td>
                                             </tr>
                                             <tr bgcolor="white">
                                                 <td align="right"><strong>Who received:</strong></td>
                                                 <td>
-                                                    <input type="text" name="receiver" id="receiver">
+                                                    <!-- <input type="text" name="receiver" id="receiver">  -->
+                                                    <html:text name="Clone" property="receiver"/>
                                                 </td>
                                                 <td align="right"><strong>When received:</strong></td>
                                                 <td>
-                                                    <input type="text" name="rdate" id="rdate"><br><font size="-1">(Please enter like 01-DEC-2008)</font>
+                                                    <!-- <input type="text" name="rdate" id="rdate"> -->
+                                                    <html:text name="Clone" property="rdate"/>
+                                                    <br><font size="-1">(Please enter like 01-DEC-2008)</font>
                                                 </td>
                                             </tr>
                                         </table>
-
+                                        
                                 </td></tr>
                                 <tr bgcolor="white" height="18px"><td></td></tr>
                                 <tr bgcolor="white"><td><html:submit value="Submit" onclick="return checkForm();"/></td></tr>
@@ -101,7 +109,7 @@
                 </td>
             </tr>
         </table>
-
+        
         <jsp:include page="footer.jsp" />
         <script>
             function checkFind() {

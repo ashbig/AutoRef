@@ -611,6 +611,13 @@ public class CloneManager extends TableManager {
     }
 
     public Clone queryCloneByCloneid(int cloneid) {
+        return queryCloneByCloneid(cloneid, false);
+    }
+
+    public Clone queryCloneByCloneid(int cloneid, boolean querySubmission) {
+        if (cloneid < 1) {
+            return null;
+        }
         String sql = "select clonename, clonetype, verified, vermethod," +
                 " domain, subdomain, restriction, comments, vectorid, vectorname, clonemapfilename, status,specialtreatment,source,description" +
                 " from clone where cloneid=" + cloneid;
@@ -643,6 +650,7 @@ public class CloneManager extends TableManager {
         String sql11 = "select propertytype,propertyvalue,extrainfo from cloneproperty where cloneid=" + cloneid;
         String sql12 = "select propertytype,propertyvalue,extrainfo from insertproperty where insertid=?";
         String sql13 = "select seqorder,seqtext from seqtext t, dnasequence d where t.sequenceid=d.sequenceid and d.insertid=? order by seqorder";
+        String sql14 = "select submitter, TO_CHAR(submitdate, 'DD-MON-YYYY'), receiver, TO_CHAR(receivedate, 'DD-MON-YYYY') from clonesubmission where cloneid=" + cloneid + " order by submissionid desc";
 
         Clone c = null;
 
@@ -665,7 +673,19 @@ public class CloneManager extends TableManager {
                 String specialtreatment = rs.getString(13);
                 String src = rs.getString(14);
                 String d = rs.getString(15);
-                c = new Clone(cloneid, clonename, clonetype, verified, vermethod, domain, subdomain, restriction, comments, vectorid, vectorname, clonemap, status, specialtreatment, src, d);
+
+                String submitter = "", receiver = "";
+                String submitdate = "", receivedate = "";
+                if (querySubmission) {
+                    ResultSet rs14 = t.executeQuery(sql14);
+                    if (rs14.next()) {
+                        submitter = rs14.getString(1);
+                        submitdate = rs14.getString(2);
+                        receiver = rs14.getString(3);
+                        receivedate = rs14.getString(4);
+                    }
+                }
+                c = new Clone(cloneid, clonename, clonetype, verified, vermethod, domain, subdomain, restriction, comments, vectorid, vectorname, clonemap, status, specialtreatment, src, d, submitter, submitdate, receiver, receivedate);
 
                 List inserts = new ArrayList();
                 ResultSet rs2 = t.executeQuery(sql2);
@@ -1750,7 +1770,7 @@ public class CloneManager extends TableManager {
         if ((cloneid < 1) || (verified == null) || (verified.length() < 1) || (source == null) || (source.length() < 1)) {
             return true;
         }
-        
+
         String sql = "update clone set verified=?, vermethod=?, restriction=?, comments=?, source=? where cloneid=?";
         try {
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -1769,28 +1789,35 @@ public class CloneManager extends TableManager {
 
         return true;
     }
-    
-    public boolean updateCloneSubmission(int cloneid, int userid,
-            String st, String hs, String re, String f,
+
+    public boolean updateCloneSubmission(int csid, int cloneid, int userid,
+            String st, String hs, String re, String mta,
             String s, String sd, String r, String rd) {
-        if ((cloneid < 1) || (userid < 1) || (s == null) || (s.length() < 1) || (sd == null) || (sd.length() < 1) || (r == null) || (r.length() < 1) || (rd == null) || (rd.length() < 1) || (st == null) || (st.length() < 1) || (hs == null) || (hs.length() < 1) || (re == null) || (re.length() < 1) || (f == null) || (f.length() < 1)) {
-            return true;
+        if ((csid < 1) || (cloneid < 1) || (userid < 1) || (s == null) || (s.length() < 1) || (sd == null) || (sd.length() < 1) || (r == null) || (r.length() < 1) || (rd == null) || (rd.length() < 1) || (st == null) || (st.length() < 1) || (hs == null) || (hs.length() < 1)) {
+            return false;
         }
 
-        String sql1 = "update clone set status=? where cloneid=?";
-        String sql2 = "update host set isinuse=? where cloneid=? and hoststrain=?";
-        String sql3 = "insert into clonesubmission (cloneid, userid, submitter, submitdate, receiver, receivedate) values (?,?,?,?,?,?)";
+        if ((re == null) || (re.length() < 1)) {
+            re = "";
+        }
+        if ((mta == null) || (mta.length() < 1)) {
+            mta = "";
+        }
+        String sql1 = "update clone set status=?, restriction=?, specialtreatment=? where cloneid=?";
+        String sql2 = "update host set isinuse='Y' where cloneid=? and hoststrain=?";
+        String sql3 = "insert into clonesubmission (cloneid, userid, submitter, submitdate, receiver, receivedate, submissionid, submissiondate, submissionstatus) values (?,?,?,?,?,?,?,SYSDATE,'RECEIVED')";
         try {
             PreparedStatement stmt1 = conn.prepareStatement(sql1);
             PreparedStatement stmt2 = conn.prepareStatement(sql2);
             PreparedStatement stmt3 = conn.prepareStatement(sql3);
 
             stmt1.setString(1, st);
-            stmt1.setInt(2, cloneid);
+            stmt1.setString(2, re);
+            stmt1.setString(3, mta);
+            stmt1.setInt(4, cloneid);
 
-            stmt2.setString(1, "Y");
-            stmt2.setInt(2, cloneid);
-            stmt2.setString(3, hs);
+            stmt2.setInt(1, cloneid);
+            stmt2.setString(2, hs);
 
             stmt3.setInt(1, cloneid);
             stmt3.setInt(2, userid);
@@ -1798,6 +1825,7 @@ public class CloneManager extends TableManager {
             stmt3.setString(4, sd);
             stmt3.setString(5, r);
             stmt3.setString(6, rd);
+            stmt3.setInt(7, csid);
             DatabaseTransaction.executeUpdate(stmt1);
             DatabaseTransaction.closeStatement(stmt1);
             DatabaseTransaction.executeUpdate(stmt2);
@@ -1810,6 +1838,29 @@ public class CloneManager extends TableManager {
         }
 
         return true;
+    }
+
+    public boolean checkNoInsertCloneExistByVectorid(int vectorid) {
+        if (vectorid < 1) {
+            return false;
+        }
+        boolean bResult = false;
+
+        String sql = "select * from clone where vectorid=? and clonetype='" + Clone.NOINSERT + "'";
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, vectorid);
+            ResultSet rs = DatabaseTransaction.executeQuery(stmt);
+            if (rs.next()) {
+                bResult = true;
+            }
+            DatabaseTransaction.closeStatement(stmt);
+        } catch (Exception ex) {
+            handleError(ex, "Error occured while query CLONE table");
+            return false;
+        }
+
+        return bResult;
     }
 
     public static void main(String args[]) {

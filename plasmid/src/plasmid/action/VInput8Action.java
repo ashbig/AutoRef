@@ -52,6 +52,13 @@ public class VInput8Action extends Action {
         ActionErrors errors = new ActionErrors();
         ActionForward af = null;
         HttpSession session = request.getSession();
+        
+        List psic = DefTableManager.getVocabularies("psisite","name");
+        session.removeAttribute("PSIC");
+        if ((psic != null) && (psic.size() > 0)) {
+            session.setAttribute("PSIC", psic);
+        }
+        
         af = mapping.findForward("continue");
         return (af);
     }

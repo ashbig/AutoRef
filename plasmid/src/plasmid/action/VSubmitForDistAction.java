@@ -66,7 +66,7 @@ public class VSubmitForDistAction extends Action {
                 addVGC(session, vif, errors);
 
                 af = new ActionForward(mapping.getInput());
-            // vif.reset();
+                // vif.reset();
             } else if (sAction.equals("Remove From List")) {
                 removeVGC(session, vif);
 
@@ -79,7 +79,7 @@ public class VSubmitForDistAction extends Action {
                 saveInfo(session, request, cm, vif);
 
                 af = new ActionForward(mapping.getInput());
-            //af = mapping.findForward("success");
+                //af = mapping.findForward("success");
             } else if (sAction.equals("Add New Growth Condition")) {
                 VectorManager vm = new VectorManager(conn);
                 List ht = vm.getHTs("");
@@ -162,29 +162,44 @@ public class VSubmitForDistAction extends Action {
         try {
             DefTableManager dm = new DefTableManager();
             cloneid = dm.getNextid("cloneid", DatabaseTransaction.getInstance());
+            String source = "";
+            if (vif.getSource().equals("PSI")) {
+                source = vif.getPsi().trim();
+            } else {
+                source = vif.getNonpsi().trim();
+            }
             c = new Clone(cloneid, v.getName(), Clone.NOINSERT, vif.getVerified(), vif.getVerifiedmethod(),
                     Clone.NOINSERT, null, Clone.NON_PROFIT, vif.getComments().trim(), v.getVectorid(),
-                    v.getName(), v.getMapfilename(), Clone.NOT_AVAILABLE, null, vif.getSource(), v.getDescription());
+                    v.getName(), v.getMapfilename(), Clone.NOT_AVAILABLE, null, source, v.getDescription());
             List cs = new ArrayList();
             cs.add(c);
             cm.insertClones(cs);
+
+            if (vif.getSource().equals("PSI")) {
+                List cps = new ArrayList();
+                cps.add(new CloneProperty(cloneid, "Collection", "PSI", ""));
+                cps.add(new CloneProperty(cloneid, "Collection", source, ""));
+                cm.insertCloneProperties(cps);
+            }
+
+            List VGCA = (List) session.getAttribute("VGCA");
+            List VGC = (List) session.getAttribute("VGC");
+            List VHS = (List) session.getAttribute("VHS");
+            List VSM = (List) session.getAttribute("VSM");
+            if (vif.getSameasvector() == null) {  // not the same as vector, add from vgca
+                cm.insertCloneGrowths(cloneid, VGCA);
+            } else {  // the same as vector growth condition, add from vgc
+                cm.insertCloneGrowths(cloneid, VGC);
+            }
+            cm.insertCloneSelections(cloneid, VSM);
+            cm.insertCloneHosts(cloneid, VHS);
+
         } catch (Exception ex) {
             if (Constants.DEBUG) {
                 System.out.println(ex);
             }
         }
 
-        List VGCA = (List) session.getAttribute("VGCA");
-        List VGC = (List) session.getAttribute("VGC");
-        List VHS = (List) session.getAttribute("VHS");
-        List VSM = (List) session.getAttribute("VSM");
-        if (vif.getSameasvector() == null) {  // not the same as vector, add from vgca
-            cm.insertCloneGrowths(cloneid, VGCA);
-        } else {  // the same as vector growth condition, add from vgc
-            cm.insertCloneGrowths(cloneid, VGC);
-        }
-        cm.insertCloneSelections(cloneid, VSM);
-        cm.insertCloneHosts(cloneid, VHS);
         request.setAttribute("Clone", c);
         session.removeAttribute("VGC");
         session.removeAttribute("VGCA");
@@ -194,5 +209,6 @@ public class VSubmitForDistAction extends Action {
         session.removeAttribute("VFN");
         session.removeAttribute("VPT");
         session.removeAttribute("Vector");
+        session.removeAttribute("SFDR");
     }
 }

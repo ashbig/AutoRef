@@ -10,7 +10,6 @@ import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.upload.FormFile;
 
 import plasmid.coreobject.Clone;
 
@@ -25,8 +24,7 @@ public class PReceiveForm extends ActionForm {
     private String status = null;
     private String hs = null;
     private String restriction = null;
-    private FormFile file = null;
-    private FormFile allfile = null;
+    private String mta = null;
     private String sender = null;
     private String sdate = null;
     private String receiver = null;
@@ -104,20 +102,12 @@ public class PReceiveForm extends ActionForm {
         this.submit = s;
     }
 
-    public FormFile getFile() {
-        return file;
+    public String getMta() {
+        return mta;
     }
 
-    public void setFile(FormFile f) {
-        this.file = f;
-    }
-
-    public FormFile getAllfile() {
-        return allfile;
-    }
-
-    public void setAllfile(FormFile f) {
-        this.allfile = f;
+    public void setMta(String mta) {
+        this.mta = mta;
     }
 
     public PReceiveForm() {
@@ -135,8 +125,7 @@ public class PReceiveForm extends ActionForm {
         status = null;
         hs = null;
         restriction = null;
-        file = null;
-        allfile = null;
+        mta = null;
         sender = null;
         sdate = null;
         receiver = null;

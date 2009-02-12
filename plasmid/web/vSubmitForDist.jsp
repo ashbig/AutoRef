@@ -54,7 +54,7 @@
                                         <html:radio property="source" value="PSI"/>PSI:&nbsp;&nbsp;
                                         <logic:present name="PSIC">
                                             <html:select property="psi">
-                                                <html:options property="PSIC"/>
+                                                <html:options name="PSIC"/>
                                             </html:select>
                                         </logic:present>
                                         <logic:notPresent name="PSIC">

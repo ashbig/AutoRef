@@ -62,6 +62,7 @@ public class ContinueVSFDAction extends Action {
         session.removeAttribute("VHS");
         session.removeAttribute("VSM");
         session.removeAttribute("GC");
+        session.removeAttribute("PSIC");
 
         ContinueVSFDForm vsf = (ContinueVSFDForm) form;
         String vid = vsf.getVID();
@@ -73,6 +74,14 @@ public class ContinueVSFDAction extends Action {
             conn = t.requestConnection();
             VectorManager vm = new VectorManager(conn);
             if (vid != null) {
+                CloneManager cm = new CloneManager(conn);
+                if (cm.checkNoInsertCloneExistByVectorid(Integer.parseInt(vid))) {
+                    DatabaseTransaction.closeConnection(conn);
+                    errors.add(ActionErrors.GLOBAL_ERROR,
+                            new ActionError("error.VID.alreadysubmitted"));
+                    return (new ActionForward(mapping.getInput()));
+                }
+                    
                 session.setAttribute("VID", vid);
 
                 CloneVector v = vm.getVectorByID(vid);
@@ -84,6 +93,7 @@ public class ContinueVSFDAction extends Action {
                 List vgc = vm.getVGCs(nvid);
                 List vhs = vm.getVHSs(nvid);
                 List vsm = vm.getVSMs(nvid);
+
                 if ((vgc != null) && (vgc.size() > 0)) {
                     session.setAttribute("VGC", vgc);
                 }
@@ -93,6 +103,10 @@ public class ContinueVSFDAction extends Action {
                 if ((vsm != null) && (vsm.size() > 0)) {
                     session.setAttribute("VSM", vsm);
                 }
+            }
+            List psic = DefTableManager.getVocabularies("psisite", "name");
+            if ((psic != null) && (psic.size() > 0)) {
+                session.setAttribute("PSIC", psic);
             }
             List gc = vm.getGCNs("");
             if ((gc != null) && (gc.size() > 0)) {

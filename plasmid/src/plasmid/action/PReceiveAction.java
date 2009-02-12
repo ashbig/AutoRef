@@ -16,7 +16,6 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
-import org.apache.struts.upload.FormFile;
 
 import plasmid.form.PReceiveForm;
 import plasmid.coreobject.*;
@@ -56,7 +55,7 @@ public class PReceiveAction extends Action {
 
         PReceiveForm vif = (PReceiveForm) form;
         String sAction = vif.getSubmit();
-        int cloneid = vif.getCloneid();
+        
 
         DatabaseTransaction t = null;
         Connection conn = null;
@@ -67,36 +66,45 @@ public class PReceiveAction extends Action {
             VectorManager vm = new VectorManager(conn);
 
             if (sAction.equals("Find")) {
-                Clone c = cm.queryCloneByCloneid(cloneid);
+                int cloneid = vif.getCloneid();
+                Clone c = cm.queryCloneByCloneid(cloneid, true);
                 if (c == null) {
                     errors.add("PRF", new ActionError("failed.CID.empty"));
                 } else {
-                    request.setAttribute("Clone", c);
+                    session.setAttribute("Clone", c);
                 }
                 List hs = vm.getHSs("");
+                List mta = DefTableManager.getVocabularies("specialtreatment","code");
+                mta.add(0, "");
+                List res = DefTableManager.getVocabularies("restriction","restriction");
                 session.removeAttribute("HS");
+                session.removeAttribute("MTA");
                 if ((hs != null) && (hs.size() > 0)) {
                     session.setAttribute("HS", hs);
-                }    
+                } 
+                if ((mta != null) && (mta.size() > 0)) {
+                    session.setAttribute("MTA", mta);
+                } 
+                if ((res != null) && (res.size() > 0)) {
+                    session.setAttribute("RES", res);
+                } 
             } else if (sAction.equals("Submit")) { //Submit
-                cm.updateCloneSubmission(cloneid, user.getUserid(),
-                        vif.getStatus(), vif.getHs(), vif.getRestriction(), vif.getFile().getFileName(),
-                        vif.getSender(), vif.getSdate(), vif.getReceiver(), vif.getRdate());
-
-                FormFile mtaf = vif.getFile();
-                String filename = mtaf.getFileName().trim();
-                String fPath = getServlet().getServletContext().getRealPath("/") + "PlasmidRepository/file/mta";
-                if ((filename != null) && (filename.length() > 0)) {
-                    File mtaFile = new File(fPath, filename);
-                    FileOutputStream mfOS = new FileOutputStream(mtaFile);
-                    mfOS.write(mtaf.getFileData());
-                    mfOS.flush();
-                    mfOS.close();
-                }
+                DefTableManager dm = new DefTableManager();
+                int csid = dm.getNextid("submissionid", t);
+                Clone c = (Clone) session.getAttribute("Clone");
+                int cloneid = c.getCloneid();
+                if (cm.updateCloneSubmission(csid, cloneid, user.getUserid(),
+                        vif.getStatus(), vif.getHs(), vif.getRestriction(), vif.getMta(),
+                        vif.getSender(), vif.getSdate(), vif.getReceiver(), vif.getRdate()))
+                    DatabaseTransaction.commit(conn);
+                else
+                    DatabaseTransaction.rollback(conn);
+                
+                session.removeAttribute("Clone");
+                session.removeAttribute("HS");
+                session.removeAttribute("MTA");
+                session.removeAttribute("RES");
             }
-
-            DatabaseTransaction.commit(conn);
-
         } catch (Exception ex) {
             if (Constants.DEBUG) {
                 System.out.println(ex);

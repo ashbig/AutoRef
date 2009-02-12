@@ -12,6 +12,22 @@
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
         <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
         <script src="js/common.js"></script>
+        <script>
+            function checkForm2() {
+                vid = document.getElementsByName("VID") ;
+                if ((typeof(vid) == 'undefined') || (vid.length < 1)) {
+                    alert("Please select a vector before continue.")
+                    return false;
+                }                
+                for (i = 0; i < vid.length; i++) {
+                    if (vid[i].checked)
+                        return true;
+                }
+                alert("Please select a vector before continue.")
+                return false;
+            }
+            
+        </script>        
     </head>
     
     <body>
@@ -47,14 +63,14 @@
                     <p></p>
                     <html:form action="/continueVSFD">
                         <logic:notEmpty name="vSearchSFDForm" property="VN">
-                            <logic:notPresent name="vSearchSFDForm" property="results">
+                            <logic:notPresent name="SFDR">
                                 <center><font color="red"><b>No Vector Found. Please try again.</b></font></center>
                             </logic:notPresent>
-                            <logic:present name="vSearchSFDForm" property="results">
-                                <logic:empty name="vSearchSFDForm" property="results">
+                            <logic:present name="SFDR">
+                                <logic:empty name="SFDR">
                                     <center><font color="red"><b>No Vector Found. Please try again.</b></font></center>
                                 </logic:empty>
-                                <logic:notEmpty name="vSearchSFDForm" property="results">
+                                <logic:notEmpty name="SFDR">
                                     <p>We found the following vectors. Please click the vector name to review the
                                     detailed information to make sure it is the same vector.</p>
                                     <p></p>
@@ -71,7 +87,7 @@
                                             <td width="16%"><strong>Vector Name</strong></td>
                                             <td width="80%"><strong>Description</strong></td>
                                         </tr>
-                                        <logic:iterate id="result" name="vSearchSFDForm" property="results">
+                                        <logic:iterate id="result" name="SFDR">
                                             <logic:equal name="result" property="status" value="PENDING">
                                                 <tr bgcolor="#FFFFFCC">
                                                     <td>
@@ -114,7 +130,7 @@
                                         </logic:iterate>
                                     </table>
                                     <p></p>
-                                    <html:submit value="Continue to Vector Submission For Distribution"/>
+                                    <html:submit value="Continue to Vector Submission For Distribution" onclick="return checkForm2();"/>
                                 </logic:notEmpty>
                             </logic:present>
                         </logic:notEmpty>

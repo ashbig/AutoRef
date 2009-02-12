@@ -57,6 +57,8 @@ public class VSearchSFDAction extends Action {
         // get the parameters specified by the customer
         ActionErrors errors = new ActionErrors();
         VSearchSFDForm vsf = (VSearchSFDForm) form;
+        HttpSession session = request.getSession();
+        session.removeAttribute("SFDR");
         List iter = new ArrayList();
         iter.add(vsf.getVN());
         List results = new ArrayList();
@@ -76,7 +78,8 @@ public class VSearchSFDAction extends Action {
                 results = vm.getVectorsForDistByNameLike(vsf.getVN());
             }
             if ((results != null) && (results.size() > 0)) {
-                vsf.setResults(results);
+                // vsf.setResults(results);
+                session.setAttribute("SFDR", results);
             }
         } catch (Exception ex) {
             if(Constants.DEBUG) {

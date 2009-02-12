@@ -49,6 +49,12 @@ public class ContinueVSFDForm extends ActionForm {
    
    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
        ActionErrors errors = new ActionErrors();
+       if (submit.equals("Continue to Vector Submission For Distribution")) {
+            if (VID == null || VID.length() == 0) {
+                errors.add(ActionErrors.GLOBAL_ERROR,
+                        new ActionError("error.VID.selectionrequired"));
+            }
+        }
        return errors;
    }
 }
