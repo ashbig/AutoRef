@@ -100,6 +100,18 @@
             <html:option value="<%=Constants.ALL%>"/>
             <html:option value="<%=Constants.PSI%>"/>
             <html:option value="<%=Constants.PSI_CESG%>"/>
+            <html:option value="<%=Constants.PSI_NYSGX%>"/>
+            <html:option value="<%=Constants.PSI_ATCG%>"/>
+            <html:option value="<%=Constants.PSI_BSGC%>"/>
+            <html:option value="<%=Constants.PSI_CHTSB%>"/>
+            <html:option value="<%=Constants.PSI_CSMP%>"/>
+            <html:option value="<%=Constants.PSI_ICSFI%>"/>
+            <html:option value="<%=Constants.PSI_JCSG%>"/>
+            <html:option value="<%=Constants.PSI_MCSG%>"/>
+            <html:option value="<%=Constants.PSI_NSGC%>"/>
+            <html:option value="<%=Constants.PSI_NYCMPS%>"/>
+            <html:option value="<%=Constants.PSI_SCSG%>"/>
+            <html:option value="<%=Constants.PSI_SGPP%>"/>
         </html:select>
     </td>
   </tr>

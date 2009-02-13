@@ -100,6 +100,18 @@ public class Constants {
     
     public static final String PSI = "PSI";
     public static final String PSI_CESG = "Center for Eukaryotic Structural Genomics";
+    public static final String PSI_NYSGX = "New York SGX Research Center for Structural Genomics";                            
+    public static final String PSI_ATCG = "Accelerated Technologies Center for Gene to 3D Structure";                       
+    public static final String PSI_BSGC = "Berkeley Structural Genomics Center";                                        
+    public static final String PSI_CHTSB = "Center for High-Throughput Structural Biology";                                   
+    public static final String PSI_CSMP = "Center for Structures of Membrane Proteins";                                      
+    public static final String PSI_ICSFI = "Integrated Center for Structure and Function Innovation";                        
+    public static final String PSI_JCSG = "Joint Center for Structural Genomics";                                            
+    public static final String PSI_MCSG = "Midwest Center for Structural Genomics";                                          
+    public static final String PSI_NSGC = "Northeast Structural Genomics Consortium";                                        
+    public static final String PSI_NYCMPS = "New York Consortium on Membrane Protein Structure";                               
+    public static final String PSI_SCSG = "Southeast Collaboratory for Structural Genomics";                                 
+    public static final String PSI_SGPP = "Structural Genomics of Pathogenic Protozoa";  
     
     public static final String PAYPALEMAIL = "janice_williamson@hms.harvard.edu";
     public static final String SEARCH_WILDCARD = "*";
