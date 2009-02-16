@@ -51,6 +51,7 @@ public class Clone implements Serializable {
     protected String specialtreatment;
     protected String source;
     protected String description;
+    protected String hs;
     protected String sender;
     protected String sdate;
     protected String receiver;
@@ -183,6 +184,9 @@ public class Clone implements Serializable {
     public String getSpecialtreatment() {
         return specialtreatment;
     }
+    public String getMta() {
+        return specialtreatment;
+    }
 
     public String getSource() {
         return source;
@@ -215,7 +219,12 @@ public class Clone implements Serializable {
     public String getReceivedate() {
         return rdate;
     }
-
+    public String getHs() {
+        return hs;
+    }
+    public void setHs(String hs) {
+        this.hs=hs;
+    }
     public void setCloneid(int id) {
         this.cloneid = id;
     }
@@ -281,6 +290,9 @@ public class Clone implements Serializable {
     }
 
     public void setSpecialtreatment(String s) {
+        this.specialtreatment = s;
+    }
+    public void setMta(String s) {
         this.specialtreatment = s;
     }
 

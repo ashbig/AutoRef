@@ -35,7 +35,7 @@
           <td height="15" valign="middle"><a href="SearchOrderInput.jsp" class="leftnavtext">Search Orders</a></td>
         </tr>
         <tr> 
-          <td height="15" valign="middle"><a href="pReceive.jsp" class="leftnavtext">Receive Plasmids</a></td>
+          <td height="15" valign="middle"><a href="pReceiveSearch.jsp" class="leftnavtext">Receive Plasmids</a></td>
         </tr>
         </logic:equal>
       </table>

@@ -14,889 +14,796 @@
      need only the "form-bean" element itself, with the corresponding
      "name" and "type" attributes.
 -->
-
-
 <struts-config>
 
 
- 
+
   <!-- ========== Form Bean Definitions =================================== -->
-  <form-beans>
-        <form-bean name="addVFTForm" 
+    <form-beans>
+        <form-bean name="addVFTForm"
                 type="plasmid.form.AddVFTForm"/>
-        <form-bean name="addVFNForm" 
+        <form-bean name="addVFNForm"
                 type="plasmid.form.AddVFNForm"/>
-        <form-bean name="addHSForm" 
+        <form-bean name="addHSForm"
                 type="plasmid.form.AddHSForm"/>
-        <form-bean name="addHTForm" 
+        <form-bean name="addHTForm"
                 type="plasmid.form.AddHTForm"/>
-        <form-bean name="addGCForm" 
+        <form-bean name="addGCForm"
                 type="plasmid.form.AddGCForm"/>
-        <form-bean name="addSMForm" 
+        <form-bean name="addSMForm"
                 type="plasmid.form.AddSMForm"/>
-        <form-bean name="addVPTForm" 
+        <form-bean name="addVPTForm"
                 type="plasmid.form.AddVPTForm"/>
-        <form-bean name="vSearchForm" 
+        <form-bean name="vSearchForm"
                 type="plasmid.form.VSearchForm"/>
-        <form-bean name="vSearchSFDForm" 
+        <form-bean name="vSearchSFDForm"
                 type="plasmid.form.VSearchSFDForm"/>
-        <form-bean name="continueVSubmitForm" 
+        <form-bean name="continueVSubmitForm"
                 type="plasmid.form.ContinueVSubmitForm"/>
-        <form-bean name="continueVSFDForm" 
+        <form-bean name="continueVSFDForm"
                 type="plasmid.form.ContinueVSFDForm"/>
-        <form-bean name="vInputForm" 
+        <form-bean name="vInputForm"
                 type="plasmid.form.VInputForm"/>
-        <form-bean name="vInput2Form" 
+        <form-bean name="vInput2Form"
                 type="plasmid.form.VInput2Form"/>
-        <form-bean name="vInput3Form" 
+        <form-bean name="vInput3Form"
                 type="plasmid.form.VInput3Form"/>
-        <form-bean name="vInput4Form" 
+        <form-bean name="vInput4Form"
                 type="plasmid.form.VInput4Form"/>
-        <form-bean name="vInput5Form" 
+        <form-bean name="vInput5Form"
                 type="plasmid.form.VInput5Form"/>
-        <form-bean name="vInput6Form" 
+        <form-bean name="vInput6Form"
                 type="plasmid.form.VInput6Form"/>
-        <form-bean name="vInput7Form" 
+        <form-bean name="vInput7Form"
                 type="plasmid.form.VInput7Form"/>
-        <form-bean name="vInput8Form" 
+        <form-bean name="vInput8Form"
                 type="plasmid.form.VInput8Form"/>
-        <form-bean name="vSubmitForDistForm" 
+        <form-bean name="vSubmitForDistForm"
                 type="plasmid.form.VSubmitForDistForm"/>
-        <form-bean name="pReceiveForm" 
+        <form-bean name="pReceiveSearchForm"
+                type="plasmid.form.PReceiveSearchForm"/>
+        <form-bean name="pReceiveForm"
                 type="plasmid.form.PReceiveForm"/>
-        <form-bean name="findAuthorForm" 
+        <form-bean name="findAuthorForm"
                 type="plasmid.form.FindAuthorForm"/>
-        <form-bean name="findPMIDForm" 
+        <form-bean name="findPMIDForm"
                 type="plasmid.form.FindPMIDForm"/>
-
-    <form-bean      name="refseqSearchForm"
+        <form-bean      name="refseqSearchForm"
                     type="plasmid.form.RefseqSearchForm"/>
-                    
-    <form-bean      name="cloneDetailForm"
+        <form-bean      name="cloneDetailForm"
                     type="plasmid.form.CloneDetailForm"/>
-
-    <form-bean      name="vectorDetailForm"
+        <form-bean      name="vectorDetailForm"
                     type="plasmid.form.VectorDetailForm"/>
-
-    <form-bean      name="viewCartForm"
+        <form-bean      name="viewCartForm"
                     type="plasmid.form.ViewCartForm"/>
-
-    <form-bean      name="logonForm"
+        <form-bean      name="logonForm"
                     type="plasmid.form.LogonForm"/>
-      
-    <form-bean      name="logoutForm"
+        <form-bean      name="logoutForm"
                     type="plasmid.form.LogoutForm"/>
-                                  
-    <form-bean      name="registrationForm"
+        <form-bean      name="registrationForm"
                     type="plasmid.form.RegistrationForm"/>
-                                  
-    <form-bean      name="checkoutForm"
+        <form-bean      name="checkoutForm"
                     type="plasmid.form.CheckoutForm"/>
-                    
-    <form-bean      name="mergeCartForm"
+        <form-bean      name="mergeCartForm"
                     type="plasmid.form.MergeCartForm"/>
-                    
-    <form-bean      name="viewOrderHistoryForm"
+        <form-bean      name="viewOrderHistoryForm"
                     type="plasmid.form.ViewOrderHistoryForm"/>
-                    
-    <form-bean      name="viewOrderDetailForm"
+        <form-bean      name="viewOrderDetailForm"
                     type="plasmid.form.ViewOrderDetailForm"/>
-                    
-    <form-bean      name="viewOrderClonesForm"
+        <form-bean      name="viewOrderClonesForm"
                     type="plasmid.form.ViewOrderClonesForm"/>
-                    
-    <form-bean      name="findPasswordForm"
+        <form-bean      name="findPasswordForm"
                     type="plasmid.form.FindPasswordForm"/>
-                    
-    <form-bean      name="downloadClonesForm"
+        <form-bean      name="downloadClonesForm"
                     type="plasmid.form.DownloadClonesForm"/>
-                    
-    <form-bean      name="changeOrderStatusForm"
+        <form-bean      name="changeOrderStatusForm"
                     type="plasmid.form.ChangeOrderStatusForm"/>
-                    
-    <form-bean      name="labelPlatesForm"
+        <form-bean      name="labelPlatesForm"
                     type="plasmid.form.LabelPlatesForm"/>
-                    
-    <form-bean      name="printLabelsForm"
+        <form-bean      name="printLabelsForm"
                     type="plasmid.form.PrintLabelsForm"/>
-                    
-    <form-bean      name="uploadCultureResultsForm"
+        <form-bean      name="uploadCultureResultsForm"
                     type="plasmid.form.UploadCultureResultsForm"/>
-                    
-    <form-bean      name="generateWorklistForm"
+        <form-bean      name="generateWorklistForm"
                     type="plasmid.form.GenerateWorklistForm"/>
-                    
-    <form-bean      name="enterResultsForm"
+        <form-bean      name="enterResultsForm"
                     type="plasmid.form.EnterResultsForm"/>
-                    
-    <form-bean      name="viewCollectionForm"
+        <form-bean      name="viewCollectionForm"
                     type="plasmid.form.ViewCollectionForm"/>
-                    
-    <form-bean      name="vectorSearchForm"
+        <form-bean      name="vectorSearchForm"
                     type="plasmid.form.VectorSearchForm"/>
-                    
-    <form-bean      name="cloneSearchForm"
+        <form-bean      name="cloneSearchForm"
                     type="plasmid.form.CloneSearchForm"/>
-                    
-    <form-bean      name="advancedSearchForm"
+        <form-bean      name="advancedSearchForm"
                     type="plasmid.form.AdvancedSearchForm"/>
-                    
-    <form-bean      name="processShippingForm"
+        <form-bean      name="processShippingForm"
                     type="plasmid.form.ProcessShippingForm"/>
-                    
-    <form-bean      name="viewContainersForm"
+        <form-bean      name="viewContainersForm"
                     type="plasmid.form.ViewContainersForm"/>
-                    
-    <form-bean      name="cancelOrderForm"
+        <form-bean      name="cancelOrderForm"
                     type="plasmid.form.CancelOrderForm"/>
-                    
-    <form-bean      name="searchOrderForm"
+        <form-bean      name="searchOrderForm"
                     type="plasmid.form.SearchOrderForm"/>
-                    
-    <form-bean      name="batchOrderForm"
+        <form-bean      name="batchOrderForm"
                     type="plasmid.form.BatchOrderForm"/>
-                    
-    <form-bean      name="findClonesForm"
+        <form-bean      name="findClonesForm"
                     type="plasmid.form.FindClonesForm"/>
-                    
-    <form-bean      name="generateMultipleWorklistForm"
+        <form-bean      name="generateMultipleWorklistForm"
                     type="plasmid.form.GenerateMultipleWorklistForm"/>
-                    
-    <form-bean      name="plate96To384MappingForm"
+        <form-bean      name="plate96To384MappingForm"
                     type="plasmid.form.Plate96To384MappingForm"/>
-                    
-    <form-bean      name="queryVectorForm"
+        <form-bean      name="queryVectorForm"
                     type="plasmid.form.QueryVectorForm"/>
-                    
-    <form-bean      name="blastForm"
+        <form-bean      name="blastForm"
                     type="plasmid.form.BlastForm"/>
-                    
- </form-beans>
+    </form-beans>
 
   <!-- ========== Global Forward Definitions ============================== -->
-  <global-forwards>
-    <forward    name="help"         path="/Help.jsp"/>
-    <forward    name="login"        path="/Login.jsp"/>
-    <forward    name="logout"       path="/Logout.do"/>
-    <forward    name="home"         path="/overview.jsp"/>
-    <forward    name="register"     path="/CustomerRegistration.jsp"/>
-    <forward    name="findRegistration" path="/FindRegistration.jsp"/>
-    <forward    name="error"        path="/ProcessError.do"/>
-    <forward    name="vSearch"      path="/vSearch.jsp"/>
-    <forward    name="vSearchSFD"      path="/vSearchSFD.jsp"/>
-    <forward    name="vInput1"      path="/vInput.jsp"/>
-    <forward    name="vInput2"      path="/vInput2.jsp"/>
-    <forward    name="vInput3"      path="/vInput3.jsp"/>
-    <forward    name="vInput4"      path="/vInput4.jsp"/>
-    <forward    name="vInput5"      path="/vInput5.jsp"/>
-    <forward    name="vInput6"      path="/vInput6.jsp"/>
-    <forward    name="vInput7"      path="/vInput7.jsp"/>
-    <forward    name="vInput8"      path="/vInput8.jsp"/>
-    <forward    name="vSubmitForDist"      path="/vSubmitForDist.jsp"/>
-    <forward    name="addGC"        path="/addGC.jsp"/>
-    <forward    name="addHS"        path="/addHS.jsp"/>
-    <forward    name="addHT"        path="/addHT.jsp"/>
-    <forward    name="addSM"        path="/addSM.jsp"/>
-    <forward    name="addVFN"        path="/addVFN.jsp"/>
-    <forward    name="addVFT"        path="/addVFT.jsp"/>
-    <forward    name="addVPT"        path="/addVPT.jsp"/>
-    <forward    name="findAuthor"    path="/findAuthor.jsp"/>
-    <forward    name="findPMID"    path="/findPMID.jsp"/>
-  </global-forwards>
-  
+    <global-forwards>
+        <forward    name="help"         path="/Help.jsp"/>
+        <forward    name="login"        path="/Login.jsp"/>
+        <forward    name="logout"       path="/Logout.do"/>
+        <forward    name="home"         path="/overview.jsp"/>
+        <forward    name="register"     path="/CustomerRegistration.jsp"/>
+        <forward    name="findRegistration" path="/FindRegistration.jsp"/>
+        <forward    name="error"        path="/ProcessError.do"/>
+        <forward    name="vSearch"      path="/vSearch.jsp"/>
+        <forward    name="vSearchSFD"      path="/vSearchSFD.jsp"/>
+        <forward    name="vInput1"      path="/vInput.jsp"/>
+        <forward    name="vInput2"      path="/vInput2.jsp"/>
+        <forward    name="vInput3"      path="/vInput3.jsp"/>
+        <forward    name="vInput4"      path="/vInput4.jsp"/>
+        <forward    name="vInput5"      path="/vInput5.jsp"/>
+        <forward    name="vInput6"      path="/vInput6.jsp"/>
+        <forward    name="vInput7"      path="/vInput7.jsp"/>
+        <forward    name="vInput8"      path="/vInput8.jsp"/>
+        <forward    name="vSubmitForDist"      path="/vSubmitForDist.jsp"/>
+        <forward    name="addGC"        path="/addGC.jsp"/>
+        <forward    name="addHS"        path="/addHS.jsp"/>
+        <forward    name="addHT"        path="/addHT.jsp"/>
+        <forward    name="addSM"        path="/addSM.jsp"/>
+        <forward    name="addVFN"        path="/addVFN.jsp"/>
+        <forward    name="addVFT"        path="/addVFT.jsp"/>
+        <forward    name="addVPT"        path="/addVPT.jsp"/>
+        <forward    name="findAuthor"    path="/findAuthor.jsp"/>
+        <forward    name="findPMID"    path="/findPMID.jsp"/>
+    </global-forwards>
+
 
   <!-- ========== Action Mapping Definitions ============================== -->
-  <action-mappings type="org.apache.struts.action.ActionMapping">
-    
-    <action     path="/AddCollectionToCart"
+    <action-mappings type="org.apache.struts.action.ActionMapping">
+        <action     path="/AddCollectionToCart"
                 type="plasmid.action.AddCollectionToCartAction"
                name="refseqSearchForm"
               validate="false"
               input="/ViewCollection.jsp">
-      <forward  name="success"  path="/ViewCollection.jsp"/>
-    </action>
-    
-    <action     path="/AdvancedSearch"
+            <forward  name="success"  path="/ViewCollection.jsp"/>
+        </action>
+        <action     path="/AdvancedSearch"
                 type="plasmid.action.AdvancedSearchAction"
                name="advancedSearchForm"
               input="/AdvancedSearch.jsp">
-      <forward  name="success"  path="/DisplayVectorSearchResults.jsp"/>
-      <forward  name="success_psi"  path="/DisplayVectorSearchResultsPSI.jsp"/>
-      <forward  name="empty"  path="/DisplayEmptySearchResults.jsp"/>
-    </action>
-    
-    <action     path="/BatchOrder"
+            <forward  name="success"  path="/DisplayVectorSearchResults.jsp"/>
+            <forward  name="success_psi"  path="/DisplayVectorSearchResultsPSI.jsp"/>
+            <forward  name="empty"  path="/DisplayEmptySearchResults.jsp"/>
+        </action>
+        <action     path="/BatchOrder"
                 type="plasmid.action.BatchOrderAction"
                name="batchOrderForm"
                scope="request"
               input="/BatchOrder.jsp">
-      <forward  name="success"  path="/DisplayCart.jsp"/>
-    </action>
-    
-    <action     path="/BlastSearch"
+            <forward  name="success"  path="/DisplayCart.jsp"/>
+        </action>
+        <action     path="/BlastSearch"
                 type="plasmid.action.BlastSearchAction"
                name="blastForm"
               input="/PrepareBlast.do">
-      <forward  name="success"  path="/BlastSearchResult.jsp"/>
-      <forward  name="empty"  path="/DisplayEmptySearchResults.jsp"/>
-    </action>
-    
-    <action     path="/CancelOrder"
+            <forward  name="success"  path="/BlastSearchResult.jsp"/>
+            <forward  name="empty"  path="/DisplayEmptySearchResults.jsp"/>
+        </action>
+        <action     path="/CancelOrder"
                 type="plasmid.action.CancelOrderAction"
                name="cancelOrderForm"
               input="/OrderList.jsp">
-      <forward  name="success"  path="/ViewOrderHistory.do"/>
-    </action>
-    
-    <action     path="/CancelOrderPaypal"
+            <forward  name="success"  path="/ViewOrderHistory.do"/>
+        </action>
+        <action     path="/CancelOrderPaypal"
                 type="plasmid.action.CancelOrderPaypalAction"
                name="checkoutForm"
               input="/ChoosePayment.jsp">
-      <forward  name="success"  path="/ViewOrderDetail.jsp"/>
-    </action>
-    
-    <action     path="/ChangeOrderStatus"
+            <forward  name="success"  path="/ViewOrderDetail.jsp"/>
+        </action>
+        <action     path="/ChangeOrderStatus"
                 type="plasmid.action.ChangeOrderStatusAction"
                name="changeOrderStatusForm"
               input="/OrderList.jsp">
-      <forward  name="success"  path="/ChangeOrderStatusSuccess.jsp"/>
-    </action>
-    
-    <action     path="/Checkout"
+            <forward  name="success"  path="/ChangeOrderStatusSuccess.jsp"/>
+        </action>
+        <action     path="/Checkout"
                 type="plasmid.action.CheckoutAction"
                name="checkoutForm"
               input="/DisplayCart.jsp">
-      <forward  name="continue"  path="/CheckoutContinue.do"/>
-      <forward  name="mta"  path="/DisplayMTA.jsp"/>
-      <forward  name="success_empty"  path="/DisplayEmptyCart.jsp"/>
-    </action>
-    
-    <action     path="/CheckoutContinue"
+            <forward  name="continue"  path="/CheckoutContinue.do"/>
+            <forward  name="mta"  path="/DisplayMTA.jsp"/>
+            <forward  name="success_empty"  path="/DisplayEmptyCart.jsp"/>
+        </action>
+        <action     path="/CheckoutContinue"
                 type="plasmid.action.CheckoutContinueAction"
                name="checkoutForm"
               input="/Checkout.do">
-      <forward  name="success"  path="/ChooseShipping.jsp"/>
-      <forward  name="success_empty"  path="/DisplayEmptyCart.jsp"/>
-    </action>
-      
-    <action     path="/CheckoutConfirm"
+            <forward  name="success"  path="/ChooseShipping.jsp"/>
+            <forward  name="success_empty"  path="/DisplayEmptyCart.jsp"/>
+        </action>
+        <action     path="/CheckoutConfirm"
                 type="plasmid.action.CheckoutConfirmAction"
                name="checkoutForm"
               input="/Checkout.jsp">
-      <forward  name="success"  path="/CheckoutConfirm.jsp"/>
-    </action>
-      
-    <action     path="/ChoosePayment"
+            <forward  name="success"  path="/CheckoutConfirm.jsp"/>
+        </action>
+        <action     path="/ChoosePayment"
                 type="plasmid.action.ChoosePaymentAction"
                name="checkoutForm"
               input="/CheckoutConfirm.jsp">
-      <forward  name="success"  path="/ViewOrderDetail.jsp"/>
-      <forward  name="success_paypal"  path="/ChoosePayment.jsp"/>
-    </action>
-    
-    <action     path="/ConfirmLogout"
+            <forward  name="success"  path="/ViewOrderDetail.jsp"/>
+            <forward  name="success_paypal"  path="/ChoosePayment.jsp"/>
+        </action>
+        <action     path="/ConfirmLogout"
                 type="plasmid.action.ConfirmLogoutAction"
                name="logoutForm"
               scope="request"
               input="/Logout.do">
-      <forward  name="success"  path="/Home.jsp"/>
-    </action>
-    
-    <action     path="/ConfirmResults"
+            <forward  name="success"  path="/Home.jsp"/>
+        </action>
+        <action     path="/ConfirmResults"
                 type="plasmid.action.ConfirmResultsAction"
                name="enterResultsForm"
                validate="false"
               input="/ConfirmResultFile.jsp">
-      <forward  name="success"  path="/GetResultTypes.do"/>
-    </action>
-    
-    <action     path="/DisplayMTA"
+            <forward  name="success"  path="/GetResultTypes.do"/>
+        </action>
+        <action     path="/DisplayMTA"
                 type="plasmid.action.DisplayMTAAction"
                name="checkoutForm"
               input="/DisplayMTA.jsp">
-      <forward  name="success"  path="/CheckoutContinue.do"/>
-      <forward  name="fail"  path="/Checkout.do"/>
-    </action>
-    
-    <action    path="/DownloadClones"
+            <forward  name="success"  path="/CheckoutContinue.do"/>
+            <forward  name="fail"  path="/Checkout.do"/>
+        </action>
+        <action    path="/DownloadClones"
                type="plasmid.action.DownloadClonesAction"
                name="downloadClonesForm"
               input="/ViewOrderClones.jsp">
-      <forward  name="success"  path="/CreateBiobankWorklistSuccess.jsp"/>
-    </action>
-    
-    <action     path="/EnterAddress"
+            <forward  name="success"  path="/CreateBiobankWorklistSuccess.jsp"/>
+        </action>
+        <action     path="/EnterAddress"
                 type="plasmid.action.EnterAddressAction"
                name="checkoutForm"
               input="/ChooseShipping.jsp">
-      <forward  name="success"  path="/Checkout.jsp"/>
-    </action>
-    
-    <action     path="/EnterShipping"
+            <forward  name="success"  path="/Checkout.jsp"/>
+        </action>
+        <action     path="/EnterShipping"
                 type="plasmid.action.EnterShippingAction"
                name="processShippingForm"
               input="/EnterShipping.jsp">
-      <forward  name="success"  path="/ViewOrderDetail.jsp"/>
-    </action>
-         
-    <action    path="/FindClones"
+            <forward  name="success"  path="/ViewOrderDetail.jsp"/>
+        </action>
+        <action    path="/FindClones"
                type="plasmid.action.FindClonesAction"
                name="findClonesForm"
               scope="request"
               input="/FindClones.jsp">
-      <forward  name="success"   path="/DisplayCloneStorage.jsp"/>
-    </action>
-         
-    <action    path="/FindPassword"
+            <forward  name="success"   path="/DisplayCloneStorage.jsp"/>
+        </action>
+        <action    path="/FindPassword"
                type="plasmid.action.FindPasswordAction"
                name="findPasswordForm"
               scope="request"
               input="/FindPassword.jsp">
-      <forward  name="success"   path="/FindPasswordSuccessful.jsp"/>
-    </action>
-    
-    <action    path="/GenerateContainers"
+            <forward  name="success"   path="/FindPasswordSuccessful.jsp"/>
+        </action>
+        <action    path="/GenerateContainers"
                type="plasmid.action.GenerateContainersAction"
                name="generateWorklistForm"
               validate="false">
-      <forward  name="success"   path="/GenerateContainersSuccessful.txt"/>
-      <forward  name="fail"   path="/GenerateContainersFail.txt"/>
-    </action>
-         
-    <action    path="/GetAlignment"
+            <forward  name="success"   path="/GenerateContainersSuccessful.txt"/>
+            <forward  name="fail"   path="/GenerateContainersFail.txt"/>
+        </action>
+        <action    path="/GetAlignment"
                type="plasmid.action.GetAlignmentAction"
               name="blastForm">
-      <forward  name="success"   path="/ViewAlignment.jsp"/>
-    </action>
-         
-    <action    path="/GetAllVectors"
+            <forward  name="success"   path="/ViewAlignment.jsp"/>
+        </action>
+        <action    path="/GetAllVectors"
                type="plasmid.action.GetAllVectorsAction"
               input="/GetAllVectors.do"
               name="queryVectorForm"
               scope="request">
-      <forward  name="success"   path="/DisplayVectors.jsp"/>
-      <forward  name="empty"   path="/DisplayVectorsEmpty.jsp"/>
-    </action>
-         
-    <action    path="/GetCloneDetail"
+            <forward  name="success"   path="/DisplayVectors.jsp"/>
+            <forward  name="empty"   path="/DisplayVectorsEmpty.jsp"/>
+        </action>
+        <action    path="/GetCloneDetail"
                type="plasmid.action.GetCloneDetailAction"
                name="cloneDetailForm"
               scope="request"
               input="/GetCloneDetailAction">
-      <forward  name="success"   path="/ViewCloneDetail.jsp"/>
-    </action>
-     
-    <action    path="/GetCloneSearchTypes"
+            <forward  name="success"   path="/ViewCloneDetail.jsp"/>
+        </action>
+        <action    path="/GetCloneSearchTypes"
                type="plasmid.action.GetCloneSearchTypesAction">
-      <forward  name="success"   path="/SearchClone.jsp"/>
-    </action>
-     
-    <action    path="/GetCollection"
+            <forward  name="success"   path="/SearchClone.jsp"/>
+        </action>
+        <action    path="/GetCollection"
                type="plasmid.action.GetCollectionAction"
                name="refseqSearchForm"
               validate="false"
               input="/GetCollectionList.do">
-      <forward  name="success"   path="/ViewCollection.jsp"/>
-    </action>
-         
-    <action    path="/GetCollectionList"
+            <forward  name="success"   path="/ViewCollection.jsp"/>
+        </action>
+        <action    path="/GetCollectionList"
                type="plasmid.action.GetCollectionListAction"
               scope="request"
               input="/GetCollectionList.do">
-      <forward  name="success"   path="/CollectionList.jsp"/>
-      <forward  name="empty"   path="/CollectionListEmpty.jsp"/>
-    </action>
-     
-    <action    path="/GetDataForRefseqSearch"
+            <forward  name="success"   path="/CollectionList.jsp"/>
+            <forward  name="empty"   path="/CollectionListEmpty.jsp"/>
+        </action>
+        <action    path="/GetDataForRefseqSearch"
                type="plasmid.action.GetDataForRefseqSearchAction"
                name="refseqSearchForm"
               input="/GetDataForRefseqSearch.do">
-      <forward  name="success"   path="/RefseqSearch.jsp"/>
-    </action>
-     
-    <action    path="/GetResultTypes"
+            <forward  name="success"   path="/RefseqSearch.jsp"/>
+        </action>
+        <action    path="/GetResultTypes"
                type="plasmid.action.GetResultTypesAction"
               scope="request"
               input="/GetResultTypes.do">
-      <forward  name="success"   path="/SelectResultType.jsp"/>
-    </action>
-     
-    <action    path="/GetVectorDetail"
+            <forward  name="success"   path="/SelectResultType.jsp"/>
+        </action>
+        <action    path="/GetVectorDetail"
                type="plasmid.action.GetVectorDetailAction"
                name="vectorDetailForm"
               scope="request"
               input="/GetVectorDetailAction">
-      <forward  name="success"   path="/ViewVectorDetail.jsp"/>
-    </action>
-     
-    <action    path="/GetVectorPropertyTypes"
+            <forward  name="success"   path="/ViewVectorDetail.jsp"/>
+        </action>
+        <action    path="/GetVectorPropertyTypes"
                name="vectorSearchForm"
                type="plasmid.action.GetVectorPropertyTypesAction"
                input="/GetVectorPropertyTypes.do">
-      <forward  name="success"   path="/VectorSearch.jsp"/>
-    </action>
-     
-    <action    path="/LabelPlates"
+            <forward  name="success"   path="/VectorSearch.jsp"/>
+        </action>
+        <action    path="/LabelPlates"
                type="plasmid.action.LabelPlatesAction"
                name="labelPlatesForm"
               scope="request"
               input="/LabelPlates.jsp">
-      <forward  name="success"   path="/PrintLabels.jsp"/>
-    </action>
-    
+            <forward  name="success"   path="/PrintLabels.jsp"/>
+        </action>
+
     <!-- Process a user logon -->
-    <action    path="/Logon"
+        <action    path="/Logon"
                type="plasmid.action.LogonAction"
                name="logonForm"
               scope="request"
               input="/Login.jsp">
-      <forward  name="success"   path="/Account.jsp"/>
-      <forward  name="confirm"   path="/MergeCart.jsp"/>
-      <forward  name="failure"  path="/Login.jsp"/>
-    </action>
+            <forward  name="success"   path="/Account.jsp"/>
+            <forward  name="confirm"   path="/MergeCart.jsp"/>
+            <forward  name="failure"  path="/Login.jsp"/>
+        </action>
 
     <!-- process a user logout -->
-    <action     path="/Logout"
+        <action     path="/Logout"
                 type="plasmid.action.LogoutAction">
-      <forward  name="success"  path="/Home.jsp"/>
-      <forward  name="confirm"  path="/ConfirmLogout.jsp"/>
-    </action>
-    
-     <action    path="/MergeCart"
+            <forward  name="success"  path="/Home.jsp"/>
+            <forward  name="confirm"  path="/ConfirmLogout.jsp"/>
+        </action>
+        <action    path="/MergeCart"
                type="plasmid.action.MergeCartAction"
                name="mergeCartForm"
               scope="request"
               input="/Login.jsp">
-      <forward  name="success"   path="/ViewCart.do"/>
-    </action>
-    
-    <action    path="/MultipleWorklistInput"
+            <forward  name="success"   path="/ViewCart.do"/>
+        </action>
+        <action    path="/MultipleWorklistInput"
                type="plasmid.action.MultipleWorklistInputAction"
                name="generateMultipleWorklistForm"
               input="/MultipleWorklistInput.jsp"
               validate="true">
-      <forward  name="success"   path="/WorklistOutput.jsp"/>
-    </action>
-            
-    <action     path="/PlaceOrder"
+            <forward  name="success"   path="/WorklistOutput.jsp"/>
+        </action>
+        <action     path="/PlaceOrder"
                 type="plasmid.action.PlaceOrderAction"
                name="checkoutForm"
               input="/ChoosePayment.jsp">
-      <forward  name="success"  path="/Home.jsp"/>
-    </action>
-    
-    <action    path="/Plate96To384Input"
+            <forward  name="success"  path="/Home.jsp"/>
+        </action>
+        <action    path="/Plate96To384Input"
                type="plasmid.action.Plate96To384InputAction"
                name="plate96To384MappingForm"
               scope="request"
               input="/Plate96To384Input.jsp"
               validate="true">
-      <forward  name="success"   path="/Plate96To384Input.jsp"/>
-    </action>
-    
-    <action     path="/PrepareAdvancedSearch"
+            <forward  name="success"   path="/Plate96To384Input.jsp"/>
+        </action>
+        <action     path="/PrepareAdvancedSearch"
                 type="plasmid.action.PrepareAdvancedSearchAction"
                name="advancedSearchForm">
-      <forward  name="success"  path="/AdvancedSearch.jsp"/>
-    </action>
-    
-    <action    path="/PrepareBlast"
+            <forward  name="success"  path="/AdvancedSearch.jsp"/>
+        </action>
+        <action    path="/PrepareBlast"
                type="plasmid.action.PrepareBlastAction"
                name="blastForm">
-      <forward  name="success"   path="/BlastInput.jsp"/>
-    </action>
-    
-    <action    path="/PrepareRegistration"
+            <forward  name="success"   path="/BlastInput.jsp"/>
+        </action>
+        <action    path="/PrepareRegistration"
                type="plasmid.action.PrepareRegistrationAction"
               input="/PrepareRegistration.do">
-      <forward  name="success"   path="/HomeRegistration.jsp"/>
-    </action>
-    
-    <action    path="/PrintLabels"
+            <forward  name="success"   path="/HomeRegistration.jsp"/>
+        </action>
+        <action    path="/PrintLabels"
                type="plasmid.action.PrintLabelsAction"
                name="printLabelsForm">
-      <forward  name="success"   path="/PrintLabels.jsp"/>
-    </action>
-      
-    <action     path="/ProcessError"
+            <forward  name="success"   path="/PrintLabels.jsp"/>
+        </action>
+        <action     path="/ProcessError"
                 type="edu.harvard.med.hip.flex.action.ProcessErrorAction">
-       <forward name="displayError" path="/PlasmidError.jsp"/>
-    </action>
-    
-    <action    path="/ProcessShipping"
+            <forward name="displayError" path="/PlasmidError.jsp"/>
+        </action>
+        <action    path="/ProcessShipping"
                type="plasmid.action.ProcessShippingAction"
                name="processShippingForm">
-      <forward  name="success"   path="/EnterShipping.jsp"/>
-    </action>
-
-    <action    path="/RefseqSearch"
+            <forward  name="success"   path="/EnterShipping.jsp"/>
+        </action>
+        <action    path="/RefseqSearch"
                type="plasmid.action.RefseqSearchAction"
                name="refseqSearchForm"
               input="/RefseqSearch.jsp">
-      <forward  name="success"   path="/RefseqSearchContinue.jsp"/>
-    </action>
-         
-    <action    path="/RefseqSearchContinue"
+            <forward  name="success"   path="/RefseqSearchContinue.jsp"/>
+        </action>
+        <action    path="/RefseqSearchContinue"
                type="plasmid.action.RefseqSearchContinueAction"
                name="refseqSearchForm"
               input="/RefseqSearchContinue.jsp">
-      <forward  name="success"   path="/DisplayResults.jsp"/>
-    </action>
-      
-    <action    path="/Registration"
+            <forward  name="success"   path="/DisplayResults.jsp"/>
+        </action>
+        <action    path="/Registration"
                type="plasmid.action.RegistrationAction"
                name="registrationForm"
                validate="true"
               input="/PrepareRegistration.do">
-      <forward  name="success_confirm"   path="/ConfirmRegistration.jsp"/>
-      <forward  name="success"   path="/Login.jsp"/>
-    </action>
-      
-    <action    path="/SearchClone"
+            <forward  name="success_confirm"   path="/ConfirmRegistration.jsp"/>
+            <forward  name="success"   path="/Login.jsp"/>
+        </action>
+        <action    path="/SearchClone"
                type="plasmid.action.SearchCloneAction"
                name="cloneSearchForm"
                scope="request"
               input="/SearchClone.jsp">
-      <forward  name="success"   path="/DisplayResults.jsp"/>
-    </action>
-      
-    <action    path="/SearchOrderInput"
+            <forward  name="success"   path="/DisplayResults.jsp"/>
+        </action>
+        <action    path="/SearchOrderInput"
                type="plasmid.action.SearchOrderInputAction"
                name="searchOrderForm"
                scope="request"
               input="/SearchOrderInput.jsp">
-      <forward  name="success"   path="/OrderList.jsp"/>
-      <forward  name="success_empty"   path="/OrderListEmpty.jsp"/>
-    </action>
-      
-    <action    path="/SelectProcess"
+            <forward  name="success"   path="/OrderList.jsp"/>
+            <forward  name="success_empty"   path="/OrderListEmpty.jsp"/>
+        </action>
+        <action    path="/SelectProcess"
                type="plasmid.action.SelectProcessAction"
                name="generateWorklistForm"
               input="/SelectProcess.jsp"
               validate="false">
-      <forward  name="success"   path="/WorklistInput.jsp"/>
-      <forward  name="success_multiple_glycerol"   path="/MultipleWorklistInput.jsp"/>
-      <forward  name="success_plating"   path="/PlatingInput.jsp"/>
-    </action>
-      
-    <action    path="/SelectResultType"
+            <forward  name="success"   path="/WorklistInput.jsp"/>
+            <forward  name="success_multiple_glycerol"   path="/MultipleWorklistInput.jsp"/>
+            <forward  name="success_plating"   path="/PlatingInput.jsp"/>
+        </action>
+        <action    path="/SelectResultType"
                type="plasmid.action.SelectResultTypeAction"
                name="enterResultsForm"
               input="/GetResultTypes.do"
               validate="false">
-      <forward  name="success_upload_result_file"   path="/UploadResultFile.jsp"/>
-      <forward  name="fail"   path="/ResultTypeNotFound.jsp"/>
-    </action>
-         
-    <action    path="/SetDisplay"
+            <forward  name="success_upload_result_file"   path="/UploadResultFile.jsp"/>
+            <forward  name="fail"   path="/ResultTypeNotFound.jsp"/>
+        </action>
+        <action    path="/SetDisplay"
                type="plasmid.action.SetDisplayAction"
                name="refseqSearchForm"
               input="/RefseqSearchContinue.jsp">
-      <forward  name="success"   path="/DisplayResults.jsp"/>
-      <forward  name="success_collection"   path="/ViewCollection.jsp"/>
-      <forward  name="success_vector_search"   path="/DisplayVectorSearchResults.jsp"/>
-      <forward  name="success_vector_search_psi"   path="/DisplayVectorSearchResultsPSI.jsp"/>
-      <forward  name="success_blast"   path="/BlastSearchResult.jsp"/>
-    </action>
-         
-    <action    path="/SetVectorDisplay"
+            <forward  name="success"   path="/DisplayResults.jsp"/>
+            <forward  name="success_collection"   path="/ViewCollection.jsp"/>
+            <forward  name="success_vector_search"   path="/DisplayVectorSearchResults.jsp"/>
+            <forward  name="success_vector_search_psi"   path="/DisplayVectorSearchResultsPSI.jsp"/>
+            <forward  name="success_blast"   path="/BlastSearchResult.jsp"/>
+        </action>
+        <action    path="/SetVectorDisplay"
                type="plasmid.action.SetVectorDisplayAction"
                name="refseqSearchForm"
               scope="request"
               input="/DisplayVectors.jsp">
-      <forward  name="success"   path="/DisplayVectors.jsp"/>
-    </action>
-         
-    <action    path="/UploadCultureResults"
+            <forward  name="success"   path="/DisplayVectors.jsp"/>
+        </action>
+        <action    path="/UploadCultureResults"
                type="plasmid.action.UploadCultureResultsAction"
                name="uploadCultureResultsForm"
               scope="request"
               input="/UploadCultureResults.jsp">
-      <forward  name="success"   path="/ConfirmCultureResults.jsp"/>
-    </action>
-
-    <action    path="/UpdateCart"
+            <forward  name="success"   path="/ConfirmCultureResults.jsp"/>
+        </action>
+        <action    path="/UpdateCart"
                type="plasmid.action.UpdateCartAction"
                name="viewCartForm"
               input="/DisplayCart.jsp">
-      <forward  name="success"   path="/DisplayCart.jsp"/>
-      <forward  name="success_empty"   path="/DisplayEmptyCart.jsp"/>
-      <forward  name="success_save"   path="/Account.jsp"/>
-      <forward  name="success_checkout"   path="/Checkout.do"/>
-    </action>
-      
-    <action    path="/UploadResultFile"
+            <forward  name="success"   path="/DisplayCart.jsp"/>
+            <forward  name="success_empty"   path="/DisplayEmptyCart.jsp"/>
+            <forward  name="success_save"   path="/Account.jsp"/>
+            <forward  name="success_checkout"   path="/Checkout.do"/>
+        </action>
+        <action    path="/UploadResultFile"
                type="plasmid.action.UploadResultFileAction"
                name="enterResultsForm"
               input="/UploadResultFile.jsp"
               validate="true">
-      <forward  name="success"   path="/ConfirmResultFile.jsp"/>
-      <forward  name="fail"   path="/ResultTypeNotFound.jsp"/>
-    </action>
-      
-    <action    path="/VectorSearch"
+            <forward  name="success"   path="/ConfirmResultFile.jsp"/>
+            <forward  name="fail"   path="/ResultTypeNotFound.jsp"/>
+        </action>
+        <action    path="/VectorSearch"
                type="plasmid.action.VectorSearchAction"
                name="vectorSearchForm"
               input="/VectorSearch.jsp">
-      <forward  name="success"   path="/VectorSearchContinue.jsp"/>
-    </action>
-      
-    <action    path="/VectorSearchContinue"
+            <forward  name="success"   path="/VectorSearchContinue.jsp"/>
+        </action>
+        <action    path="/VectorSearchContinue"
                type="plasmid.action.VectorSearchContinueAction"
                name="vectorSearchForm"
               input="/VectorSearchContinue.jsp">
-      <forward  name="success"   path="/DisplayVectorSearchResults.jsp"/>
-    </action>
-    
-    <action    path="/ViewCart"
+            <forward  name="success"   path="/DisplayVectorSearchResults.jsp"/>
+        </action>
+        <action    path="/ViewCart"
                type="plasmid.action.ViewCartAction"
                name="viewCartForm"
               input="/ViewCart.do">
-      <forward  name="success"   path="/DisplayCart.jsp"/>
-      <forward  name="success_empty"   path="/DisplayEmptyCart.jsp"/>
-    </action>
-    
-    <action    path="/ViewContainers"
+            <forward  name="success"   path="/DisplayCart.jsp"/>
+            <forward  name="success_empty"   path="/DisplayEmptyCart.jsp"/>
+        </action>
+        <action    path="/ViewContainers"
                type="plasmid.action.ViewContainersAction"
                name="viewContainersForm"
                scope="request"
                validate="true"
               input="/ViewContainers.jsp">
-      <forward  name="success"   path="/DisplayContainers.jsp"/>
-    </action>
-        
-    <action    path="/ViewOrderClones"
+            <forward  name="success"   path="/DisplayContainers.jsp"/>
+        </action>
+        <action    path="/ViewOrderClones"
                type="plasmid.action.ViewOrderClonesAction"
                name="viewOrderClonesForm"
                scope="request"
               input="/ViewOrderClones.do">
-      <forward  name="success"   path="/ViewOrderClones.jsp"/>
-    </action>
-        
-    <action    path="/ViewOrderCollections"
+            <forward  name="success"   path="/ViewOrderClones.jsp"/>
+        </action>
+        <action    path="/ViewOrderCollections"
                type="plasmid.action.ViewOrderCollectionsAction"
                name="viewOrderClonesForm"
                scope="request"
               input="/ViewOrderClones.do">
-      <forward  name="success"   path="/ViewOrderCollections.jsp"/>
-    </action>
-    
-    <action    path="/ViewOrderDetail"
+            <forward  name="success"   path="/ViewOrderCollections.jsp"/>
+        </action>
+        <action    path="/ViewOrderDetail"
                type="plasmid.action.ViewOrderDetailAction"
                name="viewOrderDetailForm"
               input="/ViewOrderDetail.do">
-      <forward  name="success"   path="/ViewOrderDetail.jsp"/>
-    </action>
-    
-    <action    path="/ViewOrderHistory"
+            <forward  name="success"   path="/ViewOrderDetail.jsp"/>
+        </action>
+        <action    path="/ViewOrderHistory"
                type="plasmid.action.ViewOrderHistoryAction"
                name="viewOrderHistoryForm"
               input="/ViewOrderHistory.do">
-      <forward  name="success"   path="/OrderList.jsp"/>
-      <forward  name="success_outside"   path="/OrderListOutside.jsp"/>
-      <forward  name="success_empty"   path="/OrderListEmpty.jsp"/>
-    </action>
-    
-    <action    path="/WorklistInput"
+            <forward  name="success"   path="/OrderList.jsp"/>
+            <forward  name="success_outside"   path="/OrderListOutside.jsp"/>
+            <forward  name="success_empty"   path="/OrderListEmpty.jsp"/>
+        </action>
+        <action    path="/WorklistInput"
                type="plasmid.action.WorklistInputAction"
                name="generateWorklistForm"
               input="/WorklistInput.jsp"
               validate="true">
-      <forward  name="success"   path="/WorklistOutput.jsp"/>
-    </action>
-
-        <action path="/addVFT" 
+            <forward  name="success"   path="/WorklistOutput.jsp"/>
+        </action>
+        <action path="/addVFT"
             type="plasmid.action.AddVFTAction"
-            name="addVFTForm" 
-            input="/addVFT.jsp" 
+            name="addVFTForm"
+            input="/addVFT.jsp"
             validate="true">
         </action>
-        <action path="/addVFN" 
+        <action path="/addVFN"
             type="plasmid.action.AddVFNAction"
-            name="addVFNForm" 
-            input="/addVFN.jsp" 
+            name="addVFNForm"
+            input="/addVFN.jsp"
             validate="true">
         </action>
-        <action path="/addVPT" 
+        <action path="/addVPT"
             type="plasmid.action.AddVPTAction"
-            name="addVPTForm" 
-            input="/addVPT.jsp" 
+            name="addVPTForm"
+            input="/addVPT.jsp"
             validate="true">
         </action>
-        <action path="/addSM" 
+        <action path="/addSM"
             type="plasmid.action.AddSMAction"
-            name="addSMForm" 
-            input="/addSM.jsp" 
+            name="addSMForm"
+            input="/addSM.jsp"
             validate="true">
         </action>
-        <action path="/addGC" 
+        <action path="/addGC"
             type="plasmid.action.AddGCAction"
-            name="addGCForm" 
-            input="/addGC.jsp" 
+            name="addGCForm"
+            input="/addGC.jsp"
             validate="true">
             <forward  name="success"   path="/addGC.jsp"/>
         </action>
-        <action path="/addGrowCondition" 
+        <action path="/addGrowCondition"
             type="plasmid.action.AddGrowConditionAction">
             <forward  name="success"   path="/addGC.jsp"/>
             <forward  name="error"   path="/addGC.jsp"/>
         </action>
-        <action path="/addHT" 
+        <action path="/addHT"
             type="plasmid.action.AddHTAction"
-            name="addHTForm" 
-            input="/addHT.jsp" 
+            name="addHTForm"
+            input="/addHT.jsp"
             validate="true">
-        </action>        
-        <action path="/addHS" 
+        </action>
+        <action path="/addHS"
             type="plasmid.action.AddHSAction"
-            name="addHSForm" 
-            input="/addHS.jsp" 
+            name="addHSForm"
+            input="/addHS.jsp"
             validate="true">
         </action>
-        <action path="/vSearch" 
+        <action path="/vSearch"
             type="plasmid.action.VSearchAction"
-            name="vSearchForm" 
-            input="/vSearch.jsp" 
+            name="vSearchForm"
+            input="/vSearch.jsp"
             validate="true">
         </action>
-        <action path="/continueVSubmit" 
+        <action path="/continueVSubmit"
             type="plasmid.action.ContinueVSubmitAction"
             input="/vSearch.jsp"
             name="continueVSubmitForm"
             validate="true">
             <forward  name="success"   path="/vInput.jsp"/>
         </action>
-        <action path="/vSearchSFD" 
+        <action path="/vSearchSFD"
             type="plasmid.action.VSearchSFDAction"
-            name="vSearchSFDForm" 
-            input="/vSearchSFD.jsp" 
+            name="vSearchSFDForm"
+            input="/vSearchSFD.jsp"
             validate="true">
         </action>
-        <action path="/continueVSFD" 
+        <action path="/continueVSFD"
             type="plasmid.action.ContinueVSFDAction"
             input="/vSearchSFD.jsp"
             name="continueVSFDForm"
             validate="true">
             <forward  name="success"   path="/vSubmitForDist.jsp"/>
         </action>
-
-        <action path="/vInput" 
+        <action path="/vInput"
             type="plasmid.action.VInputAction"
-            name="vInputForm" 
-            input="/vInput.jsp" 
+            name="vInputForm"
+            input="/vInput.jsp"
             validate="true">
             <forward name="save" path="/vInput.jsp"/>
             <forward name="continue" path="/vInput2.jsp"/>
-        </action>        
-        <action path="/vInput2" 
+        </action>
+        <action path="/vInput2"
             type="plasmid.action.VInput2Action"
-            name="vInput2Form" 
-            input="/vInput2.jsp" 
+            name="vInput2Form"
+            input="/vInput2.jsp"
             validate="true">
             <forward name="save" path="/vInput2.jsp"/>
             <forward name="back" path="/vInput.jsp"/>
             <forward name="continue" path="/vInput3.jsp"/>
-        </action>        
-        <action path="/vInput3" 
+        </action>
+        <action path="/vInput3"
             type="plasmid.action.VInput3Action"
-            name="vInput3Form" 
-            input="/vInput3.jsp" 
+            name="vInput3Form"
+            input="/vInput3.jsp"
             validate="true">
             <forward name="save" path="/vInput3.jsp"/>
             <forward name="back" path="/vInput2.jsp"/>
             <forward name="continue" path="/vInput4.jsp"/>
-        </action>        
-        <action path="/vInput4" 
+        </action>
+        <action path="/vInput4"
             type="plasmid.action.VInput4Action"
-            name="vInput4Form" 
-            input="/vInput4.jsp" 
+            name="vInput4Form"
+            input="/vInput4.jsp"
             validate="true">
             <forward name="save" path="/vInput4.jsp"/>
             <forward name="back" path="/vInput3.jsp"/>
             <forward name="continue" path="/vInput5.jsp"/>
-        </action>        
-        <action path="/vInput5" 
+        </action>
+        <action path="/vInput5"
             type="plasmid.action.VInput5Action"
-            name="vInput5Form" 
-            input="/vInput5.jsp" 
+            name="vInput5Form"
+            input="/vInput5.jsp"
             validate="true">
             <forward name="save" path="/vInput5.jsp"/>
             <forward name="back" path="/vInput4.jsp"/>
             <forward name="continue" path="/vInput6.jsp"/>
-        </action>        
-        <action path="/vInput6" 
+        </action>
+        <action path="/vInput6"
             type="plasmid.action.VInput6Action"
-            name="vInput6Form" 
-            input="/vInput6.jsp" 
+            name="vInput6Form"
+            input="/vInput6.jsp"
             validate="true">
             <forward name="save" path="/vInput6.jsp"/>
             <forward name="back" path="/vInput5.jsp"/>
             <forward name="continue" path="/vInput7.jsp"/>
-        </action>        
-        <action path="/vInput7" 
+        </action>
+        <action path="/vInput7"
             type="plasmid.action.VInput7Action"
-            name="vInput7Form" 
-            input="/vInput7.jsp" 
+            name="vInput7Form"
+            input="/vInput7.jsp"
             validate="true">
             <forward name="save" path="/vInput7.jsp"/>
             <forward name="back" path="/vInput6.jsp"/>
             <forward name="continue" path="/vInput8.jsp"/>
-        </action>        
-        <action path="/vInput8" 
+        </action>
+        <action path="/vInput8"
             type="plasmid.action.VInput8Action"
-            name="vInput8Form" 
-            input="/vInput8.jsp" 
+            name="vInput8Form"
+            input="/vInput8.jsp"
             validate="true">
             <forward name="save" path="/vInput8.jsp"/>
             <forward name="back" path="/vInput7.jsp"/>
             <forward name="continue" path="/vSubmitForDist.jsp"/>
-        </action>        
-        <action path="/vSubmitForDist" 
+        </action>
+        <action path="/vSubmitForDist"
             type="plasmid.action.VSubmitForDistAction"
-            name="vSubmitForDistForm" 
-            input="/vSubmitForDist.jsp" 
+            name="vSubmitForDistForm"
+            input="/vSubmitForDist.jsp"
             validate="true">
             <forward name="success" path="/vSubmitForDistSucc.jsp"/>
-        </action>        
-        <action path="/pReceive" 
+        </action>
+        <action path="/pReceiveSearch"
+            type="plasmid.action.PReceiveSearchAction"
+            name="pReceiveSearchForm"
+            input="/pReceiveSearch.jsp"
+            validate="true"
+            scope="request">
+            <forward name="success" path="/pReceive.jsp"/> 
+            </action>        
+        <action path="/pReceive"
             type="plasmid.action.PReceiveAction"
-            name="pReceiveForm" 
-            input="/pReceive.jsp" 
+            name="pReceiveForm"
+            input="/pReceive.jsp"
             validate="true">
-        </action>        
-        <action path="/findAuthor" 
+            <forward name="success" path="/pReceiveSuccess.jsp"/>
+        </action>
+        <action path="/findAuthor"
             type="plasmid.action.FindAuthorAction"
-            name="findAuthorForm" 
-            input="/findAuthor.jsp" 
+            name="findAuthorForm"
+            input="/findAuthor.jsp"
             validate="true">
-        </action>        
-        <action path="/findPMID" 
+        </action>
+        <action path="/findPMID"
             type="plasmid.action.FindPMIDAction"
-            name="findPMIDForm" 
-            input="/findPMID.jsp" 
+            name="findPMIDForm"
+            input="/findPMID.jsp"
             validate="true">
-        </action>        
+        </action>
 
-    
+
     <!-- The standard administrative actions available with Struts -->
     <!-- These would be either omitted or protected by security -->
     <!-- in a real application deployment -->
-    <action    path="/admin/addFormBean"
+        <action    path="/admin/addFormBean"
                type="org.apache.struts.actions.AddFormBeanAction"/>
-    <action    path="/admin/addForward"
+        <action    path="/admin/addForward"
                type="org.apache.struts.actions.AddForwardAction"/>
-    <action    path="/admin/addMapping"
+        <action    path="/admin/addMapping"
                type="org.apache.struts.actions.AddMappingAction"/>
-    <action    path="/admin/reload"
+        <action    path="/admin/reload"
                type="org.apache.struts.actions.ReloadAction"/>
-    <action    path="/admin/removeFormBean"
+        <action    path="/admin/removeFormBean"
                type="org.apache.struts.actions.RemoveFormBeanAction"/>
-    <action    path="/admin/removeForward"
+        <action    path="/admin/removeForward"
                type="org.apache.struts.actions.RemoveForwardAction"/>
-    <action    path="/admin/removeMapping"
+        <action    path="/admin/removeMapping"
                type="org.apache.struts.actions.RemoveMappingAction"/>
-
-
-  </action-mappings>
-
+    </action-mappings>
 </struts-config>

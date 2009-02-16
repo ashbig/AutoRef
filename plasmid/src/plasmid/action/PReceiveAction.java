@@ -17,6 +17,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 
+import plasmid.util.StringConvertor;
 import plasmid.form.PReceiveForm;
 import plasmid.coreobject.*;
 import plasmid.Constants;
@@ -55,7 +56,7 @@ public class PReceiveAction extends Action {
 
         PReceiveForm vif = (PReceiveForm) form;
         String sAction = vif.getSubmit();
-        
+
 
         DatabaseTransaction t = null;
         Connection conn = null;
@@ -65,47 +66,35 @@ public class PReceiveAction extends Action {
             CloneManager cm = new CloneManager(conn);
             VectorManager vm = new VectorManager(conn);
 
-            if (sAction.equals("Find")) {
-                int cloneid = vif.getCloneid();
-                Clone c = cm.queryCloneByCloneid(cloneid, true);
-                if (c == null) {
-                    errors.add("PRF", new ActionError("failed.CID.empty"));
-                } else {
-                    session.setAttribute("Clone", c);
-                }
-                List hs = vm.getHSs("");
-                List mta = DefTableManager.getVocabularies("specialtreatment","code");
-                mta.add(0, "");
-                List res = DefTableManager.getVocabularies("restriction","restriction");
-                session.removeAttribute("HS");
-                session.removeAttribute("MTA");
-                if ((hs != null) && (hs.size() > 0)) {
-                    session.setAttribute("HS", hs);
-                } 
-                if ((mta != null) && (mta.size() > 0)) {
-                    session.setAttribute("MTA", mta);
-                } 
-                if ((res != null) && (res.size() > 0)) {
-                    session.setAttribute("RES", res);
-                } 
-            } else if (sAction.equals("Submit")) { //Submit
-                DefTableManager dm = new DefTableManager();
-                int csid = dm.getNextid("submissionid", t);
-                Clone c = (Clone) session.getAttribute("Clone");
-                int cloneid = c.getCloneid();
-                if (cm.updateCloneSubmission(csid, cloneid, user.getUserid(),
-                        vif.getStatus(), vif.getHs(), vif.getRestriction(), vif.getMta(),
-                        vif.getSender(), vif.getSdate(), vif.getReceiver(), vif.getRdate()))
+            if (sAction.equals("Submit")) { //Submit
+                List c = (List) session.getAttribute("CLONES");
+                updateClones(c, vif.getAllstatus(), vif.getAllhs(), vif.getAllrestriction(), vif.getAllmta(),
+                        vif.getSender(), vif.getSdate(), vif.getReceiver(), vif.getRdate());
+                if (cm.updateCloneSubmission(user.getUserid(), c)) {
                     DatabaseTransaction.commit(conn);
-                else
+                    session.removeAttribute("HS");
+                    session.removeAttribute("MTA");
+                    session.removeAttribute("RES");
+                    session.removeAttribute("CLONES");
+                    request.setAttribute("CLONES", c);
+                    request.setAttribute("sender", vif.getSender());
+                    request.setAttribute("sdate", vif.getSdate());
+                    request.setAttribute("receiver", vif.getReceiver());
+                    request.setAttribute("rdate", vif.getRdate());
+                    af = mapping.findForward("success");
+                } else {
                     DatabaseTransaction.rollback(conn);
-                
-                session.removeAttribute("Clone");
-                session.removeAttribute("HS");
-                session.removeAttribute("MTA");
-                session.removeAttribute("RES");
+                    errors.add("PRF", new ActionError("failed.CloneSubmission"));
+                }
+            } else if (sAction.equals("Remove")) { //Submit
+                List c = (List) session.getAttribute("CLONES");
+                c.remove(vif.getCID());
+                session.removeAttribute("CLONES");
+                if ((c != null) && (c.size() > 0))
+                session.setAttribute("CLONES", c);
             }
         } catch (Exception ex) {
+            errors.add("PRF", new ActionError("failed.CloneSubmission"));
             if (Constants.DEBUG) {
                 System.out.println(ex);
             }
@@ -113,8 +102,39 @@ public class PReceiveAction extends Action {
             DatabaseTransaction.closeConnection(conn);
         }
 
-        af = new ActionForward(mapping.getInput());
+        if (af == null)
+            af = new ActionForward(mapping.getInput());
         saveErrors(request, errors);
         return (af);
     }
+
+    private void updateClones(List clones, String allstatus, String allhs, String allrestriction, String allmta,
+            String sender, String sdate, String receiver, String rdate) {
+        int j = clones.size();
+        String status[] = allstatus.split("\n");
+        String hs[] = allhs.split("\n");
+        String restriction[] = allrestriction.split("\n");
+        String mta[] = allmta.split("\n");
+
+        for (int i = 0; i < j; i++) {
+            Clone c = (Clone) clones.get(i);
+            c.setSender(sender);
+            c.setSdate(sdate);
+            c.setReceiver(receiver);
+            c.setRdate(rdate);
+            if ((status != null) && (status.length > i)) {
+                c.setStatus(status[i].trim());
+            }
+            if ((hs != null) && (hs.length > i)) {
+                c.setHs(hs[i].trim());
+            }
+            if ((restriction != null) && (restriction.length > i)) {
+                c.setRestriction(restriction[i].trim());
+            }
+            if ((mta != null) && (mta.length > i)){
+                c.setMta(mta[i].trim());
+            }
+        }
+    }
 }
+

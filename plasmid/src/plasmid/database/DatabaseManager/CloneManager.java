@@ -1743,6 +1743,9 @@ public class CloneManager extends TableManager {
                     Clone c = new Clone(cloneid, clonename, clonetype, verified, vermethod, domain, subdomain, restriction, comments, vectorid, vectorname, clonemap, status, specialtreatment, src, des);
                     List hs = new ArrayList();
                     while (rs2.next()) {
+                        if (rs2.getString(2).equals("Y")) {
+                            c.setHs(rs2.getString(1));
+                        }
                         CloneHost h = new CloneHost(cid, rs2.getString(1), rs2.getString(2), rs2.getString(3));
                         hs.add(h);
                     }
@@ -1831,6 +1834,57 @@ public class CloneManager extends TableManager {
             DatabaseTransaction.executeUpdate(stmt2);
             DatabaseTransaction.closeStatement(stmt2);
             DatabaseTransaction.executeUpdate(stmt3);
+            DatabaseTransaction.closeStatement(stmt3);
+        } catch (Exception ex) {
+            handleError(ex, "Error occured while updating CLONE,HOST,CLONESUBMISSION table");
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean updateCloneSubmission(int userid, List clones) {
+        if ((clones == null) || (clones.size() < 1) || (userid < 1)) {
+            return false;
+        }
+        String sql1 = "update clone set status=?, restriction=?, specialtreatment=? where cloneid=?";
+        String sql2 = "update host set isinuse='Y' where cloneid=? and hoststrain=?";
+        String sql3 = "insert into clonesubmission (cloneid, userid, submitter, submitdate, receiver, receivedate, submissionid, submissiondate, submissionstatus) values (?,?,?,?,?,?,?,SYSDATE,'RECEIVED')";
+        try {
+            PreparedStatement stmt1 = conn.prepareStatement(sql1);
+            PreparedStatement stmt2 = conn.prepareStatement(sql2);
+            PreparedStatement stmt3 = conn.prepareStatement(sql3);
+
+            DatabaseTransaction t = null;
+            t = DatabaseTransaction.getInstance();
+            DefTableManager dm = new DefTableManager();
+
+            for (int i = 0; i < clones.size(); i++) {
+                Clone c = (Clone) clones.get(i);
+                int cloneid = c.getCloneid();
+                stmt1.setString(1, c.getStatus());
+                stmt1.setString(2, c.getRestriction());
+                stmt1.setString(3, c.getSpecialtreatment());
+                stmt1.setInt(4, cloneid);
+                DatabaseTransaction.executeUpdate(stmt1);
+
+                stmt2.setInt(1, cloneid);
+                stmt2.setString(2, c.getHs());
+                DatabaseTransaction.executeUpdate(stmt2);
+
+                int csid = dm.getNextid("submissionid", t);
+                stmt3.setInt(1, cloneid);
+                stmt3.setInt(2, userid);
+                stmt3.setString(3, c.getSender());
+                stmt3.setString(4, c.getSdate());
+                stmt3.setString(5, c.getReceiver());
+                stmt3.setString(6, c.getRdate());
+                stmt3.setInt(7, csid);
+                DatabaseTransaction.executeUpdate(stmt3);
+            }
+
+            DatabaseTransaction.closeStatement(stmt1);
+            DatabaseTransaction.closeStatement(stmt2);
             DatabaseTransaction.closeStatement(stmt3);
         } catch (Exception ex) {
             handleError(ex, "Error occured while updating CLONE,HOST,CLONESUBMISSION table");
