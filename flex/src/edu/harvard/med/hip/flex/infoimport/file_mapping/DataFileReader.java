@@ -289,12 +289,6 @@ public class DataFileReader
                       object_property_value_description.getColumnsPerProperty().length==1)
               {
                   int length = object_property_value_description.getFileColumnDescription().getValueLength();
-             if (value.length() > 200)
-             {
-                 System.out.println(length);
-             
-             }
-                  
                   length = (length <= value.length())? length : value.length()+1;
                   value = value.substring(0, length-1);
               }
@@ -1004,15 +998,10 @@ public class DataFileReader
               row_sequence.setCDSStop(row_sequence.getSequenceText().length()  );
          
           }
-        if (row_sequence.getSequenceText().length() % 3 != 0)
-      {
-           p_info =  PublicInfoItem.getPublicInfoByName(ImportFlexSequence.PROPERTY_NAME_IS_CHECK_CDS, row_sequence.getPublicInfo());
+        p_info =  PublicInfoItem.getPublicInfoByName(ImportFlexSequence.PROPERTY_NAME_IS_CHECK_CDS, row_sequence.getPublicInfo());
            if (  p_info != null && p_info.getValue().intern() == ImportFlexSequence.PROPERTY_VALUE_NOTCHECK_CDS)
-                isCheckSequenceTotalNumberCodons = false;
-           else
-        //  System.out.println("sequence length: "+ row_sequence.getSequenceText().length() +" gene id: "+PublicInfoItem.getPublicInfoByName( "GENE_ID", row_sequence.getPublicInfo()));
-              throw new Exception ("Wrong sequence text "+row_sequence.getSequenceText().length());
-      }
+           {    isCheckSequenceTotalNumberCodons = false;}
+         
 
           if ( isCheckSequenceTotalNumberCodons &&  (row_sequence.getCDSStop() - row_sequence.getCDSStart() + 1) % 3 != 0)
               throw new Exception ("Wrong sequence text ");
