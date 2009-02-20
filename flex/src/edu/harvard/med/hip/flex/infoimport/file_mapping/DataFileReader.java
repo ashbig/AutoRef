@@ -432,7 +432,7 @@ public class DataFileReader
      }
      catch(Exception e)
      {
-         throw new Exception("Can not read sequence "+ records_out);
+         throw new Exception("Can not read sequence "+ e.getMessage());
      }
    }
    
@@ -1004,7 +1004,7 @@ public class DataFileReader
          
 
           if ( isCheckSequenceTotalNumberCodons &&  (row_sequence.getCDSStop() - row_sequence.getCDSStart() + 1) % 3 != 0)
-              throw new Exception ("Wrong sequence text ");
+              throw new Exception ("Wrong sequence text (not total number of codons) isCheckSequenceTotalNumberCodons="+isCheckSequenceTotalNumberCodons);
           if (sequence_id == null) 
               throw new Exception ("Can not get sequence id. ");
         
