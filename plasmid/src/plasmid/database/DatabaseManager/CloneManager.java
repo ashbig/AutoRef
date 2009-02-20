@@ -1849,18 +1849,31 @@ public class CloneManager extends TableManager {
         }
         String sql1 = "update clone set status=?, restriction=?, specialtreatment=? where cloneid=?";
         String sql2 = "update host set isinuse='Y' where cloneid=? and hoststrain=?";
-        String sql3 = "insert into clonesubmission (cloneid, userid, submitter, submitdate, receiver, receivedate, submissionid, submissiondate, submissionstatus) values (?,?,?,?,?,?,?,SYSDATE,'RECEIVED')";
+        String sql3 = "insert into clonesubmission (userid, submitter, submitdate, receiver, receivedate, submissionid, submissiondate, submissionstatus) values (?,?,?,?,?,?,SYSDATE,'RECEIVED')";
+        String sql4 = "insert into clonereceive (clonereceiveid, submissionid, cloneid) values (?,?,?)";
         try {
             PreparedStatement stmt1 = conn.prepareStatement(sql1);
             PreparedStatement stmt2 = conn.prepareStatement(sql2);
             PreparedStatement stmt3 = conn.prepareStatement(sql3);
+            PreparedStatement stmt4 = conn.prepareStatement(sql4);
 
             DatabaseTransaction t = null;
             t = DatabaseTransaction.getInstance();
             DefTableManager dm = new DefTableManager();
+            Clone c = (Clone) clones.get(0);
+
+            int csid = dm.getNextid("submissionid", t);
+            stmt3.setInt(1, userid);
+            stmt3.setString(2, c.getSender());
+            stmt3.setString(3, c.getSdate());
+            stmt3.setString(4, c.getReceiver());
+            stmt3.setString(5, c.getRdate());
+            stmt3.setInt(6, csid);
+            DatabaseTransaction.executeUpdate(stmt3);
 
             for (int i = 0; i < clones.size(); i++) {
-                Clone c = (Clone) clones.get(i);
+                c = (Clone) clones.get(i);
+                int crid = dm.getNextid("clonereceiveid", t);
                 int cloneid = c.getCloneid();
                 stmt1.setString(1, c.getStatus());
                 stmt1.setString(2, c.getRestriction());
@@ -1872,20 +1885,16 @@ public class CloneManager extends TableManager {
                 stmt2.setString(2, c.getHs());
                 DatabaseTransaction.executeUpdate(stmt2);
 
-                int csid = dm.getNextid("submissionid", t);
-                stmt3.setInt(1, cloneid);
-                stmt3.setInt(2, userid);
-                stmt3.setString(3, c.getSender());
-                stmt3.setString(4, c.getSdate());
-                stmt3.setString(5, c.getReceiver());
-                stmt3.setString(6, c.getRdate());
-                stmt3.setInt(7, csid);
-                DatabaseTransaction.executeUpdate(stmt3);
+                stmt4.setInt(1, crid);
+                stmt4.setInt(2, csid);
+                stmt4.setInt(3, cloneid);
+                DatabaseTransaction.executeUpdate(stmt4);
             }
 
             DatabaseTransaction.closeStatement(stmt1);
             DatabaseTransaction.closeStatement(stmt2);
             DatabaseTransaction.closeStatement(stmt3);
+            DatabaseTransaction.closeStatement(stmt4);
         } catch (Exception ex) {
             handleError(ex, "Error occured while updating CLONE,HOST,CLONESUBMISSION table");
             return false;
