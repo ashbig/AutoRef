@@ -236,8 +236,8 @@ public class AceToFlexImporter extends ImportRunner
         CloneSequenceDataForFLEXSubmission clone_data = null;
          int sequenceid =  -1; String cloneName = null;
         String sql_insert_cseq = "insert into clonesequence(sequenceid,sequencetype,resultexpect,"+
-        " matchexpect,genechange,linker5p,linker3p,cdsstart,cdslength,sequencingid)"+
-        " values(?,'FULL SEQUENCE',?,?,?,?,?,?,?,(select max(sequencingid) from clonesequencing where cloneid=?))";
+        " matchexpect,genechange,linker5p,linker3p,cdsstart,cdslength,sequencingid,mastercloneid)"+
+        " values(?,'FULL SEQUENCE',?,?,?,?,?,?,?,(select max(sequencingid) from clonesequencing where cloneid=?),(select mastercloneid from clones where cloneid=?))";
        
         String sql_insert_seq = "insert into clonesequencetext(sequenceid, sequenceorder, sequencetext)\n"+
         " values(?,?,?)";
@@ -304,7 +304,7 @@ public class AceToFlexImporter extends ImportRunner
                 stmt_insert_clone_sequence_details.setInt(7,clone_data.getCDSStart());//cdsstart
                 stmt_insert_clone_sequence_details.setInt(8,clone_data.getCDSStop()-clone_data.getCDSStart());//cdslength,
                 stmt_insert_clone_sequence_details.setInt(9,clone_data.getCloneID());//cdslength,
-                 
+                 stmt_insert_clone_sequence_details.setInt(10,clone_data.getCloneID());
                  DatabaseTransaction.executeUpdate(stmt_insert_clone_sequence_details);
                  
                  if ( clone_data.getACESequenceID() > 0 )
