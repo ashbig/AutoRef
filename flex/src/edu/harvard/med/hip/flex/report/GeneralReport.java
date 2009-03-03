@@ -157,7 +157,7 @@ public class GeneralReport extends ReportDefinition
                   case   PROJECT_NAME:
                   case         WORKFLOW_NAME :
                  // case         QUEUE_PROTOCOL_NAME:     { isPlateLabel = true; isProcessingStatus= true ; break;}
-                  case         CLONE_SEQUENCE:                  {isCloneSequence= true ; break;}
+                  case         CLONE_SEQUENCE:                 
                   case        CLONE_S_LINKER_5P :
                    case  CLONE_S_LINKER_3P :
                    case  CLONE_S_CDS_START :
@@ -171,7 +171,7 @@ public class GeneralReport extends ReportDefinition
         }
     }
    
-    private HashMap<Integer, CloningStrategy>      getCloningStrategies()throws Exception
+    public HashMap<Integer, CloningStrategy>      getCloningStrategies()throws Exception
     {
         List clon_strategies = CloningStrategy.getAllCloningStrategies(true);
         HashMap<Integer, CloningStrategy> result = new HashMap<Integer, CloningStrategy>(clon_strategies.size());
@@ -182,7 +182,7 @@ public class GeneralReport extends ReportDefinition
          } 
         return result;
     }
-    private HashMap<String, ImportClone>          getCloneInfo(String sql_items,
+    public HashMap<String, ImportClone>          getCloneInfo(String sql_items,
             ITEM_TYPE item_type)throws Exception
     {
         HashMap<String, ImportClone>   clones = new HashMap<String, ImportClone>  ( );
@@ -210,7 +210,7 @@ public class GeneralReport extends ReportDefinition
                 if (  isClonePublications  )
                 {
                      ImportPublication pb;
-                     sql= "select cloneid as item1, pubmedid  as item2, title as item3 from "
+                     sql= "select cloneid as item1, pubmedid  as item2, title as item3, p.publicationid as item4 from "
                         +     " clonepublication cp, publication p where cp.publicationid=p.publicationid and cloneid in ("+sql_item+")";
                      List <String[]> clone_publications=UtilSQL.getDataFromDatabase(sql, 3);
                      for ( String[] pb_record : clone_publications )
@@ -219,6 +219,7 @@ public class GeneralReport extends ReportDefinition
                          pb = new ImportPublication();
                          pb.setPubMedID(pb_record[1]);
                          pb.setTitle(pb_record[2]);
+                         pb.setId(Integer.valueOf(pb_record[3]));
                          clone.addPublication(  pb);
                          
                      }
@@ -226,15 +227,29 @@ public class GeneralReport extends ReportDefinition
                 if (  isCloneAuthors )
                 {
                     ImportAuthor author;
-                    sql= "select cloneid as item1, authortype  as item2, authorname as item3 from "
-                        +     " cloneauthor cp, authorinfo p where cp.authorid=p.authorid and cloneid in ("+sql_item+")";
-                    List <String[]> clone_authors=UtilSQL.getDataFromDatabase(sql, 3);
+                    sql= "select cloneid as item1, authortype  as item2, authorname as item3, "
+ +" firstname as item4, lastname as item5, fax as item6,authoremail as item7,"
++" address as item8, www as item9,description as item10,organizationname as item11 "
+
++" from  cloneauthor cp, authorinfo p where cp.authorid=p.authorid and cloneid in ("+sql_item+")";
+                    
+                    
+                    
+                    List <String[]> clone_authors=UtilSQL.getDataFromDatabase(sql, 11);
                      for ( String[] author_record : clone_authors )
                      {
                          clone = clones.get(author_record[0]);
                          author = new ImportAuthor();
                          author.setName(author_record[2]);
                          author.setType(author_record[1]);
+                         author.setFNName(author_record[3]);
+                         author.setFLName(author_record[4]);
+                         author.setFax(author_record[5]);
+                         author.setEMail(author_record[6]);
+                         author.setAdress(author_record[7]);
+                         author.setWWW(author_record[8]);
+                         author.setDescription(author_record[9]);
+                         author.setOrgName(author_record[10]);
                          clone.addAuthor(  author);
                          
                      }
@@ -254,19 +269,19 @@ public class GeneralReport extends ReportDefinition
          switch (item_type)
          {
              case PLATE_LABELS:
-                 return "select cloneid, clonetype, clonename, sequenceid, constructid, strategyid, status, comments from clones where cloneid in ("
+                 return "select cloneid, mastercloneid,clonetype, clonename, sequenceid, constructid, strategyid, status, comments from clones where cloneid in ("
                         + " select cloneid from sample where containerid in ("
                         +" select containerid from containerheader where label in (" +sql_items+")))";
             
              case CLONE_ID:
-                 return "select cloneid, clonetype, clonename, sequenceid, constructid, strategyid, status, comments from clones where cloneid in ("+sql_items+")";
+                 return "select cloneid, mastercloneid,clonetype, clonename, sequenceid, constructid, strategyid, status, comments from clones where cloneid in ("+sql_items+")";
              case FLEXSEQUENCE_ID:
-                 return "select cloneid, clonetype, clonename, sequenceid, constructid, strategyid, status, comments from clones where cloneid in ("
+                 return "select cloneid, mastercloneid,clonetype, clonename, sequenceid, constructid, strategyid, status, comments from clones where cloneid in ("
                          +" select cloneid from sample where constructid in ("
                          +" select constructid from designconstruct where sequenceid in ("+sql_items+")))";
             
              case USER_PLATE_LABELS:
-                 return "select cloneid, clonetype, clonename, sequenceid, constructid, strategyid, status, comments from clones where cloneid in ("
+                 return "select cloneid, mastercloneid,clonetype, clonename, sequenceid, constructid, strategyid, status, comments from clones where cloneid in ("
                         + " select cloneid from sample where containerid in ("
                         +" select containerid from containerheader_name where nametype='USER_ID' and  namevalue in (" +sql_items+")))";
     
@@ -294,6 +309,7 @@ public class GeneralReport extends ReportDefinition
                 cur_clone.setCloningStrategyId(rs.getInt("strategyid"));
                 cur_clone.setType(rs.getString("clonetype"));
                 cur_clone.setStatus(rs.getString("status"));
+                cur_clone.setMasterCloneId(rs.getInt("mastercloneid"));
                 tmp=rs.getString("clonename");
                 if (tmp != null)
                 {p_info = new  PublicInfoItem("CLONE_NAME",tmp);
@@ -359,11 +375,14 @@ public class GeneralReport extends ReportDefinition
             String sql_cl) throws FlexDatabaseException
     {
         
-          String sql  = "select '' || cloneid as item1, '' || sequenceid as item2,"
-  +" sequencetype as item3, linker5p as item4, linker3p as item5,'' || cdsstart as item6,"
- +" '' || cdslength as item7,genechange as item8 from clonesequence cs,clonesequencing ss "
-+" where cloneid in ("+sql_cl+") and "
-+"cs.sequencingid=ss.sequencingid order by cloneid, sequenceid";
+          String sql  = "select '' || cs.cloneid as item1, '' || cs.sequenceid as item2,"
+  +" cs.sequencetype as item3, cs.linker5p as item4, cs.linker3p as item5,'' || cs.cdsstart as item6,"
+ +" '' || cs.cdslength as item7,cs.genechange as item8 from clonesequence cs,clonesequencing ss ,clones cc "
++" where cc.mastercloneid in (select distinct mastercloneid from clones where cloneid in("+sql_cl+")) and "
++"cs.sequencingid=ss.sequencingid order by ss.cloneid, cs.sequenceid";
+          
+          
+   
          CachedRowSet rs =null; 
         ImportCloneSequence clone_sequence;
         ImportClone cur_clone;
@@ -396,7 +415,7 @@ public class GeneralReport extends ReportDefinition
     
     
     ////////////////////////////////////////////////////////
-    private  HashMap<String, ImportFlexSequence>              
+    public  HashMap<String, ImportFlexSequence>              
             getReferenceSequenceInfo(String sql_items,ITEM_TYPE items_type)
             throws FlexDatabaseException
     {
@@ -548,7 +567,7 @@ return "select '' || sequenceid as item1, flexstatus as item2,"
     }
     /////////////////////////////////////////////////////////////
     
-    private ArrayList<Container>               getContainersInfo(String item_ids,
+    public ArrayList<Container>               getContainersInfo(String item_ids,
             ITEM_TYPE itemtype)
             throws Exception
     {
