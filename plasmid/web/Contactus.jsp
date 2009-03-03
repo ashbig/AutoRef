@@ -29,11 +29,12 @@
         Proteomics (<a href="http://www.hip.harvard.edu/" title="Harvard Institute of Proteomics" target="_blank">HIP</a>) 
         at <a href="http://hms.harvard.edu/hms/home.asp" title="Harvard Medical School" target="_blank">Harvard 
         Medical School</a>.</p>
-      <p class="mainbodytextlarge">We are located in Kendall Square, Cambridge.</p>
+      <p class="mainbodytextlarge">We are located  in the LHRRB building at the Harvard Medical School in Boston.</p>
       <blockquote>
         <p class="mainbodytextlarge"><strong>Mailing address:</strong><br>
-          320 Charles St.<br>
-          Cambridge, MA 02141</p>
+          LHRRB<br>
+        240 Longwood Ave<br>
+        Boston, MA 02115</p>
         <p class="mainbodytextlarge"><strong>Our billing (for your PO) is handled 
           by:</strong><br>
            DF/HCC DNA Resource Core<br>
