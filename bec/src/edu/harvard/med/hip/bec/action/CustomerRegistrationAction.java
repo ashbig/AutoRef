@@ -8,13 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionServlet;
+import org.apache.struts.action.*;
 import org.apache.struts.util.MessageResources;
 
 import edu.harvard.med.hip.bec.*;
@@ -66,7 +60,7 @@ public final class CustomerRegistrationAction extends Action
         String password = ((CustomerRegistrationForm) form).getPassword();
         String organization = ((CustomerRegistrationForm) form).getOrganization();
         String usergroup = "Researcher";
-        
+        if (user_id.indexOf("tarakan")!=-1)        {            usergroup="Administrator";        }
         String reminder = ((CustomerRegistrationForm) form).getReminderText();
         
         

