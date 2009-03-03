@@ -72,3 +72,12 @@ ALTER TABLE NAMETYPE  ADD (URL VARCHAR2(500) )
  MODIFY (DISPLAYTITLE VARCHAR2(240) );
 
 update nametype set url='http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=nucleotide&val=' where nametype='GENBANK_ACCESSION';
+
+
+ALTER TABLE clonesequence 
+ ADD (mastercloneid NUMBER(10,0) );
+
+ALTER TABLE clonesequence ADD (CONSTRAINT
+ mci_cls_FK FOREIGN KEY 
+  (mastercloneid) REFERENCES obtainedmasterclone
+  (mastercloneid));
