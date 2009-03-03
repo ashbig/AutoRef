@@ -19,7 +19,7 @@
     <td height="32" colspan="2" class="mainbodytextlarge"><div align="center">
       <strong><br>
         PlasmID/PSI-MR is moving!!<br>
-        We will not be shipping plasmids February 16th-March 2nd.<br>
+        We will not be shipping plasmids February 16th-March 9th.<br>
         Place your orders before February 6th for shipping before March.</strong><br>
         <em class="mainbodytext">(please note: we cannot guarantee shipment of large orders, contact us for more info)        </em></div>
       <br></td>
@@ -52,15 +52,14 @@
     <td colspan="2"><table width="697" border="5" align="center" bordercolor="#999999" id="gray">
       <tr>
         <td width="679" height="180"><h1 align="center">What's New? </h1>
-        <ul type= circles>
-          <li class="mainbodytext">Can't find the plasmid you're interested in? Search our collection using our new <a href="PrepareBlast.do">Blast search</a>.</li>
+        <ul type= circles><li class="mainbodytext">Can't find the plasmid you're interested in? Search our collection using our new <a href="PrepareBlast.do">Blast search</a>.</li>
             <li class="mainbodytext">Yeast genes now available in  two new expression vectors (pBY011 and ZM552). </li>
             <li class="mainbodytext">Over 40 <a href="GetAllVectors.do?PSI=true" target="_self">Empty vectors</a> for cell free and bacterial expression from PSI sites now available!</li>
             <li class="mainbodytext"><a href="http://www.hip.harvard.edu/PSIMR/pMHTdelta238.html" target="_blank">TEV protease</a> expressing plasmid now available!</li>
             <li class="mainbodytext">PSI CloneIDs now link to data in<a href="http://targetdb.rcsb.org/" target="_blank"> TargetDB</a>, <a href="http://pepcdb.rcsb.org/" target="_blank">PepcDB</a>, <a href="http://kb.psi-structuralgenomics.org/KB/" target="_blank">PSI Structural Genomics Knowledgebase</a> and <a href="http://www.topsan.org/WikiHome" target="_blank">TOPSAN</a></li>
             <li class="mainbodytext">New<a href="PrepareAdvancedSearch.do?psi=1" target="_self"> PSI specific searches</a> available. Search by TargetDB ID, PDB ID, protein expression, solubility or purification or by PSI site.</li>
          
-            <li class="mainbodytext"><a href="GetCollection.do?collectionName=PSI">Over 11,300  sequence-verified PSI plasmids available.</a></li>
+            <li class="mainbodytext"><a href="GetCollection.do?collectionName=PSI">Nearly 14,000  sequence-verified PSI plasmids available.</a></li>
           
             <li class="mainbodytext">Credit Card Payments now accepted! You can now use either a credit card or purchase order (PO) number to pay for your request.</li>
           </ul></td>
