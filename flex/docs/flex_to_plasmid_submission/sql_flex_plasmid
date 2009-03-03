@@ -1,0 +1,74 @@
+ALTER TABLE CLONES 
+ ADD (ISREADYFORPLASMID INTEGER DEFAULT 0 NOT NULL
+ );
+
+update clones set ISREADYFORPLASMID=1 where status='SEQUENCE VERIFIED';
+;
+
+
+
+ALTER TABLE SPECIES 
+ ADD (IDNAME VARCHAR2(50)
+ );
+
+update species set idname='SGD' where genusspecies='Saccharomyces cerevisiae';
+update species set idname='PANUMBER' where genusspecies='Pseudomonas aeruginosa';
+update species set idname='TIGR_ID' where genusspecies='Francisella tularensis';
+update species set idname='SYNONYM' where genusspecies='Vibrio cholerae';
+update species set idname='TAIR' where genusspecies='Arabidopsis thaliana Columbia';
+update species set idname='TAIR' where genusspecies='Anopheles gambiae';
+update species set idname='SYNONYM' where genusspecies='Aquifex aeolicus';
+update species set idname='TAIR' where genusspecies='Arabidopsis thaliana Columbia';
+update species set idname='SYNONYM' where genusspecies='Archaeoglobus fulgidus';
+update species set idname='SYNONYM' where genusspecies='Bacillus anthracis';
+update species set idname='SYNONYM' where genusspecies='Bacillus halodurans';
+update species set idname='SYNONYM' where genusspecies='Bacillus subtilis';
+update species set idname='SYNONYM' where genusspecies='Chlorobium tepidum';
+update species set idname='SYNONYM' where genusspecies='Deinococcus radiodurans';
+update species set idname='TAIR' where genusspecies='Entamoeba histolytica HM-1:IMSS';
+update species set idname='SYNONYM' where genusspecies='Escherichia coli';
+update species set idname='SYNONYM' where genusspecies='Francisella tularensis';
+update species set idname='GENE_ID' where genusspecies='Gallus gallus';
+update species set idname='LOCUS_ID' where genusspecies='Homo sapiens';
+update species set idname='SYNONYM' where genusspecies='Methanococcus jannaschii';
+update species set idname='LOCUS_ID' where genusspecies='Mus musculus';
+update species set idname='LOCUS_TAG' where genusspecies='Mycobacterium tuberculosis';
+update species set idname='SYNONYM' where genusspecies='Mycoplasma genitalium';
+update species set idname='SYNONYM' where genusspecies='Mycoplasma pneumoniae';
+update species set idname='SYNONYM' where genusspecies='Myxoma virus';
+update species set idname='TAIR' where genusspecies='Plasmodium falciparum';
+update species set idname='SYNONYM' where genusspecies='Pyrococcus furiosus';
+update species set idname='SYNONYM' where genusspecies='Pyrococcus horikoshii';
+update species set idname='SGD' where genusspecies='Saccharomyces cerevisiae';
+update species set idname='SYNONYM' where genusspecies='Streptococcus pyogenes';
+update species set idname='SYNONYM' where genusspecies='Thermobacterium acidophilum';
+update species set idname='SYNONYM' where genusspecies='Thermotoga maritima';
+update species set idname='TAIR' where genusspecies='Toxoplasma gondii';
+update species set idname='TAIR' where genusspecies='Trichomonas vaginalis';
+update species set idname='SYNONYM' where genusspecies='Vaccinia virus';
+update species set idname='SYNONYM' where genusspecies='Vibrio cholerae';
+update species set idname='SYNONYM' where genusspecies='Yersinia pestis';
+update species set idname='SYNONYM' where genusspecies='Yersinia pseudotuberculosis
+
+CREATE TABLE FLEX_PLASMID_DEFINITION_MAP
+ (MAPTYPE VARCHAR2(60) NOT NULL
+ ,FLEXID NUMBER(10,0) DEFAULT -1
+ ,FLEXNAME VARCHAR2(400) NOT NULL
+ ,PLASMIDID NUMBER(10,0) DEFAULT -1
+ ,PLASMIDNAME VARCHAR2(400) NOT NULL
+ ,VALUE1 VARCHAR2(240)
+ ,VALUE2 VARCHAR2(240)
+ );
+
+ALTER TABLE FLEX_PLASMID_DEFINITION_MAP
+ ADD (CONSTRAINT FP1_PK PRIMARY KEY 
+  (MAPTYPE
+  ,FLEXNAME
+  ,PLASMIDNAME));
+
+
+
+ALTER TABLE NAMETYPE  ADD (URL VARCHAR2(500) )
+ MODIFY (DISPLAYTITLE VARCHAR2(240) );
+
+update nametype set url='http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=nucleotide&val=' where nametype='GENBANK_ACCESSION';
