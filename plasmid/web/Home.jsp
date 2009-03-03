@@ -15,7 +15,6 @@
 <body>
 <jsp:include page="homeTitle.jsp" /><table width="973" height="538" border="0">
   <tr>
-<<<<<<< Home.jsp
     <td height="32" colspan="2" class="mainbodytextlarge"><div align="center">
       <strong><br>
         PlasmID/PSI-MR is moving!!<br>
@@ -25,8 +24,6 @@
       <br></td>
   </tr>
   <tr>
-=======
->>>>>>> 1.38
     <td width="550" height="300"><table width="578" height="259" border="0" align="center" bgcolor="#EFEFEF" id="form">
       <tr>
         <td width="572" height="112"><p align="center"><span class="mainbodytext">Plasmid Information Database (PlasmID) is a central repository for plasmid clone collections and distribution as part of the DF/HCC DNA Resource Core based at the <a href="http://www.hip.harvard.edu/" target="_blank">Harvard Institute of Proteomics (HIP)</a>. We are also the <a href="http://www.hip.harvard.edu/PSIMR/index.htm" target="_blank">Protein Structure Initiative (PSI) Material Repository</a>.&nbsp;        
