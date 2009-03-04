@@ -375,10 +375,10 @@ public class GeneralReport extends ReportDefinition
             String sql_cl) throws FlexDatabaseException
     {
         
-          String sql  = "select '' || cs.cloneid as item1, '' || cs.sequenceid as item2,"
+          String sql  = "select '' || ss.cloneid as item1, '' || cs.sequenceid as item2,"
   +" cs.sequencetype as item3, cs.linker5p as item4, cs.linker3p as item5,'' || cs.cdsstart as item6,"
  +" '' || cs.cdslength as item7,cs.genechange as item8 from clonesequence cs,clonesequencing ss ,clones cc "
-+" where cc.mastercloneid in (select distinct mastercloneid from clones where cloneid in("+sql_cl+")) and "
++" where ss.cloneid=cc.cloneid and cs.sequencingid=ss.sequencingid and cc.mastercloneid in (select distinct mastercloneid from clones where cloneid in("+sql_cl+")) and "
 +"cs.sequencingid=ss.sequencingid order by ss.cloneid, cs.sequenceid";
           
           
@@ -399,7 +399,8 @@ public class GeneralReport extends ReportDefinition
                 clone_sequence.setMutCDS(record[7]);
                 clone_sequence.setMutLinker3(record[4]);
                 cur_clone = clones.get(record[0]);
-                cur_clone.setCloneSequence(clone_sequence);
+                if (cur_clone != null)
+                    cur_clone.setCloneSequence(clone_sequence);
              }
       
         }
@@ -407,7 +408,8 @@ public class GeneralReport extends ReportDefinition
         {
             System.out.println(sqlE.getMessage());
             throw new FlexDatabaseException("Error occured while getting clone information /SQL: "+sql);
-        } finally
+        } 
+        finally
         {
             DatabaseTransactionLocal.closeResultSet(rs);
         }
