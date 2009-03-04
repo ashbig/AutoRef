@@ -6,7 +6,9 @@
 package plasmid.coreobject;
 
 import java.io.*;
+import java.sql.Connection;
 import java.util.*;
+import plasmid.database.DatabaseManager.DefTableManager;
 import plasmid.util.StringConvertor;
 
 /**
@@ -184,6 +186,7 @@ public class Clone implements Serializable {
     public String getSpecialtreatment() {
         return specialtreatment;
     }
+
     public String getMta() {
         return specialtreatment;
     }
@@ -199,12 +202,15 @@ public class Clone implements Serializable {
     public String getSender() {
         return sender;
     }
+
     public String getSubmitter() {
         return sender;
     }
+
     public String getSdate() {
         return sdate;
     }
+
     public String getSubmitdate() {
         return sdate;
     }
@@ -216,15 +222,19 @@ public class Clone implements Serializable {
     public String getRdate() {
         return rdate;
     }
+
     public String getReceivedate() {
         return rdate;
     }
+
     public String getHs() {
         return hs;
     }
+
     public void setHs(String hs) {
-        this.hs=hs;
+        this.hs = hs;
     }
+
     public void setCloneid(int id) {
         this.cloneid = id;
     }
@@ -292,6 +302,7 @@ public class Clone implements Serializable {
     public void setSpecialtreatment(String s) {
         this.specialtreatment = s;
     }
+
     public void setMta(String s) {
         this.specialtreatment = s;
     }
@@ -307,6 +318,7 @@ public class Clone implements Serializable {
     public void setSender(String s) {
         this.sender = s;
     }
+
     public void setSubmitter(String s) {
         this.sender = s;
     }
@@ -314,6 +326,7 @@ public class Clone implements Serializable {
     public void setSdate(String s) {
         this.sdate = s;
     }
+
     public void setSubmitdate(String s) {
         this.sdate = s;
     }
@@ -325,6 +338,7 @@ public class Clone implements Serializable {
     public void setRdate(String s) {
         this.rdate = s;
     }
+
     public void setReceivedate(String s) {
         this.rdate = s;
     }
@@ -570,5 +584,27 @@ public class Clone implements Serializable {
 
     public String getLongFastaID() {
         return ">PlasmID|" + getName() + "|" + getCloneDescription();
+    }
+
+    public static String constructClonename(Connection conn, Clone c) throws Exception {
+        java.text.NumberFormat fmt = java.text.NumberFormat.getInstance();
+        fmt.setMaximumIntegerDigits(8);
+        fmt.setMinimumIntegerDigits(8);
+        fmt.setGroupingUsed(false);
+        DefTableManager man = new DefTableManager();
+        String sp = man.getVocabulary("species", "genusspecies", "code", c.getDomain(), conn);
+        String tp = man.getVocabulary("clonetype", "clonetype", "code", c.getType(), conn);
+        if (sp == null) {
+            if (Clone.NOINSERT.equals(c.getDomain())) {
+                sp = Clone.SPECIES_NOINSERT;
+            } else {
+                throw new Exception("Cannot find code for species: [" + c.getDomain() + "]");
+            }
+        }
+        if (tp == null) {
+            throw new Exception("Cannot find code for clonetype: " + c.getType());
+        }
+        
+        return (sp + tp + fmt.format(c.getCloneid()));
     }
 }
