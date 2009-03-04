@@ -168,9 +168,21 @@ public class VSubmitForDistAction extends Action {
             } else {
                 source = vif.getNonpsi().trim();
             }
-            c = new Clone(cloneid, v.getName(), Clone.NOINSERT, vif.getVerified(), vif.getVerifiedmethod(),
+            c = new Clone(cloneid, "", Clone.NOINSERT, vif.getVerified(), vif.getVerifiedmethod(),
                     Clone.NOINSERT, null, Clone.NON_PROFIT, vif.getComments().trim(), v.getVectorid(),
                     v.getName(), v.getMapfilename(), Clone.NOT_AVAILABLE, null, source, v.getDescription());
+            String cname = "";
+            try {
+                cname = Clone.constructClonename(cm.getConnection(), c);
+            } catch  (Exception ex) {
+                if (Constants.DEBUG) {
+                    System.out.println(ex);
+                }
+            }
+            if (cname == null) {
+                cname = v.getName();
+            }
+            c.setName(cname);
             List cs = new ArrayList();
             cs.add(c);
             cm.insertClones(cs);
