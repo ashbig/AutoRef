@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.8 $
- * $Date: 2009-03-05 14:19:54 $
+ * $Revision: 1.9 $
+ * $Date: 2009-03-05 14:33:00 $
  * $Author: dz4 $
  *
  ******************************************************************************
@@ -49,7 +49,7 @@ import javax.mail.internet.*;
  * Utility class to send simple messages.
  *
  * @author     $Author: dz4 $
- * @version    $Revision: 1.8 $ $Date: 2009-03-05 14:19:54 $
+ * @version    $Revision: 1.9 $ $Date: 2009-03-05 14:33:00 $
  */
 
 public class Mailer {
@@ -130,11 +130,11 @@ public class Mailer {
             msg.saveChanges();
             
             // send the message
-            //Transport.send(msg);
-            Transport trans = session.getTransport("smtp");
+            Transport.send(msg, address);
+            //Transport trans = session.getTransport("smtp");
             //trans.connect(SMTP_HOST, USNAME, PWD);
-            trans.sendMessage(msg, address);
-            trans.close();
+            //trans.sendMessage(msg, address);
+            //trans.close();
         } catch(MessagingException mex) {
             mex.printStackTrace();
             Exception ex = null;
@@ -223,11 +223,11 @@ public class Mailer {
             msg.saveChanges();
             
             // send the message
-            //Transport.send(msg);
-            Transport trans = session.getTransport("smtp");
+            Transport.send(msg, address);
+            //Transport trans = session.getTransport("smtp");
             //trans.connect(SMTP_HOST, USNAME, PWD);
-            trans.sendMessage(msg, address);
-            trans.close();
+            //trans.sendMessage(msg, address);
+            //trans.close();
         } catch(MessagingException mex) {
             mex.printStackTrace();
             Exception ex = null;
@@ -296,11 +296,11 @@ public class Mailer {
             msg.saveChanges();
             
             // send the message
-            //Transport.send(msg);
-            Transport trans = session.getTransport("smtp");
+            Transport.send(msg, address);
+            //Transport trans = session.getTransport("smtp");
             //trans.connect(SMTP_HOST, USNAME, PWD);
-            trans.sendMessage(msg, address);
-            trans.close();
+            //trans.sendMessage(msg, address);
+            //trans.close();
         } catch(MessagingException mex) {
             mex.printStackTrace();
             Exception ex = null;
