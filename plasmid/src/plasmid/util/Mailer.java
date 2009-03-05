@@ -13,9 +13,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.7 $
- * $Date: 2008-01-08 15:29:06 $
- * $Author: dzuo $
+ * $Revision: 1.8 $
+ * $Date: 2009-03-05 14:19:54 $
+ * $Author: dz4 $
  *
  ******************************************************************************
  *
@@ -48,14 +48,14 @@ import javax.mail.internet.*;
  *
  * Utility class to send simple messages.
  *
- * @author     $Author: dzuo $
- * @version    $Revision: 1.7 $ $Date: 2008-01-08 15:29:06 $
+ * @author     $Author: dz4 $
+ * @version    $Revision: 1.8 $ $Date: 2009-03-05 14:19:54 $
  */
 
 public class Mailer {
     //public static final String FILEPATH = FlexProperties.getInstance().getProperty("tmp");
     //public final static String SMTP_HOST ="hms.harvard.edu";
-    public final static String SMTP_HOST ="gate.med.harvard.edu";
+    public final static String SMTP_HOST ="smtp.cl.med.harvard.edu";
     public static final String FROM = "plasmidhelp@hms.harvard.edu";
     public static final String USNAME = "plasmidhelp";
     public static final String PWD = "Password1";
@@ -75,7 +75,7 @@ public class Mailer {
     throws MessagingException {
         Properties props = new Properties();
         props.put("mail.smtp.host",SMTP_HOST);
-        props.put("mail.smtp.auth", "true");
+        //props.put("mail.smtp.auth", "true");
         Session session = Session.getDefaultInstance(props,null);
         //session.setDebug(true);
         
@@ -132,7 +132,7 @@ public class Mailer {
             // send the message
             //Transport.send(msg);
             Transport trans = session.getTransport("smtp");
-            trans.connect(SMTP_HOST, USNAME, PWD);
+            //trans.connect(SMTP_HOST, USNAME, PWD);
             trans.sendMessage(msg, address);
             trans.close();
         } catch(MessagingException mex) {
@@ -161,7 +161,7 @@ public class Mailer {
     throws MessagingException {
         Properties props = new Properties();
         props.put("mail.smtp.host",SMTP_HOST);
-        props.put("mail.smtp.auth", "true");
+        //props.put("mail.smtp.auth", "true");
         Session session = Session.getDefaultInstance(props,null);
         
         //session.setDebug(true);
@@ -225,7 +225,7 @@ public class Mailer {
             // send the message
             //Transport.send(msg);
             Transport trans = session.getTransport("smtp");
-            trans.connect(SMTP_HOST, USNAME, PWD);
+            //trans.connect(SMTP_HOST, USNAME, PWD);
             trans.sendMessage(msg, address);
             trans.close();
         } catch(MessagingException mex) {
@@ -242,7 +242,7 @@ public class Mailer {
     throws MessagingException {
         Properties props = new Properties();
         props.put("mail.smtp.host",SMTP_HOST);
-        props.put("mail.smtp.auth", "true");
+        //props.put("mail.smtp.auth", "true");
         Session session = Session.getDefaultInstance(props,null);
         //session.setDebug(true);
         
@@ -298,7 +298,7 @@ public class Mailer {
             // send the message
             //Transport.send(msg);
             Transport trans = session.getTransport("smtp");
-            trans.connect(SMTP_HOST, USNAME, PWD);
+            //trans.connect(SMTP_HOST, USNAME, PWD);
             trans.sendMessage(msg, address);
             trans.close();
         } catch(MessagingException mex) {
