@@ -94,7 +94,7 @@ public class PReceiveAction extends Action {
                 session.setAttribute("CLONES", c);
             }
         } catch (Exception ex) {
-            errors.add("PRF", new ActionError("failed.CloneSubmission"));
+            errors.add("PRF", new ActionError("failed.CloneUpdate"));
             if (Constants.DEBUG) {
                 System.out.println(ex);
             }
