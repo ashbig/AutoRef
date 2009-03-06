@@ -155,6 +155,13 @@ public class PReceiveForm extends ActionForm {
     public PReceiveForm() {
         super();
     // TODO Auto-generated constructor stub
+        Calendar c = Calendar.getInstance();
+        sdd = d[c.get(Calendar.DAY_OF_MONTH) - 1];
+        sdm = m[c.get(Calendar.MONTH)];
+        sdy = Integer.toString(c.get(Calendar.YEAR));
+        rdd = sdd;
+        rdm = sdm;
+        rdy = sdy;
     }
 
     public void reset(ActionMapping mapping, HttpServletRequest request) {
