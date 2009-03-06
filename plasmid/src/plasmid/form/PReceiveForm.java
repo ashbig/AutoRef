@@ -25,11 +25,63 @@ public class PReceiveForm extends ActionForm {
     private String allrestriction = null;
     private String allmta = null;
     private String sender = null;
-    private String sdate = null;
+    private String sdm = null;
+    private String sdd = null;
+    private String sdy = null;
     private String receiver = null;
-    private String rdate = null;
+    private String rdm = null;
+    private String rdd = null;
+    private String rdy = null;
+    private String m[] = {"JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"};
+    private String d[] = {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"};
+    private String y[] = {"2009", "2010", "2011", "2012", "2013", "2014"};
     private int CID = -1;
 
+    public String[] getM() {
+        return m;
+    }
+    public String[] getD() {
+        return d;
+    }
+    public String[] getY() {
+        return y;
+    }
+    public String getSdm() {
+        return sdm;
+    }
+    public String getSdd() {
+        return sdd;
+    }
+    public String getSdy() {
+        return sdy;
+    }
+    public String getRdm() {
+        return rdm;
+    }
+    public String getRdd() {
+        return rdd;
+    }
+    public String getRdy() {
+        return rdy;
+    }
+    public void setSdm(String sdm) {
+        this.sdm = sdm;
+    }
+    public void setSdd(String sdd) {
+        this.sdd = sdd;
+    }
+    public void setSdy(String sdy) {
+        this.sdy = sdy;
+    }
+    public void setRdm(String rdm) {
+        this.rdm = rdm;
+    }
+    public void setRdd(String rdd) {
+        this.rdd = rdd;
+    }
+    public void setRdy(String rdy) {
+        this.rdy = rdy;
+    }
     public void setClones(List cs) {
         allstatus = "";
         allhs = "";
@@ -51,11 +103,9 @@ public class PReceiveForm extends ActionForm {
         sender = string;
     }
     public String getSdate() {
-        return sdate;
+        return sdd + "-" + sdm + "-" + sdy;
     }
-    public void setSdate(String string) {
-        sdate = string;
-    }
+    
     public String getReceiver() {
         return receiver;
     }
@@ -63,10 +113,7 @@ public class PReceiveForm extends ActionForm {
         receiver = string;
     }
     public String getRdate() {
-        return rdate;
-    }
-    public void setRdate(String string) {
-        rdate = string;
+        return rdd + "-" + rdm + "-" + rdy;
     }
     public String getSubmit() {
         return submit;
@@ -121,9 +168,13 @@ public class PReceiveForm extends ActionForm {
         allrestriction = null;
         allmta = null;
         sender = null;
-        sdate = null;
         receiver = null;
-        rdate = null;
+        sdm = null;
+        sdd = null;
+        sdy = null;
+        rdm = null;
+        rdd = null;
+        rdy = null;
         CID = -1;
     }
     
@@ -136,10 +187,10 @@ public class PReceiveForm extends ActionForm {
             if (receiver.length() < 1) {
                 errors.add("PRF", new ActionError("error.RVR.required"));
             }
-            if (sdate.length() < 1) {
+            if ((sdm.length() < 1) || (sdd.length() < 1) || (sdy.length() < 1)) {
                 errors.add("PRF", new ActionError("error.SRD.required"));
             }
-            if (rdate.length() < 1) {
+            if ((rdm.length() < 1) || (rdd.length() < 1) || (rdy.length() < 1)) {
                 errors.add("PRF", new ActionError("error.RRD.required"));
             }
         }

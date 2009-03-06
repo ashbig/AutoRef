@@ -68,25 +68,29 @@ public class PReceiveAction extends Action {
 
             if (sAction.equals("Submit")) { //Submit
                 List c = (List) session.getAttribute("CLONES");
-                updateClones(c, vif.getAllstatus(), vif.getAllhs(), vif.getAllrestriction(), vif.getAllmta(),
-                        vif.getSender(), vif.getSdate(), vif.getReceiver(), vif.getRdate());
-                if (cm.updateCloneSubmission(user.getUserid(), c)) {
-                    DatabaseTransaction.commit(conn);
-                    session.removeAttribute("HS");
-                    session.removeAttribute("MTA");
-                    session.removeAttribute("RES");
-                    session.removeAttribute("CLONES");
-                    request.setAttribute("CLONES", c);
-                    request.setAttribute("sender", vif.getSender());
-                    request.setAttribute("sdate", vif.getSdate());
-                    request.setAttribute("receiver", vif.getReceiver());
-                    request.setAttribute("rdate", vif.getRdate());
-                    af = mapping.findForward("success");
+                if ((c == null) || (c.size() < 1)) {
+                    errors.add("PRF", new ActionError("failed.NOCLONETOSUBMIT"));
                 } else {
-                    DatabaseTransaction.rollback(conn);
-                    errors.add("PRF", new ActionError("failed.CloneSubmission"));
+                    updateClones(c, vif.getAllstatus(), vif.getAllhs(), vif.getAllrestriction(), vif.getAllmta(),
+                            vif.getSender(), vif.getSdate(), vif.getReceiver(), vif.getRdate());
+                    if (cm.updateCloneSubmission(user.getUserid(), c)) {
+                        DatabaseTransaction.commit(conn);
+                        session.removeAttribute("HS");
+                        session.removeAttribute("MTA");
+                        session.removeAttribute("RES");
+                        session.removeAttribute("CLONES");
+                        request.setAttribute("CLONES", c);
+                        request.setAttribute("sender", vif.getSender());
+                        request.setAttribute("sdate", vif.getSdate());
+                        request.setAttribute("receiver", vif.getReceiver());
+                        request.setAttribute("rdate", vif.getRdate());
+                        af = mapping.findForward("success");
+                    } else {
+                        DatabaseTransaction.rollback(conn);
+                        errors.add("PRF", new ActionError("failed.CloneSubmission"));
+                    }
                 }
-            } else if (sAction.equals("Remove")) { //Submit
+            } else if (sAction.equals("Remove")) { //Remove
                 List c = (List) session.getAttribute("CLONES");
                 c.remove(vif.getCID());
                 session.removeAttribute("CLONES");
