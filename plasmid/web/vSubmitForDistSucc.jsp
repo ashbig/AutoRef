@@ -25,7 +25,6 @@
                     <logic:present name="Clone">
                         <p></p>
                         <p>Clone vector <bean:write name="Clone" property="name"/> has been successfully submitted for distribution. <br>
-                            The Clone ID is <bean:write name="Clone" property="cloneid"/>.<br>
                         Thank you.</p>
                     </logic:present>
                 </td>

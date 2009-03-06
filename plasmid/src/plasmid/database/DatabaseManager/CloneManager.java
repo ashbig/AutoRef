@@ -1769,6 +1769,77 @@ public class CloneManager extends TableManager {
         return cs;
     }
 
+    public List getCloneInfoByClonenames(List clonenames) {
+        if ((clonenames == null) || (clonenames.size() < 1)) {
+            return null;
+        }
+        List cs = new ArrayList();
+        String sql = "select clonename, clonetype, verified, vermethod," +
+                " domain, subdomain, restriction, comments, vectorid, vectorname," +
+                " clonemapfilename,status,specialtreatment,source,description,cloneid" +
+                " from clone where clonename=?";
+
+        String sql2 = "select h.hoststrain, h.isinuse, h.description" +
+                " from host h, clone c where h.cloneid=c.cloneid and c.clonename=?";
+
+        ResultSet rs = null, rs2 = null;
+        PreparedStatement stmt = null, stmt2 = null;
+        try {
+            stmt = conn.prepareStatement(sql);
+            stmt2 = conn.prepareStatement(sql2);
+
+            for (int i = 0; i < clonenames.size(); i++) {
+                String cname = (String) clonenames.get(i);
+                stmt.setString(1, cname);
+                stmt2.setString(1, cname);
+                rs = DatabaseTransaction.executeQuery(stmt);
+                rs2 = DatabaseTransaction.executeQuery(stmt2);
+                if (rs.next()) {
+                    String clonename = rs.getString(1);
+                    String clonetype = rs.getString(2);
+                    String verified = rs.getString(3);
+                    String vermethod = rs.getString(4);
+                    String domain = rs.getString(5);
+                    String subdomain = rs.getString(6);
+                    String restriction = rs.getString(7);
+                    String comments = rs.getString(8);
+                    int vectorid = rs.getInt(9);
+                    String vectorname = rs.getString(10);
+                    String clonemap = rs.getString(11);
+                    String status = rs.getString(12);
+                    String specialtreatment = rs.getString(13);
+                    String src = rs.getString(14);
+                    String des = rs.getString(15);
+                    int cloneid = rs.getInt(16);
+                    Clone c = new Clone(cloneid, clonename, clonetype, verified, vermethod, domain, subdomain, restriction, comments, vectorid, vectorname, clonemap, status, specialtreatment, src, des);
+                    List hs = new ArrayList();
+                    while (rs2.next()) {
+                        if (rs2.getString(2).equals("Y")) {
+                            c.setHs(rs2.getString(1));
+                        }
+                        CloneHost h = new CloneHost(cloneid, rs2.getString(1), rs2.getString(2), rs2.getString(3));
+                        hs.add(h);
+                    }
+                    if (hs.size() > 0) {
+                        c.setHosts(hs);
+                    }
+                    cs.add(c);
+                }
+            }
+            DatabaseTransaction.closeResultSet(rs);
+        } catch (Exception ex) {
+            handleError(ex, "Error occured while query clones");
+            return null;
+        } finally {
+            DatabaseTransaction.closeStatement(stmt);
+        }
+
+        if (cs.size() < 1) {
+            cs = null;
+        }
+        return cs;
+    }
+    
     public boolean updateCloneSFD(int cloneid, String verified, String vermethod, String restriction, String comments, String source) {
         if ((cloneid < 1) || (verified == null) || (verified.length() < 1) || (source == null) || (source.length() < 1)) {
             return true;

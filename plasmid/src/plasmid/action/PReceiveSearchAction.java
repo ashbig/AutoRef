@@ -62,7 +62,10 @@ public class PReceiveSearchAction extends Action {
                 String cloneid = vif.getCloneid();
                 StringConvertor sv = new StringConvertor();
                 List cloneids = sv.convertFromStringToList(cloneid, "\n");
-                List c = cm.getCloneInfoByCloneids(cloneids);
+                // Search clones by actually cloneid
+                // List c = cm.getCloneInfoByCloneids(cloneids);
+                // Search clones by clone name, not actual cloneid
+                List c = cm.getCloneInfoByClonenames(cloneids);
                 if (c == null) {
                     errors.add("PRF", new ActionError("failed.CID.empty"));
                 } else {

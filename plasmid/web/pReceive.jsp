@@ -47,7 +47,7 @@
                                                 <logic:iterate id="Clone" name="CLONES" indexId="CID">
                                                     <tr bgcolor="white">
                                                         <td><input type="radio" name="CID" id="CID" value="<bean:write name="CID"/>"></td>
-                                                        <td><bean:write name="Clone" property="cloneid"/></td>
+                                                        <td><bean:write name="Clone" property="name"/></td>
                                                         <td>
                                                             <html:select name="Clone" property="status">
                                                                 <option value="AVAILABLE" selected>AVAILABLE</option>
