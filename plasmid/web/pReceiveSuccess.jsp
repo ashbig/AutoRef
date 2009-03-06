@@ -42,7 +42,7 @@
                                                         </tr>
                                                         <logic:iterate id="Clone" name="CLONES" indexId="CID">
                                                             <tr bgcolor="white">
-                                                                <td>&nbsp;<a href="http://plasmid.med.harvard.edu/PLASMID/ViewCloneDetail.do?cloneid=<bean:write name="Clone" property="cloneid"/>" target="clonedetail"><bean:write name="Clone" property="cloneid"/></a></td>
+                                                                <td>&nbsp;<a href="http://plasmid.med.harvard.edu/PLASMID/GetCloneDetail.do?cloneid=<bean:write name="Clone" property="cloneid"/>" target="clonedetail"><bean:write name="Clone" property="cloneid"/></a></td>
                                                                 <td>
                                                                     &nbsp;<bean:write name="Clone" property="status"/>
                                                                 </td>
