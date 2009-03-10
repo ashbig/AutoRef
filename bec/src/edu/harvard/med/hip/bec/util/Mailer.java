@@ -11,9 +11,9 @@
  
  *
  * The following information is used by CVS
- * $Revision: 1.12 $
- * $Date: 2007-04-04 17:45:56 $
- * $Author: Elena $
+ * $Revision: 1.13 $
+ * $Date: 2009-03-10 17:18:49 $
+ * $Author: et15 $
  *
  ******************************************************************************
  
@@ -37,8 +37,8 @@ import edu.harvard.med.hip.bec.database.*;
  *
  * Utility class to send simple messages.
  *
- * @author     $Author: Elena $
- * @version    $Revision: 1.12 $ $Date: 2007-04-04 17:45:56 $
+ * @author     $Author: et15 $
+ * @version    $Revision: 1.13 $ $Date: 2009-03-10 17:18:49 $
  */
 
 public class Mailer
@@ -61,7 +61,7 @@ public class Mailer
     {
         Properties props = new Properties();
         props.put("mail.smtp.host",BecProperties.getInstance().getProperty("mail.smtp.host"));
-        props.put("mail.smtp.auth", "true");
+        
         Session session = Session.getDefaultInstance(props,null);
         try
         {
@@ -113,6 +113,7 @@ public class Mailer
             {
                 String user =      BecProperties.getInstance().getProperty("ACE_FROM_EMAIL_ADDRESS");
                 user = user.substring(0, user.indexOf('@'));
+                props.put("mail.smtp.auth", "true"); //commect for aunt
                 Transport trans = session.getTransport("smtp");
                 trans.connect(BecProperties.getInstance().getProperty("mail.smtp.host"), 
                             user, 
@@ -185,7 +186,10 @@ public class Mailer
      
 
     public static void main(String [] args) throws Exception
-    {BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
+    {
+        
+        
+        BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
             sysProps.verifyApplicationSettings();
          
          Mailer.sendMessage("htlena@yahoo.com", "hip_informatics@hms.harvard.edu", " subject",
