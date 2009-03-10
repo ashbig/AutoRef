@@ -11,8 +11,8 @@
  
  *
  * The following information is used by CVS
- * $Revision: 1.13 $
- * $Date: 2009-03-10 17:18:49 $
+ * $Revision: 1.14 $
+ * $Date: 2009-03-10 17:28:49 $
  * $Author: et15 $
  *
  ******************************************************************************
@@ -38,7 +38,7 @@ import edu.harvard.med.hip.bec.database.*;
  * Utility class to send simple messages.
  *
  * @author     $Author: et15 $
- * @version    $Revision: 1.13 $ $Date: 2009-03-10 17:18:49 $
+ * @version    $Revision: 1.14 $ $Date: 2009-03-10 17:28:49 $
  */
 
 public class Mailer
@@ -61,7 +61,11 @@ public class Mailer
     {
         Properties props = new Properties();
         props.put("mail.smtp.host",BecProperties.getInstance().getProperty("mail.smtp.host"));
-        
+          if ( BecProperties.getInstance().getProperty("EMAIL_PASSWORD") != null && 
+                !BecProperties.getInstance().getProperty("EMAIL_PASSWORD").trim().equals(""))
+            {
+                props.put("mail.smtp.auth", "true"); //commect for aunt
+          }
         Session session = Session.getDefaultInstance(props,null);
         try
         {
@@ -113,7 +117,6 @@ public class Mailer
             {
                 String user =      BecProperties.getInstance().getProperty("ACE_FROM_EMAIL_ADDRESS");
                 user = user.substring(0, user.indexOf('@'));
-                props.put("mail.smtp.auth", "true"); //commect for aunt
                 Transport trans = session.getTransport("smtp");
                 trans.connect(BecProperties.getInstance().getProperty("mail.smtp.host"), 
                             user, 
