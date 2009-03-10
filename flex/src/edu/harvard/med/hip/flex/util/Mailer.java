@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.19 $
- * $Date: 2009-03-10 15:18:38 $
+ * $Revision: 1.20 $
+ * $Date: 2009-03-10 16:25:42 $
  * $Author: et15 $
  *
  ******************************************************************************
@@ -51,7 +51,7 @@ import edu.harvard.med.hip.flex.database.*;
  * Utility class to send simple messages.
  *
  * @author     $Author: et15 $
- * @version    $Revision: 1.19 $ $Date: 2009-03-10 15:18:38 $
+ * @version    $Revision: 1.20 $ $Date: 2009-03-10 16:25:42 $
  */
 
 public class Mailer
@@ -264,7 +264,7 @@ public class Mailer
     {
         Properties props = new Properties();
         props.put("mail.smtp.host",FlexProperties.getInstance().getProperty("mail.smtp.host"));
-       // props.put("mail.smtp.auth", "true");
+        
         Session session = Session.getDefaultInstance(props,null);
         try
         {
@@ -321,6 +321,7 @@ public class Mailer
             {
                 String user =      FlexProperties.getInstance().getProperty("HIP_FROM_EMAIL_ADDRESS");
                 user = user.substring(0, user.indexOf('@'));
+                props.put("mail.smtp.auth", "true");
                 Transport trans = session.getTransport("smtp");
                 trans.connect(FlexProperties.getInstance().getProperty("mail.smtp.host"), 
                             user, 
