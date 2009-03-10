@@ -55,13 +55,14 @@
           <strong>Q. How much do plasmids  cost?</strong> <br> 
         A. Please see current pricing on <a href="OrderOverview.jsp">this page</a>.</span></p>
            <strong>Q. How much does shipping cost?</strong> <br>
-       A. There are two ways to pay for shipping:
+       A. There are three ways to pay for shipping:
         <ul>
           <li>Provide us with you FedEx number.</li>
           <li>Flat shipping rate of $10 for domestic orders and $20 for international orders.</li>
+         <li>No charge for shipping for the Harvard Medical School community. Pick up your order in the Seeley G. Mudd Building in the <a href="http://www.hip.harvard.edu/Location.html#Quad" target="_blank">HMS Quad</a> in the second floor hallway freezer. You MUST have access to the building to take advantage of this offer.</li>
         </ul>
     
-            <strong>Q. Why am I charged for  a plasmid?</strong> <br>
+      <strong>Q. Why am I charged for  a plasmid?</strong> <br>
           A.&nbsp; These nominal  costs&nbsp;are designed to offset the handling fees associated with preparing  and sending plasmids. In keeping with the terms outlined by our granting  agencies, our aim is always to offset costs, never to make a profit. In  addition, we make an effort to significantly reduce the per-clone costs for  large collections in order to encourage high-throughput studies.<br>
           <br> 
             <strong>Q. How can I pay for  these plasmids?</strong> <br>
@@ -77,7 +78,7 @@
         <p><strong>Q. How long will it take for me to receive my plasmids?</strong><br>
         A. You will receive your plasmids with 1-4 weeks of your order.  There are several reasons for this amount of time. For each order, we pick the clones from our BioBank, grow them overnight, and then ship overnight.  We do not ship over the weekend to ensure that people are in your laboratory to receive the order.  At minimum filling your order will take three days, however, we fill orders based on when we receive them, so if there are 10 orders in front of you, it may take more time to get to picking your order.  Also if you place a large order it takes more time to pick the clones, and this can take up to 4 weeks. </p>
         <p><span class="mainbodytext"><strong>Q.&nbsp; Will I need to  get a signature on an MTA?</strong> <br>
-          A. For certain plasmids, yes you will need  an MTA signature. We will be sure to identify the correct MTA and send it to you electronically to be signed by the appropriate official in your technology transfer office.&nbsp; An original signed copy of the MTA should be  returned to Catherine Cormier at Harvard Institute of Proteomics, 320 Charles Street, Cambridge MA 02141.&nbsp; We will ship your plasmids  within 2 days of receipt of the signed MTA.</span></p>
+          A. For certain plasmids, yes you will need  an MTA signature. We will be sure to identify the correct MTA and send it to you electronically to be signed by the appropriate official in your technology transfer office.&nbsp; An original signed copy of the MTA should be  returned to Catherine Cormier at Harvard Institute of Proteomics, 240 Longwood Ave, LHRRB, Boston, MA 02115.&nbsp; We will ship your plasmids  within 2 days of receipt of the signed MTA.</span></p>
 <span class="mainbodytext">More specifically, if you are: <br> 
            <span class="mainbodytext">ACADEMIC RESEARCHERS: FLEXGene  clones from HIP are covered by a minimally restrictive MTA sent with clones.  Most other clones are covered by our standard MTA, which has been pre-approved  by some institutions and is based on the well-recognized Uniform Biologicals  MTA (UB-MTA). For some clones and for some institutions, however, you will have  to get a signed MTA to us before we can send the clones. In a few exceptional  cases, you will have to get a third-party MTA signed before we can send the  clone, as all or part of the clone is covered by MTAs from more than one  institution. For more information about MTAs, including information about how  to join our 'in network' group with pre-approved MTA coverage, please contact  Catherine Cormier. If you request clones and an MTA is required, the MTA will be  emailed to you as a PDF file.<br><br> 
 COMPANIES: Most of the HIP  FLEXGene clones are available to companies and will be covered by a minimally  restrictive MTA between HIP and your company. We will email the MTA after you  place a request. You are also welcome to get in touch to review the terms  before placing your request.<br> 
