@@ -222,7 +222,7 @@
                     return false;
                 }
                 function showGC() {
-                    var ogc = document.getElementById("growthcondition");
+                    var ogc = document.forms["vSubmitForDistForm"].elements["growthcondition"];
                     if (typeof ogc != 'undefined') {
                         var gc = ogc.options[ogc.selectedIndex].value;
                         if (gc.length > 0) {

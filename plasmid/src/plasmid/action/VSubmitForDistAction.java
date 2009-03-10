@@ -81,6 +81,8 @@ public class VSubmitForDistAction extends Action {
                 af = new ActionForward(mapping.getInput());
                 //af = mapping.findForward("success");
             } else if (sAction.equals("Add New Growth Condition")) {
+                t = DatabaseTransaction.getInstance();
+                conn = t.requestConnection();
                 VectorManager vm = new VectorManager(conn);
                 List ht = vm.getHTs("");
                 request.removeAttribute("HT");
