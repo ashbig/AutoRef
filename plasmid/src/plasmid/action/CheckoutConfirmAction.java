@@ -147,11 +147,13 @@ public class CheckoutConfirmAction extends UserAction {
         ((CheckoutForm)form).setOrderid(orderid);
         ((CheckoutForm)form).setPaymentmethod(Constants.PAYPAL);
           
+        String shippingMethod = ((CheckoutForm)form).getShippingMethod();
         String accountNumber = ((CheckoutForm)form).getAccountNumber(); 
         double shippingCost = ((CheckoutForm)form).getCostForShipping();  
         double clonePrice = ((CheckoutForm)form).getCostOfClones();
         double collectionPrice = ((CheckoutForm)form).getCostOfCollections();
-        if(accountNumber==null || accountNumber.trim().length()<1) {
+        if((!shippingMethod.equals(Constants.SHIPPING_METHOD_PICKUP)) &&
+        (accountNumber==null || accountNumber.trim().length()<1)) {
             if(country.equals(Constants.COUNTRY_USA)) {
                 shippingCost = 10;
             } else {

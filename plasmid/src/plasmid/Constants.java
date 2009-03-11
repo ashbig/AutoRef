@@ -93,6 +93,7 @@ public class Constants {
     
     public static final String PO = "PO";
     public static final String PAYPAL = "Credit Card";
+    public static final String SHIPPING_METHOD_PICKUP = "Pickup";
     
     public static final int SHIPFEE_DOM = 10;
     public static final int SHIPFEE_INT = 15;
