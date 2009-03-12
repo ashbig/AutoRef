@@ -44,7 +44,7 @@
     <td width="45%" valign="top">
       <p><span align="left" class="homepageText2">PSI search</span>
             <span class="mainbodytext"><a href="PrepareAdvancedSearch.do?psi=1">Advanced search</a></span><br>
-        <span class="mainbodytext">Search by PDB ID, TargetDB ID, PSI site or by ability of protein to express, be solube or purify.</span><br>
+        <span class="mainbodytext">Search by PDB ID, TargetDB ID, PSI site or by ability of protein to express, be soluble or purify.</span><br>
         <br>
             <span align="left" class="homepageText2">Advanced search options</span> 
             <span class="mainbodytext"><a href="PrepareAdvancedSearch.do?psi=0">Advanced search</a></span> <br>
@@ -75,7 +75,7 @@
           <td>$1200/plate</td>
         </tr>
         <tr class="tableinfo">
-          <td rowspan="2">PSI LaboratoryPSI Laboratory</td>
+          <td rowspan="2">PSI Laboratory</td>
           <td>individual clone</td>
           <td>$30/clone</td>
         </tr>
@@ -84,7 +84,7 @@
           <td>$1200/plate</td>
         </tr>
         <tr class="tableinfo">
-          <td rowspan="2">All othersAll others</td>
+          <td rowspan="2">All others</td>
           <td>individual clone</td>
           <td>$45/clone</td>
         </tr>
@@ -94,7 +94,7 @@
         </tr>
       </table>
       <div align="center"><span class="footertext"> *Shipping is additional. Either provide a FedEx number or shipping is a flat fee of $10 for domestic orders or $20 for international orders. <br>
-      No charge for shjpping to the Harvard Medical School community if order is picked up. Must have building access.</span></div>
+      No charge for shipping to the Harvard Medical School community if order is picked up. Must have building access.</span></div>
       <pre><span class="homepageText2">
 Can't find what you're looking for? </span>
 <span class="mainbodytext">          1. Please be sure you logged in because log-in effects what clones you can view.
