@@ -7,12 +7,9 @@
 </head>
 
 <body>
-<p class="leftsectiontitle">Explanation of Terms Used by PlasmID</p>
+<p align="center" class="homepageText2">Explanation of Terms Used by PlasmID</p>
 <table width="100%" border="0">
-  <tr> 
-    <td class="tablebody">Eyes feeling tired? Click <a href="definitionofterms.pdf">here</a> to dowload a PDF of our 
-      explanation of terms.</td>
-  </tr>
+ 
 </table>
 <table width="100%" border="0">
   <tr> 
@@ -23,13 +20,25 @@
     <td class="controlpaneltext">SEARCH TERM</td>
     <td class="mainbodytext">Term you searched with. if this is a recognized synonym 
       rather than the official gene symbol then your search term will not match 
-      the gene name. <a href="http://www.gene.ucl.ac.uk/nomenclature/" target="_blank">click 
+      the gene name. <a href="http://www.ncbi.nlm.nih.gov/entrez/query/static/help/genefaq.html#faq_g4" target="_blank">Click 
       here to learn about 'official' gene symbols</a>.</td>
   </tr>
   <tr> 
     <td class="controlpaneltext">Clone ID</td>
     <td class="mainbodytext"> Internal link to information about growth conditions, 
       insert &amp; vector, references, and more (Clone ID is assigned by PlasmID).</td>
+  </tr>
+  <tr>
+    <td class="controlpaneltext">Original Clone ID</td>
+    <td class="mainbodytext">ID of the plasmid provided by the depositor at the time of submission.</td>
+  </tr>
+  <tr>
+    <td class="controlpaneltext">PDB ID</td>
+    <td class="mainbodytext">The <a href="http://www.rcsb.org/pdb/home/home.do" target="_blank">Protein Data Bank (PDB) ID</a> links to the structure of the insert within this plasmid. If a PDB ID is provided, this clone was used for structure determination.</td>
+  </tr>
+  <tr>
+    <td class="controlpaneltext">PepcDB ID</td>
+    <td class="mainbodytext"><a href="http://pepcdb.pdb.org/index.html" target="_blank">PepcDB</a> is the Protein Expression Purification Crystallization Database. It is designed to document every step of the protein production pipeline, including reference and contact information.</td>
   </tr>
   <tr> 
     <td class="controlpaneltext">Clone Type</td>
@@ -44,7 +53,7 @@
   </tr>
   <tr> 
     <td class="controlpaneltext">GENE SYMBOL</td>
-    <td class="mainbodytext">Official gene symbol for the gene -- <a href="http://www.gene.ucl.ac.uk/nomenclature/" target="_blank">click 
+    <td class="mainbodytext">Official gene symbol for the gene. <a href="http://www.ncbi.nlm.nih.gov/entrez/query/static/help/genefaq.html#faq_g4" target="_blank">Click 
       here to learn about 'official' gene symbols</a>.</td>
   </tr>
   <tr> 
@@ -108,10 +117,13 @@
       clone. The majority of clones are limited to academic and non-profit labs 
       but additional restrictions and/or special treatment (see below) may apply.</td>
   </tr>
-  <tr> 
-    <td class="controlpaneltext">SPECIAL TREATMENT</td>
-    <td class="mainbodytext">Information on additional MTAs required for specific 
-      clones (for example, a CRE-specific MTA for CRE-containing clones). </td>
+  <tr>
+    <td class="controlpaneltext">Max Identity (%)/ Alignment Length</td>
+    <td class="mainbodytext">This field refers to the alignment of the Blast input (query) sequence to its matched (subject) sequence and indicates the maximum percentage of identical nucleotides or amino acids within the noted  alignment length. <a href="http://blast.ncbi.nlm.nih.gov/Blast.cgi" target="_blank">Click here for more information about Blast.</a></td>
+  </tr>
+  <tr>
+    <td class="controlpaneltext">Max Alignment Length/ Identity (%) </td>
+    <td class="mainbodytext">This field refers to the alignment of the Blast input (query) sequence to matched (subject) sequence and indicates the maximum  alignment length between the input and match and the percentage identity within this length. <a href="http://blast.ncbi.nlm.nih.gov/Blast.cgi" target="_blank">Click here for more information about Blast.</a> </td>
   </tr>
   <tr> 
     <td class="tablebody">OTHER TERMS</td>
@@ -127,6 +139,11 @@
       the case, it's best to confirm the identity of the plasmid by some appropriate 
       method before you use the clone. We welcome your feedback -- if you find 
       a clone isn't what you thought it was, please let us know as soon as possible.</td>
+  </tr>
+  <tr>
+    <td class="controlpaneltext">SPECIAL MTA</td>
+    <td class="mainbodytext">Information on additional MTAs required for specific 
+      clones (for example, a CRE-specific MTA for CRE-containing clones). </td>
   </tr>
   <tr> 
     <td class="controlpaneltext">PLASMID CLONE</td>
