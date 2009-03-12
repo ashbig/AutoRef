@@ -51,14 +51,14 @@
              <span class="mainbodytext">Search by gene name, gene symbol, vector name, vector feature, author name, publication, or species.</span><br>
           <br>
           <span class="homepageText2">Looking for an 'empty vector'? </span>
-          <span class="mainbodytext"><a href="GetAllVectors.do">View all vectors</a></span></p>
-      </td>
+          <span class="mainbodytext"><a href="GetAllVectors.do">View all vectors</a></span></p>      </td>
   </tr>
   <tr>
     <td height="277" colspan="2" valign="top"><div align="center">
       
       
-      <span class="homepageText2 style3"><br>CLONE COSTS </span>   </div>
+      <span class="homepageText2 style3"><a name="cost"></a><br>
+      CLONE COSTS </span>   </div>
       <table width="61%" border="3" align="center" id="gray">
         <tr class="tableheader">
           <td width="40%">PI Status</td>
@@ -66,39 +66,35 @@
           <td width="28%">Price/Unit*</td>
         </tr>
         <tr class="tableinfo">
-          <td height="20"><p>DF/HCC Member or Harvard Affiliate</p></td>
-          <td>individual clone</td>
+          <td rowspan="2"><p>DF/HCC Member or Harvard Affiliate</p></td>
+          <td height="20">individual clone</td>
           <td>$30/clone</td>
         </tr>
         <tr class="tableinfo">
-          <td>DF/HCC Member or Harvard Affiliate</td>
           <td>96-well plate of clones</td>
           <td>$1200/plate</td>
         </tr>
         <tr class="tableinfo">
-          <td>PSI Laboratory</td>
+          <td rowspan="2">PSI LaboratoryPSI Laboratory</td>
           <td>individual clone</td>
           <td>$30/clone</td>
         </tr>
         <tr class="tableinfo">
-          <td>PSI Laboratory</td>
           <td>96-well plate of clones</td>
           <td>$1200/plate</td>
         </tr>
         <tr class="tableinfo">
-          <td>All others</td>
+          <td rowspan="2">All othersAll others</td>
           <td>individual clone</td>
           <td>$45/clone</td>
         </tr>
         <tr class="tableinfo">
-          <td>All others</td>
           <td>96-well plate of clones</td>
           <td>$1500/plate</td>
         </tr>
       </table>
-      <div align="center"><span class="footertext"> *Shipping is additional -- details at  checkout</span>
-          </p>
-      </div>
+      <div align="center"><span class="footertext"> *Shipping is additional. Either provide a FedEx number or shipping is a flat fee of $10 for domestic orders or $20 for international orders. <br>
+      No charge for shjpping to the Harvard Medical School community if order is picked up. Must have building access.</span></div>
       <pre><span class="homepageText2">
 Can't find what you're looking for? </span>
 <span class="mainbodytext">          1. Please be sure you logged in because log-in effects what clones you can view.
