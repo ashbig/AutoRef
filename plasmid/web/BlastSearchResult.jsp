@@ -11,7 +11,7 @@
         <title>PlasmID Database</title>
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
         <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
-    </head>
+</head>
     
     <body>
         <jsp:include page="orderTitle.jsp" />
@@ -36,12 +36,13 @@
                         <html:hidden name="blastForm" property="isMegablast"/>
                     </h:form>
                     
-                    <p class="mainbodytexthead">List of search terms found</p>
-               
+                    <p class="mainbodytexthead">List of search terms found<br>
+                            <em>Click link in the &quot;Search Term&quot; field to view the alignment</em><br>
+                    </p>
                     <html:form action="SetDisplay.do">
                         <table width="100%" border="0">
                             <tr class="mainbodytexthead">
-                                <td align="left" class="mainbodytexthead">Page: 
+                              <td align="left" class="mainbodytexthead">Page: 
                                     <html:select property="page">
                                         <%  int k = 0;
             while (k < Integer.parseInt(total.toString()) / Integer.parseInt(size.toString())) {
@@ -160,7 +161,7 @@
             while (k < Integer.parseInt(total.toString()) / Integer.parseInt(size.toString())) {
                                         %>
                                         <html:option value="<%=(new Integer(k+1)).toString()%>"/>
-                                        <%      k++;
+                                    <%      k++;
             }
             if ((Integer.parseInt(total.toString()) % Integer.parseInt(size.toString())) > 0)
                                         %>
