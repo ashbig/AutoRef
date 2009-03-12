@@ -16,32 +16,27 @@
 <jsp:include page="homeTitle.jsp" /><table width="973" height="538" border="0">
 
   <tr>
-    <td width="550" height="300"><table width="578" height="259" border="0" align="center" bgcolor="#EFEFEF" id="form">
+    <td height="300"><table width="800" height="259" border="0" align="center" bgcolor="#EFEFEF" id="form">
       <tr>
-        <td width="572" height="112"><p align="center"><span class="mainbodytext">Plasmid Information Database (PlasmID) is a central repository for plasmid clone collections and distribution as part of the DF/HCC DNA Resource Core based at the <a href="http://www.hip.harvard.edu/" target="_blank">Harvard Institute of Proteomics (HIP)</a>. We are also the <a href="http://www.hip.harvard.edu/PSIMR/index.htm" target="_blank">Protein Structure Initiative (PSI) Material Repository</a>.&nbsp;        
+        <td width="800" height="112"><p align="center"><span class="mainbodytext">Plasmid Information Database (PlasmID) is a central repository for plasmid clone collections and distribution as part of the DF/HCC DNA Resource Core based at the <a href="http://www.hip.harvard.edu/" target="_blank">Harvard Institute of Proteomics (HIP)</a>. We are also the <a href="http://www.hip.harvard.edu/PSIMR/index.htm" target="_blank">Protein Structure Initiative (PSI) Material Repository</a>.&nbsp;        
         </span>
         <p align="center"><span class="mainbodytext">
-          <a href="http://hms.harvard.edu" target="_blank"><img src="HMS_logo.jpg" width="66" height="63"></a>&nbsp;<a href="http://www.hip.harvard.edu/PSIMR" target="_blank"><a href="http://www.hip.harvard.edu/PSIMR" target="_blank"><img src="psilogo.jpg" width="150" height="63"></a><br>
-          <a href="http://www.dfhcc.harvard.edu" target="_blank"><img src="DFHCC_NCI_logo.jpg" width="379" height="46"></a>
-        </span>
-        <p align="center" class="mainbodytext">To search for plasmids, please go to <a href="OrderOverview.jsp">Plasmid Request</a>  
+          <a href="http://hms.harvard.edu" target="_blank"><img src="HMS_logo.jpg" width="66" height="63"></a>&nbsp;<a href="http://www.hip.harvard.edu/PSIMR" target="_blank"><a href="http://www.hip.harvard.edu/PSIMR" target="_blank"><img src="psilogo.jpg" width="150" height="63"></a><a href="http://www.dfhcc.harvard.edu" target="_blank"><a href="http://www.dfhcc.harvard.edu" target="_blank"><img src="DFHCC_NCI_logo.jpg" width="379"  height="46"></a></span>
+          <br><hr>
+        <p align="center" class="mainbodytext"><strong>PLASMID SEARCH:</strong>  Go to <a href="OrderOverview.jsp">Plasmid Request</a>
           or find a list of our large collections <a href="collection_overview.jsp" target="_blank">here</a>. </p>
-        <p align="center" class="mainbodytext">For  more information on how to deposit clones with our repository,<br>please go to <a href="Submission.jsp">Plasmid Submission</a>.</p>
-        <p align="center" class="mainbodytext">Click <a href="http://www.hip.harvard.edu/PSIMR/MTA.html" target="_blank">here</a> for  information about the terms and conditions for receiving plasmids from the repository. </p>
-        <p align="center" class="mainbodytext">Click <a href="cloning_strategies.htm" target="_blank">here</a> to view the cloning methods used to create many of the  plasmids           </p>        </td>
+        <p align="center" class="mainbodytext"><strong>PLASMID COST:</strong> Click <a href="http://plasmid.med.harvard.edu/PLASMID/OrderOverview.jsp#cost">here</a> for plasmid and shipping costs.</p>
+        <p align="center" class="mainbodytext"><strong class="mainbodytext">DEPOSITING CLONES: </strong>Go to <a href="Submission.jsp">Plasmid Submission</a> or see a <a href="http://www.hip.harvard.edu/PSIMR/overview.html" target="_blank">slide show</a> describing the process.</p>
+        <hr>
+        <p align="center" class="mainbodytext">Click <a href="http://www.hip.harvard.edu/PSIMR/MTA.html" target="_blank">here</a> for the <strong class="mainbodytext">terms and conditions</strong> for receiving plasmids from the repository.</p>
+        <p align="center" class="mainbodytext"> Click <a href="cloning_strategies.htm" target="_blank">here</a> to view the <strong>cloning methods</strong> used to create many of the  plasmids           </p>        </td>
       </tr>
     </table></td>
-    <td width="490"><img src="monday_4.gif" width="410" height="270" border="0" alt="" usemap="#monday_4_Map" />
-      <map name="monday_4_Map" id="monday_4_Map">
-        <area shape="rect" alt="" coords="91,132,313,157" href="OrderOverview.jsp" />
-        <area shape="rect" alt="" coords="77,175,329,201" href="collection_overview.jsp" target="_blank" />
-        <area shape="rect" alt="" coords="104,87,298,114" href="Submission.jsp" />
-    </map></td>
   </tr>
   <tr>
-    <td colspan="2"><table width="697" border="5" align="center" bordercolor="#999999" id="gray">
+    <td><table width="800" border="5" align="center" bordercolor="#999999" id="gray">
       <tr>
-        <td width="679" height="180"><h1 align="center">What's New? </h1>
+        <td width="800" height="180"><h1 align="center">What's New? </h1>
         <ul type= circles>
           <li class="mainbodytext">No charge for shipping for the Harvard Medical School community. Pick up your order in the Seeley G. Mudd Building in the <a href="http://www.hip.harvard.edu/Location.html#Quad" target="_blank">HMS Quad</a> in the second floor hallway freezer. You MUST have access to the building and select this option at check-out to take advantage of this option.</li>
             <li class="mainbodytext">Can't find the plasmid you're interested in? Search our collection using our new <a href="PrepareBlast.do">Blast search</a>.</li>
