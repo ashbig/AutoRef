@@ -147,6 +147,11 @@
                                         <html:option value="Academic researcher, vector donor">Academic researcher, vector donor</html:option>
                                         <html:option value="Academic researcher, first author">Academic researcher, first author</html:option>
                                         <html:option value="Commercial Vector">Commercial Vector</html:option>
+                                        <html:option value="Academic Institute">Academic Institute</html:option>
+                                        <html:option value="National Laboratory">National Laboratory</html:option>
+                                        <html:option value="Research Center">Research Center</html:option>
+                                        <html:option value="Consortium">Consortium</html:option>
+                                        <html:option value="Initiative">Initiative</html:option>
                                     </html:select>
                                 </td>
                             </tr>
