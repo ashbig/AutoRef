@@ -72,6 +72,14 @@ ALTER TABLE NAMETYPE  ADD (URL VARCHAR2(500) )
  MODIFY (DISPLAYTITLE VARCHAR2(240) );
 
 update nametype set url='http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=nucleotide&val=' where nametype='GENBANK_ACCESSION';
+update nametype set url='http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=protein&val=' where nametype='PID';
+update nametype set url='http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=protein&val=' where nametype='P_ID';
+update nametype set url='http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=protein&val=' where nametype='P_ACCESSION_NUMBER';
+insert into nametype (nametype, url) values('SEGUID','http://bioinformatics.anl.gov/cgi-bin/tools/get_seguid_info.pl?SEGUIDs=');
+
+
+
+
 
 
 ALTER TABLE clonesequence 
