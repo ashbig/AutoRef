@@ -3,7 +3,6 @@ package plasmid.action;
 import java.util.*;
 import java.io.*;
 import java.sql.*;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -14,8 +13,6 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionServlet;
-import org.apache.struts.util.MessageResources;
 import org.apache.struts.upload.FormFile;
 
 import plasmid.form.VInputForm;
@@ -23,7 +20,6 @@ import plasmid.coreobject.*;
 import plasmid.Constants;
 import plasmid.database.*;
 import plasmid.database.DatabaseManager.*;
-import plasmid.database.DatabaseManager.UserManager;
 import plasmid.database.DatabaseManager.VectorManager;
 
 public class VInputAction extends Action {
@@ -191,8 +187,8 @@ public class VInputAction extends Action {
             }
 
             // Save file on the server
-            String mfPath = getServlet().getServletContext().getRealPath("/") + "PlasmidRepository/file/map";
-            String sfPath = getServlet().getServletContext().getRealPath("/") + "PlasmidRepository/file/sequence";
+            String mfPath = Constants.MAP_FILE_PATH;
+            String sfPath = Constants.SEQ_FILE_PATH;
             if ((mf != null) && (mf.getFileName().trim().length() > 0) && (mf.getFileSize() > 0)) {
                 File MapFile = new File(mfPath, mapfilename);
                 FileOutputStream mfOS = new FileOutputStream(MapFile);

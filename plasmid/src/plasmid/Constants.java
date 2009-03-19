@@ -40,6 +40,8 @@ public class Constants {
     public static final String FULLWORKLIST = "fullworklist";
     public static final String WORKLISTROBOT = "worklistrobot";
     public static final String BIOTRACY_WORKLIST_PATH = FlexProperties.getInstance().getProperty("biotracyworklist");
+    public static final String MAP_FILE_PATH = FlexProperties.getInstance().getProperty("mapfilepath");
+    public static final String SEQ_FILE_PATH = FlexProperties.getInstance().getProperty("seqfilepath");
     
     public static final String COLLECTION = "Collections";
     public static final String SINGLECOLLECTION = "Collection";
