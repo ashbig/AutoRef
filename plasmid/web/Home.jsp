@@ -38,7 +38,8 @@
       <tr>
         <td width="800" height="180"><h1 align="center">What's New? </h1>
         <ul type= circles>
-          <li class="mainbodytext">No charge for shipping for the Harvard Medical School community. Pick up your order in the Seeley G. Mudd Building in the <a href="http://www.hip.harvard.edu/Location.html#Quad" target="_blank">HMS Quad</a> in the second floor hallway freezer. You MUST have access to the building and select this option at check-out to take advantage of this option.</li>
+          <li class="mainbodytext">Curious about who orders our plasmids? Here's a <a href="http://www.batchgeocode.com/map/?i=bb69e015b8bfb20e06150bb05f4c95e3" target="_blank">map</a> of where the repository has shipped plasmids.</li>
+            <li class="mainbodytext">No charge for shipping for the Harvard Medical School community. Pick up your order in the Seeley G. Mudd Building in the <a href="http://www.hip.harvard.edu/Location.html#Quad" target="_blank">HMS Quad</a> in the second floor hallway freezer. You MUST have access to the building and select this option at check-out to take advantage of this option.</li>
             <li class="mainbodytext">Can't find the plasmid you're interested in? Search our collection using our new <a href="PrepareBlast.do">Blast search</a>.</li>
             <li class="mainbodytext">Yeast genes now available in  two new expression vectors (pBY011 and ZM552). </li>
             <li class="mainbodytext">Over 40 <a href="GetAllVectors.do?PSI=true" target="_self">Empty vectors</a> for cell free and bacterial expression from PSI sites now available!</li>

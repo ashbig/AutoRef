@@ -70,8 +70,12 @@
           <br> 
             <strong>Q.&nbsp; Do I need a PayPal  account to pay by credit card?</strong> <br>
           A.&nbsp; No you DO NOT need a PayPal account to pay by  credit card.&nbsp; PayPal is only used to  securely collect the credit card information.&nbsp;  At check out, use the option to &ldquo;pay without an account.&rdquo;<br>
-          <br> 
-            <strong>Q. In what form will I  receive the plasmids?</strong> <br>
+          <br> <strong>Q. Does the PSI-MR ship worldwide?</strong>
+<br>
+A. Yes, the PSI-MR ships plasmids all over the world. See this <a href="http://www.batchgeocode.com/map/?i=bb69e015b8bfb20e06150bb05f4c95e3" target="_blank">map</a> to explore the locations where we have shipped plasmids over the past 3 years. If your country is not on the list of countries that we ship to, please <a href="mailto:plasmidhelp@hms.harvard.edu">contact us</a> so we can add it to our list.
+ <br>
+ <br />
+        <strong>Q. In what form will I  receive the plasmids?</strong> <br>
         A. We usually ship plasmids at  room temperature (no ice) as freshly-prepared bacterial glycerol stocks.&nbsp;  Our years of experience have shown that plasmids are stable in that format  during shipment (streak out and/or freeze at -80 upon arrival). We occasionally  ship plasmids as purified DNA dried on Sample Matrix from BioMatrica. For  international requests, we send DNA spotted to sterile filter paper (recover by  adding TE or a similar buffer, followed by transformation). </span></p>
         <p><strong>Q. Can I pick up my plasmids from your facility?<br>
         </strong>A. Unfortunately we do not have pick-up from our facility.  However, we ship the plasmids to you by FedEx overnight, so you will receive your order the day after it is processed.</p>
