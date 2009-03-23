@@ -105,6 +105,9 @@ public class InsertImporter {
                 if("region".equalsIgnoreCase(columnName)) {
                     c.setRegion(columnInfo);
                 }
+                if("annotation".equalsIgnoreCase(columnName)) {
+                    c.setAnnotation(columnInfo);
+                }
                 if("refseqid".equalsIgnoreCase(columnName)) {
                     int refseqid = 0;
                     
