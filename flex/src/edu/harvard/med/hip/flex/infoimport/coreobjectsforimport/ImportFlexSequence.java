@@ -162,7 +162,13 @@ public void insert(Connection conn, ArrayList errors) throws Exception
                 "values("+ m_id+","+(i+1)+",'"+text+"')";
                 DatabaseTransaction.executeUpdate(sql_i,conn);
             }
-            
+            // clean up 
+            PublicInfoItem info_item;
+             for (Iterator iter = m_additional_info.iterator (); iter.hasNext (); )
+             {
+                info_item = (PublicInfoItem)iter.next ();
+                info_item.setValue(info_item.getValue().substring(0, 239));
+             }
             PublicInfoItem.insertPublicInfo(  conn, "NAME", 
             m_additional_info, m_id, "SEQUENCEID",    true, errors) ;
        
