@@ -13,9 +13,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.4 $
- * $Date: 2001-07-13 15:33:31 $
- * $Author: jmunoz $
+ * $Revision: 1.5 $
+ * $Date: 2009-03-27 17:42:05 $
+ * $Author: et15 $
  *
  ******************************************************************************
  *
@@ -52,8 +52,8 @@ import edu.harvard.med.hip.flex.util.*;
  *
  * Overides the ActionServlet to provide flex specific functionality
  *
- * @author     $Author: jmunoz $
- * @version    $Revision: 1.4 $ $Date: 2001-07-13 15:33:31 $
+ * @author     $Author: et15 $
+ * @version    $Revision: 1.5 $ $Date: 2009-03-27 17:42:05 $
  */
 
 public class FlexServlet extends ActionServlet {
@@ -87,7 +87,6 @@ public class FlexServlet extends ActionServlet {
      */
     protected void initFlexProp(String className, String fileName) throws ServletException {
         String name = filePath+fileName;
-        
        // first load the system configuration info
         InputStream systemStream = 
             getServletContext().getResourceAsStream(name);
@@ -106,6 +105,7 @@ public class FlexServlet extends ActionServlet {
             flexProp.setProperties(prop);
            
         } catch (IOException ioE) {
+            System.out.println("initProp "+ systemStream.toString() + " eee "+ioE.getMessage());
             throw new ServletException(ioE);
         }
        
