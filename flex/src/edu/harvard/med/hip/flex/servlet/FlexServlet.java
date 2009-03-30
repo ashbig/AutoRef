@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.5 $
- * $Date: 2009-03-27 17:42:05 $
+ * $Revision: 1.6 $
+ * $Date: 2009-03-30 14:51:52 $
  * $Author: et15 $
  *
  ******************************************************************************
@@ -53,7 +53,7 @@ import edu.harvard.med.hip.flex.util.*;
  * Overides the ActionServlet to provide flex specific functionality
  *
  * @author     $Author: et15 $
- * @version    $Revision: 1.5 $ $Date: 2009-03-27 17:42:05 $
+ * @version    $Revision: 1.6 $ $Date: 2009-03-30 14:51:52 $
  */
 
 public class FlexServlet extends ActionServlet {
@@ -67,12 +67,15 @@ public class FlexServlet extends ActionServlet {
      * @exception ServletException if we cannot configure ourselves correctly
      */
     public void init() throws ServletException {
+         System.out.println("______________P");
         super.init();
         initFlex();        
     }
     
     
     protected void initFlex() throws ServletException {
+             System.out.println("______________AP");
+    
         initFlexProp("FlexProperties", "SystemConfig.properties");
         initFlexProp("ContainerTypeProperties", "ContainerType.properties");
          
@@ -86,14 +89,13 @@ public class FlexServlet extends ActionServlet {
      * @exception ServletException when a configuration error is found.
      */
     protected void initFlexProp(String className, String fileName) throws ServletException {
-        String name = filePath+fileName;
+        String name = "/"+filePath+fileName;
        // first load the system configuration info
-        InputStream systemStream = 
-            getServletContext().getResourceAsStream(name);
+        InputStream  systemStream = getServletContext().getResourceAsStream(name);
         if(systemStream == null) {
-            System.err.println("Unable to read properties file: "+name);
+            System.out.println("__________Unable to read properties file: "+name);
         }
-        Properties prop = new Properties();
+          Properties prop = new Properties();
         try {
             
             prop.load(systemStream);
