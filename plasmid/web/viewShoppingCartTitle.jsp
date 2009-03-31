@@ -22,7 +22,7 @@
                   <li>Pay with your credit card.<br>
                       Payments are sent through PayPal, but you DO NOT need to register with PayPal to pay by credit card.
                   </li>
-                  <li>Include a purchase order (PO) number at check-out.</li>
+                  <li>Include a purchase order (PO) number or a 33-digit code at check-out.</li>
               </ol>
            </td>
         </tr>

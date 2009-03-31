@@ -27,11 +27,8 @@
     <b>Pay Using a Credit Card </b>
 </p>
 <p class="mainbodytexthead">
-You DO NOT need to create a PayPal account to pay by credit card: see the bottom right-hand side of the PayPal page for a link to pay by credit card WITHOUT signing in or registering.
-</p> 
-<p class="mainbodytexthead">
-Click the button to pay by credit card through the PayPal site. You will be returned to PlasmID to complete your request. 
-</p>
+Click the button to pay by credit card through the PayPal site. You DO NOT need to create a PayPal account to pay by credit card: see the bottom right-hand side of the PayPal page for a link to pay by credit card WITHOUT signing in or registering.
+ You will be returned to PlasmID to complete your request.</p> 
 <p class="text">Please confirm the following information (use back button to make changes):</P>
 <html:errors/>
 <table width="100%" border="0">
@@ -165,7 +162,7 @@ Click the button to pay by credit card through the PayPal site. You will be retu
 <td></td>
 </tr>
 <tr>
- <td class="formlabel">*PO Number (if choose payment by PO):</td>
+ <td class="formlabel">*PO Number (if choose payment by PO or 33-digit code):</td>
     <td class="text">
         <html:text maxlength="50" property="ponumber" size="40"/>
     </td>
