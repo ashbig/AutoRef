@@ -36,7 +36,7 @@ public class PrintLabel {
     
     
     public static String execute(String label) {
-        String urlString = "http://fv98.harvard.edu:8080/zebra/PrintLabelServlet?label=";
+        String urlString = "http://fv.med.harvard.edu:8080/zebra/PrintLabelServlet?label=";
         String msg = "";
         try {
             InputStream output = null;

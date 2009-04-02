@@ -43,7 +43,7 @@ public class PrintLabelsAction extends InternalUserAction{
         List labels = ((PrintLabelsForm)form).getLabels();
         request.setAttribute(Constants.LABELS, labels);
         
-        String urlString = "http://128.103.32.197:8080/zebra/PrintLabelServlet?label=";
+        String urlString = "http://fv.med.harvard.edu:8080/zebra/PrintLabelServlet?label=";
         URL url = null;
         InputStream output = null;
         BufferedReader reader = null;
