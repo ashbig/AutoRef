@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.6 $
- * $Date: 2009-03-30 14:51:52 $
+ * $Revision: 1.7 $
+ * $Date: 2009-04-02 14:52:34 $
  * $Author: et15 $
  *
  ******************************************************************************
@@ -53,7 +53,7 @@ import edu.harvard.med.hip.flex.util.*;
  * Overides the ActionServlet to provide flex specific functionality
  *
  * @author     $Author: et15 $
- * @version    $Revision: 1.6 $ $Date: 2009-03-30 14:51:52 $
+ * @version    $Revision: 1.7 $ $Date: 2009-04-02 14:52:34 $
  */
 
 public class FlexServlet extends ActionServlet {
@@ -67,16 +67,13 @@ public class FlexServlet extends ActionServlet {
      * @exception ServletException if we cannot configure ourselves correctly
      */
     public void init() throws ServletException {
-         System.out.println("______________P");
         super.init();
         initFlex();        
     }
     
     
     protected void initFlex() throws ServletException {
-             System.out.println("______________AP");
-    
-        initFlexProp("FlexProperties", "SystemConfig.properties");
+         initFlexProp("FlexProperties", "SystemConfig.properties");
         initFlexProp("ContainerTypeProperties", "ContainerType.properties");
          
     }
@@ -93,7 +90,7 @@ public class FlexServlet extends ActionServlet {
        // first load the system configuration info
         InputStream  systemStream = getServletContext().getResourceAsStream(name);
         if(systemStream == null) {
-            System.out.println("__________Unable to read properties file: "+name);
+            System.out.println("Unable to read properties file: "+name);
         }
           Properties prop = new Properties();
         try {
