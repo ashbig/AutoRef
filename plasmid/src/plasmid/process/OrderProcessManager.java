@@ -810,7 +810,7 @@ public class OrderProcessManager {
                     out.print(cs.getHosttype() + ": " + cs.getMarker() + ";");
                 }
 
-                out.print("\t\t\t"+c.getSpecialtreatment());
+                out.print("\t\t\t\t"+c.getSpecialtreatment());
 
                 if (isQuantity) {
                     out.print("\t" + c.getQuantity());
