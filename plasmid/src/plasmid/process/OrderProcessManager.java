@@ -786,16 +786,16 @@ public class OrderProcessManager {
 
     public void writeCloneList(List clones, PrintWriter out, boolean isWorkingStorage, boolean isQuantity) {
         if (isWorkingStorage) {
-            out.print("Clone ID\tClone Type\tGene ID\tGene Symbol\tGene Name\tReference Sequence Genbank Accession\tReference Sequence GI\tInsert Format\tVector\tGrowth Condition\tSelection Markers\tMutation\tDiscrepancy");
+            out.print("Clone ID\tClone Type\tGene ID\tGene Symbol\tGene Name\tReference Sequence Genbank Accession\tReference Sequence GI\tInsert Format\tVector\tGrowth Condition\tSelection Markers\tMutation\tDiscrepancy\tSpecies\tSpecial Treatment");
             if (isQuantity) {
                 out.print("\tQuantity");
             }
-            out.println("\tContainer\tWell\tPosition\tSpecial Treatment");
+            out.println("\tContainer\tWell\tPosition");
         } else {
             if (isQuantity) {
-                out.println("Clone ID\tClone Type\tGene ID\tGene Symbol\tGene Name\tReference Sequence Genbank Accession\tReference Sequence GI\tInsert Format\tVector\tGrowth Condition\tSelection Markers\tMutation\tDiscrepancy\tQuantity");
+                out.println("Clone ID\tClone Type\tGene ID\tGene Symbol\tGene Name\tReference Sequence Genbank Accession\tReference Sequence GI\tInsert Format\tVector\tGrowth Condition\tSelection Markers\tMutation\tDiscrepancy\tSpecies\tSpecial Treatment\tQuantity");
             } else {
-                out.println("Clone ID\tClone Type\tGene ID\tGene Symbol\tGene Name\tReference Sequence Genbank Accession\tReference Sequence GI\tInsert Format\tVector\tGrowth Condition\tSelection Markers\tMutation\tDiscrepancy");
+                out.println("Clone ID\tClone Type\tGene ID\tGene Symbol\tGene Name\tReference Sequence Genbank Accession\tReference Sequence GI\tInsert Format\tVector\tGrowth Condition\tSelection Markers\tMutation\tDiscrepancy\tSpecies\tSpecial Treatment");
             }
         }
 
@@ -810,14 +810,14 @@ public class OrderProcessManager {
                     out.print(cs.getHosttype() + ": " + cs.getMarker() + ";");
                 }
 
-                out.print("\t\t");
+                out.print("\t\t\t"+c.getSpecialtreatment());
 
                 if (isQuantity) {
                     out.print("\t" + c.getQuantity());
                 }
 
                 if (isWorkingStorage) {
-                    out.println("\t" + c.getPlate() + "\t" + c.getWell() + "\t" + c.getPosition() + "\t" + c.getSpecialtreatment());
+                    out.println("\t" + c.getPlate() + "\t" + c.getWell() + "\t" + c.getPosition());
                 } else {
                     out.println();
                 }
@@ -833,14 +833,14 @@ public class OrderProcessManager {
                         out.print(cs.getHosttype() + ": " + cs.getMarker() + ";");
                     }
 
-                    out.print("\t" + insert.getHasmutation() + "\t" + insert.getHasdiscrepancy());
+                    out.print("\t" + insert.getHasmutation() + "\t" + insert.getHasdiscrepancy()+"\t"+insert.getSpecies()+"\t"+c.getSpecialtreatment());
 
                     if (isQuantity) {
                         out.print("\t" + c.getQuantity());
                     }
 
                     if (isWorkingStorage) {
-                        out.println("\t" + c.getPlate() + "\t" + c.getWell() + "\t" + c.getPosition() + "\t" + c.getSpecialtreatment());
+                        out.println("\t" + c.getPlate() + "\t" + c.getWell() + "\t" + c.getPosition());
                     } else {
                         out.println();
                     }
