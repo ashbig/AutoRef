@@ -1008,7 +1008,13 @@ public class OrderProcessManager {
             return;
         //OutputStreamWriter f = new FileWriter(path+filename);
         }
-        OutputStreamWriter f = new OutputStreamWriter(ftp.getOutputStream(path + filename, 0, false));
+        OutputStreamWriter f = null;
+        if(ftp==null) {
+            f = new FileWriter(new File(path+filename));
+        } else {
+            f = new OutputStreamWriter(ftp.getOutputStream(path + filename, 0, false));
+        }
+        
         f.write(filename + "\n\n\n");
         for (int i = 0; i < clones.size(); i++) {
             CloneInfo clone = (CloneInfo) clones.get(i);
@@ -1029,9 +1035,14 @@ public class OrderProcessManager {
     public void printBioTracySummary(List groups, String filename, String worklistFilenameRoot, Sftp ftp) throws Exception {
         if (groups == null || filename == null) {
             return;
-        //OutputStreamWriter f = new FileWriter(filename);
         }
-        OutputStreamWriter f = new OutputStreamWriter(ftp.getOutputStream(filename, 0, false));
+        OutputStreamWriter f = null;
+        if(ftp == null) {
+            f = new FileWriter(filename);
+        } else {
+            f = new OutputStreamWriter(ftp.getOutputStream(filename, 0, false));
+        }
+        
         f.write("File Name\tHost Type\tSelection Condition\tGrowth Condition\tComments\n");
         for (int i = 0; i < groups.size(); i++) {
             List clones = (List) groups.get(i);
@@ -1147,7 +1158,14 @@ public class OrderProcessManager {
 
     public void sendOrderEmail(CloneOrder order, String email) {
         String subject = "order " + order.getOrderid();
-        String text = "Thank you for placing a clone request at PlasmID. Clones are sent as glycerol stocks (most U.S. orders) or as purified DNA (most overseas orders).\n";
+        String text = "Thank you for placing a clone request at PlasmID. "+
+                "Clones are sent as glycerol stocks (most U.S. orders) "+
+                "or as purified DNA (most overseas orders).  For orders "+
+                "of <96 clones, if you are in our Expedited MTA network "+
+                "we will ship within 10 business days of your order. "+
+                "For out-of-network orders, we will ship your clones within "+
+                "10 days after receipt of the signed MTA.  For orders of >96 "+
+                "plasmids, please contact us for an estimated shipment time.\n";
         text += "\n" + formOrderText(order);
         text += "\n" + "Please sign in at PlasmID to view order status, " +
                 "track your shipment, download clone information, cancel a request, " +
