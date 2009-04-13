@@ -1,0 +1,433 @@
+
+
+P6. Rebuild projects
+
+	Rebuild projects for production server: 
+		a. log in to kotel and change user to flex (see 9).
+		b. run cvs update: cvs update flex
+		c. change directory to flex: cd flex
+		d. run build: ant
+		e. restart web server. 
+	
+	Rebuild projects for development server:
+		a. use vnc to connect to flex: flex.harvard.edu/flex
+		b. log in to flex: flex/FleX
+		c. start wincvs program
+d. log in to cvs and update flex module and log out (password for dzuo:  dongmeizuo69).
+		e. changed file path if needed.
+		f. shutdown tomcat server.
+		g. rebuild programs using ant:
+			start a dos command window
+			change directory to: H:\FLEXDev\flex\flex
+			run ant: ant
+		h. restart tomcat server (tomcat 4.0)
+		j. go to development site and verify that you can log in correctly.
+
+P7. Rearray programs
+
+Current status: It is fully released into production. Only people with
+ manager or higher previliges can access the program. The menu is called "Rearray" under 
+"Process" group.
+	
+Possible work to do: 
+•	Bug fix. Since this program hasn't been used for a long time, 
+bugs may still exists.
+•	The current UI may not meet all the rearray requests. May 
+need further development when new requests coming.
+
+Business logic class description:
+	
+RearrayManager.java
+This is the main control class. It has all the rearray parameters as 
+data members. It communicates with other rearray classes to do the rearray work.
+		
+RearrayInputSample.java
+This class stores all the rearray input information as data members. 
+It provides get and set methods for all the data members.
+		
+RearrayPlateMap.java
+This class stores all the database field that may be used to do rearray.
+ It also provides get and set methods for all the data members.
+		
+RearrayPlateMapCreator.java
+This class takes RearrayInputSample objects as input and converts them into 
+RearrayPlateMap objects.
+		
+GenericRearrayer.java
+This class handles all the rearray rules. It has the following inner classes 
+for sorting:
+SourceWellComparator.java
+DestWellComparator.java
+CDSComparator.java
+		
+RearrayContainerMapper.java
+This class creates the rearrayed containers for a list of input samples.
+ It has the following inner class to handle plate sorting:
+	ContainerComparator.java
+	
+All related action classes:
+	RearraySelectionAction.java
+	RearrayFileInputAction.java
+	CloneRearrayFileInputAction.java
+	RearrayParamSetAction.java
+	CloneRearrayParamSetAction.java
+		
+All related form beans:
+	GenericRearrayForm.java
+	
+All related jsp pages:
+	RearraySelection.jsp
+	RearrayFileInput.jsp
+	CloneRearrayFileInput.jsp
+	RearrayParamSet.jsp
+	CloneRearrayParamSet.jsp
+	RearrayOutput.jsp
+	
+For UML and workflow diagram and other related information, 
+please see my network folder:
+	Protocols\rearray
+	presentation\presentation_10_9_03
+		
+P8. Expression vector programs
+
+Current status: It is fully released into production, but hasn't been used. 
+In order to use it,
+users have to enter their expression vectors into database manually 
+by informaticists (see below). 
+
+
+Business logic class description:	
+
+MasterToExpressionContainerMapper.java
+This class creates expression plate, samples and samplelineages.
+		
+CloneContainer.java
+This class is a child class of Container.java. It contains data and methods related to CLONES table other than those in Container.java class.
+		
+ExpressionCloneContainer.java
+This class is a child class of CloneContainer.java. It contains data and methods related to CLONEVALIDATION table other than those in CloneContainer.java class.
+	
+CloneSample.java
+This class is a child class of Sample.java. It contains information related to clone
+besides the information stored in Sample.java.
+		
+ExpressionCloneSample.java
+This class is a child class of CloneSample.java. It contains specific information related
+to expression clones (such as validation results) other than those related to CloneSample.java.
+		
+CloningStrategy.java
+This class contains all the information related to CLONINGSTRATEGY, VECTOR, LINKER tables.
+		
+CloneVector.java
+This class contains all the information related to VECTOR table.
+		
+CloneLinker.java
+This class contains all the information related to LINKER table.
+		
+All related JSPs:
+	
+	ExpressionCloneEntry.jsp: first page
+	EnterMasterPlateBarcode.jsp
+	EnterExpressionPlateBarcode.jsp
+	SelectExpressionVector.jsp
+	SetDisplay.jsp
+	EnterResult.jsp
+	NoPlateInSession.jsp
+	NoPlateInSession.jsp
+	ExpressionResultHistory.jsp
+	ExpressionResultHistoryNoResult.jsp
+	ExpressionResultHistoryFail.jsp
+		
+All related Action classes:
+	GetStrategyAction.java
+	CreateExpressionPlateAction.java
+	SetDisplayAction.java
+	EnterExpressionResultAction.java
+	EnterExpressionPlateBarcodeAction.java
+	ExpressionResultHistoryAction.java
+	
+All related Form beans:
+	ExpressionResultHistoryForm.java
+	EnterResultForm.java
+	CreateExpressionPlateForm.java
+		
+Other reference information:
+	strut-config.xml
+Workflow diagrams, usecase document and user mannual can be found in my network folder:
+		Protocols\expression_vector\expression
+		presentation\presentation_10_9_03
+
+P9. Changing TM for oligo calculation
+
+The default TM for oligo calculation is 60. Pseudomonas uses 65. 
+If a certain project requires different TM, we need the modify the programs.
+	
+•	Create a new class extending from NNPrimerCalculator.java.
+•	Overwrite two methods: getDesiredTM and adjustPosition.
+•	Modify the method makePrimerCalculator in StaticPrimerCalculatorFactory.java.
+	
+Reference: Please look at PMNNPrimerCalculator.java
+		
+P10. Workflow set up
+
+Sometimes for a new project, production team will choose a workflow that 
+is different from all the existing workflows. This may also happen for 
+existing projects. In this case, a new workflow needs to be set up in
+ the database and related programs need to be modified. Sometimes, 
+new UI needs to be developed for new processes that are currently 
+not supported by the system (not in this document).
+	
+Database change:
+	
+•	Insert project records into PROJECT table:
+o	projectid (max projectid + 1)
+o	name
+o	description
+o	version
+
+•	Insert workflow records into WORKFLOW table:
+o	workflowid (max workflowid + 1)
+o	name
+o	description
+
+•	Insert records into PROJECTWORKFLOW table:
+o	projectid (foreign key to project table)
+o	workflowid (foreign key to workflow table)
+o	code (one letter code defined by project manager)
+
+•	Insert records into WORKFLOWTASK table:
+o	workflowtaskid (generated by workflowtaskid sequence)
+o	currentprotocolid (foreign key to processprotocol table)
+o	nextprotocolid (foreign key to processprotocol table)
+o	workflowid (foreign key to workflow table)
+	
+Program change:
+	
+•	Project.java: add static field for the project
+•	Workflow.java: add static field for the workflow
+•	Oligo.java: change methods setTagSequence_5p, setTagSequence_3p_Close, setTagSequence_3p_Fusion
+•	OligoPlateManager.java: set the fusion or closed format of the oligo
+•	EnterOligoPlates.jsp
+•	EnterOligoPlatesAction.java
+•	GetPCRResearcherAction.java
+•	GetNewOligoResearcherAction.java
+•	CloningStrategy.java
+		
+For expression workflow, modify the following programs:
+•	Project.java
+•	Workflow.java
+•	CloningStrategy.java
+•	Protocol.java: if there is new process
+•	ContainerType.property: for new protocol
+•	Sample.java: for new sample type
+•	GetResearcherAction.java
+•	OneToOneContainerMapper.java: for new vector extensions at the end of the plate label
+
+After all the database changes and programs changes have been made:
+•	Test run the new workflow on local server and fix bugs
+•	Build changes into testing server
+•	Test run the new workflow on test server and fix bugs
+•	Build changes into production server
+	
+Note:
+•	When check in/check out programs, make sure all the related path settings are changed properly. Programs checked into CVS need to have all the file path set to production server (ie. kotel).
+•	Make sure to check the primer tag and gene specific part with project manager.
+
+Other references:
+•	Please see the presentation on my network folder: presentation\presentation_10_9_03
+
+
+
+
+
+P11. Delete production plates and related information from database
+
+The production team sometimes enters the wrong information for a 
+thread of plates, and it needs to be deleted from the database. 
+Most of the time, records need to be deleted to PCR step. 
+In the worst case, all the records from PCR to glycerol need to be deleted.
+ Deletion of the records from the database is very error prone so it is not 
+recommended in the production database unless it is absolutely necessary. 
+Sometimes, database update is necessary to meet the request. To minimize the 
+rrors, I recommend to use the testing database to do the test first. 
+In order to use the testing database correctly, the testing database 
+needs to be synchronized with production database. The production server 
+needs to be shutdown before doing the deletion from production database. 
+	
+Please keep in mind:
+•	Don't disable constraints because you don't want to accidently delete something that is still referenced by records in other tables.
+•	Records need to be deleted in appropriate order to avoid the foreign key violation.
+•	Some records need to be queried out before deletion because you need to reference them when you delete other records.
+		   
+Following is the guidline for this procedure. It may be different in different cases:
+
+Delete from summary tables:
+•	query CLONESTORAGE table to get all cloneids using storagecontainerid.
+•	delete from CLONESTORAGE table using storagecontainerid.
+•	update SAMPLE table to set cloneid=null using cloneid.
+•	delete from CLONES table using cloneid.
+•	delete from OBTAINEDMASTERCLONE table using containerid
+•	query SAMPLE table to get all distinct constructid using containerid
+•	delete from CLONINGPROGRESS table using constructid
+
+Delete from other tables:
+•	delete from QUEUE table for the records put on the last step using containerid.
+•	query PROCESSOBJECT table to get all executionid using containerid
+•	delete from PROCESSOBJECT table using executionid
+•	delete from SAMPLELINEAGE table using executionid
+•	(delete from RESULT table using executionid, may also need to delete from FILEREFERENCE table and RESULTFILEREFERENCE table)
+•	delete from PROCESSEXECUTION table using executionid
+•	delete from CONTAINERCELL table using containerid.
+•	delete from SAMPLE table using containerid.
+•	delete from CONTAINERHEADER table using containerid.
+•	(delete from PLATESET all the platesets for the above containers)
+•	insert into QUEUE the appropriate objects.
+		
+In case when you need to delete records all the way up to sequence approval:
+•	delete from CONSTRUCTDESIGN. 
+•	delete from OLIGO (oligoid needs to be selected before deleting from CONSTRUCTDESIGN).
+•	update FLEXSEQUENCE to set FLEXSTATUS='PENDING'.
+•	insert into QUEUE all the sequences for PROTOCOLID=3 or 4
+
+Reference information:
+	Please see my network folder: Protocols\dbcleanup_3_15_02.txt
+	
+P12. Change sample results
+
+This happens when the production team members repeat certain steps and get better results, but the old results have been entered, therefore, we need to update the results and following sample type information in the database to reflect the correct results. To minimize the errors, I recommend using the testing database to do the test first. In order to use the testing database correctly, the testing database needs to be synchronized with production database. The production server needs to be shutdown before doing the database update.
+	
+•	Ask user to use FLEXGene system to print out the container detail page for the results they would like to change, and mark the correct results besides the old results.
+•	Shut down production server.
+•	Update RESULT table for RESULTVALUE using the sampleid.
+•	Update SAMPLE table for SAMPLETYPE using the samplelineage records.
+•	Repeat until you fixed all the results and sample types.
+•	Restart production server and verify your changes using container history and container detail.
+
+P13. Enter data into summary tables for obtained master clones
+
+This should automatically happen when user creates glycerol stock plates in production (GetResearcherAction.java class calls ThreadedSummaryTablePopulator.java to insert all the clones into summary tables). However, if the system fails due to an unexpected error, we need to initiate the process manually. An email will be sent to flexgene_manager account whether this process is successful or not. All the containerid associated with the process will be included in the email message.
+
+•	Modify the main method of SummaryTablePopulator.java to include the containerid that you need to insert into summary tables, and define the cloning strategy accordingly.
+•	Change DatabaseTransaction.java class to work locally.
+•	Execute SummaryTablePopulator.java program to insert the data into summary tables.
+•	Check the email to make sure the records are inserted successfully.
+
+P14. Enter data into summary tables for sequencing plates
+
+When the production team send plates to the sequencing facility, they need to give informatics team all the plate barcodes and sequencing facility information so that the sequencing information is entered into FLEXGene database properly for BEC to do further analysis.
+	
+•	Query sample table for the plates to make sure all the samples with type equals "ISOLATE" have cloneid. If they don't have cloneid, we need to trace back through the samplelineage table to get the cloneid of the source sample and update accordingly.
+•	Insert records into CLONESEQUENCING table.
+		insert into clonesequencing
+		select sequencingid.nextval, 'IN PROCESS', sequencing facility name, 
+		sysdate, null, sampleid, cloneid
+		from sample where sampletype = 'ISOLATE'
+		and containerid in
+		(select containerid from containerheader where label in ())
+•	Update CLONES table to set the status to ‘IN SEQUENCING PROCESS’
+		
+P15. Enter data into summary tables for sequence verified or rejected clones.
+
+For sequence rejected clones:
+•	Update clones table to change the status to ‘NOT SEQUENCE VERIFIED’ if the status was ‘UNSEQUENCED’. If the status was ‘INPROCESS’, also update the clonesequencing table to ‘COMPLETE’.
+•	Update cloningprogress table for construct status:
+o	If status was ‘SEQUENCE VERIFIED CLONES OBTAINED’, don’t update status.
+o	If status was ‘CLONES OBTAINED’, change status to ‘SEQUENCE REJECTED’.
+•	Update flexsequence table for sequence status:
+o	If status was not ‘SEQUENCE VERIFIED CLONES OBTAINED’, change status to ‘FAILED’ if there are not other constructs that are in process or has clones obtained.
+
+For sequence verified clones:
+•	Update clones table to change the status to ‘SEQUENCE VERIFIED’. If the status was ‘INPROCESS’, also update the clonesequencing table to ‘COMPLETE’.
+•	Update cloningprogress table for construct status:
+o	Change status to ‘SEQUENCE VERIFIED CLONES OBTAINED’.
+•	Update flexsequence table for sequence status:
+Change status to ‘SEQUENCE VERIFIED’.
+•	Update clonename using programs
+o	UpdateClonename.java
+o	DatabaseTransaction.java
+P16. Enter new expression vector information into database
+
+Current status: A template file for expression information is created for such purpose. It can be found in my network folder:
+	Protocols\expression_vector\vector_input_format.txt
+	
+Possible works to do:
+•	Enter new expression vectors into database.
+	
+	a. Insert into vector table:
+		vectorname
+		vectorsource
+		vectortype (entry vector, destination vector)
+		vectorfile (the file name)
+		vectorpath (the path to the file)
+		description
+		restriction
+		hipname (generated by DB)
+		vectorid (the max vectorid + 1)
+	b. Insert into vectorfeature table:
+		featureid (featureid.nextval)
+		featurename
+		featuredescription
+		featurestatus
+		vectorname (foreign key to vector table)
+	c. Insert into vectortag table:
+		tagname
+		tagtype
+		vectorname (foreign key to vector table)
+	d. Insert into vectormapping table:
+		srcvectorname (foreign key to vector table)
+		destvectorname (foreign key to vector table)
+	e. Insert into linker table:
+		linkerid (the max linkerid + 1)
+		linkername
+		linkersequence (make sure they are all sense strand from 5p to 3p)
+	f. Insert into cloningstrategy: 
+note: for each compatible source vector, enter one record for each pair of linkers.
+		strategyid (the max strategyid + 1)
+		strategyname
+		linkerid_5p (foreign key to linker table)
+		linkerid_3p (foreign key to linker table)
+		vectorname (foreign key to vector table)
+		type (entry plasmid, destination plasmid)
+
+	Note: some fields are optional.
+
+P17. Delete obtained master clones from summary tables.
+
+•	Get all the containers that need to be deleted from the database.
+•	Query CLONESTORAGE table to get all the cloneids on the containers.
+•	Query CLONES table to get all the mastercloneids for the clones.
+•	Delete from CLONESTORAGE table for all the samples on the containers.
+•	Delete from CLONES table for all the clones.
+•	Delete from OBTAINEDMASTERCLONE table for all the master clones.
+•	Delete from CLONINGPROGRESS table for all the non-referenced constructs.
+
+P18. Import ORF clones.
+
+•	Import reference sequences using OrfCloneImporter.java with the file
+•	Update queue table for the imported sequences:
+update queue set workflowid=31, protocolid=4 where sequenceid in
+(select sequenceid from requestsequence where requestid=224)
+•	Design construct using special oligo order program
+•	Receive oligo plates, generate PCR and glycerol plates. Remember glycerol plate labels.
+•	Populate summary tables
+•	Query:
+select c.cloneid, c.sequenceid, cd.constructtype, n.namevalue,
+s.storagecontainerlabel, s.storagecontainerposition
+from clones c, constructdesign cd, name n, clonestorage s
+where c.cloneid=s.cloneid
+and c.constructid=cd.constructid
+and cd.sequenceid=n.sequenceid
+and n.nametype='GENBANK_ACCESSION'
+and s.storagecontainerid in (…)
+•	Run Algorithm.java to convert plate/well to position
+•	Import into Access database with the original file
+•	Join the files to generate rearray files
+•	Run rearray program to generate rearrayed plates as HMG plates
+•	Query:
+select cloneid, storagecontainerlabel, storagecontainerposition 
+from clonestorage where storagecontainerid in (…)
+•	Import to Access database to get the final file
+•	Delete the virtual plates from clonestorage table
+•	Updated the imported plates to be original storage
+
+
