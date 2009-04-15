@@ -42,6 +42,10 @@ public class ProcessobjectTO implements Serializable {
     protected int level;
     protected int order;
     
+    private MicrovigeneslideTO vslide;
+    
+    private ProcessexecutionTO process;
+    
     /** Creates a new instance of ProcessobjectTO */
     public ProcessobjectTO() {
     }
@@ -138,6 +142,22 @@ public class ProcessobjectTO implements Serializable {
 
     public void setObjectname(String objectname) {
         this.objectname = objectname;
+    }
+
+    public MicrovigeneslideTO getVslide() {
+        return vslide;
+    }
+
+    public void setVslide(MicrovigeneslideTO vslide) {
+        this.vslide = vslide;
+    }
+
+    public ProcessexecutionTO getProcess() {
+        return process;
+    }
+
+    public void setProcess(ProcessexecutionTO process) {
+        this.process = process;
     }
     
 }

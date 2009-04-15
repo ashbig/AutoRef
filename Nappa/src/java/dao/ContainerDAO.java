@@ -14,16 +14,21 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import process.Container384ToSlideMapper;
 import transfer.CloneTO;
 import transfer.ContainercellTO;
 import transfer.ContainerheaderTO;
 import transfer.ContainerpropertyTO;
 import transfer.ContainertypeTO;
 import transfer.ProcessexecutionTO;
+import transfer.ProcessprotocolTO;
 import transfer.ReagentTO;
+import transfer.ResearcherTO;
+import transfer.ResultTO;
 import transfer.ResulttypeTO;
 import transfer.SampleTO;
 import transfer.SamplepropertyTO;
@@ -322,6 +327,10 @@ public class ContainerDAO {
     }
 
     public static SlideTO getSlide(int slideid, boolean isSample, boolean isReagent, boolean isClone, boolean isType, boolean isLineage) throws DaoException {
+        return getSlide(slideid, isSample, isReagent, isClone, isType, isLineage, false, null);
+    }
+
+    public static SlideTO getSlide(int slideid, boolean isSample, boolean isReagent, boolean isClone, boolean isType, boolean isLineage, boolean isResult, String resultType) throws DaoException {
         String sql = "select barcode, printorder, surfacechem, program, startdate, containerid from slide where slideid=" + slideid;
         DatabaseTransaction t = null;
         ResultSet rs = null;
@@ -337,7 +346,7 @@ public class ContainerDAO {
                 String startdate = rs.getString(5);
                 int containerid = rs.getInt(6);
                 slide = new SlideTO(slideid, printorder, barcode, surfacechem, program, startdate);
-                ContainerheaderTO c = ContainerDAO.getContainer(containerid, isSample, isReagent, isClone, isType, isLineage);
+                ContainerheaderTO c = ContainerDAO.getContainer(containerid, isSample, isReagent, isClone, isType, isLineage, isResult, slideid, resultType);
                 slide.setContainer(c);
             }
         } catch (Exception ex) {
@@ -383,8 +392,12 @@ public class ContainerDAO {
     public static ContainerheaderTO getContainer(int containerid, boolean isSample, boolean isReagent, boolean isClone, boolean isType) throws DaoException {
         return getContainer(containerid, isSample, isReagent, isClone, isType, false);
     }
-
+    
     public static ContainerheaderTO getContainer(int containerid, boolean isSample, boolean isReagent, boolean isClone, boolean isType, boolean isLineage) throws DaoException {
+        return getContainer(containerid, isSample, isReagent, isClone, isType, isLineage, false, 0, null);
+    }
+
+    public static ContainerheaderTO getContainer(int containerid, boolean isSample, boolean isReagent, boolean isClone, boolean isType, boolean isLineage, boolean isResult, int slideid, String resultType) throws DaoException {
         String sql = "select barcode,type,format,status,location,labware,threadid,category from containerheader where containerid=?";
         String sql2 = "select pos,posx,posy,type from containercell where containerid=? and sampleid=?";
         String sql3 = "select sampleid,name,description,volume,quantity,unit,type,form,status,pos from sample where containerid=?";
@@ -398,7 +411,8 @@ public class ContainerDAO {
                 " where  h.containerid=c.containerid and c.sampleid in" +
                 " (select sampleid_from from samplelineage" +
                 " where sampleid_to=?)";
-
+        String sql10 = "select resultid,resultvalue,executionid from result where resulttype=? and slideid=? and sampleid=?";
+                
         DatabaseTransaction t = null;
         Connection conn = null;
         ResultSet rs = null;
@@ -410,6 +424,7 @@ public class ContainerDAO {
         ResultSet rs7 = null;
         ResultSet rs8 = null;
         ResultSet rs9 = null;
+        ResultSet rs10 = null;
         PreparedStatement stmt = null;
         PreparedStatement stmt2 = null;
         PreparedStatement stmt3 = null;
@@ -419,6 +434,7 @@ public class ContainerDAO {
         PreparedStatement stmt7 = null;
         PreparedStatement stmt8 = null;
         PreparedStatement stmt9 = null;
+        PreparedStatement stmt10 = null;
 
         ContainerheaderTO container = null;
         try {
@@ -430,6 +446,10 @@ public class ContainerDAO {
                 stmt3 = conn.prepareStatement(sql3);
                 stmt6 = conn.prepareStatement(sql6);
                 stmt8 = conn.prepareStatement(sql8);
+                
+                if(isResult) {
+                    stmt10 = conn.prepareStatement(sql10);
+                }
             }
             if (isReagent) {
                 stmt4 = conn.prepareStatement(sql4);
@@ -582,6 +602,21 @@ public class ContainerDAO {
                                     }
                                 }
                                 sample.addReagent(reagent);
+                            }
+                        }
+                        
+                        if(isResult) {
+                            stmt10.setString(1, resultType);
+                            stmt10.setInt(2, slideid);
+                            stmt10.setInt(3, sampleid);
+                            rs10 = t.executeQuery(stmt10);
+                            while(rs10.next()) {
+                                int resultid = rs10.getInt(1);
+                                String resultvalue = rs10.getString(2);
+                                int executionid = rs10.getInt(3);
+                                ResultTO result = new ResultTO(resultid, resultType, resultvalue, executionid, sampleid);
+                                result.setSlideid(slideid);
+                                sample.addResult(result);
                             }
                         }
                         container.addSample(sample);
@@ -1326,6 +1361,179 @@ public class ContainerDAO {
         return containers;
     }
 
+    public static List<SlideTO> getSlidesWithRootid(String rootid) throws DaoException {
+        String sql = "select slideid, barcode, printorder, surfacechem, program, startdate, containerid"+
+                " from slide where containerid in (select containerid from containerheader where barcode=?)";
+        
+        DatabaseTransaction t = null;
+        Connection c = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        List <SlideTO> slides = new ArrayList<SlideTO>();
+        
+        try {
+            t = DatabaseTransaction.getInstance();
+            c = t.requestConnection();
+            stmt = c.prepareStatement(sql);
+            stmt.setString(1, rootid);
+            rs = DatabaseTransaction.executeQuery(stmt);
+            while(rs.next()) {
+                int slideid = rs.getInt(1);
+                String barcode = rs.getString(2);
+                int printorder = rs.getInt(3);
+                String chem = rs.getString(4);
+                String program = rs.getString(5);
+                String startdate = rs.getString(6);
+                int containerid = rs.getInt(7);
+                SlideTO slide = new SlideTO(slideid, printorder, barcode, chem, program, startdate);
+                slide.setContainerid(containerid);
+                slides.add(slide);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new DaoException("Error occured while querying database.\n"+ex.getMessage());
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+            DatabaseTransaction.closeConnection(c);
+        }
+        
+        return slides;
+    }
+    
+    public static List<SlideTO> getProcessSlidesWithRootid(String rootid, String protocol) throws DaoException {
+        String sql = "select slideid, barcode, printorder, surfacechem, program, startdate, containerid,"+
+                " objectid,objectname,objecttype,ioflag,objectorder,objectlevel,"+
+                " p.executionid,when,who,outcome"+
+                " from slide s, processobject o, processexecution p"+
+                " where s.slideid=o.objectid"+
+                " and o.executionid=p.executionid"+
+                " and p.protocol=? and containerid in (select containerid from containerheader where barcode=?)"+
+                " order by slideid";
+        
+        DatabaseTransaction t = null;
+        Connection c = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        List <SlideTO> slides = new ArrayList<SlideTO>();
+        
+        try {
+            t = DatabaseTransaction.getInstance();
+            c = t.requestConnection();
+            stmt = c.prepareStatement(sql);
+            stmt.setString(1, protocol);
+            stmt.setString(2, rootid);
+            rs = DatabaseTransaction.executeQuery(stmt);
+            while(rs.next()) {
+                int slideid = rs.getInt(1);
+                String barcode = rs.getString(2);
+                int printorder = rs.getInt(3);
+                String chem = rs.getString(4);
+                String program = rs.getString(5);
+                String startdate = rs.getString(6);
+                int containerid = rs.getInt(7);
+                int objectid = rs.getInt(8);
+                String objectname = rs.getString(9);
+                String objecttype = rs.getString(10);
+                String ioflag = rs.getString(11);
+                int objectorder = rs.getInt(12);
+                int objectlevel = rs.getInt(13);
+                SlideTO slide = new SlideTO(slideid, printorder, barcode, chem, program, startdate);
+                slide.setContainerid(containerid);
+                slide.setObjectid(objectid);
+                slide.setObjectname(objectname);
+                slide.setObjecttype(objecttype);
+                slide.setIoflag(ioflag);
+                slide.setOrder(objectorder);
+                slide.setLevel(objectlevel);
+                
+                int executionid = rs.getInt(14);
+                Date when = rs.getDate(15);
+                String who = rs.getString(16);
+                String outcome = rs.getString(17);
+                ProcessprotocolTO p = new ProcessprotocolTO();
+                ResearcherTO researcher = new ResearcherTO();
+                researcher.setName(who);
+                p.setName(protocol);
+                ProcessexecutionTO process = new ProcessexecutionTO(p,when,researcher,outcome);
+                process.setExecutionid(executionid);
+                slide.setProcess(process);
+                
+                slides.add(slide);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new DaoException("Error occured while querying database.\n"+ex.getMessage());
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+            DatabaseTransaction.closeConnection(c);
+        }
+        
+        return slides;
+    }
+    
+    public static List<SampleTO> getSamples(int slideid, int executionid) throws DaoException {
+        String sql = "select s.sampleid,s.name,s.description,s.volume,s.quantity,s.unit,s.type,s.form,s.status,"+
+                " c.pos,c.posx,c.posy,c.type,r.resultid,r.resulttype,r.resultvalue,s.containerid"+
+                " from sample s, containercell c, slide sd, result r"+
+                " where s.sampleid=c.sampleid"+
+                " and c.containerid=sd.containerid"+
+                " and sd.slideid=r.slideid"+
+                " and r.sampleid=s.sampleid"+
+                " and r.executionid=? and r.slideid=?";
+        
+        DatabaseTransaction t = null;
+        Connection c = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        List<SampleTO> samples = new ArrayList<SampleTO>();
+        
+        try {
+            t = DatabaseTransaction.getInstance();
+            c = t.requestConnection();
+            stmt = c.prepareStatement(sql);
+            stmt.setInt(1, executionid);
+            stmt.setInt(2, slideid);
+            rs = DatabaseTransaction.executeQuery(stmt);
+            while(rs.next()) {
+                int sampleid = rs.getInt(1);
+                String name= rs.getString(2);
+                String description = rs.getString(3);
+                int volume = rs.getInt(4);
+                int quantity = rs.getInt(5);
+                String unit = rs.getString(6);
+                String type = rs.getString(7);
+                String form = rs.getString(8);
+                String status = rs.getString(9);
+                int pos = rs.getInt(10);
+                String posx = rs.getString(11);
+                String posy = rs.getString(12);
+                String ctype = rs.getString(13);
+                int resultid = rs.getInt(14);
+                String rtype = rs.getString(15);
+                String rvalue = rs.getString(16);
+                int containerid = rs.getInt(17);
+                SampleTO s = new SampleTO(sampleid,name,description,volume,quantity,unit,type,form,status,containerid,pos);
+                ContainercellTO cell = new ContainercellTO(pos,posx,posy,ctype);
+                ResultTO r = new ResultTO(resultid,rtype,rvalue,executionid,sampleid);
+                r.setSlideid(slideid);
+                s.setCell(cell);
+                s.addResult(r);
+                samples.add(s);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new DaoException("Error occured while querying sample and result.\n"+ex.getMessage());
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+            DatabaseTransaction.closeConnection(c);
+        }
+        
+        return samples;
+    }
+    
     public static Collection<ContainerheaderTO> checkContainers(Collection<String> labels, boolean isReagent) throws DaoException {
         return checkContainers(labels, null, false, false, isReagent);
     }
