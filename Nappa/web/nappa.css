@@ -125,6 +125,15 @@ a {
   color: black;
 }
 
+.subtitle {
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 12px;
+	font-weight: bold;
+	background-color: #FFFFFF;
+  color: black;
+  text-decoration: underline;
+}
+
 .warning {
 	font-family: Georgia, "Times New Roman", Times, serif;
 	font-size: 12px;

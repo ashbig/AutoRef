@@ -36,6 +36,10 @@ on Libraries node in Projects view can be used to add the JSTL 1.1 library.
                 <li><a href="./faces/ExperimentInput.jsp" target="rightFrame">Perform Experiment</a></li>
                 <li><a href="./faces/UploadMicrovigeneFile.jsp" target="rightFrame">Upload Microvigene File</a></li>
             </ul>
+            <ul>Data Analysis
+                <li><a href="./faces/PreHistogramInput.jsp" target="rightFrame">View Slide Histogram</a></li>
+                <li><a href="./faces/LowNorm.jsp" target="rightFrame">Low Level Normalization</a></li>
+            </ul>
             <ul>Add
                 <li><a href="./faces/SearchContainer.jsp" target="rightFrame">Add Controls</a></li>
                 <li><a href="./faces/AddReagent.jsp" target="rightFrame">Add Reagent</a></li>

@@ -31,6 +31,12 @@
     </managed-bean>
     
     <managed-bean>
+        <managed-bean-name>addVariableBean</managed-bean-name>
+        <managed-bean-class>bean.AddVariableBean</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    
+    <managed-bean>
         <managed-bean-name>ContainerViewBean</managed-bean-name>
         <managed-bean-class>bean.ContainerViewBean</managed-bean-class>
         <managed-bean-scope>session</managed-bean-scope>
@@ -82,6 +88,18 @@
         <managed-bean-name>layoutViewBean</managed-bean-name>
         <managed-bean-class>bean.LayoutViewBean</managed-bean-class>
         <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+    
+    <managed-bean>
+        <managed-bean-name>lowNormBean</managed-bean-name>
+        <managed-bean-class>bean.LowNormBean</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    
+    <managed-bean>
+        <managed-bean-name>prehistogramBean</managed-bean-name>
+        <managed-bean-class>bean.PrehistogramBean</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
     
     <managed-bean>
@@ -235,6 +253,14 @@
     </navigation-rule>
     
     <navigation-rule>
+        <from-view-id>/PreHistogramInput.jsp</from-view-id>
+        <navigation-case>
+            <from-outcome>viewHistogram</from-outcome>
+            <to-view-id>/ViewHistogram.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
         <from-view-id>/ProcessView.jsp</from-view-id>
         <navigation-case>
             <from-outcome>viewfile</from-outcome>
@@ -303,6 +329,10 @@
         <navigation-case>
             <from-outcome>viewBlock</from-outcome>
             <to-view-id>/BlockView.jsp</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>viewHistogram</from-outcome>
+            <to-view-id>/ViewHistogram.jsp</to-view-id>
         </navigation-case>
     </navigation-rule>
     
