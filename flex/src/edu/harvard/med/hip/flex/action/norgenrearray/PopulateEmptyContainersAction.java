@@ -271,16 +271,19 @@ public class PopulateEmptyContainersAction extends ResearcherAction {
 +"  status_gb) values (?,?, ?,?,?)" ;
 String sql_sample_lin = "insert into samplelineage (executionid, sampleid_from, sampleid_to)" +
         " values ("+executionid+",?,?)" ;
+String sql_containercell = "insert into containercell (containerid, position,  sampleid)" +
+        " values (?,?,?)" ;
          PreparedStatement stmt = null; 
         PreparedStatement stmt_sample_lin = null;
         PreparedStatement stmt_sql_no_construct=null;
+        PreparedStatement stmt_sql__containercell = null;
          int count=1;
         Container container; ResultSet rs;
         try {
             stmt = conn.prepareStatement(sql);
             stmt_sql_no_construct = conn.prepareStatement(sql_no_construct);
               stmt_sample_lin = conn.prepareStatement(sql_sample_lin);
-            
+            stmt_sql__containercell = conn.prepareStatement(sql_containercell);
             for( NorgenDestinationPlate dest_plate:   dest_plates)
             {
                 for (NorgenLogFileRecord record: dest_plate.getRecords())
@@ -310,6 +313,11 @@ String sql_sample_lin = "insert into samplelineage (executionid, sampleid_from, 
                          count=1;
                          DatabaseTransaction.executeUpdate(stmt_sql_no_construct);
                       }
+                        stmt_sql__containercell.setInt(1,dest_plate.getId());
+                        stmt_sql__containercell.setInt(2,record.getDestPosition());
+                        stmt_sql__containercell.setInt(3,record.getDestSampleId());
+                       DatabaseTransaction.executeUpdate(       stmt_sql__containercell);
+                       
                      stmt_sample_lin.setInt( count++, record.getOrgSampleId());
                      stmt_sample_lin.setInt(count++, record.getDestSampleId());
                      DatabaseTransaction.executeUpdate(stmt_sample_lin);
