@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.21 $
- * $Date: 2009-03-10 17:30:18 $
+ * $Revision: 1.22 $
+ * $Date: 2009-04-29 15:12:57 $
  * $Author: et15 $
  *
  ******************************************************************************
@@ -51,7 +51,7 @@ import edu.harvard.med.hip.flex.database.*;
  * Utility class to send simple messages.
  *
  * @author     $Author: et15 $
- * @version    $Revision: 1.21 $ $Date: 2009-03-10 17:30:18 $
+ * @version    $Revision: 1.22 $ $Date: 2009-04-29 15:12:57 $
  */
 
 public class Mailer
@@ -59,7 +59,7 @@ public class Mailer
     public static final String FILEPATH = FlexProperties.getInstance().getProperty("tmp");
     //public final static String SMTP_HOST ="hms.harvard.edu";
    // public final static String SMTP_HOST ="gate.med.harvard.edu";
-    public final static String SMTP_HOST ="smtp.cl.med.harvard.edu";
+    public final static String SMTP_HOST = FlexProperties.getInstance().getProperty("mail.smtp.host");
     
     /**
      * Utility Method to send a message
