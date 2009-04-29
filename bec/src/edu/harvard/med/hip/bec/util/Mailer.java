@@ -11,8 +11,8 @@
  
  *
  * The following information is used by CVS
- * $Revision: 1.14 $
- * $Date: 2009-03-10 17:28:49 $
+ * $Revision: 1.15 $
+ * $Date: 2009-04-29 15:19:40 $
  * $Author: et15 $
  *
  ******************************************************************************
@@ -38,7 +38,7 @@ import edu.harvard.med.hip.bec.database.*;
  * Utility class to send simple messages.
  *
  * @author     $Author: et15 $
- * @version    $Revision: 1.14 $ $Date: 2009-03-10 17:28:49 $
+ * @version    $Revision: 1.15 $ $Date: 2009-04-29 15:19:40 $
  */
 
 public class Mailer
@@ -60,11 +60,15 @@ public class Mailer
     throws MessagingException
     {
         Properties props = new Properties();
-        props.put("mail.smtp.host",BecProperties.getInstance().getProperty("mail.smtp.host"));
-          if ( BecProperties.getInstance().getProperty("EMAIL_PASSWORD") != null && 
+        String smtp_host= BecProperties.getInstance().getProperty("mail.smtp.host");
+        props.put("mail.smtp.host",smtp_host);
+        boolean isAutheticationNeeded = false;
+        if ( BecProperties.getInstance().getProperty("EMAIL_PASSWORD") != null && 
                 !BecProperties.getInstance().getProperty("EMAIL_PASSWORD").trim().equals(""))
             {
-                props.put("mail.smtp.auth", "true"); //commect for aunt
+                isAutheticationNeeded=true;
+                props.put("mail.smtp.auth", isAutheticationNeeded); //commect for aunt
+                
           }
         Session session = Session.getDefaultInstance(props,null);
         try
@@ -112,13 +116,12 @@ public class Mailer
             msg.saveChanges();
             
              // send the message
-            if ( BecProperties.getInstance().getProperty("EMAIL_PASSWORD") != null && 
-                !BecProperties.getInstance().getProperty("EMAIL_PASSWORD").trim().equals(""))
+            if (isAutheticationNeeded)
             {
                 String user =      BecProperties.getInstance().getProperty("ACE_FROM_EMAIL_ADDRESS");
                 user = user.substring(0, user.indexOf('@'));
                 Transport trans = session.getTransport("smtp");
-                trans.connect(BecProperties.getInstance().getProperty("mail.smtp.host"), 
+                trans.connect(smtp_host, 
                             user, 
                             BecProperties.getInstance().getProperty("EMAIL_PASSWORD"));
                 trans.sendMessage(msg, address);
