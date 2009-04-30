@@ -150,10 +150,11 @@ public class GenerateMultipleGlycerolAction extends ResearcherAction {
             request.getSession().setAttribute("EnterSourcePlateAction.newContainers", newContainers);
 
             //print barcode labels for new containers
-            for (int i = 0; i < newContainers.size(); i++) {
+          /*  for (int i = 0; i < newContainers.size(); i++) {
                 Container c = (Container) newContainers.elementAt(i);
                 String status = PrintLabel.execute(c.getLabel());
             }
+           * */
         } catch (Exception ex) {
             DatabaseTransaction.rollback(conn);
             request.setAttribute(Action.EXCEPTION_KEY, new Exception(ex.getMessage()));

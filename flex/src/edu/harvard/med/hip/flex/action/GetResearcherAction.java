@@ -34,6 +34,8 @@ import static edu.harvard.med.hip.flex.workflow.Workflow.WORKFLOW_TYPE;
 import edu.harvard.med.hip.flex.util.*;
 import edu.harvard.med.hip.flex.special_projects.*;
 
+import edu.harvard.med.hip.utility.Logger;
+
 /**
  *
  * @author  dzuo
@@ -42,6 +44,8 @@ import edu.harvard.med.hip.flex.special_projects.*;
 public class GetResearcherAction extends ResearcherAction{
     public final static String BLAST_BASE_DIR=FlexProperties.getInstance().getProperty("flex.repository.basedir");
     public final static String BARCODEFILE = BLAST_BASE_DIR+"barcode/barcode.txt";
+    
+    
     //public final static String BARCODEFILE = "G:\\dev\\barcode.txt";
     
     /**
@@ -69,8 +73,13 @@ public class GetResearcherAction extends ResearcherAction{
         int workflowid = ((GetResearcherBarcodeForm)form).getWorkflowid();
         int projectid = ((GetResearcherBarcodeForm)form).getProjectid();
         int writeBarcode = ((GetResearcherBarcodeForm)form).getWriteBarcode();
+         
         
-        Researcher researcher = null;
+        /*String logger_file_name =   FlexProperties.getInstance().getProperty("tmp")+ "sourcelog"+ "_"+System.currentTimeMillis()+ ".txt";
+         List<String> logger_data= new ArrayList<String>();   
+     String timestamp=""+System.currentTimeMillis();*/
+         
+         Researcher researcher = null;
         
         // Validate the researcher barcode.
         try {
@@ -94,7 +103,8 @@ public class GetResearcherAction extends ResearcherAction{
         Vector sampleLineageSet = (Vector)request.getSession().getAttribute("EnterSourcePlateAction.sampleLineageSet");
         SubProtocol subprotocol = (SubProtocol)request.getSession().getAttribute("EnterSourcePlateAction.subprotocol");
         String executionStatus = edu.harvard.med.hip.flex.process.Process.SUCCESS;
- // System.out.println("nc "+newContainers.size());      
+            
+      //  logger_data.add(timestamp+"a\t"+System.currentTimeMillis());
         if(workflowid == Workflow.EXPRESSION_WORKFLOW) {
             if(newContainers == null || oldContainers == null ||
             protocol == null || sampleLineageSet == null) {
@@ -107,7 +117,8 @@ public class GetResearcherAction extends ResearcherAction{
                 return (mapping.findForward("fail"));
             }
         }
-        
+       //  logger_data.add(timestamp+"a1\t"+System.currentTimeMillis());
+           
         Connection conn = null;
         try {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
@@ -119,7 +130,8 @@ public class GetResearcherAction extends ResearcherAction{
   //System.out.println("nc "+newContainer.getLabel());      
                 newContainer.insert(conn);
             }
-            
+         //    logger_data.add(timestamp+"a3\t"+System.currentTimeMillis());
+         
             if(Protocol.CREATE_CULTURE_FROM_MGC.equals(protocol.getProcessname())) {
                 Container c = (Container)oldContainers.elementAt(0);
                 MgcContainer mgcContainer = MgcContainer.findMGCContainerWithThread(c.getLabel().substring(3));
@@ -147,7 +159,9 @@ public class GetResearcherAction extends ResearcherAction{
                 Container oldContainer = (Container)oldContainers.elementAt(i);
                 oldContainer.updateLocation(oldContainer.getLocation().getId(), conn);
             }
-            
+           //  logger_data.add(timestamp+"a4\t"+System.currentTimeMillis());
+       
+                
             Workflow workflow = new Workflow(workflowid);
             Project project = new Project(projectid);
             WorkflowManager manager = new WorkflowManager(project, workflow, "ProcessPlateManager");
@@ -161,7 +175,8 @@ public class GetResearcherAction extends ResearcherAction{
                 // insert process record for creating culture from MGC
                 manager.createProcessRecord(executionStatus, protocol, researcher,
                 subprotocol, oldContainers, in, null, sampleLineageSet, conn);
-                
+   // logger_data.add(timestamp+"a41\t"+System.currentTimeMillis());
+                   
                 // insert process record for creating glycerol from culture
                 Protocol p = new Protocol(Protocol.CREATE_GLYCEROL_FROM_CULTURE);
                 Vector sls = (Vector)request.getSession().getAttribute("EnterSourcePlateAction.sls");
@@ -181,17 +196,24 @@ public class GetResearcherAction extends ResearcherAction{
                 manager.createProcessRecord(executionStatus, protocol, researcher,
                 subprotocol, oldContainers, newContainers,
                 null, sampleLineageSet, conn);
+           //     logger_data.add(timestamp+"a41\t"+System.currentTimeMillis());
+       
                 manager.processQueue(items, newContainers, protocol, conn);
+           //     logger_data.add(timestamp+"a42\t"+System.currentTimeMillis());
+       
             }
             
             // Print the barcode
+            
+            /*
             for(int i=0; i<newContainers.size(); i++) {
                 Container newContainer = (Container)newContainers.elementAt(i);
                 String status = PrintLabel.execute(newContainer.getLabel());
      //           System.out.println("Printing barcode: "+status);
-            }
+            }*/
  //System.out.println("nc "+BARCODEFILE);      
-             
+        //  logger_data.add(timestamp+"a5\t"+System.currentTimeMillis());
+               
             //Print the barcode to the file.
             if(writeBarcode == 1) {
                 PrintWriter pr = new PrintWriter(new BufferedWriter(new FileWriter(BARCODEFILE)));
@@ -209,7 +231,9 @@ public class GetResearcherAction extends ResearcherAction{
                 pr.close();
                 request.setAttribute("writeBarcode", new Integer(1));
             }
-            
+       //     logger_data.add(timestamp+"a6\t"+System.currentTimeMillis());
+       
+                
             // Commit the changes to the database.
         //     why here???    DatabaseTransaction.commit(conn);
             //DatabaseTransaction.rollback(conn);
@@ -240,7 +264,7 @@ public class GetResearcherAction extends ResearcherAction{
                     for(int i=0; i<newContainers.size(); i++) {
                         Container newContainer = (Container)newContainers.elementAt(i);
                         newContainerids.add(new Integer(newContainer.getId()));
-      System.out.println(newContainer.getId());
+     // System.out.println(newContainer.getId());
                     }
                    
                     //change class to allow processing of clones in different vectors into the same expression vector
@@ -261,7 +285,11 @@ public class GetResearcherAction extends ResearcherAction{
                 {
                     SummaryTablePopulator populator = new SummaryTablePopulator();
                     ThreadedRearrayedSeqPlatesHandler handler = new ThreadedRearrayedSeqPlatesHandler(seqContainers, researcher.getBarcode(), b, populator, containerids, strategyid, CloneInfo.MASTER_CLONE);
+       //             logger_data.add(timestamp+"a7\t"+System.currentTimeMillis());
+       
                     new Thread(handler).start();
+       //              logger_data.add(timestamp+"a71\t"+System.currentTimeMillis());
+       
                 }
             }
             
@@ -273,14 +301,19 @@ public class GetResearcherAction extends ResearcherAction{
                 for(int i=0; i<newContainers.size(); i++) 
                 {
                     Container newContainer = (Container)newContainers.elementAt(i);
-                    
+         //     logger_data.add(timestamp+"a8\t"+System.currentTimeMillis());
+       
+                       
                     if(newContainer.getLabel().substring(1,3).equals("GS")) {
                         containerids.add(new Integer(newContainer.getId()));
                     } else {
                         seqContainers.add(newContainer);
                     }
+         //     logger_data.add(timestamp+"a81\t"+System.currentTimeMillis());
+       
                 }
-                
+                   
+            
                 String isMappingFile = ((GetResearcherBarcodeForm)form).getIsMappingFile();
                 boolean isMappingFileRequested = ("Yes".equals(isMappingFile)) ?  true: false;
                 
@@ -292,6 +325,8 @@ public class GetResearcherAction extends ResearcherAction{
                 populator.setStorageType(StorageType.WORKING);
                 populator.setStorageForm(StorageForm.GLYCEROL);
                 Thread new_thread = new Thread(populator);    
+            //    logger_data.add(timestamp+"SummaryTablePopulatorPlateWithClones\t "+System.currentTimeMillis());
+       
                 new_thread.start();
                    
                 
@@ -321,7 +356,7 @@ public class GetResearcherAction extends ResearcherAction{
             
                // Commit the changes to the database.
             DatabaseTransaction.commit(conn);
-         
+          //  edu.harvard.med.hip.flex.report.ReportRunner.writeFile(logger_data, "GetResercherAction",   logger_file_name, "\n",              false);
             return (mapping.findForward("success"));
         } catch (Exception ex) {
             DatabaseTransaction.rollback(conn);
