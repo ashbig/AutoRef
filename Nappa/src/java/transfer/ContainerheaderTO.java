@@ -14,6 +14,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  *
@@ -150,6 +152,17 @@ public class ContainerheaderTO extends ProcessobjectTO implements Serializable {
         } catch (IndexOutOfBoundsException ex) {
             throw new TransferException("Invalid position: "+pos);
         }
+    }
+    
+    public static List<String> getControls(List<SampleTO> samples) {
+        List<String> controls = new ArrayList<String>();
+        Set<String> c = new TreeSet<String>();
+        for(SampleTO s:samples) {
+            if(ContainercellTO.getTYPE_CONTROL().equals(s.getCell().getType()))
+                c.add(s.getName());
+        }
+        controls.addAll(c);
+        return controls;
     }
     
     public static String getSTATUS_GOOD() {

@@ -12,6 +12,7 @@ import java.util.Map;
 import javax.faces.context.FacesContext;
 import org.rosuda.JRI.Rengine;
 import rpack.RengineManager;
+import transfer.ContainerheaderTO;
 import transfer.ProcessprotocolTO;
 import transfer.SampleTO;
 import transfer.SlideTO;
@@ -40,7 +41,7 @@ public class PrehistogramBean implements Serializable {
         slides = null;
         setShowSlides(false);
         try {
-            slides = controller.findSlides(barcode, ProcessprotocolTO.UPLOAD_VIGENE_RESULT);
+            slides = controller.findSlides(barcode, ProcessprotocolTO.UPLOAD_VIGENE_RESULT, false);
         } catch (Exception ex) {
             ex.printStackTrace();
             setMessage("Cannot find slides.");
@@ -53,16 +54,41 @@ public class PrehistogramBean implements Serializable {
         FacesContext context = FacesContext.getCurrentInstance();
         Map map = context.getExternalContext().getRequestParameterMap();
         int slideid = Integer.parseInt((String) map.get("slideid"));
+        String slidebarcode = (String) map.get("slidebarcode");
         int executionid = Integer.parseInt((String) map.get("executionid"));
         
         Rengine re = null;
         try {
             List<SampleTO> samples = controller.getSamples(executionid, slideid);
-            controller.printHistogramInputFile(samples, Constants.TMP + slideid);
+            List<String> controls = ContainerheaderTO.getControls(samples);
+            
+            controller.printHistogramInputFile(samples, Constants.TMP + slideid, slidebarcode);
             
             re = RengineManager.createRengine();
             setHistogramFile(slideid+".jpg");
-            controller.printHistogramOutputFile(re, Constants.R_TMP+slideid, Constants.R_OUTPUT_DIR+getHistogramFile());
+            controller.printHistogramOutputFile(re, 4, 1, Constants.R_TMP+slideid, Constants.R_OUTPUT_DIR+getHistogramFile(),HistogramController.FILE_FORMAT_JPG,controls);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            RengineManager.stopRengine(re);
+        }
+
+        return "viewHistogram";
+    }
+    
+    public String viewAllHistogram() {
+        Rengine re = null;
+        try {
+            slides = controller.findSlides(barcode, ProcessprotocolTO.UPLOAD_VIGENE_RESULT, true);
+            SlideTO slide = (SlideTO)slides.get(0);
+            List<SampleTO> samples = slide.getContainer().getSamples();
+            List<String> controls = ContainerheaderTO.getControls(samples);
+            
+            controller.printHistogramInputFile(slides, Constants.TMP + barcode);
+            
+            re = RengineManager.createRengine();
+            setHistogramFile(barcode+".pdf");
+            controller.printHistogramOutputFile(re, 4, slides.size(), Constants.R_TMP+barcode, Constants.R_TMP+getHistogramFile(),HistogramController.FILE_FORMAT_PDF,controls);
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
