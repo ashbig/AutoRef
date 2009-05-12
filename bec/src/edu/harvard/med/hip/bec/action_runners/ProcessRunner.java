@@ -132,6 +132,8 @@ public abstract class ProcessRunner implements Runnable
                         { ((ReportRunner)this).run_process(); break;  }
                case Constants.PROCESS_NOMATCH_REPORT:
                         { ((NoMatchReportRunner)this).run_process(); break;  }
+               case Constants.PROCESS_REBUILD_BLASTABLE_DB:
+                        { ((BlastablDbBuilderRunner)this).run_process(); break;  }
               // { ((SpecialReportRunner)this).run(); break;  }
               case Constants.PROCESS_RUN_ASSEMBLER_FOR_END_READS:
               case Constants.PROCESS_RUN_ASSEMBLER_FOR_ALL_READS:
@@ -198,6 +200,7 @@ public abstract class ProcessRunner implements Runnable
                 case Constants.PROCESS_VIEW_OLIGO_ORDER_BY_CLONEID :  
                 case Constants.PROCESS_VIEW_INTERNAL_PRIMERS :  //view internal primers
                 case Constants.PROCESS_NOMATCH_REPORT  :  
+                     case Constants.PROCESS_REBUILD_BLASTABLE_DB  :  
                 case Constants.PROCESS_GET_TRACE_FILE_NAMES :  
                 case Constants.PROCESS_RUN_DECISION_TOOL_NEW  :  
                 case Constants.PROCESS_CREATE_REPORT_TRACEFILES_QUALITY  :  

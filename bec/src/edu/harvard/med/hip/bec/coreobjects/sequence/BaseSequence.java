@@ -28,6 +28,7 @@ public  class BaseSequence
     public static final int CLONE_SEQUENCE = 5;
   
     public static final int READ_SEQUENCE = 6;//for display only
+    public static final int BASE_CDS_SEQUENCE=7;
    
     
         public static final String THEORETICAL_SEQUENCE_STR = "THEORETICAL_SEQUENCE";

@@ -6,9 +6,9 @@
  *
  * 
  * The following information is used by CVS
- * $Revision: 1.14 $
- * $Date: 2006-12-12 19:16:56 $
- * $Author: Elena $
+ * $Revision: 1.15 $
+ * $Date: 2009-05-12 18:53:29 $
+ * $Author: et15 $
  *
  ******************************************************************************
  *
@@ -27,17 +27,17 @@ import sun.jdbc.rowset.*;
 /**
  * Holds sytem level properties.
  *
- * @author     $Author: Elena $
- * @version    $Revision: 1.14 $ $Date: 2006-12-12 19:16:56 $
+ * @author     $Author: et15 $
+ * @version    $Revision: 1.15 $ $Date: 2009-05-12 18:53:29 $
  */
 
 public class BecProperties
 {
     // The name of the properties file holding the system config info.
-    public final static String[]  APPLICATION_SETTINGS =
-    {
-      "ApplicationHostSettings.properties"};
+    public final static String APPLICATION_PROPERTIES = "ApplicationHostSettings.properties";
+    //for back compatability
     public final static String PATH = "config/";
+   
     // The properties
     private Properties m_properties = null;
 
@@ -102,6 +102,9 @@ public class BecProperties
             value =m_properties.getProperty("MOVE_TRACE_FILES_BASE_DIR");// =/f/trace_files_root/trace_files_temporary_removed/
             if ( value == null || !isFileExsist(value) )m_Error_messages.add("Path for trace files moved from common tree is not set properly");
             
+            value= m_properties.getProperty("VECTOR_LIBRARIES_ROOT");
+            if ( value == null || !isFileExsist(value) )m_Error_messages.add("Path for vector libraries location is not set properly");
+           
             value =m_properties.getProperty("NEEDLE_OUTPUT_PATH");//=/c/needleoutput/     
             if ( value == null || !isFileExsist(value) )m_Error_messages.add("Path for needle output files is not set properly");
             value =m_properties.getProperty("TRACE_FILES_OUTPUT_PATH_ROOT");//=/f/trace_files_root/
@@ -119,10 +122,10 @@ public class BecProperties
             value =m_properties.getProperty("PRIMER3_EXE_PATH"); //=/c/blast/primer3.exe
             if ( value == null || !isFileExsist(value) )m_Error_messages.add("Path for primer3.exe is not set properly");
             
-            value =m_properties.getProperty("TRACE_FILES_TRANCFER_INPUT_DIR");//=/F/Sequences for BEC/files_to_transfer
+            value =m_properties.getProperty("TRACE_FILES_TRANSFER_INPUT_DIR");//=/F/Sequences for BEC/files_to_transfer
              if ( value == null || !isFileExsist(value) )m_Error_messages.add("Path for original trace files directory is not set properly");
-           
-            value =m_properties.getProperty("POLYORPHISM_FINDER_DATA_DIRECTORY");//=/F/Sequences for BEC/files_to_transfer
+            
+            value =m_properties.getProperty("POLYMORPHISM_FINDER_DATA_DIRECTORY");//=/F/Sequences for BEC/files_to_transfer
              if ( value == null || !isFileExsist(value) )m_Error_messages.add("Path for polymorphism finder directory is not set properly");
            
             value =m_properties.getProperty("mail.smtp.host");//=/F/Sequences for BEC/files_to_transfer
@@ -288,9 +291,7 @@ public class BecProperties
         if(m_instance == null) 
         {
             m_instance = new BecProperties();
-            for (int count = 0 ; count < APPLICATION_SETTINGS.length; count++)
-            {
-               iStream = m_instance.getInputStream(file_path+APPLICATION_SETTINGS[count] );
+            iStream = m_instance.getInputStream(PATH+APPLICATION_PROPERTIES );
                if ( iStream == null)System.err.println("Unable to load properites file");
                     
                try 
@@ -305,10 +306,10 @@ public class BecProperties
                     try {
                         iStream.close();
                     } catch(Throwable th){}
-                    m_instance.addErrorMessage("Unable to load property file "+file_path+APPLICATION_SETTINGS[count]);
+                    m_instance.addErrorMessage("Unable to load property file "+file_path+APPLICATION_PROPERTIES);
                 }
               
-            }
+            
         }
         return m_instance;
     } 
@@ -357,7 +358,7 @@ public class BecProperties
         try
         {
             String dbname = null;String dbpath = null;
-        BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
+        BecProperties sysProps =  BecProperties.getInstance( BecProperties.APPLICATION_PROPERTIES);
         sysProps.verifyApplicationSettings();
         edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadTraceFileFormats();
      

@@ -45,12 +45,12 @@ import edu.harvard.med.hip.bec.util.*;
  *
  * Overides the ActionServlet to provide bec specific functionality
  *
- * @author     $Author: Elena $
- * @version    $Revision: 1.4 $ $Date: 2006-05-18 15:43:07 $
+ * @author     $Author: et15 $
+ * @version    $Revision: 1.5 $ $Date: 2009-05-12 18:53:21 $
  */
 
 public class BecServlet extends ActionServlet {
-     public static final String filePath = "WEB-INF/classes/config/";
+     public static final String filePath = "/WEB-INF/classes/config/";
     
      /**
      * Initialize this servlet.  Most of the processing has been factored into
@@ -67,25 +67,24 @@ public class BecServlet extends ActionServlet {
     
     
     protected void initBec() throws ServletException
-    {
+    {   
         Properties prop = null;
         InputStream systemStream = null;
         BecProperties becProp = BecProperties.getInstance();
-        for (int count = 0 ; count < BecProperties.APPLICATION_SETTINGS.length; count++)
+        System.out.println(filePath + BecProperties.APPLICATION_PROPERTIES);
+        systemStream =   getServletContext().getResourceAsStream(filePath + BecProperties.APPLICATION_PROPERTIES);
+        if(systemStream == null) {   System.err.println("Unable to read properties file: "+BecProperties.APPLICATION_PROPERTIES); }
+        prop = new Properties();
+        try
         {
-            systemStream =   getServletContext().getResourceAsStream(filePath + BecProperties.APPLICATION_SETTINGS[count]);
-            if(systemStream == null) {   System.err.println("Unable to read properties file: "+BecProperties.APPLICATION_SETTINGS[count]); }
-            prop = new Properties();
-            try
-            {
-                prop.load(systemStream);
-                becProp.setProperties(prop);
-               
-             } catch (IOException ioE) 
-             {
-                throw new ServletException(ioE);
-            }
+            prop.load(systemStream);
+            becProp.setProperties(prop);
+
+         } catch (IOException ioE) 
+         {
+            throw new ServletException(ioE);
         }
+        
     }
     /**
      * Initializes bec specific resources.

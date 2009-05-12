@@ -202,7 +202,8 @@ case Constants.PROCESS_RUN_DISCREPANCY_FINDER:
 break;
 }
 
-case Constants.PROCESS_NOMATCH_REPORT:
+
+case Constants.PROCESS_REBUILD_BLASTABLE_DB:
 {
 
 additional_jsp_buffer.append( "<tr><td colspan =2 bgColor='#1145A6' ><font color='#FFFFFF'><strong>Process Specification</strong></font></td></tr>");
@@ -216,24 +217,61 @@ for (Enumeration e = BecProperties.getInstance().getBlastableDatabases().keys() 
 	additional_jsp_buffer.append(" <OPTION VALUE='" + dbpath +"'>"+dbname);
 }
 additional_jsp_buffer.append("</SELECT></td> </tr>");
-additional_jsp_buffer.append("<tr> <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Species specific identifier:</strong></td>");
-additional_jsp_buffer.append("<td><SELECT NAME='ID_NAME' id='ID_NAME'>" );
-additional_jsp_buffer.append("<OPTION VALUE=' '> None");
-additional_jsp_buffer.append("<OPTION VALUE='"+ PublicInfoItem.GI +"'>"+ PublicInfoItem.GI);
-SpeciesDefinition sd = null;
-for (Enumeration e = DatabaseToApplicationDataLoader.getSpecies().keys() ; e.hasMoreElements() ;)
+ 
+    additional_jsp_buffer.append("<tr> <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Vector library add to blastable database:</strong></td>");
+
+    additional_jsp_buffer.append("<td><SELECT NAME='VECTORLIBRARY_NAME' id='ID_NAME'>" );
+    additional_jsp_buffer.append("<OPTION VALUE=' '> None");
+    for (Enumeration e = BecProperties.getInstance().getVectorLibraries() .keys(); e.hasMoreElements() ;)
+    {
+           dbname = (String) e.nextElement();
+	 dbpath = (String)BecProperties.getInstance().getVectorLibraries().get(dbname);
+	 additional_jsp_buffer.append(" <OPTION VALUE='" + dbpath +"'>"+dbpath);
+          
+    }
+    if (BecProperties.getInstance().isInternalHipVersion())
+        {
+    additional_jsp_buffer.append("<tr> <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>HIP Database to get sequence from:</strong></td>");
+    additional_jsp_buffer.append("<td><INPUT TYPE=RADIO NAME='ACE_DATABASE' VALUE='"+BlastablDbBuilderRunner.ACE_DB+"' checked>ACE&nbsp;&nbsp;&nbsp;<INPUT TYPE=RADIO NAME='ACE_DATABASE' VALUE='"+BlastablDbBuilderRunner.FLEX_DB+"' >FLEX");
+    }
+    
+    additional_jsp = additional_jsp_buffer.toString();
+break;}
+
+
+case Constants.PROCESS_NOMATCH_REPORT:
+    {
+ additional_jsp_buffer.append( "<tr><td colspan =2 bgColor='#1145A6' ><font color='#FFFFFF'><strong>Process Specification</strong></font></td></tr>");
+additional_jsp_buffer.append("<tr> <td>"+line_padding+"<strong>Database name (Entered by application administrator):</strong></td>");
+additional_jsp_buffer.append("<td><SELECT NAME='DATABASE_NAME' id='DATABASE_NAME'> ");
+String dbpath = null;String dbname = null;
+for (Enumeration e = BecProperties.getInstance().getBlastableDatabases().keys() ; e.hasMoreElements() ;)
 {
-	sd = (SpeciesDefinition) DatabaseToApplicationDataLoader.getSpecies().get( e.nextElement());
-        if ( sd.getIdName() != null && sd.getIdName().trim().length() > 0)
-            {
-	additional_jsp_buffer.append(" <OPTION VALUE='" + sd.getIdName() +"'>"+sd.getIdName());
-        }
+	dbname = (String) e.nextElement();
+	dbpath = (String)BecProperties.getInstance().getBlastableDatabases().get(dbname);
+	additional_jsp_buffer.append(" <OPTION VALUE='" + dbpath +"'>"+dbname);
 }
+additional_jsp_buffer.append("</SELECT></td> </tr>");
+    additional_jsp_buffer.append("<tr> <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Species specific identifier:</strong></td>");
+
+    additional_jsp_buffer.append("<td><SELECT NAME='ID_NAME' id='ID_NAME'>" );
+    additional_jsp_buffer.append("<OPTION VALUE=' '> None");
+    additional_jsp_buffer.append("<OPTION VALUE='"+ PublicInfoItem.GI +"'>"+ PublicInfoItem.GI);
+    SpeciesDefinition sd = null;
+    for (Enumeration e = DatabaseToApplicationDataLoader.getSpecies().keys() ; e.hasMoreElements() ;)
+    {
+            sd = (SpeciesDefinition) DatabaseToApplicationDataLoader.getSpecies().get( e.nextElement());
+            if ( sd.getIdName() != null && sd.getIdName().trim().length() > 0)
+                {
+            additional_jsp_buffer.append(" <OPTION VALUE='" + sd.getIdName() +"'>"+sd.getIdName());
+            }
+    }
 
 //additional_jsp_buffer.append("<OPTION VALUE='"+ PublicInfoItem.PANUMBER +"'>"+ PublicInfoItem.PANUMBER );
 //additional_jsp_buffer.append("<OPTION VALUE='"+ PublicInfoItem.SGD +"'>"+ PublicInfoItem.SGD );
 
-additional_jsp_buffer.append("</SELECT></td> </tr>");
+    additional_jsp_buffer.append("</SELECT></td> </tr>");
+
   
 additional_jsp = additional_jsp_buffer.toString();
 break;}

@@ -197,6 +197,7 @@ String image = "<img border='0' src='" + red_arrow_pass +"' width = '6' height='
 
 
 <%= image %><a href="page_main.jsp?forwardName=<%=Constants.UI_SELECT_PROCESS_DELETE_DATA_PAGE%>&amp;<%=Constants.JSP_CURRENT_LOCATION%>=Home > Process > Delete Data&amp;<%= Constants.JSP_TITLE%>=Delete data" title="Delete Data">Delete data</a><br/>
+<%= image %><a href="SelectProcess.do?forwardName=<%=Constants.PROCESS_REBUILD_BLASTABLE_DB%>" title="Rebuild blast database">Rebuild blast database</a><br/>
 
 <%}%>
 <%= image %><a href="page_main.jsp?forwardName=<%=Constants.UI_VIEW_PROCESS_RESULTS_PAGE%>&amp;<%=Constants.JSP_CURRENT_LOCATION%>=Home > Process > View Process Results&amp;<%= Constants.JSP_TITLE%>=View Process Results" title="View process results">View process results</a><br/>

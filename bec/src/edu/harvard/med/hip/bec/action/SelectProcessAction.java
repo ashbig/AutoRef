@@ -341,7 +341,7 @@ public class SelectProcessAction extends BecAction
                 case Constants.PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING  :
                 case Constants.PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING  :
                 case Constants.PROCESS_CREATE_REPORT_TRACEFILES_QUALITY:
-                
+                case Constants.PROCESS_REBUILD_BLASTABLE_DB:
                 case Constants.PROCESS_DELETE_PLATE :
                 case Constants.PROCESS_DELETE_CLONE_READS :
                 case Constants.PROCESS_DELETE_CLONE_FORWARD_READ :
@@ -353,7 +353,7 @@ public class SelectProcessAction extends BecAction
                 case Constants.PROCESS_SET_CLONE_FINAL_STATUS:
                 case Constants.PROCESS_REANALYZE_CLONE_SEQUENCE:
                 case Constants.PROCESS_CLEANUP_INTERMIDIATE_FILES_FROM_HARD_DRIVE:    
-                     case Constants.PROCESS_RUN_ISOLATE_RUNKER://run isolate runker
+                case Constants.PROCESS_RUN_ISOLATE_RUNKER://run isolate runker
                 
                {
                     ArrayList spec_collection = new ArrayList();
@@ -477,7 +477,9 @@ public class SelectProcessAction extends BecAction
             case Constants.PROCESS_ADD_NEW_INTERNAL_PRIMER :return"Add New Internal Primer";
             case Constants.PROCESS_PROCESS_OLIGO_PLATE:return "Track Oligo Plate"; 
             case Constants.PROCESS_SET_CLONE_FINAL_STATUS:return "Set Final Clone  Status";
-            case Constants.PROCESS_RUN_PRIMER3:return"Run Primer Designer ";
+            case Constants.PROCESS_REBUILD_BLASTABLE_DB:return "Rebuild blastable database";
+            
+              case Constants.PROCESS_RUN_PRIMER3:return"Run Primer Designer ";
              case Constants.PROCESS_RUNPOLYMORPHISM_FINDER:return "Run Polymorphism Finder";
             case Constants.PROCESS_RUN_DISCREPANCY_FINDER:  return "Run Discrepancy Finder";
             case Constants.PROCESS_APPROVE_INTERNAL_PRIMERS:return"Approve Internal Primers";
@@ -545,7 +547,8 @@ public class SelectProcessAction extends BecAction
             case Constants.PROCESS_ADD_NEW_INTERNAL_PRIMER :return"Home > Process > Internal Primer Design and Order > Add New Internal Primer";
             case Constants.PROCESS_PROCESS_OLIGO_PLATE:return "Home > Process >  Internal Primer Design and Order  > Track Oligo Plate"; 
             case Constants.PROCESS_SET_CLONE_FINAL_STATUS:return "Home > Process > Set Final Clones  Status";
-            case Constants.PROCESS_RUN_PRIMER3:return"Home > Process >  Internal Primer Design and Order  > Run Primer Designer";
+            case Constants.PROCESS_REBUILD_BLASTABLE_DB:return "Home > Process > Rebuild balstable database";
+              case Constants.PROCESS_RUN_PRIMER3:return"Home > Process >  Internal Primer Design and Order  > Run Primer Designer";
              case Constants.PROCESS_RUNPOLYMORPHISM_FINDER:return "Home > Process > Evaluate Clones > Run Polymorphism Finder";
             case Constants.PROCESS_RUN_DISCREPANCY_FINDER:  return "Home > Process > Evaluate Clones > Run Discrepancy Finder";
             case Constants.PROCESS_APPROVE_INTERNAL_PRIMERS:return"Home > Process >  Internal Primer Design and Order  > Approve Internal Primers";

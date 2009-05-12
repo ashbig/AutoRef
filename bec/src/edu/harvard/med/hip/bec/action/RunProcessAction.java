@@ -408,6 +408,7 @@ public class RunProcessAction extends BecAction
                 case Constants.PROCESS_RUN_ASSEMBLER_FOR_ALL_READS:
                 case Constants.PROCESS_ORDER_INTERNAL_PRIMERS:
                 case Constants.PROCESS_NOMATCH_REPORT:
+                case Constants.PROCESS_REBUILD_BLASTABLE_DB:
                 case Constants.PROCESS_FIND_GAPS:
                 case Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE:
                 case Constants.PROCESS_RUN_END_READS_WRAPPER:
@@ -566,6 +567,17 @@ if ( request.getParameter("plate_name") != null)((PrimerOrderRunner)runner).setP
                              ((NoMatchReportRunner)runner).setBlastableDBName( (String) request.getParameter("DATABASE_NAME")) ;
                               ((NoMatchReportRunner)runner).setIdTypeToDisplay( (String) request.getParameter("ID_NAME")) ;
                               break;
+                        }
+                         case Constants.PROCESS_REBUILD_BLASTABLE_DB:
+                        {
+                             runner = new BlastablDbBuilderRunner();
+                             System.out.println("here");
+                             System.out.println((String) request.getParameter("DATABASE_NAME")+" "+ (String) request.getParameter("VECTORLIBRARY_NAME"));
+                             boolean isACEDatabase = ((String) request.getParameter("ACE_DATABASE")).equalsIgnoreCase(BlastablDbBuilderRunner.ACE_DB);
+                             ((BlastablDbBuilderRunner)runner).setIsACEDatabase(isACEDatabase);
+                             ((BlastablDbBuilderRunner)runner).setBlastableDBName( (String) request.getParameter("DATABASE_NAME")) ;
+                             ((BlastablDbBuilderRunner)runner).setVectorLibraryName( (String) request.getParameter("VECTORLIBRARY_NAME")) ;
+                             break;
                         }
                         
                         case Constants.PROCESS_FIND_GAPS:
@@ -872,6 +884,7 @@ if ( request.getParameter("plate_name") != null)((PrimerOrderRunner)runner).setP
                 case Constants.PROCESS_CREATE_REPORT: return "Request for General Report";
                 case Constants.PROCESS_RUN_DECISION_TOOL_NEW: return "Detailed Decision Tool Request";
                   case Constants.PROCESS_NOMATCH_REPORT:return "Mismatched Clones Report";
+                  case Constants.PROCESS_REBUILD_BLASTABLE_DB:return "Rebuild blastable database";
                  case Constants.PROCESS_CREATE_REPORT_TRACEFILES_QUALITY  :return "Request for Trace File Quality Report";
                case Constants.PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING  : return "Request for End Read Report"; 
                
@@ -912,8 +925,8 @@ case Constants.PROCESS_RUN_DISCREPANCY_FINDER:return "Home > Process > Clone Eva
 case Constants.PROCESS_FIND_GAPS: return "Home > Process > Clone Evaluation > Run Gap Mapper ";
 case Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE: return"Home > Process > Clone Evaluation > Find Low Confidence  Regions in Clone Sequences";
 case Constants.PROCESS_PROCESS_OLIGO_PLATE:return "Home > Process > Clone Evaluation > Track Oligo Plate";
-case  Constants.PROCESS_SET_CLONE_FINAL_STATUS: return "Home > Process > Evaluate Clones > Set Clone Status";
-                
+case  Constants.PROCESS_SET_CLONE_FINAL_STATUS: return "Home > Process >  Set Clone Status";
+                  case Constants. PROCESS_REBUILD_BLASTABLE_DB : return "Home > Process >  Rebuild blastable database";
                  case Constants.PROCESS_SHOW_CLONE_HISTORY: return "View > Clone History";
                 
 case Constants.PROCESS_VIEW_OLIGO_ORDER_BY_CLONEID: return "Home > Process > View Results > View Oligo Order(s) for Clone(s)";
@@ -928,7 +941,7 @@ case Constants.PROCESS_RUN_DECISION_TOOL_NEW: return "Home > Reports > Detailed 
 case Constants.PROCESS_CREATE_REPORT_TRACEFILES_QUALITY  :return "Home > Reports > Trace File Quality";
 case Constants.PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING  : return "Home > Reports > End Read Report"; 
 case Constants.PROCESS_NOMATCH_REPORT:return "Home > Reports > Mismatched Clones ";
-                 
+       
                          case  Constants.PROCESS_DELETE_TRACE_FILES : return "Home > Process > Delete data  > Delete Trace Files from Hard Drive";
             case  Constants.PROCESS_MOVE_TRACE_FILES: return"Home > Process > Delete data > Move Trace Files from Clone Directory into Temporary Directory";
             case Constants.PROCESS_DELETE_PLATE :  return "Home > Process > Delete data > Delete Plate";

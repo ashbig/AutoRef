@@ -58,7 +58,7 @@ case Constants.PROCESS_RUNPOLYMORPHISM_FINDER:{  isCloneId = true; isCloneIdChec
 case Constants.PROCESS_RUN_DISCREPANCY_FINDER:{ isPlateLabel = true; isPlateLabelChecked=true; isCloneId = true; isACECloneSequenceId = true;break;}
 
 case Constants.PROCESS_NOMATCH_REPORT:{ isPlateLabel = true; isPlateLabelChecked=true; isCloneId = true;break;}
-
+case Constants.PROCESS_REBUILD_BLASTABLE_DB:{ isPlateLabel = true; isPlateLabelChecked=true;  break;}
 case Constants.PROCESS_RUN_PRIMER3 :{ isPlateLabel = true; isPlateLabelChecked=true; isCloneId = true; isFLEXSequenceId = true; isACERefSequenceId = true;break;}
  case Constants.PROCESS_VIEW_INTERNAL_PRIMERS:{ isCloneId = true; isCloneIdChecked= true;break;}//{ isPlateLabel = true; isPlateLabelChecked=true; isCloneId = true; isFLEXSequenceId = true; isACESequenceId = true;break;}
 case Constants.PROCESS_CREATE_REPORT:{ isPlateLabel = true; isPlateLabelChecked=true; isCloneId = true;  isFLEXSequenceId = true;isACECloneSequenceId = true;break;}

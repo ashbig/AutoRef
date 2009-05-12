@@ -340,6 +340,7 @@ PROCESS_ADD_NEW_VECTOR_FROM_FLAT_FILES}
     public static final int         PROCESS_SUBMIT_CLONE_SEQUENCES  = 101;
 
     public static final int         PROCESS_SET_CLONE_FINAL_STATUS  = 102;
+    public static final int         PROCESS_REBUILD_BLASTABLE_DB=117;
     public static final int         PROCESS_REANALYZE_CLONE_SEQUENCE  = 103;
      public static final int         PROCESS_VERIFY_TRACE_FILE_FORMAT =105;
        public static final int         PROCESS_DELETE_TRACE_FILE_FORMAT =106;
