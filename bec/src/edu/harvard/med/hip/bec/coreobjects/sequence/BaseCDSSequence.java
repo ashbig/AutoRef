@@ -44,7 +44,7 @@ public class BaseCDSSequence extends BaseSequence
          }
          catch(Exception e)
          {
-             System.out.println("Cannot write sequence "+m_id+" "+m_cds_start +" "+m_cds_stop+" "+m_text.length());
+ //            System.out.println("Cannot write sequence "+m_id+" "+m_cds_start +" "+m_cds_stop+" "+m_text.length());
              throw new Exception ("Cannot write sequence "+m_id+" "+m_cds_start +" "+m_cds_stop+" "+m_text.length());
          }
            
