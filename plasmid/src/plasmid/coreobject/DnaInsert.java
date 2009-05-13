@@ -159,18 +159,20 @@ public class DnaInsert {
             return RefseqNameType.SGD;
         if(PA.equals(species))
             return RefseqNameType.PA;
-        if(LM.equals(species) || YP.equals(species))
+        if(LM.equals(species))
             return RefseqNameType.GENBANK;
+        if(YP.equals(species))
+            return RefseqNameType.PRO_GI;
         if(VC.equals(species) || VC1.equals(species))
-            return RefseqNameType.VCNUMBER;
+            return RefseqNameType.LOCUS_TAG;
         if(DM.equals(species))
             return RefseqNameType.FBID;
         if(CE.equals(species))
             return RefseqNameType.WBGENEID;
         if(FT.equals(species))
-            return RefseqNameType.FTNUMBER;
+            return RefseqNameType.LOCUS_TAG;
         if(BA.equals(species)) 
-            return RefseqNameType.BANUMBER;
+            return RefseqNameType.LOCUS_TAG;
         if(ARABIDOPSIS.equals(species)) 
             return RefseqNameType.TAIR;
         if(TM.equals(species))
