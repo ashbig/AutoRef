@@ -105,7 +105,7 @@
                 <td width="6%" class="tablebody">Keyword</td>
             </tr>
             <logic:iterate id="insert" name="clone" property="inserts">
-                <tr> 
+                <tr class="tableinfo"> 
                     <td class="tableinfo"><bean:write name="insert" property="order"/></td>
                     <td class="tableinfo"><bean:write name="insert" property="size"/></td>
                     <td class="tableinfo"><bean:write name="insert" property="species"/></td>

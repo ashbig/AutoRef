@@ -177,6 +177,8 @@ public class DnaInsert {
             return RefseqNameType.TAIR;
         if(TM.equals(species))
             return RefseqNameType.LOCUS_TAG;
+        if(YPS.equals(species))
+            return RefseqNameType.LOCUS_TAG;
         if(RefseqNameType.GENEID != null)
             return RefseqNameType.GENEID;
         return "";
