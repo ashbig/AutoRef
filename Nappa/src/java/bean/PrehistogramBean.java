@@ -88,14 +88,14 @@ public class PrehistogramBean implements Serializable {
             
             re = RengineManager.createRengine();
             setHistogramFile(barcode+".pdf");
-            controller.printHistogramOutputFile(re, 4, slides.size(), Constants.R_TMP+barcode, Constants.R_TMP+getHistogramFile(),HistogramController.FILE_FORMAT_PDF,controls);
+            controller.printHistogramOutputFile(re, 4, slides.size(), Constants.R_TMP+barcode, Constants.R_OUTPUT_DIR+getHistogramFile(),HistogramController.FILE_FORMAT_PDF,controls);
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
             RengineManager.stopRengine(re);
         }
 
-        return "viewHistogram";
+        return "viewAllHistogram";
     }
     
     public String getBarcode() {

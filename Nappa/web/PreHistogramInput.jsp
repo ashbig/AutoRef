@@ -60,10 +60,12 @@
                         <h:commandLink target="histogramview" styleClass="text" action="#{prehistogramBean.viewHistogram}">
                             <h:outputText styleClass="text" value="View Histogram"/>
                             <f:param name="slideid" value="#{slide.slideid}"/>
+                            <f:param name="slidebarcode" value="#{slide.barcode}"/>
                             <f:param name="executionid" value="#{slide.process.executionid}"/>
                         </h:commandLink>
                     </t:column>
                 </t:dataTable>
+                <h:commandButton value="#{msgs.generateAllHistogram}" action="#{prehistogramBean.viewAllHistogram}"/> 
             </h:form> 
             <h:outputText styleClass="errors" value="#{prehistogramBean.message}"/>
             

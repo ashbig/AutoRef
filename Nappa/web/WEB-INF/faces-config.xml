@@ -261,6 +261,14 @@
     </navigation-rule>
     
     <navigation-rule>
+        <from-view-id>/PreHistogramInput.jsp</from-view-id>
+        <navigation-case>
+            <from-outcome>viewAllHistogram</from-outcome>
+            <to-view-id>/ViewAllHistogram.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
         <from-view-id>/ProcessView.jsp</from-view-id>
         <navigation-case>
             <from-outcome>viewfile</from-outcome>
