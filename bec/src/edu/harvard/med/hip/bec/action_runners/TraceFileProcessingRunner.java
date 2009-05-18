@@ -42,7 +42,7 @@ public class TraceFileProcessingRunner extends ProcessRunner
    // private boolean             isUseTraceFileNameFormat = true;
     
     private String              OUTPUT_DIR = edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("TRACE_FILES_INPUT_PATH_DIR");
-    private String              INPUT_DIR = edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("TRACE_FILES_TRANCFER_INPUT_DIR");
+    private String              INPUT_DIR = edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("TRACE_FILES_TRANSFER_INPUT_DIR");
   
     public void             setReadDirection(String read_direction)    { m_read_direction = read_direction;}
     public void             setReadType(int read_type)    { m_read_type = read_type;    }//m_read_type= read_type;}
