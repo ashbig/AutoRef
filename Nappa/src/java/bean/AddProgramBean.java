@@ -6,6 +6,7 @@
 package bean;
 
 import controller.AddProgramController;
+import dao.ResearcherDAO;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.myfaces.custom.fileupload.UploadedFile;
 import transfer.ProgramdefinitionTO;
 import transfer.ProgramtypeTO;
+import transfer.ResearcherTO;
 import util.Constants;
 
 /**
@@ -69,8 +71,8 @@ public class AddProgramBean {
             }
             
             String username = ((HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest()).getUserPrincipal().getName();
-            
-            ProgramdefinitionTO program = new ProgramdefinitionTO(name, description, type, ProgramdefinitionTO.STATUS_ACTIVE, 0, 0, null, username);
+            ResearcherTO r = ResearcherDAO.getResearcher(username);
+            ProgramdefinitionTO program = new ProgramdefinitionTO(name, description, type, ProgramdefinitionTO.STATUS_ACTIVE, 0, 0, null, r.getName());
             InputStream fileinput = file.getInputStream();
             controller.setProgram(program);
             controller.readProgramFile(fileinput, isnumber);
