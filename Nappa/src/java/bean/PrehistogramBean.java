@@ -29,6 +29,7 @@ public class PrehistogramBean implements Serializable {
     private HistogramController controller;
     private boolean showSlides;
     private String histogramFile;
+    private String plotFile;
     
     public PrehistogramBean() {
         barcode = null;
@@ -41,7 +42,7 @@ public class PrehistogramBean implements Serializable {
         slides = null;
         setShowSlides(false);
         try {
-            slides = controller.findSlides(barcode, ProcessprotocolTO.UPLOAD_VIGENE_RESULT, false);
+            slides = controller.findSlides(barcode, ProcessprotocolTO.UPLOAD_VIGENE_RESULT, false, false);
         } catch (Exception ex) {
             ex.printStackTrace();
             setMessage("Cannot find slides.");
@@ -59,7 +60,7 @@ public class PrehistogramBean implements Serializable {
         
         Rengine re = null;
         try {
-            List<SampleTO> samples = controller.getSamples(executionid, slideid);
+            List<SampleTO> samples = controller.getSamples(executionid, slideid, false);
             List<String> controls = ContainerheaderTO.getControls(samples);
             
             controller.printHistogramInputFile(samples, Constants.TMP + slideid, slidebarcode);
@@ -79,7 +80,7 @@ public class PrehistogramBean implements Serializable {
     public String viewAllHistogram() {
         Rengine re = null;
         try {
-            slides = controller.findSlides(barcode, ProcessprotocolTO.UPLOAD_VIGENE_RESULT, true);
+            slides = controller.findSlides(barcode, ProcessprotocolTO.UPLOAD_VIGENE_RESULT, true, false);
             SlideTO slide = (SlideTO)slides.get(0);
             List<SampleTO> samples = slide.getContainer().getSamples();
             List<String> controls = ContainerheaderTO.getControls(samples);
@@ -96,6 +97,54 @@ public class PrehistogramBean implements Serializable {
         }
 
         return "viewAllHistogram";
+    }
+    
+    public String viewPlot() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        Map map = context.getExternalContext().getRequestParameterMap();
+        int slideid = Integer.parseInt((String) map.get("slideid"));
+        String slidebarcode = (String) map.get("slidebarcode");
+        int executionid = Integer.parseInt((String) map.get("executionid"));
+        
+        Rengine re = null;
+        try {
+            List<SampleTO> samples = controller.getSamples(executionid, slideid, true);
+            List<String> controls = ContainerheaderTO.getControls(samples);
+            
+            controller.printPlotInputFile(samples, Constants.TMP + slideid, slidebarcode);
+            
+            re = RengineManager.createRengine();
+            setPlotFile(slideid+"_plot.jpg");
+            controller.printPlotOutputFile(re, 5, 1, Constants.R_TMP+slideid, Constants.R_OUTPUT_DIR+getPlotFile(),HistogramController.FILE_FORMAT_JPG,controls);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            RengineManager.stopRengine(re);
+        }
+
+        return "viewPlot";
+    }
+    
+    public String viewAllPlot() {
+        Rengine re = null;
+        try {
+            slides = controller.findSlides(barcode, ProcessprotocolTO.UPLOAD_VIGENE_RESULT, true, true);
+            SlideTO slide = (SlideTO)slides.get(0);
+            List<SampleTO> samples = slide.getContainer().getSamples();
+            List<String> controls = ContainerheaderTO.getControls(samples);
+            
+            controller.printPlotInputFile(slides, Constants.TMP + barcode);
+            
+            re = RengineManager.createRengine();
+            setPlotFile(barcode+".pdf");
+            controller.printPlotOutputFile(re, 5, slides.size(), Constants.R_TMP+barcode, Constants.R_OUTPUT_DIR+getPlotFile(),HistogramController.FILE_FORMAT_PDF,controls);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            RengineManager.stopRengine(re);
+        }
+
+        return "viewAllPlot";
     }
     
     public String getBarcode() {
@@ -148,5 +197,17 @@ public class PrehistogramBean implements Serializable {
     
     public String getHistogramFileURL() {
         return Constants.REPOSITORY_URL+Constants.R_OUTPUT_URL+getHistogramFile();
+    }
+    
+    public String getPlotFileURL() {
+        return Constants.REPOSITORY_URL+Constants.R_OUTPUT_URL+getPlotFile();
+    }
+
+    public String getPlotFile() {
+        return plotFile;
+    }
+
+    public void setPlotFile(String plotFile) {
+        this.plotFile = plotFile;
     }
 }

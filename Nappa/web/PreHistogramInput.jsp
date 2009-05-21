@@ -64,8 +64,20 @@
                             <f:param name="executionid" value="#{slide.process.executionid}"/>
                         </h:commandLink>
                     </t:column>
+                    <t:column>
+                        <f:facet name="header">
+                            <h:outputText value=""/>
+                        </f:facet>
+                        <h:commandLink target="plotview" styleClass="text" action="#{prehistogramBean.viewPlot}">
+                            <h:outputText styleClass="text" value="View Zone Variation"/>
+                            <f:param name="slideid" value="#{slide.slideid}"/>
+                            <f:param name="slidebarcode" value="#{slide.barcode}"/>
+                            <f:param name="executionid" value="#{slide.process.executionid}"/>
+                        </h:commandLink>
+                    </t:column>
                 </t:dataTable>
-                <h:commandButton value="#{msgs.generateAllHistogram}" action="#{prehistogramBean.viewAllHistogram}"/> 
+                <h:commandButton rendered="#{prehistogramBean.showSlides}" value="#{msgs.generateAllHistogram}" action="#{prehistogramBean.viewAllHistogram}"/> 
+                <h:commandButton rendered="#{prehistogramBean.showSlides}" value="#{msgs.generateAllPlot}" action="#{prehistogramBean.viewAllPlot}"/> 
             </h:form> 
             <h:outputText styleClass="errors" value="#{prehistogramBean.message}"/>
             

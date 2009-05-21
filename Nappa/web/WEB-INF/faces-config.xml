@@ -269,6 +269,22 @@
     </navigation-rule>
     
     <navigation-rule>
+        <from-view-id>/PreHistogramInput.jsp</from-view-id>
+        <navigation-case>
+            <from-outcome>viewPlot</from-outcome>
+            <to-view-id>/ViewPlot.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <from-view-id>/PreHistogramInput.jsp</from-view-id>
+        <navigation-case>
+            <from-outcome>viewAllPlot</from-outcome>
+            <to-view-id>/ViewAllPlot.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
         <from-view-id>/ProcessView.jsp</from-view-id>
         <navigation-case>
             <from-outcome>viewfile</from-outcome>
