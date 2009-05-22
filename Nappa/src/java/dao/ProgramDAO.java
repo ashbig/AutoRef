@@ -134,10 +134,8 @@ public class ProgramDAO {
     }
 
     public void setProgrammappingids(List<ProgrammappingTO> mappings) throws DaoException {
-        int id = SequenceDAO.getNextid("mapid");
         for (ProgrammappingTO m : mappings) {
-            m.setMapid(id);
-            id++;
+            m.setMapid(SequenceDAO.getNextid("mapid"));
         }
     }
 
