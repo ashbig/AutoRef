@@ -351,17 +351,20 @@ public class DataFileReader
    private  void              processOneFileSubmission( ColumnValue[] records_out      )
         throws Exception
   {
-     
+     ImportClone row_clone=null;
       ImportContainer row_container = setContainerProperties(records_out);
       String flex_sequence_id = setFlexSequenceProperties( records_out);
        ImportSample   sample= setSampleProperties( records_out );
        
        sample.setSequenceId(flex_sequence_id);
        row_container.addSample(sample);
-       ImportClone row_clone = setCloneProperties(records_out);
-       ImportClone temp_clone = (ImportClone)m_clones.get( row_clone.getUserId());
-       if ( i_is_CreateCloneObjectPerSample && row_clone!= null    ) 
-       {    sample.setClone( row_clone) ;}
+       if (!sample.getType().equals(Sample.CONTROL_POSITIVE))
+       {
+             row_clone = setCloneProperties(records_out);
+           ImportClone temp_clone = (ImportClone)m_clones.get( row_clone.getUserId());
+           if ( i_is_CreateCloneObjectPerSample && row_clone!= null    ) 
+           {    sample.setClone( row_clone) ;}
+       }
        //get publication info
        ImportPublication publication =  setPublicationProperties(records_out);
        if ( publication != null && row_clone != null)row_clone.addPublication(publication);
@@ -465,10 +468,12 @@ public class DataFileReader
        ImportContainer row_container = setContainerProperties(records_out);
        ImportSample   sample= setSampleProperties( records_out );
        row_container.addSample(sample);
-       ImportClone row_clone = setCloneProperties(records_out);
-       ImportClone temp_clone = (ImportClone)m_clones.get( row_clone.getUserId());
-       temp_clone.reasignCloneProperties( row_clone) ;
-      
+       if (!sample.getType().equals(Sample.CONTROL_POSITIVE))
+       {
+           ImportClone row_clone = setCloneProperties(records_out);
+           ImportClone temp_clone = (ImportClone)m_clones.get( row_clone.getUserId());
+           temp_clone.reasignCloneProperties( row_clone) ;
+       }
      //  System.out.println(row_container.getLabel()+" "+sample.getPosition());
   
   }
