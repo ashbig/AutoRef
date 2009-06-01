@@ -840,10 +840,18 @@ public class DataFileReader
                    row_sample.addPublicInfo(p_info);
                    if ( temp_property_name.intern() == FileStructureColumn.PROPERTY_NAME_USER_ID)
                  {
-                      if (row_clone != null) 
+                      if ( temp_column_value.equals(Sample.CONTROL_POSITIVE))
                       {
-                          row_clone.setUserId(temp_column_value);
-                          m_clones.put(temp_column_value, row_clone);
+                          row_sample .setType(Sample.CONTROL_POSITIVE);
+                          row_sample.setClone(null);
+                      }
+                      else 
+                      {
+                          if (row_clone != null)
+                         {
+                              row_clone.setUserId(temp_column_value);
+                              m_clones.put(temp_column_value, row_clone);
+                          }
                       }
                  }
                  

@@ -63,6 +63,7 @@ public class FileStructure
        public static final int FILE_TYPE_PUBLICATION_CONNECTION = 13;
     
       public static   final   int FILE_TYPE_REFERENCE_SEQUENCE_INFO=     14;
+      public static   final   int FILE_TYPE_FLEX_TABLE_POPULATE=15;
   
     // used internaly , file of this type cannot be submitted
     public static final int FILE_TYPE_OBJECT_ANNOTATIONS = -10;
@@ -84,6 +85,7 @@ public class FileStructure
     public static   final   String   STR_FILE_TYPE_PUBLICATION_INFO=         "FILE_TYPE_PUBLICATION_INFO";
     public static   final   String   STR_FILE_TYPE_PUBLICATION_CONNECTION=      "FILE_TYPE_PUBLICATION_CONNECTION";
    public static   final   String   STR_FILE_TYPE_REFERENCE_SEQUENCE_INFO=      "FILE_TYPE_REFERENCE_SEQUENCE_INFO";
+   public static   final   String   STR_FILE_TYPE_FLEX_TABLE_POPULATE=      "FILE_TYPE_FLEX_TABLE_POPULATE";
    
     
     /** Creates a new instance of FileStructure */

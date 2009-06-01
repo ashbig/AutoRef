@@ -82,7 +82,7 @@ public class FileMapParser extends DefaultHandler
            {
                throw new SAXException("Wrong tag: "+localName);
            }
-           System.out.println(localName);
+         //  System.out.println(localName);
             if (localName==FILE_MAP_START )
             {
                 i_file_structure = new FileStructure();
