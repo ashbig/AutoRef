@@ -16,12 +16,17 @@ import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.infoimport.file_mapping.*;
 import static  edu.harvard.med.hip.flex.core.Nametype.TABLE_NAME_NAMETYPE;
+
+
 /**
  *
  * @author  htaycher
  */
 public class ConstantsImport 
 {
+    
+   
+  
     
       public static Hashtable s_flex_names = null;
       public static Hashtable s_container_names = null;
@@ -118,7 +123,7 @@ public class ConstantsImport
             case SAMPLE_NAMETYPE:{ sql = " insert into " + name_type.toString() +"(nametype,displaytitle) values (?,?)";break;}
             case NAMETYPE:{ sql = " insert into " + name_type.toString() +" (nametype,displaytitle) values (?,?)";break;}
             case CONTAINERHEADER_NAMETYPE:{ sql = " insert into " + name_type.toString() +"(nametype,displaytitle) values (?,?)";break;}
-            case SPECIES:{ sql = " insert into " + name_type.toString() +" values (?)";break;}
+            case SPECIES:{ sql = " insert into  " + name_type.toString() +"(genusspecies) values (?)";break;}
             case FLEXSTATUS:{ sql = " insert into " + name_type.toString() +" values (?)";break;}
             case SAMPLETYPE:{ sql = " insert into " + name_type.toString() +" values (?)";break;}
             case CONTAINERTYPE:{ sql = " insert into " + name_type.toString() +" values (?)";break;}
@@ -179,10 +184,10 @@ public class ConstantsImport
          IMPORT_INTO_NAMESTABLE("Names upload"),
          IMPORT_CLONING_STRATEGIES_INPUT ("Add new Cloning Strategy "),
          IMPORT_CLONING_STRATEGIES ("Cloning strategy upload"),
-          PUT_PLATES_FOR_SEQUENCING_INPUT ("Notify FLEX what plates were sequenced "),
-         PUT_PLATES_FOR_SEQUENCING ("Notify FLEX what plates were sequenced "),
+          PUT_PLATES_FOR_SEQUENCING_INPUT ("Plate sequenceing notification"),
+         PUT_PLATES_FOR_SEQUENCING ("Plate sequenceing notification"),
          TRANSFER_FLEX_TO_PLASMID_IMPORT (""),
-         TRANSFER_FLEX_TO_PLASMID_CREATE_FILES (""),
+         TRANSFER_FLEX_TO_PLASMID_CREATE_FILES ("Create files for data submission from FLEX to PLASMID"),
          TRANSFER_FLEX_TO_PLASMID_DIRECT_IMPORT(""),
          PUT_PLATES_IN_PIPELINE_INPUT ("Add plates to production pipe-line"),
          PUT_PLATES_IN_PIPELINE ("Add plates to production pipe-line"),
@@ -203,12 +208,49 @@ CREATE_PROJECT ("Create new project"),
 
 
 DISPLAY_WORKFLOW         ("Workflow"),
-VIEW_WORKFLOWS("View workflows")              
+VIEW_WORKFLOWS("View workflows")  , 
+                    
+                    //growth conditions component creation
+ADD_BIOMATERIAL_INPUT("Add new biomaterial"),
+ADD_BIOMATERIAL_CONDITION_INPUT("Add new biomaterial condition"),
+ADD_BIOMATERIAL_COMBINATION_INPUT("Add new combination of biomaterial conditions "),
+ADD_GROWTHCONDITION_INPUT("Add new growth condition"),
+ASSIGN_VECTOR_GROWTH_CONDITON_INPUT("Assign growth conditions to vector"),
+
+ADD_BIOMATERIAL_CONFIRM("Confirm addition of new biomaterial"),
+ADD_BIOMATERIAL_CONDITION_CONFIRM("Confirm addition of new biomaterial condition"),
+ADD_BIOMATERIAL_COMBINATION_CONFIRM("Confirm addition of new combination of biomaterial conditions "),
+ADD_GROWTHCONDITION_CONFIRM("Confirm addition of new growth condition"),
+ASSIGN_VECTOR_GROWTH_CONDITON_CONFIRM("Confirm growth conditions assigment for vector"),
+
+ADD_BIOMATERIAL("New biomaterial added"),
+ADD_BIOMATERIAL_CONDITION ("New biomaterial condition added"),
+ADD_BIOMATERIAL_COMBINATION("New combination of biomaterial conditions added"),
+ADD_GROWTHCONDITION("New growth condition added"),
+ASSIGN_VECTOR_GROWTH_CONDITON("Assign growth conditions to vector"),
+
+VIEW_BIOMATERIAL  ("Currently defined biomaterials","No biomaterials defined"),
+VIEW_BIOMATERIAL_CONDITION("Currently defined biomaterial conditions","No  biomaterial conditions defined"),
+VIEW_BIOMATERIAL_COMBINATION ("Currently defined combinations of biomaterial conditions","No combinations of biomaterial conditions defined"),
+VIEW_GROWTHCONDITION ("Currently defined  growth conditions","No growth conditions defined"),
+VIEW_VECTOR_GROWTH_CONDITON_TABLE("Growth conditions for vectors", "No growth condition to vector association found"),
+ 
+ REARRAY_SELECT_TYPE("Rearray")        ,
+ 
+ 
+FLEX_TABLE_POPULATE_INPUT ("Populate FLEX with third party data", "Populate FLEX with third party data"),
+FLEX_TABLE_POPULATE ("Populate FLEX with third party data", "Populate FLEX with third party data"),
+     
+ CHANGE_CLONE_STATUS("Chnage clone status for PLASMID import","Chnage clone status for PLASMID import")             
+                    
+                        
                     ;
       
          
             PROCESS_NTYPE(String title ){i_title=title; }
+            PROCESS_NTYPE(String title, String no_items_title ){i_title=title;i_no_items_title=no_items_title; }
          public String getTitle(){ return i_title;}
+         public String getNoItemsTitle(){ return i_no_items_title;}
          public PROCESS_NTYPE   getNextProcess()
          {
              switch(this)
@@ -227,6 +269,9 @@ VIEW_WORKFLOWS("View workflows")
                     return PUT_PLATES_FOR_SEQUENCING ;
                  case PUT_PLATES_IN_PIPELINE_INPUT:
                      return PUT_PLATES_IN_PIPELINE;
+                     
+                     
+                 case FLEX_TABLE_POPULATE_INPUT: return FLEX_TABLE_POPULATE;
                  case CREATE_PROJECT_INPUT:
                      return CREATE_PROJECT;
                 case CREATE_NEW_WORKFLOW_INPUT:
@@ -239,6 +284,17 @@ VIEW_WORKFLOWS("View workflows")
                      return ADD_WORKFLOW_TO_PROJECT_CONFIRM;
                  case ADD_WORKFLOW_TO_PROJECT_CONFIRM :
                      return ADD_WORKFLOW_TO_PROJECT;
+                 case ADD_BIOMATERIAL_INPUT: return ADD_BIOMATERIAL_CONFIRM;
+                 case ADD_BIOMATERIAL_CONFIRM: return ADD_BIOMATERIAL;
+                 case ADD_BIOMATERIAL_CONDITION_INPUT: return ADD_BIOMATERIAL_CONDITION_CONFIRM;
+                 case ADD_BIOMATERIAL_CONDITION_CONFIRM: return ADD_BIOMATERIAL_CONDITION;
+                 case ADD_BIOMATERIAL_COMBINATION_INPUT: return ADD_BIOMATERIAL_COMBINATION_CONFIRM;
+                 case ADD_BIOMATERIAL_COMBINATION_CONFIRM : return ADD_BIOMATERIAL_COMBINATION;
+                 case ADD_GROWTHCONDITION_INPUT: return ADD_GROWTHCONDITION_CONFIRM ;
+                 case ADD_GROWTHCONDITION_CONFIRM: return ADD_GROWTHCONDITION;
+                 case ASSIGN_VECTOR_GROWTH_CONDITON_INPUT: return ASSIGN_VECTOR_GROWTH_CONDITON_CONFIRM ;
+                 case ASSIGN_VECTOR_GROWTH_CONDITON_CONFIRM: return ASSIGN_VECTOR_GROWTH_CONDITON;
+                 
                  default: return NOT_KNOWN;
              }
          }
@@ -256,6 +312,7 @@ VIEW_WORKFLOWS("View workflows")
                      return IMPORT_INTO_NAMESTABLE_INPUT;
                  case IMPORT_CLONING_STRATEGIES:
                      return IMPORT_CLONING_STRATEGIES_INPUT;
+                 case FLEX_TABLE_POPULATE: return FLEX_TABLE_POPULATE_INPUT;
                  case PUT_PLATES_FOR_SEQUENCING :
                     return PUT_PLATES_FOR_SEQUENCING_INPUT ;
                  case PUT_PLATES_IN_PIPELINE:
@@ -272,11 +329,23 @@ VIEW_WORKFLOWS("View workflows")
                      return ADD_WORKFLOW_TO_PROJECT_CONFIRM;
                      case ADD_WORKFLOW_TO_PROJECT_CONFIRM :
                      return ADD_WORKFLOW_TO_PROJECT_INPUT;
+                 case ADD_BIOMATERIAL_CONDITION: return ADD_BIOMATERIAL_CONDITION_CONFIRM;
+                 case ADD_BIOMATERIAL_CONDITION_CONFIRM: return ADD_BIOMATERIAL_CONDITION_INPUT;
+                 case ADD_BIOMATERIAL: return ADD_BIOMATERIAL_CONFIRM;
+                 case ADD_BIOMATERIAL_CONFIRM: return ADD_BIOMATERIAL_INPUT;
+                 case ADD_BIOMATERIAL_COMBINATION: return ADD_BIOMATERIAL_COMBINATION_CONFIRM;
+                 case ADD_BIOMATERIAL_COMBINATION_CONFIRM : return ADD_BIOMATERIAL_COMBINATION_INPUT;
+                 case ADD_GROWTHCONDITION : return ADD_GROWTHCONDITION_CONFIRM ;
+                 case ADD_GROWTHCONDITION_CONFIRM: return ADD_GROWTHCONDITION_INPUT;
+                  case ASSIGN_VECTOR_GROWTH_CONDITON: return ASSIGN_VECTOR_GROWTH_CONDITON_CONFIRM  ;
+                 case ASSIGN_VECTOR_GROWTH_CONDITON_CONFIRM: return ASSIGN_VECTOR_GROWTH_CONDITON_INPUT;
+          
                  default: return NOT_KNOWN;
              }
          }
          
          private String i_title = "Not known";
+         private String i_no_items_title="No items available";
          }
  
    //   submission item type
@@ -325,7 +394,8 @@ VIEW_WORKFLOWS("View workflows")
            FileStructure.STR_FILE_TYPE_AUTHOR_CONNECTION,
           FileStructure.STR_FILE_TYPE_PUBLICATION_INFO,
           FileStructure.STR_FILE_TYPE_PUBLICATION_CONNECTION,
-          FileStructure.STR_FILE_TYPE_REFERENCE_SEQUENCE_INFO
+          FileStructure.STR_FILE_TYPE_REFERENCE_SEQUENCE_INFO,
+          FileStructure.STR_FILE_TYPE_FLEX_TABLE_POPULATE
      };
      //database mapping
    /*   public static HashMap database_dictionary_tables_map = null;
