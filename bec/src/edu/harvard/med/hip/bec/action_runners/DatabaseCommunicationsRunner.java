@@ -444,6 +444,48 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
      FileOperations.readFromFile( m_input_stream,  items, true);
       String speciesname =null;String speciesid =null;//String[] item = null;
       String sql = null;
+      ResultSet rs = null;
+      synchronized(this) 
+      {
+          //check what values exist
+          String[] new_items = new String[items.size()];
+          for (String[] item : items )
+         {
+            speciesname=item[0]; if(item.length == 2) speciesid=item[1].toUpperCase();
+            if( speciesname == null || speciesname.length()< 1) continue;
+            String sql_q = "select * from SPECIESDEFINITION where speciesname ='"+speciesname+"'";
+            
+            try
+            {
+                 rs = DatabaseTransaction.getInstance().executeQuery(sql_q); 
+                 if (!rs.next())
+                {
+                   int id = BecIDGenerator.getID("speciesid");   
+                   if( speciesid != null )
+                   {
+                       sql = "insert into SPECIESDEFINITION (speciesid, speciesname,idname) "
+            +" values ("+id+",'"+speciesname+"','"+speciesid+"')";
+                   }
+                   else
+                   {
+                       sql = " insert into SPECIESDEFINITION (speciesid, speciesname ) "
+            +" values( "+id+",'"+speciesname+"')";
+                   }
+                    DatabaseTransaction.executeUpdate(sql, conn); 
+                   DatabaseToApplicationDataLoader.addSpecies( new SpeciesDefinition(id , speciesname,speciesid));
+                   m_additional_info += "\nNew species definition added: " +speciesname;
+
+                }
+                speciesid=null;
+            }
+                 catch(Exception e){throw new Exception ("Cannot get species definition "+sql_q+"\n"+e.getMessage());}
+                finally              {  DatabaseTransaction.closeResultSet(rs);             }
+          
+          }
+     }
+  
+      
+  /* this solution caused too many calls to speciesid
      for (String[] item : items )
      // for ( int ii = 0; ii < items.size(); ii++)
      {
@@ -451,6 +493,7 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
         speciesname=item[0]; if(item.length == 2) speciesid=item[1].toUpperCase();
         if( speciesname == null || speciesname.length()< 1) continue;
         int id = BecIDGenerator.getID("speciesid");
+      
        if( speciesid != null )
        {
            sql = "insert into SPECIESDEFINITION (speciesid, speciesname,idname) "
@@ -463,11 +506,8 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
 +" select speciesid.nextval,'"+speciesname+"'  from dual "
 +" where not exists (select * from SPECIESDEFINITION where speciesname='"+speciesname+"')";
        }
-       DatabaseTransaction.executeUpdate(sql, conn); 
-       DatabaseToApplicationDataLoader.addSpecies( new SpeciesDefinition(id , speciesname,speciesid));
-       m_additional_info += "\nNew species definition added: " +speciesname;
-       speciesid=null;
-     }     
+         * */
+            
     }
    
    private synchronized void        uploadReferenceSequences(Connection conn)throws Exception
