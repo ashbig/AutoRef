@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.7 $
- * $Date: 2009-04-02 14:52:34 $
+ * $Revision: 1.8 $
+ * $Date: 2009-06-11 15:56:28 $
  * $Author: et15 $
  *
  ******************************************************************************
@@ -53,11 +53,11 @@ import edu.harvard.med.hip.flex.util.*;
  * Overides the ActionServlet to provide flex specific functionality
  *
  * @author     $Author: et15 $
- * @version    $Revision: 1.7 $ $Date: 2009-04-02 14:52:34 $
+ * @version    $Revision: 1.8 $ $Date: 2009-06-11 15:56:28 $
  */
 
 public class FlexServlet extends ActionServlet {
-     public static final String filePath = "WEB-INF/classes/config/";
+     public static final String filePath = "/WEB-INF/classes/config/";
     
      /**
      * Initialize this servlet.  Most of the processing has been factored into
@@ -75,7 +75,7 @@ public class FlexServlet extends ActionServlet {
     protected void initFlex() throws ServletException {
          initFlexProp("FlexProperties", "SystemConfig.properties");
         initFlexProp("ContainerTypeProperties", "ContainerType.properties");
-         
+     
     }
     /**
      * Initializes flex specific resources.
@@ -86,7 +86,7 @@ public class FlexServlet extends ActionServlet {
      * @exception ServletException when a configuration error is found.
      */
     protected void initFlexProp(String className, String fileName) throws ServletException {
-        String name = "/"+filePath+fileName;
+        String name = filePath+fileName;
        // first load the system configuration info
         InputStream  systemStream = getServletContext().getResourceAsStream(name);
         if(systemStream == null) {
