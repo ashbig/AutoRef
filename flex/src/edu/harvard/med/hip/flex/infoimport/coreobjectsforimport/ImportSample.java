@@ -95,7 +95,7 @@ public static final String      CLONE_STATUS_FAILED_BY_SEQUENCE_VALIDATION ="FAI
     public String       getCloneStatus(   ){  return     i_clone_status ;}
     public ImportClone  getClone(){ return i_clone;}
  
-    
+    public void         setType(String m)   {m_type=m;}
     public void         setClone(ImportClone v){ i_clone = v;}
     public void          setPosition(int v){  m_position = v;}
     public void         setConstructId(int v){    m_construct_id = v;}

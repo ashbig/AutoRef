@@ -19,7 +19,7 @@ import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.util.*;
 import edu.harvard.med.hip.flex.infoimport.file_mapping.*;
-//import static edu.harvard.med.hip.flex.infoimport.plasmidimport.PlasmidImporterDefinitions.PLASMID_TRANSFER_CLONE_STATUS;
+import static edu.harvard.med.hip.flex.infoimport.plasmidimport.PlasmidImporterDefinitions.PLASMID_TRANSFER_CLONE_STATUS;
 /**
  *
  * @author htaycher
@@ -70,10 +70,10 @@ public static final String      CLONE_STATUS_FAILED_BY_SEQUENCE_VALIDATION ="FAI
     private String                  i_clone_comment=null;
     private int                     i_master_clone_id =-1;
     private int                     i_clone_construct_id = -1;
-   // private int                     i_isReadyForPlasmidTransfer=0;
+    private int                     i_isReadyForPlasmidTransfer=0;
     
     //for flex to plasmid transfer
-  //  private PLASMID_TRANSFER_CLONE_STATUS i_clone_transfer_status=PLASMID_TRANSFER_CLONE_STATUS.NOT_READY_FOR_TRANSFER;                     
+    private PLASMID_TRANSFER_CLONE_STATUS i_clone_transfer_status=PLASMID_TRANSFER_CLONE_STATUS.NOT_READY_FOR_TRANSFER;                     
   
     /** Creates a new instance of ImportClone */
     public ImportClone() {m_additional_info = new ArrayList();
@@ -94,10 +94,12 @@ public static final String      CLONE_STATUS_FAILED_BY_SEQUENCE_VALIDATION ="FAI
     public String       get5LinkerName(){  return     i_5_linker_name ;}
     public String       get3LinkerName(){ return      i_3_linker_name ;}
     public int          getMaterCloneId(){ return i_master_clone_id;}
-    //public PLASMID_TRANSFER_CLONE_STATUS getTransferStatus(){ return i_clone_transfer_status;}
+    public PLASMID_TRANSFER_CLONE_STATUS getTransferStatus(){ return i_clone_transfer_status;}
     //for report
     public ImportCloneSequence             getCloneSequence(){ return i_clone_sequence;} 
-    public void             setCloneSequence(ImportCloneSequence s){  i_clone_sequence = s;} 
+    public void             setCloneSequence(ImportCloneSequence s){
+        i_clone_sequence = s;
+    } 
    
   
     
@@ -141,8 +143,8 @@ public static final String      CLONE_STATUS_FAILED_BY_SEQUENCE_VALIDATION ="FAI
     }
     
     
-   // public void             setTransferStatus(PLASMID_TRANSFER_CLONE_STATUS v){ i_clone_transfer_status=v;}
-  //  public void             setTransferStatus(String v)throws Exception{ i_clone_transfer_status=PLASMID_TRANSFER_CLONE_STATUS.valueOf(v);}
+    public void             setTransferStatus(PLASMID_TRANSFER_CLONE_STATUS v){ i_clone_transfer_status=v;}
+    public void             setTransferStatus(String v)throws Exception{ i_clone_transfer_status=PLASMID_TRANSFER_CLONE_STATUS.valueOf(v);}
     
     
     

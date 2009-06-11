@@ -167,7 +167,10 @@ public void insert(Connection conn, ArrayList errors) throws Exception
              for (Iterator iter = m_additional_info.iterator (); iter.hasNext (); )
              {
                 info_item = (PublicInfoItem)iter.next ();
-                info_item.setValue(info_item.getValue().substring(0, 239));
+                if ( info_item.getValue().length() > 239)
+                {info_item.setValue(info_item.getValue().substring(0, 239));}
+                
+                    
              }
             PublicInfoItem.insertPublicInfo(  conn, "NAME", 
             m_additional_info, m_id, "SEQUENCEID",    true, errors) ;
