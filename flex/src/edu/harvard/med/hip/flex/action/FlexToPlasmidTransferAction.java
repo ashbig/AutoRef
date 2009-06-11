@@ -43,7 +43,7 @@ import static edu.harvard.med.hip.flex.workflow.Workflow.WORKFLOW_TYPE;
 import edu.harvard.med.hip.flex.infoimport.bioinfo.*;
 import edu.harvard.med.hip.flex.infoimport.file_mapping.*;
 import edu.harvard.med.hip.flex.infoimport.plasmidimport.*;
-import edu.harvard.med.hip.flex.infoimport.plasmidimport.coreobject.*;
+//import edu.harvard.med.hip.flex.infoimport.plasmidimport.coreobject.*;
 import edu.harvard.med.hip.flex.infoimport.plasmidimport.databasemanipulation.*;
  import edu.harvard.med.hip.flex.infoimport.plasmidimport.filemanipulation.*;
  
