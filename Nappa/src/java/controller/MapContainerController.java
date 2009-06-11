@@ -35,7 +35,7 @@ public class MapContainerController extends ProcessController {
     protected List destLabels;
     protected String sampletype;
     protected String sampleform;
-    protected String samplename;
+    //protected String samplename;
     protected ContainerMapper mapper;
     protected String location;
     protected boolean isNumber;
@@ -82,14 +82,6 @@ public class MapContainerController extends ProcessController {
         this.sampleform = sampleform;
     }
 
-    public String getSamplename() {
-        return samplename;
-    }
-
-    public void setSamplename(String samplename) {
-        this.samplename = samplename;
-    }
-
     public ContainerMapper getMapper() {
         return mapper;
     }
@@ -116,7 +108,6 @@ public class MapContainerController extends ProcessController {
     
     public void doSpecificProcess() throws ControllerException {
         setMapper(getContainerMapper());
-        getMapper().setNewsamplename(getSamplename());
         getMapper().setNewsampleform(getSampleform());
         getMapper().setNewsampletype(getSampletype());
         getMapper().setIsNumber(getIsNumber());
@@ -224,7 +215,6 @@ public class MapContainerController extends ProcessController {
         MapContainerController controller = new MapContainerController(slabels, dlabels);
         controller.setIsNumber(false);
         controller.setSampleform(sampleform);
-        controller.setSamplename(samplename);
         controller.setSampletype(sampletype);
         controller.setProtocol(protocol);
         controller.setWho(researcher);

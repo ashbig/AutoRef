@@ -19,6 +19,7 @@ import transfer.ReagentTO;
 import transfer.SlidecellTO;
 import transfer.SlidelayoutTO;
 import transfer.SlidetemplateTO;
+import util.Constants;
 
 /**
  *
@@ -121,48 +122,58 @@ public class SlideDesignManager {
         List<ProgrammappingTO> mappings1 = program1.getMappings();
         List<ProgrammappingTO> mappings2 = program2.getMappings();
         slide = new LayoutcontainerTO(name, "slide", LayoutcontainerTO.SLIDE, ReagentTO.getTYPE_CLONE(), 1, 1, LayoutcontainerTO.OUTPUT);
+
         for (ProgrammappingTO m : mappings2) {
+            boolean isSlidecellEmpty = false;
             String label384 = m.getSrcplate();
-            int level = findLevel(label384);
-            if (level < 0) {
-                throw new ProcessException("Invalide label: " + label384);
+            if (Constants.NA.equals(label384)) {
+                isSlidecellEmpty = true;
             }
-            LayoutcontainerTO plate384 = findContainer(getContainers(), label384, ProgramcontainerTO.OUTPUT, level);
-            if (plate384 == null) {
-                throw new ProcessException("Cannot find 384-well container from mapping: " + label384);
-            }
-            ContainercellTO cell384 = new ContainercellTO(m.getSrcpos(), m.getSrcwellx(), m.getSrcwelly(), plate384.getSampletype(), plate384.getOrder(), 0);
-            cell384.setContainerlabel(label384);
-            SlidecellTO slideCell = new SlidecellTO(m.getDestpos(), m.getDestwellx(), m.getDestwelly(), cell384.getType(), m.getDestblocknum(), m.getDestblockrow(), m.getDestblockcol(), m.getDestblockposx(), m.getDestblockposy(), m.getDestblockwellx(), m.getDestblockwelly());
+
+            SlidecellTO slideCell = new SlidecellTO(m.getDestpos(), m.getDestwellx(), m.getDestwelly(), ContainercellTO.TYPE_EMPTY, m.getDestblocknum(), m.getDestblockrow(), m.getDestblockcol(), m.getDestblockposx(), m.getDestblockposy(), m.getDestblockwellx(), m.getDestblockwelly());
             slideCell.setContainerlabel(slide.getName());
-
-            String label = findLabelInMap1(label384);
-            ProgrammappingTO m1 = findMapping(mappings1, label, m.getSrcpos());
-            if (m1 == null) {
-                throw new ProcessException("Cannot find mapping from 96-well plate to 384-well plate for plate " + label + " and pos " + m.getSrcpos());
-            }
-            String label96 = m1.getSrcplate();
-            LayoutcontainerTO plate96 = findContainer(getContainers(), label96, ProgramcontainerTO.INPUT, level);
-            if (plate96 == null) {
-                throw new ProcessException("Cannot find 96-well container from mapping: " + label96);
-            }
-            ContainercellTO cell96 = new ContainercellTO(m1.getSrcpos(), m1.getSrcwellx(), m1.getSrcwelly(), plate96.getSampletype(), plate96.getOrder(), 0);
-            cell96.setContainerlabel(level + "-" + label96);
-
             SlidecelllineageTO slidelineage = new SlidecelllineageTO(slideCell);
-            slidelineage.addPre(cell384);
-            slidelineage.addPre(cell96);
             slide.addCell(slidelineage);
 
-            SlidecelllineageTO lineage384 = new SlidecelllineageTO(cell384);
-            lineage384.addPre(cell96);
-            lineage384.addPost(slideCell);
-            plate384.addCell(lineage384);
+            if (!isSlidecellEmpty) {
+                int level = findLevel(label384);
+                if (level < 0) {
+                    throw new ProcessException("Invalide label: " + label384);
+                }
+                LayoutcontainerTO plate384 = findContainer(getContainers(), label384, ProgramcontainerTO.OUTPUT, level);
+                if (plate384 == null) {
+                    throw new ProcessException("Cannot find 384-well container from mapping: " + label384);
+                }
+                ContainercellTO cell384 = new ContainercellTO(m.getSrcpos(), m.getSrcwellx(), m.getSrcwelly(), plate384.getSampletype(), plate384.getOrder(), 0);
+                cell384.setContainerlabel(label384);
+                slideCell.setType(cell384.getType());
 
-            SlidecelllineageTO lineage96 = new SlidecelllineageTO(cell96);
-            lineage96.addPost(cell384);
-            lineage96.addPost(slideCell);
-            plate96.addCell(lineage96);
+                String label = findLabelInMap1(label384);
+                ProgrammappingTO m1 = findMapping(mappings1, label, m.getSrcpos());
+                if (m1 == null) {
+                    throw new ProcessException("Cannot find mapping from 96-well plate to 384-well plate for plate " + label + " and pos " + m.getSrcpos());
+                }
+                String label96 = m1.getSrcplate();
+                LayoutcontainerTO plate96 = findContainer(getContainers(), label96, ProgramcontainerTO.INPUT, level);
+                if (plate96 == null) {
+                    throw new ProcessException("Cannot find 96-well container from mapping: " + label96);
+                }
+                ContainercellTO cell96 = new ContainercellTO(m1.getSrcpos(), m1.getSrcwellx(), m1.getSrcwelly(), plate96.getSampletype(), plate96.getOrder(), 0);
+                cell96.setContainerlabel(level + "-" + label96);
+
+                slidelineage.addPre(cell384);
+                slidelineage.addPre(cell96);
+
+                SlidecelllineageTO lineage384 = new SlidecelllineageTO(cell384);
+                lineage384.addPre(cell96);
+                lineage384.addPost(slideCell);
+                plate384.addCell(lineage384);
+
+                SlidecelllineageTO lineage96 = new SlidecelllineageTO(cell96);
+                lineage96.addPost(cell384);
+                lineage96.addPost(slideCell);
+                plate96.addCell(lineage96);
+            }
         }
     }
 
@@ -174,7 +185,7 @@ public class SlideDesignManager {
                 ContainercellTO containercell = l.getCell();
                 containercell.setType(type);
                 String controlreagent = containercell.getControlreagent();
-                if(controlreagent==null) {
+                if (controlreagent == null) {
                     controlreagent = ReagentTO.NON_SPOTS;
                 }
                 containercell.setControlreagent(controlreagent);

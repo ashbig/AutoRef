@@ -20,6 +20,10 @@ public class ReagentTO extends ProcessobjectTO implements Serializable {
     private static final String TYPE_CONTROL = ContainercellTO.getTYPE_CONTROL();
     public static final String TYPE_MASTERMIX = "Master Mix";
     public static final String NON_SPOTS = "Non Spots";
+    public static final String WATER = "water";
+    public static final String HUMAN_IGG = "Human IgG";
+    public static final String MOUSE_IGG = "Mouse IgG";
+    public static final String MASTERMIX = "Mastermix";
     public static final String NOT_SELECTED = "Not Selected";
     
     private int reagentid;

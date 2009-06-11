@@ -6,7 +6,6 @@
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.
  */
-
 package process;
 
 import Algorithm.AlgorithmException;
@@ -22,25 +21,26 @@ import transfer.ContainerheaderTO;
 import transfer.SampleTO;
 import transfer.SamplelineageTO;
 import transfer.TransferException;
+import util.Constants;
 
 /**
  *
  * @author dzuo
  */
 public abstract class ContainerMapper {
+
     protected Collection<ContainerheaderTO> srcContainers;
     protected Collection<ContainerheaderTO> destContainers;
     protected List<SamplelineageTO> lineages;
     protected List<Processobjectlineageinfo> clineages;
-    
     protected MappingAlgorithm algorithm;
-    protected String newsamplename;
+    //protected String newsamplename;
     protected String newsampletype;
     protected String newsampleform;
     //protected ContainertypeTO containertype;
     protected boolean isNumber;
     protected String location;
-    
+
     /** Creates a new instance of ContainerMapper */
     public ContainerMapper() {
         setSrcContainers(new ArrayList());
@@ -48,41 +48,41 @@ public abstract class ContainerMapper {
         setLineages(new ArrayList());
         setClineages(new ArrayList());
     }
-    
+
     public Collection<ContainerheaderTO> getSrcContainers() {
         return srcContainers;
     }
-    
+
     public void setSrcContainers(Collection<ContainerheaderTO> srcContainers) {
         this.srcContainers = srcContainers;
     }
-    
+
     public Collection<ContainerheaderTO> getDestContainers() {
         return destContainers;
     }
-    
+
     public void setDestContainers(Collection<ContainerheaderTO> destContainers) {
         this.destContainers = destContainers;
     }
-    
+
     public void addSrcContainers(ContainerheaderTO c) {
         this.getSrcContainers().add(c);
     }
-    
+
     public void addDestContainers(ContainerheaderTO c) {
         this.getDestContainers().add(c);
     }
-    
+
     public MappingAlgorithm getAlgorithm() {
         return algorithm;
     }
-    
+
     public void setAlgorithm(MappingAlgorithm algorithm) {
         this.algorithm = algorithm;
     }
-    
+
     public abstract boolean isValid();
-    
+
     public void mapContainers() throws ProcessException {
         try {
             getAlgorithm().setIsNumber(isIsNumber());
@@ -93,11 +93,11 @@ public abstract class ContainerMapper {
             throw new ProcessException(ex.getMessage());
         }
     }
-    
-    //abstract public String getLabware();
+
     public ContainercellTO getContainercellmapTO(ProgrammappingTO m) {
-        return new ContainercellTO(m.getDestpos(),m.getDestwellx(),m.getDestwelly(),ContainercellTO.TYPE_EMPTY);
+        return new ContainercellTO(m.getDestpos(), m.getDestwellx(), m.getDestwelly(), ContainercellTO.TYPE_EMPTY);
     }
+
     /**
      * public List sortContainers(Collection<String> labels, Collection<String> maplabels, Collection<ContainerheaderTO> newDestContainers) throws ProcessException {
      * if(labels.size() < maplabels.size())
@@ -118,54 +118,69 @@ public abstract class ContainerMapper {
      * return containers;
      * }
      **/
-    
     public void doMapping(Collection<ProgrammappingTO> mappings, Collection<String> mapsrclabels, Collection<String> mapdestlabels) throws ProcessException {
-        if(destContainers.size()%mapdestlabels.size()!=0) {
+        if (destContainers.size() % mapdestlabels.size() != 0) {
             throw new ProcessException("Number of destination labels is wrong.");
         }
-        
-        if(!isValid()) {
+
+        if (!isValid()) {
             throw new ProcessException("Number of source and destination plates doesn't match.");
         }
-        
+
         populateEmptySamples();
         Iterator iter = destContainers.iterator();
         Iterator iter2 = getSrcContainers().iterator();
         List processSrcContainers = new ArrayList();
         List processDestContainers = new ArrayList();
-        int i=0;
-        int k=0;
-        int n=0;
-        while(iter.hasNext()) {
-            processDestContainers.add((ContainerheaderTO)iter.next());
+        int i = 0;
+        int k = 0;
+        int n = 0;
+        while (iter.hasNext()) {
+            processDestContainers.add((ContainerheaderTO) iter.next());
             i++;
-            if(i%mapdestlabels.size()==0) {
+            if (i % mapdestlabels.size() == 0) {
                 Iterator iter3 = mapsrclabels.iterator();
-                while(iter3.hasNext()) {
+                while (iter3.hasNext()) {
                     Object o = iter3.next();
-                    processSrcContainers.add((ContainerheaderTO)iter2.next());
+                    processSrcContainers.add((ContainerheaderTO) iter2.next());
                     n++;
                 }
-                
-                for(ProgrammappingTO m:mappings) {
-                    ContainerheaderTO containerFrom = findContainer(processSrcContainers, mapsrclabels, m.getSrcplate());
-                    if(containerFrom == null)
-                        throw new ProcessException("Cannot find container "+m.getSrcplate());
-                    SampleTO sampleFrom = containerFrom.getSample(m.getSrcpos());
-                    if(sampleFrom == null)
-                        throw new ProcessException("Cannot find sample for container "+m.getSrcplate()+" at position "+m.getSrcpos());
-                     
+
+                for (ProgrammappingTO m : mappings) {
+                    SampleTO sampleFrom = null;
+                    String sampleName = SampleTO.getNAME_EMPTY();
+                    ContainerheaderTO containerFrom = null;
+
+                    if (!Constants.NA.equals(m.getSrcplate())) {
+                        containerFrom = findContainer(processSrcContainers, mapsrclabels, m.getSrcplate());
+                        if (containerFrom == null) {
+                            throw new ProcessException("Cannot find container " + m.getSrcplate());
+                        }
+                        int srcPos = m.getSrcpos();
+                        if (srcPos > 0) {
+                            sampleFrom = containerFrom.getSample(srcPos);
+                            sampleName = sampleFrom.getName();
+                        }
+                        if (sampleFrom == null && srcPos > 0) {
+                            throw new ProcessException("Cannot find sample for container " + m.getSrcplate() + " at position " + m.getSrcpos());
+                        }
+                    }
+
                     ContainerheaderTO containerTo = findContainer(processDestContainers, mapdestlabels, m.getDestplate());
-                    if(containerTo == null)
-                        throw new ProcessException("Cannot find container "+m.getDestplate());                   
-      
-                    SampleTO sampleTo = new SampleTO(-1,getNewsamplename(),null,0,0,null,getNewsampletype(),getNewsampleform(), SampleTO.getSTATUS_GOOD(), 0, m.getDestpos());
+                    if (containerTo == null) {
+                        throw new ProcessException("Cannot find container " + m.getDestplate());
+                    }
+                    SampleTO sampleTo = new SampleTO(-1, sampleName, null, 0, 0, null, getNewsampletype(), getNewsampleform(), SampleTO.getSTATUS_GOOD(), 0, m.getDestpos());
                     ContainercellTO dest = getContainercellmapTO(m);
-                    dest.setType(sampleFrom.getCell().getType());
+                    if (sampleFrom != null) {
+                        dest.setType(sampleFrom.getCell().getType());
+                    }
                     sampleTo.setCell(dest);
-                    sampleTo.setReagents(sampleFrom.getReagents());
-                    if(!SampleTO.getTYPE_CULTURE().equals(getNewsampletype())) {
-                        sampleTo.setProperties(sampleFrom.getProperties());
+                    if (sampleFrom != null) {
+                        sampleTo.setReagents(sampleFrom.getReagents());
+                        if (!SampleTO.getTYPE_CULTURE().equals(getNewsampletype())) {
+                            sampleTo.setProperties(sampleFrom.getProperties());
+                        }
                     }
 
                     sampleTo.setContainerheader(containerTo);
@@ -175,36 +190,39 @@ public abstract class ContainerMapper {
                         throw new ProcessException(ex.getMessage());
                     }
                     addOtherReagents(containerFrom, sampleTo, k, n);
-                    SamplelineageTO lineage = new SamplelineageTO(sampleFrom, sampleTo);
-                    getLineages().add(lineage);
-                    addToContainerLineages(containerFrom, containerTo);
+                    if (sampleFrom != null) {
+                        SamplelineageTO lineage = new SamplelineageTO(sampleFrom, sampleTo);
+                        getLineages().add(lineage);
+                        addToContainerLineages(containerFrom, containerTo);
+                    }
                 }
                 processDestContainers = new ArrayList();
                 processSrcContainers = new ArrayList();
-                k=n;
+                k = n;
             }
         }
     }
-    
+
     public void populateEmptySamples() {
-        for(ContainerheaderTO container:getDestContainers()) {
+        for (ContainerheaderTO container : getDestContainers()) {
             container.initSamples();
         }
     }
-    
-    public void addOtherReagents(ContainerheaderTO container, SampleTO sample, int start, int end) {}
-    
+
+    public void addOtherReagents(ContainerheaderTO container, SampleTO sample, int start, int end) {
+    }
+
     public void addToContainerLineages(ContainerheaderTO containerFrom, ContainerheaderTO containerTo) {
-        for(Processobjectlineageinfo cl:clineages) {
-            if(cl.foundFromObject(containerFrom)) {
-                if(cl.foundToObject(containerTo)) {
+        for (Processobjectlineageinfo cl : clineages) {
+            if (cl.foundFromObject(containerFrom)) {
+                if (cl.foundToObject(containerTo)) {
                     return;
                 } else {
                     cl.addToTo(containerTo);
                     return;
                 }
             } else {
-                if(cl.foundToObject(containerTo)) {
+                if (cl.foundToObject(containerTo)) {
                     cl.addToFrom(containerFrom);
                     return;
                 }
@@ -215,91 +233,83 @@ public abstract class ContainerMapper {
         info.addToTo(containerTo);
         clineages.add(info);
     }
-    
+
     protected ContainerheaderTO findContainer(Collection<ContainerheaderTO> containers, String label) {
-        for(ContainerheaderTO c:containers) {
-            if(c.getBarcode().equals(label))
+        for (ContainerheaderTO c : containers) {
+            if (c.getBarcode().equals(label)) {
                 return c;
+            }
         }
         return null;
     }
-    
+
     protected ContainerheaderTO findContainer(Collection<ContainerheaderTO> containers, Collection<String> labels, String label) {
         Iterator iter = labels.iterator();
         Iterator iter2 = containers.iterator();
-        while(iter.hasNext()) {
-            String s = (String)iter.next();
-            ContainerheaderTO container = (ContainerheaderTO)iter2.next();
-            if(s.equals(label)) {
+        while (iter.hasNext()) {
+            String s = (String) iter.next();
+            ContainerheaderTO container = (ContainerheaderTO) iter2.next();
+            if (s.equals(label)) {
                 return container;
             }
         }
-        
+
         return null;
     }
-    
+
     public void addToContainer(ContainerheaderTO container, SampleTO sample, int pos) throws TransferException {
         container.setSample(sample, pos);
     }
-    
+
     public String getNewsampletype() {
         return newsampletype;
     }
-    
+
     public void setNewsampletype(String newsampletype) {
         this.newsampletype = newsampletype;
     }
-    
-    public String getNewsamplename() {
-        return newsamplename;
-    }
-    
-    public void setNewsamplename(String newsamplename) {
-        this.newsamplename = newsamplename;
-    }
-    
+
     public List<SamplelineageTO> getLineages() {
         return lineages;
     }
-    
+
     public void setLineages(List<SamplelineageTO> lineages) {
         this.lineages = lineages;
     }
-    
+
     public String getNewsampleform() {
         return newsampleform;
     }
-    
+
     public void setNewsampleform(String newsampleform) {
         this.newsampleform = newsampleform;
     }
-    
+
     public List<Processobjectlineageinfo> getClineages() {
         return clineages;
     }
-    
+
     public void setClineages(List<Processobjectlineageinfo> clineages) {
         this.clineages = clineages;
     }
-    
+
     public boolean getIsNumber() {
         return isIsNumber();
     }
-    
+
     public void setIsNumber(boolean isNumber) {
         this.isNumber = isNumber;
     }
-    
+
     public boolean isIsNumber() {
         return isNumber;
     }
-    
+
     public String getLocation() {
         return location;
     }
-    
+
     public void setLocation(String location) {
         this.location = location;
     }
-    
 }

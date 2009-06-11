@@ -62,6 +62,10 @@ public class LowNormController implements Serializable {
     public List<String> getControlList() {
         List<String> controls = new ArrayList<String>();
         controls.add(ReagentTO.NON_SPOTS);
+        controls.add(ReagentTO.WATER);
+        controls.add(ReagentTO.HUMAN_IGG);
+        controls.add(ReagentTO.MOUSE_IGG);
+        controls.add(ReagentTO.MASTERMIX);
         return controls;
     }
     

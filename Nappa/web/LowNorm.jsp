@@ -72,17 +72,10 @@
                     <h:selectManyCheckbox styleClass="text" value="#{lowNormBean.selectedControls}">
                             <f:selectItems value="#{lowNormBean.controls}"/>
                     </h:selectManyCheckbox>
-                    <h:outputText value=" "/>
-                    <h:panelGroup>
-                            <h:outputText styleClass="text" value="Calculate background using "/>
-                            <h:inputText styleClass="text" value="#{lowNormBean.percentile}"/>
-                            <h:outputText styleClass="text" value=" percentile"/>
-                   </h:panelGroup>
+                    
                    <h:selectBooleanCheckbox styleClass="text" value="#{lowNormBean.variation}"/>
                    <h:outputText styleClass="text" value="Normalize slide variation"/>
                    
-                   <h:selectBooleanCheckbox styleClass="text" value="#{lowNormBean.histogram}"/>
-                    <h:outputText styleClass="text" value="Generate histogram"/>
                 </h:panelGrid>
                 
                <h:outputLabel styleClass="prompt" value="Please name this process:" for="nameid"/>

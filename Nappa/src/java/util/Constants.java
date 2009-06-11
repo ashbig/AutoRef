@@ -18,7 +18,7 @@ public class Constants {
     public static final String REPOSITORY = "D:\\dev\\Test\\NappaRepository\\";
     public static final String MAPFILE = "Files\\";
     public static final String RESULTFILE = "Results\\";
-    public static final String DIR_RESULT_FILE = "NappaRepository\\Result\\";
+    public static final String DIR_RESULT_FILE = "Z:\\NappaRepository\\Result\\";
     public static final String TMP = REPOSITORY+"tmp\\";
     public static final String R_REPOSITORY = "D:/dev/Test/NappaRepository/";
     public static final String R_DIR_ROUTPUT = R_REPOSITORY+"Routput/";
@@ -40,7 +40,6 @@ public class Constants {
     public static final String R_OUTPUT_DIR = R_REPOSITORY+"output/";
     public static final String REPOSITORY_URL = "http://nappa.hms.harvard.edu/NappaRepository/";
     public static final String R_OUTPUT_URL = "output/";
- 
     **/
     
     //dev server
@@ -66,6 +65,7 @@ public class Constants {
     public static final String ID_GENENAME = "Gene Name";
     public static final String ID_GENBANK = "GenBank Accession";
     public static final String ID_GI = "GI";
+    public static final String NA = "NA";
     
     /** Creates a new instance of Constants */
     public Constants() {

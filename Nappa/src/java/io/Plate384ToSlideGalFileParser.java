@@ -21,12 +21,14 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
 import transfer.ProgramcontainerTO;
+import util.Constants;
 
 /**
  *
  * @author DZuo
  */
 public class Plate384ToSlideGalFileParser extends AbstractProgramMappingFileParser {
+    public static final String EMPTY = "empty";
     
     /** Creates a new instance of Plate384ToSlideGalFileParser */
     public Plate384ToSlideGalFileParser() {
@@ -180,11 +182,18 @@ public class Plate384ToSlideGalFileParser extends AbstractProgramMappingFilePars
                         int blockrow = Integer.parseInt(tokenizer.nextToken().trim());
                         int blockcol = Integer.parseInt(tokenizer.nextToken().trim());
                         String platewell = tokenizer.nextToken().trim();
-                        tokenizer = new StringTokenizer(platewell, "-");
-                        //int srcplatenum = Integer.parseInt(tokenizer.nextToken().trim());
-                        String srcplate = tokenizer.nextToken().trim();
-                        String srcwell = tokenizer.nextToken().trim();
-                        int srcposition = Well.convertWellToVPos(srcwell, Plate96To384ProgramMappingFileParser.DESTROWNUM);
+                        
+                        String srcplate = Constants.NA;
+                        String srcwell = Constants.NA;
+                        int srcposition = 0;
+                        
+                        if(!EMPTY.equals(platewell)) {
+                            tokenizer = new StringTokenizer(platewell, "-");
+                            //int srcplatenum = Integer.parseInt(tokenizer.nextToken().trim());
+                            srcplate = tokenizer.nextToken().trim();
+                            srcwell = tokenizer.nextToken().trim();
+                            srcposition = Well.convertWellToVPos(srcwell, Plate96To384ProgramMappingFileParser.DESTROWNUM);
+                        }
                         Block b = findBlock(blocks, blocknum);
                         if(b == null) {
                             throw new ProgramMappingFileParserException("Cannot find block mapping for block number: "+blocknum);
@@ -206,10 +215,16 @@ public class Plate384ToSlideGalFileParser extends AbstractProgramMappingFilePars
                         p.setDestblockposy(b.getPosy());
                         p.setSrcplate(srcplate);
                         p.setSrcpos(srcposition);
-                        p.setSrcwellx(srcwell.substring(0,1));
-                        p.setSrcwelly(srcwell.substring(1));
+                        if(srcwell.equals(Constants.NA)) {
+                            p.setSrcwellx(Constants.NA);
+                            p.setSrcwelly(Constants.NA);
+                        } else {
+                            p.setSrcwellx(srcwell.substring(0,1));
+                            p.setSrcwelly(srcwell.substring(1));
+                        }
                         mappings.add(p);
-                        addToContainers(getSrcContainers(), srcplate);
+                        if(!Constants.NA.equals(srcplate)) 
+                            addToContainers(getSrcContainers(), srcplate);
                         addToContainers(getDestContainers(), dlabel);
                     } catch (Exception ex) {
                         throw new ProgramMappingFileParserException("Error parsing mapping information.\n"+ex.getMessage());
@@ -218,11 +233,11 @@ public class Plate384ToSlideGalFileParser extends AbstractProgramMappingFilePars
             }
             in.close();
    
-            int blockrownum = Block.getBlockRow(blocks);
-   
+            int blockcolnum = Block.getBlockCol(blocks);
+            
             for(ProgrammappingTO m:mappings) {
                 Block b = findBlock(blocks, m.getDestblocknum());
-                m.calculateDestAbsolutePositions(b.getRowNumInBlock(),b.getColNumInBlock(),blockrownum);
+                m.calculateDestAbsolutePositions(b.getRowNumInBlock(),b.getColNumInBlock(),blockcolnum);
             }
         } catch (Exception ex) {
             throw new ProgramMappingFileParserException(ex.getMessage());
