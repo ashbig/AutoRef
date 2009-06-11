@@ -81,7 +81,7 @@ private enum CLONE_INSERT_INDEX_MODE
     // in plasmid import routine : hardcoded
     
   private String              m_plate_status = plasmid.coreobject.Container.FILLED;
-    private String              m_container_location=edu.harvard.med.hip.flex.infoimport.plasmidimport.coreobject.Location.FREEZER;
+    private String              m_container_location=edu.harvard.med.hip.flex.core.Location.FREEZER;
     
     private boolean isDebug = false;
     /** Creates a new instance of FLEXtoPLASMIDImporter */

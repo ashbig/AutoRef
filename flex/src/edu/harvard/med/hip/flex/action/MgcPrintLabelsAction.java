@@ -39,7 +39,7 @@ public class MgcPrintLabelsAction extends ResearcherAction{
         
         if (labels == null || labels.length == 0) 
         {
-            request.setAttribute("message", "No MGC plates have been selected");
+            request.setAttribute("message", "No plates have been selected");
              return mapping.findForward("success");
         }
         

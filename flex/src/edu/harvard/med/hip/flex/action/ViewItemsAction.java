@@ -27,6 +27,7 @@ import edu.harvard.med.hip.flex.Constants;
 import edu.harvard.med.hip.flex.workflow.*;
 import edu.harvard.med.hip.flex.infoimport.coreobjectsforimport.*;
 import edu.harvard.med.hip.flex.infoimport.*;
+import edu.harvard.med.hip.flex.core.growthcondition.*;
 import static edu.harvard.med.hip.flex.infoimport.ConstantsImport.PROCESS_NTYPE;
 
 import java.sql.*;
@@ -74,20 +75,51 @@ public class ViewItemsAction extends ResearcherAction {
         {
             if ( cur_process != null)
             {
+                       System.out.println(cur_process.toString());
+                  
                 switch (cur_process)
                 {
                     case VIEW_WORKFLOWS:
                     {
                         items = Workflow.getAllWorkflows();
+                        title="Currently Available Workflows ";
                          if( items != null && items.size() > 0 )
                          {
                             genericComparator =  new BeanClassComparator("name");
                             Collections.sort(items, genericComparator);
-                            request.setAttribute("workflows",items);
+                             request.setAttribute("workflows",items);
+                            }
+                       else
+                       {
+                         request.setAttribute(Constants.UI_TABLE_NO_DATA,"No workflows available");}
+                       request.setAttribute(Constants.UI_PAGE_TITLE,title); 
+                        return (mapping.findForward("view_items"));
+                    }
+                    case VIEW_BIOMATERIAL_CONDITION:
+                    case VIEW_BIOMATERIAL:
+                    case VIEW_BIOMATERIAL_COMBINATION :
+                    case VIEW_GROWTHCONDITION :
+                    case VIEW_VECTOR_GROWTH_CONDITON_TABLE:
+                    {
+                         items = getVeiwItems(cur_process);
+                         System.out.println("items "+items.size());
+                         if( items != null && items.size() > 0 )
+                         {
+                            genericComparator =  new BeanClassComparator("name");
+                            Collections.sort(items, genericComparator);
+                            request.setAttribute("display_items",items);
+                              System.out.println("items "+items.size());
+                      
                          }
                        else
-                         request.setAttribute(Constants.UI_TABLE_NO_DATA,"No workflows available");
-                        title="Currently Available Workflows ";
+                       {
+                            request.setAttribute(Constants.UI_TABLE_NO_DATA,cur_process.getNoItemsTitle());
+                       }
+                       title=cur_process.getTitle();
+                       request.setAttribute(Constants.UI_PAGE_TITLE,cur_process.getTitle() );
+                       request.setAttribute("forwardName", forwardName);
+                       return (mapping.findForward("view_growthcondition_items"));
+            
                     }
                 }
             }
@@ -168,6 +200,57 @@ public class ViewItemsAction extends ResearcherAction {
         }
     }
     
-   
+   public static List             getVeiwItems(PROCESS_NTYPE cur_process)
+           throws Exception
+   {
+       List items = null;
+       try
+       {
+       switch (cur_process)
+       {
+           case VIEW_BIOMATERIAL:
+           {
+               BioMaterial bm = new BioMaterial();
+               return bm.findAll();
+           }
+           case VIEW_BIOMATERIAL_CONDITION:
+           {
+               BioMaterialCondition bc = new BioMaterialCondition();
+               List<BioMaterialCondition> ll =  bc.findAll();
+                return ll;
+           }
+            case VIEW_BIOMATERIAL_COMBINATION :
+            {
+                BioMaterialCombination bmc = new BioMaterialCombination();
+                return bmc.findAll();
+            }
+            case VIEW_GROWTHCONDITION :
+            {
+                GrowthCondition gc = new GrowthCondition();
+                return gc.findAll();
+            }
+            case VIEW_VECTOR_GROWTH_CONDITON_TABLE:
+            default: return null;
+       }
+       }catch(Exception e)
+       {
+           System.out.println("Cannot get items"+e.getMessage());
+           throw new Exception ("Cannot get items"+e.getMessage());
+       }
+        
+   }
     
+   
+   public static void main(String args[]) 
+     {
+       try
+       {
+   
+   List      gg=       getVeiwItems(PROCESS_NTYPE.VIEW_BIOMATERIAL_CONDITION);
+   System.exit(0);
+       }catch(Exception e)
+       {
+           ;
+       }
+   }
 }

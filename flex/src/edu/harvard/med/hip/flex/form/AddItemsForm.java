@@ -23,10 +23,7 @@ import org.apache.struts.upload.*;
 
 import static edu.harvard.med.hip.flex.infoimport.ConstantsImport.PROCESS_NTYPE;
 
-/**
- *
- * @author  dzuo
- * @version 
+/* 
  */
 public class AddItemsForm extends ProjectWorkflowForm 
 {
@@ -77,6 +74,7 @@ public class AddItemsForm extends ProjectWorkflowForm
             case IMPORT_LINKERS :
             case IMPORT_INTO_NAMESTABLE:
             case IMPORT_CLONING_STRATEGIES:
+            case FLEX_TABLE_POPULATE:
             {
                  {
                     if (inputFile.getFileName() == null || inputFile.getFileName().trim().length() < 1)

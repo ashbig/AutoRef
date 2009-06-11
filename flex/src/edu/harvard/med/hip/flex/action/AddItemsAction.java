@@ -95,9 +95,11 @@ public class AddItemsAction extends ResearcherAction {
                  case IMPORT_CLONING_STRATEGIES_INPUT:
                  case     PUT_PLATES_FOR_SEQUENCING_INPUT:
                  case    PUT_PLATES_IN_PIPELINE_INPUT:
+                 case    FLEX_TABLE_POPULATE_INPUT:
                  {
-                     return (mapping.findForward("add_items"));
+                      return (mapping.findForward("add_items"));
                  }
+                
               }
              ConstantsImport.fillInNames();
              imp.setProcessType(cur_process);
@@ -143,6 +145,13 @@ public class AddItemsAction extends ResearcherAction {
                         imp.run();
                         return (mapping.findForward("confirm_add_items"));
                  }
+                  case FLEX_TABLE_POPULATE:
+                  {
+                      imp.setProcessType( PROCESS_NTYPE.FLEX_TABLE_POPULATE ) ;
+                      imp.setInputData(FileStructure.STR_FILE_TYPE_FLEX_TABLE_POPULATE, inputFile.getInputStream());
+                      imp.run();
+                      return (mapping.findForward("confirm_add_items"));
+                }
                 case  PUT_PLATES_FOR_SEQUENCING:
                 case    PUT_PLATES_IN_PIPELINE:
                  {
@@ -325,6 +334,8 @@ public class AddItemsAction extends ResearcherAction {
         return labels;
         
   }
+  
+  
 }
 
 

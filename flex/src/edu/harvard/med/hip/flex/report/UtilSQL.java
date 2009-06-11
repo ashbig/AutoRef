@@ -125,7 +125,7 @@ public class UtilSQL
       }
        
        
-        protected static  List<String[]>       getDataFromDatabase(String sql, int number_columns_per_item)
+        public static  List<String[]>       getDataFromDatabase(String sql, int number_columns_per_item)
         throws FlexDatabaseException
       {
             CachedRowSet rs =null;
@@ -159,7 +159,7 @@ public class UtilSQL
      1 - item type PublicInfo
      */
         
-     protected static  HashMap <String, ArrayList<PublicInfoItem> >       
+     public static  HashMap <String, ArrayList<PublicInfoItem> >       
                 getNamesFromDatabase(String table_name , String key_column, String sql_items)
                 throws FlexDatabaseException
       {

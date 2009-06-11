@@ -51,14 +51,14 @@ public class NorgenRearrayForm  extends CreateProcessPlateForm{
                                  HttpServletRequest request) {
                                     
         ActionErrors errors = new ActionErrors();
-
         if ((researcherBarcode == null) || (researcherBarcode.trim().length() < 1))
-            errors.add("researcherBarcode", new ActionError("error.researcherBarcode.required"));
+        {errors.add("researcherBarcode", new ActionError("error.researcherBarcode.required"));}
 
         if (Protocol.POPULATE_CONTAINERS_FROM_NORGEN_LOG_FILE.equals(protocolname) && 
              (
              logFile == null || logFile.getFileName().trim().length()<1 || logFile.getFileSize() == 0))
-            errors.add("logFile", new ActionError("error.colonylogfile.invalid"));
+        { errors.add("logFile", new ActionError("error.colonylogfile.invalid"));
+        };
 
         
         return errors;

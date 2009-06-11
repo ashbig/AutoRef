@@ -91,13 +91,13 @@ public  void setPlatesetid  (Integer v){   m_platesetid = v;}
     public void insert( ) throws Exception
      {
          Session session = HibernateSessionFactory.getSessionFactoryFLEX().getCurrentSession();
-          System.out.println("Cannot get session");
+        //  System.out.println("Cannot get session");
           session.beginTransaction();
-          System.out.println("Cannot begin");
+        //  System.out.println("Cannot begin");
             session.save(this);
-            System.out.println("Cannot save");
+        //    System.out.println("Cannot save");
             session.getTransaction().commit();
-            System.out.println("Cannot commit");
+       //     System.out.println("Cannot commit");
         
      }
     
@@ -118,14 +118,15 @@ public  void setPlatesetid  (Integer v){   m_platesetid = v;}
          int processid=18;
          try
          {
-             
+             Session session = HibernateSessionFactory.getSessionFactoryFLEX().getCurrentSession();
+        
        //      edu.harvard.med.hip.flex.action.AddItemsAction.putPlatesForSequencing( containers, 
        //     "sequencing_facility_name");
           edu.harvard.med.hip.flex.action.AddItemsAction.putPlatesInProcessingPipeline(
                    containers,  project_id , workflow_id, processid);
          } catch(Exception e)
           {
-              
+              System.out.println(e.getMessage());
           }
          System.exit(0);
         

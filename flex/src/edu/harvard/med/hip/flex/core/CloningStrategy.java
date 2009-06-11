@@ -235,7 +235,7 @@ public class CloningStrategy {
     
     }
     
-    public static List<CloningStrategy> getAllCloningStrategies() 
+    public static List<CloningStrategy> getAllCloningStrategies() throws Exception
     {
         String sql = "select strategyid, strategyname, vectorname, linkerid_5p, "
 +"(select linkername from linker where linkerid=linkerid_5p) as linker_5p_name, linkerid_3p, "
@@ -244,7 +244,7 @@ public class CloningStrategy {
         return getAllCloningStrategies(sql, false,false);
     }
     
-    public static List<CloningStrategy> getAllCloningStrategies(boolean isLinkerSequence) 
+    public static List<CloningStrategy> getAllCloningStrategies(boolean isLinkerSequence) throws Exception
     {
         String sql = "select strategyid, strategyname, vectorname, linkerid_5p, "
 +"(select linkername from linker where linkerid=linkerid_5p) as linker_5p_name,(select linkersequence from linker where linkerid=linkerid_5p) as linker_5p_sequence, linkerid_3p, "
@@ -252,7 +252,8 @@ public class CloningStrategy {
  +" from cloningstrategy order by strategyid";
         return getAllCloningStrategies(sql, isLinkerSequence, false);
     }
-     public static List<CloningStrategy> getAllCloningStrategies(boolean isLinkerSequence,boolean isVectorDetails) 
+     public static List<CloningStrategy> getAllCloningStrategies(boolean isLinkerSequence,
+             boolean isVectorDetails) throws Exception
     {
         String sql = "select strategyid, strategyname, vectorname, linkerid_5p, "
 +"(select linkername from linker where linkerid=linkerid_5p) as linker_5p_name,(select linkersequence from linker where linkerid=linkerid_5p) as linker_5p_sequence, linkerid_3p, "
@@ -263,7 +264,8 @@ public class CloningStrategy {
     
     
     
-     public static List<CloningStrategy> getAllCloningStrategies(String sql, boolean isLinkerSequence, boolean isVectorDetails) 
+     public static List<CloningStrategy> getAllCloningStrategies(String sql,
+             boolean isLinkerSequence, boolean isVectorDetails) throws Exception
     {
        
         List<CloningStrategy> l = new ArrayList<CloningStrategy>();
@@ -295,6 +297,7 @@ public class CloningStrategy {
             }
         } catch (Exception ex) {
             System.out.println(ex);
+            throw new Exception ("Can not get cloning strategies: "+ex.getMessage());
         } finally {
             DatabaseTransaction.closeResultSet(rs);
         }

@@ -135,13 +135,18 @@ public class GeneralReport extends ReportDefinition
                     case LINKER_5P_NAME :
                     case LINKER_5P_SEQUENCE :
                     case STRATEGY_NAME:     {  isCloneInfo= true ;isCloningStrategy = true;     break;                    }
+                  
+                  
                   case WELL_NUMBER : case WELL_NAME: 
                   case SAMPLE_ID: case SAMPLE_TYPE  :
                   
                   case PLATE_LABEL:        { isPlateLabel = true; break;}
+                  
                   case USER_PLATE_LABEL:                  {isUserPlateLabel = true ; break;}
+                  
                   case    CLONE_ID: case CLONE_STATUS:               {isCloneInfo= true ; break;}
-                   case  CLONE_NAMES  :                  {isCloneInfo= true ;isCloneNames= true ; break;}
+                   
+                  case  CLONE_NAMES  :                  {isCloneInfo= true ;isCloneNames= true ; break;}
                   case  CLONE_AUTHOR    :                  {isCloneInfo= true ;isCloneAuthors= true ; break;}
                   case  CLONE_PUBLICATION    :              {isCloneInfo= true ;isClonePublications= true ; break;}
                     case    FLEXSEQUENCE_ID:
