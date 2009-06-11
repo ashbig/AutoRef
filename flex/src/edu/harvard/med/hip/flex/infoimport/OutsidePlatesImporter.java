@@ -1013,7 +1013,9 @@ public String getTitle() {        return "Upload of information for third-party 
                 {
                     species_names.add(sequence.getSpesies());
                     if (sequence.getSpesies()==null)
+                    {
                         System.out.println(sequence.getId());
+                    }
                 }
                 for (int p_count = 0; p_count < sequence.getPublicInfo(). size(); p_count++)
                 {

@@ -47,7 +47,9 @@ public class AceToFlexImporter extends ImportRunner
          Connection  ace_connection = null;
       
          ArrayList  clone_ids_for_sql =   prepareItemsListForSQL();
-        // System.out.println(clone_ids_for_sql.size());
+         // get all clones ids from FLEX that have same master cloneid that allows 
+         // to transfer sequences for clones that were sequences as expression for master and vs
+       // System.out.println(clone_ids_for_sql.size());
          if (clone_ids_for_sql == null || clone_ids_for_sql.size() < 1)
          {
              m_error_messages.add("No clone submitted for transfer.");
@@ -64,7 +66,9 @@ public class AceToFlexImporter extends ImportRunner
                     edu.harvard.med.hip.flex.util.FlexProperties.getInstance().getProperty("ACE_PASSWORD")).requestConnection();
           
             /* */FlexProperties sysProps = StaticPropertyClassFactory.makePropertyClass("FlexProperties");
-       
+        String url=sysProps.getInstance().getProperty("ACE_URL");
+        String uname= sysProps.getInstance().getProperty("ACE_USERNAME");
+        String upassword=sysProps.getInstance().getProperty("ACE_PASSWORD");
              ace_connection = DatabaseTransactionLocal.getInstance(
                     sysProps.getInstance().getProperty("ACE_URL") , 
                     sysProps.getInstance().getProperty("ACE_USERNAME"), 
@@ -79,6 +83,8 @@ public class AceToFlexImporter extends ImportRunner
         }
         try
         {
+              clone_ids_for_sql = getAllClonesBasedOnMAsterCloneID(flex_connection,clone_ids_for_sql);
+        
              for (int i_group_count = 0; i_group_count < clone_ids_for_sql.size(); i_group_count++)
              {
                  //get info from ACE 
@@ -101,6 +107,40 @@ public class AceToFlexImporter extends ImportRunner
            
     }
     
+    
+    private ArrayList        getAllClonesBasedOnMAsterCloneID(Connection flex_connection,ArrayList clone_ids_for_sql)
+            throws Exception
+    {
+        ArrayList clones_ids = new ArrayList();
+        StringBuffer temp=new StringBuffer();
+        String sql="select  cloneid from clones where mastercloneid in ("
++" select mastercloneid from clones where cloneid in  (";
+         CachedRowSet rs = null;
+        try
+        {
+             for (int i_group_count = 0; i_group_count < clone_ids_for_sql.size(); i_group_count++)
+             {
+                 rs = DatabaseTransaction.executeQuery(sql+clone_ids_for_sql.get(i_group_count)+"))",flex_connection);
+            
+                while(rs.next())
+                {
+                    temp.append(rs.getInt("cloneid") +" ");
+                }
+             }
+              
+            clones_ids= prepareItemsListForSQL(edu.harvard.med.hip.flex.infoimport.ConstantsImport.ITEM_TYPE.ITEM_TYPE_CLONEID, temp.toString(), 100);
+            return clones_ids;
+        
+        } catch (Exception sqlE)
+        {
+            System.out.println(sqlE.getMessage());
+            throw new FlexDatabaseException("Error occured while getting clone ids from FLEX /SQL: "+sql);
+        } finally
+        {
+            DatabaseTransactionLocal.closeResultSet(rs);
+        }
+        
+    }
     private ArrayList        getDataFromAce(String clone_ids_for_sql,Connection ace_connection)throws Exception
     {
         ArrayList clones_data = new ArrayList();
@@ -593,7 +633,8 @@ public class AceToFlexImporter extends ImportRunner
         {
             
         ImportRunner runner = new AceToFlexImporter();
-        runner.setInputData(ConstantsImport.ITEM_TYPE.ITEM_TYPE_CLONEID, " 268620 268622 268624   " );     //  runner.setContainerLabels(master_container_labels );
+        String ids="274254 259094 274355 259036 258790 274251 274253 274354 274249 274349 274338 274337 274247 274258 274242 243995 274325 274233 274326 274229 274323 258715 274243 274342 274248 241903 274324 258803 274257 274331 274302 258816 258817 274245 274228 274244 274329 274265 274351 274353 274230 274357 274350 274237 274236 274312 253199 274240 274264 274241 241091 274232 274347 274260 274234 253022 274335 274348 274334 274336 274327 274252 274343 274332 247284 274345 274255 ";
+        runner.setInputData(ConstantsImport.ITEM_TYPE.ITEM_TYPE_CLONEID, ids);     //  runner.setContainerLabels(master_container_labels );
         runner.setProcessType( ConstantsImport.PROCESS_NTYPE.TRANSFER_ACE_TO_FLEX );
        // Spec spec_f = Spec.getSpecById(91, Spec.FULL_SEQ_SPEC_INT);
         User user = new User("htaycher", "hip_informatics@hms.harvard.edu", "");

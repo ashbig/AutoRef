@@ -20,7 +20,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import org.apache.xerces.parsers.SAXParser;
 import static edu.harvard.med.hip.flex.infoimport.ConstantsImport.ITEM_TYPE;
 import static edu.harvard.med.hip.flex.infoimport.ConstantsImport.PROCESS_NTYPE;
-
+import  edu.harvard.med.hip.flex.infoimport.plasmidimport.*;
 
 
 public abstract class ImportRunner implements Runnable
@@ -29,6 +29,7 @@ public abstract class ImportRunner implements Runnable
        //------------------------------------------------------------------
     protected ArrayList<String>  m_error_messages = null;
      protected ArrayList<String>  m_process_messages = null;
+      protected ArrayList<File>  m_attached_files = null;
    
     protected String      m_items = null;
     protected String      m_processed_items = null;
@@ -39,7 +40,7 @@ public abstract class ImportRunner implements Runnable
     protected Hashtable     m_file_input_data = null;
     //private   String        m_process_title = null;
     private   String        m_input_files_data_schema = null;
-    private   InputStream   m_instream_input_files_data_schema = null;
+    protected   InputStream   m_instream_input_files_data_schema = null;
     
     private     Connection  m_conn = null;
     /** Creates a new instance of ProcessRunner */
@@ -47,12 +48,15 @@ public abstract class ImportRunner implements Runnable
     {
         m_error_messages = new ArrayList();
         m_process_messages = new ArrayList();
+        m_attached_files = new ArrayList<File>(15);
     }
     public  void        setUser(User v){m_user=v;}
     public  void        setResearcher( Researcher v)       { m_researcher = v;}
     public  void        setProcessType(PROCESS_NTYPE process_id)    {        m_process_type = process_id;    }
     public void         setConnection(Connection conn){m_conn = conn;}
     public Connection         getConnection( ){ return m_conn ;}
+    public  abstract String   getTitle();
+    
     
     public void       setInputData(ITEM_TYPE type,String item_ids)
      {
@@ -93,7 +97,13 @@ public abstract class ImportRunner implements Runnable
                case IMPORT_INTO_NAMESTABLE : 
               case  IMPORT_CLONING_STRATEGIES:
               case    PUT_PLATES_IN_PIPELINE:
+              case FLEX_TABLE_POPULATE:
+              case CHANGE_CLONE_STATUS:
                     {((ItemsImporter)this).run_process(); break;}
+              case TRANSFER_FLEX_TO_PLASMID_IMPORT:
+         case TRANSFER_FLEX_TO_PLASMID_CREATE_FILES:
+         case TRANSFER_FLEX_TO_PLASMID_DIRECT_IMPORT:
+         {((FLEXtoPLASMIDImporter)this).run_process(); break;}
              
           }
      }
@@ -216,8 +226,13 @@ public abstract class ImportRunner implements Runnable
                 System.out.println(msg);
                 Mailer.sendMessage(m_user.getUserEmail(), from, from, title, msg);  
             } 
+            msg="Request for "+this.getTitle()+" report.\n";
+            msg+="Process finished.Please find attached report file for your request.\n";
+            msg+="Request item's type: "+m_items_type.getTitle() +"\n";
+            msg+="Requested items: "+m_items +"\n\n";
+
             msg = Algorithms.convertStringArrayToString(m_process_messages,"\n");
-            Mailer.sendMessage(m_user.getUserEmail(), from, from, title, msg);  
+            Mailer.sendMessage(m_user.getUserEmail(), from, from, title, msg,m_attached_files);  
          
          }
          catch(Exception e)         {         }
@@ -255,12 +270,23 @@ public abstract class ImportRunner implements Runnable
    
      protected boolean checkNamesInDatabase(ArrayList cur_names, Hashtable names )
     {
+         try
+            { System.out.println(names.values().toString());
         for (int i_count = 0; i_count < cur_names.size(); i_count++)
         {
+            System.out.println( (String)cur_names.get(i_count));
+            
             if (names.get( (String)cur_names.get(i_count)) == null)
                 return false;
+            
         }
         return true;
+         }
+        catch(Exception e)
+        {
+            System.out.println(e.getMessage());
+             return false;
+        }
     
     }
      public static File writeFile(Object[] fileData, String file_name, String end_of_line)

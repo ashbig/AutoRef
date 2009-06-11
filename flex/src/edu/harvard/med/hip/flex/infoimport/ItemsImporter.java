@@ -19,15 +19,34 @@ import edu.harvard.med.hip.flex.infoimport.file_mapping.*;
 
 import static edu.harvard.med.hip.flex.infoimport.ConstantsImport.ITEM_TYPE;
 import static edu.harvard.med.hip.flex.infoimport.ConstantsImport.PROCESS_NTYPE;
+import edu.harvard.med.hip.flex.infoimport.plasmidimport.databasemanipulation.*;
+import static edu.harvard.med.hip.flex.infoimport.plasmidimport.PlasmidImporterDefinitions.PLASMID_TRANSFER_CLONE_STATUS;
+import edu.harvard.med.hip.flex.infoimport.file_mapping.*;
 /**
  *
  * @author htaycher
  */
 public class ItemsImporter  extends ImportRunner
 {
+    private boolean m_isWriteLogFile = false;
+    private PLASMID_TRANSFER_CLONE_STATUS  m_clone_status = PLASMID_TRANSFER_CLONE_STATUS.NOT_READY_FOR_TRANSFER;
     
-    
-    
+    public void         isWriteLogFile(boolean v){ m_isWriteLogFile=v;}
+    public void         setClonePlasmidTransferStatus(PLASMID_TRANSFER_CLONE_STATUS v){ m_clone_status=v;}
+    public String       getTitle()
+    {
+         switch (m_process_type)
+            {
+                case IMPORT_VECTORS: { return "Import new vector(s)";}
+                case IMPORT_LINKERS: {return "Import new linker(s)";}
+                case IMPORT_INTO_NAMESTABLE:{ return "Import new name type(s)";}
+                case IMPORT_CLONING_STRATEGIES:{ return "Import cloning strategy";}
+                 case FLEX_TABLE_POPULATE:{return "Add records to the table";}
+                 case CHANGE_CLONE_STATUS:
+                 { return "Change clone status";                 }
+             default: return "Unknown process"; 
+            }
+    }
     public void run_process() 
     {
         Connection conn = null;
@@ -44,7 +63,11 @@ public class ItemsImporter  extends ImportRunner
                 case IMPORT_LINKERS: {uploadLinkers(conn);break;}
                 case IMPORT_INTO_NAMESTABLE:{ uploadIntoNameTable(conn );break;}
                 case IMPORT_CLONING_STRATEGIES:{ uploadCloningStrategies(conn);break;}
-              
+                 case FLEX_TABLE_POPULATE:{uploadDataIntoTable(conn);break;}
+                 case CHANGE_CLONE_STATUS:
+                 {
+                     changeCloneStatus(conn);break;
+                 }
             }
               
         }
@@ -52,7 +75,7 @@ public class ItemsImporter  extends ImportRunner
         {
              DatabaseTransaction.rollback(conn);
              System.out.println(e.getMessage());
-             m_error_messages.add("Cannot upload new objects from files.\n"+e.getMessage());
+             m_error_messages.add("Cannot upload new objects.\n"+e.getMessage());
         }
         finally
          {
@@ -61,7 +84,23 @@ public class ItemsImporter  extends ImportRunner
         
     }
     
-    
+    private void changeCloneStatus(Connection conn) throws Exception
+    {
+        ArrayList sql_items = this.prepareItemsListForSQL(150);
+        String temp;
+        String sql = "update clones set ISREADYFORPLASMID="+m_clone_status.getIntValue()
+                +" where cloneid in(";
+        for (int cc = 0; cc < sql_items.size(); cc++)
+        {
+            temp = (String)sql_items.get(cc);
+             DatabaseTransaction.executeUpdate(sql+temp+")", conn);
+             if (m_isWriteLogFile)
+                 m_process_messages.add("Setting clone status to "+
+                       m_clone_status.toString()  +" for clones:"+ temp);
+        }
+           DatabaseTransaction.commit(conn);
+         
+    }
     private void uploadVectors(Connection conn) throws Exception
     {
          // read in data mapping schema
@@ -174,7 +213,15 @@ public class ItemsImporter  extends ImportRunner
             }
           }
     
-     
+     private void   uploadDataIntoTable(Connection conn)throws Exception
+     {
+          InputStream input = (InputStream) m_file_input_data.get(ConstantsImport.FILE_TYPE[FileStructure.FILE_TYPE_FLEX_TABLE_POPULATE]);
+          DatabaseTable dt = new DatabaseTable(); 
+          dt.insertNewData(conn, input );
+            DatabaseTransaction.commit(conn);
+           
+          
+     }
      private void uploadIntoNameTable(Connection conn)throws Exception
      {
           String table_name = null;
@@ -304,7 +351,7 @@ public class ItemsImporter  extends ImportRunner
           }
     
     
-    private    ArrayList     getCloningStrategiesHash()
+    private    ArrayList     getCloningStrategiesHash()throws Exception
     {
          Hashtable result = new Hashtable();
          ArrayList names = new ArrayList();

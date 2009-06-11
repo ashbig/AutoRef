@@ -14,6 +14,7 @@ public class FileForTransferDefinition {
     public final static String FL_HEADER="_HEADER";									
 public final static String FL_COLUMN_HEADERS="_COLUMN_HEADERS";
 public final static String FL_FILE_NAME="_FILE_NAME";
+public final static String LINE_SEPARATOR      = System.getProperty("line.separator");
 
     private String m_header;
     private PlasmIDFileType m_file_type;

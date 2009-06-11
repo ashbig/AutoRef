@@ -44,40 +44,60 @@ public class FlexPlasmidMap {
     public void     setValue1(String v){ m_value1=v;}
     public void     setValue2(String v){m_value2=v;}
     
+     public List<FlexPlasmidMap> getAllMapItems(Connection conn, IMPORT_ACTIONS cur_process )throws Exception
+    {
+         return   getAllMapItems( conn,  cur_process ,  false);
     
-    public List<FlexPlasmidMap> getAllMapItems(Connection conn, IMPORT_ACTIONS cur_process )throws Exception
+     }
+    public List<FlexPlasmidMap> getAllMapItems(Connection conn, IMPORT_ACTIONS cur_process , boolean internalCall)throws Exception
     {
             String sql=null;
            switch(cur_process)
            {
-            case CONNECT_PLASMID_FLEX_VECTOR_NAMES:
-            case CONNECT_PLASMID_FLEX_AUTHOR:
-            case CONNECT_PLASMID_FLEX_AUTHOR_TYPE:
-                 case CONNECT_PLASMID_FLEX_NAMETYPE:
-               case CONNECT_PLASMID_FLEX_CLONEPROPERTY_NAMETYPE:
-               case CONNECT_PLASMID_FLEX_CLONE_NAMETYPE:
+            case CONNECT_PLASMID_FLEX_VECTOR_NAMES_SUBMITTED:
+            case CONNECT_PLASMID_FLEX_AUTHOR_SUBMITTED:
+            case CONNECT_PLASMID_FLEX_AUTHOR_TYPE_SUBMITTED:
+                 
+               case CONNECT_PLASMID_FLEX_CLONEPROPERTY_NAMETYPE_SUBMITTED:
+               case CONNECT_PLASMID_FLEX_CLONE_NAMETYPE_SUBMITTED:
             {
                 sql="select flexid, flexname, plasmidId, plasmidname from FLEX_PLASMID_DEFINITION_MAP "
-                        +" where maptype='"+cur_process.getNextProcess().toString()+"' order by flexname";
+                        +" where maptype='"+cur_process.toString()+"' order by flexname";
                 break;
             }
-            case CONNECT_PLASMID_FLEX_SPECIES:
+            case CONNECT_PLASMID_FLEX_SPECIES_SUBMITTED:
             {
                 sql="select  flexid,flexname   ,plasmidId, value1, plasmidname || ' (' || value1 || ')' "
                         +" as plasmidname from FLEX_PLASMID_DEFINITION_MAP where maptype='"
-                        +cur_process.getNextProcess().toString()+"' order by flexname";
-
+                        +cur_process.toString()+"' order by flexname";
+                 if ( internalCall)
+                 {sql="select  flexid,flexname   ,plasmidId, value1, plasmidname  "
+                        +"  from FLEX_PLASMID_DEFINITION_MAP where maptype='"
+                        +cur_process.toString()+"' order by flexname";}
                  break;
             }
+               case CONNECT_PLASMID_FLEX_NAMETYPE_SUBMITTED:
+               {
+                    sql="select flexid, flexname, plasmidId, plasmidname from FLEX_PLASMID_DEFINITION_MAP "
+                        +" where maptype='"+cur_process.toString()+"' order by flexname";
+                    if ( internalCall)
+                   {sql="select  flexid,flexname   ,plasmidId, plasmidname, "
+                            + " (select url from nametype where nametype=flexname ) as value1   "
+                        +"   from FLEX_PLASMID_DEFINITION_MAP where maptype='"
+                        +cur_process.toString()+"' order by flexname";}
+                    
+                    break;
+               }
            
         }
            
-        if (sql==null) return null;
-         return getAllMapItems( conn,  sql, cur_process );
+        if (sql==null) return new ArrayList<FlexPlasmidMap>();
+         return getAllMapItems( conn,  sql, cur_process,internalCall );
     }
             
             
-    private   List<FlexPlasmidMap> getAllMapItems(Connection conn, String sql, IMPORT_ACTIONS cur_process )throws Exception
+    private   List<FlexPlasmidMap> getAllMapItems(Connection conn, String sql,
+            IMPORT_ACTIONS cur_process ,boolean internalCall)throws Exception
     {
           List<FlexPlasmidMap> infos = new ArrayList<FlexPlasmidMap>();
          ResultSet rs = null;FlexPlasmidMap map_item;
@@ -91,15 +111,23 @@ public class FlexPlasmidMap {
                             rs.getString("flexname"),
                             rs.getInt("plasmidid"),
                             rs.getString("plasmidname"));
-                if ( cur_process ==  IMPORT_ACTIONS.CONNECT_PLASMID_FLEX_SPECIES   )
+          
+                if (internalCall)
                 {
-                    map_item.setValue1(rs.getString("value1"));
+                switch ( cur_process )
+                {
+                    case CONNECT_PLASMID_FLEX_SPECIES_SUBMITTED:
+                    case CONNECT_PLASMID_FLEX_NAMETYPE_SUBMITTED:
+                    {
+                        map_item.setValue1(rs.getString("value1"));
+                    }}
                 }
                  infos.add(map_item);
                 
             }
              return infos;
         } catch (Exception ex) {
+            System.out.println("err "+ex.getMessage());
              throw new Exception ("Cannot get mapping information "+sql);
             
         } finally

@@ -2,15 +2,17 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package edu.harvard.med.hip.flex.infoimport.plasmidimport.filemanipulation;
+
+import edu.harvard.med.hip.flex.util.*;
+
 
 /**
  *
  * @author htaycher
  */
 
-import edu.harvard.med.hip.flex.util.*;
+
 import java.io.*;
 import java.util.*;
 /**
@@ -21,11 +23,12 @@ public class PlasmidProperties  extends FlexProperties
 {
     private HashMap <String, FileForTransferDefinition >     m_files ;
     
-    public final static String REPORT_COLUMN_ORDER_TYPE_FILE ="config/PlasmidSubmission.properties";
+    public final static String PLASMID_TRANSFER_FILENAMES_FILE ="config/PlasmidSubmission.properties";
 
-    private static PlasmidProperties pInstance = null;
-     protected InputStream getInputStream() {
-        return (Thread.currentThread().getContextClassLoader().getResourceAsStream(REPORT_COLUMN_ORDER_TYPE_FILE));
+     private static PlasmidProperties plasmidInstance = null;
+    
+    protected InputStream getInputStream() {
+        return (Thread.currentThread().getContextClassLoader().getResourceAsStream(PLASMID_TRANSFER_FILENAMES_FILE));
     }
     
     /**
@@ -34,13 +37,11 @@ public class PlasmidProperties  extends FlexProperties
      * @return the single SystemProperites instance.
      */
     public static PlasmidProperties getInstance() {
-        if(pInstance == null) {
-            pInstance = new PlasmidProperties();
-            
+        if(plasmidInstance == null) {
+            plasmidInstance = new PlasmidProperties();
         }
-        return pInstance;
+        return plasmidInstance;
     } 
-    
     public HashMap<String, FileForTransferDefinition >           getFilesProperties(){ return m_files;}
     public FileForTransferDefinition            getFilePropertiesByType(String v){ return (FileForTransferDefinition)m_files.get(v);}
     
@@ -56,9 +57,13 @@ public class PlasmidProperties  extends FlexProperties
                 elementList.add((String)keys.nextElement());
         }
         Collections.sort(elementList);
-        String pr_value;String file_key;FileForTransferDefinition fdef;
+         String pr_value="";String file_key;FileForTransferDefinition fdef;
+     
+            
         for(String p_key : elementList)
         {
+               try
+                {
             pr_value = PlasmidProperties.getInstance().getProperty(p_key);
             file_key = p_key.substring(0, p_key.indexOf("_"));
             if ( m_files.get(file_key) == null )
@@ -74,7 +79,12 @@ public class PlasmidProperties  extends FlexProperties
             {fdef.setFileName(pr_value);}
             else if  ( p_key.equalsIgnoreCase( file_key+FileForTransferDefinition.FL_COLUMN_HEADERS))
             {fdef.setColumnNames(pr_value);}
+             }catch(Exception e)
+            {
+                System.out.println(p_key+" "+pr_value);
+            }
         }
+       
 
     }
     

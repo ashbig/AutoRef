@@ -27,7 +27,7 @@ public class PlasmidImporterDefinitions
         PLASMID_DICTIONARY_TABLE_SHOW_CONTENT ("PLASMID dictionary table content",3, "PLASMID dictionary table content"),
         PLASMID_DICTIONARY_TABLE_STRUCTURE ("PLASMID dictionary table structure",3, "PLASMID dictionary table structure"),
         
-        
+        DELETE_MAPPING_ITEM("Delete mapping item",3,"Delete mapping item"),
         
         CONNECT_PLASMID_FLEX_VECTOR_NAMES ("FLEX should be able to map vector definition in FLEX database to the one in PLASMID database. It is known that historicly some vector was named different. ",3, "Map vector  definitions between FLEX and PLAMID"),
        CONNECT_PLASMID_FLEX_AUTHOR ("FLEX should know ",3, "Map author  definitions between FLEX and PLAMID"),
@@ -101,6 +101,21 @@ public class PlasmidImporterDefinitions
                  default: return null;
              }
             }
+            
+              public String   getMapTypeAsString()
+           {
+             switch(this)
+             {
+                 case  CONNECT_PLASMID_FLEX_VECTOR_NAMES_SUBMITTED: return "Vector mapping: ";
+                 case   CONNECT_PLASMID_FLEX_AUTHOR_SUBMITTED: return "Author mapping: ";
+                 case   CONNECT_PLASMID_FLEX_AUTHOR_TYPE_SUBMITTED: return "Author type mapping: ";
+                 case   CONNECT_PLASMID_FLEX_SPECIES_SUBMITTED: return "Species mapping: ";
+                 case   CONNECT_PLASMID_FLEX_NAMETYPE_SUBMITTED: return "Name type mapping: ";
+                 case   CONNECT_PLASMID_FLEX_CLONEPROPERTY_NAMETYPE_SUBMITTED: return "Clone property name type mapping: ";
+                 case   CONNECT_PLASMID_FLEX_CLONE_NAMETYPE_SUBMITTED: return "Clone name type mapping: ";
+                 default: return null;
+             }
+            }
     };
     
     
@@ -128,8 +143,14 @@ public class PlasmidImporterDefinitions
         public int      getIntValue(){ return i_int_value;}
         public String   getCloneDBStatusValue(){ return i_flex_db_clone_status;}
         public String   getDisplayPlateSubmissionRule(){ return i_display_plate_submission_rule;}
-        
-        
+        public static   PLASMID_TRANSFER_CLONE_STATUS getValueByIntValue(int v)
+                throws Exception
+        {
+            if (v==READY_FOR_TRANSFER.getIntValue()) return READY_FOR_TRANSFER;
+            if (v==NOT_READY_FOR_TRANSFER.getIntValue()) return NOT_READY_FOR_TRANSFER;
+            if ( v== TRANSFER_FINISHED.getIntValue()) return TRANSFER_FINISHED;
+            throw new Exception ("Can not convert value for PLASMID_TRANSFER_CLONE_STATUS");
+        }
     };
     
     
