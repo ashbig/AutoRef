@@ -61,6 +61,9 @@
 <div id="myMenu"><a href="/FLEX/GetProjects.do?forwardName=PLATE_CONDENSATION" target="display">Plate Condensation</a></div><%}%>
      <% if (user_level >= WADMIN){%>    
 <div id="myMenu"><a href="/FLEX/ACEtoFLEXImporterInput.jsp" target="display">ACE to FLEX data transfer</a></div><%}%>           
+    
+ <% if (user_level >= WADMIN){%>    
+<div id="myMenu"><a href="/FLEX/FLEXtoPLASMIDOptions.jsp" target="display">FLEX to PLASMID data transfer</a></div><%}%>           
      <%}%>
  
 <% if (user_level >= COLLABORATOR){%>  

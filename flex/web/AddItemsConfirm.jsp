@@ -49,6 +49,9 @@
           <logic:equal  name="forwardName"  value="<%=  ConstantsImport.PROCESS_NTYPE.CREATE_NEW_WORKFLOW_FROM_TEMPLATE.toString() %>">
             <bean:message key="flex.name"/> : <bean:message key="add.workflow.from.template.title"/> 
         </logic:equal> 
+          <logic:equal  name="forwardName"  value="<%=  ConstantsImport.PROCESS_NTYPE.FLEX_TABLE_POPULATE.toString() %>">
+            <bean:message key="flex.name"/> : <bean:message key="add.flex.table.populate.title"/> 
+        </logic:equal> 
 
 
  <logic:equal name="forwardName"  value="<%=  ConstantsImport.PROCESS_NTYPE.RUN_REPORT.toString() %>">
@@ -72,6 +75,10 @@
      <logic:equal name="forwardName"  value="<%=  ConstantsImport.PROCESS_NTYPE.IMPORT_INTO_NAMESTABLE.toString() %>">
         <bean:message key="flex.name"/> : <bean:message key="add.items.notificaton"/> 
      </logic:equal>
+      <logic:equal name="forwardName"  value="<%=  ConstantsImport.PROCESS_NTYPE.FLEX_TABLE_POPULATE.toString() %>">
+        <bean:message key="flex.name"/> : <bean:message key="add.items.notificaton"/> 
+     </logic:equal>
+     
        <logic:equal  name="forwardName"  value="<%=  ConstantsImport.PROCESS_NTYPE.IMPORT_LINKERS.toString() %>">
             <bean:message key="flex.name"/> : <bean:message key="add.items.notificaton"/> 
         </logic:equal>

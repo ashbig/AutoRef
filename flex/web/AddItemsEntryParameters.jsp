@@ -35,6 +35,10 @@
           <logic:equal  name="forwardName"  value="<%=  ConstantsImport.PROCESS_NTYPE.PUT_PLATES_IN_PIPELINE.toString() %>">
             <bean:message key="flex.name"/> : <bean:message key="put.plates.inpipeline.title"/> 
         </logic:equal>
+           <logic:equal  name="forwardName"  value="<%=  ConstantsImport.PROCESS_NTYPE.FLEX_TABLE_POPULATE_INPUT.toString() %>">
+            <bean:message key="flex.name"/> : <bean:message key="add.flex.table.populate.title"/> 
+        </logic:equal>
+         
 </h2>
 
 <hr>
@@ -158,6 +162,23 @@
 </html:form>
 </logic:equal>
 
+ 
+<!--add third party data -->
+<logic:equal name="forwardName"  value="<%=  ConstantsImport.PROCESS_NTYPE.FLEX_TABLE_POPULATE_INPUT.toString() %>">
+<p><bean:message key="add.flex.table.populate.help"/>
+<p><html:form action="/AddItems.do" enctype="multipart/form-data"> 
+<input type="hidden" name="forwardName"  value="<%=  ConstantsImport.PROCESS_NTYPE.FLEX_TABLE_POPULATE_INPUT.getNextProcess().toString()%>" >   
+
+<table>
+    <tr>
+        <td class="prompt"><bean:message key="add.flex.table.populate.prompt"/></td>
+        <td><html:file property="inputFile" /></td>
+        <td>[<a href="<bean:message key="add.flex.table.populate.sample.jsp"/>">sample file</a>]</td>
+    </tr>
+</table>
+ <div align="center"><html:submit/></div>
+</html:form>
+ </logic:equal>
 <p>
 
 </body>

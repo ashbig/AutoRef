@@ -15,9 +15,6 @@
 
  
 
-
-
-
 <html>
 <head>
     <title><bean:message key="flex.name"/> :<%= request.getAttribute(Constants.UI_PAGE_TITLE) %></title>
@@ -105,8 +102,7 @@
 <logic:present name="clstrategies">
     <TABLE border="1" cellpadding="2" cellspacing="0">
         <tr class="headerRow"> <td>Cloning Strategy Name</td><td>Vector Name</td><td>5p Linker Name</td>    <td>3p Linker Name</td> <td>Type</td>  </tr>
- <% ArrayList cl = (ArrayList) request.getAttribute("clstrategies");
-        %>
+
         
         <logic:iterate id="str" name="clstrategies"  >
           <flex:row oddStyleClass="oddRow" evenStyleClass="evenRow">
@@ -167,6 +163,8 @@
       </logic:iterate>
     </table>
     </logic:present>
+    
+
 <br>
 
 

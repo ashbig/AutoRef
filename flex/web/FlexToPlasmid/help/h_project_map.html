@@ -1,0 +1,65 @@
+<body>
+<pre>
+    # comment - line starts with '#'
+    # map is case sensitive!!!!
+# this map is to cover followinfg cases:
+
+# 0)property B of object A in FLEXDB is not mapped at all to any object 
+# in  PLASMIDDB.  
+
+# 1)property B of object A in FLEXDB is called differently than 
+# property B of object A in PLASMIDDB. Remapping of property names
+# implemented by using FLEX_PLASMID_DEFINITION_MAP
+
+# 2)property B of object A in FLEXDB is called differently and not
+# fully described compare to property B of object A in PLASMIDDB. Remapping of property names
+# implemented by using FLEX_PLASMID_DEFINITION_MAP with missing value stored in 
+# column "value1"
+# example: clone file, property 'clonetype' is associated with species, not technicaly,but...
+# CONNECT_PLASMID_FLEX_SPECIES_SUBMITTED	-1	Homo sapiens	-1	Homo sapiens	cDNA	NULL
+
+# 3)property B of object A in FLEXDB is 
+# a property C of the object D in PLASMID.
+# so, we need complete remapping  of property 
+# example: PDB ID of FlexSequence in FLEXDB become PBD ID of clone (CLONENAME file)
+# property name in FLEX: 'P_ID', property name in PLASMID='PDB ID'
+
+# 4) in addition to 3, existance of property C of object D can
+# triger addition of several more properties.
+
+# 3 & 4 are batch specific and cannot be hardcoded:(
+
+
+
+
+
+#ref sequence properties for RefSequenceProperties.txt file
+# as in FLEX database
+REFSEQNAME.NAMETYPE=NAME.TARGETID
+REFSEQNAME.NAMETYPE=NAME.SWISSPROT_ID
+REFSEQNAME.NAMETYPE=NAME.GENBANK_ACCESSION
+
+#description of data that go into clonename table
+#they can be pulled from refseq.name table & clonename in FLEX
+# you need to specify exact mapping:
+#           clonename.nametype according to PLASMID dictionaty table
+#           FLEX location: TABLENAME.NAMETYPE
+# program is not responsible for verifying your map data
+CLONENAME.GI=CLONENAME.GI
+#possible values for Original clone ID: CLONENAME.USER_ID, CLONENAME.TRC_CLONE_ID, CLONES.CLONENAME
+CLONENAME.Original Clone ID=CLONENAME.USER_ID
+
+" if one clone name requiers additional names: they MUST start with the same prefix
+# value will be attached 
+CLONENAME.NAMETYPE=NAME.TARGETDB_ID
+CLONENAME.TargetDB ID link to other DB=	TargetDB	http://targetdb.pdb.org/servlet/TargetSearch?&pdbid=&pfamid=&which_lab=&status=&seqname=Query&which_seq=SG&Aftermonth=&Afterday=&Afteryear=&Beforemonth=&Beforeday=&Beforeyear=&p_name=&org_name=&Sequence=&format=html&cp=1&id=
+CLONENAME.TargetDB ID link to other DB=	PepcDB	http://pepcdb.pdb.org/servlet/PepcSearch?pdbid=&which_lab=&status=&statusinhistory=&stopstatus=&seqname=Query&which_seq=SG&Aftermonth=&Afterday=&Afteryear=&Beforemonth=&Beforeday=&Beforeyear=&p_name=&org_name=&protocol_id=&p_type=&p_text=&Sequence=&format=html&pfamid=&cp=1&target_category=&id=
+
+CLONENAME.PDB ID=NAME.P_ID
+CLONENAME.PDB ID link to other DB=	PSI-SGKB	http://kb.psi-structuralgenomics.org/KB/search.do?SSIDSearch=PDBID&query=
+CLONENAME.PDB ID link to other DB=	TOPSAN	https://www.topsan.org/explore?targetId=
+
+CLONE.VERIFIEDFLAG=Y	
+CLONE.VERIFICATIONMETHOD=Sequence Verification
+
+</pre></body>

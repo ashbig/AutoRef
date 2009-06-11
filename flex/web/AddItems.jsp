@@ -23,31 +23,46 @@
 
 <p>
 <p><b>Please select one of the following:</b></p>
-
-    <p><div alighn="center"> <b>Add new items</b></div></p>
+<table width="95%" border="0" cellspacing="4" cellpadding="4">
+  <tr class="headerSectionRow">  
+    <td width="50%" align="center">        Add new items     </td>
+    <td  align="center" >Target sequence management</td>
+  </tr>
       
-    <ul> 
+    <tr>
+    <td valign="top"  >
+        
+        
+        <ul> 
         <% if (user_level >=  SADMIN ){%> 
-        <li><a href="/FLEX/AddResearcher.jsp" target="display">Add New Researcher</a> </li><%}%>
+        <li><a href="/FLEX/AddResearcher.jsp" target="display" >Add New Researcher</a> </li><%}%>
         <% if (user_level >= RESEARCHER){%>
         <li><a href="/FLEX/AddItems.do?forwardName=<%= ConstantsImport.PROCESS_NTYPE.IMPORT_INTO_NAMESTABLE_INPUT %>" ><%= ConstantsImport.PROCESS_NTYPE.IMPORT_INTO_NAMESTABLE_INPUT.getTitle() %>  </a> </li>
         <li><a href="/FLEX/AddItems.do?forwardName=<%=  ConstantsImport.PROCESS_NTYPE.IMPORT_LINKERS_INPUT %>"><%=  ConstantsImport.PROCESS_NTYPE.IMPORT_LINKERS_INPUT.getTitle() %>   </a> </li>
         <li><a href="/FLEX/AddItems.do?forwardName=<%= ConstantsImport.PROCESS_NTYPE.IMPORT_VECTORS_INPUT %>"><%= ConstantsImport.PROCESS_NTYPE.IMPORT_VECTORS_INPUT.getTitle() %>  </a> </li>
         <li><a href="/FLEX/AddItems.do?forwardName=<%=  ConstantsImport.PROCESS_NTYPE.IMPORT_CLONING_STRATEGIES_INPUT %>"><%=  ConstantsImport.PROCESS_NTYPE.IMPORT_CLONING_STRATEGIES_INPUT.getTitle() %>   </a> </li>  
          <%}%>
-        <P></p>
-        <% if (user_level >= SADMIN){%> 
-        <li><a href="/FLEX/GetProjects.do?forwardName=IMPORT_SEQUENCES" target="display">Import Sequence Requests</a></li><%}%>
+       
+    </ul> </td>
+   
+    <td valign="top">
+    <ul> 
+      <% if (user_level >= SADMIN){%> 
+ <li><a href="/FLEX/GetProjects.do?forwardName=IMPORT_SEQUENCES" target="display">Import Sequence Requests</a></li><%}%>
         <% if (user_level >= WADMIN ){%> 
         <li><a href="/FLEX/GetProjects.do?forwardName=APPROVE_SEQUENCES" target="display">Approve sequences</a></li><%}%>
          <% if (user_level >= RESEARCHER){%>
         <li><a href="/FLEX/CustomerRequest.do" target="display">Request Genes</a></li><%}%>
-        
-    </ul>
-   
-<p>
-     <% if (user_level >= RESEARCHER){%>
-     <p><div alighn="center"> <b>Change plate status</b></div></p>
+    </ul>   </td>
+  </tr>
+  <tr class="headerSectionRow" ><td align="center" > Change plate status</td>
+  <td align="center">&nbsp;</td>
+   <!-- <td align="center">Define vector growth conditions</td>-->
+  
+  </tr>
+  <tr >
+    <td  valign="top" > <% if (user_level >= RESEARCHER){%>
+    
      <ul> 
 <li><a href="/FLEX/AddItems.do?forwardName=<%= ConstantsImport.PROCESS_NTYPE.PUT_PLATES_FOR_SEQUENCING_INPUT %>">
 <%= ConstantsImport.PROCESS_NTYPE.PUT_PLATES_FOR_SEQUENCING_INPUT.getTitle() %>    </a> </li>  
@@ -55,9 +70,29 @@
  <li><a href="/FLEX/GetProjects.do?forwardName=<%= ConstantsImport.PROCESS_NTYPE.PUT_PLATES_IN_PIPELINE %>">
 <%= ConstantsImport.PROCESS_NTYPE.PUT_PLATES_IN_PIPELINE.getTitle() %>    </a> </li>  
 <%}%>
-
-</ul>
+ <% if (user_level >= WADMIN){%>
+ <li><a href="/FLEX/AddItems.do?forwardName=<%= ConstantsImport.PROCESS_NTYPE.FLEX_TABLE_POPULATE_INPUT %>">
+<%= ConstantsImport.PROCESS_NTYPE.FLEX_TABLE_POPULATE_INPUT.getTitle() %>    </a> </li>  
 <%}%>
+</ul>
+<%}%></td>
+   <td valign="top">
+   <!-- <ul> 
+        <% if (user_level >=  WADMIN ){%> 
+        <li><a href="/FLEX/AddGrowthConditionItems.do?forwardName=<%= ConstantsImport.PROCESS_NTYPE.ADD_BIOMATERIAL_INPUT %>" ><%= ConstantsImport.PROCESS_NTYPE.ADD_BIOMATERIAL_INPUT.getTitle() %>  </a> </li>  
+        <li><a href="/FLEX/AddGrowthConditionItems.do?forwardName=<%= ConstantsImport.PROCESS_NTYPE.ADD_BIOMATERIAL_CONDITION_INPUT %>" ><%= ConstantsImport.PROCESS_NTYPE.ADD_BIOMATERIAL_CONDITION_INPUT.getTitle() %>  </a> </li>  
+        <li><a href="/FLEX/AddGrowthConditionItems.do?forwardName=<%= ConstantsImport.PROCESS_NTYPE.ADD_BIOMATERIAL_COMBINATION_INPUT %>" ><%= ConstantsImport.PROCESS_NTYPE.ADD_BIOMATERIAL_COMBINATION_INPUT.getTitle() %>  </a> </li>  
+        <li><a href="/FLEX/AddGrowthConditionItems.do?forwardName=<%= ConstantsImport.PROCESS_NTYPE.ADD_GROWTHCONDITION_INPUT %>" ><%= ConstantsImport.PROCESS_NTYPE.ADD_GROWTHCONDITION_INPUT.getTitle() %>  </a> </li>  
+       <li><a href="/FLEX/AddGrowthConditionItems.do?forwardName=<%= ConstantsImport.PROCESS_NTYPE.ASSIGN_VECTOR_GROWTH_CONDITON_INPUT %>" ><%= ConstantsImport.PROCESS_NTYPE.ASSIGN_VECTOR_GROWTH_CONDITON_INPUT.getTitle() %>  </a> </li>  
+       <%}%>
+    </ul>  --> 
+    </td>  
+  </tr>
+  
+</table>
+
+    
+  
 
 </body>
 </html:html>
