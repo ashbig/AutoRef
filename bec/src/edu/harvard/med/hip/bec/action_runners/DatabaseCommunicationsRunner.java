@@ -422,7 +422,7 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
     // for ( int ii = 0; ii < items.size();ii++)
      {
         // String[] name_type= ((String[]) items.get(ii));
-         name_type_current= name_type[0].toUpperCase();
+         name_type_current= name_type[0].trim();//.toUpperCase();
          if (  name_type_current.equals("")  ) continue;
         {
            sql="insert into nametype (nametype) select '"+name_type_current+
@@ -451,7 +451,11 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
           String[] new_items = new String[items.size()];
           for (String[] item : items )
          {
-            speciesname=item[0]; if(item.length == 2) speciesid=item[1].toUpperCase();
+            if(item[0] != null && item[0].trim().length()>0)
+                speciesname=item[0].trim(); 
+            else
+                continue;
+            if(item.length == 2) speciesid=item[1].trim();//.toUpperCase();
             if( speciesname == null || speciesname.length()< 1) continue;
             String sql_q = "select * from SPECIESDEFINITION where speciesname ='"+speciesname+"'";
             

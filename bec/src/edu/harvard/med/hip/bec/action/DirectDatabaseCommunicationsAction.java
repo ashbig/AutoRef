@@ -723,7 +723,7 @@ item_value = "<div align=center><a href=\'"+ BecProperties.getInstance().getProp
                // check that name type does not exists
                String name_type = (String) request.getParameter("nametype");
                 if( name_type == null || name_type.trim().length()< 1) throw new Exception ("Empty Annotation Type") ;
-               name_type =name_type.toUpperCase().trim();
+               name_type =name_type.trim();//.toUpperCase().trim();
              
                if ( ! isNameTypeExist( name_type) )
                {
