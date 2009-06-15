@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.3 $
- * $Date: 2008-06-26 14:06:50 $
+ * $Revision: 1.4 $
+ * $Date: 2009-06-15 16:28:49 $
  * $Author: et15 $
  *
  ******************************************************************************
@@ -44,7 +44,7 @@ import java.util.*;
  * Holds sytem level properties.
  *
  * @author     $Author: et15 $
- * @version    $Revision: 1.3 $ $Date: 2008-06-26 14:06:50 $
+ * @version    $Revision: 1.4 $ $Date: 2009-06-15 16:28:49 $
  */
 
 public class FlexProperties {
@@ -122,6 +122,14 @@ public class FlexProperties {
     
     public static void main(String [] args) {
         FlexProperties sysProps = StaticPropertyClassFactory.makePropertyClass("FlexProperties");
+        
+        for (Enumeration e = sysProps.getKeys() ; e.hasMoreElements() ;) {
+            String kk = (String)e.nextElement();
+         System.out.println( kk+ " "+ sysProps.getProperty(kk));
+       
+
+     }
+
         System.out.println("Test: " + sysProps.getProperty("flex.repository.baseurl"));
          System.out.println("Test: " + sysProps.getProperty("Archaeglobus.fulgidus"));    
 }

@@ -60,7 +60,7 @@ public class ProjectWorkflow extends Workflow {
         String sql = "select code from projectworkflow "+
                      "where projectid = "+projectid+
                      " and workflowid = "+workflowid;
- System.out.println(sql);
+//System.out.println(sql);
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         ResultSet rs = t.executeQuery(sql);
         try{
