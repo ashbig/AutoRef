@@ -1,5 +1,5 @@
 /**
- * $Id: FlexSequence.java,v 1.9 2007-09-19 15:42:44 Elena Exp $
+ * $Id: FlexSequence.java,v 1.10 2009-06-15 16:37:08 et15 Exp $
  *
  * File     : FlexSequence.java
  * Date     : 05022001
