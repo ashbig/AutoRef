@@ -171,9 +171,17 @@ cloneids_location=null;cloneids_geneinfo=null;cloneids_cloneinfo=null;
             if (isUnzip.equals("1") )
             {
                 tester.unzipFiles( subprop,  er_messages );
-                boolean isDeleteOriginal = false;
+                boolean isDeleteOriginal = (subprop.getProperty("IS_DELETE_ORIGINAL").equals("1"));
+                String isDeleteDuplicates = subprop.getProperty("IS_DELETE_DUBLICATES");
+               
                 tester.concatenateFiles( subprop,  er_messages , isDeleteOriginal);
+                if ( isDeleteDuplicates.equals("1"))
+                {
+                       tester.deleteDuplicatedRecords( subprop,  er_messages );
+             
+                }
             }
+            
             
              String isProcess = subprop.getProperty("IS_PROCESS");
             if (isProcess.equals("1") )
@@ -374,18 +382,36 @@ cloneids_location=null;cloneids_geneinfo=null;cloneids_cloneinfo=null;
            FileManager.concatenateFiles(er_messages,outputdir, subprop.getProperty("FILE_CLONE_AUTHOR_NAME").trim() , subprop.getProperty("FILE_CLONE_AUTHOR_NAME_HEADER").trim(), isDeleteOriginal );
           FileManager.concatenateFiles(er_messages,outputdir, subprop.getProperty("FILE_CLONE_PUBLICATION_NAME").trim() , subprop.getProperty("FILE_CLONE_PUBLICATION_NAME_HEADER").trim(), isDeleteOriginal );
           FileManager.concatenateFiles(er_messages,outputdir, subprop.getProperty("FILE_CLONE_CLONEPUBLICATION_NAME").trim() , subprop.getProperty("FILE_CLONE_CLONEPUBLICATION_NAME_HEADER").trim(), isDeleteOriginal );
-         
             FileManager.concatenateFiles(er_messages,outputdir, subprop.getProperty("FILE_CLONE_CLONEAUTHOR_NAME").trim() , subprop.getProperty("FILE_CLONE_CLONEAUTHOR_NAME_HEADER").trim(), isDeleteOriginal );
-      
-        
-        
         }
         catch (Exception e)
         {            er_messages.add("Cannot create clone author file " + e.getMessage());        }
         return  er_messages;
     } 
     
-   
+   public ArrayList        deleteDuplicatedRecords(SubmissionProperties subprop, 
+            ArrayList<String> er_messages )
+    {
+        String outputdir =  subprop.getProperty("FILES_OUTPUT_DIR") ;
+        try
+        {
+           File output_dir_fl =  new File(outputdir);
+           FilenameFilter filter =   new FilenameFilter() {
+                public boolean accept(File dir, String name) {
+                    return name.endsWith(".txt");
+                }  };
+
+           File[] output_dir_files = output_dir_fl.listFiles(filter);
+           for (File fl : output_dir_files)
+           {
+           FileManager.deleteDuplicatedRecords(er_messages, fl);
+           }
+        }
+        catch (Exception e)
+        {            er_messages.add("Cannot create clone author file " + e.getMessage());        }
+        return  er_messages;
+    } 
+    
     
     public ArrayList creatCloneAuthorFile(SubmissionProperties subprop, ArrayList<String> er_messages )
     {   // create cloneauthor file by reading Location file
@@ -788,8 +814,11 @@ public void insertValuesLocationInfo(SubmissionProperties subprop,
                   subprop.getProperty("FILE_CLONE_LOCATION_NAME").trim() +".txt";
               
         List<String[]>        records =   FileManager.readFileIntoStringArray(clone_location_file_name, header_items_index,"\t", true);
-        Verifier.appendString( "\t"+ subprop.getProperty("CLONE_INFO_FORMAT_TYPE"), records);
-        header +=  subprop.getProperty("FILE_CLONE_LOCATION_HEADER_NEW_ADDITION_FOR_FORMAT");
+         if ( subprop.getProperty("FILE_CLONE_LOCATION_HEADER_NEW_ADDITION_FOR_FORMAT") != null)
+        {
+             Verifier.appendString( "\t"+ subprop.getProperty("CLONE_INFO_FORMAT_TYPE"), records);
+             header +=  subprop.getProperty("FILE_CLONE_LOCATION_HEADER_NEW_ADDITION_FOR_FORMAT");
+         }
         
         dumpInFile( subprop,  records ,  header, clone_location_file_name,  er_messages);
     }

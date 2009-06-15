@@ -84,7 +84,43 @@ public class FileManager {
     }
     
     
-    
+    public static void deleteDuplicatedRecords(ArrayList er_messages, File fl)throws Exception
+    {
+        BufferedReader input = null;BufferedWriter output = null;
+        String line ;  ArrayList< String> temp = new ArrayList< String>();
+       
+        try
+        {
+            input = new BufferedReader(new FileReader(fl));
+            temp.add(input.readLine()+"\n");
+            while ( (line = input.readLine() ) != null)
+            {
+              if ( !temp.contains(line+"\n")) temp.add(line+"\n");//System.getProperty("line.separator"));
+            }
+         }
+        catch(Exception e)
+        {   
+           throw new Exception ("Cannot read files " + fl.getName() + e.getMessage());
+   
+        }  
+        finally        {  if (input!= null)input.close();}
+        try
+        {
+            output = new BufferedWriter(new FileWriter(fl));
+            for(String record : temp)
+            {
+                output.write(record);
+            }
+            output.flush();
+        }
+        catch(Exception e)
+        {
+             throw new Exception  ("Cannot write file " +  fl.getName() + e.getMessage());
+        }
+        finally        {            if (output != null) output.close();  
+        }
+       
+    }
     
      public static String             concatenateFiles(ArrayList er_messages,
             ArrayList<String> file_names,
