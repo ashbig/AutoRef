@@ -116,7 +116,7 @@ public class Constants {
     public static final String PSI_SCSG = "Southeast Collaboratory for Structural Genomics";                                 
     public static final String PSI_SGPP = "Structural Genomics of Pathogenic Protozoa";  
     
-    public static final String PAYPALEMAIL = "jason_kramer@hms.harvard.edu";
+    public static final String PAYPALEMAIL = "li_chan@hms.harvard.edu";
     public static final String SEARCH_WILDCARD = "*";
     
     public static final String SELECT = "Please Select";
