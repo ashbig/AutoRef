@@ -18,7 +18,7 @@
   <tr>
     <td height="300"><table width="800" height="259" border="0" align="center" bgcolor="#EFEFEF" id="form">
       <tr>
-        <td width="800" height="112"><p align="center"><span class="mainbodytext">Plasmid Information Database (PlasmID) is a central repository for plasmid clone collections and distribution as part of the DF/HCC DNA Resource Core based at the <a href="http://www.hip.harvard.edu/" target="_blank">Harvard Institute of Proteomics (HIP)</a>. We are also the <a href="http://psimr.asu.edu/index.htm" target="_blank">Protein Structure Initiative (PSI) Material Repository</a>.&nbsp;        
+        <td width="800" height="112"><p align="center"><span class="mainbodytext">Plasmid Information Database (PlasmID) is a central repository for plasmid clone collections and distribution as part of the DF/HCC DNA Resource Core based at the <a href="http://www.hip.harvard.edu/" target="_blank">Harvard Institute of Proteomics (HIP)</a>. We are also the <a href="http://psimr.asu.edu" target="_blank">Protein Structure Initiative (PSI) Material Repository</a>.&nbsp;        
         </span>
         <p align="center"><span class="mainbodytext">
           <a href="http://hms.harvard.edu" target="_blank"><img src="HMS_logo.jpg" width="66" height="63"></a>&nbsp;<a href="http://psimr.asu.edu" target="_blank"><a href="http://psimr.asu.edu" target="_blank"><img src="psilogo.jpg" width="150" height="63"></a><a href="http://www.dfhcc.harvard.edu" target="_blank"><a href="http://www.dfhcc.harvard.edu" target="_blank"><img src="DFHCC_NCI_logo.jpg" width="379"  height="46"></a></span>

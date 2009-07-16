@@ -26,7 +26,7 @@
     </tr> 
     <tr> 
       <td class="mainbodytext"><p><strong class="homepageText2"><a name="who"></a>WHO WE  ARE</strong><br><br> 
-            <span class="mainbodytext">The plasmid repository was established in 2004 at  the Harvard Institute of Proteomics (HIP) at Harvard Medical School.&nbsp; Our repository holds collections  of sequenced-verified open reading frame (ORF) clones made by HIP researchers,  all clones made by researchers as part of the Protein Structure Initiative  (PSI, see <a href="http://psimr.asu.edu/index.htm">this website</a> or below for more  info), and various clones from other researchers.&nbsp; <br><br> 
+            <span class="mainbodytext">The plasmid repository was established in 2004 at  the Harvard Institute of Proteomics (HIP) at Harvard Medical School.&nbsp; Our repository holds collections  of sequenced-verified open reading frame (ORF) clones made by HIP researchers,  all clones made by researchers as part of the Protein Structure Initiative  (PSI, see <a href="http://psimr.asu.edu">this website</a> or below for more  info), and various clones from other researchers.&nbsp; <br><br> 
             We accept deposits of both large and small clone  collections from researchers and distribute their clones to universities across  the world.</span> See our<a href="http://psimr.asu.edu/depositingslides.html" target="_blank"> slide show</a> for an overview of the repository and how to deposit plasmids.<br> 
           </p> 
         <p><strong class="homepageText2">HOW TO  ORDER PLASMIDS</strong><br> 
@@ -134,7 +134,7 @@ A. Yes. Bioinformaticists at our  host institution, HIP, may be willing to colla
 <strong>Q.  Who should I cite if my work with a clone requested via PlasmID results in  publication?</strong><br> 
 <strong>A. </strong>The people who put in the hard work to  make the clone and any appropriate references should be cited! You should be  able to find this information on the clone detail page (click on the CloneID to  get there). Look for clone authors and PubMed IDs (vectors can also have  associated authors and PubMed IDs).</p> 
         <p><strong class="homepageText2"><a name="PSI"></a>PROTEIN STRUCTURE INITIATIVE (PSI)  FAQ</strong></p> 
-        <p><a href="http://psimr.asu.edu/index.htm" target="_blank">Click here</a> for more detailed information about the PSI Materials Repository<br> 
+        <p><a href="http://psimr.asu.edu" target="_blank">Click here</a> for more detailed information about the PSI Materials Repository<br> 
         
          &nbsp; <a href="http://kb.psi-structuralgenomics.org/KB/index.jsp" target="_blank">  
        Click here</a> for more detailed information about the PSI.<br> 

@@ -41,7 +41,7 @@
   </tr> 
   <tr> 
     <td colspan="3">&nbsp;</td> 
-    <td width="64%" align="center" valign="top" class="homepageLink"><a href="http://psimr.asu.edu/index.htm" target="_blank">Protein Structure Initiative
+    <td width="64%" align="center" valign="top" class="homepageLink"><a href="http://psimr.asu.edu" target="_blank">Protein Structure Initiative
       - Material Repository (PSI-MR)</a></td> 
     <td height="26" valign="baseline" class="countrytext"> 
      
