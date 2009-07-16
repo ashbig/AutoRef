@@ -19,7 +19,7 @@
       <p><a href="ViewCart.do" border="0"><img src="shoppingcart2.gif" width="105" height="18"></a></p></td>
   </tr>
   <tr>
-    <td width="64%" rowspan="2" align="center" valign="top" class="homepageLink"><a href="http://www.hip.harvard.edu/PSIMR/index.htm" target="_blank">Protein Structure Initiative
+    <td width="64%" rowspan="2" align="center" valign="top" class="homepageLink"><a href="http://psimr.asu.edu/index.htm" target="_blank">Protein Structure Initiative
     - Material Repository (PSI-MR)</a></td>
     <td rowspan="2"> 
     <logic:present name="<%=Constants.USER_KEY%>" scope="session"> 

@@ -41,7 +41,7 @@
   </tr> 
   <tr> 
     <td colspan="3">&nbsp;</td> 
-    <td width="64%" align="center" valign="top" class="homepageLink"><a href="http://www.hip.harvard.edu/PSIMR/index.htm" target="_blank">Protein Structure Initiative
+    <td width="64%" align="center" valign="top" class="homepageLink"><a href="http://psimr.asu.edu/index.htm" target="_blank">Protein Structure Initiative
       - Material Repository (PSI-MR)</a></td> 
     <td height="26" valign="baseline" class="countrytext"> 
      
@@ -175,7 +175,7 @@
     <ul class="mainbodytext">
       <li><a href="http://www.hip.harvard.edu" target="_blank">Harvard Institute of Proteomics 
       (HIP)</a></li>
-      <li><a href="http://www.hip.harvard.edu/PSIMR" target="_blank">Protein Structure Initiative Material Repository</a></li>
+      <li><a href="http://psimr.asu.edu" target="_blank">Protein Structure Initiative Material Repository</a></li>
       <li><a href="https://rodeo.med.harvard.edu/portal/login.php">BLAST at HMS 
       on the Rodeo BULL </a>(eCommons login required)</li>
       <li><a href="http://yeastgfp.ucsf.edu" target="_blank">Yeast Protein Localization by GFP 

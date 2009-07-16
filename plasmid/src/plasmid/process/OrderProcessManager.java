@@ -1175,7 +1175,7 @@ public class OrderProcessManager {
                 "The DF/HCC DNA Resource Core PlasmID Respository\n" +
                 "The Protein Structure Initiative Material Repository (PSI-MR)\n" +
                 "http://plasmid.med.harvard.edu/PLASMID/\n" +
-                "http://www.hip.harvard.edu/PSIMR\n\n" +
+                "http://psimr.asu.edu\n\n" +
                 "If you have further questions, please contact us at plasmidhelp@hms.harvard.edu\n";
 
         try {

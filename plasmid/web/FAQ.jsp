@@ -20,14 +20,14 @@
           <a href="#deposit">How to Deposit Plasmids</a><br> 
           <a href="#plasmidinfo">Information about our plasmids </a><br> 
           <a href="#PSI">Protein Structure Initiative (PSI) FAQs</a><br> 
-          <span class="mainbodytext"> &nbsp; &nbsp; &nbsp; &nbsp;  <a href="http://www.hip.harvard.edu/PSIMR/index.htm" target="_blank">Click here</a> for more detailed information about the PSI Material Repository<br> 
+          <span class="mainbodytext"> &nbsp; &nbsp; &nbsp; &nbsp;  <a href="http://psimr.asu.edu" target="_blank">Click here</a> for more detailed information about the PSI Material Repository<br> 
 &nbsp; &nbsp; &nbsp; &nbsp;  <a href="http://kb.psi-structuralgenomics.org/KB/index.jsp" target="_blank"> Click here</a> for more detailed information about PSI</span></p> 
       <p>&nbsp;</p></td> 
     </tr> 
     <tr> 
       <td class="mainbodytext"><p><strong class="homepageText2"><a name="who"></a>WHO WE  ARE</strong><br><br> 
-            <span class="mainbodytext">The plasmid repository was established in 2004 at  the Harvard Institute of Proteomics (HIP) at Harvard Medical School.&nbsp; Our repository holds collections  of sequenced-verified open reading frame (ORF) clones made by HIP researchers,  all clones made by researchers as part of the Protein Structure Initiative  (PSI, see <a href="http://www.hip.harvard.edu/PSIMR/index.htm">this website</a> or below for more  info), and various clones from other researchers.&nbsp; <br><br> 
-            We accept deposits of both large and small clone  collections from researchers and distribute their clones to universities across  the world.</span> See our<a href="http://www.hip.harvard.edu/PSIMR/depositingslides.html" target="_blank"> slide show</a> for an overview of the repository and how to deposit plasmids.<br> 
+            <span class="mainbodytext">The plasmid repository was established in 2004 at  the Harvard Institute of Proteomics (HIP) at Harvard Medical School.&nbsp; Our repository holds collections  of sequenced-verified open reading frame (ORF) clones made by HIP researchers,  all clones made by researchers as part of the Protein Structure Initiative  (PSI, see <a href="http://psimr.asu.edu/index.htm">this website</a> or below for more  info), and various clones from other researchers.&nbsp; <br><br> 
+            We accept deposits of both large and small clone  collections from researchers and distribute their clones to universities across  the world.</span> See our<a href="http://psimr.asu.edu/depositingslides.html" target="_blank"> slide show</a> for an overview of the repository and how to deposit plasmids.<br> 
           </p> 
         <p><strong class="homepageText2">HOW TO  ORDER PLASMIDS</strong><br> 
             <span class="mainbodytextlarge"><br> 
@@ -88,18 +88,18 @@ A. Yes, the PSI-MR ships plasmids all over the world. See this <a href="http://w
 COMPANIES: Most of the HIP  FLEXGene clones are available to companies and will be covered by a minimally  restrictive MTA between HIP and your company. We will email the MTA after you  place a request. You are also welcome to get in touch to review the terms  before placing your request.<br> 
           <br> 
           <strong>Q.  Can we make this MTA process easier?</strong> <br> 
-        A. YES!!!&nbsp;  We have developed an Expedited Process MTA that your institution signs  and allows all researchers at that institution to receive all plasmids from our  collection with only an electronic signature.&nbsp;   Please email us if you are interested in starting this process with your  institution.&nbsp;&nbsp; <a href="http://www.hip.harvard.edu/PSIMR/Depositor Agreement/DA.html">Click  here</a> for more information about MTAs</span></p> 
+        A. YES!!!&nbsp;  We have developed an Expedited Process MTA that your institution signs  and allows all researchers at that institution to receive all plasmids from our  collection with only an electronic signature.&nbsp;   Please email us if you are interested in starting this process with your  institution.&nbsp;&nbsp; <a href="http://psimr.asu.edu/Depositor Agreement/DA.html">Click  here</a> for more information about MTAs</span></p> 
         <p><strong class="homepageText2"><a name="deposit"></a>HOW TO DEPOSIT PLASMIDS</strong><br><br> 
           <span class="mainbodytext"><strong>Q. &nbsp;How do I deposit my clones?</strong><br> 
-          <a href="Submission.jsp">Click here</a> or contact us at  plasmidhelp@hms.harvard.edu for more information about depositing clones in our  collection.&nbsp; See our <a href="http://www.hip.harvard.edu/PSIMR/depositingslides.html" target="_blank">slide show</a> for an overview of the repository and the submission process. The three steps to deposit  clones are</strong><br>
+          <a href="Submission.jsp">Click here</a> or contact us at  plasmidhelp@hms.harvard.edu for more information about depositing clones in our  collection.&nbsp; See our <a href="http://psimr.asu.edu/depositingslides.html" target="_blank">slide show</a> for an overview of the repository and the submission process. The three steps to deposit  clones are</strong><br>
           <br> 
-          1.&nbsp; Have your  institution sign the Depositors Agreement.&nbsp;  This agreement sets the terms by which the plasmid repository will  distribute your plasmids.&nbsp; Contact us to  see if your institution has already signed a depositor agreement.&nbsp; Otherwise we will contact your technology  transfer office to begin the process.&nbsp; <a href="http://www.hip.harvard.edu/PSIMR/Depositor%20Agreement/DA.html">Click here</a> for more information  about depositor agreements.<br><br> 
+          1.&nbsp; Have your  institution sign the Depositors Agreement.&nbsp;  This agreement sets the terms by which the plasmid repository will  distribute your plasmids.&nbsp; Contact us to  see if your institution has already signed a depositor agreement.&nbsp; Otherwise we will contact your technology  transfer office to begin the process.&nbsp; <a href="http://psimr.asu.edu/Depositor%20Agreement/DA.html">Click here</a> for more information  about depositor agreements.<br><br> 
           2.&nbsp; Prepare  the data describing the details about your clones.&nbsp; Because we parse the data directly into our  database, we ask that the information you send us is in a particular format.&nbsp;&nbsp; We have submission forms and templates that  should guide you in this process.&nbsp; <br><br> 
           3.&nbsp; Once we  have entered your data into our database, we can accept your plasmid  samples.&nbsp; These can be sent on dry ice  either as DNA (10-15ul of at least 15ng/ul) or glycerol stocks.&nbsp; If you send glycerol stocks the bacteria MUST  BE T1/T5 phage resistant.&nbsp; Once we  receive your samples, we will make them available for purchase through PlasmID<br><br> 
           <strong>Q. What is a Depositors Agreement?</strong><br> 
-         <a href="http://www.hip.harvard.edu/PSIMR/Depositor%20Agreement/DA.html">Click here</a> to learn more about  the Depositors Agreement.<br><br> 
+         <a href="http://psimr.asu.edu/Depositor%20Agreement/DA.html">Click here</a> to learn more about  the Depositors Agreement.<br><br> 
           <strong>Q.&nbsp; What is an Expedited Process MTA?</strong><br> 
-          <a href="http://www.hip.harvard.edu/PSIMR/Depositor Agreement/DA.html">Click here</a> to learn more about  the Expedited Process MTA.<br><br> 
+          <a href="http://psimr.asu.edu/Depositor Agreement/DA.html">Click here</a> to learn more about  the Expedited Process MTA.<br><br> 
           <strong>Q. What types of  plasmids cannot be shared with the repository?</strong> <br> 
           A. Four types of plasmids cannot  be added to the repository.&nbsp; <br><br> 
           1. Plasmids that require an  unusual or specific bacterial host strain cannot be added, as we require that  all plasmids are stored here in a phage-resistant DH5-alpha-like host strain,  in order to maintain the integrity of the collection as a whole. <br> 
@@ -134,7 +134,7 @@ A. Yes. Bioinformaticists at our  host institution, HIP, may be willing to colla
 <strong>Q.  Who should I cite if my work with a clone requested via PlasmID results in  publication?</strong><br> 
 <strong>A. </strong>The people who put in the hard work to  make the clone and any appropriate references should be cited! You should be  able to find this information on the clone detail page (click on the CloneID to  get there). Look for clone authors and PubMed IDs (vectors can also have  associated authors and PubMed IDs).</p> 
         <p><strong class="homepageText2"><a name="PSI"></a>PROTEIN STRUCTURE INITIATIVE (PSI)  FAQ</strong></p> 
-        <p><a href="http://www.hip.harvard.edu/PSIMR/index.htm" target="_blank">Click here</a> for more detailed information about the PSI Materials Repository<br> 
+        <p><a href="http://psimr.asu.edu/index.htm" target="_blank">Click here</a> for more detailed information about the PSI Materials Repository<br> 
         
          &nbsp; <a href="http://kb.psi-structuralgenomics.org/KB/index.jsp" target="_blank">  
        Click here</a> for more detailed information about the PSI.<br> 
@@ -143,7 +143,7 @@ A. Yes. Bioinformaticists at our  host institution, HIP, may be willing to colla
             <strong>Q. What is the  PSI-Materials Repository?</strong><br> 
           A. The PSI-MR was established in 2006 at the  Harvard Institute of Proteomics with the purpose of collecting, annotating,  storing, maintaining, and distributing plasmids made by PSI researchers.</span></p> 
         <p><strong>Q.&nbsp;Where do I find information about depositing my PSI clones with the repository.</strong><br> 
-          <a href="mailto:plasmidhelp@hms.harvard.edu"> Contact us</a> or<a href="http://www.hip.harvard.edu/PSIMR/CloneSubmission/CloneSubmission.html" target="_blank"> click here</a> to find more information about depositing your PSI plasmids with the PSI-MR.<br> 
+          <a href="mailto:plasmidhelp@hms.harvard.edu"> Contact us</a> or<a href="http://psimr.asu.edu/CloneSubmission/CloneSubmission.html" target="_blank"> click here</a> to find more information about depositing your PSI plasmids with the PSI-MR.<br> 
         </p> 
         <p><strong>Q.  How many PSI plasmids are available?</strong><br> 
           Check here to see all the available PSI clones.&nbsp; We are adding new clones weekly, so check  back often<br> 
