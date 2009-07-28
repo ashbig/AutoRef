@@ -37,14 +37,15 @@
     <td><table width="800" border="5" align="center" bordercolor="#999999" id="gray">
       <tr>
         <td width="800" height="180"><h1 align="center">What's New? </h1>
-        <ul type= circles>
-          <li class="mainbodytext">07/24/09 ? Kinase shRNA hairpins Now Available! Browse collection here.</li>
-          <li class="mainbodytext">07/01/09 ? DF/HCC DNA Resource CORE under new leadership. Learn more about the CORE Director <a href="http://www.hms.harvard.edu/dms/bbs/fac/harlow.html">Dr. Edward Harlow</a>, CORE Operations Director <a href="http://www.hip.harvard.edu/Bios/Chan.html">Ms Li Chan</a>, and PlasmID Coordinator <a href="http://www.hip.harvard.edu/Bios/Beeman.html">Mr. Glenn Beeman</a>. </li>
-          <li class="mainbodytext"> 02/15/09 ? No charge for pick up orders. Orders will be available in second floor hallway freezer of the Seeley G. Mudd Building.<br>
+        <ul type= circles>          
+            <li class="mainbodytext">07/24/09 - Kinase shRNA hairpins Now Available! Browse collection <a href="http://plasmid.med.harvard.edu/PLASMID/GetCollection.do?collectionName=shRNA Kinase Collection (pLKO.1)">here</a>.</li>
+          <li class="mainbodytext">07/01/09 - DF/HCC DNA Resource CORE under new leadership. Learn more about the CORE Director <a href="http://www.hms.harvard.edu/dms/bbs/fac/harlow.html">Dr. Edward Harlow</a>, CORE Operations Director <a href="http://www.hip.harvard.edu/Bios/Chan.html">Ms Li Chan</a>, and PlasmID Coordinator <a href="http://www.hip.harvard.edu/Bios/Beeman.html">Mr. Glenn Beeman</a>. </li>
+          <li class="mainbodytext"> 02/15/09 - No charge for pick up orders. Orders will be available in second floor hallway freezer of the Seeley G. Mudd Building.<br>
                 *You MUST have access to the building and select this option at check-out to take advantage of this option. </li> 
-          <li class="mainbodytext">01/01/09 ? PlasmID ships internationally! Here's a <a href="http://www.batchgeocode.com/map/?i=bb69e015b8bfb20e06150bb05f4c95e3">map</a> of where the repository has shipped plasmids. </li>
-          <li class="mainbodytext">01/01/09 ? Search our collection using primary sequence or accession number with our new <a href="PrepareBlast.do">Blast search</a>. </li>
-          </ul></td>
+          <li class="mainbodytext">01/01/09 - PlasmID ships internationally! Here's a <a href="http://www.batchgeocode.com/map/?i=bb69e015b8bfb20e06150bb05f4c95e3">map</a> of where the repository has shipped plasmids. </li>
+          <li class="mainbodytext">01/01/09 - Search our collection using primary sequence or accession number with our new <a href="PrepareBlast.do">Blast search</a>. </li>
+ 
+         </ul></td>
       </tr>
     </table></td>
   </tr>
