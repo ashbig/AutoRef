@@ -38,18 +38,12 @@
       <tr>
         <td width="800" height="180"><h1 align="center">What's New? </h1>
         <ul type= circles>
-          <li class="mainbodytext">Curious about who orders our plasmids? Here's a <a href="http://www.batchgeocode.com/map/?i=bb69e015b8bfb20e06150bb05f4c95e3" target="_blank">map</a> of where the repository has shipped plasmids.</li>
-            <li class="mainbodytext">No charge for shipping for the Harvard Medical School community. Pick up your order in the Seeley G. Mudd Building in the <a href="http://www.hip.harvard.edu/Location.html#Quad" target="_blank">HMS Quad</a> in the second floor hallway freezer. You MUST have access to the building and select this option at check-out to take advantage of this option.</li>
-            <li class="mainbodytext">Can't find the plasmid you're interested in? Search our collection using our new <a href="PrepareBlast.do">Blast search</a>.</li>
-            <li class="mainbodytext">Yeast genes now available in  two new expression vectors (pBY011 and ZM552). </li>
-            <li class="mainbodytext">Over 40 <a href="GetAllVectors.do?PSI=true" target="_self">Empty vectors</a> for cell free and bacterial expression from PSI sites now available!</li>
-            <li class="mainbodytext"><a href="http://psimr.asu.edu/pMHTdelta238.html" target="_blank">TEV protease</a> expressing plasmid now available!</li>
-            <li class="mainbodytext">PSI CloneIDs now link to data in<a href="http://targetdb.rcsb.org/" target="_blank"> TargetDB</a>, <a href="http://pepcdb.rcsb.org/" target="_blank">PepcDB</a>, <a href="http://kb.psi-structuralgenomics.org/KB/" target="_blank">PSI Structural Genomics Knowledgebase</a> and <a href="http://www.topsan.org/WikiHome" target="_blank">TOPSAN</a></li>
-            <li class="mainbodytext">New<a href="PrepareAdvancedSearch.do?psi=1" target="_self"> PSI specific searches</a> available. Search by TargetDB ID, PDB ID, protein expression, solubility or purification or by PSI site.</li>
-         
-            <li class="mainbodytext"><a href="GetCollection.do?collectionName=PSI">Nearly 14,000  sequence-verified PSI plasmids available.</a></li>
-          
-            <li class="mainbodytext">Credit Card Payments now accepted! You can now use either a credit card or purchase order (PO) number to pay for your request.</li>
+          <li class="mainbodytext">07/24/09 ? Kinase shRNA hairpins Now Available! Browse collection here.</li>
+          <li class="mainbodytext">07/01/09 ? DF/HCC DNA Resource CORE under new leadership. Learn more about the CORE Director <a href="http://www.hms.harvard.edu/dms/bbs/fac/harlow.html">Dr. Edward Harlow</a>, CORE Operations Director <a href="http://www.hip.harvard.edu/Bios/Chan.html">Ms Li Chan</a>, and PlasmID Coordinator <a href="http://www.hip.harvard.edu/Bios/Beeman.html">Mr. Glenn Beeman</a>. </li>
+          <li class="mainbodytext"> 02/15/09 ? No charge for pick up orders. Orders will be available in second floor hallway freezer of the Seeley G. Mudd Building.<br>
+                *You MUST have access to the building and select this option at check-out to take advantage of this option. </li> 
+          <li class="mainbodytext">01/01/09 ? PlasmID ships internationally! Here's a <a href="http://www.batchgeocode.com/map/?i=bb69e015b8bfb20e06150bb05f4c95e3">map</a> of where the repository has shipped plasmids. </li>
+          <li class="mainbodytext">01/01/09 ? Search our collection using primary sequence or accession number with our new <a href="PrepareBlast.do">Blast search</a>. </li>
           </ul></td>
       </tr>
     </table></td>
