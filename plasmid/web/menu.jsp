@@ -1,7 +1,7 @@
 <table width="136" border="0">
   <tr> 
-    <td height="31" align="center" valign="middle"><font size="2" face="Verdana, Arial, Helvetica, sans-serif"><strong>Plasmid 
-      Request</strong></font></td>
+    <td height="31" align="center" valign="middle"><font size="2" face="Verdana, Arial, Helvetica, sans-serif">
+        <strong>Search & Order</strong></font></td>
   </tr>
 </table>
 <table width="97%" height="115" border="1" bordercolor="#0099FF">

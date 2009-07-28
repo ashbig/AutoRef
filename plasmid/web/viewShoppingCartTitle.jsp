@@ -1,6 +1,6 @@
  <table width="100%" border="0">
         <tr> 
-          <td bgcolor="#6699CC" class="mainbodytexthead">Plasmid Request &gt; View Shopping Cart</td>
+          <td bgcolor="#6699CC" class="mainbodytexthead">Search & Order &gt; View Shopping Cart</td>
         </tr>
         <tr>
           <td height="29" valign="bottom" bgcolor="#FFFFFF" class="mainbodytextlarge">View Shopping Cart</td>

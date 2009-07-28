@@ -1,6 +1,6 @@
 <table width="100%" border="0">
         <tr> 
-          <td bgcolor="#6699CC" class="mainbodytexthead">Plasmid Request &gt; Vector Collection &gt; view empty vectors</td>
+          <td bgcolor="#6699CC" class="mainbodytexthead">Search & Order &gt; Vector Collection &gt; view empty vectors</td>
         </tr>
         <tr>
           <td height="29" valign="bottom" bgcolor="#FFFFFF" class="mainbodytextlarge">View Empty Vectors</td>

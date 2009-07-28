@@ -10,7 +10,7 @@
                 <td width="28%" align="center" bgcolor="#6699CC"><a href="Submission.jsp" STYLE="text-decoration:none"><font><strong>Plasmid 
                   Submission </strong></font></a></td>
                 <td width="28%" align="center" bgcolor="#6699CC"><a href="OrderOverview.jsp" STYLE="text-decoration:none"><font>
-                    <strong>Plasmid Request </strong></font></a></td>
+                    <strong>Search & Order</strong></font></a></td>
                 <td width="28%" align="center" bgcolor="#6699CC"><a href="Contactus.jsp" STYLE="text-decoration:none"><font><strong>Contact 
                   Us </strong></font></a></td>
               </tr>

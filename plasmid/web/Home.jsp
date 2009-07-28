@@ -23,7 +23,7 @@
         <p align="center"><span class="mainbodytext">
           <a href="http://hms.harvard.edu" target="_blank"><img src="HMS_logo.jpg" width="66" height="63"></a>&nbsp;<a href="http://psimr.asu.edu" target="_blank"><a href="http://psimr.asu.edu" target="_blank"><img src="psilogo.jpg" width="150" height="63"></a><a href="http://www.dfhcc.harvard.edu" target="_blank"><a href="http://www.dfhcc.harvard.edu" target="_blank"><img src="DFHCC_NCI_logo.jpg" width="379"  height="46"></a></span>
           <br><hr>
-        <p align="center" class="mainbodytext"><strong>PLASMID SEARCH:</strong>  Go to <a href="OrderOverview.jsp">Plasmid Request</a>
+        <p align="center" class="mainbodytext"><strong>PLASMID SEARCH:</strong>  Go to <a href="OrderOverview.jsp">Search & Order</a>
           or find a list of our large collections <a href="collection_overview.jsp" target="_blank">here</a>. </p>
         <p align="center" class="mainbodytext"><strong>PLASMID COST:</strong> Click <a href="http://plasmid.med.harvard.edu/PLASMID/OrderOverview.jsp#cost">here</a> for plasmid and shipping costs.</p>
         <p align="center" class="mainbodytext"><strong class="mainbodytext">DEPOSITING CLONES: </strong>Go to <a href="Submission.jsp">Plasmid Submission</a> or see a <a href="http://psimr.asu.edu/overview.html" target="_blank">slide show</a> describing the process.</p>

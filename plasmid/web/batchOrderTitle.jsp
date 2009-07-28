@@ -1,6 +1,6 @@
 <table width="100%" border="0">
         <tr> 
-          <td bgcolor="#6699CC" class="mainbodytexthead">Plasmid Request &gt; Customized Request &gt; Arrange Plasmids In Specific Orders</td>
+          <td bgcolor="#6699CC" class="mainbodytexthead">Search & Order &gt; Customized Request &gt; Arrange Plasmids In Specific Orders</td>
         </tr>
         <tr>
           <td height="29" valign="bottom" bgcolor="#FFFFFF" class="mainbodytextlarge">Arrange plasmids in specific orders</td>
