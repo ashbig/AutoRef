@@ -173,12 +173,17 @@ public class ChoosePaymentAction extends UserAction {
         int numOfCollections = ((CheckoutForm) form).getNumOfCollections();
         double costOfClones = ((CheckoutForm) form).getCostOfClones();
         double costOfCollections = ((CheckoutForm) form).getCostOfCollections();
+        double costforplatinum = ((CheckoutForm)form).getCostOfPlatinum();
         double shippingCost = ((CheckoutForm) form).getCostForShipping();
         double totalCost = ((CheckoutForm) form).getTotalPrice();
 
+        String isplatinum = ((CheckoutForm)form).getIsplatinum();
         CloneOrder order = new CloneOrder(orderid, time, status, ponumber, shippingto, billingto, shippingAddress, billingAddress, numOfClones, numOfCollections, costOfClones, costOfCollections, shippingCost, totalCost, user.getUserid());
         order.setShippingmethod(shippingMethod);
         order.setShippingaccount(accountNumber);
+        order.setIsplatinum(isplatinum);
+        order.setCostforplatinum(costforplatinum);
+        
         if (country.equals("Australia")) {
             order.setIsaustralia("Y");
         }

@@ -141,11 +141,15 @@ Click the button to pay by credit card through the PayPal site. You DO NOT need 
     <td class="tablebody">Number of collections:</td>
     <td class="tablebody"><bean:write name="checkoutForm" property="numOfCollections"/></td>
     <td align="right" class="tablebody">$<bean:write name="checkoutForm" property="costOfCollections"/></td>
+  </tr>   
+  </tr> 
+   <tr> 
+    <td class="tablebody">Platinum service:</td>
+    <td align="right" colspan="2" class="tablebody">$<bean:write name="checkoutForm" property="costOfPlatinum"/></td>
   </tr> 
    <tr> 
     <td class="tablebody">Shipping:</td>
-    <td class="tablebody"><bean:write name="checkoutForm" property="numOfCollections"/></td>
-    <td align="right" class="tablebody">$<bean:write name="checkoutForm" property="costForShipping"/></td>
+    <td align="right" colspan="2" class="tablebody">$<bean:write name="checkoutForm" property="costForShipping"/></td>
   </tr> 
   <tr> 
     <td class="tableheader">Total price:</td>

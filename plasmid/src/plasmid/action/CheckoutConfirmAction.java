@@ -152,6 +152,7 @@ public class CheckoutConfirmAction extends UserAction {
         double shippingCost = ((CheckoutForm)form).getCostForShipping();  
         double clonePrice = ((CheckoutForm)form).getCostOfClones();
         double collectionPrice = ((CheckoutForm)form).getCostOfCollections();
+        double costOfPlatinum = ((CheckoutForm)form).getCostOfPlatinum();
         if((!shippingMethod.equals(Constants.SHIPPING_METHOD_PICKUP)) &&
         (accountNumber==null || accountNumber.trim().length()<1)) {
             if(country.equals(Constants.COUNTRY_USA)) {
@@ -159,7 +160,7 @@ public class CheckoutConfirmAction extends UserAction {
             } else {
                 shippingCost = 20;
             }
-            double totalCost = clonePrice+collectionPrice+shippingCost;
+            double totalCost = clonePrice+collectionPrice+shippingCost+costOfPlatinum;
             ((CheckoutForm)form).setTotalPrice(totalCost);
             ((CheckoutForm)form).setCostForShipping(shippingCost);
         }

@@ -126,6 +126,10 @@ public class Constants {
     public static final String PENDING = "PENDING";
     public static final String PENDING_X = "PENDING-X";
     
+    public static final String ISPLATINUM_Y = "Yes";
+    public static final String ISPLATINUM_N = "No";
+    public static final Double PLATINUM_SERVICE_COST = 10.0;
+    
     /** Creates a new instance of Constants */
     public Constants() {
     }

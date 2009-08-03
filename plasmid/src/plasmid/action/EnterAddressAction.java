@@ -96,12 +96,20 @@ public class EnterAddressAction extends UserAction {
             ((CheckoutForm)form).setBillingfax(billing.getFax());
         }
         
+        double platinumServiceCost = 0.0;
+        int numOfClones = ((CheckoutForm)form).getNumOfClones();
+        String isplatinum = ((CheckoutForm)form).getIsplatinum();
+        if(Constants.ISPLATINUM_Y.equals(isplatinum)) {
+            platinumServiceCost = numOfClones*Constants.PLATINUM_SERVICE_COST;
+        }
+        
         double shippingCost = 0.0;
         double clonePrice = ((CheckoutForm)form).getCostOfClones();
         double collectionPrice = ((CheckoutForm)form).getCostOfCollections();
-        double totalCost = clonePrice+collectionPrice+shippingCost;
+        double totalCost = clonePrice+collectionPrice+shippingCost+platinumServiceCost;
         ((CheckoutForm)form).setTotalPrice(totalCost);
         ((CheckoutForm)form).setCostForShipping(shippingCost);
+        ((CheckoutForm)form).setCostOfPlatinum(platinumServiceCost);
         
         ((CheckoutForm)form).setPonumber(user.getPonumber());
         ((CheckoutForm)form).setCountry(Constants.SELECT);

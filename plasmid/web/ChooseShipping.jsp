@@ -86,6 +86,13 @@
     </td>
   </tr>
   <tr> 
+    <td class="formlabel">Would you like to add platinum service?</td>
+    <td class="text">
+            <html:radio styleClass="text" property="isplatinum" value="<%=Constants.ISPLATINUM_Y%>">Yes</html:radio>
+            <html:radio styleClass="text" property="isplatinum" value="<%=Constants.ISPLATINUM_N%>">No</html:radio>
+    </td>
+  </tr>
+  <tr> 
     <td></td>
     <td class="text">
         <html:submit value="Continue"/>
