@@ -58,8 +58,9 @@ public class CloneOrderManager extends TableManager {
                 " (orderdate,orderstatus,ponumber,shippingto,billingto," +
                 " shippingaddress,billingaddress,numofclones,numofcollection," +
                 " costforclones,costforcollection,costforshipping,totalprice,userid,orderid," +
-                " shippingmethod,shippingaccount,trackingnumber,isbatch,comments,isaustralia,ismta)" +
-                " values(sysdate,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                " shippingmethod,shippingaccount,trackingnumber,isbatch,comments,"+
+                " isaustralia,ismta,isplatinum,costforplatinum)" +
+                " values(sysdate,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
         String sql2 = "insert into orderclones(orderid,cloneid,collectionname,quantity)" +
                 " values(?,?,?,?)";
@@ -89,6 +90,8 @@ public class CloneOrderManager extends TableManager {
             stmt.setString(19, order.getComments());
             stmt.setString(20, order.getIsaustralia());
             stmt.setString(21, order.getIsmta());
+            stmt.setString(22, order.getIsplatinum());
+            stmt.setDouble(23, order.getCostforplatinum());
             DatabaseTransaction.executeUpdate(stmt);
 
             stmt2 = conn.prepareStatement(sql2);
@@ -278,7 +281,8 @@ public class CloneOrderManager extends TableManager {
                 " costforcollection,costforshipping,totalprice,c.userid,shippingdate,whoshipped," +
                 " shippingmethod,shippingaccount,trackingnumber,receiveconfirmationdate," +
                 " whoconfirmed,whoreceivedconfirmation,shippedcontainers,u.email,u.piname," +
-                " u.piemail,u.phone,c.isbatch,u.usergroup,c.comments,c.isaustralia,c.ismta" +
+                " u.piemail,u.phone,c.isbatch,u.usergroup,c.comments,c.isaustralia,"+
+                " c.ismta, c.isplatinum, c.costforplatinum" +
                 " from cloneorder c, userprofile u where c.userid=u.userid and c.orderid=" + orderid;
 
         if (user != null) {
@@ -327,6 +331,8 @@ public class CloneOrderManager extends TableManager {
                 String comments = rs.getString(31);
                 String isaustralia = rs.getString(32);
                 String ismta =  rs.getString(33);
+                String isplatinum = rs.getString(34);
+                Double costforplatinum = rs.getDouble(35);
 
                 order = new CloneOrder(orderid, date, st, ponumber, shippingto, billingto, shippingaddress, billingaddress, numofclones, numofcollection, costforclones, costforcollection, costforshipping, total, userid);
                 order.setShippingdate(shippingdate);
@@ -349,6 +355,8 @@ public class CloneOrderManager extends TableManager {
                 }
                 order.setIsaustralia(isaustralia);
                 order.setIsmta(ismta);
+                order.setIsplatinum(isplatinum);
+                order.setCostforplatinum(costforplatinum);
             }
         } catch (Exception ex) {
             handleError(ex, "Cannot query cloneorder.");
@@ -372,7 +380,8 @@ public class CloneOrderManager extends TableManager {
                 " c.costforcollection,c.costforshipping,c.totalprice,c.userid,u.firstname,u.lastname," +
                 " c.shippingdate, c.whoshipped, c.shippingmethod,c.shippingaccount,c.trackingnumber," +
                 " c.receiveconfirmationdate, c.whoconfirmed,c.whoreceivedconfirmation,u.email,c.shippedcontainers," +
-                " u.piname, u.piemail, u.phone, c.isbatch, c.comments, c.isaustralia, c.ismta" +
+                " u.piname, u.piemail, u.phone, c.isbatch, c.comments, c.isaustralia,"+
+                " c.ismta, c.isplatinum, c.costforplatinum" +
                 " from cloneorder c, userprofile u where c.userid=u.userid";
 
         if (user != null) {
@@ -436,6 +445,8 @@ public class CloneOrderManager extends TableManager {
                 String comments = rs.getString(32);
                 String isaustralia = rs.getString(33);
                 String ismta = rs.getString(34);
+                String isplatinum = rs.getString(35);
+                Double costforplatinum = rs.getDouble(36);
                 CloneOrder order = new CloneOrder(orderid, date, st, ponumber, shippingto, billingto, shippingaddress, billingaddress, numofclones, numofcollection, costforclones, costforcollection, costforshipping, total, userid);
 
                 order.setFirstname(firstname);
@@ -459,6 +470,8 @@ public class CloneOrderManager extends TableManager {
                 }
                 order.setIsaustralia(isaustralia);
                 order.setIsmta(ismta);
+                order.setIsplatinum(isplatinum);
+                order.setCostforplatinum(costforplatinum);
                 orders.add(order);
             }
             return orders;
@@ -486,7 +499,8 @@ public class CloneOrderManager extends TableManager {
                 " c.costforcollection,c.costforshipping,c.totalprice,c.userid,u.firstname,u.lastname," +
                 " c.shippingdate, c.whoshipped, c.shippingmethod,c.shippingaccount,c.trackingnumber," +
                 " c.receiveconfirmationdate, c.whoconfirmed,c.whoreceivedconfirmation,u.email," +
-                " c.shippedcontainers, u.piname, u.piemail, u.phone, c.isbatch, c.comments, c.isaustralia, c.ismta, u.institution" +
+                " c.shippedcontainers, u.piname, u.piemail, u.phone, c.isbatch, c.comments,"+
+                " c.isaustralia, c.ismta, u.institution, c.isplatinum, c.costforplatinum" +
                 " from cloneorder c, userprofile u where c.userid=u.userid";
         String sql2 = "select department from pi where name=?";
 
@@ -586,6 +600,8 @@ public class CloneOrderManager extends TableManager {
                 String isaustralia = rs.getString(33);
                 String ismta = rs.getString(34);
                 String institution = rs.getString(35);
+                String isplatinum = rs.getString(36);
+                Double costforplatinum = rs.getDouble(37);
                 CloneOrder order = new CloneOrder(orderid, date, st, ponumber, shippingto, billingto, shippingaddress, billingaddress, numofclones, numofcollection, costforclones, costforcollection, costforshipping, total, userid);
 
                 order.setFirstname(firstname);
@@ -610,6 +626,8 @@ public class CloneOrderManager extends TableManager {
                 }
                 order.setIsaustralia(isaustralia);
                 order.setIsmta(ismta);
+                order.setIsplatinum(isplatinum);
+                order.setCostforplatinum(costforplatinum);
                 if (isPI) {
                     stmt.setString(1, piname);
                     rs2 = DatabaseTransaction.executeQuery(stmt);

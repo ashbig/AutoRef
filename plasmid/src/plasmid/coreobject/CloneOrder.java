@@ -58,6 +58,7 @@ public class CloneOrder {
     protected double costforclones;
     protected double costforcollection;
     protected double costforshipping;
+    private double costforplatinum;
     
     protected String shippingdate;
     protected String whoshipped;
@@ -86,8 +87,9 @@ public class CloneOrder {
     protected String comments;
     protected String piinstitution;
     protected String pidepartment;
-    private String isaustralia;
-    private String ismta;
+    protected String isaustralia;
+    protected String ismta;
+    protected String isplatinum;
     
     /** Creates a new instance of CloneOrder */
     public CloneOrder() {
@@ -283,5 +285,21 @@ public class CloneOrder {
 
     public void setIsmta(String ismta) {
         this.ismta = ismta;
+    }
+
+    public String getIsplatinum() {
+        return isplatinum;
+    }
+
+    public void setIsplatinum(String isplatinum) {
+        this.isplatinum = isplatinum;
+    }
+
+    public double getCostforplatinum() {
+        return costforplatinum;
+    }
+
+    public void setCostforplatinum(double costforplatinum) {
+        this.costforplatinum = costforplatinum;
     }
 }

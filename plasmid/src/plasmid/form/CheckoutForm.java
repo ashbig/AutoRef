@@ -9,6 +9,7 @@ package plasmid.form;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
+import plasmid.Constants;
 import plasmid.coreobject.MTA;
 
 /**
@@ -54,10 +55,14 @@ public class CheckoutForm extends ActionForm {
     private String paymentmethod;
     private String[] isagree;
     private String ismta;
+    private String isplatinum;
+    private double costOfPlatinum;
     
     /** Creates a new instance of CheckoutForm */
     public CheckoutForm() {
         this.isagree = null;
+        this.setIsplatinum(Constants.ISPLATINUM_N);
+        this.setCostOfPlatinum(0.0);
     }
     
     //public String getUsername() {return username;}
@@ -169,6 +174,22 @@ public class CheckoutForm extends ActionForm {
 
     public void setIsmta(String ismta) {
         this.ismta = ismta;
+    }
+
+    public String getIsplatinum() {
+        return isplatinum;
+    }
+
+    public void setIsplatinum(String isplatinum) {
+        this.isplatinum = isplatinum;
+    }
+
+    public double getCostOfPlatinum() {
+        return costOfPlatinum;
+    }
+
+    public void setCostOfPlatinum(double costOfPlatinum) {
+        this.costOfPlatinum = costOfPlatinum;
     }
     
     /**

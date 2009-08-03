@@ -44,6 +44,12 @@
     <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="ponumber"/></td>
   </tr>
   <tr> 
+    <td class="formlabel">Platinum Service:</td>
+    <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="isplatinum"/></td>
+    <td class="formlabel"></td>
+    <td class="text"></td>
+  </tr>
+  <tr> 
     <td class="formlabel">Email:</td>
     <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="email"/></td>
     <td class="formlabel">Phone:</td>
@@ -151,6 +157,10 @@
     <td class="tablebody"><a href="ViewOrderCollections.do?orderid=<bean:write name="<%=Constants.CLONEORDER%>" property="orderid"/>"><bean:write name="<%=Constants.CLONEORDER%>" property="numofcollection"/></a></td>
     <td align="right" class="tablebody">$<bean:write name="<%=Constants.CLONEORDER%>" property="costforcollection"/></td>
   </tr> 
+   <tr> 
+    <td class="tablebody">Platinum service:</td>
+    <td align="right" colspan="2" class="tablebody">$<bean:write name="<%=Constants.CLONEORDER%>" property="costforplatinum"/></td>
+  </tr>
    <tr> 
     <td class="tablebody">Shipping and handling:</td>
     <td align="right" colspan="2" class="tablebody">$<bean:write name="<%=Constants.CLONEORDER%>" property="shipping"/></td>

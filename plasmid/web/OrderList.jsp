@@ -57,14 +57,15 @@
 
 <table width="100%" border="0">
   <tr>
-    <td width="9%" class="tableheader">Order ID</td>
-    <td width="15%" class="tableheader">Order Date</td>
-    <td width="15%" class="tableheader">Status</td>
-    <td width="9%" class="tableheader">Number of Clones</td>
-    <td width="9%" class="tableheader">Number of Collections</td>
-    <td width="9%" class="tableheader">Total Price</td>
-    <td width="14%" class="tableheader">User</td>
-    <td width="20%" class="tableheader">User Email</td>
+    <td class="tableheader">Order ID</td>
+    <td class="tableheader">Order Date</td>
+    <td class="tableheader">Status</td>
+    <td class="tableheader">Platinum Service</td>
+    <td class="tableheader">Number of Clones</td>
+    <td class="tableheader">Number of Collections</td>
+    <td class="tableheader">Total Price</td>
+    <td class="tableheader">User</td>
+    <td class="tableheader">User Email</td>
   </tr>
 
   <% int i=0; %>
@@ -125,6 +126,7 @@
     </logic:notEqual>
     <input type="hidden" name='<%="orderid["+(i)+"]"%>' value="<bean:write name="order" property="orderid"/>">
 
+    <td class="tableinfo"><bean:write name="order" property="isplatinum"/></td>
     <td class="tableinfo"><bean:write name="order" property="numofclones"/></td>
     <td class="tableinfo"><bean:write name="order" property="numofcollection"/></td>
     <td class="tableinfo"><bean:write name="order" property="totalPriceString"/></td>
