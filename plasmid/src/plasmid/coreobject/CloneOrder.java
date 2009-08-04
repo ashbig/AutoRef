@@ -91,6 +91,8 @@ public class CloneOrder {
     protected String ismta;
     protected String isplatinum;
     
+    private List clones;
+    
     /** Creates a new instance of CloneOrder */
     public CloneOrder() {
         this.items = new ArrayList();
@@ -301,5 +303,20 @@ public class CloneOrder {
 
     public void setCostforplatinum(double costforplatinum) {
         this.costforplatinum = costforplatinum;
+    }
+
+    public List getClones() {
+        return clones;
+    }
+
+    public void setClones(List clones) {
+        this.clones = clones;
+    }
+    
+    public void addClone(Clone c) {
+        if(clones == null) {
+            clones = new ArrayList();
+        }
+        clones.add(c);
     }
 }

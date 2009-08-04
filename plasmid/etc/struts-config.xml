@@ -86,6 +86,8 @@
                     type="plasmid.form.CheckoutForm"/>
         <form-bean      name="mergeCartForm"
                     type="plasmid.form.MergeCartForm"/>
+        <form-bean      name="orderValidationForm"
+                    type="plasmid.form.OrderValidationForm"/>
         <form-bean      name="viewOrderHistoryForm"
                     type="plasmid.form.ViewOrderHistoryForm"/>
         <form-bean      name="viewOrderDetailForm"
@@ -486,6 +488,13 @@
               input="/SearchOrderInput.jsp">
             <forward  name="success"   path="/OrderList.jsp"/>
             <forward  name="success_empty"   path="/OrderListEmpty.jsp"/>
+        </action>
+        <action    path="/SearchOrders"
+               type="plasmid.action.SearchOrderAction"
+               name="orderValidationForm"
+               scope="request"
+              input="/SearchOrders.jsp">
+            <forward  name="success"   path="/OrderValidationInput.jsp"/>
         </action>
         <action    path="/SelectProcess"
                type="plasmid.action.SelectProcessAction"

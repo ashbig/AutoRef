@@ -532,11 +532,9 @@ or ant -Dj2ee.platform.classpath=&lt;server_classpath&gt; (where no properties f
         <copy-ear-war file="${file.reference.jakarta-regexp-1.2.jar}" propname="included.lib.file.reference.jakarta-regexp-1.2.jar.X"/>
         <basename file="${file.reference.jmxri.jar}" property="included.lib.file.reference.jmxri.jar"/>
         <copy-ear-war file="${file.reference.jmxri.jar}" propname="included.lib.file.reference.jmxri.jar.X"/>
-        <basename file="${file.reference.ojdbc5.jar}" property="included.lib.file.reference.ojdbc5.jar"/>
-        <copy-ear-war file="${file.reference.ojdbc5.jar}" propname="included.lib.file.reference.ojdbc5.jar.X"/>
         <mkdir dir="${build.web.dir}/META-INF"/>
         <manifest file="${build.web.dir}/META-INF/MANIFEST.MF" mode="update">
-            <attribute name="Class-Path" value="${included.lib.file.reference.jdbc2_0-stdext.jar} ${included.lib.file.reference.jta.jar} ${included.lib.file.reference.junit.jar} ${included.lib.file.reference.mail.jar} ${included.lib.file.reference.jmxtools.jar} ${included.lib.file.reference.rowset.jar} ${included.lib.file.reference.activation.jar} ${included.lib.file.reference.ant.jar} ${included.lib.file.reference.struts.jar} ${included.lib.file.reference.xerces.jar} ${included.lib.file.reference.sftp.jar} ${included.lib.file.reference.poolman.jar} ${included.lib.file.reference.jakarta-regexp-1.2.jar} ${included.lib.file.reference.jmxri.jar} ${included.lib.file.reference.ojdbc5.jar} "/>
+            <attribute name="Class-Path" value="${included.lib.file.reference.jdbc2_0-stdext.jar} ${included.lib.file.reference.jta.jar} ${included.lib.file.reference.junit.jar} ${included.lib.file.reference.mail.jar} ${included.lib.file.reference.jmxtools.jar} ${included.lib.file.reference.rowset.jar} ${included.lib.file.reference.activation.jar} ${included.lib.file.reference.ant.jar} ${included.lib.file.reference.struts.jar} ${included.lib.file.reference.xerces.jar} ${included.lib.file.reference.sftp.jar} ${included.lib.file.reference.poolman.jar} ${included.lib.file.reference.jakarta-regexp-1.2.jar} ${included.lib.file.reference.jmxri.jar} "/>
         </manifest>
         <delete dir="${dist.ear.dir}/temp"/>
     </target>
@@ -555,7 +553,6 @@ or ant -Dj2ee.platform.classpath=&lt;server_classpath&gt; (where no properties f
         <copy file="${file.reference.poolman.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copy file="${file.reference.jakarta-regexp-1.2.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copy file="${file.reference.jmxri.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
-        <copy file="${file.reference.ojdbc5.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
     </target>
     <target depends="init,compile,compile-jsps,-pre-dist,library-inclusion-in-manifest" name="do-ear-dist">
         <dirname file="${dist.ear.war}" property="dist.jar.dir"/>

@@ -62,7 +62,7 @@
                     <file>${file.reference.jmxri.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
-                <library files="1">
+                <library>
                     <file>${file.reference.ojdbc5.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>

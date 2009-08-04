@@ -19,6 +19,10 @@ import plasmid.util.StringConvertor;
  */
 public class CloneOrderManager extends TableManager {
 
+    public CloneOrderManager() {
+        super();
+    }
+    
     /** Creates a new instance of CloneOrderManager */
     public CloneOrderManager(Connection conn) {
         super(conn);
@@ -58,7 +62,7 @@ public class CloneOrderManager extends TableManager {
                 " (orderdate,orderstatus,ponumber,shippingto,billingto," +
                 " shippingaddress,billingaddress,numofclones,numofcollection," +
                 " costforclones,costforcollection,costforshipping,totalprice,userid,orderid," +
-                " shippingmethod,shippingaccount,trackingnumber,isbatch,comments,"+
+                " shippingmethod,shippingaccount,trackingnumber,isbatch,comments," +
                 " isaustralia,ismta,isplatinum,costforplatinum)" +
                 " values(sysdate,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
@@ -281,7 +285,7 @@ public class CloneOrderManager extends TableManager {
                 " costforcollection,costforshipping,totalprice,c.userid,shippingdate,whoshipped," +
                 " shippingmethod,shippingaccount,trackingnumber,receiveconfirmationdate," +
                 " whoconfirmed,whoreceivedconfirmation,shippedcontainers,u.email,u.piname," +
-                " u.piemail,u.phone,c.isbatch,u.usergroup,c.comments,c.isaustralia,"+
+                " u.piemail,u.phone,c.isbatch,u.usergroup,c.comments,c.isaustralia," +
                 " c.ismta, c.isplatinum, c.costforplatinum" +
                 " from cloneorder c, userprofile u where c.userid=u.userid and c.orderid=" + orderid;
 
@@ -330,7 +334,7 @@ public class CloneOrderManager extends TableManager {
                 String usergroup = rs.getString(30);
                 String comments = rs.getString(31);
                 String isaustralia = rs.getString(32);
-                String ismta =  rs.getString(33);
+                String ismta = rs.getString(33);
                 String isplatinum = rs.getString(34);
                 Double costforplatinum = rs.getDouble(35);
 
@@ -380,7 +384,7 @@ public class CloneOrderManager extends TableManager {
                 " c.costforcollection,c.costforshipping,c.totalprice,c.userid,u.firstname,u.lastname," +
                 " c.shippingdate, c.whoshipped, c.shippingmethod,c.shippingaccount,c.trackingnumber," +
                 " c.receiveconfirmationdate, c.whoconfirmed,c.whoreceivedconfirmation,u.email,c.shippedcontainers," +
-                " u.piname, u.piemail, u.phone, c.isbatch, c.comments, c.isaustralia,"+
+                " u.piname, u.piemail, u.phone, c.isbatch, c.comments, c.isaustralia," +
                 " c.ismta, c.isplatinum, c.costforplatinum" +
                 " from cloneorder c, userprofile u where c.userid=u.userid";
 
@@ -499,7 +503,7 @@ public class CloneOrderManager extends TableManager {
                 " c.costforcollection,c.costforshipping,c.totalprice,c.userid,u.firstname,u.lastname," +
                 " c.shippingdate, c.whoshipped, c.shippingmethod,c.shippingaccount,c.trackingnumber," +
                 " c.receiveconfirmationdate, c.whoconfirmed,c.whoreceivedconfirmation,u.email," +
-                " c.shippedcontainers, u.piname, u.piemail, u.phone, c.isbatch, c.comments,"+
+                " c.shippedcontainers, u.piname, u.piemail, u.phone, c.isbatch, c.comments," +
                 " c.isaustralia, c.ismta, u.institution, c.isplatinum, c.costforplatinum" +
                 " from cloneorder c, userprofile u where c.userid=u.userid";
         String sql2 = "select department from pi where name=?";
@@ -532,13 +536,13 @@ public class CloneOrderManager extends TableManager {
                 sql += " and u.usergroup not in (" + StringConvertor.convertFromListToSqlString(groups) + ")";
             }
         }
-        if(isMtamember) {
+        if (isMtamember) {
             sql += " and u.institution in (select name from institution where ismember='Y')";
         }
-        if(!Constants.ALL.equals(provider)) {
-            sql += " and c.orderid in (select orderid from orderclones where cloneid in (select cloneid from cloneauthor where authorid in (select authorid from authorinfo where authorname='"+provider+"')))";
+        if (!Constants.ALL.equals(provider)) {
+            sql += " and c.orderid in (select orderid from orderclones where cloneid in (select cloneid from cloneauthor where authorid in (select authorid from authorinfo where authorname='" + provider + "')))";
         }
-        
+
         if (sort != null) {
             sql += " order by " + sort;
         } else {
@@ -654,6 +658,58 @@ public class CloneOrderManager extends TableManager {
             }
             if (conn != null) {
                 DatabaseTransaction.closeConnection(conn);
+            }
+        }
+    }
+
+    public List queryCloneOrdersForValidation(List orderids) {
+        String sql = "c.cloneid, c.clonename from clone c, orderclones o" +
+                " where c.cloneid=o.cloneid" +
+                " and o.orderid=?";
+
+        DatabaseTransaction t = null;
+        ResultSet rs = null;
+        PreparedStatement stmt = null;
+        Connection connection = null;
+
+        try {
+            t = DatabaseTransaction.getInstance();
+            connection = t.requestConnection();
+            stmt = connection.prepareStatement(sql);
+
+            List cloneorders = new ArrayList();
+            for (int i = 0; i < orderids.size(); i++) {
+                int orderid = Integer.parseInt((String) orderids.get(i));
+                CloneOrder cloneOrder = new CloneOrder();
+                cloneOrder.setOrderid(orderid);
+                stmt.setInt(1, orderid);
+                rs = DatabaseTransaction.executeQuery(stmt);
+
+                while (rs.next()) {
+                    int cloneid = rs.getInt(1);
+                    String clonename = rs.getString(2);
+                    Clone clone = new Clone();
+                    clone.setCloneid(cloneid);
+                    clone.setName(clonename);
+                    cloneOrder.addClone(clone);
+                }
+                DatabaseTransaction.closeResultSet(rs);
+                cloneorders.add(cloneOrder);
+            }
+            return cloneorders;
+        } catch (Exception ex) {
+            System.out.println(ex);
+            handleError(ex, "Cannot query cloneorder for validation.");
+            return null;
+        } finally {
+            if (rs != null) {
+                DatabaseTransaction.closeResultSet(rs);
+            }
+            if (stmt != null) {
+                DatabaseTransaction.closeStatement(stmt);
+            }
+            if (connection != null) {
+                DatabaseTransaction.closeConnection(connection);
             }
         }
     }
