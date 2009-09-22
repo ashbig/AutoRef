@@ -50,7 +50,7 @@ public class ChangeOrderStatusAction extends InternalUserAction {
             response.setContentType("application/x-msexcel");
             response.setHeader("Content-Disposition", "attachment;filename=Invoice.xls");
             PrintWriter out = response.getWriter();
-            manager.printInvoice(out, l);
+            manager.printBillingReport(out, l);
             out.close();
             return null;
         }

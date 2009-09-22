@@ -1278,6 +1278,15 @@ public class OrderProcessManager {
         }
     }
 
+    public void printBillingReport(PrintWriter out, List orders) {
+        out.println("Date_Ordered\tTracking_Number\tPI_Name\tSample_Number\tTotal_Cost\tAccount_Code\tDate_Completed\tOrder_ID\tUser_Name\tInstitution");
+        for (int i = 0; i < orders.size(); i++) {
+            CloneOrder order = (CloneOrder) orders.get(i);
+            int numofsamples = order.getNumofclones()+order.getNumofcollection();
+            out.println(order.getOrderDate() + "\t" + order.getTrackingnumber() + "\t" + order.getPiname() + "\t" + numofsamples + "\t$" + order.getPrice() + "\t" + order.getPonumber() + "\t" + order.getShippingdate() + "\t" + order.getOrderid() + "\t" + order.getName() + "\tBill To: " + order.getBillingTo() + ", " + order.getBillingAddress().replaceAll("\n", " "));
+        }
+    }
+
     public void printReport(PrintWriter out, List orders) {
         out.println("Order ID\tOrder Date\tClone ID\tSpecies Specific ID\tGene Symbol\tGene Name\tStatus\t# Clones\t# Collections\tShipping Information\tUser\tUser Email\tPI Name\tPI Institution\tPI Department\tPI Email");
         for (int i = 0; i < orders.size(); i++) {
