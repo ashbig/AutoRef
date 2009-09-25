@@ -46,7 +46,7 @@ public class ChangeOrderStatusAction extends InternalUserAction {
         
         if(Constants.BUTTON_CREATE_INVOICE.equals(button)) {
             StringConvertor sv = new StringConvertor();
-            List l = manager.getCloneOrders(sv.convertFromListToString(orderid), null, null, null, null, null, null, null, null, Constants.ALL);
+            List l = manager.getCloneOrders(sv.convertFromListToString(orderid), null, null, null, null, null, null, Constants.ALL, null, Constants.ALL);
             response.setContentType("application/x-msexcel");
             response.setHeader("Content-Disposition", "attachment;filename=Invoice.xls");
             PrintWriter out = response.getWriter();
