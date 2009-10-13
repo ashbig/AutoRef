@@ -131,7 +131,7 @@ public class EnterShippingAction extends InternalUserAction {
         try {
             String to = order.getEmail();
             String subject = "order "+orderid;
-            String text = "Your order "+orderid+" has been shipped. Please log in your account for more information.";
+            String text = "Your order "+orderid+" has been shipped. Please log in your account for shipping details. If you have requested the Platinum Clone Service, QC data for your order is now available by logging into your account at http://plasmid.med.harvard.edu/PLASMID/Login.jsp.";
             Mailer.sendMessage(to,Constants.EMAIL_FROM,subject,text);
         } catch (Exception ex) {
             System.out.println(ex);
