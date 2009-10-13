@@ -1525,4 +1525,30 @@ public class OrderProcessManager {
 
         return true;
     }
+
+    public boolean addCloneValidationResults(List validations, CloneOrder order) {
+        DatabaseTransaction t = null;
+        Connection conn = null;
+
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            CloneOrderManager manager = new CloneOrderManager(conn);
+            if (manager.addOrderCloneValidation(validations) && manager.updatePlatinumServiceStatus(order)) {
+                DatabaseTransaction.commit(conn);
+                return true;
+            } else {
+                DatabaseTransaction.rollback(conn);
+                return false;
+            }
+        } catch (Exception ex) {
+            DatabaseTransaction.rollback(conn);
+            if (Constants.DEBUG) {
+                ex.printStackTrace();
+            }
+            return false;
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
+        }
+    }
 }

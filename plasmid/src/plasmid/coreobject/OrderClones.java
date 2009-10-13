@@ -6,6 +6,9 @@
 
 package plasmid.coreobject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author  DZuo
@@ -19,9 +22,12 @@ public class OrderClones {
     private String well;
     
     private Clone clone;
+    private List validations;
+    private OrderCloneValidation validation;
     
     /** Creates a new instance of OrderClones */
     public OrderClones() {
+        validations = new ArrayList();
     }
     
     public OrderClones(int orderid, int cloneid, String collectionname, int quantity) {
@@ -29,6 +35,7 @@ public class OrderClones {
         this.cloneid = cloneid;
         this.collectionname = collectionname;
         this.quantity = quantity;
+        validations = new ArrayList();
     }
     
     public int getOrderid() {return orderid;}
@@ -51,5 +58,32 @@ public class OrderClones {
 
     public void setClone(Clone clone) {
         this.clone = clone;
+    }
+
+    public List getValidations() {
+        return validations;
+    }
+
+    public void setValidations(List validations) {
+        this.validations = validations;
+    }
+    
+    public void addValidation(OrderCloneValidation v) {
+        this.validations.add(v);
+    }
+
+    public OrderCloneValidation getValidation() {
+        return validation;
+    }
+
+    public void setValidation(OrderCloneValidation validation) {
+        this.validation = validation;
+    }
+    
+    public int getHasValidations() {
+        if((this.getValidations()==null) || (this.getValidations().size()==0))
+            return 0;
+        else
+            return 1;
     }
 }

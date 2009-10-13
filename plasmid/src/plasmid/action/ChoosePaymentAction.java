@@ -183,6 +183,12 @@ public class ChoosePaymentAction extends UserAction {
         order.setShippingaccount(accountNumber);
         order.setIsplatinum(isplatinum);
         order.setCostforplatinum(costforplatinum);
+                
+        if(Constants.ISPLATINUM_Y.equals(isplatinum)) {
+            order.setPlatinumServiceStatus(CloneOrder.PLATINUM_STATUS_REQUESTED);
+        } else {
+            order.setPlatinumServiceStatus(Constants.NA);
+        }
         
         if (country.equals("Australia")) {
             order.setIsaustralia("Y");

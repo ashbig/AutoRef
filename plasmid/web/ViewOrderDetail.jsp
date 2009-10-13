@@ -46,8 +46,8 @@
   <tr> 
     <td class="formlabel">Platinum Service:</td>
     <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="isplatinum"/></td>
-    <td class="formlabel"></td>
-    <td class="text"></td>
+    <td class="formlabel">Platinum Service Status:</td>
+    <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="platinumServiceStatus"/></td>
   </tr>
   <tr> 
     <td class="formlabel">Email:</td>
@@ -105,7 +105,39 @@
   </tr>
   </logic:present>
   <tr>
-    <td colspan="4" align="center" class="text">
+    <td colspan="2" align="center" class="text">
+        <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
+        <logic:equal name="<%=Constants.CLONEORDER%>" property="isplatinum" value="Yes">
+        
+        <logic:equal name="<%=Constants.CLONEORDER%>" property="enterPlatinumBasedOnStatus" value="<%=CloneOrder.PLATINUM_ENTER_RESULTS%>">
+        <html:form action="EnterPlatinumResult.do">
+            <html:hidden name="<%=Constants.CLONEORDER%>" property="orderid"/>
+            <html:submit styleClass="text" value="Enter Platinum Results"/>
+        </html:form>
+        </logic:equal>
+        
+        <logic:equal name="<%=Constants.CLONEORDER%>" property="enterPlatinumBasedOnStatus" value="<%=CloneOrder.PLATINUM_DISPLAY_RESULTS%>">
+        <html:form action="ViewPlatinumResult.do">
+            <html:hidden name="<%=Constants.CLONEORDER%>" property="orderid"/>
+            <html:submit styleClass="text" value="View Platinum Results"/>
+        </html:form>
+        </logic:equal>
+        
+        </logic:equal>
+        </logic:equal>
+        
+        <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.EXTERNAL%>">
+        <logic:equal name="<%=Constants.CLONEORDER%>" property="isplatinum" value="Yes">
+        <logic:equal name="<%=Constants.CLONEORDER%>" property="enterPlatinumBasedOnStatus" value="<%=CloneOrder.PLATINUM_DISPLAY_RESULTS%>">
+        <html:form action="ViewPlatinumResult.do">
+            <html:hidden name="<%=Constants.CLONEORDER%>" property="orderid"/>
+            <html:submit styleClass="text" value="View Platinum Results"/>
+        </html:form>
+        </logic:equal>
+        </logic:equal>
+        </logic:equal>
+    </td>
+    <td colspan="2" align="center" class="text">
         <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
         <logic:equal name="<%=Constants.CLONEORDER%>" property="isProcessShipping" value="true">
         <html:form action="ProcessShipping.do">

@@ -31,6 +31,12 @@ public class CloneOrder {
     public static final String ISMTA_NO = "N";
     public static final String ISMTA_AGREE = "A";
     
+    public static final String PLATINUM_STATUS_REQUESTED = "Requested";
+    public static final String PLATINUM_STATUS_INPROCESS = "In process";
+    public static final String PLATINUM_STATUS_COMPLETE = "Complete";
+    public static final String PLATINUM_ENTER_RESULTS = "enter";
+    public static final String PLATINUM_DISPLAY_RESULTS = "display";
+    
     public static final String allstatus[] = {
         CloneOrder.PENDING, 
         CloneOrder.PENDING_MTA,
@@ -90,6 +96,7 @@ public class CloneOrder {
     protected String isaustralia;
     protected String ismta;
     protected String isplatinum;
+    private String platinumServiceStatus;
     
     private List clones;
     
@@ -313,10 +320,27 @@ public class CloneOrder {
         this.clones = clones;
     }
     
-    public void addClone(Clone c) {
+    public void addClone(OrderClones c) {
         if(clones == null) {
             clones = new ArrayList();
         }
         clones.add(c);
+    }
+
+    public String getPlatinumServiceStatus() {
+        return platinumServiceStatus;
+    }
+
+    public void setPlatinumServiceStatus(String platinumServiceStatus) {
+        this.platinumServiceStatus = platinumServiceStatus;
+    }
+    
+    public String getEnterPlatinumBasedOnStatus() {
+        if(this.PLATINUM_STATUS_REQUESTED.equals(getPlatinumServiceStatus())
+                ||this.PLATINUM_STATUS_INPROCESS.equals(getPlatinumServiceStatus())) {
+            return this.PLATINUM_ENTER_RESULTS;
+        } else {
+            return this.PLATINUM_DISPLAY_RESULTS;
+        }
     }
 }

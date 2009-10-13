@@ -63,8 +63,8 @@ public class CloneOrderManager extends TableManager {
                 " shippingaddress,billingaddress,numofclones,numofcollection," +
                 " costforclones,costforcollection,costforshipping,totalprice,userid,orderid," +
                 " shippingmethod,shippingaccount,trackingnumber,isbatch,comments," +
-                " isaustralia,ismta,isplatinum,costforplatinum)" +
-                " values(sysdate,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                " isaustralia,ismta,isplatinum,costforplatinum,platinumservicestatus)" +
+                " values(sysdate,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
         String sql2 = "insert into orderclones(orderid,cloneid,collectionname,quantity)" +
                 " values(?,?,?,?)";
@@ -96,6 +96,7 @@ public class CloneOrderManager extends TableManager {
             stmt.setString(21, order.getIsmta());
             stmt.setString(22, order.getIsplatinum());
             stmt.setDouble(23, order.getCostforplatinum());
+            stmt.setString(24, order.getPlatinumServiceStatus());
             DatabaseTransaction.executeUpdate(stmt);
 
             stmt2 = conn.prepareStatement(sql2);
@@ -286,7 +287,7 @@ public class CloneOrderManager extends TableManager {
                 " shippingmethod,shippingaccount,trackingnumber,receiveconfirmationdate," +
                 " whoconfirmed,whoreceivedconfirmation,shippedcontainers,u.email,u.piname," +
                 " u.piemail,u.phone,c.isbatch,u.usergroup,c.comments,c.isaustralia," +
-                " c.ismta, c.isplatinum, c.costforplatinum" +
+                " c.ismta, c.isplatinum, c.costforplatinum, c.platinumservicestatus" +
                 " from cloneorder c, userprofile u where c.userid=u.userid and c.orderid=" + orderid;
 
         if (user != null) {
@@ -337,6 +338,7 @@ public class CloneOrderManager extends TableManager {
                 String ismta = rs.getString(33);
                 String isplatinum = rs.getString(34);
                 Double costforplatinum = rs.getDouble(35);
+                String platinumservicestatus = rs.getString(36);
 
                 order = new CloneOrder(orderid, date, st, ponumber, shippingto, billingto, shippingaddress, billingaddress, numofclones, numofcollection, costforclones, costforcollection, costforshipping, total, userid);
                 order.setShippingdate(shippingdate);
@@ -361,6 +363,7 @@ public class CloneOrderManager extends TableManager {
                 order.setIsmta(ismta);
                 order.setIsplatinum(isplatinum);
                 order.setCostforplatinum(costforplatinum);
+                order.setPlatinumServiceStatus(platinumservicestatus);
             }
         } catch (Exception ex) {
             handleError(ex, "Cannot query cloneorder.");
@@ -385,7 +388,7 @@ public class CloneOrderManager extends TableManager {
                 " c.shippingdate, c.whoshipped, c.shippingmethod,c.shippingaccount,c.trackingnumber," +
                 " c.receiveconfirmationdate, c.whoconfirmed,c.whoreceivedconfirmation,u.email,c.shippedcontainers," +
                 " u.piname, u.piemail, u.phone, c.isbatch, c.comments, c.isaustralia," +
-                " c.ismta, c.isplatinum, c.costforplatinum" +
+                " c.ismta, c.isplatinum, c.costforplatinum, c.platinumservicestatus" +
                 " from cloneorder c, userprofile u where c.userid=u.userid";
 
         if (user != null) {
@@ -451,6 +454,7 @@ public class CloneOrderManager extends TableManager {
                 String ismta = rs.getString(34);
                 String isplatinum = rs.getString(35);
                 Double costforplatinum = rs.getDouble(36);
+                String platinumservicestatus = rs.getString(37);
                 CloneOrder order = new CloneOrder(orderid, date, st, ponumber, shippingto, billingto, shippingaddress, billingaddress, numofclones, numofcollection, costforclones, costforcollection, costforshipping, total, userid);
 
                 order.setFirstname(firstname);
@@ -476,6 +480,7 @@ public class CloneOrderManager extends TableManager {
                 order.setIsmta(ismta);
                 order.setIsplatinum(isplatinum);
                 order.setCostforplatinum(costforplatinum);
+                order.setPlatinumServiceStatus(platinumservicestatus);
                 orders.add(order);
             }
             return orders;
@@ -504,7 +509,7 @@ public class CloneOrderManager extends TableManager {
                 " c.shippingdate, c.whoshipped, c.shippingmethod,c.shippingaccount,c.trackingnumber," +
                 " c.receiveconfirmationdate, c.whoconfirmed,c.whoreceivedconfirmation,u.email," +
                 " c.shippedcontainers, u.piname, u.piemail, u.phone, c.isbatch, c.comments," +
-                " c.isaustralia, c.ismta, u.institution, c.isplatinum, c.costforplatinum" +
+                " c.isaustralia, c.ismta, u.institution, c.isplatinum, c.costforplatinum, c.platinumservicestatus" +
                 " from cloneorder c, userprofile u where c.userid=u.userid";
         String sql2 = "select department from pi where name=?";
 
@@ -606,6 +611,7 @@ public class CloneOrderManager extends TableManager {
                 String institution = rs.getString(35);
                 String isplatinum = rs.getString(36);
                 Double costforplatinum = rs.getDouble(37);
+                String platinumservicestatus = rs.getString(38);
                 CloneOrder order = new CloneOrder(orderid, date, st, ponumber, shippingto, billingto, shippingaddress, billingaddress, numofclones, numofcollection, costforclones, costforcollection, costforshipping, total, userid);
 
                 order.setFirstname(firstname);
@@ -632,6 +638,7 @@ public class CloneOrderManager extends TableManager {
                 order.setIsmta(ismta);
                 order.setIsplatinum(isplatinum);
                 order.setCostforplatinum(costforplatinum);
+                order.setPlatinumServiceStatus(platinumservicestatus);
                 if (isPI) {
                     stmt.setString(1, piname);
                     rs2 = DatabaseTransaction.executeQuery(stmt);
@@ -662,14 +669,19 @@ public class CloneOrderManager extends TableManager {
         }
     }
 
-    public List queryCloneOrdersForValidation(List orderids) {
-        String sql = "c.cloneid, c.clonename from clone c, orderclones o" +
+    public static List queryCloneOrdersForValidation(List orderids, boolean isvalidation) {
+        String sql = "select c.cloneid, c.clonename from clone c, orderclones o" +
                 " where c.cloneid=o.cloneid" +
                 " and o.orderid=?";
-
+        String sql2 = "select method,sequence,result,researchername,when,userid"+
+                " from orderclonevalidation where orderid=? and cloneid=?"+
+                " order by when desc";
+                
         DatabaseTransaction t = null;
         ResultSet rs = null;
+        ResultSet rs2 = null;
         PreparedStatement stmt = null;
+        PreparedStatement stmt2 = null;
         Connection connection = null;
 
         try {
@@ -677,6 +689,9 @@ public class CloneOrderManager extends TableManager {
             connection = t.requestConnection();
             stmt = connection.prepareStatement(sql);
 
+            if(isvalidation)
+                stmt2 = connection.prepareStatement(sql2);
+            
             List cloneorders = new ArrayList();
             for (int i = 0; i < orderids.size(); i++) {
                 int orderid = Integer.parseInt((String) orderids.get(i));
@@ -691,22 +706,53 @@ public class CloneOrderManager extends TableManager {
                     Clone clone = new Clone();
                     clone.setCloneid(cloneid);
                     clone.setName(clonename);
-                    cloneOrder.addClone(clone);
+                    OrderClones orderClone = new OrderClones(orderid,cloneid,null,0);
+                    orderClone.setClone(clone);
+                
+                    if(isvalidation) {
+                        stmt2.setInt(1, orderid);
+                        stmt2.setInt(2, cloneid);
+                        rs2 = DatabaseTransaction.executeQuery(stmt2);
+                        while(rs2.next()) {
+                            String method = rs2.getString(1);
+                            String sequence = rs2.getString(2);
+                            String result = rs2.getString(3);
+                            String researcher = rs2.getString(4);
+                            String when = rs2.getString(5);
+                            int userid = rs2.getInt(6);
+                            OrderCloneValidation oc = new OrderCloneValidation(orderClone);
+                            oc.setMethod(method);
+                            oc.setSequence(sequence);
+                            oc.setResult(result);
+                            oc.setWhen(when);
+                            oc.setWho(researcher);
+                            oc.setUserid(userid);
+                            orderClone.addValidation(oc);
+                        }
+                        DatabaseTransaction.closeResultSet(rs2);
+                    }
+                    cloneOrder.addClone(orderClone);
                 }
                 DatabaseTransaction.closeResultSet(rs);
                 cloneorders.add(cloneOrder);
             }
             return cloneorders;
         } catch (Exception ex) {
-            System.out.println(ex);
-            handleError(ex, "Cannot query cloneorder for validation.");
+            System.out.println("Cannot query cloneorder for validation.");
+            ex.printStackTrace();
             return null;
         } finally {
             if (rs != null) {
                 DatabaseTransaction.closeResultSet(rs);
             }
+            if (rs2 != null) {
+                DatabaseTransaction.closeResultSet(rs2);
+            }
             if (stmt != null) {
                 DatabaseTransaction.closeStatement(stmt);
+            }
+            if (stmt2 != null) {
+                DatabaseTransaction.closeStatement(stmt2);
             }
             if (connection != null) {
                 DatabaseTransaction.closeConnection(connection);
@@ -792,6 +838,54 @@ public class CloneOrderManager extends TableManager {
             DatabaseTransaction.executeUpdate(stmt);
         } catch (Exception ex) {
             handleError(ex, "Cannot update order with shipping for orderid: " + order.getOrderid());
+            return false;
+        } finally {
+            DatabaseTransaction.closeStatement(stmt);
+        }
+
+        return true;
+    }
+
+    public boolean addOrderCloneValidation(List validations) {
+        String sql = "insert into orderclonevalidation"+
+                " (orderid,cloneid,method,sequence,result,userid,when,researchername)"+
+                " values(?,?,?,?,?,?,sysdate,?)";
+        PreparedStatement stmt = null;
+
+        try {
+            stmt = conn.prepareStatement(sql);
+            for(int i=0; i<validations.size(); i++) {
+                OrderCloneValidation clone = (OrderCloneValidation)validations.get(i);
+                stmt.setInt(1, clone.getOrderid());
+                stmt.setInt(2, clone.getCloneid());
+                stmt.setString(3, clone.getMethod());
+                stmt.setString(4, clone.getSequence());
+                stmt.setString(5, clone.getResult());
+                stmt.setInt(6, clone.getUserid());
+                stmt.setString(7, clone.getWho());
+                DatabaseTransaction.executeUpdate(stmt);
+            }
+        } catch (Exception ex) {
+            handleError(ex, "Cannot add clone validation results.");
+            return false;
+        } finally {
+            DatabaseTransaction.closeStatement(stmt);
+        }
+
+        return true;
+    }
+
+    public boolean updatePlatinumServiceStatus(CloneOrder order) {
+        String sql = "update cloneorder set platinumservicestatus=? where orderid=?";
+        PreparedStatement stmt = null;
+        
+        try {
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, order.getPlatinumServiceStatus());
+            stmt.setInt(2, order.getOrderid());
+            DatabaseTransaction.executeUpdate(stmt);
+        } catch (Exception ex) {
+            handleError(ex, "Cannot update platinum service status from clone order: " + order.getOrderid());
             return false;
         } finally {
             DatabaseTransaction.closeStatement(stmt);

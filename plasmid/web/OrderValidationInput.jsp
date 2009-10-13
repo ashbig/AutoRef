@@ -23,10 +23,9 @@
       <jsp:include page="menuHome.jsp" />
 	</td>
     <td width="83%" align="left" valign="top">
-	<jsp:include page="registrationTitle.jsp" />
+	<jsp:include page="platinumServiceTitle.jsp" />
       <html:form action="OrderValidationInput.do">
-<p class="homeMainText">Please enter the following information. (* indicates required 
-  field) </p>
+<p class="homeMainText">Please enter the following information.</p>
 <html:errors/>
 <table width="100%" border="0">
   <tr class="formlabel"> 
@@ -34,53 +33,88 @@
     <td width="70%" align="left" valign="baseline"> 
                 <html:select property="method" styleClass="text">
                     <html:option value="">-- Please Select --</html:option>
-                    <html:options name="methods"/>
+                    <html:options name="validationMethods"/>
                 </html:select>   
     </td>
   </tr>
   <tr class="formlabel"> 
-    <td width="30%" align="left" valign="baseline">Source:</td>
+    <td width="30%" align="left" valign="baseline">Validation Status:</td>
     <td width="70%" align="left" valign="baseline"> 
-        <html:text maxlength="50" property="source" size="30" styleClass="text"/>
+                <html:select property="status" styleClass="text">
+                    <html:option value="">-- Please Select --</html:option>
+                    <html:options name="validationStatus"/>
+                </html:select>   
     </td>
   </tr>
   <tr class="formlabel"> 
-    <td width="30%" align="left" valign="baseline">Comments:</td>
-    <td width="70%" align="left" valign="baseline"> 
-        <html:textarea cols="50" rows="10" property="comments" styleClass="text"/>
+    <td width="30%" align="left" valign="baseline">Researcher:</td>
+    <td width="70%" align="left" valign="baseline" class="text"> 
+        <bean:write name="enterPlatinumResultForm" property="researcher" />
     </td>
   </tr>
 </table>
 
-<p>Please enter the validation results:</p>
+<p class="homeMainText">Please enter the validation results:</p>
 <table width="100%" border="0">
-  <tr class="formlabel"> 
-    <td width="30%" align="left" valign="baseline">Validation Method:</td>
-    <td width="70%" align="left" valign="baseline"> 
-                <html:select property="method" styleClass="text">
+<% int i=0; %>
+<logic:iterate name="<%=Constants.CLONEORDER%>" property="clones" id="clone">
+  <tr>
+    <td class="tableheader">PlasmID Clone ID:</td>
+    <td class="tableheader"><bean:write name="clone" property="clone.name"/></td>
+  </tr>
+  <tr align="top,top">
+    <td class="formlabel">Enter sequence:</td>
+    <td class="text"><html:textarea rows="5" cols="50" name="enterPlatinumResultForm" property='<%="sequence["+i+"]"%>'/></td>
+  </tr>
+  <tr>
+    <td class="formlabel">Select validation Result:</td>
+    <td class="text"><html:select name="enterPlatinumResultForm" property='<%="result["+i+"]"%>'>
                     <html:option value="">-- Please Select --</html:option>
-                    <html:options name="methods"/>
+                    <html:options name="validationResults"/>
                 </html:select>   
-    </td>
+            </td>
   </tr>
-  <tr class="formlabel"> 
-    <td width="30%" align="left" valign="baseline">Source:</td>
-    <td width="70%" align="left" valign="baseline"> 
-        <html:text maxlength="50" property="source" size="30" styleClass="text"/>
-    </td>
+  <tr>
+      <td colspan="2" class="formlabel">Validation history:</td>
   </tr>
-  <tr class="formlabel"> 
-    <td width="30%" align="left" valign="baseline">Comments:</td>
-    <td width="70%" align="left" valign="baseline"> 
-        <html:textarea cols="50" rows="10" property="comments" styleClass="text"/>
-    </td>
+  <tr>
+      <td colspan="2">
+          <logic:equal name="clone" property="hasValidations" value="1">
+          <table width="100%" border="1">
+          <tr>
+            <td class="tableheader">Sequence</td>
+            <td class="tableheader">Validation Result</td>
+            <td class="tableheader">Validation Method</td>
+            <td class="tableheader">Researcher</td>
+            <td class="tableheader">Date</td>
+          </tr>
+
+          <logic:iterate name="clone" property="validations" id="v">
+          <tr class="tableinfo"> 
+            <td><bean:write name="v" property="sequence"/></td>
+            <td><bean:write name="v" property="result"/></td>
+            <td><bean:write name="v" property="method"/></td>
+            <td><bean:write name="v" property="who"/></td>
+            <td><bean:write name="v" property="when"/></td>
+          </logic:iterate>
+        </table>
+        </logic:equal>
+        <logic:equal name="clone" property="hasValidations" value="0">
+            <p class="text">No validation history.</p>
+        </logic:equal>
+      </td>
   </tr>
+  <tr>
+      <td colspan="2">&nbsp;</td>
+  </tr>
+  <% i++; %>
+  </logic:iterate>
 </table>
 
 <table>
   <tr class="formlabel"> 
     <td width="30%" align="right" valign="baseline">
-        <html:submit styleClass="text" value="Register"/>
+        <html:submit styleClass="text" value="Submit"/>
     </td>
     <td width="70%" align="left" valign="baseline">
         <html:reset styleClass="text" value="Clear"/>
