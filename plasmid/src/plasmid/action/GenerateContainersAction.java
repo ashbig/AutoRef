@@ -8,19 +8,14 @@ package plasmid.action;
 
 import java.io.*;
 import java.util.*;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionServlet;
-import org.apache.struts.util.MessageResources;
 
 import plasmid.form.GenerateWorklistForm;
 import plasmid.Constants;
@@ -28,9 +23,6 @@ import plasmid.process.*;
 import plasmid.coreobject.*;
 import plasmid.util.Mailer;
 import plasmid.database.DatabaseManager.ProcessManager;
-import plasmid.coreobject.Process;
-import plasmid.util.SftpHandler;
-import com.jscape.inet.sftp.*;
 
 /**
  *
@@ -69,10 +61,10 @@ public class GenerateContainersAction extends Action {
                 throw new Exception("Cannot get data from WORKLISTINFO with worklistid: "+worklistid);
             }
             
-            Sftp ftp = SftpHandler.getSftpConnection();
+            //Sftp ftp = SftpHandler.getSftpConnection();
             String filename = info.getWorklistname();
             WorklistGenerator generator = new WorklistGenerator();
-            generator.readWorklist(Constants.WORKLIST_FILE_PATH+filename, ftp);
+            generator.readWorklist(Constants.WORKLIST_FILE_PATH+filename);
             
             Set destContainerLabels = generator.getDestContainerLabels();
             List dContainers = manager.getContainers(new ArrayList(destContainerLabels), false);
@@ -98,7 +90,7 @@ public class GenerateContainersAction extends Action {
               
                 if(Container.MICRONIC96TUBEMP16.equals(c.getType())) {
                     String label = c.getLabel();
-                    Map m = manager.readTubeMappingFile(ContainerProcessManager.TUBEMAPFILEPATH+label+".trx", ftp);
+                    Map m = manager.readTubeMappingFile(ContainerProcessManager.TUBEMAPFILEPATH+label+".trx");
                     
                     if(m == null) {
                         throw new Exception("Cannot read tube mapping file for container: "+label);
@@ -116,7 +108,7 @@ public class GenerateContainersAction extends Action {
                     samples.addAll(c.getSamples());
                 }
             }
-            SftpHandler.disconnectSftp(ftp);
+            //SftpHandler.disconnectSftp(ftp);
             
             manager.setContainerids(tubes);
             destContainers = new ArrayList();

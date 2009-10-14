@@ -14,10 +14,7 @@ import plasmid.coreobject.*;
 import plasmid.database.*;
 import plasmid.database.DatabaseManager.*;
 import plasmid.Constants;
-import plasmid.util.PlatePositionConvertor;
 import plasmid.util.CloneGrowthComparator;
-import plasmid.util.SftpHandler;
-import com.jscape.inet.sftp.*;
 
 /**
  *
@@ -197,12 +194,12 @@ public class ContainerProcessManager {
         return false;
     }
     
-    public Map readTubeMappingFile(String filename, Sftp ftp) {
+    public Map readTubeMappingFile(String filename) {
         BufferedReader in = null;
         Map mapping = new HashMap();
         try {
-            //in = new BufferedReader(new FileReader(filename));
-            in = new BufferedReader(new InputStreamReader(ftp.getInputStream(filename, 0)));
+            in = new BufferedReader(new FileReader(filename));
+            //in = new BufferedReader(new InputStreamReader(ftp.getInputStream(filename, 0)));
             String line = in.readLine();
             int i=0;
             int j=1;
@@ -523,12 +520,11 @@ public class ContainerProcessManager {
                     System.exit(0);
                 }
                 
-                Sftp ftp = SftpHandler.getSftpConnection();
                 List worklist = calculator.calculateMapping();
                 WorklistGenerator generator = new WorklistGenerator(worklist);
-                generator.printFullWorklist(filepath+"full_worklist.txt", ftp);
-                generator.printWorklist(filepath+"worklist.txt", ftp);
-                generator.readWorklist(filepath+"full_worklist.txt", ftp);
+                generator.printFullWorklist(filepath+"full_worklist.txt");
+                generator.printWorklist(filepath+"worklist.txt");
+                generator.readWorklist(filepath+"full_worklist.txt");
                 
                 ContainerMapper mapper = new ContainerMapper(generator.getWorklist());
                 List destContainers = mapper.mapContainer();
@@ -537,7 +533,7 @@ public class ContainerProcessManager {
                 List tubes = new ArrayList();
                 for(int i=0; i<destContainers.size(); i++) {
                     Container c = (Container)destContainers.get(i);
-                    Map m = manager.readTubeMappingFile(TUBEMAPFILEPATH+c.getLabel(), ftp);
+                    Map m = manager.readTubeMappingFile(TUBEMAPFILEPATH+c.getLabel());
                     
                     List l = mapper.convertToTubes(c, m, true);
                     for(int n=0; n<l.size(); n++) {
@@ -546,7 +542,6 @@ public class ContainerProcessManager {
                         samples.addAll(c1.getSamples());
                     }
                 }
-                SftpHandler.disconnectSftp(ftp);
                 manager.setContainerids(tubes);
                 manager.setSampleids(samples);
                 

@@ -8,32 +8,23 @@ package plasmid.action;
 
 import java.util.*;
 import java.io.*;
-import java.sql.*;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionServlet;
-import org.apache.struts.util.MessageResources;
 
 import plasmid.form.GenerateWorklistForm;
-import plasmid.database.DatabaseManager.ProcessManager;
 import plasmid.database.DatabaseManager.DefTableManager;
 import plasmid.Constants;
-import plasmid.coreobject.Process;
 import plasmid.coreobject.*;
+import plasmid.coreobject.Process;
 import plasmid.util.StringConvertor;
 import plasmid.process.*;
 import plasmid.util.Mailer;
-import plasmid.util.SftpHandler;
-import com.jscape.inet.sftp.*;
 
 /**
  *
@@ -82,13 +73,13 @@ public class WorklistInputAction extends InternalUserAction{
         try {
             List newSrcLabels = null;
             List mapList = new ArrayList();
-            Sftp ftp = SftpHandler.getSftpConnection();
+            //Sftp ftp = SftpHandler.getSftpConnection();
             if(b) {
                 newSrcLabels = srcLabels;
                 srcLabels = new ArrayList();
                 for(int i=0; i<newSrcLabels.size(); i++) {
                     String label = (String)newSrcLabels.get(i);
-                    Map m = manager.readTubeMappingFile(ContainerProcessManager.TUBEMAPFILEPATH+label+".trx", ftp);
+                    Map m = manager.readTubeMappingFile(ContainerProcessManager.TUBEMAPFILEPATH+label+".trx");
                     
                     if(m == null) {
                         throw new Exception("Cannot read tube mapping file for container: "+label);
@@ -192,13 +183,13 @@ public class WorklistInputAction extends InternalUserAction{
             String worklistname = Constants.FULLWORKLIST+"_"+worklistid+".txt";
             List worklist = calculator.calculateMapping();
             WorklistGenerator generator = new WorklistGenerator(worklist, isPrintEmpty);
-            generator.printFullWorklist(Constants.WORKLIST_FILE_PATH+worklistname, ftp);
-            generator.printWorklist(Constants.USER_WORKLIST_FILE_PATH+fileWorklist, ftp);
-            generator.printWorklistForRobot(Constants.USER_WORKLIST_FILE_PATH+fileWorklistRobot, volumn, volumn, true, ftp);
+            generator.printFullWorklist(Constants.WORKLIST_FILE_PATH+worklistname);
+            generator.printWorklist(Constants.USER_WORKLIST_FILE_PATH+fileWorklist);
+            generator.printWorklistForRobot(Constants.USER_WORKLIST_FILE_PATH+fileWorklistRobot, volumn, volumn, true);
             
-            File localFileWorklist = ftp.download("/tmp/"+fileWorklist, Constants.USER_WORKLIST_FILE_PATH+fileWorklist);
-            File localFileWorklistRobot = ftp.download("/tmp/"+fileWorklistRobot, Constants.USER_WORKLIST_FILE_PATH+fileWorklistRobot);
-            SftpHandler.disconnectSftp(ftp);
+            //File localFileWorklist = ftp.download("/tmp/"+fileWorklist, Constants.USER_WORKLIST_FILE_PATH+fileWorklist);
+            //File localFileWorklistRobot = ftp.download("/tmp/"+fileWorklistRobot, Constants.USER_WORKLIST_FILE_PATH+fileWorklistRobot);
+            //SftpHandler.disconnectSftp(ftp);
             
             List filenames = new ArrayList();
             filenames.add(fileWorklist);
@@ -219,10 +210,10 @@ public class WorklistInputAction extends InternalUserAction{
             String to = user.getEmail();
             String subject = "Worklist";
             String text = "The attached files are your worklists.";
-            //fileCol.add(new File(Constants.USER_WORKLIST_FILE_PATH+fileWorklist));
-            //fileCol.add(new File(Constants.USER_WORKLIST_FILE_PATH+fileWorklistRobot));
-            fileCol.add(localFileWorklist);
-            fileCol.add(localFileWorklistRobot);
+            fileCol.add(new File(Constants.USER_WORKLIST_FILE_PATH+fileWorklist));
+            fileCol.add(new File(Constants.USER_WORKLIST_FILE_PATH+fileWorklistRobot));
+            //fileCol.add(localFileWorklist);
+            //fileCol.add(localFileWorklistRobot);
             Mailer.sendMessage(to,Constants.EMAIL_FROM,null,subject,text,fileCol);
             
             if(b) {

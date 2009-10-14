@@ -10,7 +10,7 @@ import java.io.*;
 import java.util.*;
 import plasmid.util.ContainerLabelComparator;
 import plasmid.coreobject.*;
-import com.jscape.inet.sftp.*;
+//import com.jscape.inet.sftp.*;
 
 /**
  *
@@ -81,14 +81,13 @@ public class WorklistGenerator {
      * }
      */
     
-    public void printFullWorklist(String filename, Sftp ftp) throws Exception {
+    public void printFullWorklist(String filename) throws Exception {
         List newWorklist = convertWorklist();
         
         if(newWorklist == null || filename == null)
             return;
         
-        OutputStreamWriter f = new OutputStreamWriter(ftp.getOutputStream(filename, 0, false));
-        //OutputStreamWriter f = new FileWriter(filename);
+        OutputStreamWriter f = new FileWriter(filename);
         for(int i=0; i<newWorklist.size(); i++) {
             SampleLineage w = (SampleLineage)newWorklist.get(i);
             Sample from = w.getSampleFrom();
@@ -100,14 +99,14 @@ public class WorklistGenerator {
         f.close();
     }
     
-    public void printWorklist(String filename, Sftp ftp) throws Exception {
+    public void printWorklist(String filename) throws Exception {
         List newWorklist = convertWorklist();
         
         if(newWorklist == null || filename == null)
             return;
         
-        OutputStreamWriter f = new OutputStreamWriter(ftp.getOutputStream(filename, 0, false));
-       // OutputStreamWriter f = new FileWriter(filename);
+        //OutputStreamWriter f = new OutputStreamWriter(ftp.getOutputStream(filename, 0, false));
+        OutputStreamWriter f = new FileWriter(filename);
         for(int i=0; i<newWorklist.size(); i++) {
             SampleLineage w = (SampleLineage)newWorklist.get(i);
             Sample from = w.getSampleFrom();
@@ -124,12 +123,12 @@ public class WorklistGenerator {
         f.close();
     }
     
-    public void printWorklistForRobot(String filename, int avolumn, int dvolumn, boolean isWash, Sftp ftp) throws Exception {
+    public void printWorklistForRobot(String filename, int avolumn, int dvolumn, boolean isWash) throws Exception {
         if(worklist == null || filename == null)
             return;
         
-        //OutputStreamWriter f = new FileWriter(filename);
-        OutputStreamWriter f = new OutputStreamWriter(ftp.getOutputStream(filename, 0, false));
+        OutputStreamWriter f = new FileWriter(filename);
+        //OutputStreamWriter f = new OutputStreamWriter(ftp.getOutputStream(filename, 0, false));
         
         int i=0;
         int size = worklist.size();
@@ -165,9 +164,10 @@ public class WorklistGenerator {
         f.close();
     }
     
-    public void readWorklist(String filename, Sftp ftp) throws Exception {
+    public void readWorklist(String filename) throws Exception {
         worklist = new ArrayList();
-        BufferedReader in = new BufferedReader(new InputStreamReader(ftp.getInputStream(filename, 0)));
+        //BufferedReader in = new BufferedReader(new InputStreamReader(ftp.getInputStream(filename, 0)));
+        BufferedReader in = new BufferedReader(new FileReader(filename));
         String line;
         while((line = in.readLine()) != null) {
             if(line.trim().length()>0) {

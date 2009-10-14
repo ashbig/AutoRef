@@ -9,29 +9,20 @@ package plasmid.action;
 import java.util.*;
 import java.util.Date;
 import java.io.*;
-import java.sql.*;
 import java.text.SimpleDateFormat;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionServlet;
-import org.apache.struts.util.MessageResources;
 
 import plasmid.coreobject.*;
 import plasmid.process.*;
 import plasmid.form.DownloadClonesForm;
 import plasmid.Constants;
-import plasmid.query.coreobject.CloneInfo;
-import plasmid.util.SftpHandler;
-import com.jscape.inet.sftp.*;
 
 /**
  *
@@ -97,16 +88,18 @@ public class DownloadClonesAction extends UserAction {
             String filename = "order"+orderid+"_"+formatter.format(today);
             List files = new ArrayList();
             try {
-                Sftp ftp = SftpHandler.getSftpConnection();
+                //Sftp ftp = SftpHandler.getSftpConnection();
                 for(int i=0; i<groups.size(); i++) {
                     List group = (List)groups.get(i);
                     String worklistfilename = filename+"_"+(i+1)+".txt";
-                    manager.printBioTracyWorklist(group, Constants.BIOTRACY_WORKLIST_PATH, worklistfilename, isBatch, ftp);
+                    //manager.printBioTracyWorklist(group, Constants.BIOTRACY_WORKLIST_PATH, worklistfilename, isBatch, ftp);
+                    manager.printBioTracyWorklist(group, Constants.BIOTRACY_WORKLIST_PATH, worklistfilename, isBatch, null);
                     files.add(worklistfilename);
                 }
                 String summaryfilename = filename+"_summary.xls";
-                manager.printBioTracySummary(groups, Constants.BIOTRACY_WORKLIST_PATH+summaryfilename, filename, ftp);
-                SftpHandler.disconnectSftp(ftp);
+                //manager.printBioTracySummary(groups, Constants.BIOTRACY_WORKLIST_PATH+summaryfilename, filename, ftp);
+                manager.printBioTracySummary(groups, Constants.BIOTRACY_WORKLIST_PATH+summaryfilename, filename, null);
+                //SftpHandler.disconnectSftp(ftp);
                 files.add(summaryfilename);
             } catch (Exception ex) {
                 if(Constants.DEBUG) {

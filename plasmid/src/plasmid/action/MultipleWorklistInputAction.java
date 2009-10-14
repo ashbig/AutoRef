@@ -8,32 +8,22 @@ package plasmid.action;
 
 import java.util.*;
 import java.io.*;
-import java.sql.*;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionServlet;
-import org.apache.struts.util.MessageResources;
 
 import plasmid.form.GenerateMultipleWorklistForm;
-import plasmid.database.DatabaseManager.ProcessManager;
 import plasmid.database.DatabaseManager.DefTableManager;
 import plasmid.Constants;
-import plasmid.coreobject.Process;
 import plasmid.coreobject.*;
 import plasmid.util.StringConvertor;
 import plasmid.process.*;
 import plasmid.util.Mailer;
-import plasmid.util.SftpHandler;
-import com.jscape.inet.sftp.*;
 
 /**
  *
@@ -201,7 +191,7 @@ public class MultipleWorklistInputAction extends InternalUserAction{
                 return mapping.findForward("error");
             }
             
-            Sftp ftp = SftpHandler.getSftpConnection();
+            //Sftp ftp = SftpHandler.getSftpConnection();
             String fileWorklist = Constants.WORKLIST+"_"+worklistid+".txt";
             String fileWorklistRobot = Constants.WORKLISTROBOT+"_"+worklistid+".gwl";
             String worklistname = Constants.FULLWORKLIST+"_"+worklistid+".txt";
@@ -210,12 +200,12 @@ public class MultipleWorklistInputAction extends InternalUserAction{
             generator.setGlyceroltype(glyceroltype);
             generator.setGlycerolvolume(volumnGlycerol);
             generator.setVolumes(volums);
-            generator.printFullWorklist(Constants.WORKLIST_FILE_PATH+worklistname, ftp);
-            generator.printWorklist(Constants.USER_WORKLIST_FILE_PATH+fileWorklist, ftp);
-            generator.printWorklistForRobot(Constants.USER_WORKLIST_FILE_PATH+fileWorklistRobot, -1, -1, true, ftp);
-            File localFileWorklist = ftp.download("/tmp/"+fileWorklist, Constants.USER_WORKLIST_FILE_PATH+fileWorklist);
-            File localFileWorklistRobot = ftp.download("/tmp/"+fileWorklistRobot, Constants.USER_WORKLIST_FILE_PATH+fileWorklistRobot);
-            SftpHandler.disconnectSftp(ftp);
+            generator.printFullWorklist(Constants.WORKLIST_FILE_PATH+worklistname);
+            generator.printWorklist(Constants.USER_WORKLIST_FILE_PATH+fileWorklist);
+            generator.printWorklistForRobot(Constants.USER_WORKLIST_FILE_PATH+fileWorklistRobot, -1, -1, true);
+            //File localFileWorklist = ftp.download("/tmp/"+fileWorklist, Constants.USER_WORKLIST_FILE_PATH+fileWorklist);
+            //File localFileWorklistRobot = ftp.download("/tmp/"+fileWorklistRobot, Constants.USER_WORKLIST_FILE_PATH+fileWorklistRobot);
+            //SftpHandler.disconnectSftp(ftp);
             
             List filenames = new ArrayList();
             filenames.add(fileWorklist);
@@ -234,8 +224,8 @@ public class MultipleWorklistInputAction extends InternalUserAction{
             String to = user.getEmail();
             String subject = "Worklist";
             String text = "The attached files are your worklists.";
-            fileCol.add(localFileWorklist);
-            fileCol.add(localFileWorklistRobot);
+            fileCol.add(Constants.USER_WORKLIST_FILE_PATH+fileWorklist);
+            fileCol.add(Constants.USER_WORKLIST_FILE_PATH+fileWorklistRobot);
             Mailer.sendMessage(to,Constants.EMAIL_FROM,null,subject,text,fileCol);
             
             request.setAttribute("filenames", filenames);
