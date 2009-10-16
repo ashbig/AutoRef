@@ -42,9 +42,9 @@
         
           <span class="mainbodytext">Search by CloneID/PlasmID or all other IDs.</span></p></td>
     <td width="45%" valign="top">
-      <p><span align="left" class="homepageText2">PSI search</span>
-            <span class="mainbodytext"><a href="PrepareAdvancedSearch.do?psi=1">Advanced search</a></span><br>
-        <span class="mainbodytext">Search by PDB ID, TargetDB ID, PSI site or by ability of protein to express, be soluble or purify.</span><br>
+      <p><span align="left" class="homepageText2">Sequence similarity search</span>
+            <span class="mainbodytext"><a href="PrepareBlast.do">Blast search</a></span><br>
+        <span class="mainbodytext">Search by nucleotide sequence or amino acid sequence.</span><br>
         <br>
             <span align="left" class="homepageText2">Advanced search options</span> 
             <span class="mainbodytext"><a href="PrepareAdvancedSearch.do?psi=0">Advanced search</a></span> <br>
@@ -74,6 +74,7 @@
           <td>96-well plate of clones</td>
           <td>$1200/plate</td>
         </tr>
+        <!--
         <tr class="tableinfo">
           <td rowspan="2">PSI Laboratory</td>
           <td>individual clone</td>
@@ -83,6 +84,7 @@
           <td>96-well plate of clones</td>
           <td>$1200/plate</td>
         </tr>
+        -->
         <tr class="tableinfo">
           <td rowspan="2">All others</td>
           <td>individual clone</td>

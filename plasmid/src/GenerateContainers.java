@@ -13,12 +13,12 @@ import java.io.*;
 import java.net.*;
 
 public class GenerateContainers {
-    public static final String TECAN_LOG_FILE_PATH = "G:\\plasmid\\test\\tecan\\";
-    //public static final String TECAN_LOG_FILE_PATH = "C:\\Gemini\\test\\";
+    //public static final String TECAN_LOG_FILE_PATH = "G:\\plasmid\\test\\tecan\\";
+    public static final String TECAN_LOG_FILE_PATH = "D:\\dev\\Test\\Plasmid\\";
     
-    public static final String URL = "http://128.103.32.179/PLASMID/"; //testing
-    //public static final String URL = "http://128.103.32.228/PLID/";
-    //public static final String URL = "http://128.103.32.228/PLASMID/"; //production
+    //public static final String URL = "http://dev.plasmid.med.harvard.edu/PLASMID/"; //testing
+    //public static final String URL = "http://localhost:8080/PLASMID/";
+    public static final String URL = "http://plasmid.med.harvard.edu/PLASMID/"; //production
     
     private String worklistName;
     

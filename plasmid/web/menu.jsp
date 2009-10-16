@@ -28,9 +28,9 @@
           <td height="15" class="lftsubtxt">- <a href="SearchClone.jsp" class="leftsubnavtext">by 
             clone identifier</a></td>
         </tr>
-        <tr> 
+        <!--<tr> 
           <td height="15" class="lftsubtxt">- <a href="PrepareAdvancedSearch.do?psi=1" class="leftsubnavtext">PSI-MR search</a></td>
-        </tr>
+        </tr>-->
         <tr> 
           <td height="15" class="lftsubtxt">- <a href="PrepareBlast.do" class="leftsubnavtext">blast search</a></td>
         </tr>
@@ -54,9 +54,9 @@
         <tr> 
           <td height="15" class="lftsubtxt">- <a href="GetAllVectors.do?PSI=false" class="leftsubnavtext">all empty vectors</a></td>
         </tr>
-        <tr> 
+        <!--<tr> 
           <td height="15" class="lftsubtxt">- <a href="GetAllVectors.do?PSI=true" class="leftsubnavtext">PSI empty vectors</a></td>
-        </tr>
+        </tr>-->
       </table></td>
   </tr>
   <tr> 

@@ -18,10 +18,12 @@
   <tr>
     <td height="300"><table width="800" height="259" border="0" align="center" bgcolor="#EFEFEF" id="form">
       <tr>
-        <td width="800" height="112"><p align="center"><span class="mainbodytext">Plasmid Information Database (PlasmID) is a central repository for plasmid clone collections and distribution as part of the DF/HCC DNA Resource Core based at the <a href="http://www.hip.harvard.edu/" target="_blank">Harvard Institute of Proteomics (HIP)</a>. We are also the <a href="http://psimr.asu.edu" target="_blank">Protein Structure Initiative (PSI) Material Repository</a>.&nbsp;        
+        <td width="800" height="112"><p align="center"><span class="mainbodytext">Plasmid Information Database (PlasmID) is a central repository for plasmid clone collections and distribution as part of the DF/HCC DNA Resource Core based at the <a href="http://www.hip.harvard.edu/" target="_blank">Harvard Institute of Proteomics (HIP)</a>.<!-- We are also the <a href="http://psimr.asu.edu" target="_blank">Protein Structure Initiative (PSI) Material Repository</a>.-->&nbsp;        
         </span>
         <p align="center"><span class="mainbodytext">
-          <a href="http://hms.harvard.edu" target="_blank"><img src="HMS_logo.jpg" width="66" height="63"></a>&nbsp;<a href="http://psimr.asu.edu" target="_blank"><a href="http://psimr.asu.edu" target="_blank"><img src="psilogo.jpg" width="150" height="63"></a><a href="http://www.dfhcc.harvard.edu" target="_blank"><a href="http://www.dfhcc.harvard.edu" target="_blank"><img src="DFHCC_NCI_logo.jpg" width="379"  height="46"></a></span>
+          <a href="http://hms.harvard.edu" target="_blank"><img src="HMS_logo.jpg" width="66" height="63"></a>&nbsp;
+          <!--<a href="http://psimr.asu.edu" target="_blank"><a href="http://psimr.asu.edu" target="_blank"><img src="psilogo.jpg" width="150" height="63"></a>-->
+          <a href="http://www.dfhcc.harvard.edu" target="_blank"><img src="DFHCC_NCI_logo.jpg" width="379"  height="46"></a></span>
           <br><hr>
         <p align="center" class="mainbodytext"><strong>PLASMID SEARCH:</strong>  Go to <a href="OrderOverview.jsp">Search & Order</a>
           or find a list of our large collections <a href="collection_overview.jsp" target="_blank">here</a>. </p>
@@ -37,7 +39,9 @@
     <td><table width="800" border="5" align="center" bordercolor="#999999" id="gray">
       <tr>
         <td width="800" height="180"><h1 align="center">What's New? </h1>
-        <ul type= circles>          
+        <ul type= circles>  
+            <li class="mainbodytext">10/14/09 - PSI Clones have migrated to our sister site at <a href="http://dnasu.asu.edu/DNASU/" target="_blank">DNASU</a>.</li>
+            <li class="mainbodytext">10/13/09 - Platinum Clones are now available! Please use this service to request additional QC data from your specific order.</li>
             <li class="mainbodytext">07/24/09 - Kinase shRNA hairpins Now Available! Browse collection <a href="http://plasmid.med.harvard.edu/PLASMID/GetCollection.do?collectionName=shRNA Kinase Collection (pLKO.1)">here</a>.</li>
           <li class="mainbodytext">07/01/09 - DF/HCC DNA Resource CORE under new leadership. Learn more about the CORE Director <a href="http://www.hms.harvard.edu/dms/bbs/fac/harlow.html">Dr. Edward Harlow</a>, CORE Operations Director <a href="http://www.hip.harvard.edu/Bios/Chan.html">Ms Li Chan</a>, and PlasmID Coordinator <a href="http://www.hip.harvard.edu/Bios/Beeman.html">Mr. Glenn Beeman</a>. </li>
           <li class="mainbodytext"> 02/15/09 - No charge for pick up orders. Orders will be available in second floor hallway freezer of the Seeley G. Mudd Building.<br>

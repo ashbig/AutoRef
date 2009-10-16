@@ -19,8 +19,9 @@
       <p><a href="ViewCart.do" border="0"><img src="shoppingcart2.gif" width="105" height="18"></a></p></td>
   </tr>
   <tr>
-    <td width="64%" rowspan="2" align="center" valign="top" class="homepageLink"><a href="http://psimr.asu.edu" target="_blank">Protein Structure Initiative
-    - Material Repository (PSI-MR)</a></td>
+    <!--<td width="64%" rowspan="2" align="center" valign="top" class="homepageLink"><a href="http://psimr.asu.edu" target="_blank">Protein Structure Initiative
+    - Material Repository (PSI-MR)</a></td>-->
+    <td width="64%" rowspan="2" align="center" valign="top" class="homepageLink"><a href="http://dnaseq.med.harvard.edu" target="_blank">DF/HCC DNA Resource Core</a></td>
     <td rowspan="2"> 
     <logic:present name="<%=Constants.USER_KEY%>" scope="session"> 
       <a href="Logout.do" class="countrytext">Sign Out </a> 
