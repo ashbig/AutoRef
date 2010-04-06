@@ -77,15 +77,6 @@
          
       </TD>
     </TR>
-    <TR> 
-      <TD width="100%"></TD>
-    </TR>
-    <TR>
-      <TD width="100%" align="left" valign="top"> 
-        <div align="center" class="homeMainText">PlasmID was created and is maintained 
-          by the <a href="http://dnaseq.med.harvard.edu" target="_blank">DF/HCC 
-          DNA Resource Core</a></div></TD>
-    </TR>
   </TBODY>
 </table>
 <jsp:include page="footer.jsp" /></body>
