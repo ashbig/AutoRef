@@ -19,7 +19,7 @@
     <td height="300"><table width="800" height="259" border="0" align="center" bgcolor="#EFEFEF" id="form">
       <tr>
         <td width="800" height="112">
-            <p align="left"><span class="mainbodytext">The Mission of the DNA Resource CORE is to provide member in the DF/HCC, Harvard Affiliates, and outside researchers with quality and inexpensive <a href="http://dnaseq.med.harvard.edu/">DNA sequencing services</a> and <a href="http://plasmid.med.harvard.edu/PLASMID/Home.jsp">sequence verified plasmid constructs</a>, paired with comprehensive quality control and customer support.&nbsp;        
+            <p align="left"><span class="mainbodytext">The Mission of the DNA Resource CORE is to provide member in the DF/HCC, Harvard Affiliates, and outside researchers with quality and inexpensive <a target="_blank" href="http://dnaseq.med.harvard.edu/">DNA sequencing services</a> and <a href="http://plasmid.med.harvard.edu/PLASMID/Home.jsp">sequence verified plasmid constructs</a>, paired with comprehensive quality control and customer support.&nbsp;        
         </span>
         <hr>
         <p align="left" class="mainbodytext"><strong>PLASMID SEARCH:</strong>  Go to <a href="OrderOverview.jsp">Search & Order</a>
@@ -69,12 +69,12 @@
             <td width="12%"><a href="http://www.mgh.harvard.edu/" title="Massachusetts General Hospital" target="_blank" class="homeMainText">Massachusetts 
               General Hospital</a></td>
           </tr>
-          <tr>
+        </table>
+        
           <p align="center"><span class="mainbodytext">
           <a href="http://www.dfhcc.harvard.edu" target="_blank"><img src="DFHCC_NCI_logo.jpg" width="379"  height="46"></a>&nbsp;
           <a href="http://hms.harvard.edu" target="_blank"><img src="HMS_logo.jpg" width="66" height="63"></a></span>
-          </tr>
-        </table>
+         
       </TD>
     </TR>
     <TR> 

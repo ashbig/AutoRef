@@ -1,5 +1,11 @@
 <hr align="center" width="1000" size="2">
 <table width="1000" height="58" border="0" align="center">
+    <TR>
+      <TD width="100%" align="left" valign="top"> 
+        <div align="center" class="homeMainText">PlasmID was created and is maintained 
+          by the <a href="http://dnaseq.med.harvard.edu" target="_blank">DF/HCC 
+          DNA Resource Core</a></div></TD>
+    </TR>
   <tr> 
     <td height="54"> <table width="100%" border="0" cellspacing="0" cellpadding="0">
         <tr align="center"> 
