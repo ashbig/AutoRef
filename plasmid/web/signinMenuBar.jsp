@@ -14,7 +14,7 @@
         <logic:notPresent name="<%=Constants.USER_KEY%>" scope="session"> 
 &nbsp;        </logic:notPresent>    </td>
     <td width="64%" align="center" valign="bottom" class="title"> 
-      <p><strong><font color="#333333" size="5">Welcome To PlasmID</font></strong></p></td>
+      <img src="dnacore.jpg"/><img src="PlasmID_logo.jpg"/></td>
     <td width="18%" height="54" align="right" valign="bottom" class="countrytext"> 
       <p><a href="ViewCart.do" border="0"><img src="shoppingcart2.gif" width="105" height="18"></a></p></td>
   </tr>
