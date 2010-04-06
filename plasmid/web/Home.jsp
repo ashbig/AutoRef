@@ -18,20 +18,17 @@
   <tr>
     <td height="300"><table width="800" height="259" border="0" align="center" bgcolor="#EFEFEF" id="form">
       <tr>
-        <td width="800" height="112"><p align="center"><span class="mainbodytext">Plasmid Information Database (PlasmID) is a central repository for plasmid clone collections and distribution as part of the DF/HCC DNA Resource Core based at the <a href="http://www.hip.harvard.edu/" target="_blank">Harvard Institute of Proteomics (HIP)</a>.<!-- We are also the <a href="http://psimr.asu.edu" target="_blank">Protein Structure Initiative (PSI) Material Repository</a>.-->&nbsp;        
+        <td width="800" height="112">
+            <p align="left"><span class="mainbodytext">The Mission of the DNA Resource CORE is to provide member in the DF/HCC, Harvard Affiliates, and outside researchers with quality and inexpensive <a href="http://dnaseq.med.harvard.edu/">DNA sequencing services</a> and <a href="http://plasmid.med.harvard.edu/PLASMID/Home.jsp">sequence verified plasmid constructs</a>, paired with comprehensive quality control and customer support.&nbsp;        
         </span>
-        <p align="center"><span class="mainbodytext">
-          <a href="http://hms.harvard.edu" target="_blank"><img src="HMS_logo.jpg" width="66" height="63"></a>&nbsp;
-          <!--<a href="http://psimr.asu.edu" target="_blank"><a href="http://psimr.asu.edu" target="_blank"><img src="psilogo.jpg" width="150" height="63"></a>-->
-          <a href="http://www.dfhcc.harvard.edu" target="_blank"><img src="DFHCC_NCI_logo.jpg" width="379"  height="46"></a></span>
-          <br><hr>
-        <p align="center" class="mainbodytext"><strong>PLASMID SEARCH:</strong>  Go to <a href="OrderOverview.jsp">Search & Order</a>
-          or find a list of our large collections <a href="collection_overview.jsp" target="_blank">here</a>. </p>
-        <p align="center" class="mainbodytext"><strong>PLASMID COST:</strong> Click <a href="http://plasmid.med.harvard.edu/PLASMID/OrderOverview.jsp#cost">here</a> for plasmid and shipping costs.</p>
-        <p align="center" class="mainbodytext"><strong class="mainbodytext">DEPOSITING CLONES: </strong>Go to <a href="Submission.jsp">Plasmid Submission</a> or see a <a href="http://psimr.asu.edu/overview.html" target="_blank">slide show</a> describing the process.</p>
         <hr>
-        <p align="center" class="mainbodytext">Click <a href="http://psimr.asu.edu/MTA.html" target="_blank">here</a> for the <strong class="mainbodytext">terms and conditions</strong> for receiving plasmids from the repository.</p>
-        <p align="center" class="mainbodytext"> Click <a href="cloning_strategies.htm" target="_blank">here</a> to view the <strong>cloning methods</strong> used to create many of the  plasmids           </p>        </td>
+        <p align="left" class="mainbodytext"><strong>PLASMID SEARCH:</strong>  Go to <a href="OrderOverview.jsp">Search & Order</a>
+          or find a list of our large collections <a href="collection_overview.jsp" target="_blank">here</a>. </p>
+        <p align="left" class="mainbodytext"><strong>PLASMID COST:</strong> Click <a href="http://plasmid.med.harvard.edu/PLASMID/OrderOverview.jsp#cost">here</a> for plasmid and shipping costs.</p>
+        <p align="left" class="mainbodytext"><strong class="mainbodytext">DEPOSITING CLONES: </strong>Go to <a href="Submission.jsp">Plasmid Submission</a> or see a <a href="http://psimr.asu.edu/overview.html" target="_blank">slide show</a> describing the process.</p>
+        <hr>
+        <p align="left" class="mainbodytext">Click <a href="http://psimr.asu.edu/MTA.html" target="_blank">here</a> for the <strong class="mainbodytext">terms and conditions</strong> for receiving plasmids from the repository.</p>
+        <p align="left" class="mainbodytext"> Click <a href="cloning_strategies.htm" target="_blank">here</a> to view the <strong>cloning methods</strong> used to create many of the  plasmids           </p>        </td>
       </tr>
     </table></td>
   </tr>
@@ -71,6 +68,11 @@
               School of Public Health</a></td>
             <td width="12%"><a href="http://www.mgh.harvard.edu/" title="Massachusetts General Hospital" target="_blank" class="homeMainText">Massachusetts 
               General Hospital</a></td>
+          </tr>
+          <tr>
+          <p align="center"><span class="mainbodytext">
+          <a href="http://www.dfhcc.harvard.edu" target="_blank"><img src="DFHCC_NCI_logo.jpg" width="379"  height="46"></a>&nbsp;
+          <a href="http://hms.harvard.edu" target="_blank"><img src="HMS_logo.jpg" width="66" height="63"></a></span>
           </tr>
         </table>
       </TD>
