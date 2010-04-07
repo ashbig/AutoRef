@@ -26,18 +26,6 @@
 <html:errors/>
 
 <p class="mainbodytexthead">
-              Shipping Options:
-              <ol class="mainbodytexthead">
-                  <li>Include a FedEx account number at check-out and we will charge your account.</li>
-                  <li>If you don't provide a FedEx account number, we will apply a standard shipping charge at check-out.</li>
-                  <ul>  
-                      <li>$10.00 for domestic orders</li>
-                      <li>$20.00 for international orders</li>
-                </ul>
-                <li>No charge for shipping for the Harvard Medical School community. Pick up your order in the Seeley G. Mudd Building in the <a href="http://www.hip.harvard.edu/Location.html#Quad" target="_blank">HMS Quad</a> in the second floor hallway freezer. You MUST have access to the building to take advantage of this option.</li>
-      </ol>
-</p>
-<p class="mainbodytexthead">
           <i>If you do not want to complete your order now, you can save your cart and return to check-out another time (remember to sign in to see your saved cart).</i>
 </p>
 <p class="mainbodytexthead">
@@ -69,7 +57,19 @@
   </tr>
 </table>
 
-<p class="text">Shipping Information:</p>
+<p class="mainbodytexthead">
+              Shipping Options:
+              <ol class="mainbodytexthead">
+                  <li>Include a FedEx account number at check-out and we will charge your account.</li>
+                  <li>If you don't provide a FedEx account number, we will apply a standard shipping charge at check-out.</li>
+                  <ul>  
+                      <li>$10.00 for domestic orders</li>
+                      <li>$20.00 for international orders</li>
+                </ul>
+                <li>No charge for shipping for the Harvard Medical School community. Pick up your order in the Seeley G. Mudd Building in the <a href="http://www.hip.harvard.edu/Location.html#Quad" target="_blank">HMS Quad</a> in the second floor hallway freezer. You MUST have access to the building to take advantage of this option.</li>
+      </ol>
+</p>
+
 <table width="100%" border="0">
   <tr> 
     <td class="formlabel" width="20%">Choose shipping method:</td>
@@ -85,6 +85,16 @@
         <html:text size="50"property="accountNumber"/>
     </td>
   </tr>
+</table>
+
+<p class="mainbodytexthead">
+              Additional Options:
+              <ul class="mainbodytexthead">
+                  <li>Platinum QC Service ($10/ clone)</li>
+                  <li>Add this QC service for added peace of mind. When you order a Platinum Clone we will send your individual sample for end read sequencing at our in house sequencing facility. Our bench scientists will then analyze the resulting sequence to verify that the correct clone was cultured. For each clone ordered you will receive a glycerol stock, a DNA aliquot, and the individual sequencing read. If you have any additional questions about our Platinum Service please feel free to contact <a href="mailto:plasmidhelp@hms.harvard.edu>PlasmID help</a>.</li>
+      </ul>
+</p>
+<table width="100%" border="0">
   <tr> 
     <td class="formlabel">Would you like to add platinum service?</td>
     <td class="text">
