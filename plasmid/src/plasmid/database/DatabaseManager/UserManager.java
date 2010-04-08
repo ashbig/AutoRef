@@ -248,7 +248,7 @@ public class UserManager extends TableManager {
         String sql = "select userid,firstname,lastname,email,phone,"+
         " ponumber,institution,dateadded,datemod,modifier,"+
         " piname,usergroup,isinternal,piemail"+
-        " from userprofile where email=?"+
+        " from userprofile where upper(email)=upper(?)"+
         " and password=?";
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -621,7 +621,7 @@ public class UserManager extends TableManager {
     }
     
     public String findPassword(String email) {
-        String sql = "select password from userprofile where email=?";
+        String sql = "select password from userprofile where upper(email)=upper(?)";
         
         PreparedStatement stmt = null;
         ResultSet rs = null;
