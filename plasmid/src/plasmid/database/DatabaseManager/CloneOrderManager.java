@@ -526,7 +526,7 @@ public class CloneOrderManager extends TableManager {
             sql += " and c.shippingdate>=To_DATE('" + shippingDateFrom + "', 'MM/DD/YYYY')";
         }
         if (shippingDateTo != null) {
-            sql += " and c.orderDate<=To_DATE('" + shippingDateTo + "', 'MM/DD/YYYY')";
+            sql += " and c.shippingdate<=To_DATE('" + shippingDateTo + "', 'MM/DD/YYYY')";
         }
         if (status != null) {
             sql = sql + " and c.orderstatus='" + status + "'";
