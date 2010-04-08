@@ -91,9 +91,10 @@
               Additional Options:
               <ul class="mainbodytexthead">
                   <li>Platinum QC Service ($10/ clone)</li>
-                  <li>Add this QC service for added peace of mind. When you order a Platinum Clone we will send your individual sample for end read sequencing at our in house sequencing facility. Our bench scientists will then analyze the resulting sequence to verify that the correct clone was cultured. For each clone ordered you will receive a glycerol stock, a DNA aliquot, and the individual sequencing read. If you have any additional questions about our Platinum Service please feel free to contact <a href="mailto:plasmidhelp@hms.harvard.edu>PlasmID help</a>.</li>
-      </ul>
+                  <li>Add this QC service for added peace of mind. When you order a Platinum Clone we will send your individual sample for end read sequencing at our in house sequencing facility. Our bench scientists will then analyze the resulting sequence to verify that the correct clone was cultured. For each clone ordered you will receive a glycerol stock, a DNA aliquot, and the individual sequencing read. If you have any additional questions about our Platinum Service please feel free to contact <a href="mailto:plasmidhelp@hms.harvard.edu">PlasmID help</a>.</li>
+              </ul>
 </p>
+
 <table width="100%" border="0">
   <tr> 
     <td class="formlabel">Would you like to add platinum service?</td>
