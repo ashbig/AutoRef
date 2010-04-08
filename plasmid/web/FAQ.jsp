@@ -55,7 +55,7 @@
           <li><span class="formlabel"><strong><a href="#plasmidinfo6"> Can I get help identifying a large    sub-group of clones bioinformatically?</a></strong></span></li>
           <li><span class="formlabel"><strong><a href="#plasmidinfo7">Who should I cite if my work with    a clone requested via PlasmID results in publication?</a></strong></span></li>
         </ul>        
-        <p><span class="formlabelitalic"><a href="http://plasmid.med.harvard.edu/PLASMID/FAQ.jsp#PSI#PSI">PROTEIN    STRUCTURE INITIATIVE (PSI) FAQs</a></span><br />
+        <p><span class="formlabelitalic">PROTEIN    STRUCTURE INITIATIVE (PSI) FAQs</span><br />
           <span class="mainbodytext">&nbsp; &nbsp;    &nbsp; &nbsp; <a href="http://psimr.asu.edu" target="_blank">Click here</a> for more detailed information about the PSI Material Repository<br />
         &nbsp; &nbsp; &nbsp; &nbsp; <a href="http://kb.psi-structuralgenomics.org/KB/index.jsp" target="_blank">Click    here</a> for more detailed information about PSI </span></p></td>
     </tr>

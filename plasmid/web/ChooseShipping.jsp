@@ -97,8 +97,8 @@
 
 <table width="100%" border="0">
   <tr> 
-    <td class="formlabel">Would you like to add platinum service?</td>
-    <td class="text" align="left">
+    <td class="formlabel" width="20%">Would you like to add platinum service?</td>
+    <td class="text">
             <html:radio styleClass="text" property="isplatinum" value="<%=Constants.ISPLATINUM_Y%>">Yes</html:radio>
             <html:radio styleClass="text" property="isplatinum" value="<%=Constants.ISPLATINUM_N%>">No</html:radio>
     </td>
