@@ -161,7 +161,7 @@ Click the button to pay by credit card through the PayPal site. You DO NOT need 
 <table>
     <tr>
         <td colspan="4" class="text">
-            Customers paying through wire transfer please be sure to cover transferring bank fees and third-party bank fees where applicable. Thank you.
+            <i>**Customers paying through wire transfer please be sure to cover transferring bank fees and third-party bank fees where applicable. Thank you.</i>
         </td>
     </tr>
 <tr>
