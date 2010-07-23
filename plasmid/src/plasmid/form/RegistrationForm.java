@@ -41,6 +41,9 @@ public class RegistrationForm extends ActionForm {
     private String institution3;
     private String institution;
     
+    private boolean update;
+    private boolean first;
+    
     /** Creates a new instance of RegistrationForm */
     public RegistrationForm() {
     }
@@ -95,8 +98,10 @@ public class RegistrationForm extends ActionForm {
         group = null;
         password = null;
         password2 = null;
-        category = Institution.CATEGORY_US_INSTITUTION;
+        category = "";
         institution="";
+        update=false;
+        first=true;
     }
    
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
@@ -133,6 +138,7 @@ public class RegistrationForm extends ActionForm {
         if(!password.trim().equals(password2.trim()))
             errors.add("password", new ActionError("error.password2.nomatch"));
         
+        first=false;
         return errors;
     }
 
@@ -174,5 +180,21 @@ public class RegistrationForm extends ActionForm {
 
     public void setInstitution(String institution) {
         this.institution = institution;
+    }
+
+    public boolean isUpdate() {
+        return update;
+    }
+
+    public void setUpdate(boolean update) {
+        this.update = update;
+    }
+
+    public boolean isFirst() {
+        return first;
+    }
+
+    public void setFirst(boolean first) {
+        this.first = first;
     }
 }

@@ -41,8 +41,8 @@
   <tr> 
     <td class="formlabel">Institution:</td>
     <td class="text"><bean:write name="<%=Constants.USER_KEY%>" property="institution"/></td>
-    <td class="formlabel">Department:</td>
-    <td class="text"><bean:write name="<%=Constants.USER_KEY%>" property="department"/></td>
+    <td class="formlabel">Group:</td>
+    <td class="text"><bean:write name="<%=Constants.USER_KEY%>" property="group"/></td>
   </tr>
   <tr> 
     <td class="formlabel">PI Name:</td>
@@ -50,14 +50,10 @@
     <td class="formlabel">PI Email:</td>
     <td class="text"><bean:write name="<%=Constants.USER_KEY%>" property="piemail"/></td>
   </tr>
-  <tr> 
-    <td class="formlabel">Group:</td>
-    <td class="text"><bean:write name="<%=Constants.USER_KEY%>" property="group"/></td>
-  </tr>
 </table>
 
 <p>
-        <li class="text"><a href="UpdateAccount.jsp">Update Account: </a>Change account information</li>
+        <li class="text"><a href="PrepareRegistration.do?update=true&first=true">Update Account: </a>Change account information</li>
         <li class="text"><a href="ViewOrderHistory.do">View Orders: </a>View complete order list</li>
         <li class="text"><a href="ViewContainers.jsp">View Containers: </a>View plasmid information by containers</li>
         <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">

@@ -5,7 +5,6 @@
  */
 package plasmid.action;
 
-import java.util.*;
 import java.io.*;
 import java.sql.*;
 import javax.servlet.ServletException;
@@ -77,13 +76,22 @@ public class RegistrationAction extends Action {
         String institution = null;
         boolean isnewinstitution = false;
         Institution institute = null;
+        
+        ((RegistrationForm)form).setFirst(false);
+        
+        if (!password.equals(password2)) {
+            errors.add(ActionErrors.GLOBAL_ERROR,
+                    new ActionError("error.password2.nomatch"));
+            saveErrors(request, errors);
+            return (new ActionForward(mapping.getInput()));
+        }
 
         if (institution1 != null && institution1.trim().length() > 0) {
             institution = institution1;
         } else if (institution2 != null && institution2.trim().length() > 0) {
             institution = institution2;
         } else if (institution3 != null && institution3.trim().length() > 0) {
-            if(category==null || category.trim().length()<=0) {
+            if (category == null || category.trim().length() <= 0) {
                 errors.add(ActionErrors.GLOBAL_ERROR,
                         new ActionError("error.category.required"));
                 saveErrors(request, errors);
@@ -100,9 +108,9 @@ public class RegistrationAction extends Action {
             return (new ActionForward(mapping.getInput()));
         }
         ((RegistrationForm) form).setInstitution(institution);
-        if(!isnewinstitution)
+        if (!isnewinstitution) {
             ((RegistrationForm) form).setCategory("");
-
+        }
         DatabaseTransaction t = null;
         Connection conn = null;
         try {
@@ -120,8 +128,9 @@ public class RegistrationAction extends Action {
             return mapping.findForward("error");
         }
 
+        boolean update = ((RegistrationForm) form).isUpdate();
         UserManager manager = new UserManager(conn);
-        if (manager.userExist(email)) {
+        if (!update && manager.userExist(email)) {
             errors.add(ActionErrors.GLOBAL_ERROR,
                     new ActionError("error.user.exist"));
             saveErrors(request, errors);
@@ -135,15 +144,6 @@ public class RegistrationAction extends Action {
         }
 
         DefTableManager m = new DefTableManager();
-        int id = m.getNextid("userid", t);
-
-        if (id < 0) {
-            errors.add(ActionErrors.GLOBAL_ERROR,
-                    new ActionError(m.getErrorMessage()));
-            saveErrors(request, errors);
-            DatabaseTransaction.closeConnection(conn);
-            return mapping.findForward("error");
-        }
 
         String pname = null;
         String pemail = null;
@@ -196,20 +196,54 @@ public class RegistrationAction extends Action {
             }
         }
 
-        User user = new User(id, firstname.trim(), lastname.trim(), email.trim(), phone, institution, null, pname, group, password, User.EXTERNAL, pemail);
-        if (!manager.insertUser(user)) {
-            DatabaseTransaction.rollback(conn);
-            DatabaseTransaction.closeConnection(conn);
-            errors.add(ActionErrors.GLOBAL_ERROR,
-                    new ActionError(manager.getErrorMessage()));
-            saveErrors(request, errors);
-            return mapping.findForward("error");
+        String next = "success";
+        if (update) {
+            User user = (User) request.getSession().getAttribute(Constants.USER_KEY);
+            user.setFirstname(firstname);
+            user.setLastname(lastname);
+            user.setEmail(email);
+            user.setInstitution(institution);
+            user.setGroup(group);
+            user.setPassword(password);
+            user.setPhone(phone);
+            user.setPiname(pname);
+            user.setPiemail(pemail);
+            if (!manager.updateUserProfile(user)) {
+                DatabaseTransaction.rollback(conn);
+                DatabaseTransaction.closeConnection(conn);
+                errors.add(ActionErrors.GLOBAL_ERROR,
+                        new ActionError(manager.getErrorMessage()));
+                saveErrors(request, errors);
+                return mapping.findForward("error");
+            }
+            next = "success_update";
+        } else {
+            int id = m.getNextid("userid", t);
+
+            if (id < 0) {
+                errors.add(ActionErrors.GLOBAL_ERROR,
+                        new ActionError(m.getErrorMessage()));
+                saveErrors(request, errors);
+                DatabaseTransaction.closeConnection(conn);
+                return mapping.findForward("error");
+            }
+
+            User user = new User(id, firstname.trim(), lastname.trim(), email.trim(), phone, institution, null, pname, group, password, User.EXTERNAL, pemail);
+            if (!manager.insertUser(user)) {
+                DatabaseTransaction.rollback(conn);
+                DatabaseTransaction.closeConnection(conn);
+                errors.add(ActionErrors.GLOBAL_ERROR,
+                        new ActionError(manager.getErrorMessage()));
+                saveErrors(request, errors);
+                return mapping.findForward("error");
+            }
+            request.setAttribute("registrationSuccessful", "1");
         }
 
         DatabaseTransaction.commit(conn);
         DatabaseTransaction.closeConnection(conn);
-        request.setAttribute("registrationSuccessful", "1");
-        return mapping.findForward("success");
+        ((RegistrationForm)form).reset(mapping);
+        return mapping.findForward(next);
     }
 }
 

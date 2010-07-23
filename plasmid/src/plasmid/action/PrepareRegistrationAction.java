@@ -8,7 +8,6 @@ package plasmid.action;
 
 import java.util.*;
 import java.io.*;
-import java.sql.*;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,11 +17,13 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-
 import plasmid.Constants;
 import plasmid.coreobject.Institution;
+import plasmid.coreobject.PI;
+import plasmid.coreobject.User;
 import plasmid.database.DatabaseManager.*;
 import plasmid.database.*;
+import plasmid.form.RegistrationForm;
 
 /**
  *
@@ -95,6 +96,20 @@ public class PrepareRegistrationAction extends Action {
         request.setAttribute("company", company);
         request.setAttribute("categories", categories);
         
+        boolean update = ((RegistrationForm)form).isUpdate();
+        boolean first = ((RegistrationForm)form).isFirst();
+        if(update && first) {
+            User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
+            ((RegistrationForm)form).setFirstname(user.getFirstname());
+            ((RegistrationForm)form).setLastname(user.getLastname());
+            ((RegistrationForm)form).setEmail(user.getEmail());
+            ((RegistrationForm)form).setPhone(user.getPhone());
+            ((RegistrationForm)form).setPiname(PI.getNameInstitution(user.getPiname(), user.getPiemail()));
+            ((RegistrationForm)form).setGroup(user.getGroup());
+            ((RegistrationForm)form).setPassword(user.getPassword());
+            ((RegistrationForm)form).setInstitution1(user.getInstitution());
+            ((RegistrationForm)form).setInstitution2(user.getInstitution());
+        }
         return (mapping.findForward("success"));        
     }    
 }

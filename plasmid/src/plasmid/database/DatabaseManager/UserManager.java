@@ -593,7 +593,7 @@ public class UserManager extends TableManager {
             return true;
         
         String sql = "update userprofile"+
-        " set firstname=?,lastname=?,email=?,phone=?,ponumber=?,institution=?,"+
+        " set firstname=?,lastname=?,email=?,phone=?,password=?,institution=?,"+
         " datemod=sysdate,piname=?,usergroup=?,piemail=?"+
         " where userid=?";
         
@@ -604,12 +604,13 @@ public class UserManager extends TableManager {
             stmt.setString(2, user.getLastname());
             stmt.setString(3, user.getEmail());
             stmt.setString(4, user.getPhone());
-            stmt.setString(5, user.getPonumber());
+            stmt.setString(5, user.getPassword());
             stmt.setString(6, user.getInstitution());
             stmt.setString(7, user.getPiname());
             stmt.setString(8, user.getGroup());
             stmt.setString(9, user.getPiemail());
             stmt.setInt(10, user.getUserid());
+            DatabaseTransaction.executeUpdate(stmt);
         } catch (Exception ex) {
             handleError(ex, "Cannot update userprofile.");
             return false;

@@ -65,4 +65,11 @@ public class PI {
         }
         return name+" ("+s+")";
     }
+    
+    public static String getNameInstitution(String pname, String pemail) {
+        PI pi = new PI();
+        pi.setName(pname);
+        pi.setEmail(pemail);
+        return pi.getNameInstitution();
+    }
 }

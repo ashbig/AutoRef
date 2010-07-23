@@ -20,7 +20,12 @@
       <jsp:include page="menuHome.jsp" />
 	</td>
     <td width="83%" align="left" valign="top">
+    <logic:equal name="registrationForm" property="update" value="true"> 
+	<jsp:include page="updateAccountTitle.jsp" />
+    </logic:equal>
+    <logic:notEqual name="registrationForm" property="update" value="true"> 
 	<jsp:include page="registrationTitle.jsp" />
+    </logic:notEqual>
       <html:form action="Registration.do" enctype="multipart/form-data">
 <input type="hidden" name="forward" value="submit"/>
 <p class="homeMainText">Please verify the following information. (* indicates required 

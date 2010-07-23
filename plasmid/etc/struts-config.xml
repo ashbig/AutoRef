@@ -455,6 +455,8 @@
         </action>
         <action    path="/PrepareRegistration"
                type="plasmid.action.PrepareRegistrationAction"
+               name="registrationForm"
+               validate="false"
               input="/PrepareRegistration.do">
             <forward  name="success"   path="/HomeRegistration.jsp"/>
         </action>
@@ -491,6 +493,7 @@
               input="/PrepareRegistration.do">
             <forward  name="success_confirm"   path="/ConfirmRegistration.jsp"/>
             <forward  name="success"   path="/Login.jsp"/>
+            <forward  name="success_update"   path="/Account.jsp"/>
         </action>
         <action    path="/SearchClone"
                type="plasmid.action.SearchCloneAction"
