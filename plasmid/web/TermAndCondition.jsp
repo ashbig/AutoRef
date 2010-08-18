@@ -47,8 +47,8 @@
             </tr>
             <tr class="mainbodytext">
                 <td width="600"><b>FLEXGene:</b> This MTA is used to transfer clones made by the Harvard Institute of Proteomics to Non-profit or academic research laboratories. </td>
-                <td width="100"><a href="FlexGENEMTA_co_use.pdf">Download</a></td>
-                <td width="100"><a href="FlexGENEMTA_co_use.doc">Download</a></td>
+                <td width="100"><a href="FLEX_MTA_signatures.pdf">Download</a></td>
+                <td width="100"><a href="FLEX_MTA_signatures.doc">Download</a></td>
             </tr>
             <tr class="mainbodytext">
                 <td width="600"><b>FLEXGene_Co:</b> This MTA is used to transfer clones made by the Harvard Institute of Proteomics to companies</td>
