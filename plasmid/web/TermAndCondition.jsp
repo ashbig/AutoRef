@@ -37,8 +37,8 @@
             </tr>
             <tr class="mainbodytext">
                 <td width="600"><b>Standard Plasmid Transfer Agreement:</b> This generic MTA is used to govern the transfer of the majority of clones in the PlasmID Repository.</td>
-                <td width="100"><a href="Standard PlasmidTransferAgreementRev03-10-10.pdf">Download</a></td>
-                <td width="100"><a href="Standard PlasmidTransferAgreementRev03-10-10.doc">Download</a></td>
+                <td width="100"><a href="StandardPlasmidTransferAgreementRev03-10-10.pdf">Download</a></td>
+                <td width="100"><a href="StandardPlasmidTransferAgreementRev03-10-10.doc">Download</a></td>
             </tr>
             <tr class="mainbodytext">
                 <td width="600"><b>Expedited Process Agreement:</b> In conjunction with our Standard Plasmid Transfer Agreement this document will allow your institution to join our Expedited MTA Network. Members of this network agree to the terms of our Standard Plasmid Transfer Agreement on a continual basis and therefore do not need to obtain a signed MTA for each order. Instead the institution will receive a yearly report containing a list of clones and researchers who received materials from our repository in the previous year. </td>
