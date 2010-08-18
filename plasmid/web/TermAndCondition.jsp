@@ -51,12 +51,12 @@
                 <td width="100"><a href="FLEX_MTA_signatures.doc">Download</a></td>
             </tr>
             <tr class="mainbodytext">
-                <td width="600"><b>FLEXGene_Co:</b> This MTA is used to transfer clones made by the Harvard Institute of Proteomics to companies</td>
+                <td width="600"><b>FLEXGene_Co:</b> This MTA is used to transfer clones made by the Harvard Institute of Proteomics to companies.</td>
                 <td width="100"><a href="FlexGENEMTA_co_use.pdf">Download</a></td>
                 <td width="100"><a href="FlexGENEMTA_co_use.doc">Download</a></td>
             </tr>
             <tr class="mainbodytext">
-                <td width="600"><b>Tsien:</b> This MTA is used for select clones provided by Dr. Tsein?s laboratory. </td>
+                <td width="600"><b>Tsien:</b> This MTA is used for select clones provided by Dr. Tsein's laboratory. </td>
                 <td width="100"><a href="tsienMTA.pdf">Download</a></td>
                 <td width="100"><a href="tsienMTA.doc">Download</a></td>
             </tr>
@@ -68,8 +68,8 @@
     <td>
         <table width="800" border="2" align="center" bgcolor="#EFEFEF">
             <tr>
-                <td width="800" class="mainbodytext">To expedite orders please feel free to fax completed MTA?s to (214) 481 5629 and then mail the original signed document to: <br>
-                    Glenn Beeman<br>
+                <td width="800" class="mainbodytext"><i>To expedite orders please feel free to fax completed MTAs to (214) 481 5629 and then mail the original signed document to: <br>
+                    Glenn Beeman</i><br>
                     LHRRB 212<br> 
                     240 Longwood Ave<br> 
                     Boston, MA 02115
