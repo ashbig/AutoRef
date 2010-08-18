@@ -68,8 +68,8 @@
     <td>
         <table width="800" border="2" align="center" bgcolor="#EFEFEF">
             <tr>
-                <td width="800" class="mainbodytext"><i>To expedite orders please feel free to fax completed MTAs to (214) 481 5629 and then mail the original signed document to: <br>
-                    Glenn Beeman</i><br>
+                <td width="800" class="mainbodytext"><i>To expedite orders please feel free to fax completed MTAs to (214) 481 5629 and then mail the original signed document to:</i> <br>
+                    Glenn Beeman<br>
                     LHRRB 212<br> 
                     240 Longwood Ave<br> 
                     Boston, MA 02115
