@@ -1,5 +1,6 @@
 <%@ page language="java" %>
 <%@ page errorPage="ProcessError.do"%>
+<%@ page import="plasmid.Constants" %> 
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -22,10 +23,32 @@
             <p align="left"><span class="mainbodytext">The Mission of the DNA Resource CORE is to provide member in the DF/HCC, Harvard Affiliates, and outside researchers with quality and inexpensive <a target="_blank" href="http://dnaseq.med.harvard.edu/">DNA sequencing services</a> and <a href="http://plasmid.med.harvard.edu/PLASMID/Home.jsp">sequence verified plasmid constructs</a>, paired with comprehensive quality control and customer support.&nbsp;        
         </span>
         <hr>
+            <!--
         <p align="left" class="mainbodytext"><strong>PLASMID SEARCH:</strong>  Go to <a href="OrderOverview.jsp">Search & Order</a>
           or find a list of our large collections <a href="collection_overview.jsp" target="_blank">here</a>. </p>
         <p align="left" class="mainbodytext"><strong>PLASMID COST:</strong> Click <a href="http://plasmid.med.harvard.edu/PLASMID/OrderOverview.jsp#cost">here</a> for plasmid and shipping costs.</p>
-        <p align="left" class="mainbodytext"><strong class="mainbodytext">DEPOSITING CLONES: </strong>Go to <a href="Submission.jsp">Plasmid Submission</a> or see a <a href="http://psimr.asu.edu/overview.html" target="_blank">slide show</a> describing the process.</p>
+        <p align="left" class="mainbodytext"><strong class="mainbodytext">DEPOSITING CLONES: </strong>Go to <a href="Submission.jsp">Plasmid Submission</a> or see a <a href="http://psimr.asu.edu/overview.html" target="_blank">slide show</a> describing the process.</p>       
+        -->
+        
+      <html:form action="AdvancedSearch.do">
+        <p class="formlabel">Search PlasmID collection [<a href="PrepareAdvancedSearch.do?psi=0">Advanced Search</a>]</p>
+        <table width="100%" border="0">
+            <tr> 
+                <td class="formlabel" width="30%">Gene name or symbol</td>
+                <td>
+                    <html:select property="geneNameOp" styleClass="itemtext">
+                      <html:option value="<%=Constants.OPERATOR_CONTAINS %>"/>
+                      <html:option value="<%=Constants.OPERATOR_EQUALS %>"/>
+                    </html:select>
+                </td>
+                <td>
+                    <html:text styleClass="itemtext" property="geneName" size="50"/>
+                </td>
+                <td><html:submit styleClass="formlabel" value="Search"/></td>
+            </tr>
+        </table>
+        </html:form>
+    
         <hr>
         <p align="left" class="mainbodytext">Click <a href="TermAndCondition.jsp">here</a> for the <strong class="mainbodytext">terms and conditions</strong> for receiving plasmids from the repository.</p>
         <p align="left" class="mainbodytext"> Click <a href="cloning_strategies.htm" target="_blank">here</a> to view the <strong>cloning methods</strong> used to create many of the  plasmids           </p>        </td>

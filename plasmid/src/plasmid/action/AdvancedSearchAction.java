@@ -111,7 +111,7 @@ public class AdvancedSearchAction extends Action {
         List proteinSolubleList = sc.convertFromStringToList(proteinSoluble, ",");
 
         String species = ((AdvancedSearchForm) form).getSpecies();
-        if (species.equals(Constants.ALL)) {
+        if (species == null || species.equals(Constants.ALL)) {
             species = null;
         }
         String psicenter = ((AdvancedSearchForm) form).getPsicenter();
