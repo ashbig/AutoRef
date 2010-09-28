@@ -99,7 +99,8 @@ public class BlastWrapper {
         String cmd = BLAST_PROGRAM_PATH+"bl2seq -p "+getProgram()+" -i "+getInput()+
                 " -j "+getInput2()+" -o "+getBl2seqOutput()+
                 " -e "+getExpect()+" -F "+getIsLowcomp()+
-                " -U "+getIsMaskLowercase()+" -m "+getIsMegablast();
+                " -U "+getIsMaskLowercase()+" -m "+getIsMegablast()+
+                " -D "+getAlignmentview();
     
         return cmd;
     }

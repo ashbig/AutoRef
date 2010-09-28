@@ -15,11 +15,12 @@ import org.apache.struts.action.ActionForm;
  */
 public class EnterPlatinumResultForm extends ActionForm {
     private String orderid;
-    private String method;
     private String researcher;
     private String status;
     private List sequences;
     private List results;
+    private List methods;
+    private String submit;
 
     public EnterPlatinumResultForm() {
         super();
@@ -29,6 +30,7 @@ public class EnterPlatinumResultForm extends ActionForm {
     public void resetSequencesAndResults() {
         this.sequences = new ArrayList();
         this.results = new ArrayList();
+        this.methods = new ArrayList();
     }
     
     public String getOrderid() {
@@ -37,14 +39,6 @@ public class EnterPlatinumResultForm extends ActionForm {
 
     public void setOrderid(String orderid) {
         this.orderid = orderid;
-    }
-
-    public String getMethod() {
-        return method;
-    }
-
-    public void setMethod(String method) {
-        this.method = method;
     }
 
     public String getResearcher() {
@@ -78,6 +72,14 @@ public class EnterPlatinumResultForm extends ActionForm {
     public void setResult(int i, String s) {
         this.getResults().set(i, s);
     }
+    
+    public String getMethod(int i) {
+        return (String)getMethods().get(i);
+    }
+    
+    public void setMethod(int i, String s) {
+        this.getMethods().set(i, s);
+    }
 
     public List getSequences() {
         return sequences;
@@ -93,5 +95,21 @@ public class EnterPlatinumResultForm extends ActionForm {
 
     public void setResults(List results) {
         this.results = results;
+    }
+
+    public String getSubmit() {
+        return submit;
+    }
+
+    public void setSubmit(String submit) {
+        this.submit = submit;
+    }
+
+    public List getMethods() {
+        return methods;
+    }
+
+    public void setMethods(List methods) {
+        this.methods = methods;
     }
 }

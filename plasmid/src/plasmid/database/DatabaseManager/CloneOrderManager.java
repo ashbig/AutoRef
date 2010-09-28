@@ -722,7 +722,7 @@ public class CloneOrderManager extends TableManager {
                             int userid = rs2.getInt(6);
                             OrderCloneValidation oc = new OrderCloneValidation(orderClone);
                             oc.setMethod(method);
-                            oc.setSequence(sequence);
+                            oc.setSequence(Dnasequence.convertToFasta(sequence));
                             oc.setResult(result);
                             oc.setWhen(when);
                             oc.setWho(researcher);

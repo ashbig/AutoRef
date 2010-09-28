@@ -23,7 +23,7 @@ import com.jscape.inet.sftp.Sftp;
  * @author  DZuo
  */
 public class OrderProcessManager {
-
+    public static final String PLATINUM_VALIDATION_METHOD_END_SEQ = "End read sequence validation";
     public static final String USA = "USA";
     public static final int PLATESIZE = 96;
     public static final String BATCH_ORDER_FILE_DILIM = ",";

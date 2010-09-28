@@ -72,12 +72,15 @@ public class EnterPlatinumResultAction extends InternalUserAction {
         List clones = order.getClones();
         List sequences = new ArrayList();
         List results = new ArrayList();
+        List methods = new ArrayList();
         for(int i=0; i<clones.size(); i++) {
             sequences.add(null);
             results.add(null);
+            methods.add(null);
         }
         ((EnterPlatinumResultForm)form).setSequences(sequences);
         ((EnterPlatinumResultForm)form).setResults(results);
+        ((EnterPlatinumResultForm)form).setMethods(methods);
         
         List validationMethods = DefTableManager.getVocabularies("platinumvalidationmethod", "method");
         List validationStatus = new ArrayList();

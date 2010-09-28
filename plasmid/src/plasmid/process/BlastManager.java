@@ -168,10 +168,11 @@ public class BlastManager {
 
     public String runBl2seq(String program, String seq1, String seq2,
             double expect, boolean isLowcomp,
-            boolean ismaskLowercase, boolean isMegablast) throws Exception {
+            boolean ismaskLowercase, boolean isMegablast, String output,
+            int outputformat, boolean isDelete)
+            throws Exception {
         String file1 = makeQueryFile(seq1);
         String file2 = makeQueryFile(seq2);
-        String output = BlastWrapper.BLAST_FILE_PATH + "out";
 
         BlastWrapper blaster = new BlastWrapper();
         blaster.setProgram(program);
@@ -183,6 +184,7 @@ public class BlastManager {
         blaster.setIsLowcomp(getBooleanValue(isLowcomp));
         blaster.setIsMaskLowercase(getBooleanValue(ismaskLowercase));
         blaster.setIsMegablast(getBooleanValue(isMegablast));
+        blaster.setAlignmentview(outputformat);
 
         String s = "";
         try {
@@ -196,13 +198,21 @@ public class BlastManager {
             in.close();
             blaster.delete(file1);
             blaster.delete(file2);
-            blaster.delete(output);
+            if (isDelete) {
+                blaster.delete(output);
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
             throw new Exception("blast error occured.\n" + ex.getMessage());
         }
 
         return s;
+    }
+
+    public String runBl2seq(String program, String seq1, String seq2,
+            double expect, boolean isLowcomp,
+            boolean ismaskLowercase, boolean isMegablast) throws Exception {
+        return runBl2seq(program, seq1, seq2, expect, isLowcomp, ismaskLowercase, isMegablast, BlastWrapper.BLAST_FILE_PATH + "out", BlastWrapper.PAIRWISE_OUTPUT, true);
     }
 
     public String makeQueryFile(String sequence) throws Exception {

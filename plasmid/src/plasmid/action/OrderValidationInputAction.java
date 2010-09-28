@@ -24,6 +24,7 @@ import plasmid.database.DatabaseManager.DefTableManager;
 import plasmid.form.EnterPlatinumResultForm;
 import plasmid.form.ViewOrderDetailForm;
 import plasmid.process.OrderProcessManager;
+import plasmid.process.SequenceAnalysisManager;
 
 /**
  *
@@ -38,11 +39,6 @@ public class OrderValidationInputAction extends InternalUserAction {
     public ActionForward internalUserPerform(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
 
-        String method = ((EnterPlatinumResultForm) form).getMethod();
-        String status = ((EnterPlatinumResultForm) form).getStatus();
-        String researcher = ((EnterPlatinumResultForm)form).getResearcher();
-        User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
-        
         List validationMethods = DefTableManager.getVocabularies("platinumvalidationmethod", "method");
         List validationStatus = new ArrayList();
         validationStatus.add(CloneOrder.PLATINUM_STATUS_REQUESTED);
@@ -51,18 +47,42 @@ public class OrderValidationInputAction extends InternalUserAction {
         List validationResults = new ArrayList();
         validationResults.add(OrderCloneValidation.RESULT_PASS);
         validationResults.add(OrderCloneValidation.RESULT_FAIL);
-        
+        CloneOrder order = (CloneOrder) request.getSession().getAttribute(Constants.CLONEORDER);
+
         request.setAttribute("validationMethods", validationMethods);
         request.setAttribute("validationStatus", validationStatus);
         request.setAttribute("validationResults", validationResults);
         
-        if (method == null || method.trim().length() == 0) {
-            errors.add(ActionErrors.GLOBAL_ERROR,
-                    new ActionError("error.general", "Please select the validation method."));
-            saveErrors(request, errors);
+        String submit = ((EnterPlatinumResultForm) form).getSubmit();
+        if(Constants.LABEL_SEQ_ANALYSIS.equals(submit)) {
+            SequenceAnalysisManager m = new SequenceAnalysisManager();
+            List clones = order.getClones();
+            try {
+                m.getCloneSequences(clones, SequenceAnalysisManager.SEQUENCE_PATH);
+                m.runBlast(clones);
+                
+                for (int i = 0; i < clones.size(); i++) {
+                    OrderClones clone = (OrderClones) clones.get(i);
+                    OrderCloneValidation validation = clone.getValidation();
+                    if (validation != null) {
+                        ((EnterPlatinumResultForm)form).setSequence(i, validation.getSequence());
+                        ((EnterPlatinumResultForm)form).setResult(i, validation.getResult());
+                        ((EnterPlatinumResultForm)form).setMethod(i, validation.getMethod());
+                    } 
+                }
+            } catch (Exception ex) {
+                errors.add(ActionErrors.GLOBAL_ERROR,
+                    new ActionError("error.general", "Cannot run sequence analysis."));
+                saveErrors(request, errors);
+                return (new ActionForward(mapping.getInput()));
+            }
             return (new ActionForward(mapping.getInput()));
         }
-
+        
+        String status = ((EnterPlatinumResultForm) form).getStatus();
+        String researcher = ((EnterPlatinumResultForm)form).getResearcher();
+        User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
+       
         if (status == null || status.trim().length() == 0) {
             errors.add(ActionErrors.GLOBAL_ERROR,
                     new ActionError("error.general", "Please select the validation status."));
@@ -70,7 +90,6 @@ public class OrderValidationInputAction extends InternalUserAction {
             return (new ActionForward(mapping.getInput()));
         }
 
-        CloneOrder order = (CloneOrder) request.getSession().getAttribute(Constants.CLONEORDER);
         order.setPlatinumServiceStatus(status);
         List clones = order.getClones();
         List validations = new ArrayList();
@@ -78,6 +97,7 @@ public class OrderValidationInputAction extends InternalUserAction {
             OrderClones clone = (OrderClones) clones.get(i);
             String sequence = ((EnterPlatinumResultForm)form).getSequence(i);
             String result = ((EnterPlatinumResultForm)form).getResult(i);
+            String method = ((EnterPlatinumResultForm)form).getMethod(i);
             
             if (sequence == null || sequence.trim().length() == 0) {
                 if (result == null || result.trim().length() == 0) {
@@ -94,8 +114,13 @@ public class OrderValidationInputAction extends InternalUserAction {
                             new ActionError("error.general", "Please select the validation result for clone " + clone.getClone().getName()));
                     saveErrors(request, errors);
                     return (new ActionForward(mapping.getInput()));
+                } else if (method == null || method.trim().length() == 0) {
+                    errors.add(ActionErrors.GLOBAL_ERROR,
+                            new ActionError("error.general", "Please select the validation method for clone " + clone.getClone().getName()));
+                    saveErrors(request, errors);
+                    return (new ActionForward(mapping.getInput()));
                 } else {
-                    OrderCloneValidation validation = new OrderCloneValidation(clone);
+                    OrderCloneValidation validation = new OrderCloneValidation();
                     validation.setOrderid(order.getOrderid());
                     validation.setCloneid(clone.getCloneid());
                     validation.setSequence(sequence);
@@ -119,7 +144,6 @@ public class OrderValidationInputAction extends InternalUserAction {
         if (manager.addCloneValidationResults(validations, order)) {
             ViewOrderDetailForm f = new ViewOrderDetailForm();
             f.setOrderid(""+order.getOrderid());
-            ((EnterPlatinumResultForm)form).setMethod(null);
             ((EnterPlatinumResultForm)form).setStatus(null);
             ((EnterPlatinumResultForm)form).resetSequencesAndResults();
             return mapping.findForward("success");

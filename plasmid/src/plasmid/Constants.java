@@ -129,6 +129,7 @@ public class Constants {
     public static final String ISPLATINUM_Y = "Yes";
     public static final String ISPLATINUM_N = "No";
     public static final Double PLATINUM_SERVICE_COST = 10.0;
+    public static final String LABEL_SEQ_ANALYSIS = "Process Sequence Analysis";
     
     /** Creates a new instance of Constants */
     public Constants() {
