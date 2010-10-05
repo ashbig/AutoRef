@@ -55,10 +55,20 @@ public class OrderValidationInputAction extends InternalUserAction {
         
         String submit = ((EnterPlatinumResultForm) form).getSubmit();
         if(Constants.LABEL_SEQ_ANALYSIS.equals(submit)) {
+            String seqdir = ((EnterPlatinumResultForm) form).getSeqdir();
+            if(seqdir == null || seqdir.trim().length()==0) {
+                errors.add(ActionErrors.GLOBAL_ERROR,
+                    new ActionError("error.general", "Please select the sequence file directory."));
+                saveErrors(request, errors);
+                return (new ActionForward(mapping.getInput()));
+            }
+            
             SequenceAnalysisManager m = new SequenceAnalysisManager();
             List clones = order.getClones();
             try {
-                m.getCloneSequences(clones, SequenceAnalysisManager.SEQUENCE_PATH);
+                seqdir = (seqdir+"\\");
+                //seqdir = seqdir.replaceAll("\\\\", "\\\\");
+                m.getCloneSequences(clones, seqdir);
                 m.runBlast(clones);
                 
                 for (int i = 0; i < clones.size(); i++) {
@@ -71,6 +81,7 @@ public class OrderValidationInputAction extends InternalUserAction {
                     } 
                 }
             } catch (Exception ex) {
+                ex.printStackTrace();
                 errors.add(ActionErrors.GLOBAL_ERROR,
                     new ActionError("error.general", "Cannot run sequence analysis."));
                 saveErrors(request, errors);

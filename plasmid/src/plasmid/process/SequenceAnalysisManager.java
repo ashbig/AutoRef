@@ -25,7 +25,7 @@ public class SequenceAnalysisManager {
     public static final String SEQUENCE_PATH = "D:\\dev\\Test\\Plasmid\\sequence\\";
 
     public void getCloneSequences(List clones, String seqfilepath) throws Exception {
-        File folder = new File(SEQUENCE_PATH);
+        File folder = new File(seqfilepath);
         File[] listOfFiles = folder.listFiles();
 
         for (int i = 0; i < clones.size(); i++) {
@@ -34,12 +34,20 @@ public class SequenceAnalysisManager {
             for (int k = 0; k < listOfFiles.length; k++) {
                 File file = listOfFiles[k];
                 String filename = file.getName().trim();
-                int sep = filename.indexOf("-");
-                String filenameroot = filename;
-                if(sep>0)
-                    filenameroot = filename.substring(0, sep);
                 
-                if (file.isFile() && filenameroot.equalsIgnoreCase(clonename)) {
+                int sep = filename.indexOf(".");
+                if(sep>0)
+                    filename = filename.substring(0, sep);
+                
+                sep = filename.indexOf("_");
+                if(sep>0)
+                    filename = filename.substring(0, sep);
+                
+                sep = filename.indexOf("-");
+                if(sep>0)
+                    filename = filename.substring(0, sep);
+                
+                if (file.isFile() && filename.equalsIgnoreCase(clonename)) {
                     BufferedReader f = new BufferedReader(new FileReader(file));
                     String seq = "";
                     String line = null;
