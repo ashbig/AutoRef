@@ -24,7 +24,7 @@
 	</td>
     <td width="83%" align="left" valign="top">
 	<jsp:include page="platinumServiceTitle.jsp" />
-      <html:form action="OrderValidationInput.do">
+      <html:form action="OrderValidationInput.do" method="post">
 <p class="homeMainText">Please enter the following information.</p>
 <html:errors/>
 <table width="100%" border="0">
@@ -39,6 +39,12 @@
     </td>
   </tr>-->
   <tr class="formlabel"> 
+    <td width="30%" align="left" valign="baseline">Researcher:</td>
+    <td width="70%" align="left" valign="baseline" class="text"> 
+        <bean:write name="enterPlatinumResultForm" property="researcher" />
+    </td>
+  </tr>
+  <tr class="formlabel"> 
     <td width="30%" align="left" valign="baseline">Validation Status:</td>
     <td width="70%" align="left" valign="baseline"> 
                 <html:select property="status" styleClass="text">
@@ -48,9 +54,9 @@
     </td>
   </tr>
   <tr class="formlabel"> 
-    <td width="30%" align="left" valign="baseline">Researcher:</td>
+    <td width="30%" align="left" valign="baseline">Please enter the sequence file directory:</td>
     <td width="70%" align="left" valign="baseline" class="text"> 
-        <bean:write name="enterPlatinumResultForm" property="researcher" />
+        <html:text property="seqdir" />
     </td>
   </tr>
 </table>

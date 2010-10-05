@@ -58,7 +58,7 @@ public class OrderValidationInputAction extends InternalUserAction {
             String seqdir = ((EnterPlatinumResultForm) form).getSeqdir();
             if(seqdir == null || seqdir.trim().length()==0) {
                 errors.add(ActionErrors.GLOBAL_ERROR,
-                    new ActionError("error.general", "Please select the sequence file directory."));
+                    new ActionError("error.general", "Please enter the sequence file directory."));
                 saveErrors(request, errors);
                 return (new ActionForward(mapping.getInput()));
             }
