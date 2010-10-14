@@ -52,13 +52,6 @@
                     <html:options name="validationStatus"/>
                 </html:select>   
     </td>
-  </tr>
-  <tr class="formlabel"> 
-    <td width="30%" align="left" valign="baseline">Please enter the sequence file directory:</td>
-    <td width="70%" align="left" valign="baseline" class="text"> 
-        <html:text property="seqdir" />
-    </td>
-  </tr>
 </table>
 
 <p class="homeMainText">Please enter the validation results: <html:submit styleClass="text" value="<%=Constants.LABEL_SEQ_ANALYSIS%>" property="submit" /></p>

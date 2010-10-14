@@ -21,12 +21,10 @@ public class EnterPlatinumResultForm extends ActionForm {
     private List results;
     private List methods;
     private String submit;
-    private String seqdir;
 
     public EnterPlatinumResultForm() {
         super();
         resetSequencesAndResults();
-        seqdir = null;
     }
     
     public void resetSequencesAndResults() {
@@ -113,13 +111,5 @@ public class EnterPlatinumResultForm extends ActionForm {
 
     public void setMethods(List methods) {
         this.methods = methods;
-    }
-
-    public String getSeqdir() {
-        return seqdir;
-    }
-
-    public void setSeqdir(String seqdir) {
-        this.seqdir = seqdir;
     }
 }

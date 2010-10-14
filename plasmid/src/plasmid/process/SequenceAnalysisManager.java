@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.List;
+import plasmid.Constants;
 import plasmid.blast.BlastParser;
 import plasmid.blast.BlastWrapper;
 import plasmid.coreobject.OrderCloneValidation;
@@ -22,7 +23,7 @@ public class SequenceAnalysisManager {
     public static final int ALENGTH = 100;
     public static final double PID = 90.0;
     public static final double EXPECT = BlastWrapper.DEFAULT_EXPECT;
-    public static final String SEQUENCE_PATH = "D:\\dev\\Test\\Plasmid\\sequence\\";
+    public static final String SEQUENCE_PATH = Constants.SEQ_ANALYSIS_PATH;
 
     public void getCloneSequences(List clones, String seqfilepath) throws Exception {
         File folder = new File(seqfilepath);
@@ -58,6 +59,7 @@ public class SequenceAnalysisManager {
                         seq = seq+line;
                     }
                     f.close();
+                    file.delete();
                     OrderCloneValidation validation = new OrderCloneValidation(orderClone);
                     orderClone.setValidation(validation);
                     validation.setMethod(OrderProcessManager.PLATINUM_VALIDATION_METHOD_END_SEQ);
