@@ -25,6 +25,14 @@ public class SequenceAnalysisManager {
     public static final double EXPECT = BlastWrapper.DEFAULT_EXPECT;
     public static final String SEQUENCE_PATH = Constants.SEQ_ANALYSIS_PATH;
 
+    private double pid;
+    private int alength;
+    
+    public SequenceAnalysisManager() {
+        setPid(this.PID);
+        setAlength(this.ALENGTH);
+    }
+    
     public void getCloneSequences(List clones, String seqfilepath) throws Exception {
         File folder = new File(seqfilepath);
         File[] listOfFiles = folder.listFiles();
@@ -87,8 +95,8 @@ public class SequenceAnalysisManager {
             if (seq != null && seq.trim().length() > 0) {
                 String s = bm.runBl2seq(BlastWrapper.PROGRAM_BLASTN, cloneseq, ">"+clonename+"\n"+seq, this.EXPECT, true, false, false, output, BlastWrapper.DEFAULT_OUTPUT, false);
                 BlastParser parser = new BlastParser(output);
-                parser.setAlength(this.ALENGTH);
-                parser.setPid(this.PID);
+                parser.setAlength(getAlength());
+                parser.setPid(getPid());
                 parser.parseTabularOutput();
                 List infos = parser.getInfos();
 
@@ -99,5 +107,21 @@ public class SequenceAnalysisManager {
                 }
             }
         }
+    }
+
+    public double getPid() {
+        return pid;
+    }
+
+    public void setPid(double pid) {
+        this.pid = pid;
+    }
+
+    public int getAlength() {
+        return alength;
+    }
+
+    public void setAlength(int alength) {
+        this.alength = alength;
     }
 }

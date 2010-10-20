@@ -54,7 +54,27 @@
     </td>
 </table>
 
-<p class="homeMainText">Please enter the validation results: <html:submit styleClass="text" value="<%=Constants.LABEL_SEQ_ANALYSIS%>" property="submit" /></p>
+<p class="formlabel">Sequence analysis criteria:</p> 
+<table width="100%" border="0">
+    <tr> 
+        <td width="30%" class="text">Minumum percent (%) identity:</td>
+        <td class="itemtext">
+            <html:text property="pid" styleClass="itemtext"/>%
+        </td>
+    </tr>
+    <tr> 
+        <td width="30%" class="text">Minimum alignment length:</td>
+        <td class="itemtext">
+            <html:text property="alength" styleClass="itemtext"/>nt
+        </td>
+    <tr> 
+    <tr> 
+        <td colspan="2">
+            <html:submit styleClass="text" value="<%=Constants.LABEL_SEQ_ANALYSIS%>" property="submit" />
+        </td>
+    <tr> 
+</table>
+<p>
 <table width="100%" border="0">
 <% int i=0; %>
 <logic:iterate name="<%=Constants.CLONEORDER%>" property="clones" id="clone">

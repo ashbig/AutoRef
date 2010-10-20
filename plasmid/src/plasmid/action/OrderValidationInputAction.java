@@ -55,8 +55,14 @@ public class OrderValidationInputAction extends InternalUserAction {
         
         String submit = ((EnterPlatinumResultForm) form).getSubmit();
         if(Constants.LABEL_SEQ_ANALYSIS.equals(submit)) {
+            double pid = ((EnterPlatinumResultForm) form).getPid();
+            int alength = ((EnterPlatinumResultForm) form).getAlength();
+            
             String seqdir = SequenceAnalysisManager.SEQUENCE_PATH;
             SequenceAnalysisManager m = new SequenceAnalysisManager();
+            m.setPid(pid);
+            m.setAlength(alength);
+            
             List clones = order.getClones();
             try {
                 m.getCloneSequences(clones, seqdir);

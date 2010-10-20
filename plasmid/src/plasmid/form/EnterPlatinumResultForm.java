@@ -21,10 +21,14 @@ public class EnterPlatinumResultForm extends ActionForm {
     private List results;
     private List methods;
     private String submit;
+    private int alength;
+    private double pid;
 
     public EnterPlatinumResultForm() {
         super();
         resetSequencesAndResults();
+        alength=100;
+        pid=90.0;
     }
     
     public void resetSequencesAndResults() {
@@ -111,5 +115,21 @@ public class EnterPlatinumResultForm extends ActionForm {
 
     public void setMethods(List methods) {
         this.methods = methods;
+    }
+
+    public int getAlength() {
+        return alength;
+    }
+
+    public void setAlength(int alength) {
+        this.alength = alength;
+    }
+
+    public double getPid() {
+        return pid;
+    }
+
+    public void setPid(double pid) {
+        this.pid = pid;
     }
 }
