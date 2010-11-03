@@ -160,8 +160,8 @@ Click the button to pay by credit card through the PayPal site. You DO NOT need 
 <html:form action="ChoosePayment.do">
 <table>
     <tr>
-        <td colspan="4" class="text">
-            <i>**Customers paying through wire transfer please be sure to cover transferring bank fees and third-party bank fees where applicable. Thank you.</i>
+        <td colspan="4" class="alertbig">
+            **ATTENTION: Customers paying through wire transfer please be sure to cover transferring bank fees and third-party bank fees where applicable. Thank you.
         </td>
     </tr>
 <tr>
