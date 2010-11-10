@@ -60,7 +60,7 @@
       <tr>
         <td width="800" height="180"><h1 align="center">What's New? </h1>
         <ul type= circles>  
-          <li class="mainbodytext"> <a href="http://www.hms.harvard.edu/dms/bbs/fac/harper.html">Dr. Wade Harper</a> has joined the DNA Resource CORE as the CORE Director. </li>
+          <li class="mainbodytext"> <a href="http://www.hms.harvard.edu/dms/bbs/fac/harper.html" target="_blank">Dr. Wade Harper</a> has joined the DNA Resource CORE as the CORE Director. </li>
             <li class="mainbodytext">10/14/09 - PSI Clones have migrated to our sister site at <a href="http://dnasu.asu.edu/DNASU/" target="_blank">DNASU</a>.</li>
             <li class="mainbodytext">10/13/09 - Platinum Clones are now available! Please use this service to request additional QC data from your specific order.</li>
             <li class="mainbodytext">07/24/09 - Kinase shRNA hairpins Now Available! Browse collection <a href="http://plasmid.med.harvard.edu/PLASMID/GetCollection.do?collectionName=shRNA Kinase Collection (pLKO.1)">here</a>.</li>
