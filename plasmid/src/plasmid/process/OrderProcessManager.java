@@ -1163,7 +1163,7 @@ public class OrderProcessManager {
                 "Please note your order ID number and save this email for your future reference. "+
                 "Your current order status is listed below along with the details of your order. "+
                 "You may check the progress of your order at any time by logging into your "+
-                "account and then selecting ‘View Orders.’ "+
+                "account and then selecting 'View Orders.' "+
                 "Orders of < 48 clones typically ship within 7-10 days. "+
                 "We ask that you please allow additional time for large orders "+
                 "or when requesting QC testing. Orders will ship as glycerol stocks "+
