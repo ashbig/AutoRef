@@ -1157,15 +1157,26 @@ public class OrderProcessManager {
     }
 
     public void sendOrderEmail(CloneOrder order, String email) {
-        String subject = "order " + order.getOrderid();
-        String text = "Thank you for placing a clone request at PlasmID. "+
-                "Clones are sent as glycerol stocks (most U.S. orders) "+
-                "or as purified DNA (most overseas orders).  For orders "+
-                "of <96 clones, if you are in our Expedited MTA network "+
-                "we will ship within 10 business days of your order. "+
-                "For out-of-network orders, we will ship your clones within "+
-                "10 days after receipt of the signed MTA.  For orders of >96 "+
-                "plasmids, please contact us for an estimated shipment time.\n";
+        String subject = "Your PlasmID order confirmation (order ID: " + order.getOrderid()+")";
+        String text = 
+                "Thank you for placing a clone request at PlasmID. "+
+                "Please note your order ID number and save this email for your future reference. "+
+                "Your current order status is listed below along with the details of your order. "+
+                "You may check the progress of your order at any time by logging into your "+
+                "account and then selecting ‘View Orders.’ "+
+                "Orders of < 48 clones typically ship within 7-10 days. "+
+                "We ask that you please allow additional time for large orders "+
+                "or when requesting QC testing. Orders will ship as glycerol stocks "+
+                "when allowed by local law. Some international orders may ship as purified DNA "+
+                "or stabilized in special tubes to comply with local import law or to "+
+                "accommodate slower shipping routes. Please contact plasmidhelp@hms.harvard.edu "+
+                "with any questions or concerns.\n\n"+
+                "Order Status Key\n\n"+
+                "\tPending:\tNo additional information required. Your order is in line to be filled ASAP.\n"+
+                "\tIn Process:\tYour order is currently being filled.\n"+
+                "\tPending MTA:\tPlease download the required MTA from this web page http://plasmid.med.harvard.edu/PLASMID/TermAndCondition.jsp, then sign and return\n"+
+                "\tPending AQIS:\tPlease provide import documents\n"+
+                "\tPending for Payment:\tYour credit card payment was not processed properly. Please contact plasmidhelp@hms.harvard.edu for assistance.\n";
         text += "\n" + formOrderText(order);
         text += "\n" + "Please sign in at PlasmID to view order status, " +
                 "track your shipment, download clone information, cancel a request, " +
@@ -1173,9 +1184,7 @@ public class OrderProcessManager {
                 "including growth conditions for the clones.\n\n" +
                 "Thank you,\n" +
                 "The DF/HCC DNA Resource Core PlasmID Respository\n" +
-                "The Protein Structure Initiative Material Repository (PSI-MR)\n" +
-                "http://plasmid.med.harvard.edu/PLASMID/\n" +
-                "http://psimr.asu.edu\n\n" +
+                "http://plasmid.med.harvard.edu/PLASMID/\n\n" +
                 "If you have further questions, please contact us at plasmidhelp@hms.harvard.edu\n";
 
         try {
