@@ -759,7 +759,29 @@ public class CloneOrderManager extends TableManager {
             }
         }
     }
-
+    
+    public static String queryOrderStatus(int orderid) throws Exception {
+        String sql = "select orderstatus from cloneorder where orderid=" + orderid;
+        
+        DatabaseTransaction t = null;
+        ResultSet rs = null;
+        String status = null;
+        try {
+            t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            if (rs.next()) {
+                status = rs.getString(1);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            System.out.println("Cannot query clone order status.");
+            throw new Exception(ex);
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+        return status;
+    }
+    
     public boolean updateOrderStatus(int orderid, String status) {
         String sql = "update cloneorder set orderstatus=? where orderid=?";
         PreparedStatement stmt = null;

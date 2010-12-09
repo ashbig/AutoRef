@@ -23,6 +23,7 @@ import javax.servlet.http.*;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.net.URLConnection;
+import plasmid.util.CancelOrderThread;
 
 /**
  *
@@ -99,7 +100,7 @@ public class PlaceOrderAction extends Action {
             String email = manager.findEmail(order.getUserid());
             
             //debug
-            manager.sendOrderEmail(order, "dongmei_zuo@hms.harvard.edu");
+            //manager.sendOrderEmail(order, "dongmei_zuo@hms.harvard.edu");
             
             if(CloneOrder.PENDING_PAYMENT.equals(order.getStatus())) {
                 if (ipnres.equals("VERIFIED" )) {
@@ -122,9 +123,11 @@ public class PlaceOrderAction extends Action {
                 }
                 if (ipnres.equals("INVALID" )) {
                     boolean b = manager.updateOrderStatus(orderid, CloneOrder.INVALIDE_PAYMENT);
-                    manager.sendOrderInvalidePaymentEmail(order, email);
+                    manager.sendOrderInvalidePaymentEmail(orderid, email);
                 }
             }
+        
+            (new Thread(new CancelOrderThread(orderid, email))).start();
         } catch (Exception ex) {
             System.out.println(ex);
         }

@@ -1134,9 +1134,9 @@ public class OrderProcessManager {
         }
     }
 
-    public void sendOrderInvalidePaymentEmail(CloneOrder order, String email) {
-        String subject = "order " + order.getOrderid();
-        String text = "Your order " + order.getOrderid() + " was not processed successfully. Your payment was not valid. Please contact us at plasmidhelp@hms.harvard.edu to solve the problem.\n";
+    public void sendOrderInvalidePaymentEmail(int orderid, String email) {
+        String subject = "order " + orderid;
+        String text = "Your order " + orderid + " was not processed successfully. Your payment was not valid. Please contact us at plasmidhelp@hms.harvard.edu to solve the problem.\n";
 
         try {
             Mailer.sendMessage(email, Constants.EMAIL_FROM, Constants.EMAIL_FROM, subject, text);
