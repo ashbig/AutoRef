@@ -128,13 +128,6 @@ public class PlaceOrderAction extends Action {
                     manager.sendOrderInvalidePaymentEmail(orderid, email);
                 }
             }
-        
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        
-        try {
-            (new Thread(new CancelOrderThread(orderid, email))).start();
         } catch (Exception ex) {
             ex.printStackTrace();
         }

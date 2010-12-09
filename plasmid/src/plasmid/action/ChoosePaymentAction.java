@@ -20,6 +20,7 @@ import plasmid.Constants;
 import plasmid.coreobject.*;
 import plasmid.form.CheckoutForm;
 import plasmid.process.OrderProcessManager;
+import plasmid.util.CancelOrderThread;
 
 /**
  *
@@ -80,7 +81,7 @@ public class ChoosePaymentAction extends UserAction {
         String billingfax = ((CheckoutForm) form).getBillingfax();
         boolean saveInfo = ((CheckoutForm) form).getSaveInfo();
         int orderid = ((CheckoutForm) form).getOrderid();
-        
+
         OrderProcessManager manager = new OrderProcessManager();
         List mtas = null;
         try {
@@ -88,16 +89,16 @@ public class ChoosePaymentAction extends UserAction {
         } catch (Exception ex) {
             ex.printStackTrace();
             errors.add(ActionErrors.GLOBAL_ERROR,
-                        new ActionError("error.database.error", "Error occured while getting MTAs from database."));
+                    new ActionError("error.database.error", "Error occured while getting MTAs from database."));
             saveErrors(request, errors);
             return (mapping.findForward("error"));
         }
-        
+
         String status = CloneOrder.PENDING;
-        String ismta = ((CheckoutForm)form).getIsmta();
-       
-        if(mtas.size()>0) {
-            if(ismta.equals(CloneOrder.ISMTA_NO) || ismta.equals(CloneOrder.ISMTA_YES)) {
+        String ismta = ((CheckoutForm) form).getIsmta();
+
+        if (mtas.size() > 0) {
+            if (ismta.equals(CloneOrder.ISMTA_NO) || ismta.equals(CloneOrder.ISMTA_YES)) {
                 ismta = CloneOrder.ISMTA_YES;
                 status = CloneOrder.PENDING_MTA;
             }
@@ -118,7 +119,7 @@ public class ChoosePaymentAction extends UserAction {
                 status = CloneOrder.PENDING_AQIS;
             }
         } else {
-            if(ponumber != null && ponumber.trim().length()>0) {
+            if (ponumber != null && ponumber.trim().length() > 0) {
                 errors.add("ponumber", new ActionError("error.ponumber.notempty"));
                 saveErrors(request, errors);
 
@@ -129,7 +130,7 @@ public class ChoosePaymentAction extends UserAction {
             status = CloneOrder.PENDING_PAYMENT;
             ponumber = Constants.PAYPAL;
         }
-        
+
         String shippingAddress = "";
         if (organization != null) {
             shippingAddress += organization + "\n";
@@ -173,23 +174,23 @@ public class ChoosePaymentAction extends UserAction {
         int numOfCollections = ((CheckoutForm) form).getNumOfCollections();
         double costOfClones = ((CheckoutForm) form).getCostOfClones();
         double costOfCollections = ((CheckoutForm) form).getCostOfCollections();
-        double costforplatinum = ((CheckoutForm)form).getCostOfPlatinum();
+        double costforplatinum = ((CheckoutForm) form).getCostOfPlatinum();
         double shippingCost = ((CheckoutForm) form).getCostForShipping();
         double totalCost = ((CheckoutForm) form).getTotalPrice();
 
-        String isplatinum = ((CheckoutForm)form).getIsplatinum();
+        String isplatinum = ((CheckoutForm) form).getIsplatinum();
         CloneOrder order = new CloneOrder(orderid, time, status, ponumber, shippingto, billingto, shippingAddress, billingAddress, numOfClones, numOfCollections, costOfClones, costOfCollections, shippingCost, totalCost, user.getUserid());
         order.setShippingmethod(shippingMethod);
         order.setShippingaccount(accountNumber);
         order.setIsplatinum(isplatinum);
         order.setCostforplatinum(costforplatinum);
-                
-        if(Constants.ISPLATINUM_Y.equals(isplatinum)) {
+
+        if (Constants.ISPLATINUM_Y.equals(isplatinum)) {
             order.setPlatinumServiceStatus(CloneOrder.PLATINUM_STATUS_REQUESTED);
         } else {
             order.setPlatinumServiceStatus(Constants.NA);
         }
-        
+
         if (country.equals("Australia")) {
             order.setIsaustralia("Y");
         }
@@ -245,6 +246,11 @@ public class ChoosePaymentAction extends UserAction {
                 manager.sendOrderEmail(order, user.getEmail());
                 return (mapping.findForward("success"));
             } else {
+                try {
+                    (new Thread(new CancelOrderThread(orderid, user.getEmail()))).start();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
                 return (mapping.findForward("success_paypal"));
             }
         } else {
