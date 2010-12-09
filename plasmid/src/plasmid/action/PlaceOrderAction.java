@@ -53,6 +53,8 @@ public class PlaceOrderAction extends Action {
         // get the parameters specified by the customer
         ActionErrors errors = new ActionErrors();
         
+        int orderid = 0;
+        String email = null;
         try {
             Enumeration names = request.getParameterNames();
             String str = "cmd=_notify-validate";
@@ -94,10 +96,10 @@ public class PlaceOrderAction extends Action {
             String ipnres = in.readLine();
             in.close();
             
-            int orderid = Integer.parseInt(invoice);
+            orderid = Integer.parseInt(invoice);
             OrderProcessManager manager = new OrderProcessManager();
             CloneOrder order = manager.getCloneOrder(orderid);
-            String email = manager.findEmail(order.getUserid());
+            email = manager.findEmail(order.getUserid());
             
             //debug
             //manager.sendOrderEmail(order, "dongmei_zuo@hms.harvard.edu");
@@ -127,9 +129,14 @@ public class PlaceOrderAction extends Action {
                 }
             }
         
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
+        try {
             (new Thread(new CancelOrderThread(orderid, email))).start();
         } catch (Exception ex) {
-            System.out.println(ex);
+            ex.printStackTrace();
         }
         
         return (mapping.findForward("success"));
