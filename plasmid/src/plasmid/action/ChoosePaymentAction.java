@@ -246,6 +246,7 @@ public class ChoosePaymentAction extends UserAction {
                 manager.sendOrderEmail(order, user.getEmail());
                 return (mapping.findForward("success"));
             } else {
+                System.out.println("start thread");
                 try {
                     (new Thread(new CancelOrderThread(orderid, user.getEmail()))).start();
                 } catch (Exception ex) {

@@ -27,9 +27,14 @@ public class CancelOrderThread implements Runnable {
 
     public void run() {
         try {
+            System.out.println("orderid="+orderid);
+                System.out.println("sleep");
             //Thread.sleep(3600000);
             Thread.sleep(60000);
+            
+                System.out.println("awake");
             String status = CloneOrderManager.queryOrderStatus(orderid);
+                System.out.println("status="+status);
             if (CloneOrder.PENDING_PAYMENT.equals(status)) {
                 OrderProcessManager manager = new OrderProcessManager();
                 boolean b = manager.updateOrderStatus(orderid, CloneOrder.CANCEL);
