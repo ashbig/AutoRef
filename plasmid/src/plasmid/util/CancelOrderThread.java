@@ -27,11 +27,12 @@ public class CancelOrderThread implements Runnable {
 
     public void run() {
         try {
-            System.out.println("orderid="+orderid);
-                System.out.println("sleep");
             //Thread.sleep(3600000);
             Thread.sleep(60000);
-            
+        } catch (InterruptedException e) {
+        }
+         
+        try {
                 System.out.println("awake");
             String status = CloneOrderManager.queryOrderStatus(orderid);
                 System.out.println("status="+status);
@@ -40,7 +41,6 @@ public class CancelOrderThread implements Runnable {
                 boolean b = manager.updateOrderStatus(orderid, CloneOrder.CANCEL);
                 manager.sendOrderInvalidePaymentEmail(orderid, email);
             }
-        } catch (InterruptedException e) {
         }catch (Exception ex) {
             ex.printStackTrace();
         }
