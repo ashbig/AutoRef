@@ -236,12 +236,22 @@ public class BlastManager {
         return sequence;
     }
 
-    public String getCloneSequence(int cloneid, String clonename) {
-        CloneManager m = new CloneManager();
-        String s = m.queryCloneSequenceByCloneid(cloneid);
-        return ">PlasmID|" + clonename + "\n" + Dnasequence.convertToFasta(s);
+    public String getCloneSequenceWithBlastHeader(int cloneid, String clonename) {
+        return ">PlasmID|" + clonename + "\n" + this.getCloneSequence(cloneid);
     }
 
+    public String getCloneSequence(int cloneid) {
+        CloneManager m = new CloneManager();
+        String s = m.queryCloneSequenceByCloneid(cloneid);
+        return Dnasequence.convertToFasta(s);
+    }
+
+    public String getReferenceSequence(int cloneid) {
+        CloneManager m = new CloneManager();
+        String s = m.queryReferenceSequenceByCloneid(cloneid);
+        return Dnasequence.convertToFasta(s);
+    }
+    
     private String getBooleanValue(boolean b) {
         if (b) {
             return BlastWrapper.BOOLEAN_TRUE;

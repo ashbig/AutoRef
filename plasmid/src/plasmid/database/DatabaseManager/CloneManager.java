@@ -610,6 +610,50 @@ public class CloneManager extends TableManager {
         return seq;
     }
 
+    public String queryReferenceSequenceByCloneid(int cloneid) {
+        String sql = "select refseqid from dnainsert where insertid in"+
+                "(select insertid from cloneinsert where cloneid=" + cloneid+")";
+        String sql2 = "select seqtext from seqtext t, dnasequence d where t.sequenceid=d.sequenceid and d.referenceid =? order by seqorder";
+
+        String seq = "";
+        ResultSet rs = null;
+        ResultSet rs2 = null;
+        PreparedStatement stmt = null;
+        Connection c = null;
+        
+        try {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            c = t.requestConnection();
+            stmt = c.prepareStatement(sql2);
+            
+            rs = t.executeQuery(sql);
+            int refseqid = -1;
+            while (rs.next()) {
+                refseqid = rs.getInt(1);
+                
+                if(refseqid != -1) {
+                    stmt.setInt(1, refseqid);
+                    rs2 = DatabaseTransaction.executeQuery(stmt);
+                    while (rs2.next()) {
+                        String seqtext = rs2.getString(1);
+                        seq += seqtext;
+                    }
+                    if(seq.length()>0) 
+                        return seq;
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            handleError(ex, "Error occured while query clone sequence by cloneid: " + cloneid);
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeResultSet(rs2);
+            DatabaseTransaction.closeStatement(stmt);
+            DatabaseTransaction.closeConnection(c);
+        }
+        return seq;
+    }
+    
     public Clone queryCloneByCloneid(int cloneid) {
         return queryCloneByCloneid(cloneid, false);
     }

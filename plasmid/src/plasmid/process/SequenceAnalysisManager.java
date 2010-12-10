@@ -24,15 +24,14 @@ public class SequenceAnalysisManager {
     public static final double PID = 90.0;
     public static final double EXPECT = BlastWrapper.DEFAULT_EXPECT;
     public static final String SEQUENCE_PATH = Constants.SEQ_ANALYSIS_PATH;
-
     private double pid;
     private int alength;
-    
+
     public SequenceAnalysisManager() {
         setPid(this.PID);
         setAlength(this.ALENGTH);
     }
-    
+
     public void getCloneSequences(List clones, String seqfilepath) throws Exception {
         File folder = new File(seqfilepath);
         File[] listOfFiles = folder.listFiles();
@@ -43,28 +42,28 @@ public class SequenceAnalysisManager {
             for (int k = 0; k < listOfFiles.length; k++) {
                 File file = listOfFiles[k];
                 String filename = file.getName().trim();
-                
+
                 int sep = filename.indexOf(".");
-                if(sep>0)
+                if (sep > 0) {
                     filename = filename.substring(0, sep);
-                
+                }
                 sep = filename.indexOf("_");
-                if(sep>0)
+                if (sep > 0) {
                     filename = filename.substring(0, sep);
-                
+                }
                 sep = filename.indexOf("-");
-                if(sep>0)
+                if (sep > 0) {
                     filename = filename.substring(0, sep);
-                
+                }
                 if (file.isFile() && filename.equalsIgnoreCase(clonename)) {
                     BufferedReader f = new BufferedReader(new FileReader(file));
                     String seq = "";
                     String line = null;
-                    while((line=f.readLine()) != null) {
-                        if(line.indexOf(">")>= 0) {
+                    while ((line = f.readLine()) != null) {
+                        if (line.indexOf(">") >= 0) {
                             continue;
                         }
-                        seq = seq+line;
+                        seq = seq + line;
                     }
                     f.close();
                     file.delete();
@@ -83,17 +82,26 @@ public class SequenceAnalysisManager {
         for (int i = 0; i < clones.size(); i++) {
             OrderClones orderClone = (OrderClones) clones.get(i);
             OrderCloneValidation validation = orderClone.getValidation();
-            if(validation == null) {
+            if (validation == null) {
                 continue;
             }
-            
+
             int cloneid = validation.getCloneid();
+            String cloneseq = bm.getCloneSequence(cloneid);
+            if (cloneseq == null || cloneseq.trim().length() == 0) {
+                cloneseq = bm.getReferenceSequence(cloneid);
+            }
+
+            if (cloneseq == null || cloneseq.trim().length() == 0) {
+                continue;
+            }
+
             String clonename = orderClone.getClone().getName();
-            String cloneseq = bm.getCloneSequence(cloneid, clonename);
+            cloneseq = ">PlasmID|" + clonename + "\n" + cloneseq;
             String seq = validation.getSequence();
-            String output = BlastWrapper.BLAST_FILE_PATH + clonename+".out";
+            String output = BlastWrapper.BLAST_FILE_PATH + clonename + ".out";
             if (seq != null && seq.trim().length() > 0) {
-                String s = bm.runBl2seq(BlastWrapper.PROGRAM_BLASTN, cloneseq, ">"+clonename+"\n"+seq, this.EXPECT, true, false, false, output, BlastWrapper.DEFAULT_OUTPUT, false);
+                String s = bm.runBl2seq(BlastWrapper.PROGRAM_BLASTN, cloneseq, ">" + clonename + "\n" + seq, this.EXPECT, true, false, false, output, BlastWrapper.DEFAULT_OUTPUT, false);
                 BlastParser parser = new BlastParser(output);
                 parser.setAlength(getAlength());
                 parser.setPid(getPid());
