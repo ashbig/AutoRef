@@ -64,7 +64,7 @@ public class GetAlignmentAction extends Action {
             return (mapping.findForward("error"));
         }
         
-        String subjectSeq = manager.getCloneSequence(Integer.parseInt(subjectid),clonename);
+        String subjectSeq = manager.getCloneSequenceWithBlastHeader(Integer.parseInt(subjectid),clonename);
         if(subjectSeq == null) {
             System.out.println("Cannot get clone sequence with cloneid="+clonename);
             return (mapping.findForward("error"));
