@@ -1136,7 +1136,7 @@ public class OrderProcessManager {
 
     public void sendOrderInvalidePaymentEmail(int orderid, String email) {
         String subject = "order " + orderid;
-        String text = "Your order " + orderid + " was not processed successfully. Your payment was not valid. Please contact us at plasmidhelp@hms.harvard.edu to solve the problem.\n";
+        String text = "Your order " + orderid + " was not processed successfully because we didn't received a valid payment. We have cancelled this order. Please contact us at plasmidhelp@hms.harvard.edu if you have any questions.\n";
 
         try {
             Mailer.sendMessage(email, Constants.EMAIL_FROM, Constants.EMAIL_FROM, subject, text);
@@ -1176,7 +1176,7 @@ public class OrderProcessManager {
                 "\tIn Process:\tYour order is currently being filled.\n"+
                 "\tPending MTA:\tPlease download the required MTA from this web page http://plasmid.med.harvard.edu/PLASMID/TermAndCondition.jsp, then sign and return\n"+
                 "\tPending AQIS:\tPlease provide import documents\n"+
-                "\tPending for Payment:\tYour credit card payment was not processed properly. Please contact plasmidhelp@hms.harvard.edu for assistance.\n";
+                "\tPending for Payment:\tOur system is waiting for confirmation that your credit card was processed. Please log in to your account for up to date order status.\n";
         text += "\n" + formOrderText(order);
         text += "\n" + "Please sign in at PlasmID to view order status, " +
                 "track your shipment, download clone information, cancel a request, " +
