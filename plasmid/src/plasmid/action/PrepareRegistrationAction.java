@@ -71,6 +71,7 @@ public class PrepareRegistrationAction extends Action {
         }
         
         List groups = DefTableManager.getVocabularies("usergroup", "usergroup");
+        groups.remove(User.PSI);
         List pis = UserManager.getAllPis();
         
         List members = DefTableManager.getVocabularies("Institution", "ismember", "Name", Institution.ISMEMBER_YES);
