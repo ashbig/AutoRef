@@ -23,6 +23,7 @@ public class EnterPlatinumResultForm extends ActionForm {
     private String submit;
     private int alength;
     private double pid;
+    private String orderids;
 
     public EnterPlatinumResultForm() {
         super();
@@ -131,5 +132,13 @@ public class EnterPlatinumResultForm extends ActionForm {
 
     public void setPid(double pid) {
         this.pid = pid;
+    }
+
+    public String getOrderids() {
+        return orderids;
+    }
+
+    public void setOrderids(String orderids) {
+        this.orderids = orderids;
     }
 }

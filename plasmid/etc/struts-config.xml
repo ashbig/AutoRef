@@ -293,6 +293,12 @@
               input="/EnterPlatinumResult.do">
             <forward  name="success"  path="/OrderValidationInput.jsp"/>
         </action>
+        <action     path="/EnterPlatinumResultsInput"
+                type="plasmid.action.EnterPlatinumResultsInputAction"
+               name="enterPlatinumResultForm"
+              input="/EnterPlatinumResultsInput.jsp">
+            <forward  name="success"  path="/OrderValidationInput.jsp"/>
+        </action>
         <action     path="/EnterShipping"
                 type="plasmid.action.EnterShippingAction"
                name="processShippingForm"
