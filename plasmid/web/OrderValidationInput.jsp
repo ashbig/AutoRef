@@ -74,10 +74,13 @@
         </td>
     <tr> 
 </table>
-<p>
+
+<p>    
+<logic:iterate name="<%=Constants.CLONEORDER%>" id="cloneorder">
+    <p class="formlabel">Order ID: <bean:write name="cloneorder" property="orderid"/></p>
 <table width="100%" border="0">
 <% int i=0; %>
-<logic:iterate name="<%=Constants.CLONEORDER%>" property="clones" id="clone">
+<logic:iterate name="cloneorder" property="clones" id="clone">
   <tr>
     <td class="tableheader">PlasmID Clone ID:</td>
     <td class="tableheader"><bean:write name="clone" property="clone.name"/></td>
@@ -139,6 +142,7 @@
   <% i++; %>
   </logic:iterate>
 </table>
+</logic:iterate>
 
 <table>
   <tr class="formlabel"> 

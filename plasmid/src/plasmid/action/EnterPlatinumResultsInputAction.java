@@ -83,6 +83,7 @@ public class EnterPlatinumResultsInputAction extends InternalUserAction {
             request.setAttribute("validationMethods", validationMethods);
             request.setAttribute("validationStatus", validationStatus);
             request.setAttribute("validationResults", validationResults);
+            request.setAttribute(Constants.CLONEORDER, clones);
 
             return mapping.findForward("success");
         } catch (Exception ex) {

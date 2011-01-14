@@ -21,7 +21,7 @@
 	</td>
     <td width="83%" align="left" valign="top">
 	<jsp:include page="enterPlatinumResultsTitle.jsp" />
-      <html:form action="EnterPlatinumResultsInputAction.do">
+      <html:form action="EnterPlatinumResultsInput.do">
 <html:errors/>
       <table width="100%" height="118" border="0" align="center">
         <tr> 
