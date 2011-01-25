@@ -297,7 +297,7 @@
                 type="plasmid.action.EnterPlatinumResultsInputAction"
                name="enterPlatinumResultForm"
               input="/EnterPlatinumResultsInput.jsp">
-            <forward  name="success"  path="/OrderValidationInput.jsp"/>
+            <forward  name="success"  path="/OrderValidationsInput.jsp"/>
         </action>
         <action     path="/EnterShipping"
                 type="plasmid.action.EnterShippingAction"
@@ -434,6 +434,13 @@
               input="/OrderValidationInput.jsp"
               validate="true">
             <forward  name="success"   path="/ViewOrderDetail.do"/>
+        </action>
+        <action    path="/OrderValidationsInput"
+               type="plasmid.action.OrderValidationsInputAction"
+               name="enterPlatinumResultForm"
+              input="/OrderValidationsInput.jsp"
+              validate="true">
+            <forward  name="success"   path="/EnterPlatinumResultsInput.jsp"/>
         </action>
         <action     path="/PlaceOrder"
                 type="plasmid.action.PlaceOrderAction"

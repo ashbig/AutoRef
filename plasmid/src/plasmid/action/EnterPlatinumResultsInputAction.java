@@ -55,14 +55,16 @@ public class EnterPlatinumResultsInputAction extends InternalUserAction {
             ((EnterPlatinumResultForm) form).setResearcher(user.getUsername());
 
             List clones = new ArrayList();
+            List orderClones = new ArrayList();
             for (int i = 0; i < cloneorders.size(); i++) {
                 CloneOrder co = (CloneOrder) cloneorders.get(i);
                 clones.add(co);
+                orderClones.addAll(co.getClones());
             }
             List sequences = new ArrayList();
             List results = new ArrayList();
             List methods = new ArrayList();
-            for (int i = 0; i < clones.size(); i++) {
+            for (int i = 0; i < orderClones.size(); i++) {
                 sequences.add(null);
                 results.add(null);
                 methods.add(null);
@@ -83,7 +85,7 @@ public class EnterPlatinumResultsInputAction extends InternalUserAction {
             request.setAttribute("validationMethods", validationMethods);
             request.setAttribute("validationStatus", validationStatus);
             request.setAttribute("validationResults", validationResults);
-            request.setAttribute(Constants.CLONEORDER, clones);
+            request.getSession().setAttribute(Constants.CLONEORDER, clones);
 
             return mapping.findForward("success");
         } catch (Exception ex) {
