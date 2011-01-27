@@ -42,7 +42,6 @@ public class SequenceAnalysisManager {
             for (int k = 0; k < listOfFiles.length; k++) {
                 File file = listOfFiles[k];
                 String filename = file.getName().trim();
-
                 int sep = filename.indexOf(".");
                 if (sep > 0) {
                     filename = filename.substring(0, sep);

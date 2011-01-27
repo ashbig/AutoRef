@@ -164,6 +164,7 @@ public class OrderValidationsInputAction extends InternalUserAction {
 
         ((EnterPlatinumResultForm) form).setStatus(null);
         ((EnterPlatinumResultForm) form).resetSequencesAndResults();
+        ((EnterPlatinumResultForm) form).setOrderids(null);
         return mapping.findForward("success");
     }
 }
