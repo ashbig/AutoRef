@@ -456,6 +456,14 @@
               validate="true">
             <forward  name="success"   path="/Plate96To384Input.jsp"/>
         </action>
+        <action    path="/Plate384To96Input"
+               type="plasmid.action.Plate384To96InputAction"
+               name="plate96To384MappingForm"
+              scope="request"
+              input="/Plate384To96Input.jsp"
+              validate="true">
+            <forward  name="success"   path="/Plate384To96Input.jsp"/>
+        </action>
         <action     path="/PrepareAdvancedSearch"
                 type="plasmid.action.PrepareAdvancedSearchAction"
                name="advancedSearchForm">

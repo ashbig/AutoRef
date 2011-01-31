@@ -34,6 +34,7 @@ public class Plate384To96MappingCalculator extends MappingCalculator {
         
         for(int i=0; i<destContainers.size(); i++) {
             Container dest = (Container)destContainers.get(i);
+            dests.add(dest);
             if((i+1)%MULTIPLICATION == 0 || i+1==destContainers.size()) {
                 int index = (i+1)/MULTIPLICATION-1;
                 if((i+1)%MULTIPLICATION != 0 && i+1 == destContainers.size()) {
@@ -91,18 +92,18 @@ public class Plate384To96MappingCalculator extends MappingCalculator {
         if(srcContainers == null || destContainers == null)
             return false;
         
-        if(srcContainers.size()/MULTIPLICATION > destContainers.size())
+        if(destContainers.size()/MULTIPLICATION > srcContainers.size())
             return false;
         
         for(int i=0; i<srcContainers.size(); i++) {
             Container c = (Container)srcContainers.get(i);
-            if(c.getCapacity() != 96)
+            if(c.getCapacity() != 384)
                 return false;
         }
         
         for(int i=0; i<destContainers.size(); i++) {
             Container c = (Container)destContainers.get(i);
-            if(c.getCapacity() != 384)
+            if(c.getCapacity() != 96)
                 return false;
         }
         

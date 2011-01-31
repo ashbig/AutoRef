@@ -43,10 +43,6 @@
         <td colspan="2"><html:text property="plate" styleClass="itemtext"/></td>
     <tr>
     <tr>
-        <td width="20%">&nbsp;</td>
-        <td colspan="2"><html:submit styleClass="itemtext" value="Generate Archive Stock"/></td>
-    <tr>
-    <tr>
         <td colspan="3" class="formlabel">Please enter the 96-well destination plate barcodes:</td>
     <tr>
     <tr>
@@ -58,6 +54,10 @@
         <td width="20%">&nbsp;</td>
         <td width="20%"><html:text property="plateC" styleClass="itemtext"/></td>
         <td align="left"><html:text property="plateD" styleClass="itemtext"/></td>
+    <tr>
+    <tr>
+        <td width="20%">&nbsp;</td>
+        <td colspan="2"><html:submit styleClass="itemtext" value="Reverse Plate Condensation"/></td>
     <tr>
 </table>
       </html:form></td>
