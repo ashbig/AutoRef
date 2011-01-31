@@ -20,6 +20,7 @@ public class Process {
     public static final String GENERATE_MULTIPLE_GLYCEROL = "Generate Multiple Glycerol Stocks";
     public static final String ENTER_CULTURE_RESULT = "Enter Culture Results";
     public static final String GENERATE_CONDENSED_ARCHIVE = "Generate Condensed Archive Glycerol";
+    public static final String REVERSE_PLATE_CONDENSATION = "Reverse Plate Condensation";
    
     private String processname;
     private String description;

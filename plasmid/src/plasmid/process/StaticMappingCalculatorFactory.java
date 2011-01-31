@@ -15,6 +15,7 @@ import java.util.*;
 public class StaticMappingCalculatorFactory {
     public static final String DIRECT_MAPPING = "Direct Mapping";
     public static final String PLATE96_TO_384 = "Plate 94 to 384";
+    public static final String PLATE384_TO_96 = "Plate 384 to 96";
     
     /** Creates a new instance of StaticMappingCalculatorFactory */
     public StaticMappingCalculatorFactory() {
@@ -25,6 +26,8 @@ public class StaticMappingCalculatorFactory {
             return new DirectMappingCalculator(src, dest, sType);
         if(PLATE96_TO_384.equals(type))
             return new Plate96To384MappingCalculator(src, dest, sType);
+        if(PLATE384_TO_96.equals(type))
+            return new Plate384To96MappingCalculator(src, dest, sType);
         return null;
     }
 }

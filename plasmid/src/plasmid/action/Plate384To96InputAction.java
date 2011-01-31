@@ -1,7 +1,6 @@
 /*
- * Plate96To384InputAction.java
- *
- * Created on May 10, 2007, 1:10 PM
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
  */
 
 package plasmid.action;
@@ -25,12 +24,12 @@ import plasmid.util.StringConvertor;
 
 /**
  *
- * @author  DZuo
+ * @author Dongmei
  */
-public class Plate96To384InputAction extends InternalUserAction{
+public class Plate384To96InputAction extends InternalUserAction{
     
     /** Creates a new instance of WorklistInputAction */
-    public Plate96To384InputAction() {
+    public Plate384To96InputAction() {
     }
     
     public ActionForward internalUserPerform(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -45,12 +44,12 @@ public class Plate96To384InputAction extends InternalUserAction{
         User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
         
         List srcLabels = new ArrayList();
-        srcLabels.add(plateA);
-        srcLabels.add(plateB);
-        srcLabels.add(plateC);
-        srcLabels.add(plateD);
+        srcLabels.add(plate);
         List destLabels = new ArrayList();
-        destLabels.add(plate);
+        destLabels.add(plateA);
+        destLabels.add(plateB);
+        destLabels.add(plateC);
+        destLabels.add(plateD);
         
         ContainerProcessManager manager = new ContainerProcessManager();
         StringConvertor sc = new StringConvertor();
@@ -113,7 +112,7 @@ public class Plate96To384InputAction extends InternalUserAction{
                 return (new ActionForward(mapping.getInput()));
             }
             
-            MappingCalculator calculator = StaticMappingCalculatorFactory.generateMappingCalculator(StaticMappingCalculatorFactory.PLATE96_TO_384, srcContainers, destContainers, Sample.ARCHIVE_GLYCEROL);
+            MappingCalculator calculator = StaticMappingCalculatorFactory.generateMappingCalculator(StaticMappingCalculatorFactory.PLATE384_TO_96, srcContainers, destContainers, Sample.WORKING_GLYCEROL);
             if(!calculator.isMappingValid()) {
                 errors.add(ActionErrors.GLOBAL_ERROR,
                 new ActionError("error.general", "Container types are not compatable for mapping."));
@@ -138,7 +137,7 @@ public class Plate96To384InputAction extends InternalUserAction{
                 throw new Exception("Error occured while setting sampleids for sample lineages.");
             }
             
-            ProcessExecution execution = new ProcessExecution(0, ProcessExecution.COMPLETE, null, Process.GENERATE_CONDENSED_ARCHIVE, user.getFirstname()+" "+user.getLastname(), null);
+            ProcessExecution execution = new ProcessExecution(0, ProcessExecution.COMPLETE, null, Process.REVERSE_PLATE_CONDENSATION, user.getFirstname()+" "+user.getLastname(), null);
             execution.setLineages(newSampleLineages);
             execution.setInputObjects(srcContainers);
             execution.setOutputObjects(destContainers);
@@ -147,7 +146,7 @@ public class Plate96To384InputAction extends InternalUserAction{
                 throw new Exception("Error occured while inserting into database.");
             }
             
-            request.setAttribute("sucmesg", "Plates are successfully condensed to 384-well archive plate.");
+            request.setAttribute("sucmesg", "Plates are successfully created.");
         } catch (Exception ex) {
             if(Constants.DEBUG) {
                 System.out.println(ex);
