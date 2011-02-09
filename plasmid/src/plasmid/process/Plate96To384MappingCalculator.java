@@ -61,7 +61,7 @@ public class Plate96To384MappingCalculator extends MappingCalculator {
                 
                 int pos = s.getPosition();
                 int newPos = pos*SPACE-1+(i%SPACE)*ROWNUM+i/SPACE+(pos-1)/SRCROWNUM*ROWNUM;
-                System.out.println("pos="+pos+"/newPos="+newPos);
+                //System.out.println("pos="+pos+"/newPos="+newPos);
                 Sample sample = new Sample();
                 sample.setContainerid(dest.getContainerid());
                 sample.setContainerlabel(dest.getLabel());
@@ -82,7 +82,7 @@ public class Plate96To384MappingCalculator extends MappingCalculator {
                         sample.setType(destSampleType);
                     }
                 }
-                System.out.println(s.getContainerlabel()+"\t"+s.getPosition()+"\t"+sample.getContainerlabel()+"\t"+sample.getPosition());
+                //System.out.println(s.getContainerlabel()+"\t"+s.getPosition()+"\t"+sample.getContainerlabel()+"\t"+sample.getPosition());
                 l.add(new SampleLineage(s,sample));
             }
         }

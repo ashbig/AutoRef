@@ -92,7 +92,7 @@ public class Plate384To96MappingCalculator extends MappingCalculator {
         if(srcContainers == null || destContainers == null)
             return false;
         
-        if(destContainers.size()/MULTIPLICATION > srcContainers.size())
+        if(destContainers.size()/MULTIPLICATION != srcContainers.size())
             return false;
         
         for(int i=0; i<srcContainers.size(); i++) {

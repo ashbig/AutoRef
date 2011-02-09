@@ -24,6 +24,9 @@
         <tr> 
           <td height="15" class="lftsubtxt"><a href="Plate96To384Input.jsp" class="leftsubnavtext">Generate Condensed Archive Plates</a></td>
         </tr>
+        <tr> 
+          <td height="15" class="lftsubtxt"><a href="Plate384To96Input.jsp" class="leftsubnavtext">Reverse Plate Condensation </a></td>
+        </tr>
       </table></td>
   </tr>
 </table>
