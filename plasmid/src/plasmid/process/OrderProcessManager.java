@@ -1266,6 +1266,9 @@ public class OrderProcessManager {
             if (Constants.SORTBY_USERNAME.equals(sort)) {
                 sortby = "lastname";
             }
+            if (Constants.SORTBY_INSTITUTION.equals(sort)) {
+                sortby = "institution";
+            }
             List cloneorders = manager.queryCloneOrders(orderidList, orderDateFrom, orderDateTo, shippingDateFrom, shippingDateTo, status, lastnameList, groups, isMember, sortby, provider, isPI, isMtamember);
             return cloneorders;
         } catch (Exception ex) {
