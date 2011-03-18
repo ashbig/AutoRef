@@ -17,7 +17,7 @@ import java.util.*;
 public class CultureResultConvertor extends FileResultConvertor {
     public static final String DILIM = "\t";
     public static final int TOTALCOUNT = 96;
-    public static final int IGNORELINES = 3;
+    public static final int IGNORELINES = 2;
     public static final int ROW = 8;
     
     public static final double GROW = 0.150;
@@ -60,10 +60,7 @@ public class CultureResultConvertor extends FileResultConvertor {
                 StringTokenizer st = new StringTokenizer(line, DILIM);
                 
                 try {
-                    if(index == 0) {
-                        String ignore = st.nextToken();
-                    }
-                    
+                    String ignore = st.nextToken();
                     while(st.hasMoreTokens() && index < size) {
                         odList.put(new Integer(index), st.nextToken());
                         index = index+8;
