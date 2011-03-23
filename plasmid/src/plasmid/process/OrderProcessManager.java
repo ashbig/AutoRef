@@ -205,9 +205,9 @@ public class OrderProcessManager {
         return n;
     }
 
-    public double getTotalClonePrice(int platesize, String group) {
+    public double getTotalClonePrice(String group) {
         ClonePriceCalculator calculator = new ClonePriceCalculator();
-        return calculator.calculateClonePrice(getTotalCloneQuantity(), platesize, group);
+        return calculator.calculateClonePrice(getTotalCloneQuantity(), group);
     }
 
     public double getTotalCollectionPrice(List collectionList, String group) {

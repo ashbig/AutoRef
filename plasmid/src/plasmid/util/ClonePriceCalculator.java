@@ -23,12 +23,9 @@ public class ClonePriceCalculator {
     public ClonePriceCalculator() {
     }
     
-    public double calculateClonePrice(int clonenum, int platesize, String group) {
-        int platenum = clonenum/platesize;
-        int leftclonenum = clonenum%platesize;
+    public double calculateClonePrice(int clonenum, String group) {
         double pricePerClone = getPricePerClone(group);
-        double pricePerPlate = getPricePerPlate(group);
-        return pricePerPlate*platenum+pricePerClone*leftclonenum;
+        return clonenum*pricePerClone;
     }
     
     public double getPricePerClone(String group) {
