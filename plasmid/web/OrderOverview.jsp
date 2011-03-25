@@ -59,26 +59,32 @@
       
       <span class="homepageText2 style3"><a name="cost"></a><br>
       CLONE COSTS </span>   </div>
-      <table width="61%" border="3" align="center" id="gray">
+      <table width="70%" border="3" align="center" id="gray">
         <tr class="tableheader">
-          <td width="50%">Pricing Category</td>
-          <td width="50%">Price/Clone*</td>
+          <td width="30%">Pricing Category</td>
+          <td width="25%">Individual Clone</td>
+          <td width="45%">Individual Clone with Platinum QC</td>
         </tr>
         <tr class="tableinfo">
-          <td>DF/HCC Member</td>
-          <td>$45.00</td>
+          <td>DF/HCC Members</td>
+          <td align="right">$45.00</td>
+          <td align="right">$55.00</td>
         </tr>
         <tr class="tableinfo">
-          <td>Commercial</td>
-          <td>$60.50</td>
+          <td>Academics and Nonprofits</td>
+          <td align="right">$55.00</td>
+          <td align="right">$65.00</td>
         </tr>
         <tr class="tableinfo">
-          <td>Others</td>
-          <td>$55.00</td>
+          <td>Commercial Users</td>
+          <td align="right">$60.50</td>
+          <td align="right">$70.50</td>
         </tr>
       </table>
       <div align="center"><span class="footertext"> *Shipping is additional. Either provide a FedEx number or shipping is a flat fee of $10 for domestic orders or $20 for international orders. <br>
       No charge for shipping to the Harvard Medical School community if order is picked up. Must have building access.</span></div>
+      <div align="center"><span class="footertext">Please click <a target="_blank" href="http://plasmid.med.harvard.edu/PLASMID/PIList.html">here</a> for the list of DF/HCC members.</span></div>  
+      
       <pre><span class="homepageText2">
 Can't find what you're looking for? </span>
 <span class="mainbodytext">          1. Please be sure you logged in because log-in effects what clones you can view.
