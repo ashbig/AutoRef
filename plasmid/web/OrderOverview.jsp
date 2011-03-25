@@ -61,39 +61,19 @@
       CLONE COSTS </span>   </div>
       <table width="61%" border="3" align="center" id="gray">
         <tr class="tableheader">
-          <td width="40%">PI Status</td>
-          <td width="32%">Order Type</td>
-          <td width="28%">Price/Unit*</td>
+          <td width="50%">Pricing Category</td>
+          <td width="50%">Price/Clone*</td>
         </tr>
         <tr class="tableinfo">
-          <td rowspan="2"><p>DF/HCC Member or Harvard Affiliate</p></td>
-          <td height="20">individual clone</td>
-          <td>$30/clone</td>
+          <td rowspan="2"><p>DF/HCC Member</p></td>
+          <td>$45.00</td>
         </tr>
         <tr class="tableinfo">
-          <td>96-well plate of clones</td>
-          <td>$1200/plate</td>
-        </tr>
-        <!--
+          <td rowspan="2">Commercial</td>
+          <td>$60.50</td>
         <tr class="tableinfo">
-          <td rowspan="2">PSI Laboratory</td>
-          <td>individual clone</td>
-          <td>$30/clone</td>
-        </tr>
-        <tr class="tableinfo">
-          <td>96-well plate of clones</td>
-          <td>$1200/plate</td>
-        </tr>
-        -->
-        <tr class="tableinfo">
-          <td rowspan="2">All others</td>
-          <td>individual clone</td>
-          <td>$45/clone</td>
-        </tr>
-        <tr class="tableinfo">
-          <td>96-well plate of clones</td>
-          <td>$1500/plate</td>
-        </tr>
+          <td rowspan="2">Others</td>
+          <td>$55.00</td>
       </table>
       <div align="center"><span class="footertext"> *Shipping is additional. Either provide a FedEx number or shipping is a flat fee of $10 for domestic orders or $20 for international orders. <br>
       No charge for shipping to the Harvard Medical School community if order is picked up. Must have building access.</span></div>
