@@ -65,15 +65,17 @@
           <td width="50%">Price/Clone*</td>
         </tr>
         <tr class="tableinfo">
-          <td rowspan="2"><p>DF/HCC Member</p></td>
+          <td>DF/HCC Member</td>
           <td>$45.00</td>
         </tr>
         <tr class="tableinfo">
-          <td rowspan="2">Commercial</td>
+          <td>Commercial</td>
           <td>$60.50</td>
+        </tr>
         <tr class="tableinfo">
-          <td rowspan="2">Others</td>
+          <td>Others</td>
           <td>$55.00</td>
+        </tr>
       </table>
       <div align="center"><span class="footertext"> *Shipping is additional. Either provide a FedEx number or shipping is a flat fee of $10 for domestic orders or $20 for international orders. <br>
       No charge for shipping to the Harvard Medical School community if order is picked up. Must have building access.</span></div>
