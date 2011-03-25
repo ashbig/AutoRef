@@ -5,6 +5,10 @@
  */
 package plasmid.database.DatabaseManager;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.OutputStreamWriter;
 import java.sql.*;
 import java.util.*;
 
@@ -2042,12 +2046,29 @@ public class CloneManager extends TableManager {
     }
 
     public static void main(String args[]) {
+        String file = "C:\\dev\\andreas\\batch1\\plasmidcloneid_noseq_1.txt";
+        String output = "C:\\dev\\andreas\\batch1\\plasmidclone_noseq_1.txt";
         DatabaseTransaction dt = null;
         Connection conn = null;
+        
         try {
             dt = DatabaseTransaction.getInstance();
             conn = dt.requestConnection();
             CloneManager manager = new CloneManager(conn);
+            BufferedReader in = new BufferedReader(new FileReader(file));
+            OutputStreamWriter f = new FileWriter(output);
+            String line = null;
+            while ((line = in.readLine()) != null) {
+                int cloneid = Integer.parseInt(line);
+                System.out.println("clone:"+cloneid);
+                String seq = manager.queryReferenceSequenceByCloneid(cloneid);
+                //String seq = manager.queryCloneSequenceByCloneid(cloneid);
+                f.write(cloneid+"\t"+seq+"\n");
+            }
+            in.close();
+            f.close();
+                       
+            /**
             Clone c = manager.queryCloneByCloneid(5096);
             List names = c.getNames();
             List authors = c.getAuthors();
@@ -2055,6 +2076,7 @@ public class CloneManager extends TableManager {
             System.out.println(names);
             System.out.println(authors);
             System.out.println(growths);
+            */
         } catch (Exception ex) {
             System.out.println(ex);
         } finally {

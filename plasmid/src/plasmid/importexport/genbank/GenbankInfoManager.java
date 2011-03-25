@@ -8,6 +8,7 @@ package plasmid.importexport.genbank;
 
 import java.io.*;
 import java.util.*;
+import plasmid.coreobject.Publication;
 
 /**
  *
@@ -28,7 +29,7 @@ public class GenbankInfoManager {
     
     public void printGenbankInfo(List infos, String filename) throws Exception {
         OutputStreamWriter f = new FileWriter(filename);
-        f.write("Sequence ID\tAccession\tAccession Version\tGI\tOrganism\tGene ID\tSymbol\tDescription\tCDS Start\tCDS Stop\tSequence\n");
+        f.write("Sequence ID\tAccession\tAccession Version\tGI\tOrganism\tGene ID\tSymbol\tDescription\tCDS Start\tCDS Stop\tattL1Start\tattL1Stop\tattL2Start\tattL2Stop\tLinker5pStart\tLinker5pStop\tLinker3pStart\tLinker3pStop\tSequence\n");
         for(int i=0; i<infos.size(); i++) {
             GenbankInfo info = (GenbankInfo)infos.get(i);
             f.write(info.getTerm()+"\t");
@@ -78,6 +79,7 @@ public class GenbankInfoManager {
             else
                 f.write(info.getCdsstop()+"\t");
             
+            f.write(info.getAttL1Start()+"\t"+info.getAttL1Stop()+"\t"+info.getAttL2Start()+"\t"+info.getAttL2Stop()+"\t"+info.getLinker5pStart()+"\t"+info.getLinker5pStop()+"\t"+info.getLinker3pStart()+"\t"+info.getLinker3pStop()+"\t");
             if(info.getSequencetext() == "")
                 f.write(NA+"\n");
             else
@@ -134,6 +136,19 @@ public class GenbankInfoManager {
             }
         }
         
+        //print other names
+        for(int i=0; i<infos.size(); i++) {
+            GenbankInfo info = (GenbankInfo)infos.get(i);
+            List names = info.getNames();
+            for(int n=0; n<names.size(); n++) {
+                GenbankInfoName name = (GenbankInfoName)names.get(n);
+                f.write(info.getTerm()+"\t");
+                f.write(name.getNametype()+"\t");
+                f.write(name.getNamevalue()+"\t");
+                f.write(NA+"\n");
+            }
+        }
+        
         f.close();
     }
     
@@ -143,6 +158,23 @@ public class GenbankInfoManager {
             String s = (String)errorList.get(i);
             f.write(s+"\n");
         }
+        f.close();
+    }
+    
+    public void printPublications(List infos, String filename) throws Exception {
+        OutputStreamWriter f = new FileWriter(filename);
+        f.write("Sequence ID\tPmid\n");
+        
+        for(int i=0; i<infos.size(); i++) {
+            GenbankInfo info = (GenbankInfo)infos.get(i);
+            List publications = info.getPublications();
+            for(int n=0; n<publications.size(); n++) {
+                Publication p = (Publication)publications.get(n);
+                f.write(info.getTerm()+"\t");
+                f.write(p.getPmid()+"\n");
+            }
+        }
+        
         f.close();
     }
     
@@ -162,13 +194,15 @@ public class GenbankInfoManager {
     }
     
     public static void main(String args[]) throws Exception {
-        String referenceFile = "G:\\plasmid\\Reference\\bryanvought_nov_2006\\reference.txt";
-        String referenceNameFile = "G:\\plasmid\\Reference\\bryanvought_nov_2006\\referenceName.txt";
-        String referenceInput = "G:\\plasmid\\Reference\\bryanvought_nov_2006\\input.txt";
-        //String referenceInput="G:\\tmp.txt";
-        String error = "G:\\plasmid\\Reference\\bryanvought_nov_2006\\error.txt";
+        String referenceInput = "C:\\dev\\plasmidsupport\\Orfeome\\gi.txt";  
+        String genbankInput = "C:\\dev\\plasmidsupport\\Orfeome201103\\sequence.gb"; 
+        String referenceFile = "C:\\dev\\plasmidsupport\\Orfeome201103\\cloneseq.txt";
+        String referenceNameFile = "C:\\dev\\plasmidsupport\\Orfeome201103\\cloneseqname.txt";
+        String error = "C:\\dev\\plasmidsupport\\Orfeome201103\\error.txt";
+        String publication = "C:\\dev\\plasmidsupport\\Orfeome201103\\clonepublication.txt";
         
         GenbankInfoManager manager = new GenbankInfoManager();
+        /**
         List genbanks = manager.readGenbank(referenceInput);
         if(genbanks == null) {
             System.out.println("Error occured while reading input file.");
@@ -195,12 +229,21 @@ public class GenbankInfoManager {
                 infos.add(info);
             }
         }
-        
+        */
+        GenbankParser parser = new GenbankParser();
+        List infos = new ArrayList();
+        try {
+            infos = parser.parseGenbanksOffline(genbankInput);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
         manager.printGenbankInfo(infos, referenceFile);
         manager.printGenbankNames(infos, referenceNameFile);
+        manager.printPublications(infos, publication);
+        /**
         if(errorList.size()>0)
             manager.printError(errorList, error);
-        
+        */
         System.exit(0);
     }
 }

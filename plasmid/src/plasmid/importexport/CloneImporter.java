@@ -351,7 +351,8 @@ public class CloneImporter {
                 if("publicationid".equalsIgnoreCase(columnName)) {
                     int pubid = 0;
                     if(pubidmap == null) {
-                        pubid = Integer.parseInt(columnInfo);
+                        PublicationManager man = new PublicationManager(manager.getConnection());
+                        pubid = man.getPublicationid(columnInfo);
                     } else {
                         pubid = ((Integer)pubidmap.get(columnInfo)).intValue();
                     }

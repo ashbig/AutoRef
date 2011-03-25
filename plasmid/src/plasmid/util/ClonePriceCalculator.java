@@ -37,16 +37,21 @@ public class ClonePriceCalculator {
     
     public double calculatePriceForCollection(CollectionInfo info, String group) {
         double price = info.getPrice();
+        int quantity = info.getQuantity();
+        
+        if(User.OTHER.equals(group)) {
+            price = info.getCommercialprice();
+            return price*quantity;
+        }
         
         for(int i=0; i<User.MEMBER.length; i++) {
             String g = User.MEMBER[i];
             if(g.equals(group)) {
                 price = info.getMemberprice();
-                break;
+                return price*quantity;
             }
         }
         
-        int quantity = info.getQuantity();
         return price*quantity;
     }
 }

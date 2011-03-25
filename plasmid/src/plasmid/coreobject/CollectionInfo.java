@@ -34,6 +34,7 @@ public class CollectionInfo {
     private double memberprice;
     private String status;
     private String restriction;
+    private double commercialprice;
     
     private List protocols;
     private List authors;
@@ -46,13 +47,14 @@ public class CollectionInfo {
     public CollectionInfo() {
     }
     
-    public CollectionInfo(String name, String desc, double price, double memberprice, String status, String restriction) {
+    public CollectionInfo(String name, String desc, double price, double memberprice, String status, String restriction, double commercialprice) {
         this.name = name;
         this.description = desc;
         this.price = price;
         this.memberprice = memberprice;
         this.status = status;
         this.restriction = restriction;
+        this.commercialprice = commercialprice;
     }
     
     public String getName() {return name;}
@@ -97,5 +99,21 @@ public class CollectionInfo {
             s = DISPLAYPRICE;
         
         return s;
+    }
+    
+    public String getDisplayCommercialPrice() {
+        String s = ""+commercialprice;
+        if(commercialprice<0)
+            s = DISPLAYPRICE;
+        
+        return s;
+    }
+
+    public double getCommercialprice() {
+        return commercialprice;
+    }
+
+    public void setCommercialprice(double commercialprice) {
+        this.commercialprice = commercialprice;
     }
 }
