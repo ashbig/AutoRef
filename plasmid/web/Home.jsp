@@ -22,17 +22,32 @@
         <td width="800" height="112">
             <p align="left"><span class="mainbodytext">The Mission of the DNA Resource CORE is to provide member in the DF/HCC, Harvard Affiliates, and outside researchers with quality and inexpensive <a target="_blank" href="http://dnaseq.med.harvard.edu/">DNA sequencing services</a> and <a href="http://plasmid.med.harvard.edu/PLASMID/Home.jsp">sequence verified plasmid constructs</a>, paired with comprehensive quality control and customer support.&nbsp;        
         </span>
+        
+        <p align="left" class="formlabelitalic">
+            Dear Valued PlasmID User,<br><br>
+            We are happy to announce that we are no longer experiencing a two week delay on new orders.
+            To better serve your plasmid needs in the future we are happy to announce our upcoming 
+            plans for expansion. In the coming days please look forward to the addition of many new 
+            clone collections, new personnel to fill orders, and faster turn-around times. To enable 
+            this expansion we are also adjusting our price structure for the first time in almost 
+            10 years! We are committed to providing valuable plasmid constructs to the research 
+            community at the lowest possible rate, and are happy to announce new rates far below 
+            those found elsewhere on the market. Below please find our new pricing structure which 
+            will take effect on April 1, 2011. If you have any questions or concerns please feel free 
+            to contact <a href="mailto:plasmidhelp@hms.harvard.edu">plasmidhelp@hms.harvard.edu</a>. 
+        </p>
+            <!--
         <p class="alertbigger">NOTICE: Due to high volume all incoming orders are experiencing a TWO WEEK delay. We are working rapidly to improve our capacity and value your patronage. If you have any further questions or concerns please contact <a href="mailto:plasmidhelp@hms.harvard.edu">plasmidhelp@hms.harvard.edu</a>.</p>
             <!--p class="alertheader">Special Notice: In observance of the holidays the PlasmID Repository will be closed from 12/23/2010 - 01/03/2011. </p-->
             <!--p class="alert">Our website will continue to accept new orders, but no new orders will be processed until the new year. To avoid shipping complications our last shipping date will be 12/20/2010.Please contact plasmidhelp@hms.harvard.edu with any questions or concerns. </p-->
-        <hr>
+        
             <!--
         <p align="left" class="mainbodytext"><strong>PLASMID SEARCH:</strong>  Go to <a href="OrderOverview.jsp">Search & Order</a>
           or find a list of our large collections <a href="collection_overview.jsp" target="_blank">here</a>. </p>
         <p align="left" class="mainbodytext"><strong>PLASMID COST:</strong> Click <a href="http://plasmid.med.harvard.edu/PLASMID/OrderOverview.jsp#cost">here</a> for plasmid and shipping costs.</p>
         <p align="left" class="mainbodytext"><strong class="mainbodytext">DEPOSITING CLONES: </strong>Go to <a href="Submission.jsp">Plasmid Submission</a> or see a <a href="http://psimr.asu.edu/overview.html" target="_blank">slide show</a> describing the process.</p>       
         -->
-        
+       <hr> 
       <html:form action="AdvancedSearch.do">
         <p class="formlabel">Search PlasmID collection [<a href="PrepareAdvancedSearch.do?psi=0">Advanced Search</a>]</p>
         <table width="100%" border="0">
