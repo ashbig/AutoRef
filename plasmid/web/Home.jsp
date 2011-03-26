@@ -36,6 +36,28 @@
             will take effect on April 1, 2011. If you have any questions or concerns please feel free 
             to contact <a href="mailto:plasmidhelp@hms.harvard.edu">plasmidhelp@hms.harvard.edu</a>. 
         </p>
+              <table width="70%" border="3" align="center" id="gray">
+        <tr class="tableheader">
+          <td width="30%">Pricing Category</td>
+          <td width="25%">Individual Clone</td>
+          <td width="45%">Individual Clone with Platinum QC</td>
+        </tr>
+        <tr class="tableinfo">
+          <td>DF/HCC Members</td>
+          <td align="right">$45.00</td>
+          <td align="right">$55.00</td>
+        </tr>
+        <tr class="tableinfo">
+          <td>Academics and Nonprofits</td>
+          <td align="right">$55.00</td>
+          <td align="right">$65.00</td>
+        </tr>
+        <tr class="tableinfo">
+          <td>Commercial Users</td>
+          <td align="right">$60.50</td>
+          <td align="right">$70.50</td>
+        </tr>
+      </table>
             <!--
         <p class="alertbigger">NOTICE: Due to high volume all incoming orders are experiencing a TWO WEEK delay. We are working rapidly to improve our capacity and value your patronage. If you have any further questions or concerns please contact <a href="mailto:plasmidhelp@hms.harvard.edu">plasmidhelp@hms.harvard.edu</a>.</p>
             <!--p class="alertheader">Special Notice: In observance of the holidays the PlasmID Repository will be closed from 12/23/2010 - 01/03/2011. </p-->
