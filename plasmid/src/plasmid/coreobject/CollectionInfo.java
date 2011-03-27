@@ -87,32 +87,27 @@ public class CollectionInfo {
     public void setClones(List l) {this.clones = l;}
     
     public String getDisplayPrice() {
-        String s = ""+price;
         if(price<-1)
-            s = DISPLAYPRICE;
+            return DISPLAYPRICE;
         if(price<0)
-            s = Constants.NA;
-        return s;
+            return Constants.NA;
+        return "$"+price;
     }
     
     public String getDisplayMemberPrice() {
-        String s = ""+memberprice;
         if(price<-1)
-            s = DISPLAYPRICE;
+            return DISPLAYPRICE;
         if(price<0)
-            s = Constants.NA;
-        
-        return s;
+            return Constants.NA;
+        return "$"+memberprice;
     }
     
     public String getDisplayCommercialPrice() {
-        String s = ""+commercialprice;
         if(price<-1)
-            s = DISPLAYPRICE;
+            return DISPLAYPRICE;
         if(price<0)
-            s = Constants.NA;
-        
-        return s;
+            return Constants.NA;
+        return "$"+commercialprice;
     }
 
     public double getCommercialprice() {
