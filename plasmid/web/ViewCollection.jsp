@@ -29,13 +29,19 @@
                     <tr> 
                         <td width="10%" valign="top" class="formlabel">Collection:</td>
                         <td width="40%" valign="top" class="itemtext"><bean:write name="<%=Constants.SINGLECOLLECTION%>" property="name"/></td>
-                        <td width="20%" valign="top" class="formlabel">Price for member:</td>
+                        <td width="20%" valign="top" class="formlabel">Price for DF/HCC members:</td>
                         <td width="30%" valign="top" class="itemtext">$<bean:write name="<%=Constants.SINGLECOLLECTION%>" property="displayMemberPrice"/></td>
                     </tr>
                     <tr> 
                         <td width="10%" valign="top" class="formlabel">&nbsp;</td>
                         <td width="40%" valign="top" class="itemtext">&nbsp;</td>
-                        <td width="20%" valign="top" class="formlabel">Price for non-member:</td>
+                        <td width="20%" valign="top" class="formlabel">Price for commercial users:</td>
+                        <td width="30%" valign="top" class="itemtext">$<bean:write name="<%=Constants.SINGLECOLLECTION%>" property="displayCommercialPrice"/></td>
+                    </tr>
+                    <tr> 
+                        <td width="10%" valign="top" class="formlabel">&nbsp;</td>
+                        <td width="40%" valign="top" class="itemtext">&nbsp;</td>
+                        <td width="20%" valign="top" class="formlabel">Price for all others:</td>
                         <td width="30%" valign="top" class="itemtext">$<bean:write name="<%=Constants.SINGLECOLLECTION%>" property="displayPrice"/></td>
                     </tr>
                     <tr> 

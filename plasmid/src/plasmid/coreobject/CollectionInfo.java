@@ -7,6 +7,7 @@
 package plasmid.coreobject;
 
 import java.util.*;
+import plasmid.Constants;
 
 /**
  *
@@ -87,24 +88,29 @@ public class CollectionInfo {
     
     public String getDisplayPrice() {
         String s = ""+price;
-        if(price<0)
+        if(price<-1)
             s = DISPLAYPRICE;
-        
+        if(price<0)
+            s = Constants.NA;
         return s;
     }
     
     public String getDisplayMemberPrice() {
         String s = ""+memberprice;
-        if(memberprice<0)
+        if(price<-1)
             s = DISPLAYPRICE;
+        if(price<0)
+            s = Constants.NA;
         
         return s;
     }
     
     public String getDisplayCommercialPrice() {
         String s = ""+commercialprice;
-        if(commercialprice<0)
+        if(price<-1)
             s = DISPLAYPRICE;
+        if(price<0)
+            s = Constants.NA;
         
         return s;
     }
