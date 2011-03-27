@@ -95,17 +95,17 @@ public class CollectionInfo {
     }
     
     public String getDisplayMemberPrice() {
-        if(price<-1)
+        if(memberprice<-1)
             return DISPLAYPRICE;
-        if(price<0)
+        if(memberprice<0)
             return Constants.NA;
         return "$"+memberprice;
     }
     
     public String getDisplayCommercialPrice() {
-        if(price<-1)
+        if(commercialprice<-1)
             return DISPLAYPRICE;
-        if(price<0)
+        if(commercialprice<0)
             return Constants.NA;
         return "$"+commercialprice;
     }
