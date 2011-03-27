@@ -130,8 +130,9 @@
                                 <td class="tableheader">&nbsp;</td>
                                 <td class="tableheader">Collection Name</td>
                                 <td class="tableheader">Use Restriction</td>
-                                <td class="tableheader">Price For Member</td>
-                                <td class="tableheader">Price For Non-Member</td>
+                                <td class="tableheader">Price For DF/HCC Members</td>
+                                <td class="tableheader">Price For Commercial Users</td>
+                                <td class="tableheader">Price For All Others</td>
                                 <td class="tableheader">&nbsp;</td>
                             </tr>
                             
@@ -142,6 +143,7 @@
                                     <td><a target="_blank" class="itemtext" href="GetCollection.do?collectionName=<bean:write name="collection" property="name"/>"><bean:write name="collection" property="name"/></a></td>
                                     <td><bean:write name="collection" property="restriction"/></td>
                                     <td><bean:write name="collection" property="displayMemberPrice"/></td>
+                                    <td><bean:write name="collection" property="displayCommercialPrice"/></td>
                                     <td><bean:write name="collection" property="displayPrice"/></td>
                                     <td><html:form action="UpdateCart.do">
                                         <input type="hidden" name="itemid" value="<bean:write name="collection" property="name"/>">
