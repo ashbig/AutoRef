@@ -43,6 +43,7 @@ public class CollectionInfo {
     private List clones;
     
     private int quantity;
+    private int cloneCount;
     
     /** Creates a new instance of CollectionInfo */
     public CollectionInfo() {
@@ -116,5 +117,13 @@ public class CollectionInfo {
 
     public void setCommercialprice(double commercialprice) {
         this.commercialprice = commercialprice;
+    }
+
+    public int getCloneCount() {
+        return cloneCount;
+    }
+
+    public void setCloneCount(int cloneCount) {
+        this.cloneCount = cloneCount;
     }
 }

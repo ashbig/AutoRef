@@ -213,7 +213,8 @@ public class OrderProcessManager {
         int n = 0;
         for (int i = 0; i < collections.size(); i++) {
             ShoppingCartItem item = (ShoppingCartItem) collections.get(i);
-            n = n + item.getQuantity();
+            //n = n + item.getQuantity()*item.getCloneCount();
+            n = n + item.getCloneCount();
         }
 
         return n;
@@ -334,7 +335,7 @@ public class OrderProcessManager {
             conn = t.requestConnection();
 
             CollectionManager man = new CollectionManager(conn);
-            Map foundCollections = man.getCollections(conn, collectionNames);
+            Map foundCollections = man.getCollections(conn, collectionNames, true);
             List newShoppingcartCollections = new ArrayList();
             for (int i = 0; i < collections.size(); i++) {
                 ShoppingCartItem item = (ShoppingCartItem) collections.get(i);
@@ -343,7 +344,7 @@ public class OrderProcessManager {
                 CollectionInfo info = (CollectionInfo) foundCollections.get(itemid);
                 info.setQuantity(quantity);
                 newShoppingcartCollections.add(info);
-                item.setCloneCount(info.getClones().size());
+                item.setCloneCount(info.getCloneCount());
             }
 
             return newShoppingcartCollections;
