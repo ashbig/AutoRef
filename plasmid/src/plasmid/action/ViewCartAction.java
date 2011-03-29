@@ -8,11 +8,8 @@ package plasmid.action;
 
 import java.util.*;
 import java.io.*;
-import java.sql.*;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionError;
@@ -20,14 +17,8 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionServlet;
-import org.apache.struts.util.MessageResources;
 
-import plasmid.database.*;
-import plasmid.database.DatabaseManager.*;
 import plasmid.Constants;
-import plasmid.coreobject.*;
-import plasmid.query.coreobject.CloneInfo;
 import plasmid.form.ViewCartForm;
 import plasmid.process.OrderProcessManager;
 

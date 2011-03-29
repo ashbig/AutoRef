@@ -98,9 +98,10 @@ public class EnterAddressAction extends UserAction {
         
         double platinumServiceCost = 0.0;
         int numOfClones = ((CheckoutForm)form).getNumOfClones();
+        int numOfClonesInCollections = ((CheckoutForm)form).getNumOfClonesInCollections();
         String isplatinum = ((CheckoutForm)form).getIsplatinum();
         if(Constants.ISPLATINUM_Y.equals(isplatinum)) {
-            platinumServiceCost = numOfClones*Constants.PLATINUM_SERVICE_COST;
+            platinumServiceCost = (numOfClones+numOfClonesInCollections)*Constants.PLATINUM_SERVICE_COST;
         }
         
         double shippingCost = 0.0;
