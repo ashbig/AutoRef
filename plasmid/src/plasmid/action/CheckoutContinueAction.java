@@ -83,6 +83,7 @@ public class CheckoutContinueAction extends UserAction {
         double collectionPrice = m.getTotalCollectionPrice(collections, user.getGroup());
         int totalQuantity = m.getTotalQuantity();
         double totalPrice = clonePrice+collectionPrice;
+        int numOfClonesInCollections = m.getNumOfClonesInCollections();
         
         if(cloneQuantity == 0 && collectionQuantity == 0) {
             return (new ActionForward(mapping.getInput()));
@@ -111,6 +112,7 @@ public class CheckoutContinueAction extends UserAction {
         ((CheckoutForm)form).setCostOfPlatinum(0.0);
         ((CheckoutForm)form).setIsBatch(isBatch);
         ((CheckoutForm)form).setIsplatinum(Constants.ISPLATINUM_N);
+        ((CheckoutForm)form).setNumOfClonesInCollections(numOfClonesInCollections);
            
         List shippingMethods = DefTableManager.getVocabularies("shippingmethod", "method");
         request.setAttribute("shippingMethods", shippingMethods);

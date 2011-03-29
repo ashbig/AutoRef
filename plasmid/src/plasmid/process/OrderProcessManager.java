@@ -23,6 +23,7 @@ import com.jscape.inet.sftp.Sftp;
  * @author  DZuo
  */
 public class OrderProcessManager {
+
     public static final String PLATINUM_VALIDATION_METHOD_END_SEQ = "End read sequence validation";
     public static final String USA = "USA";
     public static final int PLATESIZE = 96;
@@ -205,6 +206,19 @@ public class OrderProcessManager {
         return n;
     }
 
+    public int getNumOfClonesInCollections() {
+        if (collections == null) {
+            return 0;
+        }
+        int n = 0;
+        for (int i = 0; i < collections.size(); i++) {
+            ShoppingCartItem item = (ShoppingCartItem) collections.get(i);
+            n = n + item.getQuantity();
+        }
+
+        return n;
+    }
+
     public double getTotalClonePrice(String group) {
         ClonePriceCalculator calculator = new ClonePriceCalculator();
         return calculator.calculateClonePrice(getTotalCloneQuantity(), group);
@@ -329,6 +343,7 @@ public class OrderProcessManager {
                 CollectionInfo info = (CollectionInfo) foundCollections.get(itemid);
                 info.setQuantity(quantity);
                 newShoppingcartCollections.add(info);
+                item.setCloneCount(info.getClones().size());
             }
 
             return newShoppingcartCollections;
@@ -340,6 +355,18 @@ public class OrderProcessManager {
         } finally {
             DatabaseTransaction.closeConnection(conn);
         }
+    }
+
+    public int getTotalNumOfClonesInCollections() {
+        int count = 0;
+        for (int i = 0; i < collections.size(); i++) {
+            ShoppingCartItem item = (ShoppingCartItem) collections.get(i);
+            int cloneCount = item.getCloneCount();
+            int quantity = item.getQuantity();
+            count = count + cloneCount * quantity;
+        }
+
+        return count;
     }
 
     public List getOrderClones(int orderid, User user, boolean isWorkingStorage, String isBatch) {
@@ -810,7 +837,7 @@ public class OrderProcessManager {
                     out.print(cs.getHosttype() + ": " + cs.getMarker() + ";");
                 }
 
-                out.print("\t\t\t\t"+c.getSpecialtreatment());
+                out.print("\t\t\t\t" + c.getSpecialtreatment());
 
                 if (isQuantity) {
                     out.print("\t" + c.getQuantity());
@@ -833,7 +860,7 @@ public class OrderProcessManager {
                         out.print(cs.getHosttype() + ": " + cs.getMarker() + ";");
                     }
 
-                    out.print("\t" + insert.getHasmutation() + "\t" + insert.getHasdiscrepancy()+"\t"+insert.getSpecies()+"\t"+c.getSpecialtreatment());
+                    out.print("\t" + insert.getHasmutation() + "\t" + insert.getHasdiscrepancy() + "\t" + insert.getSpecies() + "\t" + c.getSpecialtreatment());
 
                     if (isQuantity) {
                         out.print("\t" + c.getQuantity());
@@ -1009,12 +1036,12 @@ public class OrderProcessManager {
         //OutputStreamWriter f = new FileWriter(path+filename);
         }
         OutputStreamWriter f = null;
-        if(ftp==null) {
-            f = new FileWriter(new File(path+filename));
+        if (ftp == null) {
+            f = new FileWriter(new File(path + filename));
         } else {
             f = new OutputStreamWriter(ftp.getOutputStream(path + filename, 0, false));
         }
-        
+
         f.write(filename + "\n\n\n");
         for (int i = 0; i < clones.size(); i++) {
             CloneInfo clone = (CloneInfo) clones.get(i);
@@ -1037,12 +1064,12 @@ public class OrderProcessManager {
             return;
         }
         OutputStreamWriter f = null;
-        if(ftp == null) {
+        if (ftp == null) {
             f = new FileWriter(filename);
         } else {
             f = new OutputStreamWriter(ftp.getOutputStream(filename, 0, false));
         }
-        
+
         f.write("File Name\tHost Type\tSelection Condition\tGrowth Condition\tComments\n");
         for (int i = 0; i < groups.size(); i++) {
             List clones = (List) groups.get(i);
@@ -1157,25 +1184,25 @@ public class OrderProcessManager {
     }
 
     public void sendOrderEmail(CloneOrder order, String email) {
-        String subject = "Your PlasmID order confirmation (order ID: " + order.getOrderid()+")";
-        String text = 
-                "Thank you for placing a clone request at PlasmID. "+
-                "Please note your order ID number and save this email for your future reference. "+
-                "Your current order status is listed below along with the details of your order. "+
-                "You may check the progress of your order at any time by logging into your "+
-                "account and then selecting 'View Orders.' "+
-                "Orders of < 48 clones typically ship within 7-10 days. "+
-                "We ask that you please allow additional time for large orders "+
-                "or when requesting QC testing. Orders will ship as glycerol stocks "+
-                "when allowed by local law. Some international orders may ship as purified DNA "+
-                "or stabilized in special tubes to comply with local import law or to "+
-                "accommodate slower shipping routes. Please contact plasmidhelp@hms.harvard.edu "+
-                "with any questions or concerns.\n\n"+
-                "Order Status Key\n\n"+
-                "\tPending:\tNo additional information required. Your order is in line to be filled ASAP.\n"+
-                "\tIn Process:\tYour order is currently being filled.\n"+
-                "\tPending MTA:\tPlease download the required MTA from this web page http://plasmid.med.harvard.edu/PLASMID/TermAndCondition.jsp, then sign and return\n"+
-                "\tPending AQIS:\tPlease provide import documents\n"+
+        String subject = "Your PlasmID order confirmation (order ID: " + order.getOrderid() + ")";
+        String text =
+                "Thank you for placing a clone request at PlasmID. " +
+                "Please note your order ID number and save this email for your future reference. " +
+                "Your current order status is listed below along with the details of your order. " +
+                "You may check the progress of your order at any time by logging into your " +
+                "account and then selecting 'View Orders.' " +
+                "Orders of < 48 clones typically ship within 7-10 days. " +
+                "We ask that you please allow additional time for large orders " +
+                "or when requesting QC testing. Orders will ship as glycerol stocks " +
+                "when allowed by local law. Some international orders may ship as purified DNA " +
+                "or stabilized in special tubes to comply with local import law or to " +
+                "accommodate slower shipping routes. Please contact plasmidhelp@hms.harvard.edu " +
+                "with any questions or concerns.\n\n" +
+                "Order Status Key\n\n" +
+                "\tPending:\tNo additional information required. Your order is in line to be filled ASAP.\n" +
+                "\tIn Process:\tYour order is currently being filled.\n" +
+                "\tPending MTA:\tPlease download the required MTA from this web page http://plasmid.med.harvard.edu/PLASMID/TermAndCondition.jsp, then sign and return\n" +
+                "\tPending AQIS:\tPlease provide import documents\n" +
                 "\tPending for Payment:\tOur system is waiting for confirmation that your credit card was processed. Please log in to your account for up to date order status.\n";
         text += "\n" + formOrderText(order);
         text += "\n" + "Please sign in at PlasmID to view order status, " +
@@ -1294,7 +1321,7 @@ public class OrderProcessManager {
         out.println("Date_Ordered\tTracking_Number\tPI_Name\tSample_Number\tTotal_Cost\tAccount_Code\tDate_Completed\tOrder_ID\tUser_Name\tInstitution");
         for (int i = 0; i < orders.size(); i++) {
             CloneOrder order = (CloneOrder) orders.get(i);
-            int numofsamples = order.getNumofclones()+order.getNumofcollection();
+            int numofsamples = order.getNumofclones() + order.getNumofcollection();
             out.println(order.getOrderDate() + "\t" + order.getTrackingnumber() + "\t" + order.getPiname() + "\t" + numofsamples + "\t$" + order.getPrice() + "\t" + order.getPonumber() + "\t" + order.getShippingdate() + "\t" + order.getOrderid() + "\t" + order.getName() + "\tBill To: " + order.getBillingTo() + ", " + order.getBillingAddress().replaceAll("\n", " "));
         }
     }

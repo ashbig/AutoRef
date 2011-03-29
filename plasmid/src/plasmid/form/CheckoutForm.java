@@ -57,6 +57,7 @@ public class CheckoutForm extends ActionForm {
     private String ismta;
     private String isplatinum;
     private double costOfPlatinum;
+    private int numOfClonesInCollections;
     
     /** Creates a new instance of CheckoutForm */
     public CheckoutForm() {
@@ -190,6 +191,14 @@ public class CheckoutForm extends ActionForm {
 
     public void setCostOfPlatinum(double costOfPlatinum) {
         this.costOfPlatinum = costOfPlatinum;
+    }
+
+    public int getNumOfClonesInCollections() {
+        return numOfClonesInCollections;
+    }
+
+    public void setNumOfClonesInCollections(int numOfClonesInCollections) {
+        this.numOfClonesInCollections = numOfClonesInCollections;
     }
     
     /**

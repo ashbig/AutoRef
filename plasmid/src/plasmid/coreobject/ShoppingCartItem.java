@@ -20,6 +20,7 @@ public class ShoppingCartItem {
     private String itemid;
     private String type;
     private int quantity;
+    private int cloneCount; //number of clones in collection
     
     /** Creates a new instance of ShoppingCartItem */
     public ShoppingCartItem() {
@@ -75,5 +76,13 @@ public class ShoppingCartItem {
         }
         cart.add(item);
         return;
+    }
+
+    public int getCloneCount() {
+        return cloneCount;
+    }
+
+    public void setCloneCount(int cloneCount) {
+        this.cloneCount = cloneCount;
     }
 }
