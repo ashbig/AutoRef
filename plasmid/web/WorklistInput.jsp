@@ -48,13 +48,13 @@ plates is the same as your input order.</p>
   </tr>
   </logic:present>
   <tr> 
-    <td width="20%" height="91" valign="top" class="formlabel">Source containers: <br>(separated by white space)</td>
+    <td width="20%" height="91" valign="top" class="formlabel">Source containers: <br>(separated by new line or tab)</td>
     <td colspan="2">
         <html:textarea styleClass="itemtext" property="srcContainerList" rows="5"/>
     </td>
   </tr>
   <tr> 
-    <td width="20%" height="98" valign="top" class="formlabel">Destination containers: <br>(separated by white space)</td>
+    <td width="20%" height="98" valign="top" class="formlabel">Destination containers: <br>(separated by new line or tab)</td>
     <td colspan="2" class="itemtext">
         <html:textarea styleClass="itemtext" property="destContainerList" rows="5"/>
     </td>

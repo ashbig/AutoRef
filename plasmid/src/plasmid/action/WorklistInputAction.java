@@ -49,8 +49,8 @@ public class WorklistInputAction extends InternalUserAction{
         User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
         
         StringConvertor sc = new StringConvertor();
-        List srcLabels = sc.convertFromStringToList(srcContainerList, "\n\t ");
-        List destLabels = sc.convertFromStringToList(destContainerList, "\n\t ");
+        List srcLabels = sc.convertFromStringToList(srcContainerList, "\n\t");
+        List destLabels = sc.convertFromStringToList(destContainerList, "\n\t");
         
         if(srcLabels.size()==0) {
             errors.add(ActionErrors.GLOBAL_ERROR,
