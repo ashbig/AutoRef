@@ -22,7 +22,7 @@
         <td width="800" height="112">
             <p align="left"><span class="mainbodytext">The Mission of the DNA Resource CORE is to provide member in the DF/HCC, Harvard Affiliates, and outside researchers with quality and inexpensive <a target="_blank" href="http://dnaseq.med.harvard.edu/">DNA sequencing services</a> and <a href="http://plasmid.med.harvard.edu/PLASMID/Home.jsp">sequence verified plasmid constructs</a>, paired with comprehensive quality control and customer support.&nbsp;        
         </span>
-        
+        <!--
         <p align="left" class="formlabelitalic">
             Dear Valued PlasmID User,<br><br>
             We are happy to announce that we are no longer experiencing a two week delay on new orders.
@@ -58,7 +58,7 @@
           <td align="right">$70.50</td>
         </tr>
       </table>
-            <!--
+            
         <p class="alertbigger">NOTICE: Due to high volume all incoming orders are experiencing a TWO WEEK delay. We are working rapidly to improve our capacity and value your patronage. If you have any further questions or concerns please contact <a href="mailto:plasmidhelp@hms.harvard.edu">plasmidhelp@hms.harvard.edu</a>.</p>
             <!--p class="alertheader">Special Notice: In observance of the holidays the PlasmID Repository will be closed from 12/23/2010 - 01/03/2011. </p-->
             <!--p class="alert">Our website will continue to accept new orders, but no new orders will be processed until the new year. To avoid shipping complications our last shipping date will be 12/20/2010.Please contact plasmidhelp@hms.harvard.edu with any questions or concerns. </p-->
