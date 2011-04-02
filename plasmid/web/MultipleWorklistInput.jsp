@@ -35,12 +35,12 @@ plates is the same as your input order.</p>
 <input type="hidden" name="processname" value="<bean:write name="generateWorklistForm" property="processname"/>">
 <table width="100%" border="0">
   <tr> 
-    <td width="20%" class="formlabel">Process:</td>
-    <td width="80%" colspan="2" class="itemtext" ><bean:write name="generateWorklistForm" property="processname"/></td>
+    <td width="30%" class="formlabel">Process:</td>
+    <td colspan="2" class="itemtext" ><bean:write name="generateWorklistForm" property="processname"/></td>
   </tr>
   <logic:present name="<%=Constants.PROTOCOLS %>">
   <tr> 
-    <td width="20%" height="37" class="formlabel">Select protocol:</td>
+    <td width="30%" height="37" class="formlabel">Select protocol:</td>
     <td colspan="2">
         <html:select property="protocol" styleClass="itemtext">
           <html:options collection="<%=Constants.PROTOCOLS %>" property="name"/>
@@ -49,46 +49,46 @@ plates is the same as your input order.</p>
   </tr>
   </logic:present>
   <tr> 
-    <td width="20%" height="91" valign="top" class="formlabel">Source containers: <br>(separated by white space)</td>
+    <td width="30%" height="91" valign="top" class="formlabel">Source containers: <br>(separated by new line or tab)</td>
     <td colspan="2">
-        <html:textarea styleClass="itemtext" property="srcContainerList" rows="5"/>
+        <html:textarea styleClass="itemtext" property="srcContainerList" rows="5" cols="50"/>
     </td>
   </tr>  
   <tr> 
-    <td colspan="3" valign="top" class="formlabel">Destination containers: <br>(separated by white space)</td>
+    <td colspan="3" valign="top" class="formlabel">Destination containers: (separated by new line or tab)</td>
   </tr>
   <tr> 
-    <td width="20%" height="98" valign="top" class="formlabel">Working copies:</td>
+    <td width="30%" height="98" valign="top" class="formlabel">Working copies:</td>
     <td height="98" valign="top" class="itemtext">
-        <html:textarea styleClass="itemtext" property="destContainerListWorking" rows="5"/>
+        <html:textarea styleClass="itemtext" property="destContainerListWorking" rows="5" cols="50"/>
     </td>
     <td  height="98" valign="top" class="formlabel">
-        <html:text property="volumnWorking" styleClass="itemtext" size="30"/>Volumn (in microliter)
+        <html:text property="volumnWorking" styleClass="itemtext" size="10"/>Volumn (in microliter)
     </td>
   </tr>
   <tr> 
-    <td width="20%" height="98" valign="top" class="formlabel">Local archive copies:</td>
+    <td width="30%" height="98" valign="top" class="formlabel">Local archive copies:</td>
     <td height="98" valign="top" class="itemtext">
-        <html:textarea styleClass="itemtext" property="destContainerListArchive" rows="5"/>
+        <html:textarea styleClass="itemtext" property="destContainerListArchive" rows="5" cols="50"/>
     </td>
     <td height="98" valign="top" class="formlabel">
-        <html:text property="volumnArchive" styleClass="itemtext" size="30"/>Volumn (in microliter)
+        <html:text property="volumnArchive" styleClass="itemtext" size="10"/>Volumn (in microliter)
     </td>
   </tr>
   <tr> 
     <td colspan="3" class="formlabel"><html:checkbox property="isBiobank">Check here if you need BioBank copy</html:checkbox></td>
   </tr>
   <tr> 
-    <td width="20%" height="98" valign="top" class="formlabel">BioBank copies:</td>
+    <td width="30%" height="98" valign="top" class="formlabel">BioBank copies:</td>
     <td height="98" valign="top" class="itemtext">
-        <html:textarea styleClass="itemtext" property="destContainerListBiobank" rows="5"/>
+        <html:textarea styleClass="itemtext" property="destContainerListBiobank" rows="5" cols="50"/>
     </td>
     <td height="98" valign="top" class="formlabel">
-        <html:text property="volumnBiobank" styleClass="itemtext" size="30"/>Volumn (in microliter)
+        <html:text property="volumnBiobank" styleClass="itemtext" size="10"/>Volumn (in microliter)
     </td>
   </tr>
   <tr> 
-    <td width="20%" height="98" valign="top" class="formlabel">Reservoir for glycerol stock:</td>
+    <td width="30%" height="98" valign="top" class="formlabel">Reservoir for glycerol stock:</td>
     <td height="98" valign="top" class="itemtext">
         <html:select property="glyceroltype" styleClass="itemtext">
           <html:option value="<%=Container.COSTAR_FLT%>"><%=Container.COSTAR_FLT%></html:option>
@@ -102,11 +102,11 @@ plates is the same as your input order.</p>
         </html:select>
     </td>
     <td height="98" valign="top" class="formlabel">
-        <html:text property="volumnGlycerol" styleClass="itemtext" size="30"/>Volumn (in microliter)
+        <html:text property="volumnGlycerol" styleClass="itemtext" size="10"/>Volumn (in microliter)
     </td>
   </tr>
   <tr> 
-    <td width="20%">&nbsp;</td>
+    <td width="30%">&nbsp;</td>
     <td colspan="2"> <html:submit styleClass="itemtext" value="Generate Worklist"/> </td>
   </tr>
 </table>

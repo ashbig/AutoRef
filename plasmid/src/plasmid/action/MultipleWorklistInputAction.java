@@ -62,10 +62,10 @@ public class MultipleWorklistInputAction extends InternalUserAction{
         User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
         
         StringConvertor sc = new StringConvertor();
-        List srcLabels = sc.convertFromStringToList(srcContainerList, "\n\t ");
-        List destLabelsWorking = sc.convertFromStringToList(destContainerListWorking, "\n\t ");
-        List destLabelsArchive = sc.convertFromStringToList(destContainerListArchive, "\n\t ");
-        List destLabelsBiobank = sc.convertFromStringToList(destContainerListBiobank, "\n\t ");
+        List srcLabels = sc.convertFromStringToList(srcContainerList, "\n\t");
+        List destLabelsWorking = sc.convertFromStringToList(destContainerListWorking, "\n\t");
+        List destLabelsArchive = sc.convertFromStringToList(destContainerListArchive, "\n\t");
+        List destLabelsBiobank = sc.convertFromStringToList(destContainerListBiobank, "\n\t");
         
         if(srcLabels.size()==0) {
             errors.add(ActionErrors.GLOBAL_ERROR,

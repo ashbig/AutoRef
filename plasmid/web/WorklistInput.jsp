@@ -34,13 +34,13 @@ plates is the same as your input order.</p>
 
 <table width="100%" border="0">
   <tr> 
-    <td width="20%" class="formlabel">Process:</td>
-    <td width="80%" colspan="2" class="itemtext" ><bean:write name="generateWorklistForm" property="processname"/></td>
+    <td width="30%" class="formlabel">Process:</td>
+    <td width="70%" class="itemtext" ><bean:write name="generateWorklistForm" property="processname"/></td>
   </tr>
   <logic:present name="<%=Constants.PROTOCOLS %>">
   <tr> 
-    <td width="20%" height="37" class="formlabel">Select protocol:</td>
-    <td colspan="2">
+    <td height="37" class="formlabel">Select protocol:</td>
+    <td>
         <html:select property="protocol" styleClass="itemtext">
           <html:options collection="<%=Constants.PROTOCOLS %>" property="name"/>
         </html:select>
@@ -48,36 +48,36 @@ plates is the same as your input order.</p>
   </tr>
   </logic:present>
   <tr> 
-    <td width="20%" height="91" valign="top" class="formlabel">Source containers: <br>(separated by new line or tab)</td>
-    <td colspan="2">
-        <html:textarea styleClass="itemtext" property="srcContainerList" rows="5"/>
+    <td height="91" valign="top" class="formlabel">Source containers: <br>(separated by new line or tab)</td>
+    <td>
+        <html:textarea styleClass="itemtext" property="srcContainerList" rows="5" cols="50"/>
     </td>
   </tr>
   <tr> 
-    <td width="20%" height="98" valign="top" class="formlabel">Destination containers: <br>(separated by new line or tab)</td>
-    <td colspan="2" class="itemtext">
-        <html:textarea styleClass="itemtext" property="destContainerList" rows="5"/>
+    <td height="98" valign="top" class="formlabel">Destination containers: <br>(separated by new line or tab)</td>
+    <td class="itemtext">
+        <html:textarea styleClass="itemtext" property="destContainerList" rows="5" cols="50"/>
     </td>
   </tr>
   <tr> 
-    <td width="20%" height="29" class="formlabel">Volumn (in microliter):</td>
-    <td colspan="2">
+    <td height="29" class="formlabel">Volumn (in microliter):</td>
+    <td>
         <html:text property="volumn" styleClass="itemtext" size="30"/>
     </td>
   </tr>
   <logic:equal name="generateWorklistForm" property="processname" value="<%=Process.GENERATE_GLYCEROL%>">
   <tr> 
-    <td width="20%" colspan="3" height="29" class="formlabel"><html:checkbox property="tube"/>Please check here if the destination containers are tubes</td>
+    <td colspan="2" height="29" class="formlabel"><html:checkbox property="tube"/>Please check here if the destination containers are tubes</td>
   </tr>
   </logic:equal>
   <logic:equal name="generateWorklistForm" property="processname" value="<%=Process.CULTURE%>">
   <tr> 
-    <td width="20%" colspan="3" height="29" class="formlabel"><html:checkbox property="tube"/>Please check here if the source containers are tubes</td>
+    <td colspan="2" height="29" class="formlabel"><html:checkbox property="tube"/>Please check here if the source containers are tubes</td>
   </tr>
   </logic:equal>
   <tr> 
-    <td width="20%">&nbsp;</td>
-    <td colspan="2"> <html:submit styleClass="itemtext" value="Generate Worklist"/> </td>
+    <td>&nbsp;</td>
+    <td> <html:submit styleClass="itemtext" value="Generate Worklist"/> </td>
   </tr>
 </table>
       </html:form></td>
