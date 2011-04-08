@@ -1221,7 +1221,37 @@ public class OrderProcessManager {
             System.out.println(ex);
         }
     }
-
+    
+    public void sendTroubleshootingEmail(int orderid, String email) {
+        String subject = "Troubleshooting Order # " + orderid;
+        String text =
+                "Dear PlasmID User,\n\n"+
+                "I write in regard to your recent order from the PlasmID Repository. "+
+                "Unfortunately one or more of the clones in your order has encountered "+
+                "a problem that requires troubleshooting. "+
+                "This may have occurred because a clone did not pass our Platinum QC testing, "+
+                "or because a bacterial culture did not grow as expected. "+
+                "To view the results of our QC testing please log into your account, "+
+                "select the appropriate order number, and then select \"View Platinum Results.\"\n\n"+
+                "In light of these results I write to determine the best way to complete your order. "+
+                "In most cases simple isolation on agar can remedy the problem and will add "+
+                "only a modest delay to your order. If this approach does not yield success "+
+                "we typically have each gene in several vectors or formats and are happy to "+
+                "provide an alternate plasmid to complete your order. "+
+                "If substitution with an alternate clone or a modest troubleshooting delay "+
+                "is not possible we are also happy to adjust the price of your order and "+
+                "ship the remaining constructs. Please contact me at your earliest convenience "+
+                "so that we may work together to complete your order.\n\n"+
+                "Sincerely,\n\n"+
+                "The PlasmID Repository Staff\n"+
+                "plasmidhelp@hms.harvard.edu\n";
+        try {
+            Mailer.sendMessage(email, Constants.EMAIL_FROM, subject, text);
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
+    }
+    
     public List getCloneOrders(String orderids, String orderDateFrom, String orderDateTo,
             String shippingDateFrom, String shippingDateTo, String status, String lastnames,
             String organization, String sort, String provider) {

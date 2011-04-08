@@ -19,7 +19,7 @@ public class CloneOrder {
     public static final String PENDING_MTA = "Pending MTA";
     public static final String PENDING_PAYMENT = "Pending for payment";
     public static final String INVALIDE_PAYMENT = "Invalid payment";
-    public static final String MTA_RECEIVED = "MTA Received";
+    public static final String TROUBLESHOOTING = "Troubleshooting";
     public static final String INPROCESS = "In Process";
     public static final String SHIPPED = "Shipped";
     public static final String PARTIALLY_SHIPPED = "Partially Shipped";
@@ -41,7 +41,7 @@ public class CloneOrder {
         CloneOrder.PENDING, 
         CloneOrder.PENDING_MTA,
         CloneOrder.PENDING_AQIS,
-        CloneOrder.MTA_RECEIVED,
+        CloneOrder.TROUBLESHOOTING,
         CloneOrder.CANCEL, 
         CloneOrder.INPROCESS, 
         CloneOrder.PENDING_PAYMENT,

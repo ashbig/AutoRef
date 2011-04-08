@@ -79,6 +79,10 @@ public class ChangeOrderStatusAction extends InternalUserAction {
             order.setOrderid(id);
             order.setStatus(s);
             orders.add(order);
+            
+            if(CloneOrder.TROUBLESHOOTING.equals(s)) {
+                manager.sendTroubleshootingEmail(id, user.getEmail());
+            }
         }
         
         if(!manager.updateAllOrderStatus(orders)) {

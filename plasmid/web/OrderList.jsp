@@ -38,7 +38,7 @@
             <html:option value="<%=CloneOrder.PENDING_MTA%>"/>
             <html:option value="<%=CloneOrder.PENDING_PAYMENT%>"/>
             <html:option value="<%=CloneOrder.PENDING_AQIS%>"/>
-            <html:option value="<%=CloneOrder.MTA_RECEIVED%>"/>
+            <html:option value="<%=CloneOrder.TROUBLESHOOTING%>"/>
             <html:option value="<%=CloneOrder.INPROCESS%>"/>
             <html:option value="<%=CloneOrder.SHIPPED%>"/>
             <html:option value="<%=CloneOrder.PARTIALLY_SHIPPED%>"/>
@@ -100,11 +100,11 @@
             <logic:notEqual name="order" property="status" value="<%=CloneOrder.PENDING_PAYMENT%>">
             <option value="<%=CloneOrder.PENDING%>"/><%=CloneOrder.PENDING_PAYMENT%>
             </logic:notEqual>
-            <logic:equal name="order" property="status" value="<%=CloneOrder.MTA_RECEIVED%>">
-            <option value="<%=CloneOrder.MTA_RECEIVED%>" selected/><%=CloneOrder.MTA_RECEIVED%>
+            <logic:equal name="order" property="status" value="<%=CloneOrder.TROUBLESHOOTING%>">
+            <option value="<%=CloneOrder.TROUBLESHOOTING%>" selected/><%=CloneOrder.TROUBLESHOOTING%>
             </logic:equal>
-            <logic:notEqual name="order" property="status" value="<%=CloneOrder.MTA_RECEIVED%>">
-            <option value="<%=CloneOrder.MTA_RECEIVED%>"/><%=CloneOrder.MTA_RECEIVED%>
+            <logic:notEqual name="order" property="status" value="<%=CloneOrder.TROUBLESHOOTING%>">
+            <option value="<%=CloneOrder.TROUBLESHOOTING%>"/><%=CloneOrder.TROUBLESHOOTING%>
             </logic:notEqual>
             <logic:equal name="order" property="status" value="<%=CloneOrder.INPROCESS%>">
             <option value="<%=CloneOrder.INPROCESS%>" selected/><%=CloneOrder.INPROCESS%>
