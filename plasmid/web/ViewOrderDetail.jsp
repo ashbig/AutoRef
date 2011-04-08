@@ -128,7 +128,7 @@
         
         <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.EXTERNAL%>">
         <logic:equal name="<%=Constants.CLONEORDER%>" property="isplatinum" value="Yes">
-        <logic:equal name="<%=Constants.CLONEORDER%>" property="enterPlatinumBasedOnStatus" value="<%=CloneOrder.PLATINUM_DISPLAY_RESULTS%>">
+        <logic:equal name="<%=Constants.CLONEORDER%>" property="displayPlatinumBasedOnStatus" value="<%=CloneOrder.PLATINUM_DISPLAY_RESULTS%>">
         <html:form action="ViewPlatinumResult.do">
             <html:hidden name="<%=Constants.CLONEORDER%>" property="orderid"/>
             <html:submit styleClass="text" value="View Platinum Results"/>

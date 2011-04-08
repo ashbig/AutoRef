@@ -343,4 +343,11 @@ public class CloneOrder {
             return this.PLATINUM_DISPLAY_RESULTS;
         }
     }
+    
+    public String getDisplayPlatinumBasedOnStatus() {
+        if(this.PLATINUM_STATUS_INPROCESS.equals(getPlatinumServiceStatus())
+                ||this.PLATINUM_STATUS_COMPLETE.equals(getPlatinumServiceStatus()))
+            return this.PLATINUM_DISPLAY_RESULTS;
+        return "";
+    }
 }
