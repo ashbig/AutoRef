@@ -191,6 +191,7 @@ public class VInputAction extends Action {
             String sfPath = Constants.SEQ_FILE_PATH;
             if ((mf != null) && (mf.getFileName().trim().length() > 0) && (mf.getFileSize() > 0)) {
                 File MapFile = new File(mfPath, mapfilename);
+                MapFile.setReadable(true, false);
                 FileOutputStream mfOS = new FileOutputStream(MapFile);
                 mfOS.write(mf.getFileData());
                 mfOS.flush();
@@ -199,6 +200,7 @@ public class VInputAction extends Action {
             }
             if ((sf != null) && (sf.getFileName().trim().length() > 0) && (sf.getFileSize() > 0)) {
                 File SeqFile = new File(sfPath, seqfilename);
+                SeqFile.setReadable(true, false);
                 FileOutputStream sfOS = new FileOutputStream(SeqFile);
                 sfOS.write(sf.getFileData());
                 sfOS.flush();
