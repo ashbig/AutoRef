@@ -250,7 +250,7 @@ public class CloneOrder {
     }
     
     public int getBeforeInprocess() {
-        return (CloneOrder.compareStatus(status, CloneOrder.INPROCESS));
+        return (CloneOrder.compareStatus(status, CloneOrder.PENDING_PAYMENT));
     }
     
     public int getBeforeCancell() {
