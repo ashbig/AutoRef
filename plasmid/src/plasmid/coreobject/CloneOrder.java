@@ -44,8 +44,8 @@ public class CloneOrder {
         CloneOrder.TROUBLESHOOTING,
         CloneOrder.CANCEL, 
         CloneOrder.INPROCESS, 
-        CloneOrder.PENDING_PAYMENT,
         CloneOrder.PARTIALLY_SHIPPED,
+        CloneOrder.PENDING_PAYMENT,
         CloneOrder.SHIPPED, 
         CloneOrder.COMPLETE};
     
