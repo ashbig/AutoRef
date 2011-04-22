@@ -53,9 +53,13 @@ public class GenerateContainersAction extends Action {
         String worklistname = ((GenerateWorklistForm)form).getWorklistname();
         ContainerProcessManager manager = new ContainerProcessManager();
         try {
+            System.out.println("worklistname="+worklistname);
             int begin = worklistname.indexOf("_");
+            System.out.println("begin="+begin);
             int end = worklistname.indexOf(".");
+            System.out.println("end="+end);
             int worklistid = Integer.parseInt(worklistname.substring(begin+1, end));
+            System.out.println("worklistid="+worklistid);
             WorklistInfo info = ProcessManager.getWorklistInfo(worklistid);
             if(info == null) {
                 throw new Exception("Cannot get data from WORKLISTINFO with worklistid: "+worklistid);
@@ -63,8 +67,10 @@ public class GenerateContainersAction extends Action {
             
             //Sftp ftp = SftpHandler.getSftpConnection();
             String filename = info.getWorklistname();
+            System.out.println("filename="+filename);
             WorklistGenerator generator = new WorklistGenerator();
             generator.readWorklist(Constants.WORKLIST_FILE_PATH+filename);
+            System.out.println("here=");
             
             Set destContainerLabels = generator.getDestContainerLabels();
             List dContainers = manager.getContainers(new ArrayList(destContainerLabels), false);
