@@ -130,7 +130,7 @@ public class GenerateContainersAction extends Action {
         } catch (Exception ex) {
             if(Constants.DEBUG) {
                 System.out.println("Creating database records from worklist failed for worklist: "+worklistname);
-                System.out.println(ex);
+                ex.printStackTrace();
             }
             
             String to = Constants.EMAIL_FROM;
