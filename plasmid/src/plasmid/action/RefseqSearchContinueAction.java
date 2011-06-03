@@ -139,9 +139,9 @@ public class RefseqSearchContinueAction extends Action {
                 handler.restoreClones(null, true, cloneids);
                 directFoundList = handler.convertFoundToCloneinfo();
                 searchList = handler.getNofound();
-                totalFoundCloneCount = handler.queryTotalFoundCloneCounts(restrictions, clonetypes, species, Clone.AVAILABLE);
+                totalFoundCloneCount = handler.getFoundCloneCount();
                 request.getSession().setAttribute("directFounds", directFoundList);
-                request.getSession().setAttribute("numOfDirectFound", new Integer(handler.getFoundCloneCount()));
+                request.getSession().setAttribute("numOfDirectFound", new Integer(totalFoundCloneCount));
             } catch (Exception ex) {
                 if (Constants.DEBUG) {
                     System.out.println(ex);
@@ -162,7 +162,7 @@ public class RefseqSearchContinueAction extends Action {
         try {
             Set cloneids = handler.doQuery(restrictions, clonetypes, species, -1, -1);
 
-            if (cloneids.size() > GeneQueryHandler.MAXCLONECOUNT) {
+            if ((cloneids.size()+totalFoundCloneCount) > GeneQueryHandler.MAXCLONECOUNT) {
                 return (mapping.findForward("summary"));
             }
 

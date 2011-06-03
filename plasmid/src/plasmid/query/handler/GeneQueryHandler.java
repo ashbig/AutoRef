@@ -179,9 +179,9 @@ public abstract class GeneQueryHandler {
     
     protected Set executeQuery(String sq, int start, int end, int num, boolean isLike) throws Exception {
         if (terms == null || terms.size() == 0) {
-            return null;
+            return new TreeSet();
         }
-System.out.println(sq);
+
         Set cloneids = new TreeSet();
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         Connection conn = null;
