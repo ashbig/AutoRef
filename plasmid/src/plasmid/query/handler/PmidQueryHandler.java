@@ -7,6 +7,8 @@
 package plasmid.query.handler;
 
 import java.util.*;
+import plasmid.coreobject.Clone;
+import plasmid.util.StringConvertor;
 
 /**
  *
@@ -22,28 +24,56 @@ public class PmidQueryHandler extends GeneQueryHandler {
         super(terms);
     }
     
-    public void doQuery() throws Exception {
-        doQuery(null, null, null, null);
-    }
-    
-    public void doQuery(List restrictions, List clonetypes, String species, String status) throws Exception {
-        doQuery(restrictions,clonetypes,species,-1,-1, null, status);
-    }
-    
-    public void doQuery(List restrictions, List clonetypes, String species, int start, int end, String column, String status) throws Exception {
+    public Set doQuery(List restrictions, List clonetypes, String species, int start, int end) throws Exception {
         String sql = "select distinct cloneid from clonepublication"+
         " where publicationid in (select publicationid from publication"+
-        " where upper(PMID) = upper(?))";
-        executeQuery(sql, restrictions, clonetypes, species, start, end, column, status, 1, false);
+        " where upper(PMID) = upper(?))"+
+        " and cloneid in (select cloneid from clone where status='"+Clone.AVAILABLE+"'";
+        
+         if (clonetypes != null) {
+            String s = StringConvertor.convertFromListToSqlString(clonetypes);
+            sql = sql + " and clonetype in (" + s + ")";
+        }
+        
+        if (restrictions != null) {
+            String s = StringConvertor.convertFromListToSqlString(restrictions);
+            sql = sql + " and restriction in (" + s + ")";
+        }
+
+        if (species != null) {
+            sql = sql + " and domain='" + species + "'";
+        }
+        
+        sql = sql+")";
+        
+        return executeQuery(sql, start, end, 1, false);
     }
     
-    public void doQuery(List restrictions, List clonetypes, String species, int start, int end, String column, String status, String clonetable) throws Exception {
+    public Set doQuery(List restrictions, List clonetypes, String species, int start, int end, String clonetable) throws Exception {
         String sql = "select distinct cloneid from clonepublication"+
         " where publicationid in (select publicationid from publication"+
         " where upper(PMID) = upper(?))"+
         " and cloneid in ("+
-        " select cloneid from "+clonetable+")";
-        executeQuery(sql, restrictions, clonetypes, species, start, end, column, status, 1, false);
+        " select cloneid from "+clonetable+
+        " where status='"+Clone.AVAILABLE+"'";
+        
+         if (clonetypes != null) {
+            String s = StringConvertor.convertFromListToSqlString(clonetypes);
+            sql = sql + " and clonetype in (" + s + ")";
+        }
+        
+        if (restrictions != null) {
+            String s = StringConvertor.convertFromListToSqlString(restrictions);
+            sql = sql + " and restriction in (" + s + ")";
+        }
+
+        if (species != null) {
+            sql = sql + " and domain='" + species + "'";
+        }
+        
+        sql = sql+")";
+        
+        return executeQuery(sql, start, end, 1, false);
     }
     
 }

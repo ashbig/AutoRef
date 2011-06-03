@@ -193,6 +193,7 @@
             <forward  name="success"  path="/DisplayVectorSearchResults.jsp"/>
             <forward  name="success_psi"  path="/DisplayVectorSearchResultsPSI.jsp"/>
             <forward  name="empty"  path="/DisplayEmptySearchResults.jsp"/>
+            <forward  name="summary"   path="/DisplayResultSummary.jsp"/>
         </action>
         <action     path="/BatchOrder"
                 type="plasmid.action.BatchOrderAction"
@@ -200,6 +201,7 @@
                scope="request"
               input="/BatchOrder.jsp">
             <forward  name="success"  path="/DisplayCart.jsp"/>
+            <forward  name="summary"   path="/DisplayResultSummary.jsp"/>
         </action>
         <action     path="/BlastSearch"
                 type="plasmid.action.BlastSearchAction"
@@ -207,6 +209,7 @@
               input="/PrepareBlast.do">
             <forward  name="success"  path="/BlastSearchResult.jsp"/>
             <forward  name="empty"  path="/DisplayEmptySearchResults.jsp"/>
+            <forward  name="summary"   path="/DisplayResultSummary.jsp"/>
         </action>
         <action     path="/CancelOrder"
                 type="plasmid.action.CancelOrderAction"
@@ -506,6 +509,7 @@
                name="refseqSearchForm"
               input="/RefseqSearchContinue.jsp">
             <forward  name="success"   path="/DisplayResults.jsp"/>
+            <forward  name="summary"   path="/DisplayResultSummary.jsp"/>
         </action>
         <action    path="/Registration"
                type="plasmid.action.RegistrationAction"
@@ -522,6 +526,7 @@
                scope="request"
               input="/SearchClone.jsp">
             <forward  name="success"   path="/DisplayResults.jsp"/>
+            <forward  name="summary"   path="/DisplayResultSummary.jsp"/>
         </action>
         <action    path="/SearchOrderInput"
                type="plasmid.action.SearchOrderInputAction"
@@ -601,6 +606,7 @@
                name="vectorSearchForm"
               input="/VectorSearch.jsp">
             <forward  name="success"   path="/VectorSearchContinue.jsp"/>
+            <forward  name="summary"   path="/DisplayResultSummary.jsp"/>
         </action>
         <action    path="/VectorSearchContinue"
                type="plasmid.action.VectorSearchContinueAction"

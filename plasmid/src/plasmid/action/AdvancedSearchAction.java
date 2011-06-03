@@ -340,6 +340,12 @@ public class AdvancedSearchAction extends Action {
                     return (mapping.findForward("empty"));
                 }
             }
+            
+            if(foundSet.size()>GeneQueryHandler.MAXCLONECOUNT) {
+                return mapping.findForward("summary");
+            }
+            
+            handler.restoreClones(null, true, foundSet);
         } catch (Exception ex) {
             if (Constants.DEBUG) {
                 System.out.println(ex);
@@ -355,7 +361,7 @@ public class AdvancedSearchAction extends Action {
         }
 
         List founds = new ArrayList();
-        founds.addAll(foundSet);
+        founds.addAll(handler.convertFoundToCloneinfo());
         request.getSession().setAttribute("numOfFound", new Integer(founds.size()));
         request.getSession().setAttribute("found", founds);
 

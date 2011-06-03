@@ -406,7 +406,7 @@ public class OrderProcessManager {
             }
 
             CloneManager manager = new CloneManager(conn);
-            Map found = manager.queryClonesByCloneid(items, true, true, isWorkingStorage, true, null, null, null, null);
+            Map found = manager.queryClonesByCloneid(items, true, true, isWorkingStorage, true, null, null, null, null, false, false);
 
             List orderClones = new ArrayList();
             for (int i = 0; i < clones.size(); i++) {
@@ -1454,7 +1454,8 @@ public class OrderProcessManager {
             throw new Exception("Wrong clone ID type.");
         }
 
-        handler.doQuery(restrictions, null, null, -1, -1, null, Clone.AVAILABLE, true);
+        Set foundcloneids = handler.doQuery(restrictions, null, null, -1, -1);
+        handler.restoreClones(null, true, foundcloneids);
         Map founds = handler.getFound();
         noFoundClones.addAll(handler.getNofound());
 

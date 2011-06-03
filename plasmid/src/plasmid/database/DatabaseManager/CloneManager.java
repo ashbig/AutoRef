@@ -546,11 +546,7 @@ public class CloneManager extends TableManager {
 
         return performQueryClones(cloneids, isInsert, isSelection, isWorkingStorage, isGrowth, sq, isInsertseq, isClonename);
     }
-
-    public Map queryClonesByCloneid(List cloneids, boolean isInsert, boolean isSelection, boolean isWorkingStorage, List restrictions, List clonetypes, String species, String status) {
-        return queryClonesByCloneid(cloneids, isInsert, isSelection, isWorkingStorage, true, restrictions, clonetypes, species, status);
-    }
-
+    
     /**
      * Query the database to get a list of Clone objects for given list of cloneid.
      * @param cloneids A list of cloneid as String.
@@ -560,26 +556,31 @@ public class CloneManager extends TableManager {
      * @return A map with cloneid as the key and Clone object as the value. Return null if
      *  error occured.
      */
+    public Map queryClonesByCloneid(List cloneids, boolean isInsert, boolean isSelection, boolean isWorkingStorage, boolean isGrowth, boolean isInsertseq, boolean isClonename) {
+        String sq = "select clonename, clonetype, verified, vermethod," +
+                " domain, subdomain, restriction, comments, vectorid, vectorname," +
+                " clonemapfilename,status,specialtreatment,source,description,cloneid" +
+                " from clone where cloneid =? and status='"+Clone.AVAILABLE+"'";
+        
+        return performQueryClones(cloneids, isInsert, isSelection, isWorkingStorage, isGrowth, sq, isInsertseq, isClonename);
+    }
+
     public Map queryClonesByCloneid(List cloneids, boolean isInsert, boolean isSelection, boolean isWorkingStorage) {
-        return queryClonesByCloneid(cloneids, isInsert, isSelection, isWorkingStorage, null, null, null, null);
+        return queryClonesByCloneid(cloneids, isInsert, isSelection, isWorkingStorage, true);
     }
 
-    public Map queryClonesByCloneid(List cloneids, boolean isInsert, boolean isSelection, boolean isWorkingStorage, boolean isGrowth, List restrictions, List clonetypes, String species, String status, boolean isClonename) {
-        return queryClonesByCloneid(cloneids, isInsert, isSelection, isWorkingStorage, isGrowth, restrictions, clonetypes, species, status, false, isClonename);
+    public Map queryClonesByCloneid(List cloneids, boolean isInsert, boolean isSelection, boolean isWorkingStorage, boolean isGrowth, boolean isClonename) {
+        return queryClonesByCloneid(cloneids, isInsert, isSelection, isWorkingStorage, isGrowth, false, isClonename);
     }
 
-    public Map queryClonesByCloneid(List cloneids, boolean isInsert, boolean isSelection, boolean isWorkingStorage, boolean isGrowth, List restrictions, List clonetypes, String species, String status) {
-        return queryClonesByCloneid(cloneids, isInsert, isSelection, isWorkingStorage, isGrowth, restrictions, clonetypes, species, status, false, false);
+    public Map queryClonesByCloneid(List cloneids, boolean isInsert, boolean isSelection, boolean isWorkingStorage, boolean isGrowth) {
+        return queryClonesByCloneid(cloneids, isInsert, isSelection, isWorkingStorage, isGrowth, false, false);
     }
 
     public Map queryAvailableClonesByCloneid(List cloneids, boolean isInsert, boolean isSelection, boolean isWorkingStorage) {
-        return queryClonesByCloneid(cloneids, isInsert, isSelection, isWorkingStorage, null, null, null, Clone.AVAILABLE);
+        return queryClonesByCloneid(cloneids, isInsert, isSelection, isWorkingStorage);
     }
-
-    public Map queryAvailableClonesByCloneid(List cloneids, boolean isInsert, boolean isSelection, boolean isWorkingStorage, List restrictions, List clonetypes, String species) {
-        return queryClonesByCloneid(cloneids, isInsert, isSelection, isWorkingStorage, restrictions, clonetypes, species, Clone.AVAILABLE);
-    }
-
+    
     public String queryCloneSequenceByCloneid(int cloneid) {
         String sql = "select insertid from cloneinsert where cloneid=" + cloneid;
         String seq = "";
@@ -2046,8 +2047,8 @@ public class CloneManager extends TableManager {
     }
 
     public static void main(String args[]) {
-        String file = "C:\\dev\\andreas\\batch1\\plasmidcloneid_noseq_1.txt";
-        String output = "C:\\dev\\andreas\\batch1\\plasmidclone_noseq_1.txt";
+        String file = "C:\\dev\\andreas\\batch3\\plasmidid_noseq.txt";
+        String output = "C:\\dev\\andreas\\batch3\\plasmidrefseq_3.txt";
         DatabaseTransaction dt = null;
         Connection conn = null;
         
@@ -2061,8 +2062,8 @@ public class CloneManager extends TableManager {
             while ((line = in.readLine()) != null) {
                 int cloneid = Integer.parseInt(line);
                 System.out.println("clone:"+cloneid);
-                String seq = manager.queryReferenceSequenceByCloneid(cloneid);
-                //String seq = manager.queryCloneSequenceByCloneid(cloneid);
+                //String seq = manager.queryReferenceSequenceByCloneid(cloneid);
+                String seq = manager.queryCloneSequenceByCloneid(cloneid);
                 f.write(cloneid+"\t"+seq+"\n");
             }
             in.close();

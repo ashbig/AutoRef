@@ -8,6 +8,7 @@ package plasmid.importexport.genbank;
 import java.net.*;
 import java.io.*;
 import java.util.*;
+import plasmid.util.StringConvertor;
 import plasmid.coreobject.Publication;
 
 /**
@@ -20,142 +21,29 @@ public class GenbankParser {
     public GenbankParser() {
     }
 
-    public GenbankInfo parseGenbank(String genbank) throws Exception {
-        String urlString = "http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=nucleotide&val=" + genbank;
-
+    public List getGenbankRecords(List ids) throws Exception {
+        //for nt
+        //String urlString = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&rettype=gb&retmode=text&id=";
+        //for protein
+        String urlString = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=protein&rettype=gb&retmode=text&id=";
+        
+        StringConvertor sc = new StringConvertor();
+        urlString += sc.convertFromListToString(ids);
         URL url = new URL(urlString);
         BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-
-        String definition = "";
-        String accession = "";
-        String accessionVersion = "";
-        String gi = "";
-        String organism = "";
-        String geneid = "";
-        String genesymbol = "";
-        int cdsstart = -1;
-        int cdsstop = -1;
-        String sequencetext = "";
-
-        boolean isSeqStart = false;
-        int cdscount = 0;
-        String inputLine;
-        boolean breakSeq = false;
-        boolean definitionStop = false;
-        List names = new ArrayList();
-        while ((inputLine = in.readLine()) != null) {
-            //System.out.println(inputLine);
-
-            //ACCESSION   NM_026689
-            if (inputLine.trim().indexOf("ACCESSION") != -1 && accession.equals("")) {
-                definitionStop = true;
-                StringTokenizer tokens = new StringTokenizer(inputLine);
-                if (tokens.hasMoreTokens()) {
-                    String ignore = tokens.nextToken();
-                    accession = tokens.nextToken();
-                }
-            }
-            //DEFINITION  Mus musculus RIKEN cDNA 0610009K11 gene (0610009K11Rik), mRNA.
-            if (!definitionStop) {
-                if (inputLine.trim().indexOf("DEFINITION") != -1) {
-                    definition = inputLine.trim().substring(inputLine.indexOf("DEFINITION") + 10).trim();
-                } else {
-                    definition += " " + inputLine.trim();
-                }
-            }
-            //VERSION     NM_026689.3  GI:40548428
-            if (inputLine.indexOf("VERSION") != -1 && accessionVersion.equals("")) {
-                String tmp = inputLine.substring(inputLine.indexOf("VERSION:") + 8);
-                accessionVersion = tmp.substring(0, tmp.indexOf("GI:")).trim();
-            }
-            if (inputLine.indexOf("GI:") != -1 && gi.equals("")) {
-                gi = inputLine.substring(inputLine.indexOf("GI:") + 3);
-            }
-            //                     /organism="Mus musculus"
-            if (inputLine.trim().indexOf("/organism=") != -1) {
-                organism = inputLine.substring(inputLine.indexOf("\"") + 1, inputLine.lastIndexOf("\""));
-            }
-            //                     /db_xref="GeneID:<a href=http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=gene&cmd=retrieve&dopt=graphics&list_uids=68350>68350</a>"
-            if (inputLine.indexOf("GeneID:") != -1 && geneid.equals("")) {
-                geneid = inputLine.substring(inputLine.indexOf(">") + 1, inputLine.lastIndexOf("<"));
-            }
-            //                     /gene="0610009K11Rik"
-            if (inputLine.indexOf("/gene=") != -1 && genesymbol.equals("")) {
-                genesymbol = inputLine.substring(inputLine.indexOf("\"") + 1, inputLine.lastIndexOf("\"") - 1);
-            }
-
-            //     <a href=/entrez/viewer.fcgi?val=40548428&itemID=1&view=gbwithparts>CDS</a>             89..1147
-            if (inputLine.indexOf(">CDS</a>") != -1) {
-                cdscount++;
-
-                //genomic
-                if (cdscount > 1) {
-                    cdsstart = -1;
-                    cdsstop = -1;
-                    break;
-                }
-                //genomic
-                if (inputLine.indexOf("join") != -1 || inputLine.indexOf("complement") != -1) {
-                    continue;
-                }
-                String substr = inputLine.substring(inputLine.indexOf(">CDS</a>"));
-                StringTokenizer st = new StringTokenizer(substr);
-                String cds = "";
-                if (st.hasMoreTokens()) {
-                    String ignore = st.nextToken();
-                    cds = st.nextToken();
-                }
-                st = new StringTokenizer(cds, "..");
-                if (st.hasMoreTokens()) {
-                    String startStr = st.nextToken();
-                    String newStart = startStr;
-                    //missing start
-                    if (startStr.indexOf("&lt;") != -1) {
-                        //newStart = startStr.substring(startStr.indexOf(";")+1);
-                        newStart = "-2";
-                    }
-
-                    String stopStr = st.nextToken();
-                    String newStop = stopStr;
-                    //missing stop
-                    if (stopStr.indexOf("&gt;") != -1) {
-                        newStop = "-2";
-                    }
-                    cdsstart = Integer.parseInt(newStart);
-                    cdsstop = Integer.parseInt(newStop);
-                }
-            }
-            //ORIGIN
-            //1 tcgacgggcg acgggttccg ggaagggctg cgcggctgcg taggggtcgc aggtgatttc
-            if (inputLine.indexOf("ORIGIN") != -1) {
-                isSeqStart = true;
-                breakSeq = true;
-                continue;
-            }
-
-            if (inputLine.indexOf("//") == 0 && breakSeq) {
-                isSeqStart = false;
-                breakSeq = false;
-                sequencetext = sequencetext.substring(sequencetext.indexOf("</a>") + 4);
-                break;
-            }
-
-            if (isSeqStart) {
-                StringTokenizer st = new StringTokenizer(inputLine);
-                while (st.hasMoreTokens()) {
-                    sequencetext = sequencetext + st.nextToken(" 1234567890");
-                }
-            }
-        }
-
+        List l = parseGenbanks(in);
         in.close();
-
-        GenbankInfo info = new GenbankInfo(genbank, definition, accession, accessionVersion, gi, organism, geneid, genesymbol, cdsstart, cdsstop, sequencetext);
-        info.setNames(names);
-        return info;
+        return l;
     }
 
     public List parseGenbanksOffline(String filename) throws Exception {
+        BufferedReader in = new BufferedReader(new FileReader(filename));
+        List l = parseGenbanks(in);
+        in.close();
+        return l;
+    }
+    
+    public List parseGenbanks(BufferedReader in) throws Exception {
         List genbanks = new ArrayList();
 
         String line = null;
@@ -185,7 +73,6 @@ public class GenbankParser {
         int linker3pStart = -1;
         int linker3pStop = -1;
 
-        BufferedReader in = new BufferedReader(new FileReader(filename));
         while ((line = in.readLine()) != null) {
             //System.out.println(line);
             if (line.trim().length() <= 0) {
@@ -258,7 +145,7 @@ public class GenbankParser {
             }
 
             //misc_feature    1..35    
-            if (line.indexOf("misc_feature") >= 0) {
+           /** if (line.indexOf("misc_feature") >= 0) {
                 StringTokenizer st = new StringTokenizer(line.trim());
                 String ignore = st.nextToken();
                 String cds = st.nextToken();
@@ -278,7 +165,7 @@ public class GenbankParser {
                     attL2Start = start;
                     attL2Stop = stop;
                 }
-            }
+            }*/
             //     CDS             83..1903
             if (line.indexOf("     CDS") == 0) {
                 cdscount++;
@@ -331,7 +218,7 @@ public class GenbankParser {
 
             //end of a record
             if (line.indexOf("//") == 0 && breakSeq) {
-                System.out.println("Genbank: " + accession);
+                System.out.println("Genbank: " + gi);
                 GenbankInfo info = new GenbankInfo(gi, definition, accession, accessionVersion, gi, organism, geneid, genesymbol, cdsstart, cdsstop, sequencetext);
                 info.setNames(names);
                 info.setPublications(publications);
@@ -380,7 +267,6 @@ public class GenbankParser {
             }
         }
 
-        in.close();
         return genbanks;
     }
 }

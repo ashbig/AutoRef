@@ -344,7 +344,8 @@ public class PlateManager extends TableManager {
         }
         
         CloneManager m = new CloneManager(conn);
-        Map clones = m.queryClonesByCloneid(cloneids, true, true, false, true, null, null, null, null);
+        Map clones = m.queryClonesByCloneid(cloneids, true, true, false, true, null, null, null, null, false, false);
+        
         if(clones == null) {
             handleError(null, "Error occured while query clone information.");
             return null;

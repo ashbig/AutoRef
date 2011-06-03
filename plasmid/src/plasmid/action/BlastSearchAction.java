@@ -24,6 +24,7 @@ import plasmid.database.DatabaseManager.UserManager;
 import plasmid.form.BlastForm;
 import plasmid.form.RefseqSearchForm;
 import plasmid.process.BlastManager;
+import plasmid.query.handler.GeneQueryHandler;
 
 /**
  *
@@ -85,23 +86,23 @@ public class BlastSearchAction extends Action {
         try {
             if (BlastManager.INPUT_ID.equals(inputformat)) {
                 sequence = manager.fetchNCBIseqs(sequence);
-                ((BlastForm)form).setSequence(sequence);
+                ((BlastForm) form).setSequence(sequence);
             }
-            
+
             /**
             boolean isCorrectSeqForm = true;
             if(BlastWrapper.PROGRAM_TBLASTN.equals(program)) {
-                isCorrectSeqForm = BlastManager.isAminoAcidSeq(sequence);
+            isCorrectSeqForm = BlastManager.isAminoAcidSeq(sequence);
             } else {
-                isCorrectSeqForm = BlastManager.isNucleotideSeq(sequence);
+            isCorrectSeqForm = BlastManager.isNucleotideSeq(sequence);
             }
             
             if(!isCorrectSeqForm) {
-                errors.add("sequence", new ActionError("error.blast.wrongseqformat"));
-                saveErrors(request, errors);
-                return (new ActionForward(mapping.getInput()));
+            errors.add("sequence", new ActionError("error.blast.wrongseqformat"));
+            saveErrors(request, errors);
+            return (new ActionForward(mapping.getInput()));
             }
-            */
+             */
             List l = null;
             try {
                 l = manager.runBlast(program, database, sequence, expect, pid, alength, isLowcomp, isMaskLowercase, isMegablast);
@@ -110,29 +111,33 @@ public class BlastSearchAction extends Action {
             }
 
             if (l == null || l.size() == 0) {
-                if(program.equals(BlastWrapper.PROGRAM_BLASTN)||program.equals(BlastWrapper.PROGRAM_TBLASTX))
+                if (program.equals(BlastWrapper.PROGRAM_BLASTN) || program.equals(BlastWrapper.PROGRAM_TBLASTX)) {
                     program = BlastWrapper.PROGRAM_TBLASTN;
-                else
+                } else {
                     program = BlastWrapper.PROGRAM_BLASTN;
-                
+                }
                 try {
                     l = manager.runBlast(program, database, sequence, expect, pid, alength, isLowcomp, isMaskLowercase, isMegablast);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
-                
-                if(l == null || l.size() == 0)
+
+                if (l == null || l.size() == 0) {
                     return (mapping.findForward("empty"));
-                else {
+                } else {
                     ((BlastForm) form).setProgram(program);
                 }
             }
-            
-            List infos = manager.getFoundClones(l, restrictions, null, null);
-            if(infos == null || infos.size() == 0) {
-                    return (mapping.findForward("empty"));
+
+            if (l.size() > GeneQueryHandler.MAXCLONECOUNT) {
+                return (mapping.findForward("summary"));
             }
-                
+
+            List infos = manager.getFoundClones(l, restrictions, null, null);
+            if (infos == null || infos.size() == 0) {
+                return (mapping.findForward("empty"));
+            }
+
             ((BlastForm) form).setInfos(infos);
 
             RefseqSearchForm f = (RefseqSearchForm) request.getSession().getAttribute("refseqSearchForm");

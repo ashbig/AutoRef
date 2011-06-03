@@ -8,7 +8,6 @@ package plasmid.process;
 
 import java.util.*;
 import java.sql.*;
-import java.io.*;
 
 import plasmid.coreobject.*;
 import plasmid.query.coreobject.*;
@@ -42,7 +41,8 @@ public class QueryProcessManager {
             conn = t.requestConnection();
             CloneManager manager = new CloneManager(conn);
             List cloneids = manager.queryCloneidsByCloneType(clonetypes, isPSI);
-            Map clones = manager.queryAvailableClonesByCloneid(cloneids, false, true, false, restrictions, clonetypes, null);
+            Map clones = manager.queryClonesByCloneid(cloneids, false, true, false, false, restrictions, clonetypes, null, Clone.AVAILABLE, false, false);
+            
             Set ks = clones.keySet();
             Iterator iter = ks.iterator();
             while(iter.hasNext()) {
@@ -106,11 +106,11 @@ public class QueryProcessManager {
         return CollectionManager.getClonenumInCollection(name);
     }
     
-    public List queryClonesByVector(User user, Set vectorids, String species, String status) {
-        return queryClonesByVector(user,vectorids,species,status,true);
+    public List queryClonesByVector(User user, Set vectorids, String species) {
+        return queryClonesByVector(user,vectorids,species,true);
     }
     
-    public List queryClonesByVector(User user, Set vectors, String species, String status, boolean vectorid) {
+    public List queryClonesByVector(User user, Set vectors, String species, boolean vectorid) {
         List restrictions = new ArrayList();
         restrictions.add(Clone.NO_RESTRICTION);
         restrictions.add(Clone.NON_PROFIT);
@@ -122,9 +122,9 @@ public class QueryProcessManager {
         VectorQueryHandler handler = new VectorQueryHandler();
         List clones = null;
         if(vectorid) {
-            clones = handler.queryClones(vectors, restrictions, species, status);
+            clones = handler.queryClones(vectors, restrictions, species);
         } else {
-            clones = handler.queryClonesByVectornames(vectors, restrictions, species, status);
+            clones = handler.queryClonesByVectornames(vectors, restrictions, species);
         }
         
         return clones;
@@ -261,13 +261,39 @@ public class QueryProcessManager {
         
         return l;
     }
-    
+        
     public Set processAdvancedQuery(Set foundSet, GeneQueryHandler handler, List restrictions, String species, boolean isClonename) throws Exception {
         StringConvertor sc = new StringConvertor();
         handler.setIsClonename(isClonename);
         
         if(foundSet == null) {
-            handler.doQuery(restrictions, null, species, -1, -1, null, Clone.AVAILABLE);
+            foundSet = handler.doQuery(restrictions, null, species, -1, -1);
+        } else {
+            List cloneids = new ArrayList(foundSet);
+            int start=0;
+            while(start<cloneids.size()) {
+                int end = start+1000;
+                if(end>cloneids.size())
+                    end = cloneids.size();
+                
+                List l = cloneids.subList(start, end);
+                String s = sc.convertFromListToSqlList(l);
+                Set found = handler.doQuery(restrictions, null, species, -1, -1, "(select * from clone where cloneid in ("+s+"))");
+                start += 1000;
+                
+                foundSet.addAll(found);
+            }
+        }
+        return foundSet;
+    }
+      
+    /**
+    public Set processAdvancedQuery(Set foundSet, GeneQueryHandler handler, List restrictions, String species, boolean isClonename) throws Exception {
+        StringConvertor sc = new StringConvertor();
+        handler.setIsClonename(isClonename);
+        
+        if(foundSet == null) {
+            handler.doQuery(restrictions, null, species, -1, -1, null);
             foundSet = new TreeSet(new CloneInfoComparator());
             foundSet.addAll(handler.convertFoundToCloneinfo());
         } else {
@@ -280,7 +306,7 @@ public class QueryProcessManager {
                 
                 List l = cloneids.subList(start, end);
                 String s = sc.convertFromListToSqlList(l);
-                handler.doQuery(restrictions, null, species, -1, -1, null, Clone.AVAILABLE, "(select * from clone where cloneid in ("+s+"))");
+                handler.doQuery(restrictions, null, species, -1, -1, null, "(select * from clone where cloneid in ("+s+"))");
                 start += 1000;
                 
                 foundSet = new TreeSet(new CloneInfoComparator());
@@ -288,5 +314,5 @@ public class QueryProcessManager {
             }
         }
         return foundSet;
-    }
+    }*/
 }

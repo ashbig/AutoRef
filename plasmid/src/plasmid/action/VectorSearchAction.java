@@ -3,39 +3,31 @@
  *
  * Created on February 2, 2006, 3:47 PM
  */
-
 package plasmid.action;
 
 import java.util.*;
 import java.io.*;
-import java.sql.*;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionServlet;
-import org.apache.struts.util.MessageResources;
 
 import plasmid.form.VectorSearchForm;
 import plasmid.coreobject.*;
 import plasmid.Constants;
-import plasmid.database.DatabaseManager.UserManager;
 import plasmid.process.QueryProcessManager;
-import plasmid.query.coreobject.QueryOperator;
-import plasmid.util.StringConvertor;
+import plasmid.query.handler.GeneQueryHandler;
 
 /**
  *
  * @author  DZuo
  */
 public class VectorSearchAction extends Action {
+
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
      * response (or forward to another web component that will create it).
@@ -52,34 +44,38 @@ public class VectorSearchAction extends Action {
      * @exception ServletException if a servlet exception occurs
      */
     public ActionForward perform(ActionMapping mapping,
-    ActionForm form,
-    HttpServletRequest request,
-    HttpServletResponse response)
-    throws ServletException, IOException {
-        
+            ActionForm form,
+            HttpServletRequest request,
+            HttpServletResponse response)
+            throws ServletException, IOException {
+
         // get the parameters specified by the customer
         ActionErrors errors = new ActionErrors();
-        String species = ((VectorSearchForm)form).getSpecies();
-        
-        Map types = ((VectorSearchForm)form).getTypes();
-        
+        String species = ((VectorSearchForm) form).getSpecies();
+
+        Map types = ((VectorSearchForm) form).getTypes();
+
         QueryProcessManager manager = new QueryProcessManager();
-        User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
-        List operators = manager.getVectorQueryOperators(types, (VectorSearchForm)form);
+        User user = (User) request.getSession().getAttribute(Constants.USER_KEY);
+        List operators = manager.getVectorQueryOperators(types, (VectorSearchForm) form);
         Set vectorids = manager.getVectoridFromQueryOperators(operators, Constants.AND);
-        List clones = manager.queryClonesByVector(user, vectorids, species, Clone.AVAILABLE);
-        
-        if(clones == null) {
+        List clones = manager.queryClonesByVector(user, vectorids, species);
+
+        if (clones == null) {
             return (mapping.findForward("error"));
         }
-        
+
+        if (clones.size() > GeneQueryHandler.MAXCLONECOUNT) {
+            return (mapping.findForward("summary"));
+        }
+
         List vectors = manager.getVectorNamesFromClones(clones);
-        ((VectorSearchForm)form).setVectornames(vectors);
-        ((VectorSearchForm)form).setVectors(vectors);
-        ((VectorSearchForm)form).setClones(clones);
-        ((VectorSearchForm)form).resetVectornameBooleanValues(vectors);
+        ((VectorSearchForm) form).setVectornames(vectors);
+        ((VectorSearchForm) form).setVectors(vectors);
+        ((VectorSearchForm) form).setClones(clones);
+        ((VectorSearchForm) form).resetVectornameBooleanValues(vectors);
         request.setAttribute("numberOfClones", new Integer(clones.size()));
-        
+
         return (mapping.findForward("success"));
     }
 }

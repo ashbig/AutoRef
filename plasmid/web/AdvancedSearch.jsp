@@ -27,11 +27,11 @@
           
 <table width="100%" border="0">
   <tr> 
-    <td width="15%" class="formlabel">Gene name or symbol</td>
+    <td width="15%" class="formlabel">Gene name</td>
     <td width="15%">
         <html:select property="geneNameOp" styleClass="itemtext">
-          <html:option value="<%=Constants.OPERATOR_CONTAINS %>"/>
           <html:option value="<%=Constants.OPERATOR_EQUALS %>"/>
+          <html:option value="<%=Constants.OPERATOR_CONTAINS %>"/>
         </html:select>
     </td>
     <td width="36%">
@@ -48,8 +48,8 @@
     <td width="15%" class="formlabel">Vector name</td>
     <td width="15%">
         <html:select property="vectorNameOp" styleClass="itemtext">
-          <html:option value="<%=Constants.OPERATOR_CONTAINS %>"/>
           <html:option value="<%=Constants.OPERATOR_EQUALS %>"/>
+          <html:option value="<%=Constants.OPERATOR_CONTAINS %>"/>
         </html:select>
     </td>
     <td width="36%">
@@ -66,8 +66,8 @@
     <td width="15%" class="formlabel">Vector feature</td>
     <td width="15%">
         <html:select property="vectorFeatureOp" styleClass="itemtext">
-          <html:option value="<%=Constants.OPERATOR_CONTAINS %>"/>
           <html:option value="<%=Constants.OPERATOR_EQUALS %>"/>
+          <html:option value="<%=Constants.OPERATOR_CONTAINS %>"/>
         </html:select>
     </td>
     <td width="36%">
@@ -84,8 +84,8 @@
     <td width="15%" class="formlabel">Author name</td>
     <td width="15%">
         <html:select property="authorNameOp" styleClass="itemtext">
-          <html:option value="<%=Constants.OPERATOR_CONTAINS %>"/>
           <html:option value="<%=Constants.OPERATOR_EQUALS %>"/>
+          <html:option value="<%=Constants.OPERATOR_CONTAINS %>"/>
         </html:select>
     </td>
     <td width="36%">

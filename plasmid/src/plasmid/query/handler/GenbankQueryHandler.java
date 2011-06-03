@@ -7,12 +7,9 @@
 package plasmid.query.handler;
 
 import java.util.*;
-import java.sql.*;
-import javax.sql.*;
 
-import plasmid.database.*;
-import plasmid.database.DatabaseManager.*;
 import plasmid.coreobject.*;
+import plasmid.util.StringConvertor;
 
 /**
  *
@@ -27,18 +24,40 @@ public class GenbankQueryHandler extends GeneQueryHandler {
     public GenbankQueryHandler(List terms) {
         super(terms);
     }
-    
-    public void doQuery(List restrictions, List clonetypes, String species, String status) throws Exception {
-        doQuery(restrictions,clonetypes,species,-1,-1, null, status);
+    /**
+    public void doQuery(List restrictions, List clonetypes, String species) throws Exception {
+        doQuery(restrictions,clonetypes,species,-1,-1, null);
     }
         
     public void doQuery() throws Exception {
-        doQuery(null, null, null, null);
+        doQuery(null, null, null);
     }  
-    
-    public void doQuery(List restrictions, List clonetypes, String species, int start, int end, String column, String status) throws Exception {
-        String sql = "select distinct cloneid from clonegenbank where upper(accession) = upper(?)";
-        executeQuery(sql, restrictions, clonetypes, species, start, end, column, status);
+    */
+    public Set doQuery(List restrictions, List clonetypes, String species, int start, int end) throws Exception {
+        String sql = "select distinct cloneid from clonegenbank where upper(accession) = upper(?)"+
+                " and cloneid in (select cloneid from clone where status='"+Clone.AVAILABLE+"'";
+        
+         if (clonetypes != null) {
+            String s = StringConvertor.convertFromListToSqlString(clonetypes);
+            sql = sql + " and clonetype in (" + s + ")";
+        }
+        
+        if (restrictions != null) {
+            String s = StringConvertor.convertFromListToSqlString(restrictions);
+            sql = sql + " and restriction in (" + s + ")";
+        }
+
+        if (species != null) {
+            sql = sql + " and domain='" + species + "'";
+        }
+        
+        sql = sql+")";
+        
+        return executeQuery(sql, start, end, 1, false);
+    }
+        
+    public Set doQuery(List restrictions, List clonetypes, String species, int start, int end, String clonetable) throws Exception {
+        return null;
     }
     
     public static void main(String args[]) {
@@ -52,7 +71,8 @@ public class GenbankQueryHandler extends GeneQueryHandler {
         
         GeneQueryHandler handler = StaticQueryHandlerFactory.makeGeneQueryHandler(GeneQueryHandler.GENBANK, terms);
         try {
-            handler.doQuery();
+            Set cloneids = handler.doQuery(null,null,null,-1,-1);
+            handler.restoreClones("cloneid", true, cloneids);
             Map found = handler.getFound();
             Set keys = found.keySet();
             Iterator iter = keys.iterator();

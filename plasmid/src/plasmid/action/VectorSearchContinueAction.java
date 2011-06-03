@@ -77,7 +77,7 @@ public class VectorSearchContinueAction extends Action {
                     checkedVectors.add(v);
                 }
             }
-            clones = manager.queryClonesByVector(user, checkedVectornames, species, Clone.AVAILABLE, false);
+            clones = manager.queryClonesByVector(user, checkedVectornames, species, false);
             
             ((VectorSearchForm)form).setVectornames(checkedVectors);
             ((VectorSearchForm)form).setVectors(checkedVectors);

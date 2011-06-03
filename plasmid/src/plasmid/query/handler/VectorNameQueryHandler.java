@@ -7,6 +7,8 @@
 package plasmid.query.handler;
 
 import java.util.*;
+import plasmid.coreobject.Clone;
+import plasmid.util.StringConvertor;
 
 /**
  *
@@ -22,37 +24,57 @@ public class VectorNameQueryHandler extends GeneQueryHandler {
         super(terms);
     }
     
-    public void doQuery() throws Exception {
-        doQuery(null, null, null, null);
-    }
-    
-    public void doQuery(List restrictions, List clonetypes, String species, String status) throws Exception {
-        doQuery(restrictions,clonetypes,species,-1,-1, null, status);
-    }
-    
-    public void doQuery(List restrictions, List clonetypes, String species, int start, int end, String column, String status) throws Exception {
+    public Set doQuery(List restrictions, List clonetypes, String species, int start, int end) throws Exception {
         String sql = "select distinct cloneid from clone"+
-        " where vectorid in (select vectorid from vector"+
+        " where (vectorid in (select vectorid from vector"+
         " where upper(name) like upper(?)"+
         " or upper(description) like upper(?)"+
         " or upper(comments) like upper(?))"+
         " or vectorid in (select vectorid from vectorsynonym"+
-        " where upper(vsynonym) like upper(?))";
-        executeQuery(sql, restrictions, clonetypes, species, start, end, column, status, 4, true);
+        " where upper(vsynonym) like upper(?)))"+
+        " and status='"+Clone.AVAILABLE+"'";
+        
+         if (clonetypes != null) {
+            String s = StringConvertor.convertFromListToSqlString(clonetypes);
+            sql = sql + " and clonetype in (" + s + ")";
+        }
+        
+        if (restrictions != null) {
+            String s = StringConvertor.convertFromListToSqlString(restrictions);
+            sql = sql + " and restriction in (" + s + ")";
+        }
+
+        if (species != null) {
+            sql = sql + " and domain='" + species + "'";
+        }
+        
+        return executeQuery(sql, start, end, 4, true);
     }
     
-    public void doQuery(List restrictions, List clonetypes, String species, int start, int end, String column, String status, String clonetable) throws Exception {
+    public Set doQuery(List restrictions, List clonetypes, String species, int start, int end, String clonetable) throws Exception {
         String sql = "select distinct cloneid from "+clonetable+
-        " where vectorid in (select vectorid from vector"+
+        " where (vectorid in (select vectorid from vector"+
         " where upper(name) like upper(?)"+
         " or upper(description) like upper(?)"+
         " or upper(comments) like upper(?))"+
         " or vectorid in (select vectorid from vectorsynonym"+
-        " where upper(vsynonym) like upper(?))";
-        executeQuery(sql, restrictions, clonetypes, species, start, end, column, status, 4, true);
+        " where upper(vsynonym) like upper(?)))"+
+        " and status='"+Clone.AVAILABLE+"'";
+        
+         if (clonetypes != null) {
+            String s = StringConvertor.convertFromListToSqlString(clonetypes);
+            sql = sql + " and clonetype in (" + s + ")";
+        }
+        
+        if (restrictions != null) {
+            String s = StringConvertor.convertFromListToSqlString(restrictions);
+            sql = sql + " and restriction in (" + s + ")";
+        }
+
+        if (species != null) {
+            sql = sql + " and domain='" + species + "'";
+        }
+        
+        return executeQuery(sql, start, end, 4, true);
     }
-    
-    public void doQuery(List restrictions, List clonetypes, String species, int start, int end, String column, String status, boolean isGrowth) throws Exception {
-    }
-    
 }

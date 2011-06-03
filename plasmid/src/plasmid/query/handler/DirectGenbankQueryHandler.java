@@ -7,12 +7,9 @@
 package plasmid.query.handler;
 
 import java.util.*;
-import java.sql.*;
-import javax.sql.*;
 
-import plasmid.database.*;
-import plasmid.database.DatabaseManager.*;
 import plasmid.coreobject.*;
+import plasmid.util.StringConvertor;
 
 /**
  *
@@ -28,17 +25,31 @@ public class DirectGenbankQueryHandler extends GeneQueryHandler {
         super(terms);
     }
     
-    public void doQuery() throws Exception {
-        doQuery(null, null, null, null);
-    }  
+    public Set doQuery(List restrictions, List clonetypes, String species, int start, int end) throws Exception {
+        String sq = "select distinct cloneid from cloneinsert where insertid in"+
+                " (select insertid from dnainsert where upper(targetgenbank) = upper(?))"+
+                " and cloneid in (select cloneid from clone where status='"+Clone.AVAILABLE+"'";
+        
+         if (clonetypes != null) {
+            String s = StringConvertor.convertFromListToSqlString(clonetypes);
+            sq = sq + " and clonetype in (" + s + ")";
+        }
+        
+        if (restrictions != null) {
+            String s = StringConvertor.convertFromListToSqlString(restrictions);
+            sq = sq + " and restriction in (" + s + ")";
+        }
+
+        if (species != null) {
+            sq = sq + " and domain='" + species + "'";
+        }
+        
+        sq = sq+")";
+        
+        return executeQuery(sq, start, end, 1, false);
+    }      
     
-    public void doQuery(List restrictions, List clonetypes, String species, String status) throws Exception {
-        doQuery(restrictions,clonetypes,species,-1,-1, null, status);
+    public Set doQuery(List restrictions, List clonetypes, String species, int start, int end, String clonetable) throws Exception {
+        return null;
     }
-    
-    public void doQuery(List restrictions, List clonetypes, String species, int start, int end, String column, String status) throws Exception {
-        String sql = "select distinct cloneid from cloneinsert where insertid in (select insertid from dnainsert where upper(targetgenbank) = upper(?))";
-        executeQuery(sql,restrictions,clonetypes,species, start, end, column, status);
-    }  
-    
 }
