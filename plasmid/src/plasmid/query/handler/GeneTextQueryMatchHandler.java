@@ -26,11 +26,9 @@ public class GeneTextQueryMatchHandler extends GeneQueryHandler {
     
     public Set doQuery(List restrictions, List clonetypes, String species, int start, int end) throws Exception {
         String sql = "select cloneid from clone where cloneid in ("+
-        "select distinct cloneid from cloneinsert where insertid in (select insertid from dnainsert where upper(geneid) = upper(?)"+
-        " or upper(name) = upper(?) or upper(description) = upper(?))"+
-        " union (select distinct cloneid from clonegene where upper(geneid) = upper(?))"+
-        " union (select distinct cloneid from clonegenbank where upper(accession) = upper(?))"+
-        " union (select distinct cloneid from clonegi where upper(gi) = upper(?))"+
+        "select distinct cloneid from cloneinsert"+
+        " where insertid in (select insertid from dnainsert where upper(geneid) = upper(?)"+
+        " or upper(name) = upper(?)"+
         " union (select distinct cloneid from clonesymbol where upper(symbol) = upper(?))"+
         " ) and status='"+Clone.AVAILABLE+"'";
         
