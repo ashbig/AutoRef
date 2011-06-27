@@ -64,6 +64,8 @@ public class EnterShippingAction extends InternalUserAction {
       //  String labels = ((ProcessShippingForm)form).getContainers();
         String comments = ((ProcessShippingForm)form).getComments();
         String status = ((ProcessShippingForm)form).getShippingStatus();
+        double adjustment = ((ProcessShippingForm)form).getAdjustment();
+        String reason = ((ProcessShippingForm)form).getReason();
         
         OrderProcessManager manager = new OrderProcessManager();
         CloneOrder order = manager.getCloneOrder(user, orderid);
@@ -120,8 +122,10 @@ public class EnterShippingAction extends InternalUserAction {
         //order.setPrice(order.calculateTotalPrice());
         //order.setShippedContainers(sc.convertFromListToString(labelList));
         order.setComments(comments);
+
+        Invoice invoice = manager.generateInvoice(order, reason, adjustment);
         
-        if(!manager.updateShipping(order)) {
+        if(!manager.updateShipping(order, invoice)) {
             errors.add(ActionErrors.GLOBAL_ERROR,
             new ActionError("error.general", "Error occured while updating database with shipping information."));
             saveErrors(request,errors);

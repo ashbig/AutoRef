@@ -199,10 +199,10 @@ public class GenbankInfoManager {
     }
 
     public static void main(String args[]) throws Exception {
-        String genbankInput = "C:\\dev\\andreas\\db\\sequence.gb";
-        String referenceFile = "C:\\dev\\andreas\\db\\sequence.txt";
-        String referenceNameFile = "C:\\dev\\andreas\\db\\sequencename_nocloneseq_output.txt";
-        String publication = "C:\\dev\\andreas\\batch2\\sequencepub_nocloneseq_output.txt";
+        String genbankInput = "C:\\dev\\plasmidsupport\\Orfeome201104\\clonesequence.gb";
+        String referenceFile = "C:\\dev\\plasmidsupport\\Orfeome201104\\clonesequence_2.txt";
+        String referenceNameFile = "C:\\dev\\plasmidsupport\\Orfeome201104\\sequencename_2.txt";
+        String publication = "C:\\dev\\plasmidsupport\\Orfeome201104\\clonesequencepub.txt";
 
         GenbankInfoManager manager = new GenbankInfoManager();
         GenbankParser parser = new GenbankParser();
@@ -244,9 +244,9 @@ public class GenbankInfoManager {
             ex.printStackTrace();
             System.exit(1);
         }
-        manager.printGenbankInfo(infos, referenceFile);
-        // manager.printGenbankNames(infos, referenceNameFile);
-        // manager.printPublications(infos, publication);
+        //manager.printGenbankInfo(infos, referenceFile);
+        //manager.printGenbankNames(infos, referenceNameFile);
+        manager.printPublications(infos, publication);
 
         System.exit(0);
     }

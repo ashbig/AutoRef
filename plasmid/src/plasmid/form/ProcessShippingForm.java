@@ -24,6 +24,8 @@ public class ProcessShippingForm extends ActionForm {
    // private double totalPrice;
     private String comments;
     private String shippingStatus;
+    private double adjustment;
+    private String reason;
     
     /** Creates a new instance of ProcessShippingForm */
     public ProcessShippingForm() {
@@ -59,5 +61,23 @@ public class ProcessShippingForm extends ActionForm {
         whoShipped = null;
         trackingNumber = null;
         comments = null;
+        adjustment = 0.0;
+        reason = null;
+    }
+
+    public double getAdjustment() {
+        return adjustment;
+    }
+
+    public void setAdjustment(double adjustment) {
+        this.adjustment = adjustment;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
     }
 }

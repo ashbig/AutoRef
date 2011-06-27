@@ -24,6 +24,7 @@
     <td width="83%" align="left" valign="top">
 	<jsp:include page="orderHistoryTitle.jsp" />
 
+<html:form action="EnterShipping.do">
 <table width="100%" border="0">
   <tr> 
     <td class="formlabel">Order ID:</td>
@@ -49,10 +50,21 @@
     <td class="formlabel">Phone:</td>
     <td class="text"><bean:write name="<%=Constants.USER_KEY%>" property="phone"/></td>
   </tr>
+  <tr> 
+    <td class="formlabel">Total Price:</td>
+    <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="totalPriceString"/></td>
+    <td class="formlabel">Price Adjustment (enter negative number for refund):</td>
+    <td class="text"><html:text maxlength="50" property="adjustment"/></td>
+  </tr>
+  <tr> 
+    <td class="formlabel" colspan="4">Reason for Adjustment:</td>
+  </tr>
+  <tr> 
+    <td class="text" colspan="4"><html:textarea rows="5" cols="60" property="reason"/></td>
+  </tr>
 </table>
 
 <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
-<html:form action="EnterShipping.do">
 <p class="text">Shipping Information</P>
 <table width="100%" border="0">
   <tr> 
@@ -90,8 +102,8 @@
 </table>
 <html:hidden name="<%=Constants.CLONEORDER%>" property="orderid"/>
 <p align="center"><html:submit styleClass="text" value="Process"/></P>
-</html:form>
 </logic:equal>
+</html:form>
 
 <table width="100%" border="0">
   <tr> 

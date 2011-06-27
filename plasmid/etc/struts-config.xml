@@ -142,6 +142,8 @@
                     type="plasmid.form.EnterPlatinumResultForm"/>
         <form-bean      name="viewPlatinumResultForm"
                     type="plasmid.form.ViewPlatinumResultForm"/>
+        <form-bean      name="viewInvoiceForm"
+                    type="plasmid.form.ViewInvoiceForm"/>
                     
     </form-beans>
 
@@ -628,6 +630,12 @@
                validate="true"
               input="/ViewContainers.jsp">
             <forward  name="success"   path="/DisplayContainers.jsp"/>
+        </action>
+        <action    path="/ViewInvoiceDetail"
+               type="plasmid.action.ViewInvoiceDetailAction"
+               name="viewInvoiceForm"
+               scope="request"
+              input="/ViewInvoiceDetail.do">
         </action>
         <action    path="/ViewOrderClones"
                type="plasmid.action.ViewOrderClonesAction"

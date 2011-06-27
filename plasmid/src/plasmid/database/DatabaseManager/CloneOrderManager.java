@@ -6,6 +6,7 @@
 package plasmid.database.DatabaseManager;
 
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import plasmid.coreobject.*;
@@ -22,7 +23,7 @@ public class CloneOrderManager extends TableManager {
     public CloneOrderManager() {
         super();
     }
-    
+
     /** Creates a new instance of CloneOrderManager */
     public CloneOrderManager(Connection conn) {
         super(conn);
@@ -281,21 +282,24 @@ public class CloneOrderManager extends TableManager {
      * @exception
      */
     public CloneOrder queryCloneOrder(User user, int orderid) throws Exception {
-        String sql = "select c.orderid,to_char(c.orderdate, 'MON-DD-YYYY HH24:MI:SS'),orderstatus,c.ponumber,shippingto,billingto," +
+        String sql = "select c.orderid,to_char(c.orderdate, 'YYYY-MM-DD hh:mm:ss'),orderstatus,c.ponumber,shippingto,billingto," +
                 " shippingaddress,billingaddress,numofclones,numofcollection,costforclones," +
                 " costforcollection,costforshipping,totalprice,c.userid,shippingdate,whoshipped," +
                 " shippingmethod,shippingaccount,trackingnumber,receiveconfirmationdate," +
                 " whoconfirmed,whoreceivedconfirmation,shippedcontainers,u.email,u.piname," +
                 " u.piemail,u.phone,c.isbatch,u.usergroup,c.comments,c.isaustralia," +
-                " c.ismta, c.isplatinum, c.costforplatinum, c.platinumservicestatus" +
+                " c.ismta, c.isplatinum, c.costforplatinum, c.platinumservicestatus,u.firstname,u.lastname" +
                 " from cloneorder c, userprofile u where c.userid=u.userid and c.orderid=" + orderid;
-
+                
+        String sql2 = "select invoiceid from invoice where orderid="+orderid;
+        
         if (user != null) {
             sql = sql + " and u.userid=" + user.getUserid();
         }
 
         DatabaseTransaction t = null;
         ResultSet rs = null;
+        ResultSet rs2 = null;
         CloneOrder order = null;
         try {
             t = DatabaseTransaction.getInstance();
@@ -339,7 +343,9 @@ public class CloneOrderManager extends TableManager {
                 String isplatinum = rs.getString(34);
                 Double costforplatinum = rs.getDouble(35);
                 String platinumservicestatus = rs.getString(36);
-
+                String firstname = rs.getString(37);
+                String lastname = rs.getString(38);
+                
                 order = new CloneOrder(orderid, date, st, ponumber, shippingto, billingto, shippingaddress, billingaddress, numofclones, numofcollection, costforclones, costforcollection, costforshipping, total, userid);
                 order.setShippingdate(shippingdate);
                 order.setWhoshipped(whoshipped);
@@ -364,12 +370,21 @@ public class CloneOrderManager extends TableManager {
                 order.setIsplatinum(isplatinum);
                 order.setCostforplatinum(costforplatinum);
                 order.setPlatinumServiceStatus(platinumservicestatus);
+                order.setFirstname(firstname);
+                order.setLastname(lastname);
+                
+                rs2 = t.executeQuery(sql2);
+                if(rs2.next()) {
+                    int invoiceid = rs2.getInt(1);
+                    order.setInvoiceid(invoiceid);
+                }
             }
         } catch (Exception ex) {
             handleError(ex, "Cannot query cloneorder.");
             throw new Exception(ex);
         } finally {
             DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeResultSet(rs2);
         }
         return order;
     }
@@ -673,10 +688,10 @@ public class CloneOrderManager extends TableManager {
         String sql = "select c.cloneid, c.clonename from clone c, orderclones o" +
                 " where c.cloneid=o.cloneid" +
                 " and o.orderid=?";
-        String sql2 = "select method,sequence,result,researchername,when,userid"+
-                " from orderclonevalidation where orderid=? and cloneid=?"+
+        String sql2 = "select method,sequence,result,researchername,when,userid" +
+                " from orderclonevalidation where orderid=? and cloneid=?" +
                 " order by when desc";
-                
+
         DatabaseTransaction t = null;
         ResultSet rs = null;
         ResultSet rs2 = null;
@@ -689,9 +704,9 @@ public class CloneOrderManager extends TableManager {
             connection = t.requestConnection();
             stmt = connection.prepareStatement(sql);
 
-            if(isvalidation)
+            if (isvalidation) {
                 stmt2 = connection.prepareStatement(sql2);
-            
+            }
             List cloneorders = new ArrayList();
             for (int i = 0; i < orderids.size(); i++) {
                 int orderid = Integer.parseInt((String) orderids.get(i));
@@ -706,14 +721,14 @@ public class CloneOrderManager extends TableManager {
                     Clone clone = new Clone();
                     clone.setCloneid(cloneid);
                     clone.setName(clonename);
-                    OrderClones orderClone = new OrderClones(orderid,cloneid,null,0);
+                    OrderClones orderClone = new OrderClones(orderid, cloneid, null, 0);
                     orderClone.setClone(clone);
-                
-                    if(isvalidation) {
+
+                    if (isvalidation) {
                         stmt2.setInt(1, orderid);
                         stmt2.setInt(2, cloneid);
                         rs2 = DatabaseTransaction.executeQuery(stmt2);
-                        while(rs2.next()) {
+                        while (rs2.next()) {
                             String method = rs2.getString(1);
                             String sequence = rs2.getString(2);
                             String result = rs2.getString(3);
@@ -759,10 +774,10 @@ public class CloneOrderManager extends TableManager {
             }
         }
     }
-    
+
     public static String queryOrderStatus(int orderid) throws Exception {
         String sql = "select orderstatus from cloneorder where orderid=" + orderid;
-        
+
         DatabaseTransaction t = null;
         ResultSet rs = null;
         String status = null;
@@ -781,7 +796,7 @@ public class CloneOrderManager extends TableManager {
         }
         return status;
     }
-    
+
     public boolean updateOrderStatus(int orderid, String status) {
         String sql = "update cloneorder set orderstatus=? where orderid=?";
         PreparedStatement stmt = null;
@@ -869,15 +884,15 @@ public class CloneOrderManager extends TableManager {
     }
 
     public boolean addOrderCloneValidation(List validations) {
-        String sql = "insert into orderclonevalidation"+
-                " (orderid,cloneid,method,sequence,result,userid,when,researchername)"+
+        String sql = "insert into orderclonevalidation" +
+                " (orderid,cloneid,method,sequence,result,userid,when,researchername)" +
                 " values(?,?,?,?,?,?,sysdate,?)";
         PreparedStatement stmt = null;
 
         try {
             stmt = conn.prepareStatement(sql);
-            for(int i=0; i<validations.size(); i++) {
-                OrderCloneValidation clone = (OrderCloneValidation)validations.get(i);
+            for (int i = 0; i < validations.size(); i++) {
+                OrderCloneValidation clone = (OrderCloneValidation) validations.get(i);
                 stmt.setInt(1, clone.getOrderid());
                 stmt.setInt(2, clone.getCloneid());
                 stmt.setString(3, clone.getMethod());
@@ -900,7 +915,7 @@ public class CloneOrderManager extends TableManager {
     public boolean updatePlatinumServiceStatus(CloneOrder order) {
         String sql = "update cloneorder set platinumservicestatus=? where orderid=?";
         PreparedStatement stmt = null;
-        
+
         try {
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, order.getPlatinumServiceStatus());
@@ -916,6 +931,98 @@ public class CloneOrderManager extends TableManager {
         return true;
     }
 
+    public static int getNextInvoiceid() {
+        int id = -1;
+        String sql = "select invoiceid.nextval from dual";
+        ResultSet rs = null;
+        try {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            if (rs.next()) {
+                id = rs.getInt(1);
+            }
+        } catch (Exception ex) {
+            System.out.println(ex + "Cannot get invoice id.");
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+        return id;
+    }
+
+    public int addInvoice(Invoice invoice) {
+        int invoiceid = CloneOrderManager.getNextInvoiceid();
+        if (invoiceid < 0) {
+            return invoiceid;
+        }
+
+        String sql = "insert into invoice" +
+                " (invoiceid, invoicenumber, price, adjustment, payment, paymentstatus, paymenttype," +
+                " account, orderid, updatedby, updatedon, reason,invoicedate)" +
+                " values(?,?,?,?,?,?,?,?,?,'System',sysdate,?,?)";
+        PreparedStatement stmt = null;
+
+        try {
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, invoiceid);
+            stmt.setString(2, invoice.getInvoicenum());
+            stmt.setDouble(3, invoice.getPrice());
+            stmt.setDouble(4, invoice.getAdjustment());
+            stmt.setDouble(5, invoice.getPayment());
+            stmt.setString(6, invoice.getPaymentstatus());
+            stmt.setString(7, invoice.getPaymenttype());
+            stmt.setString(8, invoice.getAccountnum());
+            stmt.setInt(9, invoice.getOrderid());
+            stmt.setString(10, invoice.getReasonforadj());
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss"); 
+            java.util.Date dt = formatter.parse(invoice.getInvoicedate());
+            stmt.setDate(11, new java.sql.Date(dt.getTime()));
+            DatabaseTransaction.executeUpdate(stmt);
+        } catch (Exception ex) {
+            handleError(ex, "Cannot add invoice to the database.");
+            return -1;
+        } finally {
+            DatabaseTransaction.closeStatement(stmt);
+        }
+
+        return invoiceid;
+    }
+    
+    public Invoice queryInvoice(int invoiceid) throws Exception {
+        String sql = "select invoicenumber, to_char(invoicedate,'YYYY-MM-dd hh:mm:ss'), price, adjustment, payment, paymentstatus,"+
+                " paymenttype, account, orderid, comments, reason"+
+                " from invoice where invoiceid="+invoiceid;
+        
+        DatabaseTransaction t = null;
+        ResultSet rs = null;
+        Invoice invoice = null;
+        try {
+            t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            if(rs.next()) {
+                String invoicenumber = rs.getString(1);
+                String invoicedate = rs.getString(2);
+                double price = rs.getDouble(3);
+                double adjustment = rs.getDouble(4);
+                double payment = rs.getDouble(5);
+                String paymentstatus = rs.getString(6);
+                String paymenttype = rs.getString(7);
+                String account = rs.getString(8);
+                int orderid = rs.getInt(9);
+                String comments = rs.getString(10);
+                String reason = rs.getString(11);
+                invoice = new Invoice(invoicenumber,invoicedate,price,adjustment,payment,paymentstatus,paymenttype,orderid,reason,account);
+                invoice.setComments(comments);
+                invoice.setInvoiceid(invoiceid);
+            }
+        } catch (Exception ex) {
+            handleError(ex, "Cannot query invoice.");
+            throw new Exception(ex);
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+        return invoice;
+    }
+    
     public static void main(String args[]) {
         DatabaseTransaction t = null;
         Connection conn = null;

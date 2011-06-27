@@ -161,4 +161,14 @@ public class User {
     public String getUsername() {
         return firstname+" "+lastname;
     }
+    
+    public boolean isMember() {
+        for(int i=0; i<User.MEMBER.length; i++) {
+            String g = User.MEMBER[i];
+            if(g.equals(group)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

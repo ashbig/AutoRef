@@ -64,7 +64,7 @@ public class CloneOrder {
     protected double costforclones;
     protected double costforcollection;
     protected double costforshipping;
-    private double costforplatinum;
+    protected double costforplatinum;
     
     protected String shippingdate;
     protected String whoshipped;
@@ -96,9 +96,10 @@ public class CloneOrder {
     protected String isaustralia;
     protected String ismta;
     protected String isplatinum;
-    private String platinumServiceStatus;
+    protected String platinumServiceStatus;
     
-    private List clones;
+    protected List clones;
+    private int invoiceid;
     
     /** Creates a new instance of CloneOrder */
     public CloneOrder() {
@@ -139,7 +140,7 @@ public class CloneOrder {
     public String getStatus() {return status;}
     public String getPonumber() {return ponumber;}
     public String getShippingAddress() {return shippingAddress;}
-    public String getBillingAddress() {return billingAddress;}
+    public String getBillingAddress() {return billingAddress.replace("\n\n", "\n");}
     public int getUserid() {return userid;}
     public String getShippingTo() {return shippingTo;}
     public String getBillingTo() {return billingTo;}
@@ -349,5 +350,13 @@ public class CloneOrder {
                 ||this.PLATINUM_STATUS_COMPLETE.equals(getPlatinumServiceStatus()))
             return this.PLATINUM_DISPLAY_RESULTS;
         return "";
+    }
+
+    public int getInvoiceid() {
+        return invoiceid;
+    }
+
+    public void setInvoiceid(int invoiceid) {
+        this.invoiceid = invoiceid;
     }
 }

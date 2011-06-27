@@ -67,8 +67,8 @@ public class PlatePositionConvertor {
     public static void main(String args[]) {
         //String inputFile = "G:\\plasmid\\plate_outside_200704\\plate.txt";
         //String outputFile = "G:\\plasmid\\plate_outside_200704\\plateout.txt";
-        String inputFile = "G:\\plasmid\\test\\plate.txt";
-        String outputFile = "G:\\plasmid\\test\\plateout.txt";
+        String inputFile = "C:\\dev\\plasmidsupport\\Orfeome201104\\wellin.txt";
+        String outputFile = "C:\\dev\\plasmidsupport\\Orfeome201104\\wellout.txt";
         String line;
         
         try {
@@ -77,9 +77,9 @@ public class PlatePositionConvertor {
             BufferedReader in = new BufferedReader((new FileReader(inputFile)));
             
             while((line = in.readLine()) != null) {
-                int pos = Integer.parseInt(line);
-                //int position = PlatePositionConvertor.convertWellFromA8_12toInt(line);
-                String position = PlatePositionConvertor.convertWellFromInttoA8_12(pos);
+                //int pos = Integer.parseInt(line);
+                int position = PlatePositionConvertor.convertWellFromA8_12toInt(line);
+                //String position = PlatePositionConvertor.convertWellFromInttoA8_12(pos);
                 output.println(line+"\t"+position);
             }
             in.close();
