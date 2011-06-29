@@ -1919,8 +1919,10 @@ public class OrderProcessManager {
         subject = "Invoice for order " + orderid;
         text = "Please see the invoices";
         List files = new ArrayList();
-        files.add(f1);
         files.add(f2);
+        if (!user.isInternalMember()) {
+            files.add(f1);
+        }
         Mailer.sendMessage(billingemail, Constants.EMAIL_FROM, to, subject, text, files);
     }
 
