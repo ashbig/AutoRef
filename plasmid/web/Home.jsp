@@ -77,8 +77,8 @@
                 <td class="formlabel" width="30%">Gene name or symbol</td>
                 <td>
                     <html:select property="geneNameOp" styleClass="itemtext">
-                      <html:option value="<%=Constants.OPERATOR_CONTAINS %>"/>
                       <html:option value="<%=Constants.OPERATOR_EQUALS %>"/>
+                      <html:option value="<%=Constants.OPERATOR_CONTAINS %>"/>
                     </html:select>
                 </td>
                 <td>

@@ -54,7 +54,7 @@
     <td class="formlabel">Total Price:</td>
     <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="totalPriceString"/></td>
     <td class="formlabel">Price Adjustment (enter negative number for refund):</td>
-    <td class="text"><html:text maxlength="50" property="adjustment"/></td>
+    <td class="text"><html:text styleClass="text" maxlength="50" property="adjustment"/></td>
   </tr>
   <tr> 
     <td class="formlabel" colspan="4">Reason for Adjustment:</td>
@@ -121,6 +121,12 @@
     <td class="text"><pre><bean:write name="<%=Constants.CLONEORDER%>" property="shippingAddress"/></pre></td>
     <td class="formlabel">Address:</td>
     <td class="text"><pre><bean:write name="<%=Constants.CLONEORDER%>" property="billingAddress"/></pre></td>
+  </tr>
+  <tr> 
+    <td class="formlabel">&nbsp;</td>
+    <td class="text">&nbsp;</td>
+    <td class="formlabel">Email:</td>
+    <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="billingemail"/></td>
   </tr>
 </table>
 
