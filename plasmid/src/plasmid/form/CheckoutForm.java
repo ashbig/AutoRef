@@ -58,6 +58,7 @@ public class CheckoutForm extends ActionForm {
     private String isplatinum;
     private double costOfPlatinum;
     private int numOfClonesInCollections;
+    private String billingemail;
     
     /** Creates a new instance of CheckoutForm */
     public CheckoutForm() {
@@ -199,6 +200,14 @@ public class CheckoutForm extends ActionForm {
 
     public void setNumOfClonesInCollections(int numOfClonesInCollections) {
         this.numOfClonesInCollections = numOfClonesInCollections;
+    }
+
+    public String getBillingemail() {
+        return billingemail;
+    }
+
+    public void setBillingemail(String billingemail) {
+        this.billingemail = billingemail;
     }
     
     /**

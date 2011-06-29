@@ -6,30 +6,21 @@
 
 package plasmid.action;
 
-import java.util.*;
 import java.io.*;
-import java.text.SimpleDateFormat;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionServlet;
-import org.apache.struts.util.MessageResources;
 
 import plasmid.form.ProcessShippingForm;
 import plasmid.coreobject.*;
 import plasmid.process.*;
 import plasmid.Constants;
-import plasmid.util.StringConvertor;
 import plasmid.util.Mailer;
-import plasmid.database.DatabaseManager.DefTableManager;
 
 /**
  *
@@ -133,12 +124,9 @@ public class EnterShippingAction extends InternalUserAction {
         }
         
         try {
-            String to = order.getEmail();
-            String subject = "order "+orderid;
-            String text = "Your order "+orderid+" has been shipped. Please log in your account for shipping details. If you have requested the Platinum Clone Service, QC data for your order is now available by logging into your account at http://plasmid.med.harvard.edu/PLASMID/Login.jsp.";
-            Mailer.sendMessage(to,Constants.EMAIL_FROM,subject,text);
+            manager.sendShippingEmails(user, order, invoice);
         } catch (Exception ex) {
-            System.out.println(ex);
+            ex.printStackTrace();
             errors.add(ActionErrors.GLOBAL_ERROR,
             new ActionError("error.general", "Email notification to user has been failed."));
             saveErrors(request, errors);

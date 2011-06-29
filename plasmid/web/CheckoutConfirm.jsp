@@ -121,6 +121,12 @@ Click the button to pay by credit card through the PayPal site. You DO NOT need 
     <td class="formlabel">Fax:</td>
     <td class="text"><bean:write name="checkoutForm"  property="billingfax"/></td>
   </tr>
+  <tr> 
+    <td >&nbsp;</td>
+    <td >&nbsp;</td>
+    <td class="formlabel">Email:</td>
+    <td class="text"><bean:write name="checkoutForm"  property="billingemail"/></td>
+  </tr>
 </table>
 
 <p>&nbsp;</p>

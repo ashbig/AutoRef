@@ -57,7 +57,7 @@ is not allowed to be shipped outside of USA.
   <tr> 
     <td width="17%" class="formlabel">*Name:</td>
     <td><html:text styleClass="text" property="shippingto"/></td>
-    <td class="formlabel">*Name:</td>
+    <td class="formlabel">*Name(For Harvard and DF/HCC members please enter the grant manager name):</td>
     <td><html:text styleClass="text" property="billingto"/></td>
   </tr>
   <tr> 
@@ -119,6 +119,12 @@ is not allowed to be shipped outside of USA.
     <td><html:text styleClass="text" property="fax"/></td>
     <td class="formlabel">*Fax:</td>
     <td><html:text styleClass="text" property="billingfax"/></td>
+  </tr>
+  <tr> 
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td class="formlabel">*Email (For Harvard and DF/HCC members please enter the grant manager email):</td>
+    <td><html:text styleClass="text" property="billingemail"/></td>
   </tr>
 </table>
 

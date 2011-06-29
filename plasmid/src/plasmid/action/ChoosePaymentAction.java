@@ -79,6 +79,7 @@ public class ChoosePaymentAction extends UserAction {
         String billingphone = ((CheckoutForm) form).getBillingphone();
         String fax = ((CheckoutForm) form).getFax();
         String billingfax = ((CheckoutForm) form).getBillingfax();
+        String billingemail = ((CheckoutForm) form).getBillingemail();
         boolean saveInfo = ((CheckoutForm) form).getSaveInfo();
         int orderid = ((CheckoutForm) form).getOrderid();
 
@@ -166,6 +167,7 @@ public class ChoosePaymentAction extends UserAction {
             addresses = new ArrayList();
             UserAddress a = new UserAddress(user.getUserid(), UserAddress.SHIPPING, organization, addressline1, addressline2, city, state, zipcode, country, shippingto, phone, fax);
             UserAddress b = new UserAddress(user.getUserid(), UserAddress.BILLING, billingOrganization, billingaddressline1, billingaddressline2, billingcity, billingstate, billingzipcode, billingcountry, billingto, billingphone, billingfax);
+            b.setEmail(billingemail);
             addresses.add(a);
             addresses.add(b);
         }
@@ -180,6 +182,7 @@ public class ChoosePaymentAction extends UserAction {
 
         String isplatinum = ((CheckoutForm) form).getIsplatinum();
         CloneOrder order = new CloneOrder(orderid, time, status, ponumber, shippingto, billingto, shippingAddress, billingAddress, numOfClones, numOfCollections, costOfClones, costOfCollections, shippingCost, totalCost, user.getUserid());
+        order.setBillingemail(billingemail);
         order.setShippingmethod(shippingMethod);
         order.setShippingaccount(accountNumber);
         order.setIsplatinum(isplatinum);

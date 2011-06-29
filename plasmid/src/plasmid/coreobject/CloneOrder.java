@@ -100,6 +100,7 @@ public class CloneOrder {
     
     protected List clones;
     private int invoiceid;
+    private String billingemail;
     
     /** Creates a new instance of CloneOrder */
     public CloneOrder() {
@@ -358,5 +359,13 @@ public class CloneOrder {
 
     public void setInvoiceid(int invoiceid) {
         this.invoiceid = invoiceid;
+    }
+
+    public String getBillingemail() {
+        return billingemail;
+    }
+
+    public void setBillingemail(String billingemail) {
+        this.billingemail = billingemail;
     }
 }

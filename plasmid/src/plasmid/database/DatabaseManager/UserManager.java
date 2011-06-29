@@ -460,7 +460,7 @@ public class UserManager extends TableManager {
     public List getUserAddresses(int userid) {
         List addresses = new ArrayList();
         String sql = "select addresstype,name,organization,addressline1,"+
-        " addressline2,city,state,zipcode,country,phone,fax"+
+        " addressline2,city,state,zipcode,country,phone,fax,email"+
         " from useraddress where userid="+userid;
         
         ResultSet rs = null;
@@ -481,7 +481,9 @@ public class UserManager extends TableManager {
                 String country = rs.getString(9);
                 String phone = rs.getString(10);
                 String fax = rs.getString(11);
+                String email = rs.getString(12);
                 UserAddress a = new UserAddress(userid,type,organization,addressline1,addressline2,city,state,zipcode,country,name,phone,fax);
+                a.setEmail(email);
                 addresses.add(a);
             }
         } catch (Exception ex) {
@@ -499,8 +501,8 @@ public class UserManager extends TableManager {
             return true;
         
         String sql = "insert into useraddress(userid,addresstype,name,organization,"+
-        " addressline1,addressline2,city,state,zipcode,country,phone,fax)"+
-        " values(?,?,?,?,?,?,?,?,?,?,?,?)";
+        " addressline1,addressline2,city,state,zipcode,country,phone,fax,email)"+
+        " values(?,?,?,?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement stmt = null;
         try {
             stmt = conn.prepareStatement(sql);
@@ -518,6 +520,7 @@ public class UserManager extends TableManager {
                 stmt.setString(10, a.getCountry());
                 stmt.setString(11, a.getPhone());
                 stmt.setString(12, a.getFax());
+                stmt.setString(13, a.getEmail());
                 DatabaseTransaction.executeUpdate(stmt);
             }
         } catch (Exception ex) {
@@ -536,7 +539,7 @@ public class UserManager extends TableManager {
         
         String sql = "update useraddress"+
         " set name=?,organization=?,addressline1=?,addressline2=?,"+
-        " city=?,state=?,zipcode=?,country=?,phone=?,fax=?"+
+        " city=?,state=?,zipcode=?,country=?,phone=?,fax=?,email=?"+
         " where userid=? and addresstype=?";
         
         PreparedStatement stmt = null;
@@ -556,6 +559,7 @@ public class UserManager extends TableManager {
                 stmt.setString(10, a.getFax());
                 stmt.setInt(11, userid);
                 stmt.setString(12, a.getType());
+                stmt.setString(13, a.getEmail());
                 
                 DatabaseTransaction.executeUpdate(stmt);
             }

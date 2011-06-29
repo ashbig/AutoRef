@@ -64,8 +64,8 @@ public class CloneOrderManager extends TableManager {
                 " shippingaddress,billingaddress,numofclones,numofcollection," +
                 " costforclones,costforcollection,costforshipping,totalprice,userid,orderid," +
                 " shippingmethod,shippingaccount,trackingnumber,isbatch,comments," +
-                " isaustralia,ismta,isplatinum,costforplatinum,platinumservicestatus)" +
-                " values(sysdate,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                " isaustralia,ismta,isplatinum,costforplatinum,platinumservicestatus,billingemail)" +
+                " values(sysdate,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
         String sql2 = "insert into orderclones(orderid,cloneid,collectionname,quantity)" +
                 " values(?,?,?,?)";
@@ -98,6 +98,7 @@ public class CloneOrderManager extends TableManager {
             stmt.setString(22, order.getIsplatinum());
             stmt.setDouble(23, order.getCostforplatinum());
             stmt.setString(24, order.getPlatinumServiceStatus());
+            stmt.setString(25, order.getBillingemail());
             DatabaseTransaction.executeUpdate(stmt);
 
             stmt2 = conn.prepareStatement(sql2);
@@ -288,7 +289,7 @@ public class CloneOrderManager extends TableManager {
                 " shippingmethod,shippingaccount,trackingnumber,receiveconfirmationdate," +
                 " whoconfirmed,whoreceivedconfirmation,shippedcontainers,u.email,u.piname," +
                 " u.piemail,u.phone,c.isbatch,u.usergroup,c.comments,c.isaustralia," +
-                " c.ismta, c.isplatinum, c.costforplatinum, c.platinumservicestatus,u.firstname,u.lastname" +
+                " c.ismta, c.isplatinum, c.costforplatinum, c.platinumservicestatus,u.firstname,u.lastname,billingemail" +
                 " from cloneorder c, userprofile u where c.userid=u.userid and c.orderid=" + orderid;
                 
         String sql2 = "select invoiceid from invoice where orderid="+orderid;
@@ -345,6 +346,7 @@ public class CloneOrderManager extends TableManager {
                 String platinumservicestatus = rs.getString(36);
                 String firstname = rs.getString(37);
                 String lastname = rs.getString(38);
+                String billingemail = rs.getString(39);
                 
                 order = new CloneOrder(orderid, date, st, ponumber, shippingto, billingto, shippingaddress, billingaddress, numofclones, numofcollection, costforclones, costforcollection, costforshipping, total, userid);
                 order.setShippingdate(shippingdate);
@@ -372,6 +374,7 @@ public class CloneOrderManager extends TableManager {
                 order.setPlatinumServiceStatus(platinumservicestatus);
                 order.setFirstname(firstname);
                 order.setLastname(lastname);
+                order.setBillingemail(billingemail);
                 
                 rs2 = t.executeQuery(sql2);
                 if(rs2.next()) {
@@ -397,13 +400,13 @@ public class CloneOrderManager extends TableManager {
      * @return A list of CloneOrder objects. Return null if error occured.
      */
     public List queryCloneOrders(User user, String status) {
-        String sql = "select c.orderid,to_char(c.orderdate, 'MON-DD-YYYY HH24:MI:SS'),c.orderstatus,c.ponumber,c.shippingto,c.billingto," +
+        String sql = "select c.orderid,to_char(c.orderdate, 'YYYY-MM-DD hh:mm:ss'),c.orderstatus,c.ponumber,c.shippingto,c.billingto," +
                 " c.shippingaddress,c.billingaddress,c.numofclones,c.numofcollection,c.costforclones," +
                 " c.costforcollection,c.costforshipping,c.totalprice,c.userid,u.firstname,u.lastname," +
                 " c.shippingdate, c.whoshipped, c.shippingmethod,c.shippingaccount,c.trackingnumber," +
                 " c.receiveconfirmationdate, c.whoconfirmed,c.whoreceivedconfirmation,u.email,c.shippedcontainers," +
                 " u.piname, u.piemail, u.phone, c.isbatch, c.comments, c.isaustralia," +
-                " c.ismta, c.isplatinum, c.costforplatinum, c.platinumservicestatus" +
+                " c.ismta, c.isplatinum, c.costforplatinum, c.platinumservicestatus,c.billingemail" +
                 " from cloneorder c, userprofile u where c.userid=u.userid";
 
         if (user != null) {
@@ -470,6 +473,7 @@ public class CloneOrderManager extends TableManager {
                 String isplatinum = rs.getString(35);
                 Double costforplatinum = rs.getDouble(36);
                 String platinumservicestatus = rs.getString(37);
+                String billingemail = rs.getString(38);
                 CloneOrder order = new CloneOrder(orderid, date, st, ponumber, shippingto, billingto, shippingaddress, billingaddress, numofclones, numofcollection, costforclones, costforcollection, costforshipping, total, userid);
 
                 order.setFirstname(firstname);
@@ -496,6 +500,7 @@ public class CloneOrderManager extends TableManager {
                 order.setIsplatinum(isplatinum);
                 order.setCostforplatinum(costforplatinum);
                 order.setPlatinumServiceStatus(platinumservicestatus);
+                order.setBillingemail(billingemail);
                 orders.add(order);
             }
             return orders;
@@ -518,13 +523,14 @@ public class CloneOrderManager extends TableManager {
     public List queryCloneOrders(List orderids, String orderDateFrom, String orderDateTo,
             String shippingDateFrom, String shippingDateTo, String status, List lastnames,
             List groups, boolean isMember, String sort, String provider, boolean isPI, boolean isMtamember) {
-        String sql = "select c.orderid,to_char(c.orderdate, 'MON-DD-YYYY HH24:MI:SS'),c.orderstatus,c.ponumber,c.shippingto,c.billingto," +
+        String sql = "select c.orderid,to_char(c.orderdate, 'YYYY-MM-DD hh:mm:ss'),c.orderstatus,c.ponumber,c.shippingto,c.billingto," +
                 " c.shippingaddress,c.billingaddress,c.numofclones,c.numofcollection,c.costforclones," +
                 " c.costforcollection,c.costforshipping,c.totalprice,c.userid,u.firstname,u.lastname," +
                 " c.shippingdate, c.whoshipped, c.shippingmethod,c.shippingaccount,c.trackingnumber," +
                 " c.receiveconfirmationdate, c.whoconfirmed,c.whoreceivedconfirmation,u.email," +
                 " c.shippedcontainers, u.piname, u.piemail, u.phone, c.isbatch, c.comments," +
-                " c.isaustralia, c.ismta, u.institution, c.isplatinum, c.costforplatinum, c.platinumservicestatus" +
+                " c.isaustralia, c.ismta, u.institution, c.isplatinum, c.costforplatinum,"+
+                " c.platinumservicestatus, c.billingemail" +
                 " from cloneorder c, userprofile u where c.userid=u.userid";
         String sql2 = "select department from pi where name=?";
 
@@ -627,6 +633,7 @@ public class CloneOrderManager extends TableManager {
                 String isplatinum = rs.getString(36);
                 Double costforplatinum = rs.getDouble(37);
                 String platinumservicestatus = rs.getString(38);
+                String billingemail = rs.getString(39);
                 CloneOrder order = new CloneOrder(orderid, date, st, ponumber, shippingto, billingto, shippingaddress, billingaddress, numofclones, numofcollection, costforclones, costforcollection, costforshipping, total, userid);
 
                 order.setFirstname(firstname);
@@ -654,6 +661,7 @@ public class CloneOrderManager extends TableManager {
                 order.setIsplatinum(isplatinum);
                 order.setCostforplatinum(costforplatinum);
                 order.setPlatinumServiceStatus(platinumservicestatus);
+                order.setBillingemail(billingemail);
                 if (isPI) {
                     stmt.setString(1, piname);
                     rs2 = DatabaseTransaction.executeQuery(stmt);

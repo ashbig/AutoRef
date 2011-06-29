@@ -43,6 +43,7 @@ public class Constants {
     public static final String MAP_FILE_PATH = FlexProperties.getInstance().getProperty("mapfilepath");
     public static final String SEQ_FILE_PATH = FlexProperties.getInstance().getProperty("seqfilepath");
     public static final String SEQ_ANALYSIS_PATH = FlexProperties.getInstance().getProperty("sequencepath");
+    public static final String FILE_PATH = FlexProperties.getInstance().getProperty("filepath");
     
     public static final String COLLECTION = "Collections";
     public static final String SINGLECOLLECTION = "Collection";
@@ -132,6 +133,7 @@ public class Constants {
     public static final String ISPLATINUM_N = "No";
     public static final Double PLATINUM_SERVICE_COST = 10.0;
     public static final String LABEL_SEQ_ANALYSIS = "Process Sequence Analysis";
+    public static final String TMP = "/tmp/";
     
     /** Creates a new instance of Constants */
     public Constants() {

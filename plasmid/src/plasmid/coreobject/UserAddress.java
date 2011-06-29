@@ -26,6 +26,7 @@ public class UserAddress {
     private String country;
     private String phone;
     private String fax;
+    private String email;
     
     /** Creates a new instance of UserAddress */
     public UserAddress() {
@@ -73,4 +74,12 @@ public class UserAddress {
     public void setName(String s) {this.name = s;}
     public void setPhone(String s) {this.phone = s;}
     public void setFax(String s) {this.fax = s;}
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }

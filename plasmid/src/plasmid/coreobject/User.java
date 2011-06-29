@@ -171,4 +171,13 @@ public class User {
         }
         return false;
     }
+    
+    public boolean isInternalMember() {
+        if(isMember()) {
+            if(piemail.indexOf("harvard.edu")>0) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

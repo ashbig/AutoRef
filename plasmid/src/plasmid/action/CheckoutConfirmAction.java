@@ -66,6 +66,7 @@ public class CheckoutConfirmAction extends UserAction {
         String billingphone = ((CheckoutForm)form).getBillingphone();
         String fax = ((CheckoutForm)form).getFax();
         String billingfax = ((CheckoutForm)form).getBillingfax();
+        String billingemail = ((CheckoutForm)form).getBillingemail();
         request.getSession().removeAttribute("viewCartForm");
         
         if(shippingto == null || shippingto.trim().length()<1)
@@ -98,6 +99,8 @@ public class CheckoutConfirmAction extends UserAction {
             errors.add("billingphone", new ActionError("error.billingphone.required"));
         if(billingfax == null || billingfax.trim().length() < 1)
             errors.add("billingfax", new ActionError("error.billingfax.require"));
+        if(billingemail == null || billingemail.trim().length() < 1)
+            errors.add("billingemail", new ActionError("error.billingemail.require"));
         
         List shoppingcart = (List)request.getSession().getAttribute(Constants.CART);
         

@@ -1641,7 +1641,7 @@ public class OrderProcessManager {
         Invoice invoice = manager.queryInvoice(invoiceid);
         return invoice;
     }
-    
+
     public Invoice generateInvoice(CloneOrder order, String reason, double adjustment) {
         int orderid = order.getOrderid();
         String invoicenum = Invoice.INVOICE_PREFIX + orderid;
@@ -1652,7 +1652,7 @@ public class OrderProcessManager {
             payment = order.getPrice();
             paymentstatus = Invoice.PAYMENTSTATUS_PAID;
             paymenttype = Constants.PAYPAL;
-        }        
+        }
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         String date = dateFormat.format(calendar.getTime());
@@ -1675,7 +1675,7 @@ public class OrderProcessManager {
             table.addCell(PdfEditor.makeSmallBold("Invoice Number:\t" + invoice.getInvoicenum()));
             table.addCell(PdfEditor.makeSmallBold("Invoice Date:\t" + invoice.getInvoicedate()));
             document.add(table);
-            
+
             document.add(PdfEditor.makeTitle(" "));
             table = new PdfPTable(2);
             table.setWidthPercentage(100);
@@ -1698,7 +1698,8 @@ public class OrderProcessManager {
             document.add(PdfEditor.makeSmallBold("Bill To:"));
             document.add(PdfEditor.makeSmall(order.getBillingTo()));
             document.add(PdfEditor.makeSmall(order.getBillingAddress()));
-                    
+            document.add(PdfEditor.makeSmall(order.getBillingemail()));
+
             document.add(PdfEditor.makeTitle(" "));
             table = new PdfPTable(3);
             table.setWidthPercentage(100);
@@ -1759,10 +1760,10 @@ public class OrderProcessManager {
             document.add(PdfEditor.makeSmallItalic("*" + invoice.getReasonforadj()));
 
             document.add(PdfEditor.makeTitle(" "));
-            document.add(PdfEditor.makeSmallBold("Make checkes Payable to: Harvard Medical School. "+
-                "Include invoice number on check. Payments must be made in U.S. funds drawn on a U.S. bank. "+
-                "If you pay through wire transfer, please include wire transfer fee in the total amount."));
-            
+            document.add(PdfEditor.makeSmallBold("Make checkes Payable to: Harvard Medical School. " +
+                    "Include invoice number on check. Payments must be made in U.S. funds drawn on a U.S. bank. " +
+                    "If you pay through wire transfer, please include wire transfer fee in the total amount."));
+
             document.add(PdfEditor.makeTitle(" "));
             document.add(PdfEditor.makeSmallBold("Mailing Address:"));
             document.add(PdfEditor.makeSmall("  Harvard Medical School"));
@@ -1770,19 +1771,19 @@ public class OrderProcessManager {
             document.add(PdfEditor.makeSmall("  C1-214"));
             document.add(PdfEditor.makeSmall("  240 Longwood Ave."));
             document.add(PdfEditor.makeSmall("  Boston, MA 02115"));
-            
+
             document.add(PdfEditor.makeTitle(" "));
             document.add(PdfEditor.makeSmallBold("For Invoice Information Contact:"));
             document.add(PdfEditor.makeSmall("  Elmira Dhroso, (617)432-1210"));
             document.add(PdfEditor.makeSmall("  elmira_dhroso@hms.harvard.edu"));
-            
+
             document.close();
             file.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
+
     public void printInternalInvoice(OutputStream file, CloneOrder order, Invoice invoice) {
         try {
             Document document = new Document();
@@ -1798,7 +1799,7 @@ public class OrderProcessManager {
             table.addCell(PdfEditor.makeSmallBold("Invoice Number:\t" + invoice.getInvoicenum()));
             table.addCell(PdfEditor.makeSmallBold("Invoice Date:\t" + invoice.getInvoicedate()));
             document.add(table);
-            
+
             document.add(PdfEditor.makeTitle(" "));
             table = new PdfPTable(2);
             table.setWidthPercentage(100);
@@ -1821,6 +1822,7 @@ public class OrderProcessManager {
             document.add(PdfEditor.makeSmallBold("Bill To:"));
             document.add(PdfEditor.makeSmall(order.getBillingTo()));
             document.add(PdfEditor.makeSmall(order.getBillingAddress()));
+            document.add(PdfEditor.makeSmall(order.getBillingemail()));
 
             document.add(PdfEditor.makeTitle(" "));
             table = new PdfPTable(3);
@@ -1880,7 +1882,7 @@ public class OrderProcessManager {
             table.addCell(cell);
             document.add(table);
             document.add(PdfEditor.makeSmallItalic("*" + invoice.getReasonforadj()));
-            
+
             document.close();
             file.close();
         } catch (Exception e) {
@@ -1889,13 +1891,39 @@ public class OrderProcessManager {
     }
 
     public void displayInvoice(OutputStream file, CloneOrder order, Invoice invoice, User user) {
-        if(user.isMember()) {
+        if (user.isMember()) {
             printInternalInvoice(file, order, invoice);
         } else {
             printExternalInvoice(file, order, invoice);
         }
     }
-    
+
+    public void sendShippingEmails(User user, CloneOrder order, Invoice invoice) throws Exception {
+        int orderid = order.getOrderid();
+        String to = order.getEmail();
+        String subject = "order " + orderid;
+        String text = "Your order " + orderid + " has been shipped. Please log in your account for shipping details. If you have requested the Platinum Clone Service, QC data for your order is now available by logging into your account at http://plasmid.med.harvard.edu/PLASMID/Login.jsp.";
+        Mailer.sendMessage(to, Constants.EMAIL_FROM, subject, text);
+
+        String filename = Constants.TMP + "Invoice_" + orderid;
+        File f1 = new File(Constants.FILE_PATH + "Billing_memo.pdf");
+        File f2 = new File(filename);
+        OutputStream file = new FileOutputStream(f2);
+        if (user.isInternalMember()) {
+            printInternalInvoice(file, order, invoice);
+        } else {
+            printExternalInvoice(file, order, invoice);
+        }
+
+        String billingemail = order.getBillingemail();
+        subject = "Invoice for order " + orderid;
+        text = "Please see the invoices";
+        List files = new ArrayList();
+        files.add(f1);
+        files.add(f2);
+        Mailer.sendMessage(billingemail, Constants.EMAIL_FROM, to, subject, text, files);
+    }
+
     public static final void main(String args[]) {
         String filename = "C:\\dev\\test\\plasmid\\invoice.pdf";
 
@@ -1910,10 +1938,10 @@ public class OrderProcessManager {
             CloneOrder order = manager.getCloneOrder(user, 7429);
             Invoice invoice = manager.generateInvoice(order, "Reason for refund goes here.", -10.0);
             invoice.setInvoiceid(101);
-            
+
             OutputStream file = new FileOutputStream(new File(filename));
             manager.printInternalInvoice(file, order, invoice);
-            //manager.printExternalInvoice(file, order, invoice);
+        //manager.printExternalInvoice(file, order, invoice);
         } catch (Exception ex) {
             ex.printStackTrace();
             System.exit(1);
