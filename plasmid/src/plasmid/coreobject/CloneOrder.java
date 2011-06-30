@@ -140,7 +140,7 @@ public class CloneOrder {
     public String getOrderDate() {return orderDate;}
     public String getStatus() {return status;}
     public String getPonumber() {return ponumber;}
-    public String getShippingAddress() {return shippingAddress;}
+    public String getShippingAddress() {return shippingAddress.replace("\n\n", "\n");}
     public String getBillingAddress() {return billingAddress.replace("\n\n", "\n");}
     public int getUserid() {return userid;}
     public String getShippingTo() {return shippingTo;}

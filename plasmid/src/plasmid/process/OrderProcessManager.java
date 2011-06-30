@@ -1905,7 +1905,7 @@ public class OrderProcessManager {
         String text = "Your order " + orderid + " has been shipped. Please log in your account for shipping details. If you have requested the Platinum Clone Service, QC data for your order is now available by logging into your account at http://plasmid.med.harvard.edu/PLASMID/Login.jsp.";
         Mailer.sendMessage(to, Constants.EMAIL_FROM, subject, text);
 
-        String filename = Constants.TMP + "Invoice_" + orderid;
+        String filename = Constants.TMP + "Invoice_" + orderid+".pdf";
         File f1 = new File(Constants.FILE_PATH + "Billing_memo.pdf");
         File f2 = new File(filename);
         OutputStream file = new FileOutputStream(f2);
@@ -1917,7 +1917,20 @@ public class OrderProcessManager {
 
         String billingemail = order.getBillingemail();
         subject = "Invoice for order " + orderid;
-        text = "Please see the invoices";
+        text = "Dear Accounts Payable Representative:\n\n"+
+                "Payment is requested for the attached invoice from the PlasmID Repository"+
+                " at Harvard Medical School.\n\n"+
+                "This invoice was generated upon completion and shipment of your order."+
+                " Any discounts or price modifications should already be reflected on this invoice."+
+                " If you have received this notification in error, or believe that a clerical"+
+                " mistake has occurred please contact us as soon as possible to resolve the issue."+
+                " Please find payment instructions attached to this email and always be sure to"+
+                " include your invoice number with payment and add any wire transfer fees to your total.\n\n"+
+                "As a part of our continued environmental efforts this email will serve as your"+
+                " sole notification, and no paper copy will be mailed to your facility.\n\n"+
+                "Payment Terms: Net 30\n"+
+                "Enclosures: Invoice, Payment Instructions\n";
+
         List files = new ArrayList();
         files.add(f2);
         if (!user.isInternalMember()) {
