@@ -124,7 +124,7 @@ public class EnterShippingAction extends InternalUserAction {
         }
         
         try {
-            manager.sendShippingEmails(user, order, invoice);
+            manager.sendShippingEmails(order, invoice);
         } catch (Exception ex) {
             ex.printStackTrace();
             errors.add(ActionErrors.GLOBAL_ERROR,

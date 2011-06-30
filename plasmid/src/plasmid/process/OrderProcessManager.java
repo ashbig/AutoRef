@@ -1771,6 +1771,9 @@ public class OrderProcessManager {
             document.add(PdfEditor.makeSmall("  C1-214"));
             document.add(PdfEditor.makeSmall("  240 Longwood Ave."));
             document.add(PdfEditor.makeSmall("  Boston, MA 02115"));
+            
+            document.add(PdfEditor.makeTitle(" "));
+            document.add(PdfEditor.makeSmallItalic("Please see billing memo for more payment information."));
 
             document.add(PdfEditor.makeTitle(" "));
             document.add(PdfEditor.makeSmallBold("For Invoice Information Contact:"));
@@ -1890,15 +1893,15 @@ public class OrderProcessManager {
         }
     }
 
-    public void displayInvoice(OutputStream file, CloneOrder order, Invoice invoice, User user) {
-        if (user.isMember()) {
+    public void displayInvoice(OutputStream file, CloneOrder order, Invoice invoice) {
+        if (User.isInternalMember(order.getPiemail(), order.getUsergroup())) {
             printInternalInvoice(file, order, invoice);
         } else {
             printExternalInvoice(file, order, invoice);
         }
     }
 
-    public void sendShippingEmails(User user, CloneOrder order, Invoice invoice) throws Exception {
+    public void sendShippingEmails(CloneOrder order, Invoice invoice) throws Exception {
         int orderid = order.getOrderid();
         String to = order.getEmail();
         String subject = "order " + orderid;
@@ -1909,7 +1912,7 @@ public class OrderProcessManager {
         File f1 = new File(Constants.FILE_PATH + "Billing_memo.pdf");
         File f2 = new File(filename);
         OutputStream file = new FileOutputStream(f2);
-        if (user.isInternalMember()) {
+        if (User.isInternalMember(order.getPiemail(), order.getUsergroup())) {
             printInternalInvoice(file, order, invoice);
         } else {
             printExternalInvoice(file, order, invoice);
@@ -1933,7 +1936,7 @@ public class OrderProcessManager {
 
         List files = new ArrayList();
         files.add(f2);
-        if (!user.isInternalMember()) {
+        if (User.isInternalMember(order.getPiemail(), order.getUsergroup())) {
             files.add(f1);
         }
         Mailer.sendMessage(billingemail, Constants.EMAIL_FROM, to, subject, text, files);

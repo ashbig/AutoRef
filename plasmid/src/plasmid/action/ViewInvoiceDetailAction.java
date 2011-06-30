@@ -75,7 +75,7 @@ public class ViewInvoiceDetailAction extends UserAction {
         
         //write to pdf file in browser
         response.setContentType("application/pdf"); 
-        manager.displayInvoice(response.getOutputStream(), order, invoice, user);
+        manager.displayInvoice(response.getOutputStream(), order, invoice);
         
         return mapping.findForward(null);
     }
