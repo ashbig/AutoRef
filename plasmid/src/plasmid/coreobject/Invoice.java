@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package plasmid.coreobject;
 
 /**
@@ -10,12 +9,12 @@ package plasmid.coreobject;
  * @author Dongmei
  */
 public class Invoice {
+
     public static final String PAYMENTSTATUS_UNPAID = "Unpaid";
     public static final String PAYMENTSTATUS_PAID = "Paid";
     public static final String PAYMENTSTATUS_PARTIAL = "Partially paid";
     public static final String PAYMENTTYPE_CREDITCARD = "Credit Card";
     public static final String INVOICE_PREFIX = "DFHCC_";
-    
     private int invoiceid;
     private String invoicenum;
     private String invoicedate;
@@ -30,7 +29,7 @@ public class Invoice {
     private String updatedby;
     private String updatedon;
     private int orderid;
-    
+
     public Invoice(String invoicenum, String invoicedate, double price, double adjustment, double payment,
             String paymentstatus, String paymenttype, int orderid, String reason, String account) {
         this.invoicenum = invoicenum;
@@ -156,15 +155,25 @@ public class Invoice {
     public void setReasonforadj(String reasonforadj) {
         this.reasonforadj = reasonforadj;
     }
-    
+
     public String getAdjustmentString() {
-        if(adjustment>0.0) 
-            return "$"+adjustment;
-        else
-            return "($"+Math.abs(adjustment)+")";
+        if (adjustment > 0.0) {
+            return "$" + adjustment;
+        } else {
+            return "($" + Math.abs(adjustment) + ")";
+        }
     }
-    
+
     public double getDue() {
-        return price+adjustment-payment;
+        return price + adjustment - payment;
+    }
+
+    public String getDueString() {
+        double due = getDue();
+        if (due > 0.0) {
+            return "$" + due;
+        } else {
+            return "($" + Math.abs(due) + ")";
+        }
     }
 }

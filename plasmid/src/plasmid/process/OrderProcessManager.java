@@ -1879,7 +1879,7 @@ public class OrderProcessManager {
             cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
             table.addCell(cell);
             table.addCell(PdfEditor.makeSmallBold("Payment Due"));
-            cell = new PdfPCell(PdfEditor.makeSmallBold("$" + invoice.getDue()));
+            cell = new PdfPCell(PdfEditor.makeSmallBold(invoice.getDueString()));
             cell.setColspan(2);
             cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
             table.addCell(cell);
