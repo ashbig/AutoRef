@@ -1936,7 +1936,7 @@ public class OrderProcessManager {
 
         List files = new ArrayList();
         files.add(f2);
-        if (User.isInternalMember(order.getPiemail(), order.getUsergroup())) {
+        if (!User.isInternalMember(order.getPiemail(), order.getUsergroup())) {
             files.add(f1);
         }
         Mailer.sendMessage(billingemail, Constants.EMAIL_FROM, to, subject, text, files);
