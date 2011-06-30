@@ -557,13 +557,14 @@ public class UserManager extends TableManager {
                 stmt.setString(8, a.getCountry());
                 stmt.setString(9, a.getPhone());
                 stmt.setString(10, a.getFax());
-                stmt.setInt(11, userid);
-                stmt.setString(12, a.getType());
-                stmt.setString(13, a.getEmail());
+                stmt.setString(11, a.getEmail());
+                stmt.setInt(12, userid);
+                stmt.setString(13, a.getType());
                 
                 DatabaseTransaction.executeUpdate(stmt);
             }
         } catch (Exception ex) {
+            ex.printStackTrace();
             handleError(ex, "Cannot update useraddress.");
             return false;
         } finally {
