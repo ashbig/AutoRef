@@ -1771,7 +1771,7 @@ public class OrderProcessManager {
             document.add(PdfEditor.makeSmall("  C1-214"));
             document.add(PdfEditor.makeSmall("  240 Longwood Ave."));
             document.add(PdfEditor.makeSmall("  Boston, MA 02115"));
-            
+
             document.add(PdfEditor.makeTitle(" "));
             document.add(PdfEditor.makeSmallItalic("Please see billing memo for more payment information."));
 
@@ -1908,38 +1908,34 @@ public class OrderProcessManager {
         String text = "Your order " + orderid + " has been shipped. Please log in your account for shipping details. If you have requested the Platinum Clone Service, QC data for your order is now available by logging into your account at http://plasmid.med.harvard.edu/PLASMID/Login.jsp.";
         Mailer.sendMessage(to, Constants.EMAIL_FROM, subject, text);
 
-        String filename = Constants.TMP + "Invoice_" + orderid+".pdf";
-        File f1 = new File(Constants.FILE_PATH + "Billing_memo.pdf");
-        File f2 = new File(filename);
-        OutputStream file = new FileOutputStream(f2);
-        if (User.isInternalMember(order.getPiemail(), order.getUsergroup())) {
-            printInternalInvoice(file, order, invoice);
-        } else {
-            printExternalInvoice(file, order, invoice);
-        }
-
-        String billingemail = order.getBillingemail();
-        subject = "Invoice for order " + orderid;
-        text = "Dear Accounts Payable Representative:\n\n"+
-                "Payment is requested for the attached invoice from the PlasmID Repository"+
-                " at Harvard Medical School.\n\n"+
-                "This invoice was generated upon completion and shipment of your order."+
-                " Any discounts or price modifications should already be reflected on this invoice."+
-                " If you have received this notification in error, or believe that a clerical"+
-                " mistake has occurred please contact us as soon as possible to resolve the issue."+
-                " Please find payment instructions attached to this email and always be sure to"+
-                " include your invoice number with payment and add any wire transfer fees to your total.\n\n"+
-                "As a part of our continued environmental efforts this email will serve as your"+
-                " sole notification, and no paper copy will be mailed to your facility.\n\n"+
-                "Payment Terms: Net 30\n"+
-                "Enclosures: Invoice, Payment Instructions\n";
-
-        List files = new ArrayList();
-        files.add(f2);
         if (!User.isInternalMember(order.getPiemail(), order.getUsergroup())) {
+            String filename = Constants.TMP + "Invoice_" + orderid + ".pdf";
+            File f1 = new File(filename);
+            OutputStream file = new FileOutputStream(f1);
+            printExternalInvoice(file, order, invoice);
+            File f2 = new File(Constants.FILE_PATH + "Billing_memo.pdf");
+            List files = new ArrayList();
             files.add(f1);
+            files.add(f2);
+
+            String billingemail = order.getBillingemail();
+            subject = "Invoice for order " + orderid;
+            text = "Dear Accounts Payable Representative:\n\n" +
+                    "Payment is requested for the attached invoice from the PlasmID Repository" +
+                    " at Harvard Medical School.\n\n" +
+                    "This invoice was generated upon completion and shipment of your order." +
+                    " Any discounts or price modifications should already be reflected on this invoice." +
+                    " If you have received this notification in error, or believe that a clerical" +
+                    " mistake has occurred please contact us as soon as possible to resolve the issue." +
+                    " Please find payment instructions attached to this email and always be sure to" +
+                    " include your invoice number with payment and add any wire transfer fees to your total.\n\n" +
+                    "As a part of our continued environmental efforts this email will serve as your" +
+                    " sole notification, and no paper copy will be mailed to your facility.\n\n" +
+                    "Payment Terms: Net 30\n" +
+                    "Enclosures: Invoice, Payment Instructions\n";
+
+            Mailer.sendMessage(billingemail, Constants.EMAIL_FROM, to, subject, text, files);
         }
-        Mailer.sendMessage(billingemail, Constants.EMAIL_FROM, to, subject, text, files);
     }
 
     public static final void main(String args[]) {
