@@ -1927,8 +1927,8 @@ public class OrderProcessManager {
                     " Any discounts or price modifications should already be reflected on this invoice." +
                     " If you have received this notification in error, or believe that a clerical" +
                     " mistake has occurred please contact us as soon as possible to resolve the issue." +
-                    " Please find payment instructions attached to this email and always be sure to" +
-                    " include your invoice number with payment and add any wire transfer fees to your total.\n\n" +
+                    " Please find payment instructions attached to this email and ALWAYS BE SURE TO" +
+                    " INCLUDE YOUR INVOICE NUMBER WITH PAYMENT and ADD ANY WIRE TRANSFER FEES TO YOUR TOTAL.\n\n" +
                     "As a part of our continued environmental efforts this email will serve as your" +
                     " sole notification, and no paper copy will be mailed to your facility.\n\n" +
                     "Payment Terms: Net 30\n" +
