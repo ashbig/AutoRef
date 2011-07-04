@@ -148,7 +148,7 @@
                                 </table></td>
                             </tr>
                             <tr class="formlabel"> 
-                                <td width="30%" align="left" valign="baseline">Please choose the appropriate 
+                                <td width="30%" align="left" valign="baseline">*Please choose the appropriate 
                                 group you or your PI belong to:</td>
                                 <td width="70%" align="left" valign="baseline">
                                     <html:select property="group" styleClass="text">
