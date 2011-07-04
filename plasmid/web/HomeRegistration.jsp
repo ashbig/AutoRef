@@ -114,7 +114,7 @@
                             <tr></tr>
                             <tr class="formlabel"> 
                                 <td width="30%" align="left" valign="baseline">Please choose your PI:<br>
-                                    (*PI is required for HIP member, DF/HCC member, Harvard affiliate and Other academic groups)
+                                    (*PI is required for Harvard University, Harvard affiliate and Other academic groups)
                                 </td>
                                 <td width="70%" align="left" valign="baseline"> 
                                     <html:select property="piname" styleClass="text">
@@ -155,6 +155,12 @@
                                         <html:option value="">-- Please Select --</html:option>
                                         <html:options name="groups"/>
                                     </html:select>
+                                </td>        
+                            </tr>
+                            <tr class="formlabel"> 
+                                <td width="30%" align="left" valign="baseline">Please check here if you or your PI is a DF/HCC member:</td>
+                                <td width="70%" align="left" valign="baseline">
+                                    <html:checkbox property="ismember" styleClass="text">DF/HCC member</html:checkbox>
                                     <a href="PIList.html" target="_blank">check if your PI is a DF/HCC memeber</a>
                                 </td>        
                             </tr>

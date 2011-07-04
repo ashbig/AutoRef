@@ -12,17 +12,16 @@ import java.util.*;
  * @author  DZuo
  */
 public class User {
-
-    public static final String HIP = "HIP member";
-    public static final String DFHCC = "DF/HCC member";
+    public static final String HARVARD_UNIVERSITY = "Harvard University";
     public static final String HARVARD = "Harvard affiliate";
     public static final String ACADEMIC = "Other academic";
     public static final String NONPROFIT = "Other non-profit organization";
     public static final String OTHER = "Commercial";
-    public static final String PSI = "PSI Laboratory";
-    public static final String MEMBER[] = {DFHCC};
     public static final String INTERNAL = "Yes";
     public static final String EXTERNAL = "No";
+    public static final String MEMBER_Y = "Y";
+    public static final String MEMBER_N = "N";
+    
     private int userid;
     private String firstname;
     private String lastname;
@@ -42,6 +41,7 @@ public class User {
     private List addresses;
     private List orders;
     private List items;
+    private String ismember;
 
     /** Creates a new instance of User */
     public User() {
@@ -237,33 +237,45 @@ public class User {
     }
 
     public boolean isMember() {
-        for (int i = 0; i < User.MEMBER.length; i++) {
-            String g = User.MEMBER[i];
-            if (g.equals(group)) {
-                return true;
-            }
-        }
+        if(MEMBER_Y.equals(ismember))
+            return true;
         return false;
     }
 
     public boolean isInternalMember() {
-        if (isMember()) {
-            if (piemail.indexOf("harvard.edu") > 0) {
-                return true;
-            }
+        if(HARVARD_UNIVERSITY.equals(group)) {
+            return true;
         }
         return false;
     }
 
-    public static boolean isInternalMember(String piemail, String usergroup) {
-        for (int i = 0; i < User.MEMBER.length; i++) {
-            String g = User.MEMBER[i];
-            if (g.equals(usergroup)) {
-                if (piemail.indexOf("harvard.edu") > 0) {
-                    return true;
-                }
-            }
+    public static boolean isInternalMember(String usergroup) {
+        if(HARVARD_UNIVERSITY.equals(usergroup)) {
+            return true;
         }
         return false;
+    }
+
+    public String getIsmember() {
+        return ismember;
+    }
+
+    public void setIsmember(String ismember) {
+        this.ismember = ismember;
+    }
+
+    public void setIsmember(boolean b) {
+        if (b) {
+            this.setIsmember(MEMBER_Y);
+        } else {
+            this.setIsmember(MEMBER_N);
+        }
+    }
+    
+    public String getIsmemberString() {
+        if(User.MEMBER_Y.equals(ismember)) {
+            return "Yes";
+        }
+        return "No";
     }
 }

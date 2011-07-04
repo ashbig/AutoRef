@@ -50,6 +50,10 @@
     <td class="formlabel">PI Email:</td>
     <td class="text"><bean:write name="<%=Constants.USER_KEY%>" property="piemail"/></td>
   </tr>
+  <tr> 
+    <td class="formlabel">DF/HCC Member:</td>
+    <td class="text"><bean:write name="<%=Constants.USER_KEY%>" property="ismemberString"/></td>
+  </tr>
 </table>
 
 <p>

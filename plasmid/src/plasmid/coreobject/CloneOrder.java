@@ -101,6 +101,7 @@ public class CloneOrder {
     protected List clones;
     private int invoiceid;
     private String billingemail;
+    private String ismember;
     
     /** Creates a new instance of CloneOrder */
     public CloneOrder() {
@@ -367,5 +368,20 @@ public class CloneOrder {
 
     public void setBillingemail(String billingemail) {
         this.billingemail = billingemail;
+    }
+
+    public String getIsmember() {
+        return ismember;
+    }
+
+    public void setIsmember(String ismember) {
+        this.ismember = ismember;
+    }
+    
+    public String getIsmemberString() {
+        if(User.MEMBER_Y.equals(ismember)) {
+            return "Yes";
+        } 
+        return "No";
     }
 }

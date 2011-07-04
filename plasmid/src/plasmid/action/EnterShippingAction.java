@@ -133,6 +133,7 @@ public class EnterShippingAction extends InternalUserAction {
         }
         
         ((ProcessShippingForm)form).resetValues();
+        order.setInvoiceid(invoice.getInvoiceid());
         return mapping.findForward("success");
     }
 }

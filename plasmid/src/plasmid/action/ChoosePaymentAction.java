@@ -247,6 +247,12 @@ public class ChoosePaymentAction extends UserAction {
         if (errors.empty()) {
             if (Constants.PO.equals(payment)) {
                 manager.sendOrderEmail(order, user.getEmail());
+                order.setEmail(user.getEmail());
+                order.setPhone(user.getPhone());
+                order.setPiname(user.getPiname());
+                order.setPiemail(user.getPiemail());
+                order.setUsergroup(user.getGroup());
+                order.setIsmember(user.getIsmember());
                 return (mapping.findForward("success"));
             } else {
                 try {

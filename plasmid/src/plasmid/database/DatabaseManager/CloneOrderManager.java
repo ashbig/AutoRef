@@ -289,11 +289,12 @@ public class CloneOrderManager extends TableManager {
                 " shippingmethod,shippingaccount,trackingnumber,receiveconfirmationdate," +
                 " whoconfirmed,whoreceivedconfirmation,shippedcontainers,u.email,u.piname," +
                 " u.piemail,u.phone,c.isbatch,u.usergroup,c.comments,c.isaustralia," +
-                " c.ismta, c.isplatinum, c.costforplatinum, c.platinumservicestatus,u.firstname,u.lastname,billingemail" +
+                " c.ismta, c.isplatinum, c.costforplatinum, c.platinumservicestatus,u.firstname,"+
+                " u.lastname,billingemail,u.ismember" +
                 " from cloneorder c, userprofile u where c.userid=u.userid and c.orderid=" + orderid;
-                
-        String sql2 = "select invoiceid from invoice where orderid="+orderid;
-        
+
+        String sql2 = "select invoiceid from invoice where orderid=" + orderid;
+
         if (user != null) {
             sql = sql + " and u.userid=" + user.getUserid();
         }
@@ -347,6 +348,7 @@ public class CloneOrderManager extends TableManager {
                 String firstname = rs.getString(37);
                 String lastname = rs.getString(38);
                 String billingemail = rs.getString(39);
+                String ismember = rs.getString(40);
                 
                 order = new CloneOrder(orderid, date, st, ponumber, shippingto, billingto, shippingaddress, billingaddress, numofclones, numofcollection, costforclones, costforcollection, costforshipping, total, userid);
                 order.setShippingdate(shippingdate);
@@ -375,9 +377,10 @@ public class CloneOrderManager extends TableManager {
                 order.setFirstname(firstname);
                 order.setLastname(lastname);
                 order.setBillingemail(billingemail);
+                order.setIsmember(ismember);
                 
                 rs2 = t.executeQuery(sql2);
-                if(rs2.next()) {
+                if (rs2.next()) {
                     int invoiceid = rs2.getInt(1);
                     order.setInvoiceid(invoiceid);
                 }
@@ -516,20 +519,20 @@ public class CloneOrderManager extends TableManager {
 
     public List queryCloneOrders(List orderids, String orderDateFrom, String orderDateTo,
             String shippingDateFrom, String shippingDateTo, String status, List lastnames,
-            List groups, boolean isMember, String sort, String provider, boolean isMtamember) {
-        return queryCloneOrders(orderids, orderDateFrom, orderDateTo, shippingDateFrom, shippingDateTo, status, lastnames, groups, isMember, sort, provider, false, isMtamember);
+            boolean isMember, String sort, String provider, boolean isMtamember) {
+        return queryCloneOrders(orderids, orderDateFrom, orderDateTo, shippingDateFrom, shippingDateTo, status, lastnames, isMember, sort, provider, false, isMtamember);
     }
 
     public List queryCloneOrders(List orderids, String orderDateFrom, String orderDateTo,
             String shippingDateFrom, String shippingDateTo, String status, List lastnames,
-            List groups, boolean isMember, String sort, String provider, boolean isPI, boolean isMtamember) {
+            boolean isMember, String sort, String provider, boolean isPI, boolean isMtamember) {
         String sql = "select c.orderid,to_char(c.orderdate, 'YYYY-MM-DD hh:mm:ss'),c.orderstatus,c.ponumber,c.shippingto,c.billingto," +
                 " c.shippingaddress,c.billingaddress,c.numofclones,c.numofcollection,c.costforclones," +
                 " c.costforcollection,c.costforshipping,c.totalprice,c.userid,u.firstname,u.lastname," +
                 " c.shippingdate, c.whoshipped, c.shippingmethod,c.shippingaccount,c.trackingnumber," +
                 " c.receiveconfirmationdate, c.whoconfirmed,c.whoreceivedconfirmation,u.email," +
                 " c.shippedcontainers, u.piname, u.piemail, u.phone, c.isbatch, c.comments," +
-                " c.isaustralia, c.ismta, u.institution, c.isplatinum, c.costforplatinum,"+
+                " c.isaustralia, c.ismta, u.institution, c.isplatinum, c.costforplatinum," +
                 " c.platinumservicestatus, c.billingemail" +
                 " from cloneorder c, userprofile u where c.userid=u.userid";
         String sql2 = "select department from pi where name=?";
@@ -555,12 +558,8 @@ public class CloneOrderManager extends TableManager {
         if (lastnames != null) {
             sql += " and upper(u.lastname) in (" + StringConvertor.convertFromListToSqlString(lastnames) + ")";
         }
-        if (groups != null) {
-            if (isMember) {
-                sql += " and u.usergroup in (" + StringConvertor.convertFromListToSqlString(groups) + ")";
-            } else {
-                sql += " and u.usergroup not in (" + StringConvertor.convertFromListToSqlString(groups) + ")";
-            }
+        if (isMember) {
+            sql += " and u.ismember='"+User.MEMBER_Y+"'";
         }
         if (isMtamember) {
             sql += " and u.institution in (select name from institution where ismember='Y')";
@@ -981,7 +980,7 @@ public class CloneOrderManager extends TableManager {
             stmt.setString(8, invoice.getAccountnum());
             stmt.setInt(9, invoice.getOrderid());
             stmt.setString(10, invoice.getReasonforadj());
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss"); 
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
             java.util.Date dt = formatter.parse(invoice.getInvoicedate());
             stmt.setDate(11, new java.sql.Date(dt.getTime()));
             DatabaseTransaction.executeUpdate(stmt);
@@ -994,19 +993,23 @@ public class CloneOrderManager extends TableManager {
 
         return invoiceid;
     }
-    
+
     public Invoice queryInvoice(int invoiceid) throws Exception {
-        String sql = "select invoicenumber, to_char(invoicedate,'YYYY-MM-dd hh:mm:ss'), price, adjustment, payment, paymentstatus,"+
-                " paymenttype, account, orderid, comments, reason"+
-                " from invoice where invoiceid="+invoiceid;
-        
+        String sql = "select invoicenumber, to_char(invoicedate,'YYYY-MM-dd hh:mm:ss'),"+
+                " i.price, adjustment, i.payment, paymentstatus, paymenttype, account,"+
+                " i.orderid, i.comments, reason, u.piname, u.institution" +
+                " from invoice i, cloneorder c, userprofile u"+
+                " where i.orderid=c.orderid"+
+                " and c.userid = u.userid"+
+                " and i.invoiceid=" + invoiceid;
+
         DatabaseTransaction t = null;
         ResultSet rs = null;
         Invoice invoice = null;
         try {
             t = DatabaseTransaction.getInstance();
             rs = t.executeQuery(sql);
-            if(rs.next()) {
+            if (rs.next()) {
                 String invoicenumber = rs.getString(1);
                 String invoicedate = rs.getString(2);
                 double price = rs.getDouble(3);
@@ -1018,9 +1021,13 @@ public class CloneOrderManager extends TableManager {
                 int orderid = rs.getInt(9);
                 String comments = rs.getString(10);
                 String reason = rs.getString(11);
-                invoice = new Invoice(invoicenumber,invoicedate,price,adjustment,payment,paymentstatus,paymenttype,orderid,reason,account);
+                String piname = rs.getString(12);
+                String institution = rs.getString(13);
+                invoice = new Invoice(invoicenumber, invoicedate, price, adjustment, payment, paymentstatus, paymenttype, orderid, reason, account);
                 invoice.setComments(comments);
                 invoice.setInvoiceid(invoiceid);
+                invoice.setPiname(piname);
+                invoice.setInstitution(institution);
             }
         } catch (Exception ex) {
             handleError(ex, "Cannot query invoice.");
@@ -1029,6 +1036,117 @@ public class CloneOrderManager extends TableManager {
             DatabaseTransaction.closeResultSet(rs);
         }
         return invoice;
+    }
+
+    public List queryInvoices(List invoicenums, String invoiceDateFrom, String invoiceDateTo,
+            String invoiceMonth, String invoiceYear, List lastnames, List ponumbers,
+            String paymentstatus, String isinternal, String institution1, String institution2) {
+        String sql = "select invoiceid, to_char(invoicedate,'YYYY-MM-dd hh:mm:ss'), i.price," +
+                " adjustment, i.payment, paymentstatus, paymenttype, account, i.orderid, i.comments," +
+                " reason, u.piname, u.institution, invoicenumber" +
+                " from invoice i, cloneorder c, userprofile u, pi p" +
+                " where i.orderid=c.orderid" +
+                " and c.userid=u.userid" +
+                " and u.piname=p.name";
+
+        if (invoicenums != null) {
+            sql += " and i.invoicenumber in (" + StringConvertor.convertFromListToSqlString(invoicenums) + ")";
+        }
+        if (invoiceDateFrom != null) {
+            sql += " and i.invoicedate>=To_DATE('" + invoiceDateFrom + "', 'MM/DD/YYYY')";
+        }
+        if (invoiceDateTo != null) {
+            sql += " and i.invoicedate<=To_DATE('" + invoiceDateTo + "', 'MM/DD/YYYY')";
+        }
+        if (invoiceMonth != null) {
+            sql += " and to_char(i.invoicedate, 'FMMonth') = '" + invoiceMonth + "'";
+        }
+        if (invoiceYear != null) {
+            sql += " and to_char(i.invoicedate, 'YYYY')= '"+invoiceYear+"'";
+        }
+        if (lastnames != null) {
+            sql += " and upper(p.lastname) in (" + StringConvertor.convertFromListToSqlString(lastnames) + ")";
+        }
+        if (ponumbers != null) {
+            sql += " and account in (" + StringConvertor.convertFromListToSqlString(ponumbers) + ")";
+        }
+        if (paymentstatus != null) {
+            sql += " and paymentstatus='" + paymentstatus+"'";
+        }
+        if (institution1 != null) {
+            sql += " and u.institution='" + institution1+"'";
+        }
+        if (institution2 != null) {
+            sql += " and u.institution='" + institution2+"'";
+        }
+        if (isinternal != null) {
+            if(Constants.YES.equals(isinternal)) {
+                sql += " and u.usergroup='"+User.HARVARD_UNIVERSITY+"'";
+            } else {
+                sql += " and u.usergroup<>'"+User.HARVARD_UNIVERSITY+"'";
+            }
+        }
+
+        sql = sql + " order by i.invoiceid desc";
+
+        DatabaseTransaction t = null;
+        ResultSet rs = null;
+
+        try {
+            t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            List invoices = new ArrayList();
+            while (rs.next()) {
+                int invoiceid = rs.getInt(1);
+                String invoicedate = rs.getString(2);
+                double price = rs.getDouble(3);
+                double adjustment = rs.getDouble(4);
+                double payment = rs.getDouble(5);
+                String status = rs.getString(6);
+                String paymenttype = rs.getString(7);
+                String account = rs.getString(8);
+                int orderid = rs.getInt(9);
+                String comments = rs.getString(10);
+                String reason = rs.getString(11);
+                String piname = rs.getString(12);
+                String institution = rs.getString(13);
+                String invoicenumber = rs.getString(14);
+                Invoice invoice = new Invoice(invoicenumber, invoicedate, price, adjustment, payment, status, paymenttype, orderid, reason, account);
+                invoice.setComments(comments);
+                invoice.setInvoiceid(invoiceid);
+                invoice.setPiname(piname);
+                invoice.setInstitution(institution);
+                invoices.add(invoice);
+            }
+            return invoices;
+        } catch (Exception ex) {
+            System.out.println(ex);
+            handleError(ex, "Cannot query invoice.");
+            return null;
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+    }
+
+    public boolean updateInvoice(int invoiceid, String paymentstatus, String accountnum, double payment, String comments) {
+        String sql = "update invoice set paymentstatus=?,"+
+                " account=?, payment=?, comments=? where invoiceid=?";
+        PreparedStatement stmt = null;
+        try {
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, paymentstatus);
+            stmt.setString(2, accountnum);
+            stmt.setDouble(3, payment);
+            stmt.setString(4, comments);
+            stmt.setInt(5, invoiceid);
+            DatabaseTransaction.executeUpdate(stmt);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
+        } finally {
+            DatabaseTransaction.closeStatement(stmt);
+        }
+        return true;
     }
     
     public static void main(String args[]) {

@@ -79,8 +79,8 @@ public class CheckoutContinueAction extends UserAction {
         
         int cloneQuantity = m.getTotalCloneQuantity();
         int collectionQuantity = m.getTotalCollectionQuantity();
-        double clonePrice = m.getTotalClonePrice(user.getGroup());
-        double collectionPrice = m.getTotalCollectionPrice(collections, user.getGroup());
+        double clonePrice = m.getTotalClonePrice(user);
+        double collectionPrice = m.getTotalCollectionPrice(collections, user);
         int totalQuantity = m.getTotalQuantity();
         double totalPrice = clonePrice+collectionPrice;
         int numOfClonesInCollections = m.getNumOfClonesInCollections();

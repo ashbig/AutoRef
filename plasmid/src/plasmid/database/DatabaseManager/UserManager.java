@@ -24,8 +24,8 @@ public class UserManager extends TableManager {
     
     public boolean insertUser(User user) {
         String sql = "insert into userprofile(userid,firstname,lastname,phone,email,"+
-        " ponumber,institution,dateadded,piname,usergroup,password,isinternal,piemail)"+
-        " values(?,?,?,?,?,?,?,sysdate,?,?,?,?,?)";
+        " ponumber,institution,dateadded,piname,usergroup,password,isinternal,piemail,ismember)"+
+        " values(?,?,?,?,?,?,?,sysdate,?,?,?,?,?,?)";
         PreparedStatement stmt = null;
        
         try {
@@ -42,6 +42,7 @@ public class UserManager extends TableManager {
             stmt.setString(10, user.getPassword());
             stmt.setString(11, User.EXTERNAL);
             stmt.setString(12, user.getPiemail());
+            stmt.setString(13, user.getIsmember());
             DatabaseTransaction.executeUpdate(stmt);
         } catch (Exception ex) {
             handleError(ex, "Cannot insert user into database.");
@@ -146,7 +147,7 @@ public class UserManager extends TableManager {
         User user = null;
         String sql = "select userid,firstname,lastname,email,phone,"+
         " ponumber,institution,dateadded,datemod,modifier,"+
-        " piname,usergroup,isinternal,piemail,password"+
+        " piname,usergroup,isinternal,piemail,password,ismember"+
         " from userprofile where upper(email)=upper(?)";
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -169,8 +170,10 @@ public class UserManager extends TableManager {
                 String isinternal = rs.getString(13);
                 String piemail = rs.getString(14);
                 String password = rs.getString(15);
+                String ismember = rs.getString(16);
                 
                 user = new User(userid,firstname,lastname,email,phone,ponumber, institution,dateadded,datemod,modifier, pi,usergroup, password,isinternal,piemail);
+                user.setIsmember(ismember);
             }
         } catch (Exception ex) {
             handleError(ex, "Database error occured.");
@@ -247,7 +250,7 @@ public class UserManager extends TableManager {
     public User authenticate(String email, String password) {
         String sql = "select userid,firstname,lastname,email,phone,"+
         " ponumber,institution,dateadded,datemod,modifier,"+
-        " piname,usergroup,isinternal,piemail"+
+        " piname,usergroup,isinternal,piemail,ismember"+
         " from userprofile where upper(email)=upper(?)"+
         " and password=?";
         PreparedStatement stmt = null;
@@ -272,8 +275,9 @@ public class UserManager extends TableManager {
                 String usergroup = rs.getString(12);
                 String isinternal = rs.getString(13);
                 String piemail = rs.getString(14);
-                
+                String ismember = rs.getString(15);
                 user = new User(userid,firstname,lastname,email,phone,ponumber, institution,dateadded,datemod,modifier, pi,usergroup, password,isinternal,piemail);
+                user.setIsmember(ismember);
             }
         } catch (Exception ex) {
             handleError(ex, "Database error occured.");
@@ -599,7 +603,7 @@ public class UserManager extends TableManager {
         
         String sql = "update userprofile"+
         " set firstname=?,lastname=?,email=?,phone=?,password=?,institution=?,"+
-        " datemod=sysdate,piname=?,usergroup=?,piemail=?"+
+        " datemod=sysdate,piname=?,usergroup=?,piemail=?,ismember=?"+
         " where userid=?";
         
         PreparedStatement stmt = null;
@@ -615,6 +619,7 @@ public class UserManager extends TableManager {
             stmt.setString(8, user.getGroup());
             stmt.setString(9, user.getPiemail());
             stmt.setInt(10, user.getUserid());
+            stmt.setString(11, user.getIsmember());
             DatabaseTransaction.executeUpdate(stmt);
         } catch (Exception ex) {
             handleError(ex, "Cannot update userprofile.");

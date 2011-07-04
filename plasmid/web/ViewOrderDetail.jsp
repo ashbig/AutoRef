@@ -64,8 +64,22 @@
   <tr> 
     <td class="formlabel">User Group:</td>
     <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="usergroup"/></td>
+    <td class="formlabel">DF/HCC Member:</td>
+    <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="ismemberString"/></td>
+</tr>
+<tr>
     <td class="formlabel"></td>
+    <logic:equal name="<%=Constants.CLONEORDER%>" property="invoiceid" value="0">
     <td class="text"></td>
+    </logic:equal>
+    <logic:notEqual name="<%=Constants.CLONEORDER%>" property="invoiceid" value="0">
+        <html:form action="ViewInvoiceDetail.do">
+            <input type="hidden" name="invoiceid" value="<bean:write name="<%=Constants.CLONEORDER%>" property="invoiceid"/>"/>
+            <input type="hidden" name="orderid" value="<bean:write name="<%=Constants.CLONEORDER%>" property="orderid"/>"/>
+            <input type="hidden" name="isdownload" value="1"/>
+            <td class="text"><html:submit value="View Invoice"/></td>
+        </html:form>
+    </logic:notEqual>
   </tr>
 </table>
 
@@ -167,6 +181,12 @@
     <td class="text"><pre><bean:write name="<%=Constants.CLONEORDER%>" property="shippingAddress"/></pre></td>
     <td class="formlabel">Address:</td>
     <td class="text"><pre><bean:write name="<%=Constants.CLONEORDER%>" property="billingAddress"/></pre></td>
+  </tr>
+  <tr> 
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td class="formlabel">Email:</td>
+    <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="billingemail"/></td>
   </tr>
 </table>
 

@@ -1,0 +1,92 @@
+<%@ page language="java" %>
+<%@ page errorPage="ProcessError.do"%>
+
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ page import="plasmid.Constants" %> 
+<%@ page import="plasmid.coreobject.Invoice" %>
+
+<html>
+    <head>
+        <title>PlasmID Database</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+        <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
+    </head>
+    
+    <body>
+        <jsp:include page="homeTitle.jsp" />
+        <table width="1000" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
+            <tr> 
+                <td width="17%" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle"> 
+                    <jsp:include page="menuHome.jsp" />
+                </td>
+                <td width="83%" align="left" valign="top">
+                    <jsp:include page="invoiceTitle.jsp" />
+                    
+                    <logic:present name="ordermessage">
+                        <p class="text"><bean:write name="ordermessage"/></p>
+                    </logic:present>
+                    <html:errors/>
+                    
+                    <html:form action="UpdateInvoicePayment.do">
+                        <html:hidden name="<%=Constants.INVOICE%>" property="invoiceid"/>
+                        <table width="100%" border="0">
+                            <tr> 
+                                <td class="formlabel">Invoice Number:</td>
+                                <td class="text"><bean:write name="<%=Constants.INVOICE%>" property="invoicenum"/></td>
+                                <td class="formlabel">Invoice Date:</td>
+                                <td class="text"><bean:write name="<%=Constants.INVOICE%>" property="invoicedate"/></td>
+                            </tr>
+                            <tr> 
+                                <td class="formlabel">PI:</td>
+                                <td class="text"><bean:write name="<%=Constants.INVOICE%>" property="piname"/></td>
+                                <td class="formlabel">Institution:</td>
+                                <td class="text"><bean:write name="<%=Constants.INVOICE%>" property="institution"/></td>
+                            </tr>
+                            <tr> 
+                                <td class="formlabel">Price:</td>
+                                <td class="text"><bean:write name="<%=Constants.INVOICE%>" property="priceString"/></td>
+                                <td class="formlabel">Adjustment:</td>
+                                <td class="text"><bean:write name="<%=Constants.INVOICE%>" property="adjustmentString"/></td>
+                            </tr>
+                            <tr> 
+                                <td class="formlabel">Payment Due:</td>
+                                <td class="text"><bean:write name="<%=Constants.INVOICE%>" property="dueString"/></td>
+                                <td class="formlabel">Payment:</td>
+                                <td class="text">$<html:text styleClass="text" name="<%=Constants.INVOICE%>" property="payment"/></td>
+                            </tr>
+                            <tr> 
+                                <td class="formlabel">Payment Status:</td>
+                                <td class="text">
+                                    <html:select styleClass="itemtext" name="<%=Constants.INVOICE%>" property="paymentstatus">
+                                        <html:option value="<%=Invoice.PAYMENTSTATUS_PAID%>"/>
+                                        <html:option value="<%=Invoice.PAYMENTSTATUS_UNPAID%>"/>
+                                        <html:option value="<%=Invoice.PAYMENTSTATUS_PARTIAL%>"/>
+                                    </html:select>
+                                </td>
+                                <td class="formlabel">PO Number:</td>
+                                <td class="text"><html:text name="<%=Constants.INVOICE%>" property="accountnum"/></td>
+                            </tr>
+                            <tr> 
+                                <td class="formlabel">Reason For Adjustment:</td>
+                                <td class="text"><bean:write name="<%=Constants.INVOICE%>" property="reasonforadj"/></td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr> 
+                                <td class="formlabel" valign="top">Comments:</td>
+                                <td colspan="3" class="text"><html:textarea cols="60" rows="10" name="<%=Constants.INVOICE%>" property="comments"/></td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td class="formlabel"><html:submit value="Submit"/></td>
+                            </tr>
+                        </table>
+                    </html:form>
+                    
+                </td>
+            </tr>
+        </table>
+    <jsp:include page="footer.jsp" /></body>
+</html>

@@ -106,6 +106,12 @@
         <bean:write name="registrationForm" property="group"/>
     </td>
   </tr>
+  <tr class="formlabel"> 
+    <td width="22%" align="left" valign="baseline">DF/HCC member:</td>
+    <td width="78%" align="left" valign="baseline">
+        <bean:write name="registrationForm" property="member"/>
+    </td>
+  </tr>
 
   <tr class="formlabel"> 
     <td width="22%" align="right">&nbsp;</td>

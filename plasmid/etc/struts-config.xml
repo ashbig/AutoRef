@@ -144,6 +144,10 @@
                     type="plasmid.form.ViewPlatinumResultForm"/>
         <form-bean      name="viewInvoiceForm"
                     type="plasmid.form.ViewInvoiceForm"/>
+        <form-bean      name="searchInvoiceForm"
+                    type="plasmid.form.SearchInvoiceForm"/>
+        <form-bean      name="invoiceForm"
+                    type="plasmid.form.InvoiceForm"/>
                     
     </form-beans>
 
@@ -291,6 +295,12 @@
                name="checkoutForm"
               input="/ChooseShipping.jsp">
             <forward  name="success"  path="/Checkout.jsp"/>
+        </action>
+        <action     path="/EnterInvoicePayment"
+                type="plasmid.action.EnterInvoicePaymentAction"
+               name="invoiceForm"
+              input="/EnterInvoicePayment.do">
+            <forward  name="success"  path="/EnterInvoicePayment.jsp"/>
         </action>
         <action     path="/EnterPlatinumResult"
                 type="plasmid.action.EnterPlatinumResultAction"
@@ -486,6 +496,13 @@
               input="/PrepareRegistration.do">
             <forward  name="success"   path="/HomeRegistration.jsp"/>
         </action>
+        <action    path="/PrepareSearchInvoice"
+               type="plasmid.action.PrepareSearchInvoiceAction"
+               name="searchInvoiceForm"
+               validate="false"
+              input="/PrepareSearchInvoice.do">
+            <forward  name="success"   path="/SearchInvoice.jsp"/>
+        </action>
         <action    path="/PrintLabels"
                type="plasmid.action.PrintLabelsAction"
                name="printLabelsForm">
@@ -529,6 +546,14 @@
               input="/SearchClone.jsp">
             <forward  name="success"   path="/DisplayResults.jsp"/>
             <forward  name="summary"   path="/DisplayResultSummary.jsp"/>
+        </action>
+        <action    path="/SearchInvoice"
+               type="plasmid.action.SearchInvoiceAction"
+               name="searchInvoiceForm"
+               scope="request"
+              input="/PrepareSearchInvoice.do">
+            <forward  name="success"   path="/InvoiceList.jsp"/>
+            <forward  name="success_empty"   path="/InvoiceListEmpty.jsp"/>
         </action>
         <action    path="/SearchOrderInput"
                type="plasmid.action.SearchOrderInputAction"
@@ -595,6 +620,13 @@
             <forward  name="success_save"   path="/Account.jsp"/>
             <forward  name="success_checkout"   path="/Checkout.do"/>
         </action>
+        <action    path="/UpdateInvoicePayment"
+               type="plasmid.action.UpdateInvoicePaymentAction"
+               name="invoiceForm"
+              input="/EnterInvoicePayment.jsp">
+            <forward  name="success"   path="/ViewInvoice.jsp"/>
+            <forward  name="success_message"   path="/UpdateInvoicePaymentMessage.jsp"/>
+        </action>
         <action    path="/UploadResultFile"
                type="plasmid.action.UploadResultFileAction"
                name="enterResultsForm"
@@ -636,6 +668,7 @@
                name="viewInvoiceForm"
                scope="request"
               input="/ViewInvoiceDetail.do">
+            <forward  name="success"   path="/ViewInvoice.jsp"/>
         </action>
         <action    path="/ViewOrderClones"
                type="plasmid.action.ViewOrderClonesAction"

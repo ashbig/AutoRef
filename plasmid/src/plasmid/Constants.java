@@ -25,6 +25,8 @@ public class Constants {
     public static final String ORDERID = "Order ID";
     public static final String CLONEORDER = "Clone Order";
     public static final String ORDERS = "Clone Orders";
+    public static final String INVOICES = "invoices";
+    public static final String INVOICE = "invoice";
     public static final String ACADEMIC = User.ACADEMIC;
     public static final String LABELS = "labels";
     public static final String PRINT_LABEL_MESSAGE = "PRINT_LABEL_MESSAGE";
@@ -134,6 +136,9 @@ public class Constants {
     public static final String ISPLATINUM_N = "No";
     public static final Double PLATINUM_SERVICE_COST = 10.0;
     public static final String LABEL_SEQ_ANALYSIS = "Process Sequence Analysis";
+    
+    public static final String YES = "Yes";
+    public static final String NO = "No";
     
     /** Creates a new instance of Constants */
     public Constants() {

@@ -227,18 +227,18 @@ public class OrderProcessManager {
         return n;
     }
 
-    public double getTotalClonePrice(String group) {
+    public double getTotalClonePrice(User user) {
         ClonePriceCalculator calculator = new ClonePriceCalculator();
-        return calculator.calculateClonePrice(getTotalCloneQuantity(), group);
+        return calculator.calculateClonePrice(getTotalCloneQuantity(), user);
     }
 
-    public double getTotalCollectionPrice(List collectionList, String group) {
+    public double getTotalCollectionPrice(List collectionList, User user) {
         ClonePriceCalculator calculator = new ClonePriceCalculator();
 
         double price = 0.0;
         for (int i = 0; i < collectionList.size(); i++) {
             CollectionInfo info = (CollectionInfo) collectionList.get(i);
-            price = price + calculator.calculatePriceForCollection(info, group);
+            price = price + calculator.calculatePriceForCollection(info, user);
         }
 
         return price;
@@ -1023,6 +1023,7 @@ public class OrderProcessManager {
             if (manager.updateOrderWithShipping(order)) {
                 int invoiceid = manager.addInvoice(invoice);
                 if (invoiceid > 0) {
+                    invoice.setInvoiceid(invoiceid);
                     DatabaseTransaction.commit(conn);
                     return true;
                 } else {
@@ -1304,20 +1305,14 @@ public class OrderProcessManager {
             if (lastnames != null && lastnames.trim().length() > 0) {
                 lastnameList = sc.convertFromStringToCapList(lastnames.trim(), ",");
             }
-            List groups = null;
+            //List groups = null;
             boolean isMtamember = false;
-            boolean isMember = true;
+            boolean isMember = false;
             if (Constants.MTAMEMBER.equals(organization)) {
                 isMtamember = true;
             } else {
-                if (!Constants.ALL.equals(organization)) {
-                    groups = new ArrayList();
-                    for (int i = 0; i < User.MEMBER.length; i++) {
-                        groups.add(User.MEMBER[i]);
-                    }
-                    if (Constants.NONMEMBER.equals(organization)) {
-                        isMember = false;
-                    }
+                if (Constants.MEMBER.equals(organization)) {
+                    isMember = true;
                 }
             }
 
@@ -1340,8 +1335,69 @@ public class OrderProcessManager {
             if (Constants.SORTBY_INSTITUTION.equals(sort)) {
                 sortby = "institution";
             }
-            List cloneorders = manager.queryCloneOrders(orderidList, orderDateFrom, orderDateTo, shippingDateFrom, shippingDateTo, status, lastnameList, groups, isMember, sortby, provider, isPI, isMtamember);
+            List cloneorders = manager.queryCloneOrders(orderidList, orderDateFrom, orderDateTo, shippingDateFrom, shippingDateTo, status, lastnameList, isMember, sortby, provider, isPI, isMtamember);
             return cloneorders;
+        } catch (Exception ex) {
+            DatabaseTransaction.rollback(conn);
+            if (Constants.DEBUG) {
+                System.out.println(ex);
+            }
+            return null;
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
+        }
+    }
+
+    public List getInvoices(String invoicenums, String invoiceDateFrom, String invoiceDateTo,
+            String invoiceMonth, String invoiceYear, String pinames, String ponumbers,
+            String paymentstatus, String isinternal, String institution1, String institution2) {
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        StringConvertor sc = new StringConvertor();
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            CloneOrderManager manager = new CloneOrderManager(conn);
+            List invoicenumList = null;
+            if (invoicenums != null && invoicenums.trim().length() > 0) {
+                invoicenumList = sc.convertFromStringToList(invoicenums.trim(), ",");
+            }
+            if (invoiceDateFrom != null && invoiceDateFrom.trim().length() == 0) {
+                invoiceDateFrom = null;
+            }
+            if (invoiceDateTo != null && invoiceDateTo.trim().length() == 0) {
+                invoiceDateTo = null;
+            }
+            if (invoiceMonth != null && invoiceMonth.trim().length() == 0) {
+                invoiceMonth = null;
+            }
+            if (invoiceYear != null && invoiceYear.trim().length() == 0) {
+                invoiceYear = null;
+            }
+            List lastnameList = null;
+            if (pinames != null && pinames.trim().length() > 0) {
+                lastnameList = sc.convertFromStringToCapList(pinames.trim(), ",");
+            }
+            List ponumberList = null;
+            if (ponumbers != null && ponumbers.trim().length() > 0) {
+                ponumberList = sc.convertFromStringToList(ponumbers.trim(), ",");
+            }
+            if (Constants.ALL.equals(paymentstatus)) {
+                paymentstatus = null;
+            }
+            if (Constants.ALL.equals(isinternal)) {
+                isinternal = null;
+            }
+            if (institution1 != null && institution1.trim().length() == 0) {
+                institution1 = null;
+            }
+            if (institution2 != null && institution2.trim().length() == 0) {
+                institution2 = null;
+            }
+            List invoices = manager.queryInvoices(invoicenumList, invoiceDateFrom, invoiceDateTo,
+                    invoiceMonth, invoiceYear, lastnameList, ponumberList, paymentstatus,
+                    isinternal, institution1, institution2);
+            return invoices;
         } catch (Exception ex) {
             DatabaseTransaction.rollback(conn);
             if (Constants.DEBUG) {
@@ -1747,7 +1803,7 @@ public class OrderProcessManager {
             cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
             table.addCell(cell);
             table.addCell(PdfEditor.makeSmall("Payment"));
-            cell = new PdfPCell(PdfEditor.makeSmall("($" + invoice.getPayment() + ")"));
+            cell = new PdfPCell(PdfEditor.makeSmall(invoice.getPaymentString()));
             cell.setColspan(2);
             cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
             table.addCell(cell);
@@ -1874,7 +1930,7 @@ public class OrderProcessManager {
             cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
             table.addCell(cell);
             table.addCell(PdfEditor.makeSmall("Payment"));
-            cell = new PdfPCell(PdfEditor.makeSmall("($" + invoice.getPayment() + ")"));
+            cell = new PdfPCell(PdfEditor.makeSmall(invoice.getPaymentString()));
             cell.setColspan(2);
             cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
             table.addCell(cell);
@@ -1894,7 +1950,7 @@ public class OrderProcessManager {
     }
 
     public void displayInvoice(OutputStream file, CloneOrder order, Invoice invoice) {
-        if (User.isInternalMember(order.getPiemail(), order.getUsergroup())) {
+        if (User.isInternalMember(order.getUsergroup())) {
             printInternalInvoice(file, order, invoice);
         } else {
             printExternalInvoice(file, order, invoice);
@@ -1908,7 +1964,7 @@ public class OrderProcessManager {
         String text = "Your order " + orderid + " has been shipped. Please log in your account for shipping details. If you have requested the Platinum Clone Service, QC data for your order is now available by logging into your account at http://plasmid.med.harvard.edu/PLASMID/Login.jsp.";
         Mailer.sendMessage(to, Constants.EMAIL_FROM, subject, text);
 
-        if (!User.isInternalMember(order.getPiemail(), order.getUsergroup())) {
+        if (!User.isInternalMember(order.getUsergroup())) {
             String filename = Constants.TMP + "Invoice_" + orderid + ".pdf";
             File f1 = new File(filename);
             OutputStream file = new FileOutputStream(f1);

@@ -76,6 +76,7 @@ public class RegistrationAction extends Action {
         String institution = null;
         boolean isnewinstitution = false;
         Institution institute = null;
+        boolean ismember = ((RegistrationForm) form).isIsmember();
         
         ((RegistrationForm)form).setFirst(false);
         
@@ -148,7 +149,7 @@ public class RegistrationAction extends Action {
         String pname = null;
         String pemail = null;
         if (pi == null || pi.trim().length() < 1) {
-            if (group.equals(User.HIP) || group.equals(User.DFHCC) || group.equals(User.HARVARD) || group.equals(User.ACADEMIC)) {
+            if (group.equals(User.HARVARD_UNIVERSITY) || group.equals(User.HARVARD) || group.equals(User.ACADEMIC)) {
                 if (manager.piExist(pifirstname, pilastname, piemail)) {
                     errors.add(ActionErrors.GLOBAL_ERROR,
                             new ActionError("error.pi.exist"));
@@ -208,6 +209,7 @@ public class RegistrationAction extends Action {
             user.setPhone(phone);
             user.setPiname(pname);
             user.setPiemail(pemail);
+            user.setIsmember(ismember);
             if (!manager.updateUserProfile(user)) {
                 DatabaseTransaction.rollback(conn);
                 DatabaseTransaction.closeConnection(conn);
@@ -229,6 +231,7 @@ public class RegistrationAction extends Action {
             }
 
             User user = new User(id, firstname.trim(), lastname.trim(), email.trim(), phone, institution, null, pname, group, password, User.EXTERNAL, pemail);
+            user.setIsmember(ismember);
             if (!manager.insertUser(user)) {
                 DatabaseTransaction.rollback(conn);
                 DatabaseTransaction.closeConnection(conn);

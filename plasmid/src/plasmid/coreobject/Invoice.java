@@ -29,6 +29,8 @@ public class Invoice {
     private String updatedby;
     private String updatedon;
     private int orderid;
+    private String piname;
+    private String institution;
 
     public Invoice(String invoicenum, String invoicedate, double price, double adjustment, double payment,
             String paymentstatus, String paymenttype, int orderid, String reason, String account) {
@@ -156,8 +158,19 @@ public class Invoice {
         this.reasonforadj = reasonforadj;
     }
 
+    public String getPriceString() {
+        return "$" + price;
+    }
+
+    public String getPaymentString() {
+        if(payment>0.0) {
+            return "($" + payment + ")";
+        }
+        return "$"+payment;
+    }
+
     public String getAdjustmentString() {
-        if (adjustment > 0.0) {
+        if (adjustment >= 0.0) {
             return "$" + adjustment;
         } else {
             return "($" + Math.abs(adjustment) + ")";
@@ -170,10 +183,26 @@ public class Invoice {
 
     public String getDueString() {
         double due = getDue();
-        if (due > 0.0) {
+        if (due >= 0.0) {
             return "$" + due;
         } else {
             return "($" + Math.abs(due) + ")";
         }
+    }
+
+    public String getPiname() {
+        return piname;
+    }
+
+    public void setPiname(String piname) {
+        this.piname = piname;
+    }
+
+    public String getInstitution() {
+        return institution;
+    }
+
+    public void setInstitution(String institution) {
+        this.institution = institution;
     }
 }
