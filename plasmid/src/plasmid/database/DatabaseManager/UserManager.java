@@ -618,8 +618,8 @@ public class UserManager extends TableManager {
             stmt.setString(7, user.getPiname());
             stmt.setString(8, user.getGroup());
             stmt.setString(9, user.getPiemail());
-            stmt.setInt(10, user.getUserid());
-            stmt.setString(11, user.getIsmember());
+            stmt.setString(10, user.getIsmember());
+            stmt.setInt(11, user.getUserid());
             DatabaseTransaction.executeUpdate(stmt);
         } catch (Exception ex) {
             handleError(ex, "Cannot update userprofile.");
