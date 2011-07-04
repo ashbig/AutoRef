@@ -109,6 +109,7 @@ public class PrepareRegistrationAction extends Action {
             ((RegistrationForm)form).setPassword(user.getPassword());
             ((RegistrationForm)form).setInstitution1(user.getInstitution());
             ((RegistrationForm)form).setInstitution2(user.getInstitution());
+            ((RegistrationForm)form).setIsmember(user.isMember());
         }
         return (mapping.findForward("success"));        
     }    
