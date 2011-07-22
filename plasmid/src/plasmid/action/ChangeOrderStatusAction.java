@@ -81,7 +81,7 @@ public class ChangeOrderStatusAction extends InternalUserAction {
             orders.add(order);
             
             if(CloneOrder.TROUBLESHOOTING.equals(s)) {
-                String email = order.getEmail();
+                String email = manager.getCloneOrder(id).getEmail();
                 manager.sendTroubleshootingEmail(id, email);
             }
         }
