@@ -74,6 +74,7 @@ public class ProcessShippingAction  extends InternalUserAction {
         ((ProcessShippingForm)form).setTrackingNumber(order.getTrackingnumber());
         //((ProcessShippingForm)form).setShippingCharge(order.getCostforshipping());
         ((ProcessShippingForm)form).setComments(order.getComments());
+        ((ProcessShippingForm)form).setNewAccount(order.getPonumber());
         
         List shippingMethods = DefTableManager.getVocabularies("shippingmethod", "method");
         List shippingStatus = new ArrayList();

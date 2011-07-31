@@ -862,7 +862,8 @@ public class CloneOrderManager extends TableManager {
                 " costforshipping=?," +
                 " totalprice=?," +
                 " shippedcontainers=?," +
-                " comments=?" +
+                " comments=?," +
+                " ponumber=?" +
                 " where orderid=?";
         PreparedStatement stmt = null;
 
@@ -878,7 +879,8 @@ public class CloneOrderManager extends TableManager {
             stmt.setDouble(8, order.getPrice());
             stmt.setString(9, order.getShippedContainers());
             stmt.setString(10, order.getComments());
-            stmt.setInt(11, order.getOrderid());
+            stmt.setString(11, order.getPonumber());
+            stmt.setInt(12, order.getOrderid());
             DatabaseTransaction.executeUpdate(stmt);
         } catch (Exception ex) {
             handleError(ex, "Cannot update order with shipping for orderid: " + order.getOrderid());
@@ -1131,7 +1133,10 @@ public class CloneOrderManager extends TableManager {
     public boolean updateInvoice(int invoiceid, String paymentstatus, String accountnum, double payment, String comments) {
         String sql = "update invoice set paymentstatus=?,"+
                 " account=?, payment=?, comments=? where invoiceid=?";
+        String sql2 = "update cloneorder set ponumber=?"+
+                " where orderid in (select orderid from invoice where invoiceid=?)";
         PreparedStatement stmt = null;
+        PreparedStatement stmt2 = null;
         try {
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, paymentstatus);
@@ -1140,11 +1145,17 @@ public class CloneOrderManager extends TableManager {
             stmt.setString(4, comments);
             stmt.setInt(5, invoiceid);
             DatabaseTransaction.executeUpdate(stmt);
+            
+            stmt2 = conn.prepareStatement(sql2);
+            stmt2.setString(1, accountnum);
+            stmt2.setInt(2, invoiceid);
+            DatabaseTransaction.executeUpdate(stmt2);
         } catch (Exception ex) {
             ex.printStackTrace();
             return false;
         } finally {
             DatabaseTransaction.closeStatement(stmt);
+            DatabaseTransaction.closeStatement(stmt2);
         }
         return true;
     }

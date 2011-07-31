@@ -1698,7 +1698,7 @@ public class OrderProcessManager {
         return invoice;
     }
 
-    public Invoice generateInvoice(CloneOrder order, String reason, double adjustment) {
+    public Invoice generateInvoice(CloneOrder order, String reason, double adjustment, String newAccount) {
         int orderid = order.getOrderid();
         String invoicenum = Invoice.INVOICE_PREFIX + orderid;
         double payment = 0.0;
@@ -1712,7 +1712,7 @@ public class OrderProcessManager {
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         String date = dateFormat.format(calendar.getTime());
-        Invoice invoice = new Invoice(invoicenum, date, order.getPrice(), adjustment, payment, paymentstatus, paymenttype, orderid, reason, order.getPonumber());
+        Invoice invoice = new Invoice(invoicenum, date, order.getPrice(), adjustment, payment, paymentstatus, paymenttype, orderid, reason, newAccount);
         return invoice;
     }
 
@@ -2006,7 +2006,7 @@ public class OrderProcessManager {
 
             OrderProcessManager manager = new OrderProcessManager();
             CloneOrder order = manager.getCloneOrder(user, 7429);
-            Invoice invoice = manager.generateInvoice(order, "Reason for refund goes here.", -10.0);
+            Invoice invoice = manager.generateInvoice(order, "Reason for refund goes here.", -10.0, "newponumber");
             invoice.setInvoiceid(101);
 
             OutputStream file = new FileOutputStream(new File(filename));

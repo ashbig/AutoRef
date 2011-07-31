@@ -57,6 +57,7 @@ public class EnterShippingAction extends InternalUserAction {
         String status = ((ProcessShippingForm)form).getShippingStatus();
         double adjustment = ((ProcessShippingForm)form).getAdjustment();
         String reason = ((ProcessShippingForm)form).getReason();
+        String newAccount = ((ProcessShippingForm)form).getNewAccount();
         
         OrderProcessManager manager = new OrderProcessManager();
         CloneOrder order = manager.getCloneOrder(user, orderid);
@@ -103,6 +104,7 @@ public class EnterShippingAction extends InternalUserAction {
             return (new ActionForward(mapping.getInput()));
         }
         */
+        order.setPonumber(newAccount);
         order.setStatus(status);
         order.setShippingmethod(shippingMethod);
         order.setShippingdate(shippingDate);
@@ -114,7 +116,7 @@ public class EnterShippingAction extends InternalUserAction {
         //order.setShippedContainers(sc.convertFromListToString(labelList));
         order.setComments(comments);
 
-        Invoice invoice = manager.generateInvoice(order, reason, adjustment);
+        Invoice invoice = manager.generateInvoice(order, reason, adjustment, newAccount);
         
         if(!manager.updateShipping(order, invoice)) {
             errors.add(ActionErrors.GLOBAL_ERROR,

@@ -39,6 +39,12 @@
     <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="ponumber"/></td>
   </tr>
   <tr> 
+    <td class="formlabel">&nbsp;</td>
+    <td class="text">&nbsp;</td>
+    <td class="formlabel">New PO Number:</td>
+    <td class="text"><html:text styleClass="text" maxlength="100" property="newAccount"/></td>
+  </tr>
+  <tr> 
     <td class="formlabel">Platinum Service:</td>
     <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="isplatinum"/></td>
     <td class="formlabel">Platinum Service Status:</td>

@@ -35,6 +35,9 @@
           <td height="15" valign="middle"><a href="SearchOrderInput.jsp" class="leftnavtext">Search Orders</a></td>
         </tr>
         <tr> 
+          <td height="15" valign="middle"><a href="PrepareSearchInvoice.do" class="leftnavtext">Search Invoices</a></td>
+        </tr>
+        <tr> 
           <td height="15" valign="middle"><a href="pReceiveSearch.jsp" class="leftnavtext">Receive Plasmids</a></td>
         </tr>
         <tr> 
