@@ -84,7 +84,7 @@
                                 <td colspan="4" class="itemtext"><html:text property="pinames" size="50"/></td>
                             </tr>
                             <tr>
-                                <td class="formlabel">PO Number (separate each PO by comma [,]):</td>
+                                <td class="formlabel">PO/Billing Number (separate each number by comma [,]):</td>
                                 <td colspan="4" class="itemtext"><html:text property="ponumbers" size="50"/></td>
                             </tr>
                             <tr>

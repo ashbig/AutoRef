@@ -65,7 +65,7 @@
                                         <html:option value="<%=Invoice.PAYMENTSTATUS_PARTIAL%>"/>
                                     </html:select>
                                 </td>
-                                <td class="formlabel">PO Number:</td>
+                                <td class="formlabel">PO/Billing Number:</td>
                                 <td class="text"><html:text name="<%=Constants.INVOICE%>" property="accountnum"/></td>
                             </tr>
                             <tr> 

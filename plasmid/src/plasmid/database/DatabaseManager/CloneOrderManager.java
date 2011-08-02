@@ -1049,10 +1049,10 @@ public class CloneOrderManager extends TableManager {
                 " from invoice i, cloneorder c, userprofile u, pi p" +
                 " where i.orderid=c.orderid" +
                 " and c.userid=u.userid" +
-                " and u.piname=p.name";
+                " and u.piname=p.name(+)";
 
         if (invoicenums != null) {
-            sql += " and i.invoicenumber in (" + StringConvertor.convertFromListToSqlString(invoicenums) + ")";
+            sql += " and lower(i.invoicenumber) in (" + StringConvertor.convertFromListToSqlString(invoicenums).toLowerCase() + ")";
         }
         if (invoiceDateFrom != null) {
             sql += " and i.invoicedate>=To_DATE('" + invoiceDateFrom + "', 'MM/DD/YYYY')";

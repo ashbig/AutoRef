@@ -38,7 +38,7 @@
     <td class="tableheader">Adjustment</td>
     <td class="tableheader">Payment</td>
     <td class="tableheader">Due</td>
-    <td class="tableheader">PO</td>
+    <td class="tableheader">PO/Billing</td>
     <td class="tableheader">&nbsp;</td>
     <td class="tableheader">&nbsp;</td>
   </tr>
