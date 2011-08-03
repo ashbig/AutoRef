@@ -116,9 +116,23 @@ public class EnterShippingAction extends InternalUserAction {
         //order.setShippedContainers(sc.convertFromListToString(labelList));
         order.setComments(comments);
 
-        Invoice invoice = manager.generateInvoice(order, reason, adjustment, newAccount);
+        Invoice invoice = null;
+        try {
+            invoice = manager.getInvoiceByOrder(orderid);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            errors.add(ActionErrors.GLOBAL_ERROR,
+            new ActionError("error.general", "Error occured while querying invoice."));
+            saveErrors(request, errors);
+        }
         
-        if(!manager.updateShipping(order, invoice)) {
+        boolean isNewInvoice = false;
+        if(invoice == null) {
+            invoice = manager.generateInvoice(order, reason, adjustment, newAccount);
+            isNewInvoice = true;
+        }
+        
+        if(!manager.updateShipping(order, invoice, isNewInvoice)) {
             errors.add(ActionErrors.GLOBAL_ERROR,
             new ActionError("error.general", "Error occured while updating database with shipping information."));
             saveErrors(request,errors);
