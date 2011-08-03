@@ -130,6 +130,10 @@ public class EnterShippingAction extends InternalUserAction {
         if(invoice == null) {
             invoice = manager.generateInvoice(order, reason, adjustment, newAccount);
             isNewInvoice = true;
+        } else {
+            invoice.setAccountnum(newAccount);
+            invoice.setAdjustment(adjustment);
+            invoice.setReasonforadj(reason);
         }
         
         if(!manager.updateShipping(order, invoice, isNewInvoice)) {

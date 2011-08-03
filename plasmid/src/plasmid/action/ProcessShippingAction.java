@@ -63,6 +63,21 @@ public class ProcessShippingAction  extends InternalUserAction {
             return mapping.findForward("error");
         }
         
+        Invoice invoice = null;
+        try {
+            invoice = manager.getInvoiceByOrder(Integer.parseInt(orderid));
+        } catch (Exception ex) {
+            errors.add(ActionErrors.GLOBAL_ERROR,
+            new ActionError("error.general", "Cannot get invoice."));
+            saveErrors(request,errors);
+            return mapping.findForward("error");
+        }
+        
+        if(invoice != null) {
+            ((ProcessShippingForm)form).setAdjustment(invoice.getAdjustment());
+            ((ProcessShippingForm)form).setReason(invoice.getReasonforadj());
+        }
+        
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yy");
         Date today = new Date();
         

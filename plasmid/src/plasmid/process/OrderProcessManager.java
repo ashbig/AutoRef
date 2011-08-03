@@ -1012,28 +1012,31 @@ public class OrderProcessManager {
         return c;
     }
 
-    public boolean updateShipping(CloneOrder order, Invoice invoice) {
+    public boolean updateShipping(CloneOrder order, Invoice invoice, boolean isNewInvoice) {
         DatabaseTransaction t = null;
         Connection conn = null;
-
         try {
             t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
             CloneOrderManager manager = new CloneOrderManager(conn);
+            boolean b = false;
             if (manager.updateOrderWithShipping(order)) {
-                int invoiceid = manager.addInvoice(invoice);
-                if (invoiceid > 0) {
-                    invoice.setInvoiceid(invoiceid);
-                    DatabaseTransaction.commit(conn);
-                    return true;
+                if (isNewInvoice) {
+                    int invoiceid = manager.addInvoice(invoice);
+                    if (invoiceid > 0) {
+                        invoice.setInvoiceid(invoiceid);
+                        b = true;
+                    } 
                 } else {
-                    DatabaseTransaction.rollback(conn);
-                    return false;
+                    b = manager.updateInvoice(invoice.getInvoiceid(), invoice.getAccountnum(), invoice.getAdjustment(), invoice.getReasonforadj());
                 }
+            } 
+            if(b) {
+                DatabaseTransaction.commit(conn);
             } else {
                 DatabaseTransaction.rollback(conn);
-                return false;
             }
+            return b;
         } catch (Exception ex) {
             DatabaseTransaction.rollback(conn);
             if (Constants.DEBUG) {
@@ -1695,6 +1698,12 @@ public class OrderProcessManager {
     public Invoice getInvoice(int invoiceid) throws Exception {
         CloneOrderManager manager = new CloneOrderManager();
         Invoice invoice = manager.queryInvoice(invoiceid);
+        return invoice;
+    }
+
+    public Invoice getInvoiceByOrder(int orderid) throws Exception {
+        CloneOrderManager cm = new CloneOrderManager();
+        Invoice invoice = cm.queryInvoiceByOrder(orderid);
         return invoice;
     }
 
