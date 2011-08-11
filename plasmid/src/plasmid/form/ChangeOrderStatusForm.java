@@ -23,6 +23,7 @@ public class ChangeOrderStatusForm extends ActionForm {
     private List status;
     private List orderid;
     private String orderListButton;
+    private List oldStatus;
     
     /** Creates a new instance of ChangeOrderStatusForm */
     public ChangeOrderStatusForm() {
@@ -42,15 +43,21 @@ public class ChangeOrderStatusForm extends ActionForm {
     public void initiateLists(List orders) {
         status = new ArrayList();
         orderid = new ArrayList();
+        oldStatus = new ArrayList();
         
         for(int i=0; i<orders.size(); i++) {
             CloneOrder order = (CloneOrder)orders.get(i);
             status.add(order.getStatus());
+            oldStatus.add(order.getStatus());
             orderid.add((new Integer(order.getOrderid())).toString());
         }
     }    
         
     public void reset(ActionMapping mapping, HttpServletRequest request) {
         orderListButton = null;
-    } 
+    }
+
+    public List getOldStatus() {
+        return oldStatus;
+    }
 }
