@@ -290,6 +290,11 @@
               input="/ViewOrderClones.jsp">
             <forward  name="success"  path="/CreateBiobankWorklistSuccess.jsp"/>
         </action>
+        <action    path="/DownloadCloneWorklist"
+               type="plasmid.action.DownloadCloneWorklistAction"
+               name="changeOrderStatusForm"
+              input="/ChangeOrderStatusSuccess.jsp">
+        </action>
         <action     path="/EnterAddress"
                 type="plasmid.action.EnterAddressAction"
                name="checkoutForm"

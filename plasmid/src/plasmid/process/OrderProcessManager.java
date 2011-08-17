@@ -377,6 +377,25 @@ public class OrderProcessManager {
         return count;
     }
 
+    public List getOrderClonesForWorklist(String orderidString) {
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            CloneManager cm = new CloneManager(conn);
+            List clones = cm.queryClonesByOrderids(orderidString);
+            return clones;
+        } catch (Exception ex) {
+            if (Constants.DEBUG) {
+                System.out.println(ex);
+            }
+            return null;
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
+        }
+    }
+
     public List getOrderClones(int orderid, User user, boolean isWorkingStorage, String isBatch) {
         DatabaseTransaction t = null;
         Connection conn = null;
@@ -1026,12 +1045,12 @@ public class OrderProcessManager {
                     if (invoiceid > 0) {
                         invoice.setInvoiceid(invoiceid);
                         b = true;
-                    } 
+                    }
                 } else {
                     b = manager.updateInvoice(invoice.getInvoiceid(), invoice.getAccountnum(), invoice.getAdjustment(), invoice.getReasonforadj());
                 }
-            } 
-            if(b) {
+            }
+            if (b) {
                 DatabaseTransaction.commit(conn);
             } else {
                 DatabaseTransaction.rollback(conn);
@@ -1446,6 +1465,19 @@ public class OrderProcessManager {
             }
             if (!isItem) {
                 out.println(order.getOrderid() + "\t" + order.getOrderDate() + "\t\t\t\t\t" + order.getStatus() + "\t" + order.getNumofclones() + "\t" + order.getNumofcollection() + "\t" + order.getShippingTo() + ", " + order.getShippingAddress().replaceAll("\n", " ") + "\t" + order.getName() + "\t" + order.getEmail() + "\t" + order.getPiname() + "\t" + order.getPiinstitution() + "\t" + order.getPidepartment() + "\t" + order.getPiemail());
+            }
+        }
+    }
+
+    public void printCloneWorlist(PrintWriter out, List clones) {
+        out.println("Order ID\tClone ID\tVector\tGrowth Condition\tContainer\tWell");
+        for (int i = 0; i < clones.size(); i++) {
+            CloneInfo clone = (CloneInfo) clones.get(i);
+            GrowthCondition growth = clone.getRecommendedGrowthCondition();
+            if (growth == null) {
+                out.println(clone.getOrderid() + "\t" + clone.getName() + "\t" + clone.getVectorname() + "\t" + "\t\t" + clone.getPlate() + "\t" + clone.getWell());
+            } else {
+                out.println(clone.getOrderid() + "\t" + clone.getName() + "\t" + clone.getVectorname() + "\t" + clone.getRecommendedGrowthCondition().getName() + "\t" + clone.getPlate() + "\t" + clone.getWell());
             }
         }
     }

@@ -45,6 +45,7 @@ public class CloneInfo extends Clone implements Serializable{
         super.setPublications(c.getPublications());
         super.setSelections(c.getSelections());
         super.setRecommendedGrowthCondition(c.getRecommendedGrowthCondition());
+        super.setOrderid(c.getOrderid());
     }
     
     public CloneInfo(Clone c) {
@@ -57,6 +58,7 @@ public class CloneInfo extends Clone implements Serializable{
         super.setPublications(c.getPublications());
         super.setSelections(c.getSelections());
         super.setRecommendedGrowthCondition(c.getRecommendedGrowthCondition());
+        super.setOrderid(c.getOrderid());
     }
         
     public String getTerm() {return term;}

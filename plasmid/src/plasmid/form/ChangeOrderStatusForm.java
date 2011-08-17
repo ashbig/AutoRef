@@ -7,8 +7,6 @@
 package plasmid.form;
 
 import javax.servlet.http.HttpServletRequest;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
 
@@ -24,6 +22,8 @@ public class ChangeOrderStatusForm extends ActionForm {
     private List orderid;
     private String orderListButton;
     private List oldStatus;
+    private String inprocessOrderidString;
+    private boolean isDownload;
     
     /** Creates a new instance of ChangeOrderStatusForm */
     public ChangeOrderStatusForm() {
@@ -59,5 +59,21 @@ public class ChangeOrderStatusForm extends ActionForm {
 
     public List getOldStatus() {
         return oldStatus;
+    }
+
+    public String getInprocessOrderidString() {
+        return inprocessOrderidString;
+    }
+
+    public void setInprocessOrderidString(String inprocessOrderidString) {
+        this.inprocessOrderidString = inprocessOrderidString;
+    }
+
+    public boolean isIsDownload() {
+        return isDownload;
+    }
+
+    public void setIsDownload(boolean isDownload) {
+        this.isDownload = isDownload;
     }
 }

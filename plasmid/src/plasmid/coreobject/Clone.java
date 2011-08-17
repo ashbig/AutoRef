@@ -69,6 +69,7 @@ public class Clone implements Serializable {
     protected List properties;
     protected GrowthCondition recommendedGrowthCondition;
     protected CloneVector vector;
+    private int orderid;
 
     /** Creates a new instance of Clone */
     public Clone() {
@@ -606,5 +607,13 @@ public class Clone implements Serializable {
         }
         
         return (sp + tp + fmt.format(c.getCloneid()));
+    }
+
+    public int getOrderid() {
+        return orderid;
+    }
+
+    public void setOrderid(int orderid) {
+        this.orderid = orderid;
     }
 }

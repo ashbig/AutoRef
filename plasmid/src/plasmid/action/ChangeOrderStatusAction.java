@@ -72,6 +72,7 @@ public class ChangeOrderStatusAction extends InternalUserAction {
             return null;
         }
 
+        List inprocessOrders = new ArrayList();
         List orders = new ArrayList();
         for (int i = 0; i < orderid.size(); i++) {
             String s = (String) status.get(i);
@@ -82,6 +83,10 @@ public class ChangeOrderStatusAction extends InternalUserAction {
                 order.setOrderid(id);
                 order.setStatus(s);
                 orders.add(order);
+
+                if (s.equals(CloneOrder.INPROCESS)) {
+                    inprocessOrders.add(id);
+                }
             }
 
             if (CloneOrder.TROUBLESHOOTING.equals(s) && !CloneOrder.TROUBLESHOOTING.equals(os)) {
@@ -95,6 +100,14 @@ public class ChangeOrderStatusAction extends InternalUserAction {
                     new ActionError("error.order.process"));
             saveErrors(request, errors);
             return (mapping.findForward("error"));
+        }
+
+        ((ChangeOrderStatusForm) form).setIsDownload(false);
+        if (inprocessOrders.size() > 0) {
+            StringConvertor sv = new StringConvertor();
+            String inprocessOrderidString = sv.convertFromListToString(inprocessOrders);
+            ((ChangeOrderStatusForm) form).setInprocessOrderidString(inprocessOrderidString);
+            ((ChangeOrderStatusForm) form).setIsDownload(true);
         }
 
         return (mapping.findForward("success"));
