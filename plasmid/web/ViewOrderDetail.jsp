@@ -67,6 +67,12 @@
     <td class="formlabel">DF/HCC Member:</td>
     <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="ismemberString"/></td>
 </tr>
+  <tr> 
+    <td class="formlabel">Last Updatec On:</td>
+    <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="updatedon"/></td>
+    <td class="formlabel">Last Updatec By:</td>
+    <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="updatedby"/></td>
+</tr>
 <tr>
     <td class="formlabel"></td>
     <logic:equal name="<%=Constants.CLONEORDER%>" property="invoiceid" value="0">

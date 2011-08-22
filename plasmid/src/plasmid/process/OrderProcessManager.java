@@ -35,6 +35,8 @@ public class OrderProcessManager {
     public static final String USA = "USA";
     public static final int PLATESIZE = 96;
     public static final String BATCH_ORDER_FILE_DILIM = ",";
+    public static final String[] COUNTRY_AQIS = {"Australia", "New Zealand", "Brazil", "China"};
+    
     private List clones;
     private List collections;
     private List cloneids;
@@ -981,7 +983,7 @@ public class OrderProcessManager {
         }
     }
 
-    public boolean updateAllOrderStatus(List orders) {
+    public boolean updateAllOrderStatus(List orders, String researcher) {
         DatabaseTransaction t = null;
         Connection conn = null;
 
@@ -989,7 +991,7 @@ public class OrderProcessManager {
             t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
             CloneOrderManager manager = new CloneOrderManager(conn);
-            if (manager.updateAllOrderStatus(orders)) {
+            if (manager.updateAllOrderStatus(orders, researcher)) {
                 DatabaseTransaction.commit(conn);
                 return true;
             } else {
@@ -2035,6 +2037,15 @@ public class OrderProcessManager {
         }
     }
 
+    public static boolean isAqisCountry(String country) {
+        for(int i=0; i<COUNTRY_AQIS.length; i++) {
+            if(COUNTRY_AQIS[i].equals(country)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     public static final void main(String args[]) {
         String filename = "C:\\dev\\test\\plasmid\\invoice.pdf";
 

@@ -66,6 +66,8 @@
     <td class="tableheader">Total Price</td>
     <td class="tableheader">User</td>
     <td class="tableheader">User Email</td>
+    <td class="tableheader">Last Updated On</td>
+    <td class="tableheader">Last Updatec By</td>
   </tr>
 
   <% int i=0; %>
@@ -138,6 +140,8 @@
     <td class="tableinfo"><bean:write name="order" property="totalPriceString"/></td>
     <td class="tableinfo"><bean:write name="order" property="name"/></td>
     <td class="tableinfo"><bean:write name="order" property="email"/></td>
+    <td class="tableinfo"><bean:write name="order" property="updatedon"/></td>
+    <td class="tableinfo"><bean:write name="order" property="updatedby"/></td>
   </tr>
   <% i++; %>
   </logic:iterate>    

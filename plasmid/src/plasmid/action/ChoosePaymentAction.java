@@ -116,7 +116,7 @@ public class ChoosePaymentAction extends UserAction {
 
                 return (new ActionForward(mapping.getInput()));
             }
-            if (country.equals("Australia")) {
+            if (OrderProcessManager.isAqisCountry(country)) {
                 status = CloneOrder.PENDING_AQIS;
             }
         } else {
@@ -194,7 +194,7 @@ public class ChoosePaymentAction extends UserAction {
             order.setPlatinumServiceStatus(Constants.NA);
         }
 
-        if (country.equals("Australia")) {
+        if (OrderProcessManager.isAqisCountry(country)) {
             order.setIsaustralia("Y");
         }
         order.setIsmta(ismta);

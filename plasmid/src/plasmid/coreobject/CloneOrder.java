@@ -99,9 +99,11 @@ public class CloneOrder {
     protected String platinumServiceStatus;
     
     protected List clones;
-    private int invoiceid;
-    private String billingemail;
-    private String ismember;
+    protected int invoiceid;
+    protected String billingemail;
+    protected String ismember;
+    private String updatedby;
+    private String updatedon;
     
     /** Creates a new instance of CloneOrder */
     public CloneOrder() {
@@ -383,5 +385,21 @@ public class CloneOrder {
             return "Yes";
         } 
         return "No";
+    }
+
+    public String getUpdatedby() {
+        return updatedby;
+    }
+
+    public void setUpdatedby(String updatedby) {
+        this.updatedby = updatedby;
+    }
+
+    public String getUpdatedon() {
+        return updatedon;
+    }
+
+    public void setUpdatedon(String updatedon) {
+        this.updatedon = updatedon;
     }
 }

@@ -409,7 +409,8 @@ public class CloneOrderManager extends TableManager {
                 " c.shippingdate, c.whoshipped, c.shippingmethod,c.shippingaccount,c.trackingnumber," +
                 " c.receiveconfirmationdate, c.whoconfirmed,c.whoreceivedconfirmation,u.email,c.shippedcontainers," +
                 " u.piname, u.piemail, u.phone, c.isbatch, c.comments, c.isaustralia," +
-                " c.ismta, c.isplatinum, c.costforplatinum, c.platinumservicestatus,c.billingemail" +
+                " c.ismta, c.isplatinum, c.costforplatinum, c.platinumservicestatus,c.billingemail,"+
+                " c.updatedby,to_char(c.updatedon, 'YYYY-MM-DD')" +
                 " from cloneorder c, userprofile u where c.userid=u.userid";
 
         if (user != null) {
@@ -477,6 +478,8 @@ public class CloneOrderManager extends TableManager {
                 Double costforplatinum = rs.getDouble(36);
                 String platinumservicestatus = rs.getString(37);
                 String billingemail = rs.getString(38);
+                String updatedby = rs.getString(39);
+                String updatedon = rs.getString(40);
                 CloneOrder order = new CloneOrder(orderid, date, st, ponumber, shippingto, billingto, shippingaddress, billingaddress, numofclones, numofcollection, costforclones, costforcollection, costforshipping, total, userid);
 
                 order.setFirstname(firstname);
@@ -504,6 +507,8 @@ public class CloneOrderManager extends TableManager {
                 order.setCostforplatinum(costforplatinum);
                 order.setPlatinumServiceStatus(platinumservicestatus);
                 order.setBillingemail(billingemail);
+                order.setUpdatedby(updatedby);
+                order.setUpdatedon(updatedon);
                 orders.add(order);
             }
             return orders;
@@ -823,12 +828,12 @@ public class CloneOrderManager extends TableManager {
         return true;
     }
 
-    public boolean updateAllOrderStatus(List orders) {
+    public boolean updateAllOrderStatus(List orders, String researcher) {
         if (orders == null) {
             return true;
         }
 
-        String sql = "update cloneorder set orderstatus=? where orderid=?";
+        String sql = "update cloneorder set orderstatus=?,updatedby=?,updatedon=sysdate where orderid=?";
         PreparedStatement stmt = null;
 
         int orderid = 0;
@@ -839,7 +844,8 @@ public class CloneOrderManager extends TableManager {
                 CloneOrder order = (CloneOrder) orders.get(i);
                 orderid = order.getOrderid();
                 stmt.setString(1, order.getStatus());
-                stmt.setInt(2, orderid);
+                stmt.setString(2, researcher);
+                stmt.setInt(3, orderid);
                 DatabaseTransaction.executeUpdate(stmt);
             }
         } catch (Exception ex) {

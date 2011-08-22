@@ -95,7 +95,7 @@ public class ChangeOrderStatusAction extends InternalUserAction {
             }
         }
 
-        if (!manager.updateAllOrderStatus(orders)) {
+        if (!manager.updateAllOrderStatus(orders, user.getFirstname()+" "+user.getLastname())) {
             errors.add(ActionErrors.GLOBAL_ERROR,
                     new ActionError("error.order.process"));
             saveErrors(request, errors);
