@@ -1004,8 +1004,8 @@ public class CloneOrderManager extends TableManager {
 
     public Invoice queryInvoice(int invoiceid) throws Exception {
         String sql = "select invoicenumber, to_char(invoicedate,'YYYY-MM-dd hh:mm:ss'),"+
-                " i.price, adjustment, i.payment, paymentstatus, paymenttype, account,"+
-                " i.orderid, i.comments, reason, u.piname, u.institution" +
+                " i.price, adjustment, i.payment, paymentstatus, nvl(paymenttype, ' '), account,"+
+                " i.orderid, nvl(i.comments,' '), nvl(reason, ' '), u.piname, u.institution" +
                 " from invoice i, cloneorder c, userprofile u"+
                 " where i.orderid=c.orderid"+
                 " and c.userid = u.userid"+
@@ -1048,8 +1048,8 @@ public class CloneOrderManager extends TableManager {
 
     public Invoice queryInvoiceByOrder(int orderid) throws Exception {
         String sql = "select invoicenumber, to_char(invoicedate,'YYYY-MM-dd hh:mm:ss'),"+
-                " i.price, adjustment, i.payment, paymentstatus, paymenttype, account,"+
-                " i.invoiceid, i.comments, reason, u.piname, u.institution" +
+                " i.price, adjustment, nvl(i.payment,' '), paymentstatus, paymenttype, account,"+
+                " i.invoiceid, nvl(i.comments,' '), nvl(reason,' '), u.piname, u.institution" +
                 " from invoice i, cloneorder c, userprofile u"+
                 " where i.orderid=c.orderid"+
                 " and c.userid = u.userid"+
@@ -1095,8 +1095,8 @@ public class CloneOrderManager extends TableManager {
             String invoiceMonth, String invoiceYear, List lastnames, List ponumbers,
             String paymentstatus, String isinternal, String institution1, String institution2) {
         String sql = "select invoiceid, to_char(invoicedate,'YYYY-MM-dd hh:mm:ss'), i.price," +
-                " adjustment, i.payment, paymentstatus, paymenttype, account, i.orderid, i.comments," +
-                " reason, u.piname, u.institution, invoicenumber" +
+                " adjustment, i.payment, paymentstatus, nvl(paymenttype,' '), account, i.orderid," +
+                " nvl(i.comments,' '), nvl(reason,' '), u.piname, u.institution, invoicenumber" +
                 " from invoice i, cloneorder c, userprofile u, pi p" +
                 " where i.orderid=c.orderid" +
                 " and c.userid=u.userid" +
