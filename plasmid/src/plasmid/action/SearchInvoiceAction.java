@@ -16,6 +16,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import plasmid.Constants;
+import plasmid.coreobject.Invoice;
 import plasmid.form.SearchInvoiceForm;
 import plasmid.process.OrderProcessManager;
 
@@ -35,7 +36,7 @@ public class SearchInvoiceAction extends InternalUserAction {
         String invoiceYear = ((SearchInvoiceForm)form).getInvoiceYear();
         String pinames = ((SearchInvoiceForm)form).getPinames();
         String ponumbers = ((SearchInvoiceForm)form).getPonumbers();
-        String paymentstatus = ((SearchInvoiceForm)form).getPaymentstatus();
+        String paymentstatus = ((SearchInvoiceForm)form).getPstatus();
         String isinternal = ((SearchInvoiceForm)form).getIsinternal();
         String institution1 = ((SearchInvoiceForm)form).getInstitution1();
         String institution2 = ((SearchInvoiceForm)form).getInstitution2();
@@ -43,6 +44,7 @@ public class SearchInvoiceAction extends InternalUserAction {
         OrderProcessManager manager = new OrderProcessManager();
         List invoices = manager.getInvoices(invoicenums,invoiceDateFrom,invoiceDateTo,invoiceMonth,
                 invoiceYear,pinames,ponumbers,paymentstatus,isinternal,institution1,institution2);
+        Invoice summary = manager.getSummeryInvoice(invoices);
         
         if(invoices == null) {
             errors.add(ActionErrors.GLOBAL_ERROR,
@@ -56,6 +58,7 @@ public class SearchInvoiceAction extends InternalUserAction {
         }
         
         request.getSession().setAttribute(Constants.INVOICES, invoices);
+        request.setAttribute(Constants.INVOICE_SUM, summary);
         return mapping.findForward("success");
     }
 }

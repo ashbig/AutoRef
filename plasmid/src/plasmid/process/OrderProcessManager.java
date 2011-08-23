@@ -1433,6 +1433,22 @@ public class OrderProcessManager {
         }
     }
 
+    public Invoice getSummeryInvoice(List<Invoice> invoices) {
+        double totalPrice = 0;
+        double totalAdjustment = 0;
+        double totalPayment = 0;
+        for(Invoice invoice:invoices) {
+            totalPrice += invoice.getPrice();
+            totalAdjustment += invoice.getAdjustment();
+            totalPayment += invoice.getPayment();
+        }
+        Invoice invoice = new Invoice();
+        invoice.setPrice(totalPrice);
+        invoice.setAdjustment(totalAdjustment);
+        invoice.setPayment(totalPayment);
+        return invoice;
+    }
+    
     public void printInvoice(PrintWriter out, List orders) {
         out.println("Name\t# Clones\t# Collections\tTotal Cost\tPO Number\tDate Shipped\tOrder #\tBilling Information\tPI Name\tPI Email");
         for (int i = 0; i < orders.size(); i++) {

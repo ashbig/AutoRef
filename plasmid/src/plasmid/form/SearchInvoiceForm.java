@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package plasmid.form;
 
 import org.apache.struts.action.ActionForm;
@@ -12,6 +11,7 @@ import org.apache.struts.action.ActionForm;
  * @author Dongmei
  */
 public class SearchInvoiceForm extends ActionForm {
+
     private String invoicenums;
     private String invoiceDateFrom;
     private String invoiceDateTo;
@@ -19,10 +19,24 @@ public class SearchInvoiceForm extends ActionForm {
     private String invoiceYear;
     private String pinames;
     private String ponumbers;
-    private String paymentstatus;
+    private String pstatus;
     private String isinternal;
     private String institution1;
     private String institution2;
+
+    public void resetAttributes() {
+        invoicenums = null;
+        invoiceDateFrom = null;
+        invoiceDateTo = null;
+        invoiceMonth = null;
+        invoiceYear = null;
+        pinames = null;
+        ponumbers = null;
+        pstatus = null;
+        isinternal = null;
+        institution1 = null;
+        institution2 = null;
+    }
 
     public String getInvoicenums() {
         return invoicenums;
@@ -80,12 +94,12 @@ public class SearchInvoiceForm extends ActionForm {
         this.ponumbers = ponumbers;
     }
 
-    public String getPaymentstatus() {
-        return paymentstatus;
+    public String getPstatus() {
+        return pstatus;
     }
 
-    public void setPaymentstatus(String paymentstatus) {
-        this.paymentstatus = paymentstatus;
+    public void setPstatus(String paymentstatus) {
+        this.pstatus = paymentstatus;
     }
 
     public String getIsinternal() {

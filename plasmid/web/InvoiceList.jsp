@@ -49,15 +49,28 @@
     <td class="tableinfo"><bean:write name="invoice" property="invoicedate"/></td>
     <td class="tableinfo"><bean:write name="invoice" property="piname"/></td>
     <td class="tableinfo"><bean:write name="invoice" property="institution"/></td>
-    <td class="tableinfo"><bean:write name="invoice" property="priceString"/></td>
-    <td class="tableinfo"><bean:write name="invoice" property="adjustmentString"/></td>
-    <td class="tableinfo"><bean:write name="invoice" property="paymentString"/></td>
-    <td class="tableinfo"><bean:write name="invoice" property="dueString"/></td>
+    <td class="tableinfo" align="right"><bean:write name="invoice" property="priceString"/></td>
+    <td class="tableinfo" align="right"><bean:write name="invoice" property="adjustmentString"/></td>
+    <td class="tableinfo" align="right"><bean:write name="invoice" property="paymentString"/></td>
+    <td class="tableinfo" align="right"><bean:write name="invoice" property="dueString"/></td>
     <td class="tableinfo"><bean:write name="invoice" property="accountnum"/></td>
     <td class="tableinfo"><a href="EnterInvoicePayment.do?invoiceid=<bean:write name="invoice" property="invoiceid"/>&returnToList=true">Enter Payment</a></td>
     <td class="tableinfo"><a target="_blank" href="ViewInvoiceDetail.do?invoiceid=<bean:write name="invoice" property="invoiceid"/>&orderid=<bean:write name="invoice" property="orderid"/>&isdownload=1">View Invoice</a></td>
   </tr>
   </logic:iterate>    
+  <tr>
+    <td class="tableinfo">Total</td>
+    <td class="tableinfo">&nbsp;</td>
+    <td class="tableinfo">&nbsp;</td>
+    <td class="tableinfo">&nbsp;</td>
+    <td class="tableinfo" align="right"><bean:write name="<%=Constants.INVOICE_SUM%>" property="priceString"/></td>
+    <td class="tableinfo" align="right"><bean:write name="<%=Constants.INVOICE_SUM%>" property="adjustmentString"/></td>
+    <td class="tableinfo" align="right"><bean:write name="<%=Constants.INVOICE_SUM%>" property="paymentString"/></td>
+    <td class="tableinfo" align="right"><bean:write name="<%=Constants.INVOICE_SUM%>" property="dueString"/></td>
+    <td class="tableinfo">&nbsp;</td>
+    <td class="tableinfo">&nbsp;</td>
+    <td class="tableinfo">&nbsp;</td>
+  </tr>
 </table>
 
     </td>

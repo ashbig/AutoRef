@@ -32,6 +32,8 @@ public class Invoice {
     private String piname;
     private String institution;
 
+    public Invoice() {}
+    
     public Invoice(String invoicenum, String invoicedate, double price, double adjustment, double payment,
             String paymentstatus, String paymenttype, int orderid, String reason, String account) {
         this.invoicenum = invoicenum;

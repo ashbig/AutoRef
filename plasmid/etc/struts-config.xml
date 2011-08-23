@@ -555,7 +555,7 @@
         <action    path="/SearchInvoice"
                type="plasmid.action.SearchInvoiceAction"
                name="searchInvoiceForm"
-               scope="request"
+               scope="session"
               input="/PrepareSearchInvoice.do">
             <forward  name="success"   path="/InvoiceList.jsp"/>
             <forward  name="success_empty"   path="/InvoiceListEmpty.jsp"/>
@@ -630,7 +630,7 @@
                name="invoiceForm"
               input="/EnterInvoicePayment.jsp">
             <forward  name="success"   path="/ViewInvoice.jsp"/>
-            <forward  name="success_list"   path="/InvoiceList.jsp"/>
+            <forward  name="success_list"   path="/SearchInvoice.do"/>
             <forward  name="success_message"   path="/UpdateInvoicePaymentMessage.jsp"/>
         </action>
         <action    path="/UploadResultFile"

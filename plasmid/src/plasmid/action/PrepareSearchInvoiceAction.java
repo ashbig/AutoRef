@@ -16,6 +16,7 @@ import org.apache.struts.action.ActionMapping;
 import plasmid.database.DatabaseManager.UserManager;
 import plasmid.coreobject.Institution;
 import plasmid.database.DatabaseManager.DefTableManager;
+import plasmid.form.SearchInvoiceForm;
 
 /**
  *
@@ -38,6 +39,9 @@ public class PrepareSearchInvoiceAction extends InternalUserAction {
         request.setAttribute("government", government);
         request.setAttribute("company", company);
 
+        SearchInvoiceForm sform = new SearchInvoiceForm();
+        sform.resetAttributes();
+        request.getSession().setAttribute("searchInvoiceForm", sform);
         return mapping.findForward("success");
     }
 }

@@ -26,6 +26,7 @@ public class Constants {
     public static final String CLONEORDER = "Clone Order";
     public static final String ORDERS = "Clone Orders";
     public static final String INVOICES = "invoices";
+    public static final String INVOICE_SUM = "SummaryInvoice";
     public static final String INVOICE = "invoice";
     public static final String ACADEMIC = User.ACADEMIC;
     public static final String LABELS = "labels";

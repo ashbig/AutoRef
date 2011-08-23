@@ -90,7 +90,7 @@
                             <tr>
                                 <td class="formlabel">Payment Status:</td>
                                 <td colspan="4">
-                                    <html:select styleClass="itemtext" property="paymentstatus">
+                                    <html:select styleClass="itemtext" property="pstatus">
                                         <html:option value="<%=Constants.ALL%>"/>
                                         <html:option value="<%=Invoice.PAYMENTSTATUS_PAID%>"/>
                                         <html:option value="<%=Invoice.PAYMENTSTATUS_UNPAID%>"/>
