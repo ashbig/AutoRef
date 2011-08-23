@@ -54,7 +54,7 @@
     <td class="tableinfo"><bean:write name="invoice" property="paymentString"/></td>
     <td class="tableinfo"><bean:write name="invoice" property="dueString"/></td>
     <td class="tableinfo"><bean:write name="invoice" property="accountnum"/></td>
-    <td class="tableinfo"><a href="EnterInvoicePayment.do?invoiceid=<bean:write name="invoice" property="invoiceid"/>">Enter Payment</a></td>
+    <td class="tableinfo"><a href="EnterInvoicePayment.do?invoiceid=<bean:write name="invoice" property="invoiceid"/>&returnToList=true">Enter Payment</a></td>
     <td class="tableinfo"><a target="_blank" href="ViewInvoiceDetail.do?invoiceid=<bean:write name="invoice" property="invoiceid"/>&orderid=<bean:write name="invoice" property="orderid"/>&isdownload=1">View Invoice</a></td>
   </tr>
   </logic:iterate>    

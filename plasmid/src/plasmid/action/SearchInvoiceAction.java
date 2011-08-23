@@ -55,7 +55,7 @@ public class SearchInvoiceAction extends InternalUserAction {
             return mapping.findForward("success_empty");
         }
         
-        request.setAttribute(Constants.INVOICES, invoices);
+        request.getSession().setAttribute(Constants.INVOICES, invoices);
         return mapping.findForward("success");
     }
 }

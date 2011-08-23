@@ -17,6 +17,9 @@ public class InvoiceForm extends ActionForm {
     private String accountnum;
     private double payment;
     private String comments;
+    private boolean returnToList;
+    
+    public InvoiceForm() {this.returnToList = false;}
     
     public int getInvoiceid() {
         return invoiceid;
@@ -56,5 +59,13 @@ public class InvoiceForm extends ActionForm {
 
     public void setComments(String comments) {
         this.comments = comments;
+    }
+
+    public boolean isReturnToList() {
+        return returnToList;
+    }
+
+    public void setReturnToList(boolean returnToList) {
+        this.returnToList = returnToList;
     }
 }

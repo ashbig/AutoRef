@@ -38,6 +38,7 @@ public class UpdateInvoicePaymentAction extends InternalUserAction {
         String accountnum = ((InvoiceForm) form).getAccountnum();
         double payment = ((InvoiceForm) form).getPayment();
         String comments = ((InvoiceForm) form).getComments();
+        boolean returnToList = ((InvoiceForm)form).isReturnToList();
 
         DatabaseTransaction t = null;
         Connection c = null;
@@ -63,6 +64,9 @@ public class UpdateInvoicePaymentAction extends InternalUserAction {
                     return mapping.findForward("success_message");
                 }
 
+                if(returnToList) {
+                    return mapping.findForward("success_list");
+                }
                 request.setAttribute(Constants.CLONEORDER, order);
                 request.setAttribute(Constants.INVOICE, invoice);
                 return mapping.findForward("success");
