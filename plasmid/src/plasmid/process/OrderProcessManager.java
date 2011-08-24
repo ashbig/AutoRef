@@ -1813,7 +1813,7 @@ public class OrderProcessManager {
             document.add(PdfEditor.makeSmallBold("Bill To:"));
             document.add(PdfEditor.makeSmall(order.getBillingTo()));
             document.add(PdfEditor.makeSmall(order.getBillingAddress()));
-            document.add(PdfEditor.makeSmall(order.getBillingemail()));
+            document.add(PdfEditor.makeSmall("Billing email: "+order.getBillingemail()));
 
             document.add(PdfEditor.makeTitle(" "));
             table = new PdfPTable(3);
@@ -1940,7 +1940,7 @@ public class OrderProcessManager {
             document.add(PdfEditor.makeSmallBold("Bill To:"));
             document.add(PdfEditor.makeSmall(order.getBillingTo()));
             document.add(PdfEditor.makeSmall(order.getBillingAddress()));
-            document.add(PdfEditor.makeSmall(order.getBillingemail()));
+            document.add(PdfEditor.makeSmall("Billing email: "+order.getBillingemail()));
 
             document.add(PdfEditor.makeTitle(" "));
             table = new PdfPTable(3);

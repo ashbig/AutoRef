@@ -290,7 +290,7 @@ public class CloneOrderManager extends TableManager {
                 " whoconfirmed,whoreceivedconfirmation,shippedcontainers,u.email,u.piname," +
                 " u.piemail,u.phone,c.isbatch,u.usergroup,c.comments,c.isaustralia," +
                 " c.ismta, c.isplatinum, c.costforplatinum, c.platinumservicestatus,u.firstname,"+
-                " u.lastname,billingemail,u.ismember" +
+                " u.lastname,nvl(billingemail,' '),u.ismember" +
                 " from cloneorder c, userprofile u where c.userid=u.userid and c.orderid=" + orderid;
 
         String sql2 = "select invoiceid from invoice where orderid=" + orderid;
