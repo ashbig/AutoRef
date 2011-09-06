@@ -141,6 +141,12 @@ public class Constants {
     public static final String YES = "Yes";
     public static final String NO = "No";
     
+    public static final String INVOICE_SORT_BY_ID = "id";
+    public static final String INVOICE_SORT_BY_DATE = "date";
+    public static final String INVOICE_SORT_BY_PI = "pi";
+    public static final String INVOICE_SORT_BY_INSTITUTION = "institution";
+    public static final String INVOICE_SORT_BY_PO = "po";
+    
     /** Creates a new instance of Constants */
     public Constants() {
     }

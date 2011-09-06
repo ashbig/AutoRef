@@ -40,10 +40,11 @@ public class SearchInvoiceAction extends InternalUserAction {
         String isinternal = ((SearchInvoiceForm)form).getIsinternal();
         String institution1 = ((SearchInvoiceForm)form).getInstitution1();
         String institution2 = ((SearchInvoiceForm)form).getInstitution2();
-        
+        String sortby = ((SearchInvoiceForm)form).getSortby();
+      
         OrderProcessManager manager = new OrderProcessManager();
         List invoices = manager.getInvoices(invoicenums,invoiceDateFrom,invoiceDateTo,invoiceMonth,
-                invoiceYear,pinames,ponumbers,paymentstatus,isinternal,institution1,institution2);
+                invoiceYear,pinames,ponumbers,paymentstatus,isinternal,institution1,institution2,sortby);
         Invoice summary = manager.getSummeryInvoice(invoices);
         
         if(invoices == null) {

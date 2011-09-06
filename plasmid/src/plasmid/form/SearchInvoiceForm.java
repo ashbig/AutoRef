@@ -11,7 +11,6 @@ import org.apache.struts.action.ActionForm;
  * @author Dongmei
  */
 public class SearchInvoiceForm extends ActionForm {
-
     private String invoicenums;
     private String invoiceDateFrom;
     private String invoiceDateTo;
@@ -23,6 +22,7 @@ public class SearchInvoiceForm extends ActionForm {
     private String isinternal;
     private String institution1;
     private String institution2;
+    private String sortby;
 
     public void resetAttributes() {
         invoicenums = null;
@@ -124,5 +124,13 @@ public class SearchInvoiceForm extends ActionForm {
 
     public void setInstitution2(String institution2) {
         this.institution2 = institution2;
+    }
+
+    public String getSortby() {
+        return sortby;
+    }
+
+    public void setSortby(String sortby) {
+        this.sortby = sortby;
     }
 }

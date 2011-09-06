@@ -30,15 +30,15 @@
 <p>
 <table width="100%" border="0">
   <tr>
-    <td class="tableheader">Invoice</td>
-    <td class="tableheader">Date</td>
-    <td class="tableheader">PI</td>
-    <td class="tableheader">Institution</td>
+      <td class="tableheader"><a href="SearchInvoice.do?sortby=<%=Constants.INVOICE_SORT_BY_ID%>">Invoice</a></td>
+      <td class="tableheader"><a href="SearchInvoice.do?sortby=<%=Constants.INVOICE_SORT_BY_DATE%>">Date</a></td>
+    <td class="tableheader"><a href="SearchInvoice.do?sortby=<%=Constants.INVOICE_SORT_BY_PI%>">PI</a></td>
+    <td class="tableheader"><a href="SearchInvoice.do?sortby=<%=Constants.INVOICE_SORT_BY_INSTITUTION%>">Institution</a></td>
     <td class="tableheader">Price</td>
     <td class="tableheader">Adjustment</td>
     <td class="tableheader">Payment</td>
     <td class="tableheader">Due</td>
-    <td class="tableheader">PO/Billing</td>
+    <td class="tableheader"><a href="SearchInvoice.do?sortby=<%=Constants.INVOICE_SORT_BY_PO%>">PO/Billing</a></td>
     <td class="tableheader">&nbsp;</td>
     <td class="tableheader">&nbsp;</td>
   </tr>

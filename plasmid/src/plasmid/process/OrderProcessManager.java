@@ -1374,7 +1374,7 @@ public class OrderProcessManager {
 
     public List getInvoices(String invoicenums, String invoiceDateFrom, String invoiceDateTo,
             String invoiceMonth, String invoiceYear, String pinames, String ponumbers,
-            String paymentstatus, String isinternal, String institution1, String institution2) {
+            String paymentstatus, String isinternal, String institution1, String institution2, String sort) {
         DatabaseTransaction t = null;
         Connection conn = null;
         StringConvertor sc = new StringConvertor();
@@ -1420,10 +1420,10 @@ public class OrderProcessManager {
             }
             List invoices = manager.queryInvoices(invoicenumList, invoiceDateFrom, invoiceDateTo,
                     invoiceMonth, invoiceYear, lastnameList, ponumberList, paymentstatus,
-                    isinternal, institution1, institution2);
+                    isinternal, institution1, institution2, sort);
             return invoices;
         } catch (Exception ex) {
-            DatabaseTransaction.rollback(conn);
+            ex.printStackTrace();
             if (Constants.DEBUG) {
                 System.out.println(ex);
             }

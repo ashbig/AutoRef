@@ -289,7 +289,7 @@ public class CloneOrderManager extends TableManager {
                 " shippingmethod,shippingaccount,trackingnumber,receiveconfirmationdate," +
                 " whoconfirmed,whoreceivedconfirmation,shippedcontainers,u.email,u.piname," +
                 " u.piemail,u.phone,c.isbatch,u.usergroup,c.comments,c.isaustralia," +
-                " c.ismta, c.isplatinum, c.costforplatinum, c.platinumservicestatus,u.firstname,"+
+                " c.ismta, c.isplatinum, c.costforplatinum, c.platinumservicestatus,u.firstname," +
                 " u.lastname,nvl(billingemail,' '),u.ismember" +
                 " from cloneorder c, userprofile u where c.userid=u.userid and c.orderid=" + orderid;
 
@@ -349,7 +349,7 @@ public class CloneOrderManager extends TableManager {
                 String lastname = rs.getString(38);
                 String billingemail = rs.getString(39);
                 String ismember = rs.getString(40);
-                
+
                 order = new CloneOrder(orderid, date, st, ponumber, shippingto, billingto, shippingaddress, billingaddress, numofclones, numofcollection, costforclones, costforcollection, costforshipping, total, userid);
                 order.setShippingdate(shippingdate);
                 order.setWhoshipped(whoshipped);
@@ -378,7 +378,7 @@ public class CloneOrderManager extends TableManager {
                 order.setLastname(lastname);
                 order.setBillingemail(billingemail);
                 order.setIsmember(ismember);
-                
+
                 rs2 = t.executeQuery(sql2);
                 if (rs2.next()) {
                     int invoiceid = rs2.getInt(1);
@@ -409,7 +409,7 @@ public class CloneOrderManager extends TableManager {
                 " c.shippingdate, c.whoshipped, c.shippingmethod,c.shippingaccount,c.trackingnumber," +
                 " c.receiveconfirmationdate, c.whoconfirmed,c.whoreceivedconfirmation,u.email,c.shippedcontainers," +
                 " u.piname, u.piemail, u.phone, c.isbatch, c.comments, c.isaustralia," +
-                " c.ismta, c.isplatinum, c.costforplatinum, c.platinumservicestatus,c.billingemail,"+
+                " c.ismta, c.isplatinum, c.costforplatinum, c.platinumservicestatus,c.billingemail," +
                 " c.updatedby,to_char(c.updatedon, 'YYYY-MM-DD')" +
                 " from cloneorder c, userprofile u where c.userid=u.userid";
 
@@ -564,7 +564,7 @@ public class CloneOrderManager extends TableManager {
             sql += " and upper(u.lastname) in (" + StringConvertor.convertFromListToSqlString(lastnames) + ")";
         }
         if (isMember) {
-            sql += " and u.ismember='"+User.MEMBER_Y+"'";
+            sql += " and u.ismember='" + User.MEMBER_Y + "'";
         }
         if (isMtamember) {
             sql += " and u.institution in (select name from institution where ismember='Y')";
@@ -1003,12 +1003,12 @@ public class CloneOrderManager extends TableManager {
     }
 
     public Invoice queryInvoice(int invoiceid) throws Exception {
-        String sql = "select invoicenumber, to_char(invoicedate,'YYYY-MM-dd hh:mm:ss'),"+
-                " i.price, adjustment, i.payment, paymentstatus, nvl(paymenttype, ' '), account,"+
+        String sql = "select invoicenumber, to_char(invoicedate,'YYYY-MM-dd hh:mm:ss')," +
+                " i.price, adjustment, i.payment, paymentstatus, nvl(paymenttype, ' '), account," +
                 " i.orderid, nvl(i.comments,' '), nvl(reason, ' '), u.piname, u.institution" +
-                " from invoice i, cloneorder c, userprofile u"+
-                " where i.orderid=c.orderid"+
-                " and c.userid = u.userid"+
+                " from invoice i, cloneorder c, userprofile u" +
+                " where i.orderid=c.orderid" +
+                " and c.userid = u.userid" +
                 " and i.invoiceid=" + invoiceid;
 
         DatabaseTransaction t = null;
@@ -1047,12 +1047,12 @@ public class CloneOrderManager extends TableManager {
     }
 
     public Invoice queryInvoiceByOrder(int orderid) throws Exception {
-        String sql = "select invoicenumber, to_char(invoicedate,'YYYY-MM-dd hh:mm:ss'),"+
-                " i.price, adjustment, nvl(i.payment,' '), paymentstatus, paymenttype, account,"+
+        String sql = "select invoicenumber, to_char(invoicedate,'YYYY-MM-dd hh:mm:ss')," +
+                " i.price, adjustment, nvl(i.payment,' '), paymentstatus, paymenttype, account," +
                 " i.invoiceid, nvl(i.comments,' '), nvl(reason,' '), u.piname, u.institution" +
-                " from invoice i, cloneorder c, userprofile u"+
-                " where i.orderid=c.orderid"+
-                " and c.userid = u.userid"+
+                " from invoice i, cloneorder c, userprofile u" +
+                " where i.orderid=c.orderid" +
+                " and c.userid = u.userid" +
                 " and i.orderid=" + orderid;
 
         DatabaseTransaction t = null;
@@ -1093,7 +1093,7 @@ public class CloneOrderManager extends TableManager {
 
     public List queryInvoices(List invoicenums, String invoiceDateFrom, String invoiceDateTo,
             String invoiceMonth, String invoiceYear, List lastnames, List ponumbers,
-            String paymentstatus, String isinternal, String institution1, String institution2) {
+            String paymentstatus, String isinternal, String institution1, String institution2, String sort) {
         String sql = "select invoiceid, to_char(invoicedate,'YYYY-MM-dd hh:mm:ss'), i.price," +
                 " adjustment, i.payment, paymentstatus, nvl(paymenttype,' '), account, i.orderid," +
                 " nvl(i.comments,' '), nvl(reason,' '), u.piname, u.institution, invoicenumber" +
@@ -1115,7 +1115,7 @@ public class CloneOrderManager extends TableManager {
             sql += " and to_char(i.invoicedate, 'FMMonth') = '" + invoiceMonth + "'";
         }
         if (invoiceYear != null) {
-            sql += " and to_char(i.invoicedate, 'YYYY')= '"+invoiceYear+"'";
+            sql += " and to_char(i.invoicedate, 'YYYY')= '" + invoiceYear + "'";
         }
         if (lastnames != null) {
             sql += " and upper(p.lastname) in (" + StringConvertor.convertFromListToSqlString(lastnames) + ")";
@@ -1124,24 +1124,32 @@ public class CloneOrderManager extends TableManager {
             sql += " and account in (" + StringConvertor.convertFromListToSqlString(ponumbers) + ")";
         }
         if (paymentstatus != null) {
-            sql += " and paymentstatus='" + paymentstatus+"'";
+            sql += " and paymentstatus='" + paymentstatus + "'";
         }
         if (institution1 != null) {
-            sql += " and u.institution='" + institution1+"'";
+            sql += " and u.institution='" + institution1 + "'";
         }
         if (institution2 != null) {
-            sql += " and u.institution='" + institution2+"'";
+            sql += " and u.institution='" + institution2 + "'";
         }
         if (isinternal != null) {
-            if(Constants.YES.equals(isinternal)) {
-                sql += " and u.usergroup='"+User.HARVARD_UNIVERSITY+"'";
+            if (Constants.YES.equals(isinternal)) {
+                sql += " and u.usergroup='" + User.HARVARD_UNIVERSITY + "'";
             } else {
-                sql += " and u.usergroup<>'"+User.HARVARD_UNIVERSITY+"'";
+                sql += " and u.usergroup<>'" + User.HARVARD_UNIVERSITY + "'";
             }
         }
-
-        sql = sql + " order by i.invoiceid desc";
-
+        if (Constants.INVOICE_SORT_BY_DATE.equals(sort)) {
+            sql += "order by i.invoicedate";
+        } else if (Constants.INVOICE_SORT_BY_INSTITUTION.equals(sort)) {
+            sql += "order by u.institution";
+        } else if (Constants.INVOICE_SORT_BY_PI.equals(sort)) {
+            sql += "order by u.piname";
+        } else if (Constants.INVOICE_SORT_BY_PO.equals(sort)) {
+            sql += "order by account";
+        } else {
+            sql = sql + " order by invoicenumber";
+        }
         DatabaseTransaction t = null;
         ResultSet rs = null;
 
@@ -1182,9 +1190,9 @@ public class CloneOrderManager extends TableManager {
     }
 
     public boolean updateInvoice(int invoiceid, String paymentstatus, String accountnum, double payment, String comments) {
-        String sql = "update invoice set paymentstatus=?,"+
+        String sql = "update invoice set paymentstatus=?," +
                 " account=?, payment=?, comments=? where invoiceid=?";
-        String sql2 = "update cloneorder set ponumber=?"+
+        String sql2 = "update cloneorder set ponumber=?" +
                 " where orderid in (select orderid from invoice where invoiceid=?)";
         PreparedStatement stmt = null;
         PreparedStatement stmt2 = null;
@@ -1196,7 +1204,7 @@ public class CloneOrderManager extends TableManager {
             stmt.setString(4, comments);
             stmt.setInt(5, invoiceid);
             DatabaseTransaction.executeUpdate(stmt);
-            
+
             stmt2 = conn.prepareStatement(sql2);
             stmt2.setString(1, accountnum);
             stmt2.setInt(2, invoiceid);
@@ -1213,7 +1221,7 @@ public class CloneOrderManager extends TableManager {
 
     public boolean updateInvoice(int invoiceid, String accountnum, double adjustment, String reason) {
         String sql = "update invoice set account=?, adjustment=?, reason=? where invoiceid=?";
-        String sql2 = "update cloneorder set ponumber=?"+
+        String sql2 = "update cloneorder set ponumber=?" +
                 " where orderid in (select orderid from invoice where invoiceid=?)";
         PreparedStatement stmt = null;
         PreparedStatement stmt2 = null;
@@ -1224,7 +1232,7 @@ public class CloneOrderManager extends TableManager {
             stmt.setString(3, reason);
             stmt.setInt(4, invoiceid);
             DatabaseTransaction.executeUpdate(stmt);
-            
+
             stmt2 = conn.prepareStatement(sql2);
             stmt2.setString(1, accountnum);
             stmt2.setInt(2, invoiceid);
@@ -1238,7 +1246,7 @@ public class CloneOrderManager extends TableManager {
         }
         return true;
     }
-    
+
     public static void main(String args[]) {
         DatabaseTransaction t = null;
         Connection conn = null;
