@@ -4,6 +4,8 @@
  */
 package plasmid.form;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.struts.action.ActionForm;
 
 /**
@@ -23,7 +25,13 @@ public class SearchInvoiceForm extends ActionForm {
     private String institution1;
     private String institution2;
     private String sortby;
+    private int selectedInvoices[];
+    private String submitButton;
 
+    public void reset() {
+        selectedInvoices = new int[0];
+    }
+    
     public void resetAttributes() {
         invoicenums = null;
         invoiceDateFrom = null;
@@ -132,5 +140,21 @@ public class SearchInvoiceForm extends ActionForm {
 
     public void setSortby(String sortby) {
         this.sortby = sortby;
+    }
+
+    public int[] getSelectedInvoices() {
+        return selectedInvoices;
+    }
+
+    public void setSelectedInvoices(int [] selectedInvoices) {
+        this.selectedInvoices = selectedInvoices;
+    }
+
+    public String getSubmitButton() {
+        return submitButton;
+    }
+
+    public void setSubmitButton(String submitButton) {
+        this.submitButton = submitButton;
     }
 }

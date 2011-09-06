@@ -146,6 +146,8 @@ public class Constants {
     public static final String INVOICE_SORT_BY_PI = "pi";
     public static final String INVOICE_SORT_BY_INSTITUTION = "institution";
     public static final String INVOICE_SORT_BY_PO = "po";
+    public static final String INVOICE_BUTTON_VIEW_SELECT_INVOICE = "View Selected Invoices";
+    public static final String INVOICE_BUTTON_VIEW_ALL_INVOICE = "View All Invoices";
     
     /** Creates a new instance of Constants */
     public Constants() {

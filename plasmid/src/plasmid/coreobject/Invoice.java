@@ -31,6 +31,8 @@ public class Invoice {
     private int orderid;
     private String piname;
     private String institution;
+    private CloneOrder order;
+    private boolean selected;
 
     public Invoice() {}
     
@@ -206,5 +208,21 @@ public class Invoice {
 
     public void setInstitution(String institution) {
         this.institution = institution;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
+
+    public CloneOrder getOrder() {
+        return order;
+    }
+
+    public void setOrder(CloneOrder order) {
+        this.order = order;
     }
 }

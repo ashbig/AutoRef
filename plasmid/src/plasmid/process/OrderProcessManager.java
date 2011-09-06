@@ -6,6 +6,7 @@
 package plasmid.process;
 
 import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfPCell;
@@ -36,7 +37,6 @@ public class OrderProcessManager {
     public static final int PLATESIZE = 96;
     public static final String BATCH_ORDER_FILE_DILIM = ",";
     public static final String[] COUNTRY_AQIS = {"Australia", "New Zealand", "Brazil", "China"};
-    
     private List clones;
     private List collections;
     private List cloneids;
@@ -1437,7 +1437,7 @@ public class OrderProcessManager {
         double totalPrice = 0;
         double totalAdjustment = 0;
         double totalPayment = 0;
-        for(Invoice invoice:invoices) {
+        for (Invoice invoice : invoices) {
             totalPrice += invoice.getPrice();
             totalAdjustment += invoice.getAdjustment();
             totalPayment += invoice.getPayment();
@@ -1448,7 +1448,7 @@ public class OrderProcessManager {
         invoice.setPayment(totalPayment);
         return invoice;
     }
-    
+
     public void printInvoice(PrintWriter out, List orders) {
         out.println("Name\t# Clones\t# Collections\tTotal Cost\tPO Number\tDate Shipped\tOrder #\tBilling Information\tPI Name\tPI Email");
         for (int i = 0; i < orders.size(); i++) {
@@ -1747,8 +1747,14 @@ public class OrderProcessManager {
 
     public Invoice getInvoice(int invoiceid) throws Exception {
         CloneOrderManager manager = new CloneOrderManager();
-        Invoice invoice = manager.queryInvoice(invoiceid);
-        return invoice;
+        List ids = new ArrayList();
+        ids.add(new Integer(invoiceid));
+        return (Invoice)(manager.queryInvoices(ids).get(0));
+    }
+    
+    public List getInvoices(List invoiceids) throws Exception {
+        CloneOrderManager manager = new CloneOrderManager();
+        return manager.queryInvoices(invoiceids);
     }
 
     public Invoice getInvoiceByOrder(int orderid) throws Exception {
@@ -1775,126 +1781,21 @@ public class OrderProcessManager {
         return invoice;
     }
 
-    public void printExternalInvoice(OutputStream file, CloneOrder order, Invoice invoice) {
+    public void printInvoices(OutputStream file, List invoices) {
         try {
             Document document = new Document();
             PdfWriter.getInstance(document, file);
             document.open();
-
-            document.add(PdfEditor.makeTitle("DF/HCC DNA Resource Core Invoice"));
-            document.add(PdfEditor.makeTitle(" "));
-
-            PdfPTable table = new PdfPTable(2);
-            table.setWidthPercentage(100);
-            table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
-            table.addCell(PdfEditor.makeSmallBold("Invoice Number:\t" + invoice.getInvoicenum()));
-            table.addCell(PdfEditor.makeSmallBold("Invoice Date:\t" + invoice.getInvoicedate()));
-            document.add(table);
-
-            document.add(PdfEditor.makeTitle(" "));
-            table = new PdfPTable(2);
-            table.setWidthPercentage(100);
-            table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
-            table.addCell(PdfEditor.makeSmall("Harvard Medical School"));
-            table.addCell(PdfEditor.makeSmallBold("Order ID:\t" + order.getOrderid()));
-            table.addCell(PdfEditor.makeSmall("Dept. BCMP-240 Longwood Ave."));
-            table.addCell(PdfEditor.makeSmall("Order Date:\t" + order.getOrderDate()));
-            table.addCell(PdfEditor.makeSmall("Accounts Receivable"));
-            table.addCell(PdfEditor.makeSmall("Order By:\t" + order.getName()));
-            table.addCell(PdfEditor.makeSmall("Boston, MA 02115"));
-            table.addCell(PdfEditor.makeSmall("PI:\t" + order.getPiname()));
-            table.addCell(PdfEditor.makeSmall("(617)432-1210"));
-            table.addCell(PdfEditor.makeSmall("PI email:\t" + order.getPiemail()));
-            table.addCell(PdfEditor.makeSmall("Attn: Elmira Dhroso"));
-            table.addCell(PdfEditor.makeSmall("Grant or PO Number:\t" + order.getPonumber()));
-            document.add(table);
-
-            document.add(PdfEditor.makeTitle(" "));
-            document.add(PdfEditor.makeSmallBold("Bill To:"));
-            document.add(PdfEditor.makeSmall(order.getBillingTo()));
-            document.add(PdfEditor.makeSmall(order.getBillingAddress()));
-            document.add(PdfEditor.makeSmall("Billing email: "+order.getBillingemail()));
-
-            document.add(PdfEditor.makeTitle(" "));
-            table = new PdfPTable(3);
-            table.setWidthPercentage(100);
-            PdfPCell cell = new PdfPCell(PdfEditor.makeSmallBold("Item"));
-            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            table.addCell(cell);
-            cell = new PdfPCell(PdfEditor.makeSmallBold("Quantity"));
-            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            table.addCell(cell);
-            cell = new PdfPCell(PdfEditor.makeSmallBold("Price"));
-            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            table.addCell(cell);
-            table.addCell(PdfEditor.makeSmall("Plasmids"));
-            cell = new PdfPCell(PdfEditor.makeSmall("" + order.getNumofclones()));
-            cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-            table.addCell(cell);
-            cell = new PdfPCell(PdfEditor.makeSmall("$" + order.getCostforclones()));
-            cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-            table.addCell(cell);
-            table.addCell(PdfEditor.makeSmall("Collections"));
-            cell = new PdfPCell(PdfEditor.makeSmall("" + order.getNumofcollection()));
-            cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-            table.addCell(cell);
-            cell = new PdfPCell(PdfEditor.makeSmall("$" + order.getCostforcollection()));
-            cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-            table.addCell(cell);
-            table.addCell(PdfEditor.makeSmall("Platinum service"));
-            cell = new PdfPCell(PdfEditor.makeSmall("$" + order.getCostforplatinum()));
-            cell.setColspan(2);
-            cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-            table.addCell(cell);
-            table.addCell(PdfEditor.makeSmall("Shipping and handling"));
-            cell = new PdfPCell(PdfEditor.makeSmall("$" + order.getCostforshipping()));
-            cell.setColspan(2);
-            cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-            table.addCell(cell);
-            table.addCell(PdfEditor.makeSmall("Total price"));
-            cell = new PdfPCell(PdfEditor.makeSmall(order.getTotalPriceString()));
-            cell.setColspan(2);
-            cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-            table.addCell(cell);
-            table.addCell(PdfEditor.makeSmall("Adjustment*"));
-            cell = new PdfPCell(PdfEditor.makeSmall(invoice.getAdjustmentString()));
-            cell.setColspan(2);
-            cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-            table.addCell(cell);
-            table.addCell(PdfEditor.makeSmall("Payment"));
-            cell = new PdfPCell(PdfEditor.makeSmall(invoice.getPaymentString()));
-            cell.setColspan(2);
-            cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-            table.addCell(cell);
-            table.addCell(PdfEditor.makeSmallBold("Payment Due"));
-            cell = new PdfPCell(PdfEditor.makeSmallBold(invoice.getDueString()));
-            cell.setColspan(2);
-            cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-            table.addCell(cell);
-            document.add(table);
-            document.add(PdfEditor.makeSmallItalic("*" + invoice.getReasonforadj()));
-
-            document.add(PdfEditor.makeTitle(" "));
-            document.add(PdfEditor.makeSmallBold("Make checkes Payable to: Harvard Medical School. " +
-                    "Include invoice number on check. Payments must be made in U.S. funds drawn on a U.S. bank. " +
-                    "If you pay through wire transfer, please include wire transfer fee in the total amount."));
-
-            document.add(PdfEditor.makeTitle(" "));
-            document.add(PdfEditor.makeSmallBold("Mailing Address:"));
-            document.add(PdfEditor.makeSmall("  Harvard Medical School"));
-            document.add(PdfEditor.makeSmall("  BCMP-Harvard Cancer Center"));
-            document.add(PdfEditor.makeSmall("  C1-214"));
-            document.add(PdfEditor.makeSmall("  240 Longwood Ave."));
-            document.add(PdfEditor.makeSmall("  Boston, MA 02115"));
-
-            document.add(PdfEditor.makeTitle(" "));
-            document.add(PdfEditor.makeSmallItalic("Please see billing memo for more payment information."));
-
-            document.add(PdfEditor.makeTitle(" "));
-            document.add(PdfEditor.makeSmallBold("For Invoice Information Contact:"));
-            document.add(PdfEditor.makeSmall("  Elmira Dhroso, (617)432-1210"));
-            document.add(PdfEditor.makeSmall("  elmira_dhroso@hms.harvard.edu"));
-
+            for (int i = 0; i < invoices.size(); i++) {
+                Invoice invoice = (Invoice) invoices.get(i);
+                CloneOrder order = invoice.getOrder();
+                if (User.isInternalMember(order.getUsergroup())) {
+                    printInternalInvoiceContent(document, order, invoice);
+                } else {
+                    printExternalInvoiceContent(document, order, invoice);
+                }
+                document.newPage();
+            }
             document.close();
             file.close();
         } catch (Exception e) {
@@ -1902,110 +1803,241 @@ public class OrderProcessManager {
         }
     }
 
-    public void printInternalInvoice(OutputStream file, CloneOrder order, Invoice invoice) {
+    public void printExternalInvoice(OutputStream file, CloneOrder order, Invoice invoice) {
         try {
             Document document = new Document();
             PdfWriter.getInstance(document, file);
             document.open();
-
-            document.add(PdfEditor.makeTitle("DF/HCC DNA Resource Core Invoice"));
-            document.add(PdfEditor.makeTitle(" "));
-
-            PdfPTable table = new PdfPTable(2);
-            table.setWidthPercentage(100);
-            table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
-            table.addCell(PdfEditor.makeSmallBold("Invoice Number:\t" + invoice.getInvoicenum()));
-            table.addCell(PdfEditor.makeSmallBold("Invoice Date:\t" + invoice.getInvoicedate()));
-            document.add(table);
-
-            document.add(PdfEditor.makeTitle(" "));
-            table = new PdfPTable(2);
-            table.setWidthPercentage(100);
-            table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
-            table.addCell(PdfEditor.makeSmall("Harvard Medical School"));
-            table.addCell(PdfEditor.makeSmallBold("Order ID:\t" + order.getOrderid()));
-            table.addCell(PdfEditor.makeSmall("Dept. BCMP-240 Longwood Ave."));
-            table.addCell(PdfEditor.makeSmall("Order Date:\t" + order.getOrderDate()));
-            table.addCell(PdfEditor.makeSmall("Accounts Receivable"));
-            table.addCell(PdfEditor.makeSmall("Order By:\t" + order.getName()));
-            table.addCell(PdfEditor.makeSmall("Boston, MA 02115"));
-            table.addCell(PdfEditor.makeSmall("PI:\t" + order.getPiname()));
-            table.addCell(PdfEditor.makeSmall("(617)432-1210"));
-            table.addCell(PdfEditor.makeSmall("PI email:\t" + order.getPiemail()));
-            table.addCell(PdfEditor.makeSmall("Attn: Elmira Dhroso"));
-            table.addCell(PdfEditor.makeSmall("Grant or PO Number:\t" + order.getPonumber()));
-            document.add(table);
-
-            document.add(PdfEditor.makeTitle(" "));
-            document.add(PdfEditor.makeSmallBold("Bill To:"));
-            document.add(PdfEditor.makeSmall(order.getBillingTo()));
-            document.add(PdfEditor.makeSmall(order.getBillingAddress()));
-            document.add(PdfEditor.makeSmall("Billing email: "+order.getBillingemail()));
-
-            document.add(PdfEditor.makeTitle(" "));
-            table = new PdfPTable(3);
-            table.setWidthPercentage(100);
-            PdfPCell cell = new PdfPCell(PdfEditor.makeSmallBold("Item"));
-            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            table.addCell(cell);
-            cell = new PdfPCell(PdfEditor.makeSmallBold("Quantity"));
-            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            table.addCell(cell);
-            cell = new PdfPCell(PdfEditor.makeSmallBold("Price"));
-            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            table.addCell(cell);
-            table.addCell(PdfEditor.makeSmall("Plasmids"));
-            cell = new PdfPCell(PdfEditor.makeSmall("" + order.getNumofclones()));
-            cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-            table.addCell(cell);
-            cell = new PdfPCell(PdfEditor.makeSmall("$" + order.getCostforclones()));
-            cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-            table.addCell(cell);
-            table.addCell(PdfEditor.makeSmall("Collections"));
-            cell = new PdfPCell(PdfEditor.makeSmall("" + order.getNumofcollection()));
-            cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-            table.addCell(cell);
-            cell = new PdfPCell(PdfEditor.makeSmall("$" + order.getCostforcollection()));
-            cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-            table.addCell(cell);
-            table.addCell(PdfEditor.makeSmall("Platinum service"));
-            cell = new PdfPCell(PdfEditor.makeSmall("$" + order.getCostforplatinum()));
-            cell.setColspan(2);
-            cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-            table.addCell(cell);
-            table.addCell(PdfEditor.makeSmall("Shipping and handling"));
-            cell = new PdfPCell(PdfEditor.makeSmall("$" + order.getCostforshipping()));
-            cell.setColspan(2);
-            cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-            table.addCell(cell);
-            table.addCell(PdfEditor.makeSmall("Total price"));
-            cell = new PdfPCell(PdfEditor.makeSmall(order.getTotalPriceString()));
-            cell.setColspan(2);
-            cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-            table.addCell(cell);
-            table.addCell(PdfEditor.makeSmall("Adjustment*"));
-            cell = new PdfPCell(PdfEditor.makeSmall(invoice.getAdjustmentString()));
-            cell.setColspan(2);
-            cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-            table.addCell(cell);
-            table.addCell(PdfEditor.makeSmall("Payment"));
-            cell = new PdfPCell(PdfEditor.makeSmall(invoice.getPaymentString()));
-            cell.setColspan(2);
-            cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-            table.addCell(cell);
-            table.addCell(PdfEditor.makeSmallBold("Payment Due"));
-            cell = new PdfPCell(PdfEditor.makeSmallBold(invoice.getDueString()));
-            cell.setColspan(2);
-            cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-            table.addCell(cell);
-            document.add(table);
-            document.add(PdfEditor.makeSmallItalic("*" + invoice.getReasonforadj()));
-
+            printExternalInvoiceContent(document, order, invoice);
             document.close();
             file.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void printExternalInvoiceContent(Document document, CloneOrder order, Invoice invoice) throws DocumentException {
+        document.add(PdfEditor.makeTitle("DF/HCC DNA Resource Core Invoice"));
+        document.add(PdfEditor.makeTitle(" "));
+
+        PdfPTable table = new PdfPTable(2);
+        table.setWidthPercentage(100);
+        table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
+        table.addCell(PdfEditor.makeSmallBold("Invoice Number:\t" + invoice.getInvoicenum()));
+        table.addCell(PdfEditor.makeSmallBold("Invoice Date:\t" + invoice.getInvoicedate()));
+        document.add(table);
+
+        document.add(PdfEditor.makeTitle(" "));
+        table = new PdfPTable(2);
+        table.setWidthPercentage(100);
+        table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
+        table.addCell(PdfEditor.makeSmall("Harvard Medical School"));
+        table.addCell(PdfEditor.makeSmallBold("Order ID:\t" + order.getOrderid()));
+        table.addCell(PdfEditor.makeSmall("Dept. BCMP-240 Longwood Ave."));
+        table.addCell(PdfEditor.makeSmall("Order Date:\t" + order.getOrderDate()));
+        table.addCell(PdfEditor.makeSmall("Accounts Receivable"));
+        table.addCell(PdfEditor.makeSmall("Order By:\t" + order.getName()));
+        table.addCell(PdfEditor.makeSmall("Boston, MA 02115"));
+        table.addCell(PdfEditor.makeSmall("PI:\t" + order.getPiname()));
+        table.addCell(PdfEditor.makeSmall("(617)432-1210"));
+        table.addCell(PdfEditor.makeSmall("PI email:\t" + order.getPiemail()));
+        table.addCell(PdfEditor.makeSmall("Attn: Elmira Dhroso"));
+        table.addCell(PdfEditor.makeSmall("Grant or PO Number:\t" + order.getPonumber()));
+        document.add(table);
+
+        document.add(PdfEditor.makeTitle(" "));
+        document.add(PdfEditor.makeSmallBold("Bill To:"));
+        document.add(PdfEditor.makeSmall(order.getBillingTo()));
+        document.add(PdfEditor.makeSmall(order.getBillingAddress()));
+        document.add(PdfEditor.makeSmall("Billing email: " + order.getBillingemail()));
+
+        document.add(PdfEditor.makeTitle(" "));
+        table = new PdfPTable(3);
+        table.setWidthPercentage(100);
+        PdfPCell cell = new PdfPCell(PdfEditor.makeSmallBold("Item"));
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        table.addCell(cell);
+        cell = new PdfPCell(PdfEditor.makeSmallBold("Quantity"));
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        table.addCell(cell);
+        cell = new PdfPCell(PdfEditor.makeSmallBold("Price"));
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        table.addCell(cell);
+        table.addCell(PdfEditor.makeSmall("Plasmids"));
+        cell = new PdfPCell(PdfEditor.makeSmall("" + order.getNumofclones()));
+        cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        table.addCell(cell);
+        cell = new PdfPCell(PdfEditor.makeSmall("$" + order.getCostforclones()));
+        cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        table.addCell(cell);
+        table.addCell(PdfEditor.makeSmall("Collections"));
+        cell = new PdfPCell(PdfEditor.makeSmall("" + order.getNumofcollection()));
+        cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        table.addCell(cell);
+        cell = new PdfPCell(PdfEditor.makeSmall("$" + order.getCostforcollection()));
+        cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        table.addCell(cell);
+        table.addCell(PdfEditor.makeSmall("Platinum service"));
+        cell = new PdfPCell(PdfEditor.makeSmall("$" + order.getCostforplatinum()));
+        cell.setColspan(2);
+        cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        table.addCell(cell);
+        table.addCell(PdfEditor.makeSmall("Shipping and handling"));
+        cell = new PdfPCell(PdfEditor.makeSmall("$" + order.getCostforshipping()));
+        cell.setColspan(2);
+        cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        table.addCell(cell);
+        table.addCell(PdfEditor.makeSmall("Total price"));
+        cell = new PdfPCell(PdfEditor.makeSmall(order.getTotalPriceString()));
+        cell.setColspan(2);
+        cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        table.addCell(cell);
+        table.addCell(PdfEditor.makeSmall("Adjustment*"));
+        cell = new PdfPCell(PdfEditor.makeSmall(invoice.getAdjustmentString()));
+        cell.setColspan(2);
+        cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        table.addCell(cell);
+        table.addCell(PdfEditor.makeSmall("Payment"));
+        cell = new PdfPCell(PdfEditor.makeSmall(invoice.getPaymentString()));
+        cell.setColspan(2);
+        cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        table.addCell(cell);
+        table.addCell(PdfEditor.makeSmallBold("Payment Due"));
+        cell = new PdfPCell(PdfEditor.makeSmallBold(invoice.getDueString()));
+        cell.setColspan(2);
+        cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        table.addCell(cell);
+        document.add(table);
+        document.add(PdfEditor.makeSmallItalic("*" + invoice.getReasonforadj()));
+
+        document.add(PdfEditor.makeTitle(" "));
+        document.add(PdfEditor.makeSmallBold("Make checkes Payable to: Harvard Medical School. " +
+                "Include invoice number on check. Payments must be made in U.S. funds drawn on a U.S. bank. " +
+                "If you pay through wire transfer, please include wire transfer fee in the total amount."));
+
+        document.add(PdfEditor.makeTitle(" "));
+        document.add(PdfEditor.makeSmallBold("Mailing Address:"));
+        document.add(PdfEditor.makeSmall("  Harvard Medical School"));
+        document.add(PdfEditor.makeSmall("  BCMP-Harvard Cancer Center"));
+        document.add(PdfEditor.makeSmall("  C1-214"));
+        document.add(PdfEditor.makeSmall("  240 Longwood Ave."));
+        document.add(PdfEditor.makeSmall("  Boston, MA 02115"));
+
+        document.add(PdfEditor.makeTitle(" "));
+        document.add(PdfEditor.makeSmallItalic("Please see billing memo for more payment information."));
+
+        document.add(PdfEditor.makeTitle(" "));
+        document.add(PdfEditor.makeSmallBold("For Invoice Information Contact:"));
+        document.add(PdfEditor.makeSmall("  Elmira Dhroso, (617)432-1210"));
+        document.add(PdfEditor.makeSmall("  elmira_dhroso@hms.harvard.edu"));
+    }
+
+    public void printInternalInvoice(OutputStream file, CloneOrder order, Invoice invoice) {
+        try {
+            Document document = new Document();
+            PdfWriter.getInstance(document, file);
+            document.open();
+            printInternalInvoiceContent(document, order, invoice);
+            document.close();
+            file.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void printInternalInvoiceContent(Document document, CloneOrder order, Invoice invoice) throws DocumentException {
+        document.add(PdfEditor.makeTitle("DF/HCC DNA Resource Core Invoice"));
+        document.add(PdfEditor.makeTitle(" "));
+
+        PdfPTable table = new PdfPTable(2);
+        table.setWidthPercentage(100);
+        table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
+        table.addCell(PdfEditor.makeSmallBold("Invoice Number:\t" + invoice.getInvoicenum()));
+        table.addCell(PdfEditor.makeSmallBold("Invoice Date:\t" + invoice.getInvoicedate()));
+        document.add(table);
+
+        document.add(PdfEditor.makeTitle(" "));
+        table = new PdfPTable(2);
+        table.setWidthPercentage(100);
+        table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
+        table.addCell(PdfEditor.makeSmall("Harvard Medical School"));
+        table.addCell(PdfEditor.makeSmallBold("Order ID:\t" + order.getOrderid()));
+        table.addCell(PdfEditor.makeSmall("Dept. BCMP-240 Longwood Ave."));
+        table.addCell(PdfEditor.makeSmall("Order Date:\t" + order.getOrderDate()));
+        table.addCell(PdfEditor.makeSmall("Accounts Receivable"));
+        table.addCell(PdfEditor.makeSmall("Order By:\t" + order.getName()));
+        table.addCell(PdfEditor.makeSmall("Boston, MA 02115"));
+        table.addCell(PdfEditor.makeSmall("PI:\t" + order.getPiname()));
+        table.addCell(PdfEditor.makeSmall("(617)432-1210"));
+        table.addCell(PdfEditor.makeSmall("PI email:\t" + order.getPiemail()));
+        table.addCell(PdfEditor.makeSmall("Attn: Elmira Dhroso"));
+        table.addCell(PdfEditor.makeSmall("Grant or PO Number:\t" + order.getPonumber()));
+        document.add(table);
+
+        document.add(PdfEditor.makeTitle(" "));
+        document.add(PdfEditor.makeSmallBold("Bill To:"));
+        document.add(PdfEditor.makeSmall(order.getBillingTo()));
+        document.add(PdfEditor.makeSmall(order.getBillingAddress()));
+        document.add(PdfEditor.makeSmall("Billing email: " + order.getBillingemail()));
+
+        document.add(PdfEditor.makeTitle(" "));
+        table = new PdfPTable(3);
+        table.setWidthPercentage(100);
+        PdfPCell cell = new PdfPCell(PdfEditor.makeSmallBold("Item"));
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        table.addCell(cell);
+        cell = new PdfPCell(PdfEditor.makeSmallBold("Quantity"));
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        table.addCell(cell);
+        cell = new PdfPCell(PdfEditor.makeSmallBold("Price"));
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        table.addCell(cell);
+        table.addCell(PdfEditor.makeSmall("Plasmids"));
+        cell = new PdfPCell(PdfEditor.makeSmall("" + order.getNumofclones()));
+        cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        table.addCell(cell);
+        cell = new PdfPCell(PdfEditor.makeSmall("$" + order.getCostforclones()));
+        cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        table.addCell(cell);
+        table.addCell(PdfEditor.makeSmall("Collections"));
+        cell = new PdfPCell(PdfEditor.makeSmall("" + order.getNumofcollection()));
+        cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        table.addCell(cell);
+        cell = new PdfPCell(PdfEditor.makeSmall("$" + order.getCostforcollection()));
+        cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        table.addCell(cell);
+        table.addCell(PdfEditor.makeSmall("Platinum service"));
+        cell = new PdfPCell(PdfEditor.makeSmall("$" + order.getCostforplatinum()));
+        cell.setColspan(2);
+        cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        table.addCell(cell);
+        table.addCell(PdfEditor.makeSmall("Shipping and handling"));
+        cell = new PdfPCell(PdfEditor.makeSmall("$" + order.getCostforshipping()));
+        cell.setColspan(2);
+        cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        table.addCell(cell);
+        table.addCell(PdfEditor.makeSmall("Total price"));
+        cell = new PdfPCell(PdfEditor.makeSmall(order.getTotalPriceString()));
+        cell.setColspan(2);
+        cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        table.addCell(cell);
+        table.addCell(PdfEditor.makeSmall("Adjustment*"));
+        cell = new PdfPCell(PdfEditor.makeSmall(invoice.getAdjustmentString()));
+        cell.setColspan(2);
+        cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        table.addCell(cell);
+        table.addCell(PdfEditor.makeSmall("Payment"));
+        cell = new PdfPCell(PdfEditor.makeSmall(invoice.getPaymentString()));
+        cell.setColspan(2);
+        cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        table.addCell(cell);
+        table.addCell(PdfEditor.makeSmallBold("Payment Due"));
+        cell = new PdfPCell(PdfEditor.makeSmallBold(invoice.getDueString()));
+        cell.setColspan(2);
+        cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        table.addCell(cell);
+        document.add(table);
+        document.add(PdfEditor.makeSmallItalic("*" + invoice.getReasonforadj()));
     }
 
     public void displayInvoice(OutputStream file, CloneOrder order, Invoice invoice) {
@@ -2054,14 +2086,14 @@ public class OrderProcessManager {
     }
 
     public static boolean isAqisCountry(String country) {
-        for(int i=0; i<COUNTRY_AQIS.length; i++) {
-            if(COUNTRY_AQIS[i].equals(country)) {
+        for (int i = 0; i < COUNTRY_AQIS.length; i++) {
+            if (COUNTRY_AQIS[i].equals(country)) {
                 return true;
             }
         }
         return false;
     }
-    
+
     public static final void main(String args[]) {
         String filename = "C:\\dev\\test\\plasmid\\invoice.pdf";
 

@@ -609,6 +609,35 @@
               input="/DisplayVectors.jsp">
             <forward  name="success"   path="/DisplayVectors.jsp"/>
         </action>
+        <action     path="/SEQ_EnterInvoicePayment"
+                type="plasmid.action.SEQ_EnterInvoicePaymentAction"
+               name="invoiceForm"
+              input="/SEQ_EnterInvoicePayment.do">
+            <forward  name="success"  path="/SEQ_EnterInvoicePayment.jsp"/>
+        </action>
+        <action    path="/SEQ_SearchInvoice"
+               type="plasmid.action.SEQ_SearchInvoiceAction"
+               name="searchInvoiceForm"
+               scope="session"
+              input="/SEQ_SearchInvoice.jsp">
+            <forward  name="success"   path="/SEQ_InvoiceList.jsp"/>
+            <forward  name="success_empty"   path="/InvoiceListEmpty.jsp"/>
+        </action>
+        <action    path="/SEQ_ViewInvoiceDetail"
+               type="plasmid.action.SEQ_ViewInvoiceDetailAction"
+               name="viewInvoiceForm"
+               scope="request"
+              input="/SEQ_ViewInvoiceDetail.do">
+            <forward  name="success"   path="/SEQ_ViewInvoice.jsp"/>
+        </action>
+        <action    path="/SEQ_UpdateInvoicePayment"
+               type="plasmid.action.SEQ_UpdateInvoicePaymentAction"
+               name="invoiceForm"
+              input="/SEQ_EnterInvoicePayment.jsp">
+            <forward  name="success"   path="/SEQ_ViewInvoice.jsp"/>
+            <forward  name="success_list"   path="/SEQ_SearchInvoice.do"/>
+            <forward  name="success_message"   path="/UpdateInvoicePaymentMessage.jsp"/>
+        </action>
         <action    path="/UploadCultureResults"
                type="plasmid.action.UploadCultureResultsAction"
                name="uploadCultureResultsForm"
@@ -709,6 +738,12 @@
                name="viewPlatinumResultForm"
               input="/ViewPlatinumResult.do">
             <forward  name="success"   path="/ViewPlatinumResult.jsp"/>
+        </action>
+        <action    path="/ViewSelectedInvoices"
+               type="plasmid.action.ViewSelectedInvoicesAction"
+               name="searchInvoiceForm"
+               scope="session"
+              input="/InvoiceList.jsp">
         </action>
         <action    path="/WorklistInput"
                type="plasmid.action.WorklistInputAction"

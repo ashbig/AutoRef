@@ -1002,48 +1002,59 @@ public class CloneOrderManager extends TableManager {
         return invoiceid;
     }
 
-    public Invoice queryInvoice(int invoiceid) throws Exception {
+    public List queryInvoices(List invoiceids) throws Exception {
         String sql = "select invoicenumber, to_char(invoicedate,'YYYY-MM-dd hh:mm:ss')," +
                 " i.price, adjustment, i.payment, paymentstatus, nvl(paymenttype, ' '), account," +
                 " i.orderid, nvl(i.comments,' '), nvl(reason, ' '), u.piname, u.institution" +
                 " from invoice i, cloneorder c, userprofile u" +
                 " where i.orderid=c.orderid" +
                 " and c.userid = u.userid" +
-                " and i.invoiceid=" + invoiceid;
+                " and i.invoiceid=?";
 
         DatabaseTransaction t = null;
+        Connection connection = null;
         ResultSet rs = null;
-        Invoice invoice = null;
+        PreparedStatement stmt = null;
+        List invoices = new ArrayList();
         try {
             t = DatabaseTransaction.getInstance();
-            rs = t.executeQuery(sql);
-            if (rs.next()) {
-                String invoicenumber = rs.getString(1);
-                String invoicedate = rs.getString(2);
-                double price = rs.getDouble(3);
-                double adjustment = rs.getDouble(4);
-                double payment = rs.getDouble(5);
-                String paymentstatus = rs.getString(6);
-                String paymenttype = rs.getString(7);
-                String account = rs.getString(8);
-                int orderid = rs.getInt(9);
-                String comments = rs.getString(10);
-                String reason = rs.getString(11);
-                String piname = rs.getString(12);
-                String institution = rs.getString(13);
-                invoice = new Invoice(invoicenumber, invoicedate, price, adjustment, payment, paymentstatus, paymenttype, orderid, reason, account);
-                invoice.setComments(comments);
-                invoice.setInvoiceid(invoiceid);
-                invoice.setPiname(piname);
-                invoice.setInstitution(institution);
+            connection = t.requestConnection();
+            stmt = connection.prepareStatement(sql);
+            for (int i = 0; i < invoiceids.size(); i++) {
+                int invoiceid = (Integer)invoiceids.get(i);
+                stmt.setInt(1, invoiceid);
+                rs = stmt.executeQuery();
+                if (rs.next()) {
+                    String invoicenumber = rs.getString(1);
+                    String invoicedate = rs.getString(2);
+                    double price = rs.getDouble(3);
+                    double adjustment = rs.getDouble(4);
+                    double payment = rs.getDouble(5);
+                    String paymentstatus = rs.getString(6);
+                    String paymenttype = rs.getString(7);
+                    String account = rs.getString(8);
+                    int orderid = rs.getInt(9);
+                    String comments = rs.getString(10);
+                    String reason = rs.getString(11);
+                    String piname = rs.getString(12);
+                    String institution = rs.getString(13);
+                    Invoice invoice = new Invoice(invoicenumber, invoicedate, price, adjustment, payment, paymentstatus, paymenttype, orderid, reason, account);
+                    invoice.setComments(comments);
+                    invoice.setInvoiceid(invoiceid);
+                    invoice.setPiname(piname);
+                    invoice.setInstitution(institution);
+                    invoices.add(invoice);
+                }
             }
         } catch (Exception ex) {
             handleError(ex, "Cannot query invoice.");
             throw new Exception(ex);
         } finally {
             DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+            DatabaseTransaction.closeConnection(connection);
         }
-        return invoice;
+        return invoices;
     }
 
     public Invoice queryInvoiceByOrder(int orderid) throws Exception {
