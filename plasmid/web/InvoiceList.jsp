@@ -78,6 +78,8 @@
                         </table>
                         <html:submit styleClass="text" property="submitButton" value="<%=Constants.INVOICE_BUTTON_VIEW_SELECT_INVOICE%>"/>
                         <html:submit styleClass="text" property="submitButton" value="<%=Constants.INVOICE_BUTTON_VIEW_ALL_INVOICE%>"/>
+                        <html:submit styleClass="text" property="submitButton" value="<%=Constants.INVOICE_BUTTON_EMAIL_SELECT_INVOICE%>"/>
+                        <html:submit styleClass="text" property="submitButton" value="<%=Constants.INVOICE_BUTTON_EMAIL_ALL_INVOICE%>"/>
                     </html:form>
                 </td>
             </tr>

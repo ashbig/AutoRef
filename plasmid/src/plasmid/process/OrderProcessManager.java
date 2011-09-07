@@ -1781,6 +1781,12 @@ public class OrderProcessManager {
         return invoice;
     }
 
+    public void printInvoice(OutputStream file, Invoice invoice) {
+        List invoices = new ArrayList();
+        invoices.add(invoice);
+        printInvoices(file, invoices);
+    }
+    
     public void printInvoices(OutputStream file, List invoices) {
         try {
             Document document = new Document();
@@ -2048,6 +2054,42 @@ public class OrderProcessManager {
         }
     }
 
+    public void emailInvoices(List invoices) throws Exception {
+        for(int i=0; i<invoices.size(); i++) {
+            Invoice invoice = (Invoice)invoices.get(i);
+            emailInvoice(invoice.getOrder(), invoice);
+        }
+    }
+    
+    public void emailInvoice(CloneOrder order, Invoice invoice) throws Exception {
+            String filename = Constants.TMP + "Invoice_" + order.getOrderid() + ".pdf";
+            File f1 = new File(filename);
+            OutputStream file = new FileOutputStream(f1);
+            printInvoice(file, invoice);
+            File f2 = new File(Constants.FILE_PATH + "Billing_memo.pdf");
+            List files = new ArrayList();
+            files.add(f1);
+            files.add(f2);
+
+            String billingemail = order.getBillingemail();
+            String subject = "Invoice for order " + invoice.getOrderid();
+            String text = "Dear Accounts Payable Representative:\n\n" +
+                    "Payment is requested for the attached invoice from the PlasmID Repository" +
+                    " at Harvard Medical School.\n\n" +
+                    "This invoice was generated upon completion and shipment of your order." +
+                    " Any discounts or price modifications should already be reflected on this invoice." +
+                    " If you have received this notification in error, or believe that a clerical" +
+                    " mistake has occurred please contact us as soon as possible to resolve the issue." +
+                    " Please find payment instructions attached to this email and ALWAYS BE SURE TO" +
+                    " INCLUDE YOUR INVOICE NUMBER WITH PAYMENT and ADD ANY WIRE TRANSFER FEES TO YOUR TOTAL.\n\n" +
+                    "As a part of our continued environmental efforts this email will serve as your" +
+                    " sole notification, and no paper copy will be mailed to your facility.\n\n" +
+                    "Payment Terms: Net 30\n" +
+                    "Enclosures: Invoice, Payment Instructions\n";
+
+            Mailer.sendMessage(billingemail, Constants.EMAIL_FROM, Constants.EMAIL_FROM, subject, text, files);
+    }
+    
     public void sendShippingEmails(CloneOrder order, Invoice invoice) throws Exception {
         int orderid = order.getOrderid();
         String to = order.getEmail();

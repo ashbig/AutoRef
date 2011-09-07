@@ -744,6 +744,7 @@
                name="searchInvoiceForm"
                scope="session"
               input="/InvoiceList.jsp">
+            <forward  name="email_successful"   path="/EmailInvoiceSuccessful.jsp"/>
         </action>
         <action    path="/WorklistInput"
                type="plasmid.action.WorklistInputAction"

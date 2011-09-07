@@ -35,7 +35,7 @@ public class ViewSelectedInvoicesAction extends InternalUserAction {
 
         OrderProcessManager manager = new OrderProcessManager();
         List selectedInvoices = null;
-        if (Constants.INVOICE_BUTTON_VIEW_ALL_INVOICE.equals(submitButton)) {
+        if (Constants.INVOICE_BUTTON_VIEW_ALL_INVOICE.equals(submitButton) || Constants.INVOICE_BUTTON_EMAIL_ALL_INVOICE.equals(submitButton)) {
             selectedInvoices = (List) request.getSession().getAttribute(Constants.INVOICES);
         } else {
             int[] selectedInvoiceids = ((SearchInvoiceForm) form).getSelectedInvoices();
@@ -57,19 +57,34 @@ public class ViewSelectedInvoicesAction extends InternalUserAction {
                 return mapping.findForward("error");
             }
         }
-        
+
         if (selectedInvoices.isEmpty()) {
             return null;
         }
-        
+
         for (int i = 0; i < selectedInvoices.size(); i++) {
             Invoice invoice = (Invoice) selectedInvoices.get(i);
             CloneOrder order = manager.getCloneOrder(user, invoice.getOrderid());
             invoice.setOrder(order);
         }
 
-        response.setContentType("application/pdf");
-        manager.printInvoices(response.getOutputStream(), selectedInvoices);
-        return null;
+        if (Constants.INVOICE_BUTTON_VIEW_ALL_INVOICE.equals(submitButton) || Constants.INVOICE_BUTTON_VIEW_SELECT_INVOICE.equals(submitButton)) {
+            response.setContentType("application/pdf");
+            manager.printInvoices(response.getOutputStream(), selectedInvoices);
+            return null;
+        } else if (Constants.INVOICE_BUTTON_EMAIL_ALL_INVOICE.equals(submitButton) || Constants.INVOICE_BUTTON_EMAIL_SELECT_INVOICE.equals(submitButton)) {
+            try {
+                manager.emailInvoices(selectedInvoices);
+                return mapping.findForward("email_successful");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                errors.add(ActionErrors.GLOBAL_ERROR,
+                        new ActionError("error.general", "Error occured while sending emails."));
+                saveErrors(request, errors);
+                return mapping.findForward("error");
+            }
+        } else {
+            return null;
+        }
     }
 }
