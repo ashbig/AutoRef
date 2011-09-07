@@ -27,7 +27,7 @@
                 <td width="83%" align="left" valign="top">
                     <jsp:include page="invoiceTitle.jsp" />
                     
-                    <p>Invoices are emailed successfully.</p>
+                    <p>Invoice(s) are emailed successfully.</p>
                 </td>
             </tr>
         </table>
