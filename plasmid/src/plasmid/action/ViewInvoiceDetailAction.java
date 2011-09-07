@@ -50,7 +50,7 @@ public class ViewInvoiceDetailAction extends UserAction {
         User user = (User) request.getSession().getAttribute(Constants.USER_KEY);
         int invoiceid = ((ViewInvoiceForm) form).getInvoiceid();
         int orderid = ((ViewInvoiceForm) form).getOrderid();
-        int isdownload = ((ViewInvoiceForm) form).getIsdownload();
+        String button = ((ViewInvoiceForm) form).getButton();
 
         OrderProcessManager manager = new OrderProcessManager();
         Invoice invoice = null;
@@ -73,11 +73,22 @@ public class ViewInvoiceDetailAction extends UserAction {
             return mapping.findForward("error");
         }
 
-        if (isdownload == 1) {
+        if (Constants.INVOICE_BUTTON_VIEW_INVOICE.equals(button)) {
             //write to pdf file in browser
             response.setContentType("application/pdf");
             manager.displayInvoice(response.getOutputStream(), order, invoice);
             return mapping.findForward(null);
+        } else if (Constants.INVOICE_BUTTON_EMAIL_INVOICE.equals(button)) {
+            try {
+                manager.emailInvoice(order, invoice);
+                return mapping.findForward("success_email");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                errors.add(ActionErrors.GLOBAL_ERROR,
+                        new ActionError("error.general", "Error occured while sending emails."));
+                saveErrors(request, errors);
+                return mapping.findForward("error");
+            }
         } else {
             request.setAttribute(Constants.CLONEORDER, order);
             request.setAttribute(Constants.INVOICE, invoice);

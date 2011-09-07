@@ -704,6 +704,7 @@
                scope="request"
               input="/ViewInvoiceDetail.do">
             <forward  name="success"   path="/ViewInvoice.jsp"/>
+            <forward  name="success_email"   path="/EmailInvoiceSuccessful.jsp"/>
         </action>
         <action    path="/ViewOrderClones"
                type="plasmid.action.ViewOrderClonesAction"

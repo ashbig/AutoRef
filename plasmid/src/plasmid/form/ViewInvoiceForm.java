@@ -14,7 +14,7 @@ import org.apache.struts.action.ActionForm;
 public class ViewInvoiceForm extends ActionForm {
     private int invoiceid;
     private int orderid;
-    private int isdownload;
+    private String button;
 
     public int getInvoiceid() {
         return invoiceid;
@@ -31,12 +31,12 @@ public class ViewInvoiceForm extends ActionForm {
     public void setOrderid(int orderid) {
         this.orderid = orderid;
     }
-
-    public int getIsdownload() {
-        return isdownload;
+    
+    public String getButton() {
+        return button;
     }
 
-    public void setIsdownload(int isdownload) {
-        this.isdownload = isdownload;
+    public void setButton(String button) {
+        this.button = button;
     }
 }

@@ -79,9 +79,9 @@
                                 <input type="hidden" name="invoiceid" value="<bean:write name="<%=Constants.INVOICE%>" property="invoiceid"/>"/>
                                 <input type="hidden" name="orderid" value="<bean:write name="<%=Constants.INVOICE%>" property="orderid"/>"/>
                                 <input type="hidden" name="isdownload" value="1"/>
-                                <td class="text"><html:submit styleClass="text" value="View Invoice"/></td>
+                                <td class="text"><html:submit styleClass="text" value="<%=Constants.INVOICE_BUTTON_VIEW_INVOICE%>"/></td>
+                                <td class="text"><html:submit styleClass="text" value="<%=Constants.INVOICE_BUTTON_EMAIL_INVOICE%>"/></td>
                             </html:form>
-                            <td>&nbsp;</td>
                         </tr>
                     </table>
                     

@@ -150,6 +150,8 @@ public class Constants {
     public static final String INVOICE_BUTTON_VIEW_ALL_INVOICE = "View All Invoices";
     public static final String INVOICE_BUTTON_EMAIL_SELECT_INVOICE = "Email Selected Invoices";
     public static final String INVOICE_BUTTON_EMAIL_ALL_INVOICE = "Email All Invoices";
+    public static final String INVOICE_BUTTON_VIEW_INVOICE = "View Invoice";
+    public static final String INVOICE_BUTTON_EMAIL_INVOICE = "Email Invoice";
     
     /** Creates a new instance of Constants */
     public Constants() {
