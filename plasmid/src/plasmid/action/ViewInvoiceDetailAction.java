@@ -51,6 +51,7 @@ public class ViewInvoiceDetailAction extends UserAction {
         int invoiceid = ((ViewInvoiceForm) form).getInvoiceid();
         int orderid = ((ViewInvoiceForm) form).getOrderid();
         String button = ((ViewInvoiceForm) form).getButton();
+        int isdownload = ((ViewInvoiceForm)form).getIsdownload();
 
         OrderProcessManager manager = new OrderProcessManager();
         Invoice invoice = null;
@@ -89,6 +90,10 @@ public class ViewInvoiceDetailAction extends UserAction {
                 saveErrors(request, errors);
                 return mapping.findForward("error");
             }
+        } else if (isdownload == 1) {
+            response.setContentType("application/pdf");
+            manager.displayInvoice(response.getOutputStream(), order, invoice);
+            return mapping.findForward(null);
         } else {
             request.setAttribute(Constants.CLONEORDER, order);
             request.setAttribute(Constants.INVOICE, invoice);
