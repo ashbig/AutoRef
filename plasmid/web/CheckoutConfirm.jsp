@@ -5,6 +5,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ page import="plasmid.Constants" %> 
+<%@ page import="plasmid.coreobject.User" %> 
 
 <html>
 <head>
@@ -172,7 +173,12 @@ Click the button to pay by credit card through the PayPal site. You DO NOT need 
     </tr>
 <tr>
 <td width="30%" class="formlabel">Please choose payment method:</td>
+<logic:equal name="<%=Constants.USER_KEY%>" property="internalMember" value="<%=User.HARVARD_UNIVERSITY%>">
+    <td width="30%" class="text"><html:radio disabled="true" property="paymentmethod" value="<%=Constants.PAYPAL%>"/><img src="credit_card.jpg"/></td>
+</logic:equal>
+<logic:notEqual name="<%=Constants.USER_KEY%>" property="internalMember" value="<%=User.HARVARD_UNIVERSITY%>">
 <td width="30%" class="text"><html:radio property="paymentmethod" value="<%=Constants.PAYPAL%>"/><img src="credit_card.jpg"/></td>
+</logic:notEqual>
 <td width="30%" class="text"><html:radio property="paymentmethod" value="<%=Constants.PO%>"/><%=Constants.PO%></td>
 <td></td>
 </tr>
