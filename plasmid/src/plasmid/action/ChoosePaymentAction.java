@@ -83,7 +83,7 @@ public class ChoosePaymentAction extends UserAction {
         boolean saveInfo = ((CheckoutForm) form).getSaveInfo();
         int orderid = ((CheckoutForm) form).getOrderid();
 
-        if (!Constants.PO.equals(payment) && user.isInternalMember()) {
+        if (Constants.PAYPAL.equals(payment) && user.isInternalMember()) {
             errors.add("ponumber", new ActionError("error.credit.notallowed"));
             saveErrors(request, errors);
             return (new ActionForward(mapping.getInput()));
