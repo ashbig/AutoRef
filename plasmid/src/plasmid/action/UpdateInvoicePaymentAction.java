@@ -36,6 +36,7 @@ public class UpdateInvoicePaymentAction extends InternalUserAction {
         int invoiceid = ((InvoiceForm) form).getInvoiceid();
         String paymentstatus = ((InvoiceForm) form).getPaymentstatus();
         String accountnum = ((InvoiceForm) form).getAccountnum();
+        double adjustment = ((InvoiceForm)form).getAdjustment();
         double payment = ((InvoiceForm) form).getPayment();
         String comments = ((InvoiceForm) form).getComments();
         boolean returnToList = ((InvoiceForm)form).isReturnToList();
@@ -47,7 +48,7 @@ public class UpdateInvoicePaymentAction extends InternalUserAction {
             c = t.requestConnection();
 
             CloneOrderManager manager = new CloneOrderManager(c);
-            if (manager.updateInvoice(invoiceid, paymentstatus, accountnum, payment, comments)) {
+            if (manager.updateInvoice(invoiceid, paymentstatus, accountnum, payment, adjustment, comments)) {
                 DatabaseTransaction.commit(c);
 
                 OrderProcessManager m = new OrderProcessManager();

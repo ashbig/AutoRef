@@ -15,6 +15,7 @@ public class InvoiceForm extends ActionForm {
     private int invoiceid;
     private String paymentstatus;
     private String accountnum;
+    private double adjustment;
     private double payment;
     private String comments;
     private boolean returnToList;
@@ -67,5 +68,13 @@ public class InvoiceForm extends ActionForm {
 
     public void setReturnToList(boolean returnToList) {
         this.returnToList = returnToList;
+    }
+
+    public double getAdjustment() {
+        return adjustment;
+    }
+
+    public void setAdjustment(double adjustment) {
+        this.adjustment = adjustment;
     }
 }

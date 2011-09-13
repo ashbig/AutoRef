@@ -1200,9 +1200,9 @@ public class CloneOrderManager extends TableManager {
         }
     }
 
-    public boolean updateInvoice(int invoiceid, String paymentstatus, String accountnum, double payment, String comments) {
+    public boolean updateInvoice(int invoiceid, String paymentstatus, String accountnum, double payment, double adjustment, String comments) {
         String sql = "update invoice set paymentstatus=?," +
-                " account=?, payment=?, comments=? where invoiceid=?";
+                " account=?, payment=?, adjustment=?, comments=? where invoiceid=?";
         String sql2 = "update cloneorder set ponumber=?" +
                 " where orderid in (select orderid from invoice where invoiceid=?)";
         PreparedStatement stmt = null;
@@ -1212,8 +1212,9 @@ public class CloneOrderManager extends TableManager {
             stmt.setString(1, paymentstatus);
             stmt.setString(2, accountnum);
             stmt.setDouble(3, payment);
-            stmt.setString(4, comments);
-            stmt.setInt(5, invoiceid);
+            stmt.setDouble(4, adjustment);
+            stmt.setString(5, comments);
+            stmt.setInt(6, invoiceid);
             DatabaseTransaction.executeUpdate(stmt);
 
             stmt2 = conn.prepareStatement(sql2);

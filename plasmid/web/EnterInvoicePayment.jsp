@@ -47,8 +47,8 @@
                             <tr> 
                                 <td class="formlabel">Price:</td>
                                 <td class="text"><bean:write name="<%=Constants.INVOICE%>" property="priceString"/></td>
-                                <td class="formlabel">Adjustment:</td>
-                                <td class="text"><bean:write name="<%=Constants.INVOICE%>" property="adjustmentString"/></td>
+                                <td class="formlabel">Adjustment (enter negative number for refund):</td>
+                                <td class="text">$<html:text styleClass="text" name="<%=Constants.INVOICE%>" property="adjustment"/></td>
                             </tr>
                             <tr> 
                                 <td class="formlabel">Payment Due:</td>
