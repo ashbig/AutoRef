@@ -176,7 +176,7 @@ Click the button to pay by credit card through the PayPal site. You DO NOT need 
 <logic:equal name="<%=Constants.USER_KEY%>" property="internalMember" value="true">
     <td width="30%" class="text"><html:radio disabled="true" property="paymentmethod" value="<%=Constants.PAYPAL%>"/><img src="credit_card.jpg"/></td>
 </logic:equal>
-<logic:notEqual name="<%=Constants.USER_KEY%>" property="internalMember" value="<%=User.HARVARD_UNIVERSITY%>">
+<logic:notEqual name="<%=Constants.USER_KEY%>" property="internalMember" value="true">
 <td width="30%" class="text"><html:radio property="paymentmethod" value="<%=Constants.PAYPAL%>"/><img src="credit_card.jpg"/></td>
 </logic:notEqual>
 <td width="30%" class="text"><html:radio property="paymentmethod" value="<%=Constants.PO%>"/><%=Constants.PO%></td>
