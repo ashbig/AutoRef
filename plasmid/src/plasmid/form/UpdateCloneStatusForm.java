@@ -1,7 +1,6 @@
 /*
- * FindClonesForm.java
- *
- * Created on June 20, 2006, 10:58 AM
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
  */
 
 package plasmid.form;
@@ -12,22 +11,17 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
 
-
 /**
  *
- * @author  DZuo
+ * @author Dongmei
  */
-public class FindClonesForm extends ActionForm {
-    private String cloneidList;
+public class UpdateCloneStatusForm extends ActionForm {
+    private String cloneList;
+    private String comments;
     
     /** Creates a new instance of FindClonesForm */
-    public FindClonesForm() {
+    public UpdateCloneStatusForm() {
     }
-    
-    public String getCloneidList() {return cloneidList;}
-    
-    public void setCloneidList(String s) {this.cloneidList = s;}
-    
         
     /**
      * Validate the properties that have been set from this HTTP request,
@@ -43,9 +37,30 @@ public class FindClonesForm extends ActionForm {
                                  HttpServletRequest request) {
 
         ActionErrors errors = new ActionErrors();
-        if ((cloneidList == null) || (cloneidList.trim().length() < 1))
+        if ((cloneList == null) || (cloneList.trim().length() < 1))
             errors.add("cloneidList", new ActionError("error.cloneid.required"));
             
         return errors;
+    }    
+    
+    public void reset(ActionMapping mapping, HttpServletRequest request) {
+        this.cloneList = null;
+        this.comments = null;
+    } 
+    
+    public String getCloneList() {
+        return cloneList;
+    }
+
+    public void setCloneList(String cloneList) {
+        this.cloneList = cloneList;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
     }
 }

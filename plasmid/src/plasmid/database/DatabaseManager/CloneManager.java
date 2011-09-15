@@ -766,8 +766,8 @@ public class CloneManager extends TableManager {
                 String src = rs.getString(14);
                 String d = rs.getString(15);
 
-                 String  submitter = "", receiver = "";
-                 String  submitdate = "", receivedate = "";
+                String submitter = "", receiver = "";
+                String submitdate = "", receivedate = "";
                 if (querySubmission) {
                     ResultSet rs14 = t.executeQuery(sql14);
                     if (rs14.next()) {
@@ -1743,8 +1743,8 @@ public class CloneManager extends TableManager {
         String sql2 = "select h.hoststrain, h.isinuse, h.description" +
                 " from host h where h.cloneid=?";
 
-         ResultSet  rs = null, rs2 = null;
-         PreparedStatement  stmt = null, stmt2 = null;
+        ResultSet rs = null, rs2 = null;
+        PreparedStatement stmt = null, stmt2 = null;
         try {
             stmt = conn.prepareStatement(sql);
             stmt2 = conn.prepareStatement(sql2);
@@ -1803,8 +1803,8 @@ public class CloneManager extends TableManager {
         String sql2 = "select h.hoststrain, h.isinuse, h.description" +
                 " from host h where h.cloneid=?";
 
-         ResultSet  rs = null, rs2 = null;
-         PreparedStatement  stmt = null, stmt2 = null;
+        ResultSet rs = null, rs2 = null;
+        PreparedStatement stmt = null, stmt2 = null;
         try {
             stmt = conn.prepareStatement(sql);
             stmt2 = conn.prepareStatement(sql2);
@@ -1874,8 +1874,8 @@ public class CloneManager extends TableManager {
         String sql2 = "select h.hoststrain, h.isinuse, h.description" +
                 " from host h, clone c where h.cloneid=c.cloneid and c.clonename=?";
 
-         ResultSet  rs = null, rs2 = null;
-         PreparedStatement  stmt = null, stmt2 = null;
+        ResultSet rs = null, rs2 = null;
+        PreparedStatement stmt = null, stmt2 = null;
         try {
             stmt = conn.prepareStatement(sql);
             stmt2 = conn.prepareStatement(sql2);
@@ -2064,6 +2064,30 @@ public class CloneManager extends TableManager {
         }
 
         return true;
+    }
+
+    public void updateCloneStatus(List clonenames, String comments) throws Exception {
+        String sql = "update clone set status='" + Clone.NOT_AVAILABLE + "', comments=comments||? where clonename=?";
+        PreparedStatement stmt = null;
+        String errorClone = "";
+        try {
+            stmt = conn.prepareStatement(sql);
+            for (int i = 0; i < clonenames.size(); i++) {
+                String clonename = (String) clonenames.get(i);
+                errorClone = clonename;
+                if(comments==null || comments.trim().length()==0)
+                    stmt.setString(1, "");
+                else
+                    stmt.setString(1, " "+comments);
+                stmt.setString(2, clonename);
+                DatabaseTransaction.executeUpdate(stmt);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new Exception("Error occured while updating clone status for: " + errorClone);
+        } finally {
+            DatabaseTransaction.closeStatement(stmt);
+        }
     }
 
     public boolean checkNoInsertCloneExistByVectorid(int vectorid) {

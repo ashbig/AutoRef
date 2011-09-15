@@ -148,6 +148,8 @@
                     type="plasmid.form.SearchInvoiceForm"/>
         <form-bean      name="invoiceForm"
                     type="plasmid.form.InvoiceForm"/>
+        <form-bean      name="updateCloneStatusForm"
+                    type="plasmid.form.UpdateCloneStatusForm"/>
                     
     </form-beans>
 
@@ -661,6 +663,12 @@
             <forward  name="success"   path="/ViewInvoice.jsp"/>
             <forward  name="success_list"   path="/SearchInvoice.do"/>
             <forward  name="success_message"   path="/UpdateInvoicePaymentMessage.jsp"/>
+        </action>
+        <action    path="/UpdateCloneStatus"
+               type="plasmid.action.UpdateCloneStatusAction"
+               name="updateCloneStatusForm"
+              scope="request"
+              input="/UpdateCloneStatusInput.jsp">
         </action>
         <action    path="/UploadResultFile"
                type="plasmid.action.UploadResultFileAction"
