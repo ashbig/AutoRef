@@ -171,7 +171,8 @@ public class CollectionManager extends TableManager {
         String sql3 = "select p.name, p.filename, p.description" +
                 " from protocol p, collectionprotocol cp" +
                 " where p.name=cp.protocolname and cp.collectionname='" + name + "'";
-        String sql4 = "select cloneid from clonecollection where name='" + name + "'";
+        String sql4 = "select cloneid from clonecollection where name='" + name + "'"+
+                " and cloneid in (select cloneid from clone where status='"+Clone.AVAILABLE+"')";
 
         DatabaseTransaction t = null;
         Connection conn = null;
@@ -267,7 +268,8 @@ public class CollectionManager extends TableManager {
     }
 
     public static int getClonenumInCollection(String name) {
-        String sql = "select count(cloneid) from clonecollection where name='" + name + "'";
+        String sql = "select count(cloneid) from clonecollection where name='" + name + "'"+
+                " and cloneid in (select cloneid from clone where status='"+Clone.AVAILABLE+"')";
         DatabaseTransaction t = null;
         ResultSet rs = null;
         int count = 0;
