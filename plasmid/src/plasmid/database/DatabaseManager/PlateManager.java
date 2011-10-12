@@ -11,7 +11,6 @@ import java.util.*;
 
 import plasmid.coreobject.*;
 import plasmid.database.*;
-import plasmid.Constants;
 import plasmid.query.coreobject.CloneInfo;
 
 /**
@@ -192,6 +191,50 @@ public class PlateManager extends TableManager {
             DatabaseTransaction.closeStatement(stmt);
         } catch (Exception ex) {
             handleError(ex, "Error occured while updating SAMPLE table");
+            return false;
+        }
+        return true;
+    }
+    
+    public boolean updateSampleType(List samples, String type) {
+        if(samples == null || samples.size() == 0)
+            return true;
+        
+        String sql = "update sample set sampletype=? where sampleid=?";
+        
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, type);
+            for(int i=0; i<samples.size(); i++) {
+                Sample s = (Sample)samples.get(i);
+                stmt.setInt(2, s.getSampleid());
+                DatabaseTransaction.executeUpdate(stmt);
+            }
+            DatabaseTransaction.closeStatement(stmt);
+        } catch (Exception ex) {
+            handleError(ex, "Error occured while updating SAMPLE table");
+            return false;
+        }
+        return true;
+    }
+    
+    public boolean updateContainerLocation(List containers, String location) {
+        if(containers == null || containers.size() == 0)
+            return true;
+        
+        String sql = "update containerheader set location=? where containerid=?";
+        
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, location);
+            for(int i=0; i<containers.size(); i++) {
+                Container s = (Container)containers.get(i);
+                stmt.setInt(2, s.getContainerid());
+                DatabaseTransaction.executeUpdate(stmt);
+            }
+            DatabaseTransaction.closeStatement(stmt);
+        } catch (Exception ex) {
+            handleError(ex, "Error occured while updating CONTAINER table");
             return false;
         }
         return true;

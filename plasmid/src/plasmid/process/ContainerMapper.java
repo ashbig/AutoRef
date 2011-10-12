@@ -7,10 +7,7 @@
 package plasmid.process;
 
 import java.util.*;
-import java.sql.*;
 
-import plasmid.database.DatabaseManager.*;
-import plasmid.database.*;
 import plasmid.coreobject.*;
 
 /**

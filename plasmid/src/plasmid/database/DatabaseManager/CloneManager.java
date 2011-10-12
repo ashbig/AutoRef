@@ -1527,19 +1527,20 @@ public class CloneManager extends TableManager {
         return totalCount;
     }
 
-    public Map queryCloneSamples(List clones) {
+    public List queryCloneSamples(List clones) {
         if (clones == null) {
             return null;
         }
 
-        String sql = "select sampletype, position, containerlabel, result, sampleid," +
-                " cloneid, containerid, positionx, positiony" +
-                " from sample where cloneid in (select cloneid from clone where clonename=?)";
+        String sql = "select s.sampletype, s.position, s.containerlabel, s.result, s.sampleid," +
+                " s.cloneid, s.containerid, s.positionx, s.positiony, c.containertype" +
+                " from sample s, containerheader c where s.containerid=c.containerid"+
+                " and s.sampletype<>'"+Sample.CONTAMINATED+"' and s.cloneid in (select cloneid from clone where clonename=?)";
 
         DatabaseTransaction t = null;
         Connection conn = null;
         PreparedStatement stmt = null;
-        Map m = new HashMap();
+        List m = new ArrayList();
         String currentClone = null;
         try {
             t = DatabaseTransaction.getInstance();
@@ -1548,9 +1549,11 @@ public class CloneManager extends TableManager {
             ResultSet rs = null;
 
             for (int i = 0; i < clones.size(); i++) {
-                String clone = (String) clones.get(i);
-                currentClone = clone;
-                stmt.setString(1, clone);
+                String clonename = (String) clones.get(i);
+                Clone clone = new Clone();
+                clone.setName(clonename);
+                currentClone = clonename;
+                stmt.setString(1, clonename);
                 rs = DatabaseTransaction.executeQuery(stmt);
                 List samples = new ArrayList();
                 while (rs.next()) {
@@ -1563,11 +1566,16 @@ public class CloneManager extends TableManager {
                     int containerid = rs.getInt(7);
                     String x = rs.getString(8);
                     String y = rs.getString(9);
+                    String containertype = rs.getString(10);
                     Sample s = new Sample(sampleid, type, null, cloneid, position, x, y, containerid, label);
                     s.setResult(result);
+                    s.setContainerType(containertype);
+                    clone.setCloneid(cloneid);
+                    s.setClone(clone);
                     samples.add(s);
                 }
-                m.put(clone, samples);
+                clone.setSamples(samples);
+                m.add(clone);
             }
             DatabaseTransaction.closeResultSet(rs);
         } catch (Exception ex) {

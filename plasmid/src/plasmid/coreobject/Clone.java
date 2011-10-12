@@ -69,8 +69,10 @@ public class Clone implements Serializable {
     protected List properties;
     protected GrowthCondition recommendedGrowthCondition;
     protected CloneVector vector;
-    private int orderid;
-
+    protected int orderid;
+    protected String newTubeLabel;
+    private List samples;
+    
     /** Creates a new instance of Clone */
     public Clone() {
     }
@@ -615,5 +617,21 @@ public class Clone implements Serializable {
 
     public void setOrderid(int orderid) {
         this.orderid = orderid;
+    }
+
+    public String getNewTubeLabel() {
+        return newTubeLabel;
+    }
+
+    public void setNewTubeLabel(String newTubeLabel) {
+        this.newTubeLabel = newTubeLabel;
+    }
+
+    public List getSamples() {
+        return samples;
+    }
+
+    public void setSamples(List samples) {
+        this.samples = samples;
     }
 }

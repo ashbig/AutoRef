@@ -150,6 +150,8 @@
                     type="plasmid.form.InvoiceForm"/>
         <form-bean      name="updateCloneStatusForm"
                     type="plasmid.form.UpdateCloneStatusForm"/>
+        <form-bean      name="updateCloneStorageForm"
+                    type="plasmid.form.UpdateCloneStorageForm"/>
                     
     </form-beans>
 
@@ -669,6 +671,30 @@
                name="updateCloneStatusForm"
               scope="request"
               input="/UpdateCloneStatusInput.jsp">
+        </action>
+        <action    path="/UpdateCloneStorageInput"
+               type="plasmid.action.UpdateCloneStorageInputAction"
+               name="updateCloneStorageForm"
+              scope="session"
+              input="/UpdateCloneStorageInput.jsp">
+            <forward  name="success"   path="/UpdateCloneStorage.jsp"/>
+        </action>
+        <action    path="/UpdateCloneStorage"
+               type="plasmid.action.UpdateCloneStorageAction"
+               name="updateCloneStorageForm"
+              scope="session"
+              validate="false"
+              input="/UpdateCloneStorage.jsp">
+            <forward  name="success"   path="/UpdateCloneStorageConfirm.jsp"/>
+            <forward  name="empty"   path="/UpdateCloneStorageEmpty.jsp"/>
+        </action>
+        <action    path="/UpdateCloneStorageConfirm"
+               type="plasmid.action.UpdateCloneStorageConfirmAction"
+               name="updateCloneStorageForm"
+              scope="request"
+              validate="false"
+              input="/UpdateCloneStorageConfirm.jsp">
+            <forward  name="success"   path="/UpdateCloneStorageSuccess.jsp"/>
         </action>
         <action    path="/UploadResultFile"
                type="plasmid.action.UploadResultFileAction"

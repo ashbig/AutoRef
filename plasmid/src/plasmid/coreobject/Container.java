@@ -30,6 +30,8 @@ public class Container {
     
     public static final String UNAVAILABLE = "UNAVAILABLE";
     public static final String WORKBENCH = "WORKBENCH";
+    public static final String TRASH = "TRASH";
+    public static final String BIOBANK = "BioBank";
     
     private int containerid;
     private String type;
@@ -183,5 +185,9 @@ public class Container {
             addSample(s);
         else
             samples.set(s.getPosition()-1, s);
+    }
+    
+    public Sample getTubeSample() {
+        return getSample(1);
     }
 }

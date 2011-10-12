@@ -23,6 +23,7 @@ public class Sample {
     public static final String GLYCEROL = "GLYCEROL";
     public static final String AGAR = "AGAR";
     public static final String TRANSFORMATION = "TRANSFORMATION";
+    public static final String CONTAMINATED = "Contaminated";
     
     protected int sampleid;
     protected String type;

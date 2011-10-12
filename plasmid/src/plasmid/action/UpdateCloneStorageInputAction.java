@@ -1,13 +1,12 @@
 /*
- * FindClonesAction.java
- *
- * Created on June 20, 2006, 10:57 AM
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
  */
 
 package plasmid.action;
 
-import java.util.*;
-import java.io.*;
+import java.io.IOException;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,25 +15,24 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-
-import plasmid.form.FindClonesForm;
-import plasmid.util.StringConvertor;
 import plasmid.database.DatabaseManager.CloneManager;
+import plasmid.form.UpdateCloneStorageForm;
+import plasmid.util.StringConvertor;
 
 /**
  *
- * @author  DZuo
+ * @author Dongmei
  */
-public class FindClonesAction extends InternalUserAction{
+public class UpdateCloneStorageInputAction extends InternalUserAction{
     
     /** Creates a new instance of FindClonesAction */
-    public FindClonesAction() {
+    public UpdateCloneStorageInputAction() {
     }
     
     public ActionForward internalUserPerform(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
         
-        String cloneList = ((FindClonesForm)form).getCloneidList();
+        String cloneList = ((UpdateCloneStorageForm)form).getCloneidList();
         StringConvertor sc = new StringConvertor();
         List clones = sc.convertFromStringToList(cloneList, " \n\t\b");
         
@@ -55,7 +53,8 @@ public class FindClonesAction extends InternalUserAction{
             return (new ActionForward(mapping.getInput()));
         }
            
-        request.setAttribute("cloneSamples", foundClones);
+        ((UpdateCloneStorageForm)form).initiateLabels(foundClones.size());
+        request.getSession().setAttribute("cloneSamples", foundClones);
         return mapping.findForward("success");
     }   
 }

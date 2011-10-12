@@ -23,31 +23,25 @@
       <jsp:include page="sampleTrackingMenu.jsp" />
 	</td>
     <td width="83%" align="left" valign="top">
-        <jsp:include page="findClonesTitle.jsp" />
+        <jsp:include page="updateCloneStorageTitle.jsp" />
 <html:errors/>
-
-<logic:iterate name="cloneSamples" id="clone">
-<p class="text">Clone: <bean:write name="clone" property="name"/></p>
+      <html:form action="UpdateCloneStorageInput.do">
 <table width="100%" border="0">
-  <tr>
-    <td class="tableheader">Container</td>
-    <td class="tableheader">Position</td>
-    <td class="tableheader">Well</td>
-    <td class="tableheader">Type</td>
+  <tr> 
+    <td class="formlabel">Please enter all the PlasmID Clone IDs: (e.g. HsCD00000196, separate each ID with white space)</td>
   </tr>
-  
-  <logic:iterate name="clone" property="samples" id="sample">
-  <tr class="tableinfo"> 
-    <td><bean:write name="sample" property="containerlabel"/></td>
-    <td><bean:write name="sample" property="position"/></td>
-    <td><bean:write name="sample" property="well"/></td>
-    <td><bean:write name="sample" property="type"/></td>
+  <tr> 
+    <td>
+        <html:textarea styleClass="itemtext" property="cloneidList" rows="10" cols="50"/>
+    </td>
   </tr>
-  </logic:iterate>
+  <tr> 
+    <td>
+        <html:submit styleClass="itemtext" value="Continue"/>
+    </td>
+  </tr>
 </table>
-</logic:iterate>
-
-      </td>
+      </html:form></td>
   </tr>
 </table>
 <jsp:include page="footer.jsp" />
