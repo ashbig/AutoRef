@@ -32,6 +32,7 @@
     <li class="text"><a href="GetResultTypes.do">Enter Results</a>
     <li class="text"><a href="FindClones.jsp">Find Clones</a>
     <li class="text"><a href="UpdateCloneStatusInput.jsp">Update Clone Status</a>
+    <li class="text"><a href="UpdateCloneStorageInput.jsp">Update Clone Storage</a>
     <li class="text"><a href="Plate96To384Input.jsp">Generate Condensed Archive Plates</a>
     <li class="text"><a href="Plate384To96Input.jsp">Reverse Plate Condensation</a>
 </ul>
