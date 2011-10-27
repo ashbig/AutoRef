@@ -4,6 +4,9 @@
  */
 package plasmid.coreobject;
 
+import java.text.DecimalFormat;
+import sequencing.SEQ_Order;
+
 /**
  *
  * @author Dongmei
@@ -33,6 +36,8 @@ public class Invoice {
     private String institution;
     private CloneOrder order;
     private boolean selected;
+    
+    private SEQ_Order seqorder;
 
     public Invoice() {}
     
@@ -163,21 +168,26 @@ public class Invoice {
     }
 
     public String getPriceString() {
-        return "$" + price;
+        DecimalFormat df = new DecimalFormat("#.00");
+        return "$" + df.format(price);
     }
 
     public String getPaymentString() {
+        DecimalFormat df = new DecimalFormat("#.00");
+        
         if(payment>0.0) {
-            return "($" + payment + ")";
+            return "($" + df.format(payment) + ")";
         }
-        return "$"+payment;
+        return "$"+df.format(payment);
     }
 
     public String getAdjustmentString() {
+        DecimalFormat df = new DecimalFormat("#.00");
+        
         if (adjustment >= 0.0) {
-            return "$" + adjustment;
+            return "$" + df.format(adjustment);
         } else {
-            return "($" + Math.abs(adjustment) + ")";
+            return "($" + df.format(Math.abs(adjustment)) + ")";
         }
     }
 
@@ -186,11 +196,12 @@ public class Invoice {
     }
 
     public String getDueString() {
+        DecimalFormat df = new DecimalFormat("#.00");
         double due = getDue();
         if (due >= 0.0) {
-            return "$" + due;
+            return "$" + df.format(due);
         } else {
-            return "($" + Math.abs(due) + ")";
+            return "($" + df.format(Math.abs(due)) + ")";
         }
     }
 
@@ -224,5 +235,13 @@ public class Invoice {
 
     public void setOrder(CloneOrder order) {
         this.order = order;
+    }
+
+    public SEQ_Order getSeqorder() {
+        return seqorder;
+    }
+
+    public void setSeqorder(SEQ_Order seqorder) {
+        this.seqorder = seqorder;
     }
 }
