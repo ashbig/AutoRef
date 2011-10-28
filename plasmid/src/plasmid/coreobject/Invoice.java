@@ -169,25 +169,25 @@ public class Invoice {
 
     public String getPriceString() {
         DecimalFormat df = new DecimalFormat("#.00");
-        return "$" + df.format(price);
+        return "$" + Double.valueOf(df.format(price));
     }
 
     public String getPaymentString() {
         DecimalFormat df = new DecimalFormat("#.00");
         
         if(payment>0.0) {
-            return "($" + df.format(payment) + ")";
+            return "($" + Double.valueOf(df.format(payment)) + ")";
         }
-        return "$"+df.format(payment);
+        return "$"+Double.valueOf(df.format(payment));
     }
 
     public String getAdjustmentString() {
         DecimalFormat df = new DecimalFormat("#.00");
         
         if (adjustment >= 0.0) {
-            return "$" + df.format(adjustment);
+            return "$" + Double.valueOf(df.format(adjustment));
         } else {
-            return "($" + df.format(Math.abs(adjustment)) + ")";
+            return "($" + Double.valueOf(df.format(Math.abs(adjustment))) + ")";
         }
     }
 
@@ -199,9 +199,9 @@ public class Invoice {
         DecimalFormat df = new DecimalFormat("#.00");
         double due = getDue();
         if (due >= 0.0) {
-            return "$" + df.format(due);
+            return "$" + Double.valueOf(df.format(due));
         } else {
-            return "($" + df.format(Math.abs(due)) + ")";
+            return "($" + Double.valueOf(df.format(Math.abs(due))) + ")";
         }
     }
 

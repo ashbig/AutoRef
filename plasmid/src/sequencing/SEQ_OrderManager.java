@@ -36,10 +36,9 @@ public class SEQ_OrderManager extends TableManager {
     public Invoice queryInvoice(int invoiceid) throws Exception {
         String sql = "select invoicenumber, to_char(invoicedate,'YYYY-MM-dd hh:mm:ss')," +
                 " i.price, adjustment, i.payment, paymentstatus, nvl(paymenttype, ' '), account," +
-                " i.orderid, nvl(i.comments,' '), nvl(reason, ' '), u.piname, u.institution" +
-                " from invoice i, cloneorder c, userprofile u" +
+                " i.orderid, nvl(i.comments,' '), nvl(reason, ' '), c.pifirstname, c.pilastname, c.institution" +
+                " from seqinvoice i, seqorder c" +
                 " where i.orderid=c.orderid" +
-                " and c.userid = u.userid" +
                 " and i.invoiceid=" + invoiceid;
 
         DatabaseTransaction t = null;
@@ -60,12 +59,13 @@ public class SEQ_OrderManager extends TableManager {
                 int orderid = rs.getInt(9);
                 String comments = rs.getString(10);
                 String reason = rs.getString(11);
-                String piname = rs.getString(12);
-                String institution = rs.getString(13);
+                String pifirstname = rs.getString(12);
+                String pilastname = rs.getString(13);
+                String institution = rs.getString(14);
                 invoice = new Invoice(invoicenumber, invoicedate, price, adjustment, payment, paymentstatus, paymenttype, orderid, reason, account);
                 invoice.setComments(comments);
                 invoice.setInvoiceid(invoiceid);
-                invoice.setPiname(piname);
+                invoice.setPiname(pilastname+", "+pifirstname);
                 invoice.setInstitution(institution);
             }
         } catch (Exception ex) {
@@ -310,9 +310,10 @@ public class SEQ_OrderManager extends TableManager {
         return order;
     }
 
-    public boolean updateInvoice(int invoiceid, String paymentstatus, String accountnum, double payment, double adjustment, String comments) {
+    public boolean updateInvoice(int invoiceid, String paymentstatus, String accountnum, double payment, 
+            double adjustment, String comments, String reason) {
         String sql = "update seqinvoice set paymentstatus=?," +
-                " account=?, payment=?, adjustment=?, comments=? where invoiceid=?";
+                " account=?, payment=?, adjustment=?, comments=?, reason=? where invoiceid=?";
         String sql2 = "update seqorder set ponumber=?" +
                 " where orderid in (select orderid from invoice where invoiceid=?)";
         PreparedStatement stmt = null;
@@ -324,7 +325,8 @@ public class SEQ_OrderManager extends TableManager {
             stmt.setDouble(3, payment);
             stmt.setDouble(4, adjustment);
             stmt.setString(5, comments);
-            stmt.setInt(6, invoiceid);
+            stmt.setString(6, reason);
+            stmt.setInt(7, invoiceid);
             DatabaseTransaction.executeUpdate(stmt);
 
             stmt2 = conn.prepareStatement(sql2);

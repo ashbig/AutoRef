@@ -1,32 +1,31 @@
 /*
- * BatchOrderForm.java
- *
- * Created on June 5, 2006, 1:28 PM
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
  */
 
 package plasmid.form;
 
 import javax.servlet.http.HttpServletRequest;
-import org.apache.struts.upload.*;
-import org.apache.struts.action.*;
+import org.apache.struts.action.ActionError;
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.upload.FormFile;
 
 /**
  *
- * @author  DZuo
+ * @author Dongmei
  */
-public class BatchOrderForm extends ActionForm {
-    private String cloneType;
-    private FormFile orderFile;
-    
-    /** Creates a new instance of BatchOrderForm */
-    public BatchOrderForm() {
+public class SEQ_UploadOrdersForm extends ActionForm {
+    private FormFile seqfile;
+
+    public FormFile getSeqfile() {
+        return seqfile;
     }
-    
-    public String getCloneType() {return cloneType;}
-    public FormFile getOrderFile() {;return orderFile;}
-    
-    public void setCloneType(String s) {this.cloneType = s;}
-    public void setOrderFile(FormFile f) {this.orderFile = f;}    
+
+    public void setSeqfile(FormFile seqfile) {
+        this.seqfile = seqfile;
+    }  
         
     /**
      * Validate the properties that have been set from this HTTP request,
@@ -42,8 +41,8 @@ public class BatchOrderForm extends ActionForm {
                                  HttpServletRequest request) {
                                  
         ActionErrors errors = new ActionErrors();
-        if ((orderFile == null) || (orderFile.getFileName() == null) || (orderFile.getFileName().trim().length() < 1))
-            errors.add("orderFile", new ActionError("error.file.invalid"));
+        if ((seqfile == null) || (seqfile.getFileName() == null) || (seqfile.getFileName().trim().length() < 1))
+            errors.add("seqfile", new ActionError("error.file.invalid"));
         
         return errors;
     }      

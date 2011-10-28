@@ -7,7 +7,9 @@
     <td colspan="3" rowspan="2">
         <logic:present name="<%=Constants.USER_KEY%>" scope="session"> 
             <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
-            <a href="SampleTrackingHome.jsp" class="text">Sample Tracking</A>            </logic:equal>
+            <a href="SampleTrackingHome.jsp" class="text">Sample Tracking</a>            
+            <a href="SEQ_InvoiceHome.jsp" class="text">Sequencing</a>            
+            </logic:equal>
             <logic:notEqual name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
 &nbsp;            </logic:notEqual>
         </logic:present>

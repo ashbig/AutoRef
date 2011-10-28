@@ -70,9 +70,7 @@
                             </tr>
                             <tr> 
                                 <td class="formlabel" valign="top">Reason For Adjustment:</td>
-                                <td class="text"><html:textarea cols="60" rows="10" name="<%=Constants.INVOICE%>" property="reasonforadj"/></td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
+                                <td colspan="3" class="text"><html:textarea cols="60" rows="10" name="<%=Constants.INVOICE%>" property="reasonforadj"/></td>
                             </tr>
                             <tr> 
                                 <td class="formlabel" valign="top">Comments:</td>
