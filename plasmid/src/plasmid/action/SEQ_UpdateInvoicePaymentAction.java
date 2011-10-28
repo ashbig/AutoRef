@@ -15,31 +15,31 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import plasmid.Constants;
-import plasmid.coreobject.CloneOrder;
 import plasmid.coreobject.Invoice;
 import plasmid.coreobject.User;
-import plasmid.database.DatabaseManager.CloneOrderManager;
 import plasmid.database.DatabaseTransaction;
 import plasmid.form.InvoiceForm;
 import plasmid.process.OrderProcessManager;
+import sequencing.SEQ_Order;
+import sequencing.SEQ_OrderManager;
+import sequencing.SEQ_OrderProcessManager;
 
 /**
  *
  * @author Dongmei
  */
-public class UpdateInvoicePaymentAction extends InternalUserAction {
+public class SEQ_UpdateInvoicePaymentAction extends InternalUserAction {
 
     public ActionForward internalUserPerform(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
 
-        User user = (User) request.getSession().getAttribute(Constants.USER_KEY);
         int invoiceid = ((InvoiceForm) form).getInvoiceid();
         String paymentstatus = ((InvoiceForm) form).getPaymentstatus();
         String accountnum = ((InvoiceForm) form).getAccountnum();
         double adjustment = ((InvoiceForm)form).getAdjustment();
         double payment = ((InvoiceForm) form).getPayment();
-        String reason = ((InvoiceForm)form).getReasonforadj();
         String comments = ((InvoiceForm) form).getComments();
+        String reason = ((InvoiceForm)form).getReasonforadj();
         boolean returnToList = ((InvoiceForm)form).isReturnToList();
 
         DatabaseTransaction t = null;
@@ -48,16 +48,16 @@ public class UpdateInvoicePaymentAction extends InternalUserAction {
             t = DatabaseTransaction.getInstance();
             c = t.requestConnection();
 
-            CloneOrderManager manager = new CloneOrderManager(c);
+            SEQ_OrderManager manager = new SEQ_OrderManager(c);
             if (manager.updateInvoice(invoiceid, paymentstatus, accountnum, payment, adjustment, comments, reason)) {
                 DatabaseTransaction.commit(c);
 
-                OrderProcessManager m = new OrderProcessManager();
+                SEQ_OrderProcessManager m = new SEQ_OrderProcessManager();
                 Invoice invoice = null;
-                CloneOrder order = null;
+                SEQ_Order order = null;
                 try {
                     invoice = m.getInvoice(invoiceid);
-                    order = m.getCloneOrder(user, invoice.getOrderid());
+                    order = m.getCloneOrder(invoice.getOrderid());
                 } catch (Exception ex) {
                     return mapping.findForward("success_message");
                 }

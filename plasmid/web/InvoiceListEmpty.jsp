@@ -21,7 +21,7 @@
       <jsp:include page="menuHome.jsp" />
 	</td>
     <td width="83%" align="left" valign="top">
-	<jsp:include page="orderHistoryTitle.jsp" />
+	<jsp:include page="invoiceTitle.jsp" />
 
 <p class="text">No invoice is found.</p>
 

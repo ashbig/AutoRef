@@ -19,17 +19,17 @@
         <table width="1000" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
             <tr> 
                 <td width="17%" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle"> 
-                    <jsp:include page="menuHome.jsp" />
+                    <jsp:include page="seq_menuHome.jsp" />
                 </td>
                 <td width="83%" align="left" valign="top">
-                    <jsp:include page="invoiceTitle.jsp" />
+                    <jsp:include page="seq_invoiceTitle.jsp" />
                     
                     <logic:present name="ordermessage">
                         <p class="text"><bean:write name="ordermessage"/></p>
                     </logic:present>
                     <html:errors/>
                     
-                    <html:form action="UpdateInvoicePayment.do">
+                    <html:form action="SEQ_UpdateInvoicePayment.do">
                         <html:hidden name="<%=Constants.INVOICE%>" property="invoiceid"/>
                         <table width="100%" border="0">
                             <tr> 

@@ -19,6 +19,7 @@ public class InvoiceForm extends ActionForm {
     private double payment;
     private String comments;
     private boolean returnToList;
+    private String reasonforadj;
     
     public InvoiceForm() {this.returnToList = false;}
     
@@ -76,5 +77,13 @@ public class InvoiceForm extends ActionForm {
 
     public void setAdjustment(double adjustment) {
         this.adjustment = adjustment;
+    }
+
+    public String getReasonforadj() {
+        return reasonforadj;
+    }
+
+    public void setReasonforadj(String reasonforadj) {
+        this.reasonforadj = reasonforadj;
     }
 }
