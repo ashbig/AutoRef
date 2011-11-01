@@ -1968,9 +1968,9 @@ public class OrderProcessManager {
         table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
         table.addCell(PdfEditor.makeSmall("Harvard Medical School"));
         table.addCell(PdfEditor.makeSmallBold("Order ID:\t" + order.getOrderid()));
-        table.addCell(PdfEditor.makeSmall("Dept. BCMP-240 Longwood Ave."));
+        table.addCell(PdfEditor.makeSmall("Dep.BCMP Room C- 214"));
         table.addCell(PdfEditor.makeSmall("Order Date:\t" + order.getOrderDate()));
-        table.addCell(PdfEditor.makeSmall("Accounts Receivable"));
+        table.addCell(PdfEditor.makeSmall("240 Longwood Ave."));
         table.addCell(PdfEditor.makeSmall("Order By:\t" + order.getName()));
         table.addCell(PdfEditor.makeSmall("Boston, MA 02115"));
         table.addCell(PdfEditor.makeSmall("PI:\t" + order.getPiname()));
