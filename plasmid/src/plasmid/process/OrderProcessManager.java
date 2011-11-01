@@ -1839,9 +1839,9 @@ public class OrderProcessManager {
         table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
         table.addCell(PdfEditor.makeSmall("Harvard Medical School"));
         table.addCell(PdfEditor.makeSmallBold("Order ID:\t" + order.getOrderid()));
-        table.addCell(PdfEditor.makeSmall("Dept. BCMP-240 Longwood Ave."));
+        table.addCell(PdfEditor.makeSmall("Dep.BCMP Room C- 214"));
         table.addCell(PdfEditor.makeSmall("Order Date:\t" + order.getOrderDate()));
-        table.addCell(PdfEditor.makeSmall("Accounts Receivable"));
+        table.addCell(PdfEditor.makeSmall("240 Longwood Ave."));
         table.addCell(PdfEditor.makeSmall("Order By:\t" + order.getName()));
         table.addCell(PdfEditor.makeSmall("Boston, MA 02115"));
         table.addCell(PdfEditor.makeSmall("PI:\t" + order.getPiname()));
@@ -1924,10 +1924,10 @@ public class OrderProcessManager {
         document.add(PdfEditor.makeTitle(" "));
         document.add(PdfEditor.makeSmallBold("Mailing Address:"));
         document.add(PdfEditor.makeSmall("  Harvard Medical School"));
-        document.add(PdfEditor.makeSmall("  BCMP-Harvard Cancer Center"));
-        document.add(PdfEditor.makeSmall("  C1-214"));
+        document.add(PdfEditor.makeSmall("  Dep.BCMP Room C- 214"));
         document.add(PdfEditor.makeSmall("  240 Longwood Ave."));
         document.add(PdfEditor.makeSmall("  Boston, MA 02115"));
+        document.add(PdfEditor.makeSmall("  617-432-1210"));
 
         document.add(PdfEditor.makeTitle(" "));
         document.add(PdfEditor.makeSmallItalic("Please see billing memo for more payment information."));
