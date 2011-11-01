@@ -70,6 +70,7 @@ public class SEQ_ViewSelectedInvoicesAction extends InternalUserAction {
 
         if (Constants.INVOICE_BUTTON_VIEW_ALL_INVOICE.equals(submitButton) || Constants.INVOICE_BUTTON_VIEW_SELECT_INVOICE.equals(submitButton)) {
             response.setContentType("application/pdf");
+            response.setHeader("Content-Disposition","attachment; filename=Invoices.pdf");
             manager.printInvoices(response.getOutputStream(), selectedInvoices);
             return null;
         } else if (Constants.INVOICE_BUTTON_EMAIL_ALL_INVOICE.equals(submitButton) || Constants.INVOICE_BUTTON_EMAIL_SELECT_INVOICE.equals(submitButton)) {

@@ -75,6 +75,7 @@ public class SEQ_ViewInvoiceDetailAction extends UserAction {
         if (Constants.INVOICE_BUTTON_VIEW_INVOICE.equals(button)) {
             //write to pdf file in browser
             response.setContentType("application/pdf");
+            response.setHeader("Content-Disposition","attachment; filename=Invoice_" + order.getOrderid() + ".pdf");
             manager.displayInvoice(response.getOutputStream(), order, invoice);
             return mapping.findForward(null);
         } else if (Constants.INVOICE_BUTTON_EMAIL_INVOICE.equals(button)) {
@@ -90,6 +91,7 @@ public class SEQ_ViewInvoiceDetailAction extends UserAction {
             }
         } else if (isdownload == 1) {
             response.setContentType("application/pdf");
+            response.setHeader("Content-Disposition","attachment; filename=Invoice_" + order.getOrderid() + ".pdf");
             manager.displayInvoice(response.getOutputStream(), order, invoice);
             return mapping.findForward(null);
         } else {

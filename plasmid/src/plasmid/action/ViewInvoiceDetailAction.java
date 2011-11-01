@@ -93,6 +93,7 @@ public class ViewInvoiceDetailAction extends UserAction {
             }
         } else if (isdownload == 1) {
             response.setContentType("application/pdf");
+            response.setHeader("Content-Disposition","attachment; filename=Invoice_" + order.getOrderid() + ".pdf");
             manager.displayInvoice(response.getOutputStream(), order, invoice);
             return mapping.findForward(null);
         } else {
