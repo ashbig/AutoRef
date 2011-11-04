@@ -389,7 +389,7 @@ public class SEQ_OrderManager extends TableManager {
         String sql = "insert into seqinvoice" +
                 " (invoiceid, invoicenumber, price, adjustment, payment, paymentstatus, paymenttype," +
                 " account, orderid, updatedby, updatedon, reason,invoicedate)" +
-                " values(invoiceid.nextval,?,?,?,?,?,?,?,?,'System',sysdate,?,sysdate)";
+                " values(seqinvoiceid.nextval,?,?,?,?,?,?,?,?,'System',sysdate,?,sysdate)";
         PreparedStatement stmt = null;
         int orderid = 0;
         
