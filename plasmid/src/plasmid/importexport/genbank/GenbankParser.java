@@ -145,7 +145,7 @@ public class GenbankParser {
             }
 
             //misc_feature    1..35    
-           if (line.indexOf("misc_feature") >= 0) {
+           /**if (line.indexOf("misc_feature") >= 0) {
                 StringTokenizer st = new StringTokenizer(line.trim());
                 String ignore = st.nextToken();
                 String cds = st.nextToken();
@@ -165,7 +165,7 @@ public class GenbankParser {
                     attL2Start = start;
                     attL2Stop = stop;
                 }
-            }
+            }*/
             //     CDS             83..1903
             if (line.indexOf("     CDS") == 0) {
                 cdscount++;

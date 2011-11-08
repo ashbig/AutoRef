@@ -154,7 +154,10 @@
                     type="plasmid.form.UpdateCloneStorageForm"/>
         <form-bean      name="seq_UploadOrdersForm"
                     type="plasmid.form.SEQ_UploadOrdersForm"/>
-                    
+        <form-bean      name="addEmtaMembersForm"
+                    type="plasmid.form.AddEmtaMembersForm"/>
+        <form-bean      name="addInstitutionsForm"
+                    type="plasmid.form.AddInstitutionsForm"/>
     </form-beans>
 
   <!-- ========== Global Forward Definitions ============================== -->
@@ -194,9 +197,33 @@
         <action     path="/AddCollectionToCart"
                 type="plasmid.action.AddCollectionToCartAction"
                name="refseqSearchForm"
-              validate="false"
-              input="/ViewCollection.jsp">
+              input="/ViewCollection.jsp"
+              validate="false">
             <forward  name="success"  path="/ViewCollection.jsp"/>
+        </action>
+        <action     path="/AddEmtaMembers"
+                type="plasmid.action.AddEmtaMembersAction"
+               name="addEmtaMembersForm"
+              scope="request"
+              input="/AddEmtaMembersInput.jsp"
+              validate="true">
+            <forward  name="success"  path="/AddEmtaMembers.jsp"/>
+        </action>
+        <action     path="/AddInstitutions"
+                type="plasmid.action.AddInstitutionsAction"
+                name="addInstitutionsForm"
+              scope="session"
+              input="/AddInstitutions.jsp"
+                validate="false">
+            <forward  name="success"  path="/AddInstitutionsConfirm.jsp"/>
+        </action>
+        <action     path="/AddInstitutionsConfirm"
+                type="plasmid.action.AddInstitutionsConfirmAction"
+                name="addInstitutionsForm"
+              scope="request"
+              input="/AddInstitutionsConfirm.jsp"
+                validate="false">
+            <forward  name="success"  path="/AddInstitutionsInput.jsp"/>
         </action>
         <action     path="/AdvancedSearch"
                 type="plasmid.action.AdvancedSearchAction"
@@ -240,6 +267,14 @@
                name="changeOrderStatusForm"
               input="/OrderList.jsp">
             <forward  name="success"  path="/ChangeOrderStatusSuccess.jsp"/>
+        </action>
+        <action     path="/CheckInstitutions"
+                type="plasmid.action.CheckInstitutionsAction"
+               name="addInstitutionsForm"
+              scope="session"
+              input="/AddInstitutionsInput.jsp"
+              validate="true">
+            <forward  name="success"  path="/AddInstitutions.jsp"/>
         </action>
         <action     path="/Checkout"
                 type="plasmid.action.CheckoutAction"
@@ -962,8 +997,8 @@
             input="/pReceiveSearch.jsp"
             validate="true"
             scope="request">
-            <forward name="success" path="/pReceive.jsp"/> 
-            </action>        
+            <forward name="success" path="/pReceive.jsp"/>
+        </action>
         <action path="/pReceive"
             type="plasmid.action.PReceiveAction"
             name="pReceiveForm"

@@ -43,6 +43,12 @@
         <tr> 
           <td height="15" valign="middle"><a href="EnterPlatinumResultsInput.jsp" class="leftnavtext">Enter Platinum Results</a></td>
         </tr>
+        <tr> 
+          <td height="15" valign="middle"><a href="AddInstitutionsInput.jsp" class="leftnavtext">Add Institutions</a></td>
+        </tr>
+        <tr> 
+          <td height="15" valign="middle"><a href="AddEmtaMembersInput.jsp" class="leftnavtext">Add EP-MTA Members</a></td>
+        </tr>
         </logic:equal>
       </table>
     </td>
