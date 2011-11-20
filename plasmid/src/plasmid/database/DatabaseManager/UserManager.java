@@ -196,7 +196,7 @@ public class UserManager extends TableManager {
         if(piname == null || email == null)
             return false;
         
-        String sql = "select * from pi where upper(name)=upper(?) and upper(email)=upper(?)";
+        String sql = "select * from pi where name=? and upper(email)=upper(?)";
         PreparedStatement stmt = null;
         ResultSet rs = null;
         boolean rt = false;
@@ -218,7 +218,7 @@ public class UserManager extends TableManager {
     }
         
     public static PI findPI(String piname) {
-        String sql = "select name,email, firstname, lastname from pi where upper(name)=upper(?)";
+        String sql = "select name,email, firstname, lastname from pi where name=?";
         PreparedStatement stmt = null;
         ResultSet rs = null;
         PI rt = null;
