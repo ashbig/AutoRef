@@ -74,10 +74,11 @@ public class PrepareRegistrationAction extends Action {
         List pis = UserManager.getAllPis();
         
         List members = DefTableManager.getVocabularies("Institution", "ismember", "Name", Institution.ISMEMBER_YES);
-        List us = UserManager.getInstitutions(Institution.CATEGORY_US_INSTITUTION, Institution.ISMEMBER_NO);
-        List international = UserManager.getInstitutions(Institution.CATEGORY_INT_INSTITUTION, Institution.ISMEMBER_NO, true);
-        List government = UserManager.getInstitutions(Institution.CATEGORY_GOVERNMENT, Institution.ISMEMBER_NO);
-        List company = UserManager.getInstitutions(Institution.CATEGORY_COMPANY, Institution.ISMEMBER_NO);
+        List institutions = UserManager.getInstitutions(null, Institution.ISMEMBER_NO);
+        //List us = UserManager.getInstitutions(Institution.CATEGORY_US_INSTITUTION, Institution.ISMEMBER_NO);
+        //List international = UserManager.getInstitutions(Institution.CATEGORY_INT_INSTITUTION, Institution.ISMEMBER_NO, true);
+        //List government = UserManager.getInstitutions(Institution.CATEGORY_GOVERNMENT, Institution.ISMEMBER_NO);
+        //List company = UserManager.getInstitutions(Institution.CATEGORY_COMPANY, Institution.ISMEMBER_NO);
         List categories = Institution.getInstitutionCategory();
         
         if(pis == null) {
@@ -90,10 +91,11 @@ public class PrepareRegistrationAction extends Action {
         request.setAttribute("groups", groups);
         request.setAttribute("pis", pis);
         request.setAttribute("members", members);
-        request.setAttribute("us", us);
-        request.setAttribute("international", international);
-        request.setAttribute("government", government);
-        request.setAttribute("company", company);
+        request.setAttribute("institutions", institutions);
+        //request.setAttribute("us", us);
+        //request.setAttribute("international", international);
+        //request.setAttribute("government", government);
+        //request.setAttribute("company", company);
         request.setAttribute("categories", categories);
         
         boolean update = ((RegistrationForm)form).isUpdate();

@@ -80,14 +80,8 @@
                                         <tr>
                                             <td class="text" colspan="2">
                                                 <html:select property="institution2" styleClass="text">
-                                                    <html:option value="">---------- US Institutions ----------</html:option>
-                                                    <html:options name="us"/>
-                                                    <html:option value="">---------- Government ----------</html:option>
-                                                    <html:options name="government"/>
-                                                    <html:option value="">---------- International Institutions ----------</html:option>
-                                                    <html:options name="international"/>
-                                                    <html:option value="">---------- Companies ----------</html:option>
-                                                    <html:options name="company"/>
+                                                    <html:option value="">---------- Please Select ----------</html:option>
+                                                    <html:options name="institutions"/>
                                                 </html:select>
                                             </td>
                                         </tr>
