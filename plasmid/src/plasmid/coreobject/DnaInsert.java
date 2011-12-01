@@ -6,13 +6,14 @@
 
 package plasmid.coreobject;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
  *
  * @author  DZuo
  */
-public class DnaInsert {
+public class DnaInsert implements Serializable {
     public static final String HUMAN = "Homo sapiens";
     public static final String YEAST = "Saccharomyces cerevisiae";
     public static final String PA = "Pseudomonas aeruginosa";
