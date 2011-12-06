@@ -94,6 +94,7 @@ public class EnterAddressAction extends UserAction {
             ((CheckoutForm)form).setBillingzipcode(billing.getZipcode());
             ((CheckoutForm)form).setBillingphone(billing.getPhone());
             ((CheckoutForm)form).setBillingfax(billing.getFax());
+            ((CheckoutForm)form).setBillingemail(billing.getEmail());
         }
         
         double platinumServiceCost = 0.0;
@@ -113,8 +114,8 @@ public class EnterAddressAction extends UserAction {
         ((CheckoutForm)form).setCostOfPlatinum(platinumServiceCost);
         
         ((CheckoutForm)form).setPonumber(user.getPonumber());
-        ((CheckoutForm)form).setCountry(Constants.SELECT);
-        ((CheckoutForm)form).setBillingcountry(Constants.SELECT);
+        //((CheckoutForm)form).setCountry(Constants.SELECT);
+        //((CheckoutForm)form).setBillingcountry(Constants.SELECT);
         ((CheckoutForm)form).setSaveInfo(false);
         return (mapping.findForward("success"));
     }
