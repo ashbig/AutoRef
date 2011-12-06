@@ -363,7 +363,7 @@ public class SEQ_OrderManager extends TableManager {
                 stmt.setString(8, order.getUsername());
                 stmt.setString(9, order.getPonumber());
 
-                DateFormat formater = new SimpleDateFormat("mm/dd/yy");
+                DateFormat formater = new SimpleDateFormat("MM/dd/yy");
                 java.util.Date parsedUtilDate = formater.parse(order.getOrderdate());
                 java.sql.Date sqlDate = new java.sql.Date(parsedUtilDate.getTime());
                 stmt.setDate(10, sqlDate);
