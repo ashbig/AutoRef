@@ -31,7 +31,7 @@
                     <html:form action="SearchInvoice.do" focus="invoicenums">
                         <table width="100%" border="0">
                             <tr>
-                                <td class="formlabel">Invoice Number (separate each invoice by comma [,]):</td>
+                                <td class="formlabel">Invoice Number (remove 'DFHCC_'; separate each invoice by comma [,]):</td>
                                 <td colspan="4" class="itemtext"><html:text property="invoicenums" size="50"/></td>
                             </tr>
                             <tr></tr>

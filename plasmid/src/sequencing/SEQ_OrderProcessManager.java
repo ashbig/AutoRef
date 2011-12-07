@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import plasmid.Constants;
 import plasmid.coreobject.Invoice;
-import plasmid.database.DatabaseManager.DefTableManager;
 import plasmid.database.DatabaseTransaction;
 import plasmid.util.Mailer;
 import plasmid.util.PdfEditor;
@@ -50,7 +49,13 @@ public class SEQ_OrderProcessManager {
             SEQ_OrderManager manager = new SEQ_OrderManager();
             List invoicenumList = null;
             if (invoicenums != null && invoicenums.trim().length() > 0) {
-                invoicenumList = sc.convertFromStringToList(invoicenums.trim(), ",");
+                invoicenumList = new ArrayList();
+                List l = sc.convertFromStringToList(invoicenums.trim(), ",");
+                for(int i=0; i<l.size(); i++) {
+                    String s = (String)l.get(i);
+                    s = "SEQ_"+s;
+                    invoicenumList.add(s);
+                }
             }
             if (invoiceDateFrom != null && invoiceDateFrom.trim().length() == 0) {
                 invoiceDateFrom = null;

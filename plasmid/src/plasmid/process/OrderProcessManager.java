@@ -1384,7 +1384,13 @@ public class OrderProcessManager {
             CloneOrderManager manager = new CloneOrderManager(conn);
             List invoicenumList = null;
             if (invoicenums != null && invoicenums.trim().length() > 0) {
-                invoicenumList = sc.convertFromStringToList(invoicenums.trim(), ",");
+                invoicenumList = new ArrayList();
+                List l = sc.convertFromStringToList(invoicenums.trim(), ",");
+                for(int i=0; i<l.size(); i++) {
+                    String s = (String)l.get(i);
+                    s = "DFHCC_"+s;
+                    invoicenumList.add(s);
+                }
             }
             if (invoiceDateFrom != null && invoiceDateFrom.trim().length() == 0) {
                 invoiceDateFrom = null;
