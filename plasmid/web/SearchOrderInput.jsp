@@ -29,7 +29,7 @@
 	<jsp:include page="orderHistoryTitle.jsp" />
 
 <p class="text">Search Orders</P>
-<html:form action="SearchOrderInput.do">
+<html:form action="SearchOrderInput.do" focus="orderid">
 <table width="100%" border="0">
   <tr>
     <td class="formlabel">Order ID (separate each ID by comma [,]):</td>

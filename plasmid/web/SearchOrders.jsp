@@ -24,7 +24,7 @@
 	</td>
     <td width="83%" align="left" valign="top">
 	<jsp:include page="registrationTitle.jsp" />
-      <html:form action="SearchOrders.do">
+      <html:form action="SearchOrders.do" focus="orderids">
 <html:errors/>
 <table width="100%" border="0">
   <tr class="formlabel"> 

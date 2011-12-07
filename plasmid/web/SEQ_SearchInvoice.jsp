@@ -28,7 +28,7 @@
                     <jsp:include page="seq_invoiceTitle.jsp" />
                     
                     <P class="formlabel">Search Sequencing Invoice</P>
-                    <html:form action="SEQ_SearchInvoice.do">
+                    <html:form action="SEQ_SearchInvoice.do" focus="invoicenums">
                         <table width="100%" border="0">
                             <tr>
                                 <td class="formlabel">Invoice Number (separate each invoice by comma [,]):</td>

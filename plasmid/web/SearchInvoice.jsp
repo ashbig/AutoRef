@@ -28,7 +28,7 @@
                     <jsp:include page="invoiceTitle.jsp" />
                     
                     <P class="formlabel">Search Invoice</P>
-                    <html:form action="SearchInvoice.do">
+                    <html:form action="SearchInvoice.do" focus="invoicenums">
                         <table width="100%" border="0">
                             <tr>
                                 <td class="formlabel">Invoice Number (separate each invoice by comma [,]):</td>
