@@ -31,6 +31,7 @@
                     
                     <html:form action="UpdateInvoicePayment.do">
                         <html:hidden name="<%=Constants.INVOICE%>" property="invoiceid"/>
+                        <html:hidden name="<%=Constants.INVOICE%>" property="price"/>
                         <table width="100%" border="0">
                             <tr> 
                                 <td class="formlabel">Invoice Number:</td>
@@ -60,13 +61,7 @@
                                 <td class="formlabel">Payment:</td>
                                 <td class="text">$<html:text styleClass="text" name="<%=Constants.INVOICE%>" property="payment"/></td>
                                 <td class="formlabel">Payment Status:</td>
-                                <td class="text">
-                                    <html:select styleClass="itemtext" name="<%=Constants.INVOICE%>" property="paymentstatus">
-                                        <html:option value="<%=Invoice.PAYMENTSTATUS_PAID%>"/>
-                                        <html:option value="<%=Invoice.PAYMENTSTATUS_UNPAID%>"/>
-                                        <html:option value="<%=Invoice.PAYMENTSTATUS_PARTIAL%>"/>
-                                    </html:select>
-                                </td>
+                                <td class="text"><bean:write name="<%=Constants.INVOICE%>" property="paymentstatus"/></td>
                             </tr>
                             <tr> 
                                 <td class="formlabel" valign="top">Reason For Adjustment:</td>

@@ -20,6 +20,7 @@ public class InvoiceForm extends ActionForm {
     private String comments;
     private boolean returnToList;
     private String reasonforadj;
+    private double price;
     
     public InvoiceForm() {this.returnToList = false;}
     
@@ -85,5 +86,13 @@ public class InvoiceForm extends ActionForm {
 
     public void setReasonforadj(String reasonforadj) {
         this.reasonforadj = reasonforadj;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 }

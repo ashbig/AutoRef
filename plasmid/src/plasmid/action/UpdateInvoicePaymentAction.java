@@ -34,13 +34,15 @@ public class UpdateInvoicePaymentAction extends InternalUserAction {
 
         User user = (User) request.getSession().getAttribute(Constants.USER_KEY);
         int invoiceid = ((InvoiceForm) form).getInvoiceid();
-        String paymentstatus = ((InvoiceForm) form).getPaymentstatus();
+        //String paymentstatus = ((InvoiceForm) form).getPaymentstatus();
         String accountnum = ((InvoiceForm) form).getAccountnum();
         double adjustment = ((InvoiceForm)form).getAdjustment();
         double payment = ((InvoiceForm) form).getPayment();
         String reason = ((InvoiceForm)form).getReasonforadj();
         String comments = ((InvoiceForm) form).getComments();
         boolean returnToList = ((InvoiceForm)form).isReturnToList();
+        double price = ((InvoiceForm)form).getPrice();
+        String paymentstatus = Invoice.getPaymentStatus(price, adjustment, payment);
 
         DatabaseTransaction t = null;
         Connection c = null;

@@ -16,10 +16,8 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import plasmid.Constants;
 import plasmid.coreobject.Invoice;
-import plasmid.coreobject.User;
 import plasmid.database.DatabaseTransaction;
 import plasmid.form.InvoiceForm;
-import plasmid.process.OrderProcessManager;
 import sequencing.SEQ_Order;
 import sequencing.SEQ_OrderManager;
 import sequencing.SEQ_OrderProcessManager;
@@ -34,13 +32,14 @@ public class SEQ_UpdateInvoicePaymentAction extends InternalUserAction {
         ActionErrors errors = new ActionErrors();
 
         int invoiceid = ((InvoiceForm) form).getInvoiceid();
-        String paymentstatus = ((InvoiceForm) form).getPaymentstatus();
         String accountnum = ((InvoiceForm) form).getAccountnum();
         double adjustment = ((InvoiceForm)form).getAdjustment();
         double payment = ((InvoiceForm) form).getPayment();
         String comments = ((InvoiceForm) form).getComments();
         String reason = ((InvoiceForm)form).getReasonforadj();
         boolean returnToList = ((InvoiceForm)form).isReturnToList();
+        double price = ((InvoiceForm)form).getPrice();
+        String paymentstatus = Invoice.getPaymentStatus(price, adjustment, payment);
 
         DatabaseTransaction t = null;
         Connection c = null;

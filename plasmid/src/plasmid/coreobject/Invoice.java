@@ -244,4 +244,17 @@ public class Invoice {
     public void setSeqorder(SEQ_Order seqorder) {
         this.seqorder = seqorder;
     }
+    
+    public static String getPaymentStatus(double price, double adjustment, double payment) {
+        double due = price + adjustment - payment;
+        if(due>0) {
+            if(due<price || payment>0) {
+                return Invoice.PAYMENTSTATUS_PARTIAL;
+            } else {
+                return Invoice.PAYMENTSTATUS_UNPAID;
+            }
+        } else {
+            return Invoice.PAYMENTSTATUS_PAID;
+        }
+    }
 }
