@@ -29,7 +29,7 @@
                     </logic:present>
                     <html:errors/>
                     
-                    <html:form action="SEQ_UpdateInvoicePayment.do">
+                    <html:form action="SEQ_UpdateInvoicePayment.do" focus="payment">
                         <html:hidden name="<%=Constants.INVOICE%>" property="invoiceid"/>
                         <html:hidden name="<%=Constants.INVOICE%>" property="price"/>
                         <table width="100%" border="0">

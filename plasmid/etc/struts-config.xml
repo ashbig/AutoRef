@@ -599,6 +599,7 @@
                scope="session"
               input="/PrepareSearchInvoice.do">
             <forward  name="success"   path="/InvoiceList.jsp"/>
+            <forward  name="success_enter_payment"  path="/EnterInvoicePayment.jsp"/>
             <forward  name="success_empty"   path="/InvoiceListEmpty.jsp"/>
         </action>
         <action    path="/SearchOrderInput"
@@ -662,6 +663,7 @@
                scope="session"
               input="/SEQ_SearchInvoice.jsp">
             <forward  name="success"   path="/SEQ_InvoiceList.jsp"/>
+            <forward  name="success_enter_payment"  path="/SEQ_EnterInvoicePayment.jsp"/>
             <forward  name="success_empty"   path="/SEQ_InvoiceListEmpty.jsp"/>
         </action>
         <action    path="/SEQ_ViewInvoiceDetail"
