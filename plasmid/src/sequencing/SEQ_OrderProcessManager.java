@@ -272,6 +272,9 @@ public class SEQ_OrderProcessManager {
                 "If you pay through wire transfer, please include wire transfer fee in the total amount."));
 
         document.add(PdfEditor.makeTitle(" "));
+        document.add(PdfEditor.makeSmallBold("If your payment due is zero, please DO NOT send payment and regard this as your receipt."));
+        
+        document.add(PdfEditor.makeTitle(" "));
         document.add(PdfEditor.makeSmallBold("Mailing Address:"));
         document.add(PdfEditor.makeSmall("  Harvard Medical School"));
         document.add(PdfEditor.makeSmall("  Dep.BCMP Room C- 214"));
