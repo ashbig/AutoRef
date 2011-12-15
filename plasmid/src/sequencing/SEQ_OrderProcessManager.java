@@ -51,9 +51,9 @@ public class SEQ_OrderProcessManager {
             if (invoicenums != null && invoicenums.trim().length() > 0) {
                 invoicenumList = new ArrayList();
                 List l = sc.convertFromStringToList(invoicenums.trim(), ",");
-                for(int i=0; i<l.size(); i++) {
-                    String s = (String)l.get(i);
-                    s = "SEQ_"+s;
+                for (int i = 0; i < l.size(); i++) {
+                    String s = (String) l.get(i);
+                    s = "SEQ_" + s;
                     invoicenumList.add(s);
                 }
             }
@@ -384,14 +384,14 @@ public class SEQ_OrderProcessManager {
         printInvoices(file, invoices);
     }
 
-    public void emailInvoices(List invoices) throws Exception {
+    public void emailInvoices(List invoices, boolean isOther) throws Exception {
         for (int i = 0; i < invoices.size(); i++) {
             Invoice invoice = (Invoice) invoices.get(i);
-            emailInvoice(invoice.getSeqorder(), invoice);
+            emailInvoice(invoice.getSeqorder(), invoice, isOther);
         }
     }
 
-    public void emailInvoice(SEQ_Order order, Invoice invoice) throws Exception {
+    public void emailInvoice(SEQ_Order order, Invoice invoice, boolean isOther) throws Exception {
         String filename = Constants.TMP + "Invoice_" + order.getOrderid() + ".pdf";
         File f1 = new File(filename);
         OutputStream file = new FileOutputStream(f1);
@@ -402,6 +402,11 @@ public class SEQ_OrderProcessManager {
         files.add(f2);
 
         String billingemail = order.getBillingemail();
+        List ccs = new ArrayList();
+        ccs.add(Constants.EMAIL_FROM);
+        if (isOther) {
+            ccs.add(order.getPiemail());
+        }
         String subject = "Invoice for order " + invoice.getOrderid();
         String text = "Dear Accounts Payable Representative:\n\n" +
                 "Payment is requested for the attached invoice from the DF/HCC DNA Resource Core" +
@@ -417,18 +422,18 @@ public class SEQ_OrderProcessManager {
                 "Payment Terms: Net 30\n" +
                 "Enclosures: Invoice, Payment Instructions\n";
 
-        Mailer.sendMessage(billingemail, Constants.EMAIL_FROM, Constants.EMAIL_FROM, subject, text, files);
+        Mailer.sendMessages(billingemail, Constants.EMAIL_FROM, ccs, subject, text, files);
     }
 
     public List<Invoice> generateInvoices(List<SEQ_Order> orders) {
         List<Invoice> invoices = new ArrayList<Invoice>();
-        for(SEQ_Order order:orders) {
+        for (SEQ_Order order : orders) {
             Invoice invoice = new Invoice();
-            invoice.setInvoicenum("SEQ_"+order.getOrderid());
+            invoice.setInvoicenum("SEQ_" + order.getOrderid());
             invoice.setPaymentstatus(Invoice.PAYMENTSTATUS_UNPAID);
             invoice.setPaymenttype(order.getPaymentmethod());
             invoice.setPrice(order.getCost());
-            if(SEQ_Order.PAYMENTMETHOD_CREDIT.equals(order.getPaymentmethod())) {
+            if (SEQ_Order.PAYMENTMETHOD_CREDIT.equals(order.getPaymentmethod())) {
                 invoice.setPaymentstatus(Invoice.PAYMENTSTATUS_PAID);
                 invoice.setPaymenttype(Invoice.PAYMENTTYPE_CREDITCARD);
                 invoice.setPayment(order.getCost());
@@ -441,12 +446,12 @@ public class SEQ_OrderProcessManager {
         }
         return invoices;
     }
-    
+
     public void uploadSeqOrders(InputStream in) throws SEQ_Exception {
         SEQ_FileReader reader = new SEQ_FileReader();
         List<SEQ_Order> orders = reader.readSeqOrders(in);
         List<Invoice> invoices = generateInvoices(orders);
-        
+
         DatabaseTransaction t = null;
         Connection conn = null;
         try {
@@ -455,11 +460,11 @@ public class SEQ_OrderProcessManager {
         } catch (Exception ex) {
             throw new SEQ_Exception("Cannot get database connection.");
         }
-        
-        if(conn == null) {
+
+        if (conn == null) {
             throw new SEQ_Exception("Cannot get database connection.");
         }
-        
+
         SEQ_OrderManager manager = new SEQ_OrderManager(conn);
         try {
             manager.insertSeqOrders(orders);

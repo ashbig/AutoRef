@@ -75,7 +75,18 @@ public class ViewSelectedInvoicesAction extends InternalUserAction {
             return null;
         } else if (Constants.INVOICE_BUTTON_EMAIL_ALL_INVOICE.equals(submitButton) || Constants.INVOICE_BUTTON_EMAIL_SELECT_INVOICE.equals(submitButton)) {
             try {
-                manager.emailInvoices(selectedInvoices);
+                manager.emailInvoices(selectedInvoices, false);
+                return mapping.findForward("email_successful");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                errors.add(ActionErrors.GLOBAL_ERROR,
+                        new ActionError("error.general", "Error occured while sending emails."));
+                saveErrors(request, errors);
+                return mapping.findForward("error");
+            }
+        } else if (Constants.INVOICE_BUTTON_EMAIL_ALL_USER_ALL_INVOICE.equals(submitButton) || Constants.INVOICE_BUTTON_EMAIL_ALL_USER_SELECT_INVOICE.equals(submitButton)) {
+            try {
+                manager.emailInvoices(selectedInvoices, true);
                 return mapping.findForward("email_successful");
             } catch (Exception ex) {
                 ex.printStackTrace();

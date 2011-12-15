@@ -2060,14 +2060,14 @@ public class OrderProcessManager {
         }
     }
 
-    public void emailInvoices(List invoices) throws Exception {
+    public void emailInvoices(List invoices, boolean isOther) throws Exception {
         for(int i=0; i<invoices.size(); i++) {
             Invoice invoice = (Invoice)invoices.get(i);
-            emailInvoice(invoice.getOrder(), invoice);
+            emailInvoice(invoice.getOrder(), invoice, isOther);
         }
     }
     
-    public void emailInvoice(CloneOrder order, Invoice invoice) throws Exception {
+    public void emailInvoice(CloneOrder order, Invoice invoice, boolean isOther) throws Exception {
             String filename = Constants.TMP + "Invoice_" + order.getOrderid() + ".pdf";
             File f1 = new File(filename);
             OutputStream file = new FileOutputStream(f1);
@@ -2078,6 +2078,12 @@ public class OrderProcessManager {
             files.add(f2);
 
             String billingemail = order.getBillingemail();
+            List ccs = new ArrayList();
+            ccs.add(Constants.EMAIL_FROM);
+            if(isOther) {
+                ccs.add(order.getPiemail());
+                ccs.add(order.getEmail());
+            }
             String subject = "Invoice for order " + invoice.getOrderid();
             String text = "Dear Accounts Payable Representative:\n\n" +
                     "Attached please find an invoice from the PlasmID Repository at Harvard Medical School.\n\n" +
@@ -2086,7 +2092,7 @@ public class OrderProcessManager {
                     "Payment Terms: Net 30\n" +
                     "Enclosures: Invoice, Payment Instructions\n";
 
-            Mailer.sendMessage(billingemail, Constants.EMAIL_FROM, Constants.EMAIL_FROM, subject, text, files);
+            Mailer.sendMessages(billingemail, Constants.EMAIL_FROM, ccs, subject, text, files);
     }
     
     public void sendShippingEmails(CloneOrder order, Invoice invoice) throws Exception {
