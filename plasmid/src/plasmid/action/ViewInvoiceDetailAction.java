@@ -82,7 +82,18 @@ public class ViewInvoiceDetailAction extends UserAction {
             return mapping.findForward(null);
         } else if (Constants.INVOICE_BUTTON_EMAIL_INVOICE.equals(button)) {
             try {
-                manager.emailInvoice(order, invoice);
+                manager.emailInvoice(order, invoice, false);
+                return mapping.findForward("success_email");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                errors.add(ActionErrors.GLOBAL_ERROR,
+                        new ActionError("error.general", "Error occured while sending emails."));
+                saveErrors(request, errors);
+                return mapping.findForward("error");
+            }
+        } else if (Constants.INVOICE_BUTTON_EMAIL_All_USER_INVOICE.equals(button)) {
+            try {
+                manager.emailInvoice(order, invoice, true);
                 return mapping.findForward("success_email");
             } catch (Exception ex) {
                 ex.printStackTrace();
