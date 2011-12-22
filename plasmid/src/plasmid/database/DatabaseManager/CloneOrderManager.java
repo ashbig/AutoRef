@@ -1059,7 +1059,7 @@ public class CloneOrderManager extends TableManager {
 
     public Invoice queryInvoiceByOrder(int orderid) throws Exception {
         String sql = "select invoicenumber, to_char(invoicedate,'YYYY-MM-dd hh:mm:ss')," +
-                " i.price, adjustment, nvl(i.payment,' '), paymentstatus, paymenttype, account," +
+                " i.price, adjustment, nvl(i.payment,0), paymentstatus, paymenttype, account," +
                 " i.invoiceid, nvl(i.comments,' '), nvl(reason,' '), u.piname, u.institution" +
                 " from invoice i, cloneorder c, userprofile u" +
                 " where i.orderid=c.orderid" +
