@@ -97,7 +97,7 @@
                         <tr> 
                             <td class="formlabel">Order Status:</td>
                             <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="status"/></td>
-                            <td class="formlabel">PO Number:</td>
+                            <td class="formlabel">PO/Billing Number:</td>
                             <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="ponumber"/></td>
                         </tr>
                         <tr> 

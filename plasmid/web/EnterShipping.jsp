@@ -35,13 +35,13 @@
   <tr> 
     <td class="formlabel">Order Status:</td>
     <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="status"/></td>
-    <td class="formlabel">PO Number:</td>
+    <td class="formlabel">PO/Billing Number:</td>
     <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="ponumber"/></td>
   </tr>
   <tr> 
     <td class="formlabel">&nbsp;</td>
     <td class="text">&nbsp;</td>
-    <td class="formlabel">New PO Number:</td>
+    <td class="formlabel">New PO/Billing Number:</td>
     <td class="text"><html:text styleClass="text" maxlength="100" property="newAccount"/></td>
   </tr>
   <tr> 

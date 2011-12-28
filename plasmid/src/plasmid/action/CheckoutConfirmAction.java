@@ -167,6 +167,24 @@ public class CheckoutConfirmAction extends UserAction {
         ((CheckoutForm) form).setOrderid(orderid);
         if (user.isInternalMember()) {
             ((CheckoutForm) form).setPaymentmethod(Constants.PO);
+            String ponumber = user.getPonumber();
+            if(ponumber != null && ponumber.trim().length()>0) {
+                StringTokenizer st = new StringTokenizer(ponumber, "-");
+                try {
+                    String s1 = st.nextToken();
+                    String s2 = st.nextToken();
+                    String s3 = st.nextToken();
+                    if(s1 != null) {
+                        ((CheckoutForm)form).setBilling1(s1);
+                    }
+                    if(s2 != null) {
+                        ((CheckoutForm)form).setBilling2(s2);
+                    }
+                    if(s3 != null) {
+                        ((CheckoutForm)form).setBilling3(s3);
+                    }
+                } catch (Exception ex) {}
+            }
         } else {
             ((CheckoutForm) form).setPaymentmethod(Constants.PAYPAL);
         }

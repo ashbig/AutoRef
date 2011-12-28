@@ -83,12 +83,83 @@ public class ChoosePaymentAction extends UserAction {
         boolean saveInfo = ((CheckoutForm) form).getSaveInfo();
         int orderid = ((CheckoutForm) form).getOrderid();
 
+        Calendar c = Calendar.getInstance();
+        String time = c.getTime().toString();
+        request.setAttribute("date", time);
+
+        if (user.isInternalMember()) {
+            payment = Constants.PO;
+            String billing1 = ((CheckoutForm) form).getBilling1();
+            String billing2 = ((CheckoutForm) form).getBilling2();
+            String billing3 = ((CheckoutForm) form).getBilling3();
+            String billing4 = ((CheckoutForm) form).getBilling4();
+            String billing5 = ((CheckoutForm) form).getBilling5();
+            String billing6 = ((CheckoutForm) form).getBilling6();
+            String billing7 = ((CheckoutForm) form).getBilling7();
+            if (billing1 == null || billing1.trim().length() != 3) {
+                errors.add("ponumber", new ActionError("error.billingcode.invalid"));
+                saveErrors(request, errors);
+                return (new ActionForward(mapping.getInput()));
+            }
+            if (billing2 == null || billing2.trim().length() != 5) {
+                errors.add("ponumber", new ActionError("error.billingcode.invalid"));
+                saveErrors(request, errors);
+                return (new ActionForward(mapping.getInput()));
+            }
+            if (billing3 == null || billing3.trim().length() != 4) {
+                errors.add("ponumber", new ActionError("error.billingcode.invalid"));
+                saveErrors(request, errors);
+                return (new ActionForward(mapping.getInput()));
+            }
+            if (billing4 == null || billing4.trim().length() != 6) {
+                errors.add("ponumber", new ActionError("error.billingcode.invalid"));
+                saveErrors(request, errors);
+                return (new ActionForward(mapping.getInput()));
+            }
+            if (billing5 == null || billing5.trim().length() != 6) {
+                errors.add("ponumber", new ActionError("error.billingcode.invalid"));
+                saveErrors(request, errors);
+                return (new ActionForward(mapping.getInput()));
+            }
+            if (billing6 == null || billing6.trim().length() != 4) {
+                errors.add("ponumber", new ActionError("error.billingcode.invalid"));
+                saveErrors(request, errors);
+                return (new ActionForward(mapping.getInput()));
+            }
+            if (billing7 == null || billing7.trim().length() != 5) {
+                errors.add("ponumber", new ActionError("error.billingcode.invalid"));
+                saveErrors(request, errors);
+                return (new ActionForward(mapping.getInput()));
+            }
+            ponumber = billing1.trim() + "-" +
+                    billing2.trim() + "-" +
+                    billing3.trim() + "-" +
+                    billing4.trim() + "-" +
+                    billing5.trim() + "-" +
+                    billing6.trim() + "-" +
+                    billing7.trim();
+            if (ponumber.equals("000-00000-0000-000000-000000-0000-00000") ||
+                    ponumber.equals("111-11111-1111-111111-111111-1111-11111") ||
+                    ponumber.equals("222-22222-2222-222222-222222-2222-22222") ||
+                    ponumber.equals("333-33333-3333-333333-333333-3333-33333") ||
+                    ponumber.equals("444-44444-4444-444444-444444-4444-44444") ||
+                    ponumber.equals("555-55555-5555-555555-555555-5555-55555") ||
+                    ponumber.equals("666-66666-6666-666666-666666-6666-66666") ||
+                    ponumber.equals("777-77777-7777-777777-777777-7777-77777") ||
+                    ponumber.equals("888-88888-8888-888888-888888-8888-88888") ||
+                    ponumber.equals("999-99999-9999-999999-999999-9999-99999")) {
+                errors.add("ponumber", new ActionError("error.billingcode.invalid"));
+                saveErrors(request, errors);
+                return (new ActionForward(mapping.getInput()));
+            }
+        }
+
         if (Constants.PAYPAL.equals(payment) && user.isInternalMember()) {
             errors.add("ponumber", new ActionError("error.credit.notallowed"));
             saveErrors(request, errors);
             return (new ActionForward(mapping.getInput()));
         }
-        
+
         OrderProcessManager manager = new OrderProcessManager();
         List mtas = null;
         try {
@@ -111,15 +182,10 @@ public class ChoosePaymentAction extends UserAction {
             }
         }
 
-        Calendar c = Calendar.getInstance();
-        String time = c.getTime().toString();
         if (Constants.PO.equals(payment)) {
             if (!manager.validatePonumber(ponumber)) {
                 errors.add("ponumber", new ActionError("error.ponumber.required"));
                 saveErrors(request, errors);
-
-                request.setAttribute("date", time);
-
                 return (new ActionForward(mapping.getInput()));
             }
             if (OrderProcessManager.isAqisCountry(country)) {

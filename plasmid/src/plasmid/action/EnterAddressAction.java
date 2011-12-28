@@ -44,8 +44,8 @@ public class EnterAddressAction extends UserAction {
         ActionErrors errors = new ActionErrors();
         
         User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
-        String shippingMethod = ((CheckoutForm)form).getShippingMethod();
-        String accountNumber = ((CheckoutForm)form).getAccountNumber();
+        //String shippingMethod = ((CheckoutForm)form).getShippingMethod();
+        //String accountNumber = ((CheckoutForm)form).getAccountNumber();
         
         OrderProcessManager m = new OrderProcessManager();
         

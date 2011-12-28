@@ -644,6 +644,17 @@ public class OrderProcessManager {
                 return -1;
             }
 
+            if (user.isInternalMember()) {
+                if (!m1.updatePonumber(user.getPonumber().substring(0, 14), user.getUserid())) {
+                    DatabaseTransaction.rollback(conn);
+                    if (Constants.DEBUG) {
+                        System.out.println(m1.getErrorMessage());
+                        System.out.println("Cannot update PO number");
+                    }
+                    return -1;
+                }
+            }
+
             CloneOrderManager m = new CloneOrderManager(conn);
             int orderid = 0;
             if (order.getIsBatch().equals("Y")) {
@@ -1386,9 +1397,9 @@ public class OrderProcessManager {
             if (invoicenums != null && invoicenums.trim().length() > 0) {
                 invoicenumList = new ArrayList();
                 List l = sc.convertFromStringToList(invoicenums.trim(), ",");
-                for(int i=0; i<l.size(); i++) {
-                    String s = (String)l.get(i);
-                    s = "DFHCC_"+s;
+                for (int i = 0; i < l.size(); i++) {
+                    String s = (String) l.get(i);
+                    s = "DFHCC_" + s;
                     invoicenumList.add(s);
                 }
             }
@@ -1755,9 +1766,9 @@ public class OrderProcessManager {
         CloneOrderManager manager = new CloneOrderManager();
         List ids = new ArrayList();
         ids.add(new Integer(invoiceid));
-        return (Invoice)(manager.queryInvoices(ids).get(0));
+        return (Invoice) (manager.queryInvoices(ids).get(0));
     }
-    
+
     public List getInvoices(List invoiceids) throws Exception {
         CloneOrderManager manager = new CloneOrderManager();
         return manager.queryInvoices(invoiceids);
@@ -1792,7 +1803,7 @@ public class OrderProcessManager {
         invoices.add(invoice);
         printInvoices(file, invoices);
     }
-    
+
     public void printInvoices(OutputStream file, List invoices) {
         try {
             Document document = new Document();
@@ -1929,7 +1940,7 @@ public class OrderProcessManager {
 
         document.add(PdfEditor.makeTitle(" "));
         document.add(PdfEditor.makeSmallBold("If your payment due is zero, please DO NOT send payment and regard this as your receipt."));
-        
+
         document.add(PdfEditor.makeTitle(" "));
         document.add(PdfEditor.makeSmallBold("Mailing Address:"));
         document.add(PdfEditor.makeSmall("  Harvard Medical School"));
@@ -2064,40 +2075,40 @@ public class OrderProcessManager {
     }
 
     public void emailInvoices(List invoices, boolean isOther) throws Exception {
-        for(int i=0; i<invoices.size(); i++) {
-            Invoice invoice = (Invoice)invoices.get(i);
+        for (int i = 0; i < invoices.size(); i++) {
+            Invoice invoice = (Invoice) invoices.get(i);
             emailInvoice(invoice.getOrder(), invoice, isOther);
         }
     }
-    
+
     public void emailInvoice(CloneOrder order, Invoice invoice, boolean isOther) throws Exception {
-            String filename = Constants.TMP + "Invoice_" + order.getOrderid() + ".pdf";
-            File f1 = new File(filename);
-            OutputStream file = new FileOutputStream(f1);
-            printInvoice(file, invoice);
-            File f2 = new File(Constants.FILE_PATH + "Billing_memo.pdf");
-            List files = new ArrayList();
-            files.add(f1);
-            files.add(f2);
+        String filename = Constants.TMP + "Invoice_" + order.getOrderid() + ".pdf";
+        File f1 = new File(filename);
+        OutputStream file = new FileOutputStream(f1);
+        printInvoice(file, invoice);
+        File f2 = new File(Constants.FILE_PATH + "Billing_memo.pdf");
+        List files = new ArrayList();
+        files.add(f1);
+        files.add(f2);
 
-            String billingemail = order.getBillingemail();
-            List ccs = new ArrayList();
-            ccs.add(Constants.EMAIL_FROM);
-            if(isOther) {
-                ccs.add(order.getPiemail());
-                ccs.add(order.getEmail());
-            }
-            String subject = "Invoice for order " + invoice.getOrderid();
-            String text = "Dear Accounts Payable Representative:\n\n" +
-                    "Attached please find an invoice from the PlasmID Repository at Harvard Medical School.\n\n" +
-                    "This invoice was generated upon completion and shipment of your order. Any discounts, price modifications, and credit card payments should already be reflected on this invoice. If you have received this notification in error, or believe that a clerical mistake has occurred please contact us as soon as possible to resolve the issue. Please find payment instructions attached to this email and ALWAYS BE SURE TO INCLUDE YOUR INVOICE NUMBER WITH PAYMENT and ADD ANY WIRE TRANSFER FEES TO YOUR TOTAL.\n\n" +
-                    "As a part of our continued environmental efforts this email will serve as your sole notification, and no paper copy will be mailed to your facility.\n\n"+
-                    "Payment Terms: Net 30\n" +
-                    "Enclosures: Invoice, Payment Instructions\n";
+        String billingemail = order.getBillingemail();
+        List ccs = new ArrayList();
+        ccs.add(Constants.EMAIL_FROM);
+        if (isOther) {
+            ccs.add(order.getPiemail());
+            ccs.add(order.getEmail());
+        }
+        String subject = "Invoice for order " + invoice.getOrderid();
+        String text = "Dear Accounts Payable Representative:\n\n" +
+                "Attached please find an invoice from the PlasmID Repository at Harvard Medical School.\n\n" +
+                "This invoice was generated upon completion and shipment of your order. Any discounts, price modifications, and credit card payments should already be reflected on this invoice. If you have received this notification in error, or believe that a clerical mistake has occurred please contact us as soon as possible to resolve the issue. Please find payment instructions attached to this email and ALWAYS BE SURE TO INCLUDE YOUR INVOICE NUMBER WITH PAYMENT and ADD ANY WIRE TRANSFER FEES TO YOUR TOTAL.\n\n" +
+                "As a part of our continued environmental efforts this email will serve as your sole notification, and no paper copy will be mailed to your facility.\n\n" +
+                "Payment Terms: Net 30\n" +
+                "Enclosures: Invoice, Payment Instructions\n";
 
-            Mailer.sendMessages(billingemail, Constants.EMAIL_FROM, ccs, subject, text, files);
+        Mailer.sendMessages(billingemail, Constants.EMAIL_FROM, ccs, subject, text, files);
     }
-    
+
     public void sendShippingEmails(CloneOrder order, Invoice invoice) throws Exception {
         int orderid = order.getOrderid();
         String to = order.getEmail();
@@ -2120,7 +2131,7 @@ public class OrderProcessManager {
             text = "Dear Accounts Payable Representative:\n\n" +
                     "Attached please find an invoice from the PlasmID Repository at Harvard Medical School.\n\n" +
                     "This invoice was generated upon completion and shipment of your order. Any discounts, price modifications, and credit card payments should already be reflected on this invoice. If you have received this notification in error, or believe that a clerical mistake has occurred please contact us as soon as possible to resolve the issue. Please find payment instructions attached to this email and ALWAYS BE SURE TO INCLUDE YOUR INVOICE NUMBER WITH PAYMENT and ADD ANY WIRE TRANSFER FEES TO YOUR TOTAL.\n\n" +
-                    "As a part of our continued environmental efforts this email will serve as your sole notification, and no paper copy will be mailed to your facility.\n\n"+
+                    "As a part of our continued environmental efforts this email will serve as your sole notification, and no paper copy will be mailed to your facility.\n\n" +
                     "Payment Terms: Net 30\n" +
                     "Enclosures: Invoice, Payment Instructions\n";
 

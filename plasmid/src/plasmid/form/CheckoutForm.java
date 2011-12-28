@@ -59,6 +59,13 @@ public class CheckoutForm extends ActionForm {
     private double costOfPlatinum;
     private int numOfClonesInCollections;
     private String billingemail;
+    private String billing1;
+    private String billing2;
+    private String billing3;
+    private String billing4;
+    private String billing5;
+    private String billing6;
+    private String billing7;
     
     /** Creates a new instance of CheckoutForm */
     public CheckoutForm() {
@@ -208,6 +215,62 @@ public class CheckoutForm extends ActionForm {
 
     public void setBillingemail(String billingemail) {
         this.billingemail = billingemail;
+    }
+
+    public String getBilling1() {
+        return billing1;
+    }
+
+    public void setBilling1(String billing1) {
+        this.billing1 = billing1;
+    }
+
+    public String getBilling2() {
+        return billing2;
+    }
+
+    public void setBilling2(String billing2) {
+        this.billing2 = billing2;
+    }
+
+    public String getBilling3() {
+        return billing3;
+    }
+
+    public void setBilling3(String billing3) {
+        this.billing3 = billing3;
+    }
+
+    public String getBilling4() {
+        return billing4;
+    }
+
+    public void setBilling4(String billing4) {
+        this.billing4 = billing4;
+    }
+
+    public String getBilling5() {
+        return billing5;
+    }
+
+    public void setBilling5(String billing5) {
+        this.billing5 = billing5;
+    }
+
+    public String getBilling6() {
+        return billing6;
+    }
+
+    public void setBilling6(String billing6) {
+        this.billing6 = billing6;
+    }
+
+    public String getBilling7() {
+        return billing7;
+    }
+
+    public void setBilling7(String billing7) {
+        this.billing7 = billing7;
     }
     
     /**

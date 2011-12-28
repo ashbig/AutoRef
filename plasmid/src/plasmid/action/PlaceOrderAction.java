@@ -23,7 +23,6 @@ import javax.servlet.http.*;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.net.URLConnection;
-import plasmid.util.CancelOrderThread;
 
 /**
  *
