@@ -14,6 +14,13 @@
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
         <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
         <META HTTP-EQUIV="Expires" CONTENT="-1">
+        <script type="text/JavaScript"    Language="JavaScript">
+            function setCheckbox() {
+                for(i=0; i<document.searchInvoiceForm.selectedInvoices.length; i++) {
+                    document.searchInvoiceForm.selectedInvoices[i].checked=document.searchInvoiceForm.invoiceCheckbox.checked;
+                }
+            }
+        </script>
         <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
     </head>
     
@@ -31,7 +38,7 @@
                     <html:form action="SEQ_ViewSelectedInvoices.do">
                         <table width="100%" border="0">
                             <tr>
-                                <td class="tableheader">&nbsp;</td>
+                                <td class="tableheader"><input type="checkbox" name="invoiceCheckbox" onclick="setCheckbox()" /></td>
                                 <td class="tableheader"><a href="SEQ_SearchInvoice.do?sortby=<%=Constants.INVOICE_SORT_BY_ID%>">Invoice</a></td>
                                 <td class="tableheader"><a href="SEQ_SearchInvoice.do?sortby=<%=Constants.INVOICE_SORT_BY_DATE%>">Date</a></td>
                                 <td class="tableheader"><a href="SEQ_SearchInvoice.do?sortby=<%=Constants.INVOICE_SORT_BY_PI%>">PI</a></td>

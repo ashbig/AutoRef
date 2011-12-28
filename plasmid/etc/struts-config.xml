@@ -694,6 +694,7 @@
                scope="session"
               input="/SEQ_InvoiceList.jsp">
             <forward  name="email_successful"   path="/SEQ_EmailInvoiceSuccessful.jsp"/>
+            <forward  name="no_invoice_selected"   path="/SEQ_InvoiceSelectEmpty.jsp"/>
         </action>
         <action    path="/UploadCultureResults"
                type="plasmid.action.UploadCultureResultsAction"
@@ -833,6 +834,7 @@
                scope="session"
               input="/InvoiceList.jsp">
             <forward  name="email_successful"   path="/EmailInvoiceSuccessful.jsp"/>
+            <forward  name="no_invoice_selected"   path="/InvoiceSelectEmpty.jsp"/>
         </action>
         <action    path="/WorklistInput"
                type="plasmid.action.WorklistInputAction"

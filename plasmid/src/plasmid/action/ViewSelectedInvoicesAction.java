@@ -40,7 +40,7 @@ public class ViewSelectedInvoicesAction extends InternalUserAction {
         } else {
             int[] selectedInvoiceids = ((SearchInvoiceForm) form).getSelectedInvoices();
             if (selectedInvoiceids.length == 0) {
-                return null;
+                return mapping.findForward("no_invoice_selected");
             }
 
             try {
@@ -59,7 +59,7 @@ public class ViewSelectedInvoicesAction extends InternalUserAction {
         }
 
         if (selectedInvoices.isEmpty()) {
-            return null;
+            return mapping.findForward("no_invoice_selected");
         }
 
         for (int i = 0; i < selectedInvoices.size(); i++) {
@@ -72,7 +72,7 @@ public class ViewSelectedInvoicesAction extends InternalUserAction {
             response.setContentType("application/pdf");
             response.setHeader("Content-Disposition","attachment; filename=Invoices.pdf");
             manager.printInvoices(response.getOutputStream(), selectedInvoices);
-            return null;
+            return mapping.findForward("no_invoice_selected");
         } else if (Constants.INVOICE_BUTTON_EMAIL_ALL_INVOICE.equals(submitButton) || Constants.INVOICE_BUTTON_EMAIL_SELECT_INVOICE.equals(submitButton)) {
             try {
                 manager.emailInvoices(selectedInvoices, false);
@@ -96,7 +96,7 @@ public class ViewSelectedInvoicesAction extends InternalUserAction {
                 return mapping.findForward("error");
             }
         } else {
-            return null;
+            return mapping.findForward("no_invoice_selected");
         }
     }
 }
