@@ -23,7 +23,7 @@
                                 
                                 <p align="left"><span class="mainbodytext">The Mission of the DNA Resource CORE is to provide member in the DF/HCC, Harvard Affiliates, and outside researchers with quality and inexpensive <a target="_blank" href="http://dnaseq.med.harvard.edu/">DNA sequencing services</a> and <a href="http://plasmid.med.harvard.edu/PLASMID/Home.jsp">sequence verified plasmid constructs</a>, paired with comprehensive quality control and customer support.&nbsp;        
                                 </span>
-                                
+                               <!-- 
                                 <p align="left"><span class="formlabelitalic">Dear DF/HCC DNA Resource Core Users,
                                         <br><br>
                                         The Core would like to inform you that our facility will be closed from Friday, December 23rd, 2011 to January 2nd, 2012. PlasmID orders however will still be accepted online during the break for later processing. We will resume filling orders on Tuesday, January 3rd, 2012.
@@ -31,7 +31,7 @@
                                         Happy Holidays!<br>
                                         Staff at DF/HCC DNA Resource Core
                                     </span>
-                                </p>
+                                </p>-->
                                 <!--
         <p align="left" class="formlabelitalic">
             Dear Valued PlasmID User,<br><br>
