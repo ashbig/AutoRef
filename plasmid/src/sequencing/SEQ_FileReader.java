@@ -60,9 +60,9 @@ public class SEQ_FileReader {
                 int n = costString.indexOf("$");
                 if (n < 0) {
                     //throw new SEQ_Exception("Column cost is wrong format: "+line);
-                    cost = Double.parseDouble(costString.substring(n + 1).replaceAll(",", ""));
-                } else {
                     cost = Double.parseDouble(costString.replaceAll(",", ""));
+                } else {
+                    cost = Double.parseDouble(costString.substring(n + 1).replaceAll(",", ""));
                 }
                 line = line.substring(line.indexOf("\t") + 1).replaceAll("\"", "");
 
