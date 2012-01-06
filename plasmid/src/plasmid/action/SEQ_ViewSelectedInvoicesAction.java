@@ -63,8 +63,8 @@ public class SEQ_ViewSelectedInvoicesAction extends InternalUserAction {
 
         for (int i = 0; i < selectedInvoices.size(); i++) {
             Invoice invoice = (Invoice) selectedInvoices.get(i);
-            SEQ_Order order = manager.getCloneOrder(invoice.getOrderid());
-            invoice.setSeqorder(order);
+            List<SEQ_Order> orders = manager.getCloneOrders(invoice.getInvoiceid());
+            invoice.setSeqorder(orders);
         }
 
         if (Constants.INVOICE_BUTTON_VIEW_ALL_INVOICE.equals(submitButton) || Constants.INVOICE_BUTTON_VIEW_SELECT_INVOICE.equals(submitButton)) {

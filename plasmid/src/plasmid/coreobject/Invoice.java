@@ -5,6 +5,8 @@
 package plasmid.coreobject;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 import sequencing.SEQ_Order;
 
 /**
@@ -37,9 +39,14 @@ public class Invoice {
     private CloneOrder order;
     private boolean selected;
     
-    private SEQ_Order seqorder;
+    //for sequencing invoice
+    private String pilastname;
+    private String isharvard;
+    private List<SEQ_Order> seqorder;
 
-    public Invoice() {}
+    public Invoice() {
+        seqorder = new ArrayList<SEQ_Order>();
+    }
     
     public Invoice(String invoicenum, String invoicedate, double price, double adjustment, double payment,
             String paymentstatus, String paymenttype, int orderid, String reason, String account) {
@@ -53,6 +60,7 @@ public class Invoice {
         this.orderid = orderid;
         this.reasonforadj = reason;
         this.accountnum = account;
+        seqorder = new ArrayList<SEQ_Order>();
     }
 
     public int getInvoiceid() {
@@ -236,14 +244,6 @@ public class Invoice {
     public void setOrder(CloneOrder order) {
         this.order = order;
     }
-
-    public SEQ_Order getSeqorder() {
-        return seqorder;
-    }
-
-    public void setSeqorder(SEQ_Order seqorder) {
-        this.seqorder = seqorder;
-    }
     
     public static String getPaymentStatus(double price, double adjustment, double payment) {
         double due = price + adjustment - payment;
@@ -256,5 +256,33 @@ public class Invoice {
         } else {
             return Invoice.PAYMENTSTATUS_PAID;
         }
+    }
+
+    public List<SEQ_Order> getSeqorder() {
+        return seqorder;
+    }
+
+    public void setSeqorder(List<SEQ_Order> seqorder) {
+        this.seqorder = seqorder;
+    }
+    
+    public void addSeqOrder(SEQ_Order order) {
+        this.seqorder.add(order);
+    }
+
+    public String getPilastname() {
+        return pilastname;
+    }
+
+    public void setPilastname(String pilastname) {
+        this.pilastname = pilastname;
+    }
+
+    public String getIsharvard() {
+        return isharvard;
+    }
+
+    public void setIsharvard(String isharvard) {
+        this.isharvard = isharvard;
     }
 }

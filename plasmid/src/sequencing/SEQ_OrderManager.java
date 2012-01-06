@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import plasmid.Constants;
 import plasmid.coreobject.Invoice;
+import plasmid.database.DatabaseManager.DefTableManager;
 import sequencing.SEQ_Order;
 import plasmid.database.DatabaseManager.TableManager;
 import plasmid.database.DatabaseTransaction;
@@ -35,11 +36,9 @@ public class SEQ_OrderManager extends TableManager {
 
     public Invoice queryInvoice(int invoiceid) throws Exception {
         String sql = "select invoicenumber, to_char(invoicedate,'YYYY-MM-dd hh:mm:ss')," +
-                " i.price, adjustment, i.payment, paymentstatus, nvl(paymenttype, ' '), account," +
-                " i.orderid, nvl(i.comments,' '), nvl(reason, ' '), c.pifirstname, c.pilastname, c.institution" +
-                " from seqinvoice i, seqorder c" +
-                " where i.orderid=c.orderid" +
-                " and i.invoiceid=" + invoiceid;
+                " price, adjustment, payment, paymentstatus, nvl(paymenttype, ' '), account," +
+                " nvl(comments,' '), nvl(reason, ' '), piname, institution" +
+                " from seqinvoice where invoiceid=" + invoiceid;
 
         DatabaseTransaction t = null;
         ResultSet rs = null;
@@ -56,16 +55,14 @@ public class SEQ_OrderManager extends TableManager {
                 String paymentstatus = rs.getString(6);
                 String paymenttype = rs.getString(7);
                 String account = rs.getString(8);
-                int orderid = rs.getInt(9);
-                String comments = rs.getString(10);
-                String reason = rs.getString(11);
-                String pifirstname = rs.getString(12);
-                String pilastname = rs.getString(13);
-                String institution = rs.getString(14);
-                invoice = new Invoice(invoicenumber, invoicedate, price, adjustment, payment, paymentstatus, paymenttype, orderid, reason, account);
+                String comments = rs.getString(9);
+                String reason = rs.getString(10);
+                String piname = rs.getString(11);
+                String institution = rs.getString(12);
+                invoice = new Invoice(invoicenumber, invoicedate, price, adjustment, payment, paymentstatus, paymenttype, 0, reason, account);
                 invoice.setComments(comments);
                 invoice.setInvoiceid(invoiceid);
-                invoice.setPiname(pilastname+", "+pifirstname);
+                invoice.setPiname(piname);
                 invoice.setInstitution(institution);
             }
         } catch (Exception ex) {
@@ -80,56 +77,55 @@ public class SEQ_OrderManager extends TableManager {
     public List queryInvoices(List invoicenums, String invoiceDateFrom, String invoiceDateTo,
             String invoiceMonth, String invoiceYear, List lastnames, List ponumbers,
             String paymentstatus, String isinternal, String institution1, String sort) {
-        String sql = "select invoiceid, to_char(invoicedate,'YYYY-MM-dd hh:mm:ss'), i.price," +
-                " i.adjustment, i.payment, paymentstatus, nvl(paymenttype,' '), i.account, i.orderid," +
-                " nvl(i.comments,' '), nvl(i.reason,' '), o.pifirstname, o.pilastname, o.institution, i.invoicenumber" +
-                " from seqinvoice i, seqorder o" +
-                " where i.orderid=o.orderid";
+        String sql = "select invoiceid, to_char(invoicedate,'YYYY-MM-dd hh:mm:ss'), price," +
+                " adjustment, payment, paymentstatus, nvl(paymenttype,' '), account," +
+                " nvl(comments,' '), nvl(reason,' '), piname, institution, invoicenumber" +
+                " from seqinvoice where invoiceid>0";
 
         if (invoicenums != null) {
-            sql += " and lower(i.invoicenumber) in (" + StringConvertor.convertFromListToSqlString(invoicenums).toLowerCase() + ")";
+            sql += " and lower(invoicenumber) in (" + StringConvertor.convertFromListToSqlString(invoicenums).toLowerCase() + ")";
         }
         if (invoiceDateFrom != null) {
-            sql += " and i.invoicedate>=To_DATE('" + invoiceDateFrom + "', 'MM/DD/YYYY')";
+            sql += " and invoicedate>=To_DATE('" + invoiceDateFrom + "', 'MM/DD/YYYY')";
         }
         if (invoiceDateTo != null) {
-            sql += " and i.invoicedate<=To_DATE('" + invoiceDateTo + "', 'MM/DD/YYYY')";
+            sql += " and invoicedate<=To_DATE('" + invoiceDateTo + "', 'MM/DD/YYYY')";
         }
         if (invoiceMonth != null) {
-            sql += " and to_char(i.invoicedate, 'FMMonth') = '" + invoiceMonth + "'";
+            sql += " and to_char(invoicedate, 'FMMonth') = '" + invoiceMonth + "'";
         }
         if (invoiceYear != null) {
-            sql += " and to_char(i.invoicedate, 'YYYY')= '" + invoiceYear + "'";
+            sql += " and to_char(invoicedate, 'YYYY')= '" + invoiceYear + "'";
         }
         if (lastnames != null) {
-            sql += " and upper(o.pilastname) in (" + StringConvertor.convertFromListToSqlString(lastnames) + ")";
+            sql += " and upper(pilastname) in (" + StringConvertor.convertFromListToSqlString(lastnames) + ")";
         }
         if (ponumbers != null) {
-            sql += " and i.account in (" + StringConvertor.convertFromListToSqlString(ponumbers) + ")";
+            sql += " and account in (" + StringConvertor.convertFromListToSqlString(ponumbers) + ")";
         }
         if (paymentstatus != null) {
-            sql += " and i.paymentstatus='" + paymentstatus + "'";
+            sql += " and paymentstatus='" + paymentstatus + "'";
         }
         if (institution1 != null) {
-            sql += " and o.institution='" + institution1 + "'";
+            sql += " and institution='" + institution1 + "'";
         }
         if (isinternal != null) {
             if (Constants.YES.equals(isinternal)) {
-                sql += " and o.isharvard='Y'";
+                sql += " and isharvard='Y'";
             } else {
-                sql += " and o.isharvard='N'";
+                sql += " and isharvard='N'";
             }
         }
         if (Constants.INVOICE_SORT_BY_DATE.equals(sort)) {
-            sql += "order by i.invoicedate";
+            sql += "order by invoicedate";
         } else if (Constants.INVOICE_SORT_BY_INSTITUTION.equals(sort)) {
-            sql += "order by o.institution";
+            sql += "order by institution";
         } else if (Constants.INVOICE_SORT_BY_PI.equals(sort)) {
-            sql += "order by o.pilastname, o.pifirstname";
+            sql += "order by piname";
         } else if (Constants.INVOICE_SORT_BY_PO.equals(sort)) {
-            sql += "order by i.account";
+            sql += "order by account";
         } else {
-            sql = sql + " order by i.invoicenumber";
+            sql = sql + " order by invoicenumber";
         }
 
         DatabaseTransaction t = null;
@@ -148,17 +144,15 @@ public class SEQ_OrderManager extends TableManager {
                 String status = rs.getString(6);
                 String paymenttype = rs.getString(7);
                 String account = rs.getString(8);
-                int orderid = rs.getInt(9);
-                String comments = rs.getString(10);
-                String reason = rs.getString(11);
-                String pifirstname = rs.getString(12);
-                String pilastname = rs.getString(13);
-                String institution = rs.getString(14);
-                String invoicenumber = rs.getString(15);
-                Invoice invoice = new Invoice(invoicenumber, invoicedate, price, adjustment, payment, status, paymenttype, orderid, reason, account);
+                String comments = rs.getString(9);
+                String reason = rs.getString(10);
+                String piname = rs.getString(11);
+                String institution = rs.getString(12);
+                String invoicenumber = rs.getString(13);
+                Invoice invoice = new Invoice(invoicenumber, invoicedate, price, adjustment, payment, status, paymenttype, 0, reason, account);
                 invoice.setComments(comments);
                 invoice.setInvoiceid(invoiceid);
-                invoice.setPiname(pilastname + ", " + pifirstname);
+                invoice.setPiname(piname);
                 invoice.setInstitution(institution);
                 invoices.add(invoice);
             }
@@ -174,11 +168,9 @@ public class SEQ_OrderManager extends TableManager {
 
     public List queryInvoices(List invoiceids) throws Exception {
         String sql = "select invoicenumber, to_char(invoicedate,'YYYY-MM-dd hh:mm:ss')," +
-                " i.price, adjustment, i.payment, paymentstatus, nvl(paymenttype, ' '), account," +
-                " i.orderid, nvl(i.comments,' '), nvl(reason, ' '), o.pilastname, o.pifirstname, o.institution" +
-                " from SEQinvoice i, SEQorder o" +
-                " where i.orderid=o.orderid" +
-                " and i.invoiceid=?";
+                " price, adjustment, payment, paymentstatus, nvl(paymenttype, ' '), account," +
+                " nvl(comments,' '), nvl(reason, ' '), piname, institution" +
+                " from SEQinvoice where invoiceid=?";
 
         DatabaseTransaction t = null;
         Connection connection = null;
@@ -202,16 +194,14 @@ public class SEQ_OrderManager extends TableManager {
                     String paymentstatus = rs.getString(6);
                     String paymenttype = rs.getString(7);
                     String account = rs.getString(8);
-                    int orderid = rs.getInt(9);
-                    String comments = rs.getString(10);
-                    String reason = rs.getString(11);
-                    String pilastname = rs.getString(12);
-                    String pifirstname = rs.getString(13);
-                    String institution = rs.getString(14);
-                    Invoice invoice = new Invoice(invoicenumber, invoicedate, price, adjustment, payment, paymentstatus, paymenttype, orderid, reason, account);
+                    String comments = rs.getString(9);
+                    String reason = rs.getString(10);
+                    String piname = rs.getString(11);
+                    String institution = rs.getString(12);
+                    Invoice invoice = new Invoice(invoicenumber, invoicedate, price, adjustment, payment, paymentstatus, paymenttype, 0, reason, account);
                     invoice.setComments(comments);
                     invoice.setInvoiceid(invoiceid);
-                    invoice.setPiname(pilastname + ", " + pifirstname);
+                    invoice.setPiname(piname);
                     invoice.setInstitution(institution);
                     invoices.add(invoice);
                 }
@@ -231,7 +221,7 @@ public class SEQ_OrderManager extends TableManager {
         String sql = "update invoice set paymentstatus=?," +
                 " account=?, payment=?, comments=? where invoiceid=?";
         String sql2 = "update cloneorder set ponumber=?" +
-                " where orderid in (select orderid from invoice where invoiceid=?)";
+                " where orderid in (select orderid from seqorderxseqinvoice where invoiceid=?)";
         PreparedStatement stmt = null;
         PreparedStatement stmt2 = null;
         try {
@@ -263,7 +253,7 @@ public class SEQ_OrderManager extends TableManager {
                 " cost,paymentmethod,service,institution,affiliation,userid,isharvard" +
                 " from seqorder c where c.orderid=" + orderid;
 
-        String sql2 = "select invoiceid from seqinvoice where orderid=" + orderid;
+        String sql2 = "select invoiceid from seqorderxseqinvoice where orderid=" + orderid;
 
         DatabaseTransaction t = null;
         ResultSet rs = null;
@@ -310,12 +300,59 @@ public class SEQ_OrderManager extends TableManager {
         return order;
     }
 
-    public boolean updateInvoice(int invoiceid, String paymentstatus, String accountnum, double payment, 
+    public List<SEQ_Order> queryCloneOrders(int invoiceid) throws Exception {
+        String sql = "select c.orderid,to_char(c.orderdate, 'YYYY-MM-DD hh:mm:ss'),c.ponumber," +
+                " billingaddress,samples,pifirstname,pilastname,piemail,billingemail,username," +
+                " cost,paymentmethod,service,institution,affiliation,userid,isharvard" +
+                " from seqorder c, seqorderxseqinvoice sc where c.orderid=sc.orderid" +
+                " and sc.invoiceid = " + invoiceid;
+
+        DatabaseTransaction t = null;
+        ResultSet rs = null;
+        List<SEQ_Order> orders = new ArrayList<SEQ_Order>();
+        try {
+            t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            while (rs.next()) {
+                int orderid = rs.getInt(1);
+                String date = rs.getString(2);
+                String ponumber = rs.getString(3);
+                String billingaddress = rs.getString(4);
+                int samples = rs.getInt(5);
+                String pifirstname = rs.getString(6);
+                String pilastname = rs.getString(7);
+                String piemail = rs.getString(8);
+                String billingemail = rs.getString(9);
+                String username = rs.getString(10);
+                double cost = rs.getDouble(11);
+                String paymentmethod = rs.getString(12);
+                String service = rs.getString(13);
+                String institution = rs.getString(14);
+                String affiliation = rs.getString(15);
+                int userid = rs.getInt(16);
+                String isharvard = rs.getString(17);
+
+                SEQ_Order order = new SEQ_Order(orderid, date, billingemail, billingaddress, pifirstname,
+                        pilastname, piemail, username, ponumber, samples, cost, paymentmethod, service,
+                        institution, affiliation, isharvard, userid);
+                order.setInvoiceid(invoiceid);
+                orders.add(order);
+            }
+        } catch (Exception ex) {
+            handleError(ex, "Cannot query cloneorder.");
+            throw new Exception(ex);
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+        return orders;
+    }
+
+    public boolean updateInvoice(int invoiceid, String paymentstatus, String accountnum, double payment,
             double adjustment, String comments, String reason) {
         String sql = "update seqinvoice set paymentstatus=?," +
                 " account=?, payment=?, adjustment=?, comments=?, reason=? where invoiceid=?";
         String sql2 = "update seqorder set ponumber=?" +
-                " where orderid in (select orderid from invoice where invoiceid=?)";
+                " where orderid in (select orderid from seqorderxseqinvoice where invoiceid=?)";
         PreparedStatement stmt = null;
         PreparedStatement stmt2 = null;
         try {
@@ -388,32 +425,46 @@ public class SEQ_OrderManager extends TableManager {
     public void insertInvoices(List<Invoice> invoices) throws SEQ_Exception {
         String sql = "insert into seqinvoice" +
                 " (invoiceid, invoicenumber, price, adjustment, payment, paymentstatus, paymenttype," +
-                " account, orderid, updatedby, updatedon, reason,invoicedate)" +
-                " values(seqinvoiceid.nextval,?,?,?,?,?,?,?,?,'System',sysdate,?,sysdate)";
+                " account, updatedby, updatedon, reason,invoicedate,piname,institution,pilastname,isharvard)" +
+                " values(?,?,?,?,?,?,?,?,'System',sysdate,?,sysdate,?,?,?,?)";
+        String sql2 = "insert into seqorderxseqinvoice(orderid,invoiceid) values(?,?)";
         PreparedStatement stmt = null;
-        int orderid = 0;
-        
+        PreparedStatement stmt2 = null;
+
         try {
             stmt = conn.prepareStatement(sql);
+            stmt2 = conn.prepareStatement(sql2);
 
             for (Invoice invoice : invoices) {
-                orderid = invoice.getOrderid();
-                stmt.setString(1, invoice.getInvoicenum());
-                stmt.setDouble(2, invoice.getPrice());
-                stmt.setDouble(3, invoice.getAdjustment());
-                stmt.setDouble(4, invoice.getPayment());
-                stmt.setString(5, invoice.getPaymentstatus());
-                stmt.setString(6, invoice.getPaymenttype());
-                stmt.setString(7, invoice.getAccountnum());
-                stmt.setInt(8, invoice.getOrderid());
+                int invoiceid = DefTableManager.getNextid("seqinvoiceid");
+                stmt.setInt(1, invoiceid);
+                stmt.setString(2, invoice.getInvoicenum());
+                stmt.setDouble(3, invoice.getPrice());
+                stmt.setDouble(4, invoice.getAdjustment());
+                stmt.setDouble(5, invoice.getPayment());
+                stmt.setString(6, invoice.getPaymentstatus());
+                stmt.setString(7, invoice.getPaymenttype());
+                stmt.setString(8, invoice.getAccountnum());
                 stmt.setString(9, invoice.getReasonforadj());
+                stmt.setString(10, invoice.getPiname());
+                stmt.setString(11, invoice.getInstitution());
+                stmt.setString(12, invoice.getPilastname());
+                stmt.setString(13, invoice.getIsharvard());
                 DatabaseTransaction.executeUpdate(stmt);
+
+                List<SEQ_Order> orders = invoice.getSeqorder();
+                for (SEQ_Order order : orders) {
+                    stmt2.setInt(1, order.getOrderid());
+                    stmt2.setInt(2, invoiceid);
+                    DatabaseTransaction.executeUpdate(stmt2);
+                }
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            throw new SEQ_Exception("Cannot add invoice to the database for order: "+orderid);
+            throw new SEQ_Exception("Cannot add invoice to the database for order.");
         } finally {
             DatabaseTransaction.closeStatement(stmt);
+            DatabaseTransaction.closeStatement(stmt2);
         }
     }
 }

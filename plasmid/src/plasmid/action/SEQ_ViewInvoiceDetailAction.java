@@ -6,6 +6,7 @@ package plasmid.action;
 
 import plasmid.Constants;
 import java.io.IOException;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -47,16 +48,15 @@ public class SEQ_ViewInvoiceDetailAction extends UserAction {
             throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
         int invoiceid = ((ViewInvoiceForm) form).getInvoiceid();
-        int orderid = ((ViewInvoiceForm) form).getOrderid();
         String button = ((ViewInvoiceForm) form).getButton();
         int isdownload = ((ViewInvoiceForm)form).getIsdownload();
 
         SEQ_OrderProcessManager manager = new SEQ_OrderProcessManager();
         Invoice invoice = null;
-        SEQ_Order order = null;
         try {
             invoice = manager.getInvoice(invoiceid);
-            order = manager.getCloneOrder(orderid);
+            List<SEQ_Order> orders = manager.getCloneOrders(invoiceid);
+            invoice.setSeqorder(orders);
         } catch (Exception ex) {
             ex.printStackTrace();
             errors.add(ActionErrors.GLOBAL_ERROR,
@@ -65,7 +65,7 @@ public class SEQ_ViewInvoiceDetailAction extends UserAction {
             return mapping.findForward("error");
         }
 
-        if (invoice == null || order == null) {
+        if (invoice == null) {
             errors.add(ActionErrors.GLOBAL_ERROR,
                     new ActionError("error.general", "Cannot get invoice."));
             saveErrors(request, errors);
@@ -75,12 +75,12 @@ public class SEQ_ViewInvoiceDetailAction extends UserAction {
         if (Constants.INVOICE_BUTTON_VIEW_INVOICE.equals(button)) {
             //write to pdf file in browser
             response.setContentType("application/pdf");
-            response.setHeader("Content-Disposition","attachment; filename=Invoice_" + order.getOrderid() + ".pdf");
-            manager.displayInvoice(response.getOutputStream(), order, invoice);
+            response.setHeader("Content-Disposition","attachment; filename=Invoice_" + invoice.getInvoicenum() + ".pdf");
+            manager.displayInvoice(response.getOutputStream(), invoice);
             return mapping.findForward(null);
         } else if (Constants.INVOICE_BUTTON_EMAIL_INVOICE.equals(button)) {
             try {
-                manager.emailInvoice(order, invoice, false);
+                manager.emailInvoice(invoice, false);
                 return mapping.findForward("success_email");
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -91,7 +91,7 @@ public class SEQ_ViewInvoiceDetailAction extends UserAction {
             }
         } else if (Constants.INVOICE_BUTTON_EMAIL_All_USER_INVOICE.equals(button)) {
             try {
-                manager.emailInvoice(order, invoice, true);
+                manager.emailInvoice(invoice, true);
                 return mapping.findForward("success_email");
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -102,11 +102,10 @@ public class SEQ_ViewInvoiceDetailAction extends UserAction {
             }
         } else if (isdownload == 1) {
             response.setContentType("application/pdf");
-            response.setHeader("Content-Disposition","attachment; filename=Invoice_" + order.getOrderid() + ".pdf");
-            manager.displayInvoice(response.getOutputStream(), order, invoice);
+            response.setHeader("Content-Disposition","attachment; filename=Invoice_" + invoice.getInvoicenum() + ".pdf");
+            manager.displayInvoice(response.getOutputStream(), invoice);
             return mapping.findForward(null);
         } else {
-            request.setAttribute(Constants.CLONEORDER, order);
             request.setAttribute(Constants.INVOICE, invoice);
             return mapping.findForward("success");
         }

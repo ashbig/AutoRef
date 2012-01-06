@@ -87,50 +87,33 @@
                         </tr>
                     </table>
                     
-                    <p>Order Information</p>
+                    <p class="mainbodytext">Order Information</p>
                     <table width="100%" border="0">
-                        <tr> 
-                            <td class="formlabel">Order ID:</td>
-                            <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="orderid"/></td>
-                            <td class="formlabel">Order Date:</td>
-                            <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="orderdate"/></td>
-                        </tr>
-                        <tr> 
-                            <td class="formlabel">User Name:</td>
-                            <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="username"/></td>
-                            <td class="formlabel">PO Number:</td>
-                            <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="ponumber"/></td>
-                        </tr>
-                        <tr> 
-                            <td class="formlabel">Billing Address:</td>
-                            <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="billingaddress"/></td>
-                            <td class="formlabel">Billing Email:</td>
-                            <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="billingemail"/></td>
-                        </tr>
-                        <tr> 
-                            <td class="formlabel">PI Name:</td>
-                            <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="piname"/></td>
-                            <td class="formlabel">PI Email:</td>
-                            <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="piemail"/></td>
-                        </tr>
-                        <tr> 
-                            <td class="formlabel">Institution:</td>
-                            <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="institution"/></td>
-                            <td class="formlabel">Affiliation:</td>
-                            <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="affiliation"/></td>
-                        </tr>
-                        <tr> 
-                            <td class="formlabel">Samples:</td>
-                            <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="samples"/></td>
-                            <td class="formlabel">Cost:</td>
-                            <td class="text">$<bean:write name="<%=Constants.CLONEORDER%>" property="cost"/></td>
-                        </tr>
-                        <tr> 
-                            <td class="formlabel">Payment Method:</td>
-                            <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="paymentmethod"/></td>
-                            <td class="formlabel">Service:</td>
-                            <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="service"/></td>
-                        </tr>
+                            <tr>
+                                <td class="tableheader">Order ID</td>
+                                <td class="tableheader">Order Date</td>
+                                <td class="tableheader">User</td>
+                                <td class="tableheader">Samples</td>
+                                <td class="tableheader">Cost</td>
+                                <td class="tableheader">Billing Address</td>
+                                <td class="tableheader">Billing Email</td>
+                                <td class="tableheader">PI Email</td>
+                                <td class="tableheader">Affiliation</td>
+                            </tr>
+                            
+                            <logic:iterate id="order" name="<%=Constants.INVOICE%>" property="seqorder"> 
+                                <tr>
+                                    <td class="tableinfo"><bean:write name="order" property="orderid"/></td>
+                                    <td class="tableinfo"><bean:write name="order" property="orderdate"/></td>
+                                    <td class="tableinfo"><bean:write name="order" property="username"/></td>
+                                    <td class="tableinfo"><bean:write name="order" property="samples"/></td>
+                                    <td class="tableinfo">$<bean:write name="order" property="cost"/></td>
+                                    <td class="tableinfo"><bean:write name="order" property="billingaddress"/></td>
+                                    <td class="tableinfo"><bean:write name="order" property="billingemail"/></td>
+                                    <td class="tableinfo"><bean:write name="order" property="piemail"/></td>
+                                    <td class="tableinfo"><bean:write name="order" property="affiliation"/></td>
+                                </tr>
+                            </logic:iterate>    
                     </table>
                     
                 </td>

@@ -62,13 +62,29 @@ public class PlatePositionConvertor {
             return "" +  rowname+"0"+column;
         else
             return "" +  rowname+column;
+    }    
+    
+    public static int convertWellToVPos( String well, int rownum) {
+        int position = -1;
+        well = well.toLowerCase();
+        int row = (int)well.charAt(0);
+        int column = Integer.parseInt(well.substring(1));
+        int a_value = (int) 'a';
+        int first_char_value = 0;
+        int second_char_value = 0;
+        int row_value = 0;
+        
+        
+        row_value = row - a_value + 1;
+        
+        return (column - 1) * rownum +  row_value ;
     }
     
     public static void main(String args[]) {
         //String inputFile = "G:\\plasmid\\plate_outside_200704\\plate.txt";
         //String outputFile = "G:\\plasmid\\plate_outside_200704\\plateout.txt";
-        String inputFile = "C:\\dev\\plasmidsupport\\Orfeome201104\\wellin.txt";
-        String outputFile = "C:\\dev\\plasmidsupport\\Orfeome201104\\wellout.txt";
+        String inputFile = "C:\\dev\\plasmidsupport\\mgc_import_201111\\plate_in_2.txt";
+        String outputFile = "C:\\dev\\plasmidsupport\\mgc_import_201111\\plate_out_2.txt";
         String line;
         
         try {
@@ -78,7 +94,7 @@ public class PlatePositionConvertor {
             
             while((line = in.readLine()) != null) {
                 //int pos = Integer.parseInt(line);
-                int position = PlatePositionConvertor.convertWellFromA8_12toInt(line);
+                int position = PlatePositionConvertor.convertWellToVPos(line, 8);
                 //String position = PlatePositionConvertor.convertWellFromInttoA8_12(pos);
                 output.println(line+"\t"+position);
             }

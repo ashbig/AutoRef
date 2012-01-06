@@ -17,7 +17,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import plasmid.Constants;
 import plasmid.coreobject.Invoice;
 import plasmid.database.DatabaseTransaction;
@@ -131,6 +135,31 @@ public class SEQ_OrderProcessManager {
         return order;
     }
 
+    public List<SEQ_Order> getCloneOrders(int invoiceid) {
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        SEQ_OrderManager manager = null;
+        List<SEQ_Order> orders = null;
+
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+
+            manager = new SEQ_OrderManager(conn);
+            orders = manager.queryCloneOrders(invoiceid);
+        } catch (Exception ex) {
+            if (Constants.DEBUG) {
+                System.out.println(manager.getErrorMessage());
+                System.out.println(ex);
+            }
+            DatabaseTransaction.closeConnection(conn);
+            return null;
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
+        }
+        return orders;
+    }
+
     public Invoice getSummeryInvoice(List<Invoice> invoices) {
         double totalPrice = 0;
         double totalAdjustment = 0;
@@ -147,11 +176,11 @@ public class SEQ_OrderProcessManager {
         return invoice;
     }
 
-    public void displayInvoice(OutputStream file, SEQ_Order order, Invoice invoice) {
-        if (SEQ_Order.ISHARVARD_Y.equals(order.getIsharvard())) {
-            printInternalInvoice(file, order, invoice);
+    public void displayInvoice(OutputStream file, Invoice invoice) {
+        if (SEQ_Order.ISHARVARD_Y.equals(invoice.getIsharvard())) {
+            printInternalInvoice(file, invoice);
         } else {
-            printExternalInvoice(file, order, invoice);
+            printExternalInvoice(file, invoice);
         }
     }
 
@@ -162,11 +191,10 @@ public class SEQ_OrderProcessManager {
             document.open();
             for (int i = 0; i < invoices.size(); i++) {
                 Invoice invoice = (Invoice) invoices.get(i);
-                SEQ_Order order = invoice.getSeqorder();
-                if (SEQ_Order.ISHARVARD_Y.equals(order.getIsharvard())) {
-                    printInternalInvoiceContent(document, order, invoice);
+                if (SEQ_Order.ISHARVARD_Y.equals(invoice.getIsharvard())) {
+                    printInternalInvoiceContent(document, invoice);
                 } else {
-                    printExternalInvoiceContent(document, order, invoice);
+                    printExternalInvoiceContent(document, invoice);
                 }
                 document.newPage();
             }
@@ -177,12 +205,12 @@ public class SEQ_OrderProcessManager {
         }
     }
 
-    public void printExternalInvoice(OutputStream file, SEQ_Order order, Invoice invoice) {
+    public void printExternalInvoice(OutputStream file, Invoice invoice) {
         try {
             Document document = new Document();
             PdfWriter.getInstance(document, file);
             document.open();
-            printExternalInvoiceContent(document, order, invoice);
+            printExternalInvoiceContent(document, invoice);
             document.close();
             file.close();
         } catch (Exception e) {
@@ -190,7 +218,7 @@ public class SEQ_OrderProcessManager {
         }
     }
 
-    private void printExternalInvoiceContent(Document document, SEQ_Order order, Invoice invoice) throws DocumentException {
+    private void printExternalInvoiceContent(Document document, Invoice invoice) throws DocumentException {
         document.add(PdfEditor.makeTitle("DF/HCC DNA Resource Core Invoice"));
         document.add(PdfEditor.makeTitle(" "));
 
@@ -206,61 +234,79 @@ public class SEQ_OrderProcessManager {
         table.setWidthPercentage(100);
         table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
         table.addCell(PdfEditor.makeSmall("Harvard Medical School"));
-        table.addCell(PdfEditor.makeSmallBold("Order ID:\t" + order.getOrderid()));
+        table.addCell(PdfEditor.makeSmall("PI:\t" + invoice.getPiname()));
         table.addCell(PdfEditor.makeSmall("Dep.BCMP Room C- 214"));
-        table.addCell(PdfEditor.makeSmall("Order Date:\t" + order.getOrderdate()));
+        table.addCell(PdfEditor.makeSmall("Institution:\t" + invoice.getInstitution()));
         table.addCell(PdfEditor.makeSmall("240 Longwood Ave."));
-        table.addCell(PdfEditor.makeSmall("Order By:\t" + order.getUsername()));
+        table.addCell(PdfEditor.makeSmall("Grant or PO Number:\t" + invoice.getAccountnum()));
         table.addCell(PdfEditor.makeSmall("Boston, MA 02115"));
-        table.addCell(PdfEditor.makeSmall("PI:\t" + order.getPiname()));
+        table.addCell(PdfEditor.makeSmall(""));
         table.addCell(PdfEditor.makeSmall("(617)432-1210"));
-        table.addCell(PdfEditor.makeSmall("PI email:\t" + order.getPiemail()));
+        table.addCell(PdfEditor.makeSmall(""));
         table.addCell(PdfEditor.makeSmall("Attn: Elmira Dhroso"));
-        table.addCell(PdfEditor.makeSmall("Grant or PO Number:\t" + order.getPonumber()));
+        table.addCell(PdfEditor.makeSmall(""));
         document.add(table);
 
+        SEQ_Order order1 = invoice.getSeqorder().get(0);
         document.add(PdfEditor.makeTitle(" "));
         document.add(PdfEditor.makeSmallBold("Bill To:"));
-        document.add(PdfEditor.makeSmall(order.getBillingaddress()));
-        document.add(PdfEditor.makeSmall("Billing email: " + order.getBillingemail()));
+        document.add(PdfEditor.makeSmall(order1.getBillingaddress()));
+        document.add(PdfEditor.makeSmall("Billing email: " + order1.getBillingemail()));
 
         document.add(PdfEditor.makeTitle(" "));
-        table = new PdfPTable(3);
+        table = new PdfPTable(6);
         table.setWidthPercentage(100);
-        PdfPCell cell = new PdfPCell(PdfEditor.makeSmallBold("Item"));
+        PdfPCell cell = new PdfPCell(PdfEditor.makeSmallBold("Order ID"));
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         table.addCell(cell);
-        cell = new PdfPCell(PdfEditor.makeSmallBold("Quantity"));
+        cell = new PdfPCell(PdfEditor.makeSmallBold("Order Date"));
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        table.addCell(cell);
+        cell = new PdfPCell(PdfEditor.makeSmallBold("Order By"));
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        table.addCell(cell);
+        cell = new PdfPCell(PdfEditor.makeSmallBold("PI Email"));
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        table.addCell(cell);
+        cell = new PdfPCell(PdfEditor.makeSmallBold("Samples"));
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         table.addCell(cell);
         cell = new PdfPCell(PdfEditor.makeSmallBold("Price"));
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         table.addCell(cell);
-        table.addCell(PdfEditor.makeSmall("Samples"));
-        cell = new PdfPCell(PdfEditor.makeSmall("" + order.getSamples()));
-        cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-        table.addCell(cell);
-        cell = new PdfPCell(PdfEditor.makeSmall("$" + order.getCost()));
-        cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-        table.addCell(cell);
+
+        List<SEQ_Order> orders = invoice.getSeqorder();
+        for (SEQ_Order order : orders) {
+            table.addCell(PdfEditor.makeSmall(""+order.getOrderid()));
+            table.addCell(PdfEditor.makeSmall(order.getOrderdate()));
+            table.addCell(PdfEditor.makeSmall(order.getUsername()));
+            table.addCell(PdfEditor.makeSmall(order.getPiemail()));
+            cell = new PdfPCell(PdfEditor.makeSmall("" + order.getSamples()));
+            cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+            table.addCell(cell);
+            cell = new PdfPCell(PdfEditor.makeSmall("$" + order.getCost()));
+            cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+            table.addCell(cell);
+        }
+
         table.addCell(PdfEditor.makeSmall("Total price"));
-        cell = new PdfPCell(PdfEditor.makeSmall("$" + order.getCost()));
-        cell.setColspan(2);
+        cell = new PdfPCell(PdfEditor.makeSmall(invoice.getPriceString()));
+        cell.setColspan(5);
         cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
         table.addCell(cell);
         table.addCell(PdfEditor.makeSmall("Adjustment*"));
         cell = new PdfPCell(PdfEditor.makeSmall(invoice.getAdjustmentString()));
-        cell.setColspan(2);
+        cell.setColspan(5);
         cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
         table.addCell(cell);
         table.addCell(PdfEditor.makeSmall("Payment"));
         cell = new PdfPCell(PdfEditor.makeSmall(invoice.getPaymentString()));
-        cell.setColspan(2);
+        cell.setColspan(5);
         cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
         table.addCell(cell);
         table.addCell(PdfEditor.makeSmallBold("Payment Due"));
         cell = new PdfPCell(PdfEditor.makeSmallBold(invoice.getDueString()));
-        cell.setColspan(2);
+        cell.setColspan(5);
         cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
         table.addCell(cell);
         document.add(table);
@@ -273,7 +319,7 @@ public class SEQ_OrderProcessManager {
 
         document.add(PdfEditor.makeTitle(" "));
         document.add(PdfEditor.makeSmallBold("If your payment due is zero, please DO NOT send payment and regard this as your receipt."));
-        
+
         document.add(PdfEditor.makeTitle(" "));
         document.add(PdfEditor.makeSmallBold("Mailing Address:"));
         document.add(PdfEditor.makeSmall("  Harvard Medical School"));
@@ -291,12 +337,12 @@ public class SEQ_OrderProcessManager {
         document.add(PdfEditor.makeSmall("  elmira_dhroso@hms.harvard.edu"));
     }
 
-    public void printInternalInvoice(OutputStream file, SEQ_Order order, Invoice invoice) {
+    public void printInternalInvoice(OutputStream file, Invoice invoice) {
         try {
             Document document = new Document();
             PdfWriter.getInstance(document, file);
             document.open();
-            printInternalInvoiceContent(document, order, invoice);
+            printInternalInvoiceContent(document, invoice);
             document.close();
             file.close();
         } catch (Exception e) {
@@ -304,7 +350,7 @@ public class SEQ_OrderProcessManager {
         }
     }
 
-    private void printInternalInvoiceContent(Document document, SEQ_Order order, Invoice invoice) throws DocumentException {
+    private void printInternalInvoiceContent(Document document, Invoice invoice) throws DocumentException {
         document.add(PdfEditor.makeTitle("DF/HCC DNA Resource Core Invoice"));
         document.add(PdfEditor.makeTitle(" "));
 
@@ -320,61 +366,79 @@ public class SEQ_OrderProcessManager {
         table.setWidthPercentage(100);
         table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
         table.addCell(PdfEditor.makeSmall("Harvard Medical School"));
-        table.addCell(PdfEditor.makeSmallBold("Order ID:\t" + order.getOrderid()));
+        table.addCell(PdfEditor.makeSmall("PI:\t" + invoice.getPiname()));
         table.addCell(PdfEditor.makeSmall("Dep.BCMP Room C- 214"));
-        table.addCell(PdfEditor.makeSmall("Order Date:\t" + order.getOrderdate()));
+        table.addCell(PdfEditor.makeSmall("Institution:\t" + invoice.getInstitution()));
         table.addCell(PdfEditor.makeSmall("240 Longwood Ave."));
-        table.addCell(PdfEditor.makeSmall("Order By:\t" + order.getUsername()));
+        table.addCell(PdfEditor.makeSmall("Grant or PO Number:\t" + invoice.getAccountnum()));
         table.addCell(PdfEditor.makeSmall("Boston, MA 02115"));
-        table.addCell(PdfEditor.makeSmall("PI:\t" + order.getPiname()));
+        table.addCell(PdfEditor.makeSmall(""));
         table.addCell(PdfEditor.makeSmall("(617)432-1210"));
-        table.addCell(PdfEditor.makeSmall("PI email:\t" + order.getPiemail()));
+        table.addCell(PdfEditor.makeSmall(""));
         table.addCell(PdfEditor.makeSmall("Attn: Elmira Dhroso"));
-        table.addCell(PdfEditor.makeSmall("Grant or PO Number:\t" + order.getPonumber()));
+        table.addCell(PdfEditor.makeSmall(""));
         document.add(table);
 
+        SEQ_Order order1 = invoice.getSeqorder().get(0);
         document.add(PdfEditor.makeTitle(" "));
         document.add(PdfEditor.makeSmallBold("Bill To:"));
-        document.add(PdfEditor.makeSmall(order.getBillingaddress()));
-        document.add(PdfEditor.makeSmall("Billing email: " + order.getBillingemail()));
+        document.add(PdfEditor.makeSmall(order1.getBillingaddress()));
+        document.add(PdfEditor.makeSmall("Billing email: " + order1.getBillingemail()));
 
         document.add(PdfEditor.makeTitle(" "));
-        table = new PdfPTable(3);
+        table = new PdfPTable(6);
         table.setWidthPercentage(100);
-        PdfPCell cell = new PdfPCell(PdfEditor.makeSmallBold("Item"));
+        PdfPCell cell = new PdfPCell(PdfEditor.makeSmallBold("Order ID"));
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         table.addCell(cell);
-        cell = new PdfPCell(PdfEditor.makeSmallBold("Quantity"));
+        cell = new PdfPCell(PdfEditor.makeSmallBold("Order Date"));
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        table.addCell(cell);
+        cell = new PdfPCell(PdfEditor.makeSmallBold("Order By"));
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        table.addCell(cell);
+        cell = new PdfPCell(PdfEditor.makeSmallBold("PI Email"));
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        table.addCell(cell);
+        cell = new PdfPCell(PdfEditor.makeSmallBold("Samples"));
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         table.addCell(cell);
         cell = new PdfPCell(PdfEditor.makeSmallBold("Price"));
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         table.addCell(cell);
-        table.addCell(PdfEditor.makeSmall("Samples"));
-        cell = new PdfPCell(PdfEditor.makeSmall("" + order.getSamples()));
-        cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-        table.addCell(cell);
-        cell = new PdfPCell(PdfEditor.makeSmall("$" + order.getCost()));
-        cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-        table.addCell(cell);
+
+        List<SEQ_Order> orders = invoice.getSeqorder();
+        for (SEQ_Order order : orders) {
+            table.addCell(PdfEditor.makeSmall(""+order.getOrderid()));
+            table.addCell(PdfEditor.makeSmall(order.getOrderdate()));
+            table.addCell(PdfEditor.makeSmall(order.getUsername()));
+            table.addCell(PdfEditor.makeSmall(order.getPiemail()));
+            cell = new PdfPCell(PdfEditor.makeSmall("" + order.getSamples()));
+            cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+            table.addCell(cell);
+            cell = new PdfPCell(PdfEditor.makeSmall("$" + order.getCost()));
+            cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+            table.addCell(cell);
+        }
+
         table.addCell(PdfEditor.makeSmall("Total price"));
-        cell = new PdfPCell(PdfEditor.makeSmall("$" + order.getCost()));
-        cell.setColspan(2);
+        cell = new PdfPCell(PdfEditor.makeSmall(invoice.getPriceString()));
+        cell.setColspan(5);
         cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
         table.addCell(cell);
         table.addCell(PdfEditor.makeSmall("Adjustment*"));
         cell = new PdfPCell(PdfEditor.makeSmall(invoice.getAdjustmentString()));
-        cell.setColspan(2);
+        cell.setColspan(5);
         cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
         table.addCell(cell);
         table.addCell(PdfEditor.makeSmall("Payment"));
         cell = new PdfPCell(PdfEditor.makeSmall(invoice.getPaymentString()));
-        cell.setColspan(2);
+        cell.setColspan(5);
         cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
         table.addCell(cell);
         table.addCell(PdfEditor.makeSmallBold("Payment Due"));
         cell = new PdfPCell(PdfEditor.makeSmallBold(invoice.getDueString()));
-        cell.setColspan(2);
+        cell.setColspan(5);
         cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
         table.addCell(cell);
         document.add(table);
@@ -390,12 +454,12 @@ public class SEQ_OrderProcessManager {
     public void emailInvoices(List invoices, boolean isOther) throws Exception {
         for (int i = 0; i < invoices.size(); i++) {
             Invoice invoice = (Invoice) invoices.get(i);
-            emailInvoice(invoice.getSeqorder(), invoice, isOther);
+            emailInvoice(invoice, isOther);
         }
     }
 
-    public void emailInvoice(SEQ_Order order, Invoice invoice, boolean isOther) throws Exception {
-        String filename = Constants.TMP + "Invoice_" + order.getOrderid() + ".pdf";
+    public void emailInvoice(Invoice invoice, boolean isOther) throws Exception {
+        String filename = Constants.TMP + "Invoice_" + invoice.getInvoicenum() + ".pdf";
         File f1 = new File(filename);
         OutputStream file = new FileOutputStream(f1);
         printInvoice(file, invoice);
@@ -404,6 +468,7 @@ public class SEQ_OrderProcessManager {
         files.add(f1);
         files.add(f2);
 
+        SEQ_Order order = invoice.getSeqorder().get(0);
         String billingemail = order.getBillingemail();
         List ccs = new ArrayList();
         ccs.add(Constants.EMAIL_FROM);
@@ -430,24 +495,68 @@ public class SEQ_OrderProcessManager {
 
     public List<Invoice> generateInvoices(List<SEQ_Order> orders) {
         List<Invoice> invoices = new ArrayList<Invoice>();
+        Map orderMap = new HashMap();
         for (SEQ_Order order : orders) {
+            if (order.getPonumber() == null || order.getPonumber().trim().length() == 0 || SEQ_Order.PAYMENTMETHOD_CREDIT.equals(order.getPaymentmethod())) {
+                List orderList = new ArrayList();
+                orderList.add(order);
+                orderMap.put(""+order.getOrderid(), orderList);
+            } else {
+                addToOrderMap(orderMap, order);
+            }
+        }
+
+        Set keys = orderMap.keySet();
+        Iterator iter = keys.iterator();
+        while (iter.hasNext()) {
+            String key = (String)iter.next();
+            List<SEQ_Order> values = (List) orderMap.get(key);
             Invoice invoice = new Invoice();
+            double totalcost = 0;
+            for (SEQ_Order order : values) {
+                totalcost += order.getCost();
+                invoice.addSeqOrder(order);
+            }
+            SEQ_Order order = values.get(0);
             invoice.setInvoicenum("SEQ_" + order.getOrderid());
             invoice.setPaymentstatus(Invoice.PAYMENTSTATUS_UNPAID);
             invoice.setPaymenttype(order.getPaymentmethod());
-            invoice.setPrice(order.getCost());
+            invoice.setPrice(totalcost);
             if (SEQ_Order.PAYMENTMETHOD_CREDIT.equals(order.getPaymentmethod())) {
                 invoice.setPaymentstatus(Invoice.PAYMENTSTATUS_PAID);
                 invoice.setPaymenttype(Invoice.PAYMENTTYPE_CREDITCARD);
-                invoice.setPayment(order.getCost());
+                invoice.setPayment(totalcost);
             }
             invoice.setAccountnum(order.getPonumber());
             invoice.setComments("");
             invoice.setReasonforadj("");
-            invoice.setOrderid(order.getOrderid());
+            invoice.setPiname(order.getPiname());
+            invoice.setInstitution(order.getInstitution());
+            invoice.setPilastname(order.getPilastname());
+            invoice.setIsharvard(order.getIsharvard());
             invoices.add(invoice);
         }
         return invoices;
+    }
+
+    private void addToOrderMap(Map orderMap, SEQ_Order order) {
+        Set keys = orderMap.keySet();
+        Iterator iter = keys.iterator();
+        boolean found = false;
+        while (iter.hasNext()) {
+            String key = (String)iter.next();
+            if ((order.getPonumber() + order.getPiname() + order.getInstitution()).equals(key)) {
+                List values = (List) orderMap.get(key);
+                values.add(order);
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            List values = new ArrayList();
+            values.add(order);
+            orderMap.put(order.getPonumber()+order.getPiname()+order.getInstitution(), values);
+        }
     }
 
     public void uploadSeqOrders(InputStream in) throws SEQ_Exception {

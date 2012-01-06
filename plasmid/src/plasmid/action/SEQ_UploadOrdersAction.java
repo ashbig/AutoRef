@@ -35,6 +35,7 @@ public class SEQ_UploadOrdersAction extends InternalUserAction {
         try {
             input = orderFile.getInputStream();
         } catch (Exception ex) {
+            ex.printStackTrace();
             if (Constants.DEBUG) {
                 System.out.println("Error occured while reading the file.");
             }
@@ -52,8 +53,10 @@ public class SEQ_UploadOrdersAction extends InternalUserAction {
             errors.add(ActionErrors.GLOBAL_ERROR,
                     new ActionError("error.general", ex.getMessage()));
             saveErrors(request, errors);
-            return (mapping.findForward(mapping.getInput()));
+            //return (mapping.findForward(mapping.getInput()));
+            return (mapping.findForward("error"));
         } catch (Exception ex) {
+            ex.printStackTrace();
             errors.add(ActionErrors.GLOBAL_ERROR,
                     new ActionError("error.general", "Error occured while importing the file."));
             saveErrors(request, errors);

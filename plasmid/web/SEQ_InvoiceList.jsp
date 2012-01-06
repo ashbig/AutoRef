@@ -55,7 +55,7 @@
                             <logic:iterate id="invoice" name="<%=Constants.INVOICES%>"> 
                                 <tr>
                                     <td class="tableinfo"><html:multibox property="selectedInvoices"><bean:write name="invoice" property="invoiceid"/></html:multibox></td>
-                                    <td class="tableinfo"><a href="SEQ_ViewInvoiceDetail.do?invoiceid=<bean:write name="invoice" property="invoiceid"/>&orderid=<bean:write name="invoice" property="orderid"/>&isdownload=0"><bean:write name="invoice" property="invoicenum"/></a></td>
+                                    <td class="tableinfo"><a href="SEQ_ViewInvoiceDetail.do?invoiceid=<bean:write name="invoice" property="invoiceid"/>&isdownload=0"><bean:write name="invoice" property="invoicenum"/></a></td>
                                     <td class="tableinfo"><bean:write name="invoice" property="invoicedate"/></td>
                                     <td class="tableinfo"><bean:write name="invoice" property="piname"/></td>
                                     <td class="tableinfo"><bean:write name="invoice" property="institution"/></td>
