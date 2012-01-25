@@ -62,6 +62,16 @@ public class Invoice {
         this.accountnum = account;
         seqorder = new ArrayList<SEQ_Order>();
     }
+    
+    public String getPiemail() {
+        if(seqorder==null || seqorder.isEmpty())
+            return "";
+        SEQ_Order o = (SEQ_Order)seqorder.get(0);
+        String s = o.getPiemail();
+        if(s.equals("0"))
+            return "";
+        return s;
+    }
 
     public int getInvoiceid() {
         return invoiceid;

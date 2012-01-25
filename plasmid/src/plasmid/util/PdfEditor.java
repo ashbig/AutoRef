@@ -10,6 +10,7 @@ import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
+import plasmid.coreobject.Invoice;
 
 /**
  *
@@ -52,5 +53,22 @@ public class PdfEditor {
         Font font = new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.ITALIC); 
         Paragraph p = new Paragraph(12, new Chunk(s, font));
         return p;
+    }
+    
+    public static Paragraph makeSenderAddress() {
+        Font font = new Font(Font.FontFamily.TIMES_ROMAN, 10); 
+        String s = "Harvard Medical School\nDep.BCMP Room C- 214\n240 Longwood Ave.\nBoston, MA 02115\n(617)432-1210\nAttn: Elmira Dhroso";
+        Paragraph par = new Paragraph(12, new Chunk(s, font));
+        return par;
+    }
+    
+    public static Paragraph makeRecieveAddress(Invoice invoice) {
+        Paragraph par = new Paragraph();
+        Font font = new Font(Font.FontFamily.TIMES_ROMAN, 10); 
+        par.add(new Chunk("PI:\t" + invoice.getPiname()+"\n", font));
+        par.add(new Chunk("PI Email:\t"+invoice.getPiemail()+"\n", font));
+        par.add(new Chunk("Institution:\t" + invoice.getInstitution()+"\n", font));
+        par.add(new Chunk("Grant or PO Number:\t" + invoice.getAccountnum(), font));
+        return par;
     }
 }

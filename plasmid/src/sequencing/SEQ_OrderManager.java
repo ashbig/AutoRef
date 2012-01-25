@@ -37,7 +37,7 @@ public class SEQ_OrderManager extends TableManager {
     public Invoice queryInvoice(int invoiceid) throws Exception {
         String sql = "select invoicenumber, to_char(invoicedate,'YYYY-MM-dd hh:mm:ss')," +
                 " price, adjustment, payment, paymentstatus, nvl(paymenttype, ' '), account," +
-                " nvl(comments,' '), nvl(reason, ' '), piname, institution" +
+                " nvl(comments,' '), nvl(reason, ' '), piname, institution, isharvard" +
                 " from seqinvoice where invoiceid=" + invoiceid;
 
         DatabaseTransaction t = null;
@@ -59,11 +59,13 @@ public class SEQ_OrderManager extends TableManager {
                 String reason = rs.getString(10);
                 String piname = rs.getString(11);
                 String institution = rs.getString(12);
+                String isharvard = rs.getString(13);
                 invoice = new Invoice(invoicenumber, invoicedate, price, adjustment, payment, paymentstatus, paymenttype, 0, reason, account);
                 invoice.setComments(comments);
                 invoice.setInvoiceid(invoiceid);
                 invoice.setPiname(piname);
                 invoice.setInstitution(institution);
+                invoice.setIsharvard(isharvard);
             }
         } catch (Exception ex) {
             handleError(ex, "Cannot query invoice.");
@@ -79,7 +81,7 @@ public class SEQ_OrderManager extends TableManager {
             String paymentstatus, String isinternal, String institution1, String sort) {
         String sql = "select invoiceid, to_char(invoicedate,'YYYY-MM-dd hh:mm:ss'), price," +
                 " adjustment, payment, paymentstatus, nvl(paymenttype,' '), account," +
-                " nvl(comments,' '), nvl(reason,' '), piname, institution, invoicenumber" +
+                " nvl(comments,' '), nvl(reason,' '), piname, institution, invoicenumber, isharvard" +
                 " from seqinvoice where invoiceid>0";
 
         if (invoicenums != null) {
@@ -149,11 +151,13 @@ public class SEQ_OrderManager extends TableManager {
                 String piname = rs.getString(11);
                 String institution = rs.getString(12);
                 String invoicenumber = rs.getString(13);
+                String isharvard = rs.getString(14);
                 Invoice invoice = new Invoice(invoicenumber, invoicedate, price, adjustment, payment, status, paymenttype, 0, reason, account);
                 invoice.setComments(comments);
                 invoice.setInvoiceid(invoiceid);
                 invoice.setPiname(piname);
                 invoice.setInstitution(institution);
+                invoice.setIsharvard(isharvard);
                 invoices.add(invoice);
             }
             return invoices;
@@ -169,7 +173,7 @@ public class SEQ_OrderManager extends TableManager {
     public List queryInvoices(List invoiceids) throws Exception {
         String sql = "select invoicenumber, to_char(invoicedate,'YYYY-MM-dd hh:mm:ss')," +
                 " price, adjustment, payment, paymentstatus, nvl(paymenttype, ' '), account," +
-                " nvl(comments,' '), nvl(reason, ' '), piname, institution" +
+                " nvl(comments,' '), nvl(reason, ' '), piname, institution, isharvard" +
                 " from SEQinvoice where invoiceid=?";
 
         DatabaseTransaction t = null;
@@ -198,11 +202,13 @@ public class SEQ_OrderManager extends TableManager {
                     String reason = rs.getString(10);
                     String piname = rs.getString(11);
                     String institution = rs.getString(12);
+                    String isharvard = rs.getString(13);
                     Invoice invoice = new Invoice(invoicenumber, invoicedate, price, adjustment, payment, paymentstatus, paymenttype, 0, reason, account);
                     invoice.setComments(comments);
                     invoice.setInvoiceid(invoiceid);
                     invoice.setPiname(piname);
                     invoice.setInstitution(institution);
+                    invoice.setIsharvard(isharvard);
                     invoices.add(invoice);
                 }
             }

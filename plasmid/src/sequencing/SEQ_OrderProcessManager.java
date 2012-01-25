@@ -4,9 +4,13 @@
  */
 package sequencing;
 
+import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
 import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
@@ -187,7 +191,7 @@ public class SEQ_OrderProcessManager {
     public void printInvoices(OutputStream file, List invoices) {
         try {
             Document document = new Document();
-            PdfWriter.getInstance(document, file);
+            PdfWriter writer = PdfWriter.getInstance(document, file);
             document.open();
             for (int i = 0; i < invoices.size(); i++) {
                 Invoice invoice = (Invoice) invoices.get(i);
@@ -228,7 +232,16 @@ public class SEQ_OrderProcessManager {
         table.addCell(PdfEditor.makeSmallBold("Invoice Number:\t" + invoice.getInvoicenum()));
         table.addCell(PdfEditor.makeSmallBold("Invoice Date:\t" + invoice.getInvoicedate()));
         document.add(table);
+ 
+        document.add(PdfEditor.makeTitle(" "));
+        table = new PdfPTable(2);
+        table.setWidthPercentage(100);
+        table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
+        table.addCell(PdfEditor.makeSenderAddress());
+        table.addCell(PdfEditor.makeRecieveAddress(invoice));
+        document.add(table);
 
+        /**
         document.add(PdfEditor.makeTitle(" "));
         table = new PdfPTable(2);
         table.setWidthPercentage(100);
@@ -246,6 +259,7 @@ public class SEQ_OrderProcessManager {
         table.addCell(PdfEditor.makeSmall("Attn: Elmira Dhroso"));
         table.addCell(PdfEditor.makeSmall(""));
         document.add(table);
+         * */
 
         SEQ_Order order1 = invoice.getSeqorder().get(0);
         document.add(PdfEditor.makeTitle(" "));
@@ -254,7 +268,7 @@ public class SEQ_OrderProcessManager {
         document.add(PdfEditor.makeSmall("Billing email: " + order1.getBillingemail()));
 
         document.add(PdfEditor.makeTitle(" "));
-        table = new PdfPTable(6);
+        table = new PdfPTable(5);
         table.setWidthPercentage(100);
         PdfPCell cell = new PdfPCell(PdfEditor.makeSmallBold("Order ID"));
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
@@ -263,9 +277,6 @@ public class SEQ_OrderProcessManager {
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         table.addCell(cell);
         cell = new PdfPCell(PdfEditor.makeSmallBold("Order By"));
-        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-        table.addCell(cell);
-        cell = new PdfPCell(PdfEditor.makeSmallBold("PI Email"));
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         table.addCell(cell);
         cell = new PdfPCell(PdfEditor.makeSmallBold("Samples"));
@@ -280,7 +291,6 @@ public class SEQ_OrderProcessManager {
             table.addCell(PdfEditor.makeSmall(""+order.getOrderid()));
             table.addCell(PdfEditor.makeSmall(order.getOrderdate()));
             table.addCell(PdfEditor.makeSmall(order.getUsername()));
-            table.addCell(PdfEditor.makeSmall(order.getPiemail()));
             cell = new PdfPCell(PdfEditor.makeSmall("" + order.getSamples()));
             cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
             table.addCell(cell);
@@ -340,7 +350,7 @@ public class SEQ_OrderProcessManager {
     public void printInternalInvoice(OutputStream file, Invoice invoice) {
         try {
             Document document = new Document();
-            PdfWriter.getInstance(document, file);
+            PdfWriter writer = PdfWriter.getInstance(document, file);
             document.open();
             printInternalInvoiceContent(document, invoice);
             document.close();
@@ -359,8 +369,17 @@ public class SEQ_OrderProcessManager {
         table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
         table.addCell(PdfEditor.makeSmallBold("Invoice Number:\t" + invoice.getInvoicenum()));
         table.addCell(PdfEditor.makeSmallBold("Invoice Date:\t" + invoice.getInvoicedate()));
+        document.add(table);    
+        
+        document.add(PdfEditor.makeTitle(" "));
+        table = new PdfPTable(2);
+        table.setWidthPercentage(100);
+        table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
+        table.addCell(PdfEditor.makeSenderAddress());
+        table.addCell(PdfEditor.makeRecieveAddress(invoice));
         document.add(table);
 
+        /**
         document.add(PdfEditor.makeTitle(" "));
         table = new PdfPTable(2);
         table.setWidthPercentage(100);
@@ -378,6 +397,7 @@ public class SEQ_OrderProcessManager {
         table.addCell(PdfEditor.makeSmall("Attn: Elmira Dhroso"));
         table.addCell(PdfEditor.makeSmall(""));
         document.add(table);
+        */
 
         SEQ_Order order1 = invoice.getSeqorder().get(0);
         document.add(PdfEditor.makeTitle(" "));
@@ -386,7 +406,7 @@ public class SEQ_OrderProcessManager {
         document.add(PdfEditor.makeSmall("Billing email: " + order1.getBillingemail()));
 
         document.add(PdfEditor.makeTitle(" "));
-        table = new PdfPTable(6);
+        table = new PdfPTable(5);
         table.setWidthPercentage(100);
         PdfPCell cell = new PdfPCell(PdfEditor.makeSmallBold("Order ID"));
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
@@ -395,9 +415,6 @@ public class SEQ_OrderProcessManager {
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         table.addCell(cell);
         cell = new PdfPCell(PdfEditor.makeSmallBold("Order By"));
-        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-        table.addCell(cell);
-        cell = new PdfPCell(PdfEditor.makeSmallBold("PI Email"));
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         table.addCell(cell);
         cell = new PdfPCell(PdfEditor.makeSmallBold("Samples"));
@@ -412,7 +429,6 @@ public class SEQ_OrderProcessManager {
             table.addCell(PdfEditor.makeSmall(""+order.getOrderid()));
             table.addCell(PdfEditor.makeSmall(order.getOrderdate()));
             table.addCell(PdfEditor.makeSmall(order.getUsername()));
-            table.addCell(PdfEditor.makeSmall(order.getPiemail()));
             cell = new PdfPCell(PdfEditor.makeSmall("" + order.getSamples()));
             cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
             table.addCell(cell);
@@ -443,6 +459,14 @@ public class SEQ_OrderProcessManager {
         table.addCell(cell);
         document.add(table);
         document.add(PdfEditor.makeSmallItalic("*" + invoice.getReasonforadj()));
+
+        document.add(PdfEditor.makeTitle(" "));
+        document.add(PdfEditor.makeSmallBold("DF/HCC DNA Resource Core is a Harvard Medical School service facility. All services purchased with Harvard funds must be paid with the customary 33-digit coding. Do not submit this invoice through the HCOM system. Harvard labs using non-Harvard funds, i.e. HHMI or Childrem's Hospital, are considered external users, and should submit their invoices for payment to their institutions' AP department."));
+        
+        document.add(PdfEditor.makeTitle(" "));
+        document.add(PdfEditor.makeSmallBold("For Invoice Information Contact:"));
+        document.add(PdfEditor.makeSmall("  Elmira Dhroso, (617)432-1210"));
+        document.add(PdfEditor.makeSmall("  elmira_dhroso@hms.harvard.edu"));
     }
 
     public void printInvoice(OutputStream file, Invoice invoice) {
