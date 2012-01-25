@@ -10,6 +10,7 @@ import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
+import plasmid.coreobject.CloneOrder;
 import plasmid.coreobject.Invoice;
 
 /**
@@ -69,6 +70,18 @@ public class PdfEditor {
         par.add(new Chunk("PI Email:\t"+invoice.getPiemail()+"\n", font));
         par.add(new Chunk("Institution:\t" + invoice.getInstitution()+"\n", font));
         par.add(new Chunk("Grant or PO Number:\t" + invoice.getAccountnum(), font));
+        return par;
+    }
+    
+    public static Paragraph makePlasmidRecieveAddress(CloneOrder order) {
+        Paragraph par = new Paragraph();
+        Font font = new Font(Font.FontFamily.TIMES_ROMAN, 10); 
+        par.add(new Chunk("Order ID:\t" + order.getOrderid()+"\n", font));
+        par.add(new Chunk("Order Date:\t" + order.getOrderDate()+"\n", font));
+        par.add(new Chunk("Order By:\t" + order.getName()+"\n", font));
+        par.add(new Chunk("PI:\t" + order.getPiname()+"\n", font));
+        par.add(new Chunk("PI email:\t" + order.getPiemail()+"\n", font));
+        par.add(new Chunk("Grant or PO Number:\t" + order.getPonumber()+"\n", font));
         return par;
     }
 }

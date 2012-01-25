@@ -1854,18 +1854,8 @@ public class OrderProcessManager {
         table = new PdfPTable(2);
         table.setWidthPercentage(100);
         table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
-        table.addCell(PdfEditor.makeSmall("Harvard Medical School"));
-        table.addCell(PdfEditor.makeSmallBold("Order ID:\t" + order.getOrderid()));
-        table.addCell(PdfEditor.makeSmall("Dep.BCMP Room C- 214"));
-        table.addCell(PdfEditor.makeSmall("Order Date:\t" + order.getOrderDate()));
-        table.addCell(PdfEditor.makeSmall("240 Longwood Ave."));
-        table.addCell(PdfEditor.makeSmall("Order By:\t" + order.getName()));
-        table.addCell(PdfEditor.makeSmall("Boston, MA 02115"));
-        table.addCell(PdfEditor.makeSmall("PI:\t" + order.getPiname()));
-        table.addCell(PdfEditor.makeSmall("(617)432-1210"));
-        table.addCell(PdfEditor.makeSmall("PI email:\t" + order.getPiemail()));
-        table.addCell(PdfEditor.makeSmall("Attn: Elmira Dhroso"));
-        table.addCell(PdfEditor.makeSmall("Grant or PO Number:\t" + order.getPonumber()));
+        table.addCell(PdfEditor.makeSenderAddress());
+        table.addCell(PdfEditor.makePlasmidRecieveAddress(order));
         document.add(table);
 
         document.add(PdfEditor.makeTitle(" "));
@@ -1986,18 +1976,8 @@ public class OrderProcessManager {
         table = new PdfPTable(2);
         table.setWidthPercentage(100);
         table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
-        table.addCell(PdfEditor.makeSmall("Harvard Medical School"));
-        table.addCell(PdfEditor.makeSmallBold("Order ID:\t" + order.getOrderid()));
-        table.addCell(PdfEditor.makeSmall("Dep.BCMP Room C- 214"));
-        table.addCell(PdfEditor.makeSmall("Order Date:\t" + order.getOrderDate()));
-        table.addCell(PdfEditor.makeSmall("240 Longwood Ave."));
-        table.addCell(PdfEditor.makeSmall("Order By:\t" + order.getName()));
-        table.addCell(PdfEditor.makeSmall("Boston, MA 02115"));
-        table.addCell(PdfEditor.makeSmall("PI:\t" + order.getPiname()));
-        table.addCell(PdfEditor.makeSmall("(617)432-1210"));
-        table.addCell(PdfEditor.makeSmall("PI email:\t" + order.getPiemail()));
-        table.addCell(PdfEditor.makeSmall("Attn: Elmira Dhroso"));
-        table.addCell(PdfEditor.makeSmall("Grant or PO Number:\t" + order.getPonumber()));
+        table.addCell(PdfEditor.makeSenderAddress());
+        table.addCell(PdfEditor.makePlasmidRecieveAddress(order));
         document.add(table);
 
         document.add(PdfEditor.makeTitle(" "));
