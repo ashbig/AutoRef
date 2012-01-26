@@ -515,7 +515,8 @@ public class CloneManager extends TableManager {
         String sql = "select clonename, clonetype, verified, vermethod," +
                 " domain, subdomain, restriction, comments, vectorid, vectorname," +
                 " clonemapfilename,status,specialtreatment,source,description,c.cloneid,o.orderid" +
-                " from clone c, orderclones o where c.cloneid=o.cloneid and o.orderid in (" + orderidString + ")";
+                " from clone c, orderclones o where c.cloneid=o.cloneid and o.orderid in (" + orderidString + ")"+
+                " order by o.orderid";
         DatabaseTransaction t = null;
         ResultSet rs = null;
         List clones = new ArrayList();
