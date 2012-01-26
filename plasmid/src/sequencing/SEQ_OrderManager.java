@@ -14,7 +14,6 @@ import java.util.List;
 import plasmid.Constants;
 import plasmid.coreobject.Invoice;
 import plasmid.database.DatabaseManager.DefTableManager;
-import sequencing.SEQ_Order;
 import plasmid.database.DatabaseManager.TableManager;
 import plasmid.database.DatabaseTransaction;
 import plasmid.util.StringConvertor;
@@ -35,7 +34,7 @@ public class SEQ_OrderManager extends TableManager {
     }
 
     public Invoice queryInvoice(int invoiceid) throws Exception {
-        String sql = "select invoicenumber, to_char(invoicedate,'YYYY-MM-dd hh:mm:ss')," +
+        String sql = "select invoicenumber, to_char(invoicedate,'YYYY-MM-dd')," +
                 " price, adjustment, payment, paymentstatus, nvl(paymenttype, ' '), account," +
                 " nvl(comments,' '), nvl(reason, ' '), piname, institution, isharvard" +
                 " from seqinvoice where invoiceid=" + invoiceid;
@@ -79,7 +78,7 @@ public class SEQ_OrderManager extends TableManager {
     public List queryInvoices(List invoicenums, String invoiceDateFrom, String invoiceDateTo,
             String invoiceMonth, String invoiceYear, List lastnames, List ponumbers,
             String paymentstatus, String isinternal, String institution1, String sort) {
-        String sql = "select invoiceid, to_char(invoicedate,'YYYY-MM-dd hh:mm:ss'), price," +
+        String sql = "select invoiceid, to_char(invoicedate,'YYYY-MM-dd'), price," +
                 " adjustment, payment, paymentstatus, nvl(paymenttype,' '), account," +
                 " nvl(comments,' '), nvl(reason,' '), piname, institution, invoicenumber, isharvard" +
                 " from seqinvoice where invoiceid>0";
@@ -171,7 +170,7 @@ public class SEQ_OrderManager extends TableManager {
     }
 
     public List queryInvoices(List invoiceids) throws Exception {
-        String sql = "select invoicenumber, to_char(invoicedate,'YYYY-MM-dd hh:mm:ss')," +
+        String sql = "select invoicenumber, to_char(invoicedate,'YYYY-MM-dd')," +
                 " price, adjustment, payment, paymentstatus, nvl(paymenttype, ' '), account," +
                 " nvl(comments,' '), nvl(reason, ' '), piname, institution, isharvard" +
                 " from SEQinvoice where invoiceid=?";
@@ -254,7 +253,7 @@ public class SEQ_OrderManager extends TableManager {
     }
 
     public SEQ_Order queryCloneOrder(int orderid) throws Exception {
-        String sql = "select c.orderid,to_char(c.orderdate, 'YYYY-MM-DD hh:mm:ss'),c.ponumber," +
+        String sql = "select c.orderid,to_char(c.orderdate, 'YYYY-MM-DD'),c.ponumber," +
                 " billingaddress,samples,pifirstname,pilastname,piemail,billingemail,username," +
                 " cost,paymentmethod,service,institution,affiliation,userid,isharvard" +
                 " from seqorder c where c.orderid=" + orderid;
@@ -307,7 +306,7 @@ public class SEQ_OrderManager extends TableManager {
     }
 
     public List<SEQ_Order> queryCloneOrders(int invoiceid) throws Exception {
-        String sql = "select c.orderid,to_char(c.orderdate, 'YYYY-MM-DD hh:mm:ss'),c.ponumber," +
+        String sql = "select c.orderid,to_char(c.orderdate, 'YYYY-MM-DD'),c.ponumber," +
                 " billingaddress,samples,pifirstname,pilastname,piemail,billingemail,username," +
                 " cost,paymentmethod,service,institution,affiliation,userid,isharvard" +
                 " from seqorder c, seqorderxseqinvoice sc where c.orderid=sc.orderid" +
