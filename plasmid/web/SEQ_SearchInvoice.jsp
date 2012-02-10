@@ -48,7 +48,7 @@
                                 <td class="itemtext"><html:select property="invoiceMonth">
                                         <html:option value="">-- Please Select --</html:option>
                                         <html:option value="January"/>
-                                        <html:option value="Feburary"/>
+                                        <html:option value="February"/>
                                         <html:option value="March"/>
                                         <html:option value="April"/>
                                         <html:option value="May"/>

@@ -32,6 +32,7 @@ public class SEQ_FileReader {
                 line = line.substring(line.indexOf("\t") + 1).replaceAll("\"", "");
 
                 String billingaddress = line.substring(0, line.indexOf("\t"));
+                billingaddress = billingaddress.replaceAll(" <br> ", "\n");
                 line = line.substring(line.indexOf("\t") + 1).replaceAll("\"", "");
 
                 String pifirstname = line.substring(0, line.indexOf("\t"));
