@@ -68,7 +68,7 @@ public class Invoice {
             return "";
         SEQ_Order o = (SEQ_Order)seqorder.get(0);
         String s = o.getPiemail();
-        if(s.equals("0"))
+        if(s==null || s.equals("0"))
             return "";
         return s;
     }
