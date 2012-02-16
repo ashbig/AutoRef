@@ -479,6 +479,7 @@ public class SEQ_OrderProcessManager {
         for (int i = 0; i < invoices.size(); i++) {
             Invoice invoice = (Invoice) invoices.get(i);
             emailInvoice(invoice, isOther);
+            System.out.println("Invoice email: "+invoice.getInvoicenum());
         }
     }
 
