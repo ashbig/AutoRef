@@ -82,7 +82,7 @@ public class PlaceOrderAction extends Action {
             
             
             /* Extract form data */
-            URL u = new URL("https://www.sandbox.paypal.com/cgi-bin/webscr") ;
+            URL u = new URL("https://www.paypal.com/cgi-bin/webscr") ;
             URLConnection uc = u.openConnection();
             uc.setDoOutput(true);
             uc.setRequestProperty("Content-Type", "application/x-www-form-urlencoded" ) ;
