@@ -21,8 +21,8 @@ import plasmid.process.OrderProcessManager;
 
 import javax.servlet.http.*;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 
 /**
  *
@@ -77,7 +77,8 @@ public class PlaceOrderAction extends Action {
                     payment_status = value;
                 if("txn_id".equals(name))
                     txn_id = value;
-                str = str + "&" + name + "=" + URLEncoder.encode(value, "ISO-8859-1" ) ;
+                //str = str + "&" + name + "=" + URLEncoder.encode(value, "ISO-8859-1" ) ;
+                str = str + "&" + name + "=" + URLEncoder.encode(value, "UTF-8" ) ;
             }
             
             
