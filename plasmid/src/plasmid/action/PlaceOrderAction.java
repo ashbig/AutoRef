@@ -140,6 +140,12 @@ public class PlaceOrderAction extends Action {
         if(gross == total && receiver_email.equals(Constants.PAYPALEMAIL) && payment_status.equals("Completed")) {
             return true;
         }
+        System.out.println("orderid="+order.getOrderid());
+        System.out.println("gross="+gross);
+        System.out.println("total="+total);
+        System.out.println("receiver_email="+receiver_email);
+        System.out.println("payment_status="+payment_status);
+        System.out.println("txn_id="+txn_id);
         return false;
     }
 }
