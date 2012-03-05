@@ -34,31 +34,31 @@
                             </tr>
                             <tr> 
                                 <td class="formlabel">*Name(Grant manager or account manager):</td>
-                                <td><html:text styleClass="text" property="billingto"/></td>
+                                <td><html:text size="50" styleClass="text" property="billingto"/></td>
                             </tr>
                             <tr> 
                                 <td class="formlabel">Organization:</td>
-                                <td><html:text styleClass="text" property="billingorganization"/></td>
+                                <td><html:text size="50" styleClass="text" property="billingorganization"/></td>
                             </tr>
                             <tr> 
                                 <td class="formlabel">*Street:</td>
-                                <td><html:text styleClass="text" property="billingaddressline1"/></td>
+                                <td><html:text size="50" styleClass="text" property="billingaddressline1"/></td>
                             </tr>
                             <tr> 
                                 <td class="formlabel">Street (continued):</td>
-                                <td><html:text styleClass="text" property="billingaddressline2"/></td>
+                                <td><html:text size="50" styleClass="text" property="billingaddressline2"/></td>
                             </tr>
                             <tr> 
                                 <td class="formlabel">*City:</td>
-                                <td><html:text styleClass="text" property="billingcity"/></td>
+                                <td><html:text size="50" styleClass="text" property="billingcity"/></td>
                             </tr>
                             <tr> 
                                 <td class="formlabel">*State:</td>
-                                <td><html:text styleClass="text" property="billingstate"/></td>
+                                <td><html:text size="50" styleClass="text" property="billingstate"/></td>
                             </tr>
                             <tr> 
                                 <td class="formlabel">*Zip code:</td>
-                                <td><html:text styleClass="text" property="billingzipcode"/></td>
+                                <td><html:text size="50" styleClass="text" property="billingzipcode"/></td>
                             </tr>
                             <tr>
                                 <td class="formlabel">*Country:</td>
@@ -69,15 +69,15 @@
                             </tr>
                             <tr> 
                                 <td class="formlabel">*Phone:</td>
-                                <td><html:text styleClass="text" property="billingphone"/></td>
+                                <td><html:text size="50" styleClass="text" property="billingphone"/></td>
                             </tr>
                             <tr> 
                                 <td class="formlabel">*Fax:</td>
-                                <td><html:text styleClass="text" property="billingfax"/></td>
+                                <td><html:text size="50" styleClass="text" property="billingfax"/></td>
                             </tr>
                             <tr> 
                                 <td class="formlabel">*Email (Grant manager or account manager):</td>
-                                <td><html:text styleClass="text" property="billingemail"/></td>
+                                <td><html:text size="50" styleClass="text" property="billingemail"/></td>
                             </tr>
                         </table>
                         
