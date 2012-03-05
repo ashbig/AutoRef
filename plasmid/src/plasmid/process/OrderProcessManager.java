@@ -672,43 +672,12 @@ public class OrderProcessManager {
             }
 
             if (addresses != null) {
-                UserManager man = new UserManager(conn);
-                /**
-                 * if(!man.updatePonumber(user.getPonumber(), user.getUserid())) {
-                 * DatabaseTransaction.rollback(conn);
-                 * if(Constants.DEBUG) {
-                 * System.out.println(man.getErrorMessage());
-                 * System.out.println("cannot update ponumber.");
-                 * }
-                 * return -1;
-                 * }*/
-                List a = man.getUserAddresses(user.getUserid());
-                if (a == null) {
+                try {
+                    updateUserAddress(user, addresses, conn);
+                } catch (Exception ex) {
                     DatabaseTransaction.rollback(conn);
                     if (Constants.DEBUG) {
-                        System.out.println(man.getErrorMessage());
-                        System.out.println("cannot get user addresses.");
-                    }
-                    return -1;
-                }
-
-                if (a.size() > 0) {
-                    if (!man.updateUserAddresses(user.getUserid(), addresses)) {
-                        DatabaseTransaction.rollback(conn);
-                        if (Constants.DEBUG) {
-                            System.out.println(man.getErrorMessage());
-                            System.out.println("Cannot update user addresses.");
-                        }
-                        return -1;
-                    }
-                } else {
-                    if (!man.addUserAddresses(user.getUserid(), addresses)) {
-                        DatabaseTransaction.rollback(conn);
-                        if (Constants.DEBUG) {
-                            System.out.println(man.getErrorMessage());
-                            System.out.println("Cannot add user addresses.");
-                        }
-                        return -1;
+                        System.out.println(ex.getMessage());
                     }
                 }
             }
@@ -726,6 +695,48 @@ public class OrderProcessManager {
         }
     }
 
+    public void updateUserAddress(User user, List addresses, Connection conn) throws Exception {
+        UserManager man = new UserManager(conn);
+        List a = man.getUserAddresses(user.getUserid());
+        if (a == null) {
+            throw new Exception("cannot get user addresses. " + man.getErrorMessage());
+        }
+
+        if (a.size() > 0) {
+            if (!man.updateUserAddresses(user.getUserid(), addresses)) {
+                throw new Exception("Cannot update user addresses. " + man.getErrorMessage());
+            }
+        } else {
+            if (!man.addUserAddresses(user.getUserid(), addresses)) {
+                throw new Exception("Cannot add user addresses. " + man.getErrorMessage());
+            }
+        }
+    }
+
+    public void updateBillingAddress(int orderid, User user, UserAddress address) throws Exception {
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            
+            List addresses = new ArrayList();
+            addresses.add(address);
+            updateUserAddress(user, addresses, conn);
+            
+            CloneOrderManager manager = new CloneOrderManager(conn);
+            manager.updateCloneOrderBilling(orderid, address);
+            
+            DatabaseTransaction.commit(conn);
+        } catch (Exception ex) {
+            DatabaseTransaction.rollback(conn);
+            System.out.println(ex);
+            throw new Exception("Cannot update billing address.");
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
+        }
+    }
+            
     public List getAllOrders(User user, String status) {
         if (user == null) {
             if (Constants.DEBUG) {

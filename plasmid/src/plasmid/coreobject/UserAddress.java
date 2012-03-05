@@ -82,4 +82,22 @@ public class UserAddress {
     public void setEmail(String email) {
         this.email = email;
     }
+    
+    public static String formatAddress(String organization, String addressline1, String addressline2,
+            String city, String state, String zipcode, String country, String phone, String fax) {
+        String address = "";
+        if (organization != null) {
+            address += organization + "\n";
+        }
+        address += addressline1 + "\n";
+        if (addressline2 != null) {
+            address += addressline2 + "\n";
+        }
+        address = address + city + ", " + state + " " + zipcode + "\n" + country;
+        address = address + "\n" + "Phone: " + phone;
+        if (fax != null && fax.trim().length() > 0) {
+            address = address + "\n" + "Fax: " + fax;
+        }
+        return address;
+    }
 }

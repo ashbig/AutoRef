@@ -1021,7 +1021,7 @@ public class CloneOrderManager extends TableManager {
             connection = t.requestConnection();
             stmt = connection.prepareStatement(sql);
             for (int i = 0; i < invoiceids.size(); i++) {
-                int invoiceid = (Integer)invoiceids.get(i);
+                int invoiceid = (Integer) invoiceids.get(i);
                 stmt.setInt(1, invoiceid);
                 rs = stmt.executeQuery();
                 if (rs.next()) {
@@ -1200,7 +1200,7 @@ public class CloneOrderManager extends TableManager {
         }
     }
 
-    public boolean updateInvoice(int invoiceid, String paymentstatus, String accountnum, double payment, 
+    public boolean updateInvoice(int invoiceid, String paymentstatus, String accountnum, double payment,
             double adjustment, String comments, String reason) {
         String sql = "update invoice set paymentstatus=?," +
                 " account=?, payment=?, adjustment=?, comments=?, reason=? where invoiceid=?";
@@ -1259,6 +1259,27 @@ public class CloneOrderManager extends TableManager {
             DatabaseTransaction.closeStatement(stmt2);
         }
         return true;
+    }
+
+    public void updateCloneOrderBilling(int orderid, UserAddress address) throws Exception {
+        String sql = "update cloneorder set billingto=?, billingaddress=?,billingemail=? where orderid=?";
+        String billingAddress = UserAddress.formatAddress(address.getOrganization(),
+                address.getAddressline1(), address.getAddressline2(), address.getCity(), address.getState(),
+                address.getZipcode(), address.getCountry(), address.getPhone(), address.getFax());
+        PreparedStatement stmt = null;
+        try {
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, address.getName());
+            stmt.setString(2, billingAddress);
+            stmt.setString(3, address.getEmail());
+            stmt.setInt(4, orderid);
+            DatabaseTransaction.executeUpdate(stmt);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new Exception("Cannot update billing information for order: "+orderid);
+        } finally {
+            DatabaseTransaction.closeStatement(stmt);
+        }
     }
 
     public static void main(String args[]) {

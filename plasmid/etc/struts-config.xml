@@ -158,6 +158,8 @@
                     type="plasmid.form.AddEmtaMembersForm"/>
         <form-bean      name="addInstitutionsForm"
                     type="plasmid.form.AddInstitutionsForm"/>
+        <form-bean      name="editBillingForm"
+                    type="plasmid.form.EditBillingForm"/>
     </form-beans>
 
   <!-- ========== Global Forward Definitions ============================== -->
@@ -335,6 +337,13 @@
                type="plasmid.action.DownloadCloneWorklistAction"
                name="changeOrderStatusForm"
               input="/ChangeOrderStatusSuccess.jsp">
+        </action>
+        <action    path="/EditBilling"
+               type="plasmid.action.EditBillingAction"
+               name="editBillingForm"
+               scope="request"
+              input="/ViewOrderDetail.jsp">
+            <forward  name="success"  path="/EditBilling.jsp"/>
         </action>
         <action     path="/EnterAddress"
                 type="plasmid.action.EnterAddressAction"
@@ -702,6 +711,13 @@
               scope="request"
               input="/UploadCultureResults.jsp">
             <forward  name="success"   path="/ConfirmCultureResults.jsp"/>
+        </action>
+        <action    path="/UpdateBilling"
+               type="plasmid.action.UpdateBillingAction"
+               name="editBillingForm"
+               scope="request"
+              input="/EditBilling.jsp">
+            <forward  name="success"  path="/ViewOrderDetail.jsp"/>
         </action>
         <action    path="/UpdateCart"
                type="plasmid.action.UpdateCartAction"

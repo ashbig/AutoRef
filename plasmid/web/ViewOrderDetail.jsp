@@ -174,7 +174,15 @@
 <table width="100%" border="0">
   <tr> 
     <td colspan="2" class="featuretext">Shipping To:</td>
-    <td colspan="2" class="featuretext">Billing To:</td>
+    <td class="featuretext">Billing To:</td>
+    <td class="featuretext">
+        <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
+        <html:form action="EditBilling.do">
+            <html:hidden name="<%=Constants.CLONEORDER%>" property="orderid"/>
+            <html:submit styleClass="text" value="Edit Billing Information"/>
+        </html:form>
+        </logic:equal>
+        </td>
   </tr>
   <tr> 
     <td width="17%" class="formlabel">Name:</td>

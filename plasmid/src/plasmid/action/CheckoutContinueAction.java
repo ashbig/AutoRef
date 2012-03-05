@@ -81,7 +81,7 @@ public class CheckoutContinueAction extends UserAction {
         int collectionQuantity = m.getTotalCollectionQuantity();
         double clonePrice = m.getTotalClonePrice(user);
         double collectionPrice = m.getTotalCollectionPrice(collections, user);
-        int totalQuantity = m.getTotalQuantity();
+        //int totalQuantity = m.getTotalQuantity();
         double totalPrice = clonePrice+collectionPrice;
         int numOfClonesInCollections = m.getNumOfClonesInCollections();
         
@@ -89,6 +89,7 @@ public class CheckoutContinueAction extends UserAction {
             return (new ActionForward(mapping.getInput()));
         }
         
+       /** 
         UserAddress shipping = null;
         UserAddress billing = null;
         try {
@@ -101,7 +102,7 @@ public class CheckoutContinueAction extends UserAction {
             errors.add(ActionErrors.GLOBAL_ERROR,
             new ActionError("error.database.error","Database error occured."));
             return (mapping.findForward("error"));
-        }
+        }*/
 
         ((CheckoutForm)form).setNumOfClones(cloneQuantity);
         ((CheckoutForm)form).setCostOfClones(clonePrice);

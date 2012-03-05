@@ -46,6 +46,10 @@ public class User {
     /** Creates a new instance of User */
     public User() {
     }
+    
+    public User(int id) {
+        this.userid = id;
+    }
 
     public User(int userid, String firstname, String lastname, String email, String phone,
             String institution, String ponumber, String pi, String group,

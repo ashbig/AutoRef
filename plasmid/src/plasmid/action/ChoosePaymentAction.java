@@ -204,35 +204,9 @@ public class ChoosePaymentAction extends UserAction {
             ponumber = Constants.PAYPAL;
         }
 
-        String shippingAddress = "";
-        if (organization != null) {
-            shippingAddress += organization + "\n";
-        }
-        shippingAddress += addressline1 + "\n";
-        if (addressline2 != null) {
-            shippingAddress += addressline2 + "\n";
-        }
-        shippingAddress = shippingAddress + city + ", " + state + " " + zipcode + "\n" + country;
-        shippingAddress = shippingAddress + "\n" + "Phone: " + phone;
-        if (fax != null && fax.trim().length() > 0) {
-            shippingAddress = shippingAddress + "\n" + "Fax: " + fax;
-        }
-
-        String billingAddress = "";
-        if (billingOrganization != null) {
-            billingAddress += billingOrganization + "\n";
-        }
-        billingAddress += billingaddressline1 + "\n";
-        if (billingaddressline2 != null) {
-            billingAddress += billingaddressline2 + "\n";
-        }
-        billingAddress = billingAddress + billingcity + ", " + billingstate + " " + billingzipcode + "\n" + billingcountry;
-        if (billingphone != null && billingphone.trim().length() > 0) {
-            billingAddress += "\nPhone: " + billingphone;
-        }
-        if (billingfax != null && billingfax.trim().length() > 0) {
-            billingAddress += "\nFax: " + billingfax;
-        }
+        String shippingAddress = UserAddress.formatAddress(organization, addressline1, addressline2, city, state, zipcode, country, phone, fax);
+        String billingAddress = UserAddress.formatAddress(billingOrganization, billingaddressline1,billingaddressline2, 
+                billingcity, billingstate, billingzipcode, billingcountry, billingphone, billingfax);
 
         List addresses = null;
         if (saveInfo) {
