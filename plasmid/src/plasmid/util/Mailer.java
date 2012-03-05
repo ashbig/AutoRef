@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.9 $
- * $Date: 2009-03-05 14:33:00 $
+ * $Revision: 1.10 $
+ * $Date: 2012-03-05 03:42:21 $
  * $Author: dz4 $
  *
  ******************************************************************************
@@ -49,7 +49,7 @@ import javax.mail.internet.*;
  * Utility class to send simple messages.
  *
  * @author     $Author: dz4 $
- * @version    $Revision: 1.9 $ $Date: 2009-03-05 14:33:00 $
+ * @version    $Revision: 1.10 $ $Date: 2012-03-05 03:42:21 $
  */
 
 public class Mailer {
@@ -228,7 +228,9 @@ public class Mailer {
             //trans.connect(SMTP_HOST, USNAME, PWD);
             //trans.sendMessage(msg, address);
             //trans.close();
+            System.out.println("email successful: "+to);
         } catch(MessagingException mex) {
+            System.out.println("email failed: "+to);
             mex.printStackTrace();
             Exception ex = null;
             if((ex = mex.getNextException()) !=null) {

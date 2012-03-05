@@ -77,6 +77,7 @@ public class SEQ_ViewSelectedInvoicesAction extends InternalUserAction {
                 manager.emailInvoices(selectedInvoices, false);
                 return mapping.findForward("email_successful");
             } catch (Exception ex) {
+                System.out.println("email invoices failed.");
                 ex.printStackTrace();
                 errors.add(ActionErrors.GLOBAL_ERROR,
                         new ActionError("error.general", "Error occured while sending emails."));
@@ -88,6 +89,7 @@ public class SEQ_ViewSelectedInvoicesAction extends InternalUserAction {
                 manager.emailInvoices(selectedInvoices, true);
                 return mapping.findForward("email_successful");
             } catch (Exception ex) {
+                System.out.println("email invoices failed.");
                 ex.printStackTrace();
                 errors.add(ActionErrors.GLOBAL_ERROR,
                         new ActionError("error.general", "Error occured while sending emails."));
