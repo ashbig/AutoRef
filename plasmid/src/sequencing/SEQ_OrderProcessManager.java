@@ -471,12 +471,19 @@ public class SEQ_OrderProcessManager {
         printInvoices(file, invoices);
     }
 
-    public void emailInvoices(List invoices, boolean isOther) throws Exception {
+    public List emailInvoices(List invoices, boolean isOther) {
+        List failed = new ArrayList();
         for (int i = 0; i < invoices.size(); i++) {
             Invoice invoice = (Invoice) invoices.get(i);
-            emailInvoice(invoice, isOther);
-            System.out.println("Email invoice: "+invoice.getInvoicenum()+ "successful.");
+            try {
+                emailInvoice(invoice, isOther);
+                System.out.println("Email invoice: "+invoice.getInvoicenum()+ " successful.");
+            } catch (Exception ex) {
+                failed.add(invoice);
+                System.out.println("Email invoice: "+invoice.getInvoicenum()+ " failed.");
+            }
         }
+        return failed;
     }
 
     public void emailInvoice(Invoice invoice, boolean isOther) throws Exception {

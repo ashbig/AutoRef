@@ -2065,13 +2065,20 @@ public class OrderProcessManager {
         }
     }
 
-    public void emailInvoices(List invoices, boolean isOther) throws Exception {
+    public List emailInvoices(List invoices, boolean isOther) {
+        List failed = new ArrayList();
         for (int i = 0; i < invoices.size(); i++) {
             Invoice invoice = (Invoice) invoices.get(i);
-            emailInvoice(invoice.getOrder(), invoice, isOther);
+            try {
+                emailInvoice(invoice.getOrder(), invoice, isOther);
+                System.out.println("Email invoice: "+invoice.getInvoicenum()+ " successful.");
+            } catch (Exception ex) {
+                failed.add(invoice);
+                System.out.println("Email invoice: "+invoice.getInvoicenum()+ " failed.");
+            }
         }
+        return failed;
     }
-
     public void emailInvoice(CloneOrder order, Invoice invoice, boolean isOther) throws Exception {
         String filename = Constants.TMP + "Invoice_" + order.getOrderid() + ".pdf";
         File f1 = new File(filename);

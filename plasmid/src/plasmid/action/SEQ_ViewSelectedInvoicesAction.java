@@ -73,27 +73,19 @@ public class SEQ_ViewSelectedInvoicesAction extends InternalUserAction {
             manager.printInvoices(response.getOutputStream(), selectedInvoices);
             return mapping.findForward("no_invoice_selected");
         } else if (Constants.INVOICE_BUTTON_EMAIL_ALL_INVOICE.equals(submitButton) || Constants.INVOICE_BUTTON_EMAIL_SELECT_INVOICE.equals(submitButton)) {
-            try {
-                manager.emailInvoices(selectedInvoices, false);
+            List failed = manager.emailInvoices(selectedInvoices, false);
+            if(failed.isEmpty()) {
                 return mapping.findForward("email_successful");
-            } catch (Exception ex) {
-                System.out.println("email invoices failed.");
-                ex.printStackTrace();
-                errors.add(ActionErrors.GLOBAL_ERROR,
-                        new ActionError("error.general", "Error occured while sending emails."));
-                saveErrors(request, errors);
+            } else {
+                request.setAttribute("failed", failed);
                 return mapping.findForward("error");
             }
         } else if (Constants.INVOICE_BUTTON_EMAIL_ALL_USER_ALL_INVOICE.equals(submitButton) || Constants.INVOICE_BUTTON_EMAIL_ALL_USER_SELECT_INVOICE.equals(submitButton)) {
-            try {
-                manager.emailInvoices(selectedInvoices, true);
+            List failed = manager.emailInvoices(selectedInvoices, true);
+            if(failed.isEmpty()) {
                 return mapping.findForward("email_successful");
-            } catch (Exception ex) {
-                System.out.println("email invoices failed.");
-                ex.printStackTrace();
-                errors.add(ActionErrors.GLOBAL_ERROR,
-                        new ActionError("error.general", "Error occured while sending emails."));
-                saveErrors(request, errors);
+            } else {
+                request.setAttribute("failed", failed);
                 return mapping.findForward("error");
             }
         } else {

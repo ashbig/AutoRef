@@ -703,6 +703,7 @@
                scope="session"
               input="/SEQ_InvoiceList.jsp">
             <forward  name="email_successful"   path="/SEQ_EmailInvoiceSuccessful.jsp"/>
+            <forward  name="email_fail"   path="/SEQ_EmailInvoiceFail.jsp"/>
             <forward  name="no_invoice_selected"   path="/SEQ_InvoiceSelectEmpty.jsp"/>
         </action>
         <action    path="/UploadCultureResults"
@@ -850,6 +851,7 @@
                scope="session"
               input="/InvoiceList.jsp">
             <forward  name="email_successful"   path="/EmailInvoiceSuccessful.jsp"/>
+            <forward  name="email_fail"   path="/EmailInvoiceFail.jsp"/>
             <forward  name="no_invoice_selected"   path="/InvoiceSelectEmpty.jsp"/>
         </action>
         <action    path="/WorklistInput"

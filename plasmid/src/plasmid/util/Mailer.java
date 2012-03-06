@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.10 $
- * $Date: 2012-03-05 03:42:21 $
+ * $Revision: 1.11 $
+ * $Date: 2012-03-06 04:07:39 $
  * $Author: dz4 $
  *
  ******************************************************************************
@@ -49,7 +49,7 @@ import javax.mail.internet.*;
  * Utility class to send simple messages.
  *
  * @author     $Author: dz4 $
- * @version    $Revision: 1.10 $ $Date: 2012-03-05 03:42:21 $
+ * @version    $Revision: 1.11 $ $Date: 2012-03-06 04:07:39 $
  */
 
 public class Mailer {
@@ -236,6 +236,7 @@ public class Mailer {
             if((ex = mex.getNextException()) !=null) {
                 ex.printStackTrace();
             }
+            throw mex;
         }
     }
     
