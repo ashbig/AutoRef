@@ -78,7 +78,7 @@ public class SEQ_ViewSelectedInvoicesAction extends InternalUserAction {
                 return mapping.findForward("email_successful");
             } else {
                 request.setAttribute("failed", failed);
-                return mapping.findForward("error");
+                return mapping.findForward("email_fail");
             }
         } else if (Constants.INVOICE_BUTTON_EMAIL_ALL_USER_ALL_INVOICE.equals(submitButton) || Constants.INVOICE_BUTTON_EMAIL_ALL_USER_SELECT_INVOICE.equals(submitButton)) {
             List failed = manager.emailInvoices(selectedInvoices, true);
@@ -86,7 +86,7 @@ public class SEQ_ViewSelectedInvoicesAction extends InternalUserAction {
                 return mapping.findForward("email_successful");
             } else {
                 request.setAttribute("failed", failed);
-                return mapping.findForward("error");
+                return mapping.findForward("email_fail");
             }
         } else {
             return mapping.findForward("no_invoice_selected");
