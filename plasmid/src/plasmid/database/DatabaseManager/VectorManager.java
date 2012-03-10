@@ -1106,7 +1106,7 @@ public class VectorManager extends TableManager {
         String sql = "select name,description,form,type,sizeinbp,mapfilename,sequencefilename,comments" +
                 " from vector where vectorid=" + vectorid;
         String sql2 = "select featureid,maptype,name,description,startpos,endpos" +
-                " from vectorfeature where vectorid=" + vectorid + " order by maptype";
+                " from vectorfeature where vectorid=" + vectorid + " order by startpos";
         String sql3 = "select propertytype from vectorproperty where vectorid=" + vectorid;
         String sql4 = "select vsynonym from vectorsynonym where vectorid=" + vectorid;
         String sql5 = "select v.authorid,v.authortype,v.creationdate,a.authorname" +
@@ -1495,7 +1495,7 @@ public class VectorManager extends TableManager {
         }
 
         List features = new ArrayList();
-        String sql = new String("select featureid,name,description,startpos,endpos,maptype from vectorfeature where vectorid=?");
+        String sql = new String("select featureid,name,description,startpos,endpos,maptype from vectorfeature where vectorid=? order by startpos");
         ResultSet rs = null;
         PreparedStatement stmt = null;
 
