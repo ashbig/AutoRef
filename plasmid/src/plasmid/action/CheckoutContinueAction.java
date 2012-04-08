@@ -112,7 +112,7 @@ public class CheckoutContinueAction extends UserAction {
         ((CheckoutForm)form).setCostForShipping(0.0);
         ((CheckoutForm)form).setCostOfPlatinum(0.0);
         ((CheckoutForm)form).setIsBatch(isBatch);
-        ((CheckoutForm)form).setIsplatinum(Constants.ISPLATINUM_N);
+        ((CheckoutForm)form).setIsplatinum(Constants.ISPLATINUM_Y);
         ((CheckoutForm)form).setNumOfClonesInCollections(numOfClonesInCollections);
            
         List shippingMethods = DefTableManager.getVocabularies("shippingmethod", "method");
