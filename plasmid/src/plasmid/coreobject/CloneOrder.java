@@ -18,7 +18,8 @@ public class CloneOrder {
     public static final String COL_ORDERDATE = "ORDERDATE";
     public static final String COL_PLATINUM = "ISPLATINUM";
     public static final String COL_NUMOFCLONES = "NUMOFCLONES";
-    public static final String COL_USERNAME = "u.lastname, u.firstname";
+    public static final String COL_USERFIRSTNAME = "u.firstname";
+    public static final String COL_USERLASTNAME = "u.lastname";
     public static final String COL_UPDATEDBY = "UPDATEDBY";
     public static final String COL_UPDATEDON = "UPDATEDON";
 

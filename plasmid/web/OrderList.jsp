@@ -51,7 +51,7 @@
             <html:option value="<%=CloneOrder.COL_ORDERDATE%>">Order Date</html:option>
             <html:option value="<%=CloneOrder.COL_PLATINUM%>">Platinum Service</html:option>
             <html:option value="<%=CloneOrder.COL_NUMOFCLONES%>">Number of Clones</html:option>
-            <html:option value="<%=CloneOrder.COL_USERNAME%>">User</html:option>
+            <html:option value="<%=CloneOrder.COL_USERLASTNAME%>">User</html:option>
             <html:option value="<%=CloneOrder.COL_UPDATEDON%>">Last Updated On</html:option>
             <html:option value="<%=CloneOrder.COL_UPDATEDBY%>">Last Updated By</html:option>
         </html:select>

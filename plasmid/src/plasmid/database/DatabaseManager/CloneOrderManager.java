@@ -59,16 +59,16 @@ public class CloneOrderManager extends TableManager {
          * handleError(new Exception(m.getErrorMessage()), "Cannot get orderid from cloneorder.");
          * return -1;
          * }*/
-        String sql = "insert into cloneorder" +
-                " (orderdate,orderstatus,ponumber,shippingto,billingto," +
-                " shippingaddress,billingaddress,numofclones,numofcollection," +
-                " costforclones,costforcollection,costforshipping,totalprice,userid,orderid," +
-                " shippingmethod,shippingaccount,trackingnumber,isbatch,comments," +
-                " isaustralia,ismta,isplatinum,costforplatinum,platinumservicestatus,billingemail)" +
-                " values(sysdate,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        String sql = "insert into cloneorder"
+                + " (orderdate,orderstatus,ponumber,shippingto,billingto,"
+                + " shippingaddress,billingaddress,numofclones,numofcollection,"
+                + " costforclones,costforcollection,costforshipping,totalprice,userid,orderid,"
+                + " shippingmethod,shippingaccount,trackingnumber,isbatch,comments,"
+                + " isaustralia,ismta,isplatinum,costforplatinum,platinumservicestatus,billingemail)"
+                + " values(sysdate,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
-        String sql2 = "insert into orderclones(orderid,cloneid,collectionname,quantity)" +
-                " values(?,?,?,?)";
+        String sql2 = "insert into orderclones(orderid,cloneid,collectionname,quantity)"
+                + " values(?,?,?,?)";
 
         PreparedStatement stmt = null;
         PreparedStatement stmt2 = null;
@@ -138,8 +138,8 @@ public class CloneOrderManager extends TableManager {
             return -1;
         }
 
-        String sql = "insert into batchorder(orderid,cloneid,plate,well)" +
-                " values(?,?,?,?)";
+        String sql = "insert into batchorder(orderid,cloneid,plate,well)"
+                + " values(?,?,?,?)";
 
         PreparedStatement stmt = null;
         try {
@@ -168,10 +168,10 @@ public class CloneOrderManager extends TableManager {
     }
 
     public List queryOrderClones(int orderid, User user) {
-        String sql = "select o.cloneid, o.quantity" +
-                " from orderclones o, cloneorder c" +
-                " where o.orderid=c.orderid and " +
-                " o.collectionname is null and c.orderid=" + orderid;
+        String sql = "select o.cloneid, o.quantity"
+                + " from orderclones o, cloneorder c"
+                + " where o.orderid=c.orderid and "
+                + " o.collectionname is null and c.orderid=" + orderid;
 
         if (user != null) {
             sql = sql + " and c.userid=" + user.getUserid();
@@ -206,10 +206,10 @@ public class CloneOrderManager extends TableManager {
      * @return A list of OrderClones object. Will return null if error occured.
      */
     public List queryBatchOrderClones(int orderid, User user) {
-        String sql = "select o.cloneid, o.quantity, b.plate, b.well" +
-                " from orderclones o, cloneorder c, batchorder b" +
-                " where o.orderid=c.orderid and o.cloneid=b.cloneid(+) and " +
-                " c.orderid=b.orderid and o.collectionname is null and c.orderid=" + orderid;
+        String sql = "select o.cloneid, o.quantity, b.plate, b.well"
+                + " from orderclones o, cloneorder c, batchorder b"
+                + " where o.orderid=c.orderid and o.cloneid=b.cloneid(+) and "
+                + " c.orderid=b.orderid and o.collectionname is null and c.orderid=" + orderid;
 
         if (user != null) {
             sql = sql + " and c.userid=" + user.getUserid();
@@ -245,8 +245,8 @@ public class CloneOrderManager extends TableManager {
     }
 
     public List queryOrderCollections(int orderid, User user) {
-        String sql = "select o.collectionname, o.quantity from orderclones o, cloneorder c" +
-                " where o.orderid=c.orderid and o.cloneid is null and c.orderid=" + orderid;
+        String sql = "select o.collectionname, o.quantity from orderclones o, cloneorder c"
+                + " where o.orderid=c.orderid and o.cloneid is null and c.orderid=" + orderid;
 
         if (user != null) {
             sql = sql + " and c.userid=" + user.getUserid();
@@ -283,15 +283,15 @@ public class CloneOrderManager extends TableManager {
      * @exception
      */
     public CloneOrder queryCloneOrder(User user, int orderid) throws Exception {
-        String sql = "select c.orderid,to_char(c.orderdate, 'YYYY-MM-DD hh:mm:ss'),orderstatus,c.ponumber,shippingto,billingto," +
-                " shippingaddress,billingaddress,numofclones,numofcollection,costforclones," +
-                " costforcollection,costforshipping,totalprice,c.userid,shippingdate,whoshipped," +
-                " shippingmethod,shippingaccount,trackingnumber,receiveconfirmationdate," +
-                " whoconfirmed,whoreceivedconfirmation,shippedcontainers,u.email,u.piname," +
-                " u.piemail,u.phone,c.isbatch,u.usergroup,c.comments,c.isaustralia," +
-                " c.ismta, c.isplatinum, c.costforplatinum, c.platinumservicestatus,u.firstname," +
-                " u.lastname,nvl(billingemail,' '),u.ismember" +
-                " from cloneorder c, userprofile u where c.userid=u.userid and c.orderid=" + orderid;
+        String sql = "select c.orderid,to_char(c.orderdate, 'YYYY-MM-DD hh:mm:ss'),orderstatus,c.ponumber,shippingto,billingto,"
+                + " shippingaddress,billingaddress,numofclones,numofcollection,costforclones,"
+                + " costforcollection,costforshipping,totalprice,c.userid,shippingdate,whoshipped,"
+                + " shippingmethod,shippingaccount,trackingnumber,receiveconfirmationdate,"
+                + " whoconfirmed,whoreceivedconfirmation,shippedcontainers,u.email,u.piname,"
+                + " u.piemail,u.phone,c.isbatch,u.usergroup,c.comments,c.isaustralia,"
+                + " c.ismta, c.isplatinum, c.costforplatinum, c.platinumservicestatus,u.firstname,"
+                + " u.lastname,nvl(billingemail,' '),u.ismember"
+                + " from cloneorder c, userprofile u where c.userid=u.userid and c.orderid=" + orderid;
 
         String sql2 = "select invoiceid from invoice where orderid=" + orderid;
 
@@ -403,15 +403,15 @@ public class CloneOrderManager extends TableManager {
      * @return A list of CloneOrder objects. Return null if error occured.
      */
     public List queryCloneOrders(User user, String status, String sortby, String sorttype) {
-        String sql = "select c.orderid,to_char(c.orderdate, 'YYYY-MM-DD hh:mm:ss'),c.orderstatus,c.ponumber,c.shippingto,c.billingto," +
-                " c.shippingaddress,c.billingaddress,c.numofclones,c.numofcollection,c.costforclones," +
-                " c.costforcollection,c.costforshipping,c.totalprice,c.userid,u.firstname,u.lastname," +
-                " c.shippingdate, c.whoshipped, c.shippingmethod,c.shippingaccount,c.trackingnumber," +
-                " c.receiveconfirmationdate, c.whoconfirmed,c.whoreceivedconfirmation,u.email,c.shippedcontainers," +
-                " u.piname, u.piemail, u.phone, c.isbatch, c.comments, c.isaustralia," +
-                " c.ismta, c.isplatinum, c.costforplatinum, c.platinumservicestatus,c.billingemail," +
-                " c.updatedby,to_char(c.updatedon, 'YYYY-MM-DD')" +
-                " from cloneorder c, userprofile u where c.userid=u.userid";
+        String sql = "select c.orderid,to_char(c.orderdate, 'YYYY-MM-DD hh:mm:ss'),c.orderstatus,c.ponumber,c.shippingto,c.billingto,"
+                + " c.shippingaddress,c.billingaddress,c.numofclones,c.numofcollection,c.costforclones,"
+                + " c.costforcollection,c.costforshipping,c.totalprice,c.userid,u.firstname,u.lastname,"
+                + " c.shippingdate, c.whoshipped, c.shippingmethod,c.shippingaccount,c.trackingnumber,"
+                + " c.receiveconfirmationdate, c.whoconfirmed,c.whoreceivedconfirmation,u.email,c.shippedcontainers,"
+                + " u.piname, u.piemail, u.phone, c.isbatch, c.comments, c.isaustralia,"
+                + " c.ismta, c.isplatinum, c.costforplatinum, c.platinumservicestatus,c.billingemail,"
+                + " c.updatedby,to_char(c.updatedon, 'YYYY-MM-DD')"
+                + " from cloneorder c, userprofile u where c.userid=u.userid";
 
         if (user != null) {
             sql = sql + " and c.userid=" + user.getUserid();
@@ -423,9 +423,13 @@ public class CloneOrderManager extends TableManager {
                 sql = sql + " and c.orderstatus=?";
             }
         }
-        
-        if(sortby != null) {
-            sql = sql + "order by "+sortby + " "+sorttype;
+
+        if (sortby != null) {
+            if (sortby.equals(CloneOrder.COL_USERLASTNAME)) {
+                sql = sql + "order by lower(u.lastname) " + sorttype + ", lower(u.firstname) " + sorttype;
+            } else {
+                sql = sql + "order by " + sortby + " " + sorttype;
+            }
         } else {
             sql = sql + " order by c.orderid desc";
         }
@@ -535,15 +539,15 @@ public class CloneOrderManager extends TableManager {
     public List queryCloneOrders(List orderids, String orderDateFrom, String orderDateTo,
             String shippingDateFrom, String shippingDateTo, String status, List lastnames,
             boolean isMember, String sort, String provider, boolean isPI, boolean isMtamember) {
-        String sql = "select c.orderid,to_char(c.orderdate, 'YYYY-MM-DD hh:mm:ss'),c.orderstatus,c.ponumber,c.shippingto,c.billingto," +
-                " c.shippingaddress,c.billingaddress,c.numofclones,c.numofcollection,c.costforclones," +
-                " c.costforcollection,c.costforshipping,c.totalprice,c.userid,u.firstname,u.lastname," +
-                " c.shippingdate, c.whoshipped, c.shippingmethod,c.shippingaccount,c.trackingnumber," +
-                " c.receiveconfirmationdate, c.whoconfirmed,c.whoreceivedconfirmation,u.email," +
-                " c.shippedcontainers, u.piname, u.piemail, u.phone, c.isbatch, c.comments," +
-                " c.isaustralia, c.ismta, u.institution, c.isplatinum, c.costforplatinum," +
-                " c.platinumservicestatus, c.billingemail" +
-                " from cloneorder c, userprofile u where c.userid=u.userid";
+        String sql = "select c.orderid,to_char(c.orderdate, 'YYYY-MM-DD hh:mm:ss'),c.orderstatus,c.ponumber,c.shippingto,c.billingto,"
+                + " c.shippingaddress,c.billingaddress,c.numofclones,c.numofcollection,c.costforclones,"
+                + " c.costforcollection,c.costforshipping,c.totalprice,c.userid,u.firstname,u.lastname,"
+                + " c.shippingdate, c.whoshipped, c.shippingmethod,c.shippingaccount,c.trackingnumber,"
+                + " c.receiveconfirmationdate, c.whoconfirmed,c.whoreceivedconfirmation,u.email,"
+                + " c.shippedcontainers, u.piname, u.piemail, u.phone, c.isbatch, c.comments,"
+                + " c.isaustralia, c.ismta, u.institution, c.isplatinum, c.costforplatinum,"
+                + " c.platinumservicestatus, c.billingemail"
+                + " from cloneorder c, userprofile u where c.userid=u.userid";
         String sql2 = "select department from pi where name=?";
 
         if (orderids != null) {
@@ -701,12 +705,12 @@ public class CloneOrderManager extends TableManager {
     }
 
     public static List queryCloneOrdersForValidation(List orderids, boolean isvalidation) {
-        String sql = "select c.cloneid, c.clonename from clone c, orderclones o" +
-                " where c.cloneid=o.cloneid" +
-                " and o.orderid=?";
-        String sql2 = "select method,sequence,result,researchername,when,userid" +
-                " from orderclonevalidation where orderid=? and cloneid=?" +
-                " order by when desc";
+        String sql = "select c.cloneid, c.clonename from clone c, orderclones o"
+                + " where c.cloneid=o.cloneid"
+                + " and o.orderid=?";
+        String sql2 = "select method,sequence,result,researchername,when,userid"
+                + " from orderclonevalidation where orderid=? and cloneid=?"
+                + " order by when desc";
 
         DatabaseTransaction t = null;
         ResultSet rs = null;
@@ -863,18 +867,18 @@ public class CloneOrderManager extends TableManager {
     }
 
     public boolean updateOrderWithShipping(CloneOrder order) {
-        String sql = "update cloneorder set orderstatus=?," +
-                " shippingmethod=?," +
-                " shippingdate=?," +
-                " whoshipped=?," +
-                " shippingaccount=?," +
-                " trackingnumber=?," +
-                " costforshipping=?," +
-                " totalprice=?," +
-                " shippedcontainers=?," +
-                " comments=?," +
-                " ponumber=?" +
-                " where orderid=?";
+        String sql = "update cloneorder set orderstatus=?,"
+                + " shippingmethod=?,"
+                + " shippingdate=?,"
+                + " whoshipped=?,"
+                + " shippingaccount=?,"
+                + " trackingnumber=?,"
+                + " costforshipping=?,"
+                + " totalprice=?,"
+                + " shippedcontainers=?,"
+                + " comments=?,"
+                + " ponumber=?"
+                + " where orderid=?";
         PreparedStatement stmt = null;
 
         try {
@@ -903,9 +907,9 @@ public class CloneOrderManager extends TableManager {
     }
 
     public boolean addOrderCloneValidation(List validations) {
-        String sql = "insert into orderclonevalidation" +
-                " (orderid,cloneid,method,sequence,result,userid,when,researchername)" +
-                " values(?,?,?,?,?,?,sysdate,?)";
+        String sql = "insert into orderclonevalidation"
+                + " (orderid,cloneid,method,sequence,result,userid,when,researchername)"
+                + " values(?,?,?,?,?,?,sysdate,?)";
         PreparedStatement stmt = null;
 
         try {
@@ -974,10 +978,10 @@ public class CloneOrderManager extends TableManager {
             return invoiceid;
         }
 
-        String sql = "insert into invoice" +
-                " (invoiceid, invoicenumber, price, adjustment, payment, paymentstatus, paymenttype," +
-                " account, orderid, updatedby, updatedon, reason,invoicedate)" +
-                " values(?,?,?,?,?,?,?,?,?,'System',sysdate,?,?)";
+        String sql = "insert into invoice"
+                + " (invoiceid, invoicenumber, price, adjustment, payment, paymentstatus, paymenttype,"
+                + " account, orderid, updatedby, updatedon, reason,invoicedate)"
+                + " values(?,?,?,?,?,?,?,?,?,'System',sysdate,?,?)";
         PreparedStatement stmt = null;
 
         try {
@@ -1007,13 +1011,13 @@ public class CloneOrderManager extends TableManager {
     }
 
     public List queryInvoices(List invoiceids) throws Exception {
-        String sql = "select invoicenumber, to_char(invoicedate,'YYYY-MM-dd hh:mm:ss')," +
-                " i.price, adjustment, i.payment, paymentstatus, nvl(paymenttype, ' '), account," +
-                " i.orderid, nvl(i.comments,' '), nvl(reason, ' '), u.piname, u.institution" +
-                " from invoice i, cloneorder c, userprofile u" +
-                " where i.orderid=c.orderid" +
-                " and c.userid = u.userid" +
-                " and i.invoiceid=?";
+        String sql = "select invoicenumber, to_char(invoicedate,'YYYY-MM-dd hh:mm:ss'),"
+                + " i.price, adjustment, i.payment, paymentstatus, nvl(paymenttype, ' '), account,"
+                + " i.orderid, nvl(i.comments,' '), nvl(reason, ' '), u.piname, u.institution"
+                + " from invoice i, cloneorder c, userprofile u"
+                + " where i.orderid=c.orderid"
+                + " and c.userid = u.userid"
+                + " and i.invoiceid=?";
 
         DatabaseTransaction t = null;
         Connection connection = null;
@@ -1062,13 +1066,13 @@ public class CloneOrderManager extends TableManager {
     }
 
     public Invoice queryInvoiceByOrder(int orderid) throws Exception {
-        String sql = "select invoicenumber, to_char(invoicedate,'YYYY-MM-dd hh:mm:ss')," +
-                " i.price, adjustment, nvl(i.payment,0), paymentstatus, paymenttype, account," +
-                " i.invoiceid, nvl(i.comments,' '), nvl(reason,' '), u.piname, u.institution" +
-                " from invoice i, cloneorder c, userprofile u" +
-                " where i.orderid=c.orderid" +
-                " and c.userid = u.userid" +
-                " and i.orderid=" + orderid;
+        String sql = "select invoicenumber, to_char(invoicedate,'YYYY-MM-dd hh:mm:ss'),"
+                + " i.price, adjustment, nvl(i.payment,0), paymentstatus, paymenttype, account,"
+                + " i.invoiceid, nvl(i.comments,' '), nvl(reason,' '), u.piname, u.institution"
+                + " from invoice i, cloneorder c, userprofile u"
+                + " where i.orderid=c.orderid"
+                + " and c.userid = u.userid"
+                + " and i.orderid=" + orderid;
 
         DatabaseTransaction t = null;
         ResultSet rs = null;
@@ -1109,13 +1113,13 @@ public class CloneOrderManager extends TableManager {
     public List queryInvoices(List invoicenums, String invoiceDateFrom, String invoiceDateTo,
             String invoiceMonth, String invoiceYear, List lastnames, List ponumbers,
             String paymentstatus, String isinternal, String institution1, String institution2, String sort) {
-        String sql = "select invoiceid, to_char(invoicedate,'YYYY-MM-dd hh:mm:ss'), i.price," +
-                " adjustment, i.payment, paymentstatus, nvl(paymenttype,' '), account, i.orderid," +
-                " nvl(i.comments,' '), nvl(reason,' '), u.piname, u.institution, invoicenumber" +
-                " from invoice i, cloneorder c, userprofile u, pi p" +
-                " where i.orderid=c.orderid" +
-                " and c.userid=u.userid" +
-                " and u.piname=p.name(+) and u.piemail=p.email(+)";
+        String sql = "select invoiceid, to_char(invoicedate,'YYYY-MM-dd hh:mm:ss'), i.price,"
+                + " adjustment, i.payment, paymentstatus, nvl(paymenttype,' '), account, i.orderid,"
+                + " nvl(i.comments,' '), nvl(reason,' '), u.piname, u.institution, invoicenumber"
+                + " from invoice i, cloneorder c, userprofile u, pi p"
+                + " where i.orderid=c.orderid"
+                + " and c.userid=u.userid"
+                + " and u.piname=p.name(+) and u.piemail=p.email(+)";
 
         if (invoicenums != null) {
             sql += " and lower(i.invoicenumber) in (" + StringConvertor.convertFromListToSqlString(invoicenums).toLowerCase() + ")";
@@ -1206,10 +1210,10 @@ public class CloneOrderManager extends TableManager {
 
     public boolean updateInvoice(int invoiceid, String paymentstatus, String accountnum, double payment,
             double adjustment, String comments, String reason) {
-        String sql = "update invoice set paymentstatus=?," +
-                " account=?, payment=?, adjustment=?, comments=?, reason=? where invoiceid=?";
-        String sql2 = "update cloneorder set ponumber=?" +
-                " where orderid in (select orderid from invoice where invoiceid=?)";
+        String sql = "update invoice set paymentstatus=?,"
+                + " account=?, payment=?, adjustment=?, comments=?, reason=? where invoiceid=?";
+        String sql2 = "update cloneorder set ponumber=?"
+                + " where orderid in (select orderid from invoice where invoiceid=?)";
         PreparedStatement stmt = null;
         PreparedStatement stmt2 = null;
         try {
@@ -1239,8 +1243,8 @@ public class CloneOrderManager extends TableManager {
 
     public boolean updateInvoice(int invoiceid, String accountnum, double adjustment, String reason) {
         String sql = "update invoice set account=?, adjustment=?, reason=? where invoiceid=?";
-        String sql2 = "update cloneorder set ponumber=?" +
-                " where orderid in (select orderid from invoice where invoiceid=?)";
+        String sql2 = "update cloneorder set ponumber=?"
+                + " where orderid in (select orderid from invoice where invoiceid=?)";
         PreparedStatement stmt = null;
         PreparedStatement stmt2 = null;
         try {
@@ -1280,7 +1284,7 @@ public class CloneOrderManager extends TableManager {
             DatabaseTransaction.executeUpdate(stmt);
         } catch (Exception ex) {
             ex.printStackTrace();
-            throw new Exception("Cannot update billing information for order: "+orderid);
+            throw new Exception("Cannot update billing information for order: " + orderid);
         } finally {
             DatabaseTransaction.closeStatement(stmt);
         }
