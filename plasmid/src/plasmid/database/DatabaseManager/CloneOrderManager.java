@@ -402,7 +402,7 @@ public class CloneOrderManager extends TableManager {
      * @param status String for status. If status is null, orders at all status will be returned.
      * @return A list of CloneOrder objects. Return null if error occured.
      */
-    public List queryCloneOrders(User user, String status) {
+    public List queryCloneOrders(User user, String status, String sortby, String sorttype) {
         String sql = "select c.orderid,to_char(c.orderdate, 'YYYY-MM-DD hh:mm:ss'),c.orderstatus,c.ponumber,c.shippingto,c.billingto," +
                 " c.shippingaddress,c.billingaddress,c.numofclones,c.numofcollection,c.costforclones," +
                 " c.costforcollection,c.costforshipping,c.totalprice,c.userid,u.firstname,u.lastname," +
@@ -423,8 +423,12 @@ public class CloneOrderManager extends TableManager {
                 sql = sql + " and c.orderstatus=?";
             }
         }
-
-        sql = sql + " order by c.orderid desc";
+        
+        if(sortby != null) {
+            sql = sql + "order by "+sortby + " "+sorttype;
+        } else {
+            sql = sql + " order by c.orderid desc";
+        }
 
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -1298,7 +1302,7 @@ public class CloneOrderManager extends TableManager {
 
         User user = new User(3, null, null, null, null, null, null, null, null, null, null, null, null);
         CloneOrderManager manager = new CloneOrderManager(conn);
-        List orders = manager.queryCloneOrders(user, null);
+        List orders = manager.queryCloneOrders(user, null, null, "Desc");
         if (orders == null) {
             System.out.println("error.");
             DatabaseTransaction.closeConnection(conn);

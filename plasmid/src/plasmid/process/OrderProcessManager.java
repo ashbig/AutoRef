@@ -737,7 +737,7 @@ public class OrderProcessManager {
         }
     }
             
-    public List getAllOrders(User user, String status) {
+    public List getAllOrders(User user, String status, String sortby, String sorttype) {
         if (user == null) {
             if (Constants.DEBUG) {
                 System.out.println("user is null.");
@@ -756,9 +756,9 @@ public class OrderProcessManager {
             CloneOrderManager manager = new CloneOrderManager(conn);
 
             if (user.INTERNAL.equals(user.getIsinternal())) {
-                orders = manager.queryCloneOrders(null, status);
+                orders = manager.queryCloneOrders(null, status, sortby, sorttype);
             } else {
-                orders = manager.queryCloneOrders(user, status);
+                orders = manager.queryCloneOrders(user, status, sortby, sorttype);
             }
         } catch (Exception ex) {
             if (Constants.DEBUG) {
@@ -1151,7 +1151,7 @@ public class OrderProcessManager {
             t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
             CloneOrderManager manager = new CloneOrderManager(conn);
-            List orders = manager.queryCloneOrders(user, null);
+            List orders = manager.queryCloneOrders(user, null, null, null);
             if (orders == null) {
                 throw new Exception("Error occured while querying database for orders.");
             }

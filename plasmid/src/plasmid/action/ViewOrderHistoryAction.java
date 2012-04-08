@@ -52,6 +52,8 @@ public class ViewOrderHistoryAction extends UserAction {
         User user = (User) request.getSession().getAttribute(Constants.USER_KEY);
         String status = ((ViewOrderHistoryForm) form).getStatus();
         int start = ((ViewOrderHistoryForm) form).getStart();
+        String sortby = ((ViewOrderHistoryForm) form).getSortby();
+        String sorttype = ((ViewOrderHistoryForm) form).getSorttype();
 
         if (start == 0) {
             if (user.getIsinternal().equals(User.INTERNAL)) {
@@ -65,7 +67,7 @@ public class ViewOrderHistoryAction extends UserAction {
         }
 
         OrderProcessManager manager = new OrderProcessManager();
-        List orders = manager.getAllOrders(user, status);
+        List orders = manager.getAllOrders(user, status, sortby, sorttype);
 
         response.setHeader("pragma", "No-Cache");
         response.setHeader("Expires", "-1");

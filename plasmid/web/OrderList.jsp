@@ -30,8 +30,7 @@
 <html:form action="ViewOrderHistory.do?start=1">
 <table width="100%" border="0">
   <tr>
-    <td width="14%" class="formlabel">Choose order status:</td>
-    <td width="13%">
+    <td width="40%" class="formlabel">Choose order status:
         <html:select styleClass="itemtext" property="status">
             <html:option value="<%=CloneOrder.ALL%>"/>
             <html:option value="<%=CloneOrder.PENDING%>"/>
@@ -46,7 +45,20 @@
             <html:option value="<%=CloneOrder.INVALIDE_PAYMENT%>"/>
         </html:select>
     </td>
-    <td width="73%">
+    <td width="40" class="formlabel">Sort by:
+        <html:select styleClass="itemtext" property="sortby">
+            <html:option value="<%=CloneOrder.COL_ORDERID%>">Order ID</html:option>
+            <html:option value="<%=CloneOrder.COL_ORDERDATE%>">Order Date</html:option>
+            <html:option value="<%=CloneOrder.COL_PLATINUM%>">Platinum Service</html:option>
+            <html:option value="<%=CloneOrder.COL_NUMOFCLONES%>">Number of Clones</html:option>
+            <html:option value="<%=CloneOrder.COL_USERNAME%>">User</html:option>
+            <html:option value="<%=CloneOrder.COL_UPDATEDON%>">Last Updated On</html:option>
+            <html:option value="<%=CloneOrder.COL_UPDATEDBY%>">Last Updated By</html:option>
+        </html:select>
+            <html:radio styleClass="itemtext" property="sorttype" value="<%=Constants.SORT_ASC%>">Asc</html:radio>
+            <html:radio styleClass="itemtext" property="sorttype" value="<%=Constants.SORT_DESC%>">Desc</html:radio>
+    </td>
+    <td width="20">
         <html:submit value="Display" styleClass="itemtext"/>
     </td>
   </tr>
@@ -67,7 +79,7 @@
     <td class="tableheader">User</td>
     <td class="tableheader">User Email</td>
     <td class="tableheader">Last Updated On</td>
-    <td class="tableheader">Last Updatec By</td>
+    <td class="tableheader">Last Updated By</td>
   </tr>
 
   <% int i=0; %>

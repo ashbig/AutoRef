@@ -14,6 +14,14 @@ import plasmid.util.StringConvertor;
  * @author  DZuo
  */
 public class CloneOrder {
+    public static final String COL_ORDERID = "c.ORDERID";
+    public static final String COL_ORDERDATE = "ORDERDATE";
+    public static final String COL_PLATINUM = "ISPLATINUM";
+    public static final String COL_NUMOFCLONES = "NUMOFCLONES";
+    public static final String COL_USERNAME = "u.lastname, u.firstname";
+    public static final String COL_UPDATEDBY = "UPDATEDBY";
+    public static final String COL_UPDATEDON = "UPDATEDON";
+
     public static final String ALL = "All";
     public static final String PENDING = "Pending";
     public static final String PENDING_MTA = "Pending MTA";
