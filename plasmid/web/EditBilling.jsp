@@ -33,7 +33,7 @@
                                 <td colspan="2" class="featuretext">Edit Billing Address:</td>
                             </tr>
                             <tr> 
-                                <td class="formlabel">*Name(Grant manager or account manager):</td>
+                                <td class="formlabel">*Name(Accounts Payable or Grant manager):</td>
                                 <td><html:text size="50" styleClass="text" property="billingto"/></td>
                             </tr>
                             <tr> 
@@ -76,7 +76,7 @@
                                 <td><html:text size="50" styleClass="text" property="billingfax"/></td>
                             </tr>
                             <tr> 
-                                <td class="formlabel">*Email (Grant manager or account manager):</td>
+                                <td class="formlabel">*Email (Accounts Payable or Grant manager):</td>
                                 <td><html:text size="50" styleClass="text" property="billingemail"/></td>
                             </tr>
                         </table>

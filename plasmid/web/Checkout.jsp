@@ -57,7 +57,7 @@ is not allowed to be shipped outside of USA.
   <tr> 
     <td width="17%" class="formlabel">*Name:</td>
     <td><html:text styleClass="text" property="shippingto"/></td>
-    <td class="formlabel">*Name(Grant manager or account manager):</td>
+    <td class="formlabel">*Name(Accounts Payable or Grant manager):</td>
     <td><html:text styleClass="text" property="billingto"/></td>
   </tr>
   <tr> 
@@ -123,7 +123,7 @@ is not allowed to be shipped outside of USA.
   <tr> 
     <td>&nbsp;</td>
     <td>&nbsp;</td>
-    <td class="formlabel">*Email (Grant manager or account manager):</td>
+    <td class="formlabel">*Email (Accounts Payable or Grant manager):</td>
     <td><html:text styleClass="text" property="billingemail"/></td>
   </tr>
 </table>
