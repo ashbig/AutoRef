@@ -515,7 +515,7 @@ public class CloneManager extends TableManager {
         String sql = "select clonename, clonetype, verified, vermethod," +
                 " domain, subdomain, restriction, comments, vectorid, vectorname," +
                 " clonemapfilename,status,specialtreatment,source,description,c.cloneid,o.orderid" +
-                " from clone c, orderclones o where c.cloneid=o.cloneid and o.orderid in (" + orderidString + ")"+
+                " from clone c, orderclones o where c.cloneid=o.cloneid and o.orderid in (" + orderidString + ")" +
                 " order by o.orderid";
         DatabaseTransaction t = null;
         ResultSet rs = null;
@@ -630,6 +630,39 @@ public class CloneManager extends TableManager {
 
         try {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
+            ResultSet rs = t.executeQuery(sql);
+            String insertid = null;
+            while (rs.next()) {
+                if (insertid == null) {
+                    insertid = rs.getString(1);
+                } else {
+                    insertid = insertid + "," + rs.getString(1);
+                }
+            }
+            DatabaseTransaction.closeResultSet(rs);
+
+            if (insertid == null) {
+                return seq;
+            }
+            sql = "select seqtext from seqtext t, dnasequence d where t.sequenceid=d.sequenceid and d.insertid in (" + insertid + ") order by seqorder";
+            rs = t.executeQuery(sql);
+            while (rs.next()) {
+                String seqtext = rs.getString(1);
+                seq += seqtext;
+            }
+            DatabaseTransaction.closeResultSet(rs);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            handleError(ex, "Error occured while query clone sequence by cloneid: " + cloneid);
+        }
+        return seq;
+    }
+
+    public String queryCloneSequenceByCloneid(DatabaseTransaction t, int cloneid) {
+        String sql = "select insertid from cloneinsert where cloneid=" + cloneid;
+        String seq = "";
+
+        try {
             ResultSet rs = t.executeQuery(sql);
             String insertid = null;
             while (rs.next()) {
@@ -1535,8 +1568,8 @@ public class CloneManager extends TableManager {
 
         String sql = "select s.sampletype, s.position, s.containerlabel, s.result, s.sampleid," +
                 " s.cloneid, s.containerid, s.positionx, s.positiony, c.containertype" +
-                " from sample s, containerheader c where s.containerid=c.containerid"+
-                " and s.sampletype<>'"+Sample.CONTAMINATED+"' and s.cloneid in (select cloneid from clone where clonename=?)";
+                " from sample s, containerheader c where s.containerid=c.containerid" +
+                " and s.sampletype<>'" + Sample.CONTAMINATED + "' and s.cloneid in (select cloneid from clone where clonename=?)";
 
         DatabaseTransaction t = null;
         Connection conn = null;
@@ -2084,10 +2117,11 @@ public class CloneManager extends TableManager {
             for (int i = 0; i < clonenames.size(); i++) {
                 String clonename = (String) clonenames.get(i);
                 errorClone = clonename;
-                if(comments==null || comments.trim().length()==0)
+                if (comments == null || comments.trim().length() == 0) {
                     stmt.setString(1, "");
-                else
-                    stmt.setString(1, " "+comments);
+                } else {
+                    stmt.setString(1, " " + comments);
+                }
                 stmt.setString(2, clonename);
                 DatabaseTransaction.executeUpdate(stmt);
             }
@@ -2123,8 +2157,8 @@ public class CloneManager extends TableManager {
     }
 
     public static void main(String args[]) {
-        String file = "C:\\dev\\andreas\\batch3\\plasmidid_noseq.txt";
-        String output = "C:\\dev\\andreas\\batch3\\plasmidrefseq_3.txt";
+        String file = "C:\\dev\\plasmidsupport\\proteome\\Plasmid_human_cloneid_3.txt";
+        String output = "C:\\dev\\plasmidsupport\\proteome\\cloneseq_3.txt";
         DatabaseTransaction dt = null;
         Connection conn = null;
 
@@ -2133,17 +2167,30 @@ public class CloneManager extends TableManager {
             conn = dt.requestConnection();
             CloneManager manager = new CloneManager(conn);
             BufferedReader in = new BufferedReader(new FileReader(file));
-            OutputStreamWriter f = new FileWriter(output);
             String line = null;
+            List clones = new ArrayList();
+            int count = 0;
             while ((line = in.readLine()) != null) {
-                int cloneid = Integer.parseInt(line);
+                int cloneid = Integer.parseInt(line.trim());
                 System.out.println("clone:" + cloneid);
                 //String seq = manager.queryReferenceSequenceByCloneid(cloneid);
-                String seq = manager.queryCloneSequenceByCloneid(cloneid);
-                f.write(cloneid + "\t" + seq + "\n");
+                String seq = manager.queryCloneSequenceByCloneid(dt, cloneid);
+                Dnasequence s = new Dnasequence();
+                s.setInsertid(cloneid);
+                s.setSequence(seq);
+                clones.add(s);
+                count++;
+                if (count == 100) {
+                    writeOutput(output, clones);
+                    clones = new ArrayList();
+                    count = 0;
+                }
             }
             in.close();
-            f.close();
+            
+            if(clones.size()>0) {
+                writeOutput(output, clones);
+            }
 
         /**
         Clone c = manager.queryCloneByCloneid(5096);
@@ -2160,5 +2207,14 @@ public class CloneManager extends TableManager {
             DatabaseTransaction.closeConnection(conn);
             System.exit(0);
         }
+    }
+
+    public static void writeOutput(String output, List clones) throws Exception {
+        OutputStreamWriter f = new FileWriter(output, true);
+        for (int i = 0; i < clones.size(); i++) {
+            Dnasequence s = (Dnasequence) clones.get(i);
+            f.write(s.getInsertid() + "\t" + s.getSequence() + "\n");
+        }
+        f.close();
     }
 }
