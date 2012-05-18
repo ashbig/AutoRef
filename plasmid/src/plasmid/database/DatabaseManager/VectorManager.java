@@ -1326,11 +1326,11 @@ public class VectorManager extends TableManager {
                     if (status == null) {
                         status = "";
                     }
-                    if (status.equals(Constants.PENDING)) {
+                    //if (status.equals(Constants.PENDING)) {
                         if (userid != uid) {
                             status = new String(Constants.PENDING_X);
                         }
-                    }
+                    //}
                     CloneVector v = new CloneVector(vectorid, vname, description, form, type, size, mapfilename, seqfilename, comments, status, userid);
                     vectors.add(v);
                 }

@@ -89,9 +89,9 @@
                                     <logic:iterate id="result" name="vSearchForm" property="results">
                                         <tr bgcolor="white">
                                             <td>
-                                                <!--logic:equal name="result" property="status" value="<%=Constants.PENDING%>"-->
+                                                <logic:notEqual name="result" property="status" value="<%=Constants.PENDING_X%>">
                                                     <input type="radio" id="VID" name="VID" value="<bean:write name="result" property="vectorid"/>">
-                                                <!--/logic:equal-->
+                                                </logic:notEqual>&nbsp;
                                             </td>
                                             <td align="left">
                                                 <html:link href="GetVectorDetail.do" paramId="vectorid" paramName="result" paramProperty="vectorid" target="VectorDetail">
