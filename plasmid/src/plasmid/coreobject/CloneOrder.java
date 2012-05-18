@@ -360,7 +360,8 @@ public class CloneOrder {
     
     public String getDisplayPlatinumBasedOnStatus() {
         if(this.PLATINUM_STATUS_INPROCESS.equals(getPlatinumServiceStatus())
-                ||this.PLATINUM_STATUS_COMPLETE.equals(getPlatinumServiceStatus()))
+                ||this.PLATINUM_STATUS_COMPLETE.equals(getPlatinumServiceStatus())
+                ||this.PLATINUM_STATUS_REQUESTED.equals(getPlatinumServiceStatus()))
             return this.PLATINUM_DISPLAY_RESULTS;
         return "";
     }
