@@ -75,7 +75,8 @@ public class ContinueVSubmitAction extends Action {
             VectorManager vm = new VectorManager(conn);
             if (vid != null ) {
                 CloneVector v = vm.getVectorByID(vid);
-                if ((v != null) && (v.getUserid() == user.getUserid()) && (v.getStatus().equals(Constants.PENDING))) {
+                //if ((v != null) && (v.getUserid() == user.getUserid()) && (v.getStatus().equals(Constants.PENDING))) {
+                if ((v != null) && (v.getUserid() == user.getUserid()) && (!v.getStatus().equals(Constants.PENDING_X))) {
                     session.setAttribute("Vector", v);
                 }
             }
