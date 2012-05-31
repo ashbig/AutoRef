@@ -39,8 +39,8 @@ public class CloneManager extends TableManager {
         }
 
         String sql = "insert into clone" +
-                " (cloneid, clonename, clonetype, verified, vermethod, domain, subdomain, restriction, comments, vectorid, vectorname, clonemapfilename, status, specialtreatment, source, description)" +
-                " values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                " (cloneid, clonename, clonetype, verified, vermethod, domain, subdomain, restriction, comments, vectorid, vectorname, clonemapfilename, status, specialtreatment, source, description,importdate)" +
+                " values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,sysdate)";
         try {
             PreparedStatement stmt = conn.prepareStatement(sql);
 
@@ -1454,7 +1454,7 @@ public class CloneManager extends TableManager {
                 if (rs.next()) {
                     String clonename = rs.getString(1);
                     String species = rs.getString(2);
-                    if (species.equals(DnaInsert.BA)) {
+                    if (species.equals(DnaInsert.BA) && !"BaCD00071996".equals(clonename)) {
                         restrictedClones.add(clonename);
                     }
                 } else {
@@ -2157,14 +2157,17 @@ public class CloneManager extends TableManager {
     }
 
     public static void main(String args[]) {
-        String file = "C:\\dev\\plasmidsupport\\proteome\\Plasmid_human_cloneid_3.txt";
-        String output = "C:\\dev\\plasmidsupport\\proteome\\cloneseq_3.txt";
+        String file = "C:\\dev\\plasmid_support\\blastdb\\cloneid_2.txt";
+        String output = "C:\\dev\\plasmid_support\\blastdb\\cloneseq_2.txt";
         DatabaseTransaction dt = null;
         Connection conn = null;
 
         try {
             dt = DatabaseTransaction.getInstance();
             conn = dt.requestConnection();
+            if(conn==null) {
+                throw new DatabaseException("Cannot get database connection.");
+            }
             CloneManager manager = new CloneManager(conn);
             BufferedReader in = new BufferedReader(new FileReader(file));
             String line = null;
@@ -2203,6 +2206,7 @@ public class CloneManager extends TableManager {
          */
         } catch (Exception ex) {
             System.out.println(ex);
+            System.exit(0);
         } finally {
             DatabaseTransaction.closeConnection(conn);
             System.exit(0);
