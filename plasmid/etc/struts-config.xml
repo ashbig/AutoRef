@@ -160,6 +160,8 @@
                     type="plasmid.form.AddInstitutionsForm"/>
         <form-bean      name="editBillingForm"
                     type="plasmid.form.EditBillingForm"/>
+        <form-bean      name="uploadContainerForm"
+                    type="plasmid.form.UploadContainerForm"/>
     </form-beans>
 
   <!-- ========== Global Forward Definitions ============================== -->
@@ -558,6 +560,10 @@
               input="/PrepareSearchInvoice.do">
             <forward  name="success"   path="/SearchInvoice.jsp"/>
         </action>
+        <action    path="/PrepareContainerUpload"
+               type="plasmid.action.PrepareContainerUploadAction">
+            <forward  name="success"   path="/UploadContainer.jsp"/>
+        </action>
         <action    path="/PrintLabels"
                type="plasmid.action.PrintLabelsAction"
                name="printLabelsForm">
@@ -766,6 +772,12 @@
               validate="false"
               input="/UpdateCloneStorageConfirm.jsp">
             <forward  name="success"   path="/UpdateCloneStorageSuccess.jsp"/>
+        </action>
+        <action    path="/UploadContainer"
+               type="plasmid.action.UploadContainerAction"
+               name="uploadContainerForm"
+              input="/UploadContainer.jsp">
+            <forward  name="success"   path="/UploadContainer.jsp"/>
         </action>
         <action    path="/UploadResultFile"
                type="plasmid.action.UploadResultFileAction"

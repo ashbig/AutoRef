@@ -28,6 +28,9 @@
           <td height="15" class="lftsubtxt"><a href="UpdateCloneStorageInput.jsp" class="leftsubnavtext">Update Clone Storage</a></td>
         </tr>
         <tr> 
+          <td height="15" class="lftsubtxt"><a href="PrepareContainerUpload.do" class="leftsubnavtext">Upload Containers</a></td>
+        </tr>
+        <tr> 
           <td height="15" class="lftsubtxt"><a href="Plate96To384Input.jsp" class="leftsubnavtext">Generate Condensed Archive Plates</a></td>
         </tr>
         <tr> 
