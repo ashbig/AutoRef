@@ -37,6 +37,7 @@ public class GenbankInfo {
     private int linker5pStop;
     private int linker3pStart;
     private int linker3pStop;
+    private String vector;
 
     /** Creates a new instance of GenbankInfo */
     public GenbankInfo() {
@@ -191,5 +192,96 @@ public class GenbankInfo {
 
     public void setLinker3pStop(int linker3pStop) {
         this.linker3pStop = linker3pStop;
+    }
+
+    /**
+     * @param term the term to set
+     */
+    public void setTerm(String term) {
+        this.term = term;
+    }
+
+    /**
+     * @param definition the definition to set
+     */
+    public void setDefinition(String definition) {
+        this.definition = definition;
+    }
+
+    /**
+     * @param accession the accession to set
+     */
+    public void setAccession(String accession) {
+        this.accession = accession;
+    }
+
+    /**
+     * @param accessionVersion the accessionVersion to set
+     */
+    public void setAccessionVersion(String accessionVersion) {
+        this.accessionVersion = accessionVersion;
+    }
+
+    /**
+     * @param gi the gi to set
+     */
+    public void setGi(String gi) {
+        this.gi = gi;
+    }
+
+    /**
+     * @param organism the organism to set
+     */
+    public void setOrganism(String organism) {
+        this.organism = organism;
+    }
+
+    /**
+     * @param geneid the geneid to set
+     */
+    public void setGeneid(String geneid) {
+        this.geneid = geneid;
+    }
+
+    /**
+     * @param genesymbol the genesymbol to set
+     */
+    public void setGenesymbol(String genesymbol) {
+        this.genesymbol = genesymbol;
+    }
+
+    /**
+     * @param cdsstart the cdsstart to set
+     */
+    public void setCdsstart(int cdsstart) {
+        this.cdsstart = cdsstart;
+    }
+
+    /**
+     * @param cdsstop the cdsstop to set
+     */
+    public void setCdsstop(int cdsstop) {
+        this.cdsstop = cdsstop;
+    }
+
+    /**
+     * @param sequencetext the sequencetext to set
+     */
+    public void setSequencetext(String sequencetext) {
+        this.sequencetext = sequencetext;
+    }
+
+    /**
+     * @return the vector
+     */
+    public String getVector() {
+        return vector;
+    }
+
+    /**
+     * @param vector the vector to set
+     */
+    public void setVector(String vector) {
+        this.vector = vector;
     }
 }
