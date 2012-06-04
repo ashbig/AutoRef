@@ -7,8 +7,6 @@
 package plasmid.importexport;
 
 import plasmid.coreobject.*;
-import plasmid.coreobject.VectorSynonym;
-import plasmid.database.*;
 import plasmid.database.DatabaseManager.*;
 import java.util.*;
 import java.sql.*;

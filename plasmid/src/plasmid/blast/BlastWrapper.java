@@ -35,6 +35,8 @@ public class BlastWrapper {
     public static final String BOOLEAN_FALSE = "F";
     public static final int DEFAULT_MAXSEQ = 10;
     public static final String DEFAULT_SPECIES_FOR_REPEATS = "repeat_9606";
+    public static final int BLASTX_TABULAR_FORMAT = 6;
+    public static final int WORDSIZE = 11;
     
     private String program;
     private String database;
@@ -54,6 +56,8 @@ public class BlastWrapper {
     private String bl2seqOutput;
     private String dbpath;
     private String filepath;
+    private String lowcomp;
+    private int wordsize;
     
     public BlastWrapper() {
         setProgram(PROGRAM_BLASTN);
@@ -69,6 +73,8 @@ public class BlastWrapper {
         setIsMegablast(BOOLEAN_FALSE);
         setDbpath(BLAST_DB_PATH);
         setFilepath(BLAST_FILE_PATH);
+        lowcomp = "yes";
+        wordsize = WORDSIZE;
     }
     
     public BlastWrapper(String program, String database, String input, String output) {
@@ -84,6 +90,8 @@ public class BlastWrapper {
         setIsMegablast(BOOLEAN_FALSE);
         setDbpath(BLAST_DB_PATH);
         setFilepath(BLAST_FILE_PATH);
+        lowcomp = "yes";
+        wordsize = WORDSIZE;
     }
     
     public String getBlastCmd() {
@@ -97,22 +105,35 @@ public class BlastWrapper {
     
     //-D 0-alignment view; 1-tabular format
     public String getBl2seqCmd() {
-        String cmd = BLAST_PROGRAM_PATH+"bl2seq -p "+getProgram()+" -i "+getInput()+
-                " -j "+getInput2()+" -o "+getBl2seqOutput()+
-                " -e "+getExpect()+" -F "+getIsLowcomp()+
-                " -U "+getIsMaskLowercase()+" -m "+getIsMegablast()+
-                " -D "+getAlignmentview();
-    
-        return cmd;
+        return getBl2seqCmd(BLAST_PROGRAM_PATH);
     }
     
     public String getBl2seqCmd(String programPath) {
-        String cmd = programPath+"bl2seq -p "+getProgram()+" -i "+getInput()+
-                " -j "+getInput2()+" -o "+getBl2seqOutput()+
-                " -e "+getExpect()+" -F "+getIsLowcomp()+
-                " -U "+getIsMaskLowercase()+" -m "+getIsMegablast()+
-                " -D "+getAlignmentview();
+        String cmd = programPath+"blastn -query "+getInput()+
+                " -subject "+getInput2()+" -out "+getBl2seqOutput()+ 
+                " -dust "+getLowcomp()+
+                //" -word_size "+getWordsize()+
+                //" -evalue "+getExpect()+
+                " -outfmt "+BLASTX_TABULAR_FORMAT;
+        
+        return cmd;
+    }
     
+    public String getBlastxCmd(String programPath) {
+        String cmd = programPath+"blastx -query "+getInput()+
+                " -subject "+getInput2()+" -out "+getBl2seqOutput()+ 
+                " -seg "+getLowcomp()+
+                " -outfmt "+BLASTX_TABULAR_FORMAT;
+        
+        return cmd;
+    }
+    
+    public String getBlastnCmd(String programPath) {
+        String cmd = programPath+"blastn -query "+getInput()+
+                " -db "+getDatabase()+" -out "+getOutput()+
+                " -dust "+getLowcomp()+
+                " -outfmt "+BLASTX_TABULAR_FORMAT+" -max_target_seqs 1";
+        
         return cmd;
     }
     
@@ -263,5 +284,33 @@ public class BlastWrapper {
 
     public void setFilepath(String filepath) {
         this.filepath = filepath;
+    }
+
+    /**
+     * @return the lowcomp
+     */
+    public String getLowcomp() {
+        return lowcomp;
+    }
+
+    /**
+     * @param lowcomp the lowcomp to set
+     */
+    public void setLowcomp(String lowcomp) {
+        this.lowcomp = lowcomp;
+    }
+
+    /**
+     * @return the wordsize
+     */
+    public int getWordsize() {
+        return wordsize;
+    }
+
+    /**
+     * @param wordsize the wordsize to set
+     */
+    public void setWordsize(int wordsize) {
+        this.wordsize = wordsize;
     }
 }

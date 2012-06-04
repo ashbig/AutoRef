@@ -77,6 +77,7 @@ public class GenbankInfoManager {
             } else {
                 f.write(info.getCdsstop() + "\t");
             }
+            f.write(info.getVector()+"\t");
             f.write(info.getAttL1Start() + "\t" + info.getAttL1Stop() + "\t" + info.getAttL2Start() + "\t" + info.getAttL2Stop() + "\t" + info.getLinker5pStart() + "\t" + info.getLinker5pStop() + "\t" + info.getLinker3pStart() + "\t" + info.getLinker3pStop() + "\t");
             if (info.getSequencetext().equals("")) {
                 f.write(NA + "\n");
@@ -88,7 +89,7 @@ public class GenbankInfoManager {
 
     public void printGenbankInfo(List infos, String filename) throws Exception {
         OutputStreamWriter f = new FileWriter(filename);
-        f.write("Sequence ID\tAccession\tAccession Version\tGI\tOrganism\tGene ID\tSymbol\tDescription\tCDS Start\tCDS Stop\tattL1Start\tattL1Stop\tattL2Start\tattL2Stop\tLinker5pStart\tLinker5pStop\tLinker3pStart\tLinker3pStop\tSequence\n");
+        f.write("Sequence ID\tAccession\tAccession Version\tGI\tOrganism\tGene ID\tSymbol\tDescription\tCDS Start\tCDS Stop\tVector\tattL1Start\tattL1Stop\tattL2Start\tattL2Stop\tLinker5pStart\tLinker5pStop\tLinker3pStart\tLinker3pStop\tSequence\n");
         printGenbankInfo(infos, f);
         f.close();
     }
@@ -183,6 +184,19 @@ public class GenbankInfoManager {
         f.close();
     }
 
+    public void printGenbankSeqs(List infos, String filename) throws Exception {
+        OutputStreamWriter f = new FileWriter(filename);
+        f.write("Accession\tSequence\n");
+
+        for (int i = 0; i < infos.size(); i++) {
+            GenbankInfo info = (GenbankInfo) infos.get(i);
+
+            f.write(info.getAccession() + "\t");
+            f.write(info.getSequencetext() + "\n");
+        }
+        f.close();
+    }
+
     public List readGenbank(String filename) throws Exception {
         List genbanks = new ArrayList();
         BufferedReader in = new BufferedReader(new FileReader(filename));
@@ -199,47 +213,48 @@ public class GenbankInfoManager {
     }
 
     public static void main(String args[]) throws Exception {
-        String genbankInput = "C:\\dev\\plasmidsupport\\mgc_import_201111\\sequence.gb";
-        String referenceFile = "C:\\dev\\plasmidsupport\\mgc_import_201111\\referencesequence.txt";
-        String referenceNameFile = "C:\\dev\\plasmidsupport\\mgc_import_201111\\referencename.txt";
-        String publication = "C:\\dev\\plasmidsupport\\mgc_import_201111\\publication.txt";
+        String genbankInput = "C:\\dev\\plasmid_support\\OC_missing\\clone_sequence.gb";
+        String referenceFile = "C:\\dev\\plasmid_support\\OC_missing\\clone_sequence_output.txt";
+        String referenceNameFile = "C:\\dev\\plasmid_support\\OC_missing\\clone_name.txt";
+        String publication = "C:\\dev\\plasmid_support\\OC_missing\\clone_publication.txt";
+        String sequenceFile = "C:\\dev\\plasmid_support\\PlasmidAnalysis_201203\\Riken\\Clonesequence_more.txt";
 
         GenbankInfoManager manager = new GenbankInfoManager();
         GenbankParser parser = new GenbankParser();
-/**
+        /**
         List genbanks = manager.readGenbank(genbankInput);
         if (genbanks == null) {
-            System.out.println("Error occured while reading input file.");
-            System.exit(0);
+        System.out.println("Error occured while reading input file.");
+        System.exit(0);
         }
         try {
-            OutputStreamWriter f = new FileWriter(referenceFile);
-            f.write("Sequence ID\tAccession\tAccession Version\tGI\tOrganism\tGene ID\tSymbol\tDescription\tCDS Start\tCDS Stop\tattL1Start\tattL1Stop\tattL2Start\tattL2Stop\tLinker5pStart\tLinker5pStop\tLinker3pStart\tLinker3pStop\tSequence\n");
-
-            List ids = new ArrayList();
-            //int count = 0;
-            for (int i = 0; i < genbanks.size(); i++) {
-                String genbank = (String) genbanks.get(i);
-                ids.add(genbank);
-                //count++;
-
-                //if (count == 100) {
-                    List l = parser.getGenbankRecords(ids);
-                    manager.printGenbankInfo(l, f);
-                    ids = new ArrayList();
-                    //count = 0;
-                //}
-            }
-
-            f.close();
+        OutputStreamWriter f = new FileWriter(referenceFile);
+        f.write("Sequence ID\tAccession\tAccession Version\tGI\tOrganism\tGene ID\tSymbol\tDescription\tCDS Start\tCDS Stop\tattL1Start\tattL1Stop\tattL2Start\tattL2Stop\tLinker5pStart\tLinker5pStop\tLinker3pStart\tLinker3pStop\tSequence\n");
+        
+        List ids = new ArrayList();
+        //int count = 0;
+        for (int i = 0; i < genbanks.size(); i++) {
+        String genbank = (String) genbanks.get(i);
+        ids.add(genbank);
+        //count++;
+        
+        //if (count == 100) {
+        List l = parser.getGenbankRecords(ids);
+        manager.printGenbankInfo(l, f);
+        ids = new ArrayList();
+        //count = 0;
+        //}
+        }
+        
+        f.close();
         } catch (Exception ex) {
-            ex.printStackTrace();
-            System.exit(1);
+        ex.printStackTrace();
+        System.exit(1);
         }*/
-            
         List infos = new ArrayList();
         try {
             infos = parser.parseGenbanksOffline(genbankInput);
+            //infos = parser.parseGenbankSeqsOffline(genbankInput);
         } catch (Exception ex) {
             ex.printStackTrace();
             System.exit(1);
@@ -247,6 +262,7 @@ public class GenbankInfoManager {
         manager.printGenbankInfo(infos, referenceFile);
         manager.printGenbankNames(infos, referenceNameFile);
         manager.printPublications(infos, publication);
+        //manager.printGenbankSeqs(infos, sequenceFile);
 
         System.exit(0);
     }

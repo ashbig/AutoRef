@@ -561,6 +561,7 @@
             <forward  name="success"   path="/SearchInvoice.jsp"/>
         </action>
         <action    path="/PrepareContainerUpload"
+                scope="request"
                type="plasmid.action.PrepareContainerUploadAction">
             <forward  name="success"   path="/UploadContainer.jsp"/>
         </action>
@@ -776,6 +777,7 @@
         <action    path="/UploadContainer"
                type="plasmid.action.UploadContainerAction"
                name="uploadContainerForm"
+               scope="request"
               input="/UploadContainer.jsp">
             <forward  name="success"   path="/UploadContainer.jsp"/>
         </action>

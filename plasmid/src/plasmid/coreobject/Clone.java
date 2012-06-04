@@ -71,7 +71,8 @@ public class Clone implements Serializable {
     protected CloneVector vector;
     protected int orderid;
     protected String newTubeLabel;
-    private List samples;
+    protected List samples;
+    private String importdate;
     
     /** Creates a new instance of Clone */
     public Clone() {
@@ -633,5 +634,19 @@ public class Clone implements Serializable {
 
     public void setSamples(List samples) {
         this.samples = samples;
+    }
+
+    /**
+     * @return the importdate
+     */
+    public String getImportdate() {
+        return importdate;
+    }
+
+    /**
+     * @param importdate the importdate to set
+     */
+    public void setImportdate(String importdate) {
+        this.importdate = importdate;
     }
 }

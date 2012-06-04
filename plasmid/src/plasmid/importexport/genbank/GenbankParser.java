@@ -26,7 +26,7 @@ public class GenbankParser {
         //String urlString = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&rettype=gb&retmode=text&id=";
         //for protein
         String urlString = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=protein&rettype=gb&retmode=text&id=";
-        
+
         StringConvertor sc = new StringConvertor();
         urlString += sc.convertFromListToString(ids);
         URL url = new URL(urlString);
@@ -42,7 +42,7 @@ public class GenbankParser {
         in.close();
         return l;
     }
-    
+
     public List parseGenbanks(BufferedReader in) throws Exception {
         List genbanks = new ArrayList();
 
@@ -72,6 +72,7 @@ public class GenbankParser {
         int linker5pStop = -1;
         int linker3pStart = -1;
         int linker3pStop = -1;
+        String vector = "";
 
         while ((line = in.readLine()) != null) {
             //System.out.println(line);
@@ -143,28 +144,36 @@ public class GenbankParser {
                     }
                 }
             }
+            //      /note="Vector: pOTB7"
+            if (line.indexOf("/note=\"Vector:") != -1 && vector.equals("")) {
+                try {
+                    vector = line.substring(line.indexOf(":") + 1, line.lastIndexOf("\""));
+                } catch (Exception ex) {
+                    vector = line.substring(line.indexOf(":") + 1, line.lastIndexOf(";"));
+                }
+            }
 
             //misc_feature    1..35    
-           /**if (line.indexOf("misc_feature") >= 0) {
-                StringTokenizer st = new StringTokenizer(line.trim());
-                String ignore = st.nextToken();
-                String cds = st.nextToken();
-                st = new StringTokenizer(cds, "..");
-                int start = Integer.parseInt(st.nextToken());
-                int stop = Integer.parseInt(st.nextToken());
-                if (attL1Start == -1 && attL1Stop == -1) {
-                    attL1Start = start;
-                    attL1Stop = stop;
-                } else if (linker5pStart == -1 && linker5pStop == -1) {
-                    linker5pStart = start;
-                    linker5pStop = stop;
-                } else if (linker3pStart == -1 && linker3pStop == -1) {
-                    linker3pStart = start;
-                    linker3pStop = stop;
-                } else {
-                    attL2Start = start;
-                    attL2Stop = stop;
-                }
+            /**if (line.indexOf("misc_feature") >= 0) {
+            StringTokenizer st = new StringTokenizer(line.trim());
+            String ignore = st.nextToken();
+            String cds = st.nextToken();
+            st = new StringTokenizer(cds, "..");
+            int start = Integer.parseInt(st.nextToken());
+            int stop = Integer.parseInt(st.nextToken());
+            if (attL1Start == -1 && attL1Stop == -1) {
+            attL1Start = start;
+            attL1Stop = stop;
+            } else if (linker5pStart == -1 && linker5pStop == -1) {
+            linker5pStart = start;
+            linker5pStop = stop;
+            } else if (linker3pStart == -1 && linker3pStop == -1) {
+            linker3pStart = start;
+            linker3pStop = stop;
+            } else {
+            attL2Start = start;
+            attL2Stop = stop;
+            }
             }*/
             //     CDS             83..1903
             if (line.indexOf("     CDS") == 0) {
@@ -218,7 +227,7 @@ public class GenbankParser {
 
             //end of a record
             if (line.indexOf("//") == 0 && breakSeq) {
-                System.out.println("Genbank: " + gi);
+                System.out.println("Genbank: " + accession);
                 GenbankInfo info = new GenbankInfo(gi, definition, accession, accessionVersion, gi, organism, geneid, genesymbol, cdsstart, cdsstop, sequencetext);
                 info.setNames(names);
                 info.setPublications(publications);
@@ -230,6 +239,7 @@ public class GenbankParser {
                 info.setLinker3pStop(linker3pStop);
                 info.setLinker5pStart(linker5pStart);
                 info.setLinker5pStop(linker5pStop);
+                info.setVector(vector);
                 genbanks.add(info);
 
                 definition = "";
@@ -257,6 +267,7 @@ public class GenbankParser {
                 linker5pStop = -1;
                 linker3pStart = -1;
                 linker3pStop = -1;
+                vector = "";
             }
 
             if (isSeqStart) {
@@ -266,6 +277,65 @@ public class GenbankParser {
                 }
             }
         }
+
+        return genbanks;
+    }
+
+    public List parseGenbankSeqsOffline(String filename) throws Exception {
+        BufferedReader in = new BufferedReader(new FileReader(filename));
+        List l = parseGenbankSeqs(in);
+        in.close();
+        return l;
+    }
+
+    public List parseGenbankSeqs(BufferedReader in) throws Exception {
+        List genbanks = new ArrayList();
+
+        String line = null;
+        String accession = "";
+        String sequencetext = "";
+        boolean isStart = false;
+
+        while ((line = in.readLine()) != null) {
+            //System.out.println(line);
+            if (line.trim().length() <= 0) {
+                continue;
+            }
+
+            //>lcl|NM_001124.1_cdsid_NP_001115.1 [gene=ADM] [protein=ADM precursor] [protein_id=NP_001115.1] [location=157..714]
+            if (line.trim().indexOf(">") == 0) {
+                if (isStart) {
+                    GenbankInfo info = new GenbankInfo();
+                    info.setAccession(accession);
+                    info.setSequencetext(sequencetext);
+                    genbanks.add(info);
+
+                    accession = "";
+                    sequencetext = "";
+                }
+
+                if (!isStart) {
+                    isStart = true;
+                }
+
+                //accession = line.substring(line.indexOf("|") + 1, line.indexOf("_cdsid"));
+                //>gi|4501944|ref|NM_001124.1| Homo sapiens adrenomedullin (ADM), mRNA
+                StringTokenizer st = new StringTokenizer(line, "|");
+                String s = st.nextToken();
+                s = st.nextToken();
+                s = st.nextToken();
+                accession = st.nextToken();
+
+                continue;
+            }
+
+            sequencetext += line.trim();
+        }
+        
+        GenbankInfo info = new GenbankInfo();
+        info.setAccession(accession);
+        info.setSequencetext(sequencetext);
+        genbanks.add(info);
 
         return genbanks;
     }
