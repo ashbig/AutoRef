@@ -162,6 +162,9 @@
                     type="plasmid.form.EditBillingForm"/>
         <form-bean      name="uploadContainerForm"
                     type="plasmid.form.UploadContainerForm"/>
+        <form-bean      name="updateBillingForm"
+                    type="plasmid.form.UpdateBillingForm"/>
+                    
     </form-beans>
 
   <!-- ========== Global Forward Definitions ============================== -->
@@ -682,13 +685,6 @@
             <forward  name="success_enter_payment"  path="/SEQ_EnterInvoicePayment.jsp"/>
             <forward  name="success_empty"   path="/SEQ_InvoiceListEmpty.jsp"/>
         </action>
-        <action    path="/SEQ_ViewInvoiceDetail"
-               type="plasmid.action.SEQ_ViewInvoiceDetailAction"
-               name="viewInvoiceForm"
-               scope="request"
-              input="/SEQ_ViewInvoiceDetail.do">
-            <forward  name="success"   path="/SEQ_ViewInvoice.jsp"/>
-        </action>
         <action    path="/SEQ_UpdateInvoicePayment"
                type="plasmid.action.SEQ_UpdateInvoicePaymentAction"
                name="invoiceForm"
@@ -697,12 +693,34 @@
             <forward  name="success_list"   path="/SEQ_SearchInvoice.do"/>
             <forward  name="success_message"   path="/SEQ_UpdateInvoicePaymentMessage.jsp"/>
         </action>
+        <action    path="/SEQ_UpdateBilling"
+               type="plasmid.action.SEQ_UpdateBillingAction"
+               name="updateBillingForm"
+               scope="request"
+              input="/SEQ_ViewInvoiceDetail.do">
+            <forward  name="success"   path="/SEQ_UpdateBilling.jsp"/>
+        </action>
+        <action    path="/SEQ_UpdateBillingContinue"
+               type="plasmid.action.SEQ_UpdateBillingContinueAction"
+               name="updateBillingForm"
+               scope="request"
+              input="/SEQ_UpdateBilling.jsp">
+            <forward  name="success"   path="/SEQ_ViewInvoice.jsp"/>
+        </action>
+        
         <action    path="/SEQ_UploadOrders"
                type="plasmid.action.SEQ_UploadOrdersAction"
                name="seq_UploadOrdersForm"
                scope="request"
               input="/SEQ_UploadOrders.jsp">
             <forward  name="success"   path="/SEQ_UploadOrdersSuccessful.jsp"/>
+        </action>
+        <action    path="/SEQ_ViewInvoiceDetail"
+               type="plasmid.action.SEQ_ViewInvoiceDetailAction"
+               name="viewInvoiceForm"
+               scope="request"
+              input="/SEQ_ViewInvoiceDetail.do">
+            <forward  name="success"   path="/SEQ_ViewInvoice.jsp"/>
         </action>
         <action    path="/SEQ_ViewSelectedInvoices"
                type="plasmid.action.SEQ_ViewSelectedInvoicesAction"

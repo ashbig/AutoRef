@@ -34,10 +34,10 @@ public class SEQ_OrderManager extends TableManager {
     }
 
     public Invoice queryInvoice(int invoiceid) throws Exception {
-        String sql = "select invoicenumber, to_char(invoicedate,'YYYY-MM-dd')," +
-                " price, adjustment, payment, paymentstatus, nvl(paymenttype, ' '), account," +
-                " nvl(comments,' '), nvl(reason, ' '), piname, institution, isharvard" +
-                " from seqinvoice where invoiceid=" + invoiceid;
+        String sql = "select invoicenumber, to_char(invoicedate,'YYYY-MM-dd'),"
+                + " price, adjustment, payment, paymentstatus, nvl(paymenttype, ' '), account,"
+                + " nvl(comments,' '), nvl(reason, ' '), piname, institution, isharvard"
+                + " from seqinvoice where invoiceid=" + invoiceid;
 
         DatabaseTransaction t = null;
         ResultSet rs = null;
@@ -78,10 +78,10 @@ public class SEQ_OrderManager extends TableManager {
     public List queryInvoices(List invoicenums, String invoiceDateFrom, String invoiceDateTo,
             String invoiceMonth, String invoiceYear, List lastnames, List ponumbers,
             String paymentstatus, String isinternal, String institution1, String sort) {
-        String sql = "select invoiceid, to_char(invoicedate,'YYYY-MM-dd'), price," +
-                " adjustment, payment, paymentstatus, nvl(paymenttype,' '), account," +
-                " nvl(comments,' '), nvl(reason,' '), piname, institution, invoicenumber, isharvard" +
-                " from seqinvoice where invoiceid>0";
+        String sql = "select invoiceid, to_char(invoicedate,'YYYY-MM-dd'), price,"
+                + " adjustment, payment, paymentstatus, nvl(paymenttype,' '), account,"
+                + " nvl(comments,' '), nvl(reason,' '), piname, institution, invoicenumber, isharvard"
+                + " from seqinvoice where invoiceid>0";
 
         if (invoicenums != null) {
             sql += " and lower(invoicenumber) in (" + StringConvertor.convertFromListToSqlString(invoicenums).toLowerCase() + ")";
@@ -170,10 +170,10 @@ public class SEQ_OrderManager extends TableManager {
     }
 
     public List queryInvoices(List invoiceids) throws Exception {
-        String sql = "select invoicenumber, to_char(invoicedate,'YYYY-MM-dd')," +
-                " price, adjustment, payment, paymentstatus, nvl(paymenttype, ' '), account," +
-                " nvl(comments,' '), nvl(reason, ' '), piname, institution, isharvard" +
-                " from SEQinvoice where invoiceid=?";
+        String sql = "select invoicenumber, to_char(invoicedate,'YYYY-MM-dd'),"
+                + " price, adjustment, payment, paymentstatus, nvl(paymenttype, ' '), account,"
+                + " nvl(comments,' '), nvl(reason, ' '), piname, institution, isharvard"
+                + " from SEQinvoice where invoiceid=?";
 
         DatabaseTransaction t = null;
         Connection connection = null;
@@ -223,10 +223,10 @@ public class SEQ_OrderManager extends TableManager {
     }
 
     public boolean updateInvoice(int invoiceid, String paymentstatus, String accountnum, double payment, String comments) {
-        String sql = "update invoice set paymentstatus=?," +
-                " account=?, payment=?, comments=? where invoiceid=?";
-        String sql2 = "update cloneorder set ponumber=?" +
-                " where orderid in (select orderid from seqorderxseqinvoice where invoiceid=?)";
+        String sql = "update invoice set paymentstatus=?,"
+                + " account=?, payment=?, comments=? where invoiceid=?";
+        String sql2 = "update cloneorder set ponumber=?"
+                + " where orderid in (select orderid from seqorderxseqinvoice where invoiceid=?)";
         PreparedStatement stmt = null;
         PreparedStatement stmt2 = null;
         try {
@@ -253,10 +253,10 @@ public class SEQ_OrderManager extends TableManager {
     }
 
     public SEQ_Order queryCloneOrder(int orderid) throws Exception {
-        String sql = "select c.orderid,to_char(c.orderdate, 'YYYY-MM-DD'),c.ponumber," +
-                " billingaddress,samples,pifirstname,pilastname,piemail,billingemail,username," +
-                " cost,paymentmethod,service,institution,affiliation,userid,isharvard" +
-                " from seqorder c where c.orderid=" + orderid;
+        String sql = "select c.orderid,to_char(c.orderdate, 'YYYY-MM-DD'),c.ponumber,"
+                + " billingaddress,samples,pifirstname,pilastname,piemail,billingemail,username,"
+                + " cost,paymentmethod,service,institution,affiliation,userid,isharvard"
+                + " from seqorder c where c.orderid=" + orderid;
 
         String sql2 = "select invoiceid from seqorderxseqinvoice where orderid=" + orderid;
 
@@ -306,11 +306,11 @@ public class SEQ_OrderManager extends TableManager {
     }
 
     public List<SEQ_Order> queryCloneOrders(int invoiceid) throws Exception {
-        String sql = "select c.orderid,to_char(c.orderdate, 'YYYY-MM-DD'),c.ponumber," +
-                " billingaddress,samples,pifirstname,pilastname,piemail,billingemail,username," +
-                " cost,paymentmethod,service,institution,affiliation,userid,isharvard" +
-                " from seqorder c, seqorderxseqinvoice sc where c.orderid=sc.orderid" +
-                " and sc.invoiceid = " + invoiceid;
+        String sql = "select c.orderid,to_char(c.orderdate, 'YYYY-MM-DD'),c.ponumber,"
+                + " billingaddress,samples,pifirstname,pilastname,piemail,billingemail,username,"
+                + " cost,paymentmethod,service,institution,affiliation,userid,isharvard"
+                + " from seqorder c, seqorderxseqinvoice sc where c.orderid=sc.orderid"
+                + " and sc.invoiceid = " + invoiceid;
 
         DatabaseTransaction t = null;
         ResultSet rs = null;
@@ -354,10 +354,10 @@ public class SEQ_OrderManager extends TableManager {
 
     public boolean updateInvoice(int invoiceid, String paymentstatus, String accountnum, double payment,
             double adjustment, String comments, String reason) {
-        String sql = "update seqinvoice set paymentstatus=?," +
-                " account=?, payment=?, adjustment=?, comments=?, reason=? where invoiceid=?";
-        String sql2 = "update seqorder set ponumber=?" +
-                " where orderid in (select orderid from seqorderxseqinvoice where invoiceid=?)";
+        String sql = "update seqinvoice set paymentstatus=?,"
+                + " account=?, payment=?, adjustment=?, comments=?, reason=? where invoiceid=?";
+        String sql2 = "update seqorder set ponumber=?"
+                + " where orderid in (select orderid from seqorderxseqinvoice where invoiceid=?)";
         PreparedStatement stmt = null;
         PreparedStatement stmt2 = null;
         try {
@@ -386,9 +386,9 @@ public class SEQ_OrderManager extends TableManager {
     }
 
     public void insertSeqOrders(List<SEQ_Order> orders) throws SEQ_Exception {
-        String sql = "insert into seqorder(orderid,userid,billingemail,billingaddress,pifirstname,pilastname," +
-                "piemail,username,ponumber,orderdate,samples,cost,paymentmethod,service,institution," +
-                "affiliation,isharvard) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        String sql = "insert into seqorder(orderid,userid,billingemail,billingaddress,pifirstname,pilastname,"
+                + "piemail,username,ponumber,orderdate,samples,cost,paymentmethod,service,institution,"
+                + "affiliation,isharvard) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement stmt = null;
         int errorOrderid = 0;
         try {
@@ -428,10 +428,10 @@ public class SEQ_OrderManager extends TableManager {
     }
 
     public void insertInvoices(List<Invoice> invoices) throws SEQ_Exception {
-        String sql = "insert into seqinvoice" +
-                " (invoiceid, invoicenumber, price, adjustment, payment, paymentstatus, paymenttype," +
-                " account, updatedby, updatedon, reason,invoicedate,piname,institution,pilastname,isharvard)" +
-                " values(?,?,?,?,?,?,?,?,'System',sysdate,?,sysdate,?,?,?,?)";
+        String sql = "insert into seqinvoice"
+                + " (invoiceid, invoicenumber, price, adjustment, payment, paymentstatus, paymenttype,"
+                + " account, updatedby, updatedon, reason,invoicedate,piname,institution,pilastname,isharvard)"
+                + " values(?,?,?,?,?,?,?,?,'System',sysdate,?,sysdate,?,?,?,?)";
         String sql2 = "insert into seqorderxseqinvoice(orderid,invoiceid) values(?,?)";
         PreparedStatement stmt = null;
         PreparedStatement stmt2 = null;
@@ -470,6 +470,23 @@ public class SEQ_OrderManager extends TableManager {
         } finally {
             DatabaseTransaction.closeStatement(stmt);
             DatabaseTransaction.closeStatement(stmt2);
+        }
+    }
+
+    public void updateOrder(int orderid, String billingAddress, String billingEmail) throws SEQ_Exception {
+        String sql = "update seqorder set billingaddress=?,billingemail=? where orderid=?";
+        PreparedStatement stmt = null;
+        try {
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, billingAddress);
+            stmt.setString(2, billingEmail);
+            stmt.setInt(3, orderid);
+            DatabaseTransaction.executeUpdate(stmt);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new SEQ_Exception("Error occured while updating the database.");
+        } finally {
+            DatabaseTransaction.closeStatement(stmt);
         }
     }
 }

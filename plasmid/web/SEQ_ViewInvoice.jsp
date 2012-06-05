@@ -98,6 +98,7 @@
                                 <td class="tableheader">Billing Email</td>
                                 <td class="tableheader">PI Email</td>
                                 <td class="tableheader">Affiliation</td>
+                                <td class="tableheader">&nbsp;</td>
                             </tr>
                             
                             <logic:iterate id="order" name="<%=Constants.INVOICE%>" property="seqorder"> 
@@ -111,6 +112,12 @@
                                     <td class="tableinfo"><bean:write name="order" property="billingemail"/></td>
                                     <td class="tableinfo"><bean:write name="order" property="piemail"/></td>
                                     <td class="tableinfo"><bean:write name="order" property="affiliation"/></td>
+                                    <td class="tableinfo">
+                                        <html:form action="SEQ_UpdateBilling.do">
+                                            <html:hidden name="order" property="orderid"/>
+                                            <html:submit styleClass="text" value="Edit"/>
+                                        </html:form>
+                                    </td>
                                 </tr>
                             </logic:iterate>    
                     </table>
