@@ -24,6 +24,7 @@ public class Sample {
     public static final String AGAR = "AGAR";
     public static final String TRANSFORMATION = "TRANSFORMATION";
     public static final String CONTAMINATED = "Contaminated";
+    public static final String DNA = "DNA";
     
     protected int sampleid;
     protected String type;

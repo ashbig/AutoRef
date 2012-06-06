@@ -47,6 +47,7 @@ public class ContainerUploader {
         List<String> types = new ArrayList<String>();
         types.add(Sample.WORKING_GLYCEROL);
         types.add(Sample.DEEP_ARCHIVE_GLYCEROL);
+        types.add(Sample.DNA);
         return types;
     }
     
