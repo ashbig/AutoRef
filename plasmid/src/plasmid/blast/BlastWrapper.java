@@ -105,10 +105,15 @@ public class BlastWrapper {
     
     //-D 0-alignment view; 1-tabular format
     public String getBl2seqCmd() {
-        return getBl2seqCmd(BLAST_PROGRAM_PATH);
+          String cmd = BLAST_PROGRAM_PATH+"bl2seq -p "+getProgram()+" -i "+getInput()+
+                " -j "+getInput2()+" -o "+getBl2seqOutput()+
+                " -e "+getExpect()+" -F "+getIsLowcomp()+
+                " -U "+getIsMaskLowercase()+" -m "+getIsMegablast()+
+                " -D "+getAlignmentview();
+          return cmd;
     }
     
-    public String getBl2seqCmd(String programPath) {
+    public String getNewBl2seqCmd(String programPath) {
         String cmd = programPath+"blastn -query "+getInput()+
                 " -subject "+getInput2()+" -out "+getBl2seqOutput()+ 
                 " -dust "+getLowcomp()+
