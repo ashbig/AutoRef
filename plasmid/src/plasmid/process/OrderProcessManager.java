@@ -719,14 +719,14 @@ public class OrderProcessManager {
         try {
             t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
-            
+
             List addresses = new ArrayList();
             addresses.add(address);
             updateUserAddress(user, addresses, conn);
-            
+
             CloneOrderManager manager = new CloneOrderManager(conn);
             manager.updateCloneOrderBilling(orderid, address);
-            
+
             DatabaseTransaction.commit(conn);
         } catch (Exception ex) {
             DatabaseTransaction.rollback(conn);
@@ -736,7 +736,7 @@ public class OrderProcessManager {
             DatabaseTransaction.closeConnection(conn);
         }
     }
-            
+
     public List getAllOrders(User user, String status, String sortby, String sorttype) {
         if (user == null) {
             if (Constants.DEBUG) {
@@ -831,6 +831,31 @@ public class OrderProcessManager {
             DatabaseTransaction.closeConnection(conn);
         }
         return order;
+    }
+
+    public UserAddress getOrderAddress(int orderid) {
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        CloneOrderManager manager = null;
+        UserAddress address = null;
+
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+
+            manager = new CloneOrderManager(conn);
+            address = manager.queryCloneShippingAddress(orderid);
+        } catch (Exception ex) {
+            if (Constants.DEBUG) {
+                System.out.println(manager.getErrorMessage());
+                System.out.println(ex);
+            }
+            DatabaseTransaction.closeConnection(conn);
+            return null;
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
+        }
+        return address;
     }
 
     public String findEmail(int userid) {
@@ -1094,7 +1119,7 @@ public class OrderProcessManager {
     public void printBioTracyWorklist(List clones, String path, String filename, String isBatch, Sftp ftp) throws Exception {
         if (clones == null || filename == null) {
             return;
-        //OutputStreamWriter f = new FileWriter(path+filename);
+            //OutputStreamWriter f = new FileWriter(path+filename);
         }
         OutputStreamWriter f = null;
         if (ftp == null) {
@@ -1247,33 +1272,33 @@ public class OrderProcessManager {
     public void sendOrderEmail(CloneOrder order, String email) {
         String subject = "Your PlasmID order confirmation (order ID: " + order.getOrderid() + ")";
         String text =
-                "Thank you for placing a clone request at PlasmID. " +
-                "Please note your order ID number and save this email for your future reference. " +
-                "Your current order status is listed below along with the details of your order. " +
-                "You may check the progress of your order at any time by logging into your " +
-                "account and then selecting 'View Orders.' " +
-                "Orders of < 48 clones typically ship within 7-10 days. " +
-                "We ask that you please allow additional time for large orders " +
-                "or when requesting QC testing. Orders will ship as glycerol stocks " +
-                "when allowed by local law. Some international orders may ship as purified DNA " +
-                "or stabilized in special tubes to comply with local import law or to " +
-                "accommodate slower shipping routes. Please contact plasmidhelp@hms.harvard.edu " +
-                "with any questions or concerns.\n\n" +
-                "Order Status Key\n\n" +
-                "\tPending:\tNo additional information required. Your order is in line to be filled ASAP.\n" +
-                "\tIn Process:\tYour order is currently being filled.\n" +
-                "\tPending MTA:\tPlease download the required MTA from this web page http://plasmid.med.harvard.edu/PLASMID/TermAndCondition.jsp, then sign and return\n" +
-                "\tPending AQIS:\tPlease provide import documents\n" +
-                "\tPending for Payment:\tOur system is waiting for confirmation that your credit card was processed. Please log in to your account for up to date order status.\n";
+                "Thank you for placing a clone request at PlasmID. "
+                + "Please note your order ID number and save this email for your future reference. "
+                + "Your current order status is listed below along with the details of your order. "
+                + "You may check the progress of your order at any time by logging into your "
+                + "account and then selecting 'View Orders.' "
+                + "Orders of < 48 clones typically ship within 7-10 days. "
+                + "We ask that you please allow additional time for large orders "
+                + "or when requesting QC testing. Orders will ship as glycerol stocks "
+                + "when allowed by local law. Some international orders may ship as purified DNA "
+                + "or stabilized in special tubes to comply with local import law or to "
+                + "accommodate slower shipping routes. Please contact plasmidhelp@hms.harvard.edu "
+                + "with any questions or concerns.\n\n"
+                + "Order Status Key\n\n"
+                + "\tPending:\tNo additional information required. Your order is in line to be filled ASAP.\n"
+                + "\tIn Process:\tYour order is currently being filled.\n"
+                + "\tPending MTA:\tPlease download the required MTA from this web page http://plasmid.med.harvard.edu/PLASMID/TermAndCondition.jsp, then sign and return\n"
+                + "\tPending AQIS:\tPlease provide import documents\n"
+                + "\tPending for Payment:\tOur system is waiting for confirmation that your credit card was processed. Please log in to your account for up to date order status.\n";
         text += "\n" + formOrderText(order);
-        text += "\n" + "Please sign in at PlasmID to view order status, " +
-                "track your shipment, download clone information, cancel a request, " +
-                "or view detailed information about the clones, " +
-                "including growth conditions for the clones.\n\n" +
-                "Thank you,\n" +
-                "The DF/HCC DNA Resource Core PlasmID Respository\n" +
-                "http://plasmid.med.harvard.edu/PLASMID/\n\n" +
-                "If you have further questions, please contact us at plasmidhelp@hms.harvard.edu\n";
+        text += "\n" + "Please sign in at PlasmID to view order status, "
+                + "track your shipment, download clone information, cancel a request, "
+                + "or view detailed information about the clones, "
+                + "including growth conditions for the clones.\n\n"
+                + "Thank you,\n"
+                + "The DF/HCC DNA Resource Core PlasmID Respository\n"
+                + "http://plasmid.med.harvard.edu/PLASMID/\n\n"
+                + "If you have further questions, please contact us at plasmidhelp@hms.harvard.edu\n";
 
         try {
             Mailer.sendMessage(email, Constants.EMAIL_FROM, subject, text);
@@ -1285,26 +1310,26 @@ public class OrderProcessManager {
     public void sendTroubleshootingEmail(int orderid, String email) {
         String subject = "Troubleshooting Order # " + orderid;
         String text =
-                "Dear PlasmID User,\n\n" +
-                "I write in regard to your recent order from the PlasmID Repository. " +
-                "Unfortunately one or more of the clones in your order has encountered " +
-                "a problem that requires troubleshooting. " +
-                "This may have occurred because a clone did not pass our Platinum QC testing, " +
-                "or because a bacterial culture did not grow as expected. " +
-                "To view the results of our QC testing please log into your account, " +
-                "select the appropriate order number, and then select \"View Platinum Results.\"\n\n" +
-                "In light of these results I write to determine the best way to complete your order. " +
-                "In most cases simple isolation on agar can remedy the problem and will add " +
-                "only a modest delay to your order. If this approach does not yield success " +
-                "we typically have each gene in several vectors or formats and are happy to " +
-                "provide an alternate plasmid to complete your order. " +
-                "If substitution with an alternate clone or a modest troubleshooting delay " +
-                "is not possible we are also happy to adjust the price of your order and " +
-                "ship the remaining constructs. Please contact me at your earliest convenience " +
-                "so that we may work together to complete your order.\n\n" +
-                "Sincerely,\n\n" +
-                "The PlasmID Repository Staff\n" +
-                "plasmidhelp@hms.harvard.edu\n";
+                "Dear PlasmID User,\n\n"
+                + "I write in regard to your recent order from the PlasmID Repository. "
+                + "Unfortunately one or more of the clones in your order has encountered "
+                + "a problem that requires troubleshooting. "
+                + "This may have occurred because a clone did not pass our Platinum QC testing, "
+                + "or because a bacterial culture did not grow as expected. "
+                + "To view the results of our QC testing please log into your account, "
+                + "select the appropriate order number, and then select \"View Platinum Results.\"\n\n"
+                + "In light of these results I write to determine the best way to complete your order. "
+                + "In most cases simple isolation on agar can remedy the problem and will add "
+                + "only a modest delay to your order. If this approach does not yield success "
+                + "we typically have each gene in several vectors or formats and are happy to "
+                + "provide an alternate plasmid to complete your order. "
+                + "If substitution with an alternate clone or a modest troubleshooting delay "
+                + "is not possible we are also happy to adjust the price of your order and "
+                + "ship the remaining constructs. Please contact me at your earliest convenience "
+                + "so that we may work together to complete your order.\n\n"
+                + "Sincerely,\n\n"
+                + "The PlasmID Repository Staff\n"
+                + "plasmidhelp@hms.harvard.edu\n";
         try {
             Mailer.sendMessage(email, Constants.EMAIL_FROM, subject, text);
         } catch (Exception ex) {
@@ -1935,9 +1960,9 @@ public class OrderProcessManager {
         document.add(PdfEditor.makeSmallItalic("*" + invoice.getReasonforadj()));
 
         document.add(PdfEditor.makeTitle(" "));
-        document.add(PdfEditor.makeSmallBold("Make checkes payable to: Harvard Medical School. " +
-                "Include invoice number on check. Payments must be made in U.S. funds drawn on a U.S. bank. " +
-                "If you pay through wire transfer, please include wire transfer fee in the total amount."));
+        document.add(PdfEditor.makeSmallBold("Make checkes payable to: Harvard Medical School. "
+                + "Include invoice number on check. Payments must be made in U.S. funds drawn on a U.S. bank. "
+                + "If you pay through wire transfer, please include wire transfer fee in the total amount."));
 
         document.add(PdfEditor.makeTitle(" "));
         document.add(PdfEditor.makeSmallBold("If your payment due is zero, please DO NOT send payment and regard this as your receipt."));
@@ -2071,14 +2096,15 @@ public class OrderProcessManager {
             Invoice invoice = (Invoice) invoices.get(i);
             try {
                 emailInvoice(invoice.getOrder(), invoice, isOther);
-                System.out.println("Email invoice: "+invoice.getInvoicenum()+ " successful.");
+                System.out.println("Email invoice: " + invoice.getInvoicenum() + " successful.");
             } catch (Exception ex) {
                 failed.add(invoice);
-                System.out.println("Email invoice: "+invoice.getInvoicenum()+ " failed.");
+                System.out.println("Email invoice: " + invoice.getInvoicenum() + " failed.");
             }
         }
         return failed;
     }
+
     public void emailInvoice(CloneOrder order, Invoice invoice, boolean isOther) throws Exception {
         String filename = Constants.TMP + "Invoice_" + order.getOrderid() + ".pdf";
         File f1 = new File(filename);
@@ -2097,12 +2123,12 @@ public class OrderProcessManager {
             ccs.add(order.getEmail());
         }
         String subject = "Invoice for order " + invoice.getOrderid();
-        String text = "Dear Accounts Payable Representative:\n\n" +
-                "Attached please find an invoice from the PlasmID Repository at Harvard Medical School.\n\n" +
-                "This invoice was generated upon completion and shipment of your order. Any discounts, price modifications, and credit card payments should already be reflected on this invoice. If you have received this notification in error, or believe that a clerical mistake has occurred please contact us as soon as possible to resolve the issue. Please find payment instructions attached to this email and ALWAYS BE SURE TO INCLUDE YOUR INVOICE NUMBER WITH PAYMENT and ADD ANY WIRE TRANSFER FEES TO YOUR TOTAL.\n\n" +
-                "As a part of our continued environmental efforts this email will serve as your sole notification, and no paper copy will be mailed to your facility.\n\n" +
-                "Payment Terms: Net 30\n" +
-                "Enclosures: Invoice, Payment Instructions\n";
+        String text = "Dear Accounts Payable Representative:\n\n"
+                + "Attached please find an invoice from the PlasmID Repository at Harvard Medical School.\n\n"
+                + "This invoice was generated upon completion and shipment of your order. Any discounts, price modifications, and credit card payments should already be reflected on this invoice. If you have received this notification in error, or believe that a clerical mistake has occurred please contact us as soon as possible to resolve the issue. Please find payment instructions attached to this email and ALWAYS BE SURE TO INCLUDE YOUR INVOICE NUMBER WITH PAYMENT and ADD ANY WIRE TRANSFER FEES TO YOUR TOTAL.\n\n"
+                + "As a part of our continued environmental efforts this email will serve as your sole notification, and no paper copy will be mailed to your facility.\n\n"
+                + "Payment Terms: Net 30\n"
+                + "Enclosures: Invoice, Payment Instructions\n";
 
         Mailer.sendMessages(billingemail, Constants.EMAIL_FROM, ccs, subject, text, files);
     }
@@ -2126,12 +2152,12 @@ public class OrderProcessManager {
 
             String billingemail = order.getBillingemail();
             subject = "Invoice for order " + orderid;
-            text = "Dear Accounts Payable Representative:\n\n" +
-                    "Attached please find an invoice from the PlasmID Repository at Harvard Medical School.\n\n" +
-                    "This invoice was generated upon completion and shipment of your order. Any discounts, price modifications, and credit card payments should already be reflected on this invoice. If you have received this notification in error, or believe that a clerical mistake has occurred please contact us as soon as possible to resolve the issue. Please find payment instructions attached to this email and ALWAYS BE SURE TO INCLUDE YOUR INVOICE NUMBER WITH PAYMENT and ADD ANY WIRE TRANSFER FEES TO YOUR TOTAL.\n\n" +
-                    "As a part of our continued environmental efforts this email will serve as your sole notification, and no paper copy will be mailed to your facility.\n\n" +
-                    "Payment Terms: Net 30\n" +
-                    "Enclosures: Invoice, Payment Instructions\n";
+            text = "Dear Accounts Payable Representative:\n\n"
+                    + "Attached please find an invoice from the PlasmID Repository at Harvard Medical School.\n\n"
+                    + "This invoice was generated upon completion and shipment of your order. Any discounts, price modifications, and credit card payments should already be reflected on this invoice. If you have received this notification in error, or believe that a clerical mistake has occurred please contact us as soon as possible to resolve the issue. Please find payment instructions attached to this email and ALWAYS BE SURE TO INCLUDE YOUR INVOICE NUMBER WITH PAYMENT and ADD ANY WIRE TRANSFER FEES TO YOUR TOTAL.\n\n"
+                    + "As a part of our continued environmental efforts this email will serve as your sole notification, and no paper copy will be mailed to your facility.\n\n"
+                    + "Payment Terms: Net 30\n"
+                    + "Enclosures: Invoice, Payment Instructions\n";
 
             Mailer.sendMessage(billingemail, Constants.EMAIL_FROM, to, subject, text, files);
         }
@@ -2163,7 +2189,7 @@ public class OrderProcessManager {
 
             OutputStream file = new FileOutputStream(new File(filename));
             manager.printInternalInvoice(file, order, invoice);
-        //manager.printExternalInvoice(file, order, invoice);
+            //manager.printExternalInvoice(file, order, invoice);
         } catch (Exception ex) {
             ex.printStackTrace();
             System.exit(1);

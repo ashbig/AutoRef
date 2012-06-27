@@ -233,6 +233,7 @@ public class ChoosePaymentAction extends UserAction {
         order.setShippingaccount(accountNumber);
         order.setIsplatinum(isplatinum);
         order.setCostforplatinum(costforplatinum);
+        order.setShippingInfo(new UserAddress(user.getUserid(), UserAddress.SHIPPING, organization, addressline1, addressline2, city, state, zipcode, country, shippingto, phone, fax));
 
         if (Constants.ISPLATINUM_Y.equals(isplatinum)) {
             order.setPlatinumServiceStatus(CloneOrder.PLATINUM_STATUS_REQUESTED);

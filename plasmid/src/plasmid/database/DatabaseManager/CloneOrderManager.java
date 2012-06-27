@@ -70,8 +70,12 @@ public class CloneOrderManager extends TableManager {
         String sql2 = "insert into orderclones(orderid,cloneid,collectionname,quantity)"
                 + " values(?,?,?,?)";
 
+        String sql3 = "insert into orderaddress(orderid,addresstype,name,organization,"
+                + " addressline1,addressline2,city,state,zipcode,country,phone,fax,email)"
+                + " values(?,?,?,?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement stmt = null;
         PreparedStatement stmt2 = null;
+        PreparedStatement stmt3 = null;
         try {
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, order.getStatus());
@@ -120,12 +124,30 @@ public class CloneOrderManager extends TableManager {
                 stmt2.setInt(4, item.getQuantity());
                 DatabaseTransaction.executeUpdate(stmt2);
             }
+
+            stmt3 = conn.prepareStatement(sql3);
+            UserAddress a = order.getShippingInfo();
+            stmt3.setInt(1, order.getOrderid());
+            stmt3.setString(2, a.getType());
+            stmt3.setString(3, a.getName());
+            stmt3.setString(4, a.getOrganization());
+            stmt3.setString(5, a.getAddressline1());
+            stmt3.setString(6, a.getAddressline2());
+            stmt3.setString(7, a.getCity());
+            stmt3.setString(8, a.getState());
+            stmt3.setString(9, a.getZipcode());
+            stmt3.setString(10, a.getCountry());
+            stmt3.setString(11, a.getPhone());
+            stmt3.setString(12, a.getFax());
+            stmt3.setString(13, a.getEmail());
+            DatabaseTransaction.executeUpdate(stmt3);
         } catch (Exception ex) {
             handleError(ex, "Cannot insert cloneorder.");
             return -1;
         } finally {
             DatabaseTransaction.closeStatement(stmt);
             DatabaseTransaction.closeStatement(stmt2);
+            DatabaseTransaction.closeStatement(stmt3);
         }
 
         return order.getOrderid();
@@ -702,6 +724,43 @@ public class CloneOrderManager extends TableManager {
                 DatabaseTransaction.closeConnection(conn);
             }
         }
+    }
+    
+    public UserAddress queryCloneShippingAddress(int orderid) {
+        String sql = "select addresstype,name,organization,addressline1," +
+                " addressline2,city,state,zipcode,country,phone,fax,email" +
+                " from orderaddress where orderid=" + orderid;
+
+        ResultSet rs = null;
+        DatabaseTransaction t = null;
+        try {
+            t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            while (rs.next()) {
+                String type = rs.getString(1);
+                String name = rs.getString(2);
+                String organization = rs.getString(3);
+                String addressline1 = rs.getString(4);
+                String addressline2 = rs.getString(5);
+                String city = rs.getString(6);
+                String state = rs.getString(7);
+                String zipcode = rs.getString(8);
+                String country = rs.getString(9);
+                String phone = rs.getString(10);
+                String fax = rs.getString(11);
+                String email = rs.getString(12);
+                UserAddress a = new UserAddress(0, type, organization, addressline1, addressline2, city, state, zipcode, country, name, phone, fax);
+                a.setEmail(email);
+                return a;
+            }
+        } catch (Exception ex) {
+            handleError(ex, "Database error occured.");
+            return null;
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+
+        return null;
     }
 
     public static List queryCloneOrdersForValidation(List orderids, boolean isvalidation) {
@@ -1288,6 +1347,64 @@ public class CloneOrderManager extends TableManager {
         } finally {
             DatabaseTransaction.closeStatement(stmt);
         }
+    }
+    
+    public static Country getCountry(String name) {
+        String sql = "select code from country where name=?";
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        Country country = null;
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, name);
+            rs = DatabaseTransaction.executeQuery(stmt);
+            if(rs.next()) {
+                String code = rs.getString(1);
+                country = new Country(name, code); 
+            } else {
+                System.out.println("Cannot find country: "+name);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+            DatabaseTransaction.closeConnection(conn);
+        }
+        return country;
+    }
+    
+    public static State getState(String code) {
+        String sql = "select name from state where code=?";
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        State state = null;
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, code);
+            rs = DatabaseTransaction.executeQuery(stmt);
+            if(rs.next()) {
+                String name = rs.getString(1);
+                state = new State(name, code); 
+            } else {
+                System.out.println("Cannot find state: "+code);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+            DatabaseTransaction.closeConnection(conn);
+        }
+        return state;
     }
 
     public static void main(String args[]) {

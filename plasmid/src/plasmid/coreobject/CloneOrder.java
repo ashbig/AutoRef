@@ -113,6 +113,7 @@ public class CloneOrder {
     protected String ismember;
     private String updatedby;
     private String updatedon;
+    private UserAddress shippingInfo;
     
     /** Creates a new instance of CloneOrder */
     public CloneOrder() {
@@ -411,5 +412,19 @@ public class CloneOrder {
 
     public void setUpdatedon(String updatedon) {
         this.updatedon = updatedon;
+    }
+
+    /**
+     * @return the shippingInfo
+     */
+    public UserAddress getShippingInfo() {
+        return shippingInfo;
+    }
+
+    /**
+     * @param shippingInfo the shippingInfo to set
+     */
+    public void setShippingInfo(UserAddress shippingInfo) {
+        this.shippingInfo = shippingInfo;
     }
 }

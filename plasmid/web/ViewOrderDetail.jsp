@@ -125,7 +125,7 @@
   </tr>
   </logic:present>
   <tr>
-    <td colspan="2" align="center" class="text">
+    <td align="center" class="text">
         <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
         <logic:equal name="<%=Constants.CLONEORDER%>" property="isplatinum" value="Yes">
         
@@ -157,7 +157,17 @@
         </logic:equal>
         </logic:equal>
     </td>
-    <td colspan="2" align="center" class="text">
+    <td align="center" class="text">
+        <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
+        <logic:equal name="<%=Constants.CLONEORDER%>" property="isProcessShipping" value="true">
+        <html:form action="GenerateFedexLabel.do">
+            <html:hidden name="<%=Constants.CLONEORDER%>" property="orderid"/>
+            <html:submit styleClass="text" value="Generate FedEx Label"/>
+        </html:form>
+        </logic:equal>
+        </logic:equal>
+    </td>
+    <td align="center" class="text">
         <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
         <logic:equal name="<%=Constants.CLONEORDER%>" property="isProcessShipping" value="true">
         <html:form action="ProcessShipping.do">
@@ -167,6 +177,7 @@
         </logic:equal>
         </logic:equal>
     </td>
+    <td>&nbsp;</td>
   </tr>
 </table>
 

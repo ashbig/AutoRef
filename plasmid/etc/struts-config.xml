@@ -164,6 +164,8 @@
                     type="plasmid.form.UploadContainerForm"/>
         <form-bean      name="updateBillingForm"
                     type="plasmid.form.UpdateBillingForm"/>
+        <form-bean      name="generateFedexLabelForm"
+                    type="plasmid.form.GenerateFedexLabelForm"/>
                     
     </form-beans>
 
@@ -400,6 +402,12 @@
               validate="false">
             <forward  name="success"   path="/GenerateContainersSuccessful.txt"/>
             <forward  name="fail"   path="/GenerateContainersFail.txt"/>
+        </action>        
+        <action     path="/GenerateFedexLabel"
+                type="plasmid.action.GenerateFedexLabelAction"
+                    name="generateFedexLabelForm"
+              scope="request">
+            <forward  name="success"  path="/GenerateLabel.jsp"/>
         </action>
         <action    path="/GetAlignment"
                type="plasmid.action.GetAlignmentAction"
