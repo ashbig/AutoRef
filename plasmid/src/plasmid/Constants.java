@@ -106,7 +106,7 @@ public class Constants {
     
     public static final int SHIPFEE_DOM = 10;
     public static final int SHIPFEE_INT = 15;
-    public static final String COUNTRY_USA = "USA";
+    public static final String COUNTRY_USA = "U.S.A.";
     
     public static final String PSI = "PSI";
     public static final String PSI_CESG = "Center for Eukaryotic Structural Genomics";
