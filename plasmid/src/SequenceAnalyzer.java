@@ -10,8 +10,11 @@ import java.io.OutputStreamWriter;
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import java.util.List;
+import java.util.Set;
 import java.util.StringTokenizer;
 import plasmid.blast.BlastHit;
 import plasmid.blast.BlastInfo;
@@ -99,7 +102,7 @@ public class SequenceAnalyzer {
             out.write("ID\tPercentid\tAlength\tMismatch\tGap\tEvalue\tScore\tqStart\tqEnd\tsStart\tsEnd\n");
 
             BlastWrapper blaster = new BlastWrapper();
-            blaster.setLowcomp("no");
+            blaster.setLowcomp("yes");
             //blaster.setWordsize(5);
             //blaster.setExpect(1000);
             blaster.setAlignmentview(1);
@@ -121,8 +124,8 @@ public class SequenceAnalyzer {
                 blaster.setInput(inputfile1);
                 blaster.setInput2(inputfile2);
                 blaster.setBl2seqOutput(outputfile);
-                String cmd = blaster.getBl2seqCmd(BLAST_PROGRAM_PATH);
-                //String cmd = blaster.getBlastxCmd(BLAST_PROGRAM_PATH);
+                //String cmd = blaster.getNewBl2seqCmd(BLAST_PROGRAM_PATH);
+                String cmd = blaster.getBlastxCmd(BLAST_PROGRAM_PATH);
                 System.out.println(cmd);
                 blaster.executeBlast(cmd);
 
@@ -277,14 +280,37 @@ public class SequenceAnalyzer {
         in.close();
         out.close();
     }
+
+    public void selectClone(String input, String output) throws Exception {
+        BufferedReader in = new BufferedReader(new FileReader(input));
+        String line = in.readLine();
+        HashMap info = new HashMap();
+        //Geneid\tID\tCoverage\tMutation
+        while ((line = in.readLine()) != null) {
+            String [] s = line.split("\t");
+            info.put(s[0], s);
+        }
+        in.close();
+        
+        Set genes = info.keySet();
+        Iterator iter = genes.iterator();
+        while(iter.hasNext()) {
+            String gene = (String)iter.next();
+            
+        }
+        
+        FileWriter out = new FileWriter(new File(output));
+        out.write("ID\tCoverage\n");
+        out.close();
+    }
     
     public static void main(String args []) {
         String input = "C:\\dev\\plasmid_support\\PlasmidAnalysis_201203\\input_for_stringcompare.txt";
         String output = "C:\\dev\\plasmid_support\\PlasmidAnalysis_201203\\output_for_stringcompare.txt";
-        String blastinput = "C:\\dev\\plasmid_support\\OC_missing\\analysis_input.txt";
-        String blastoutput = "C:\\dev\\plasmid_support\\OC_missing\\analysis_output.txt";
+        String blastinput = "C:\\dev\\plasmid_support\\OC_missing\\analysis_input_tmp.txt";
+        String blastoutput = "C:\\dev\\plasmid_support\\OC_missing\\analysis_output_tmp.txt";
 
-        String refseqfile = "C:\\dev\\plasmid_support\\blastdb\\Clonesequence.txt";
+        String refseqfile = "C:\\dev\\plasmid_support\\blastdb\\cloneseq201206_input.txt";
         String refseqFastaFile = "C:\\dev\\plasmid_support\\blastdb\\plasmid_all";
 
         String blastRefseqInput = "C:\\dev\\plasmid_support\\OC_missing\\cloneseq_noref.txt";
@@ -314,9 +340,7 @@ public class SequenceAnalyzer {
             ex.printStackTrace();
             System.exit(1);
         }
-         */
         
-        /**
         try {
             analyzer.generateFastaDatabase(refseqfile, refseqFastaFile);
         } catch (Exception ex) {
