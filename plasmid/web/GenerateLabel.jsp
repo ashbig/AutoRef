@@ -203,7 +203,7 @@ body {	font-family:  Arial;
 </style></head>
     
 <body  style="width: 695px;" onLoad="ShowHideTable()">
-<form name='mainForm' method='post' target="_blank" action='https://www.fedex.com/FWIW/Client/Shipping_v5/ClientShippingStandAloneInit' id='mainForm'>
+<form name='mainForm' method='post' action='https://www.fedex.com/FWIW/Client/Shipping_v5/ClientShippingStandAloneInit' id='mainForm'>
 <table width='100%' border='0'>
 	<tr>
 		<td align='left'>

@@ -160,7 +160,7 @@
     <td align="center" class="text">
         <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
         <logic:equal name="<%=Constants.CLONEORDER%>" property="isProcessShipping" value="true">
-        <html:form action="GenerateFedexLabel.do">
+        <html:form action="GenerateFedexLabel.do" target="_blank">
             <html:hidden name="<%=Constants.CLONEORDER%>" property="orderid"/>
             <html:submit styleClass="text" value="Generate FedEx Label"/>
         </html:form>
