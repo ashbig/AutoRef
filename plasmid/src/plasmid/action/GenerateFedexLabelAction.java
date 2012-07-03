@@ -14,6 +14,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import plasmid.Constants;
+import plasmid.coreobject.CloneOrder;
 import plasmid.coreobject.Country;
 import plasmid.coreobject.State;
 import plasmid.coreobject.User;
@@ -44,10 +45,11 @@ public class GenerateFedexLabelAction extends InternalUserAction {
 
         ActionErrors errors = new ActionErrors();
         User user = (User) request.getSession().getAttribute(Constants.USER_KEY);
-        String orderid = ((GenerateFedexLabelForm)form).getOrderid();
+        int orderid = Integer.parseInt(((GenerateFedexLabelForm)form).getOrderid());
         
         OrderProcessManager manager = new OrderProcessManager();
-        UserAddress address = manager.getOrderAddress(Integer.parseInt(orderid));
+        UserAddress address = manager.getOrderAddress(orderid);
+        CloneOrder order = manager.getCloneOrder(orderid);
         Country country = CloneOrderManager.getCountry(address.getCountry());
         State state = CloneOrderManager.getState(address.getState());
         
@@ -58,7 +60,8 @@ public class GenerateFedexLabelAction extends InternalUserAction {
             return mapping.findForward("error");
         }
 
-        request.setAttribute("address", address);  
+        request.setAttribute("address", address); 
+        request.setAttribute("order", order);
         if(country != null) {
             request.setAttribute("country", country);
         }
