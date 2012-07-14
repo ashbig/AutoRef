@@ -46,7 +46,8 @@ public class UpdateCloneStatusAction extends InternalUserAction {
             saveErrors(request, errors);
             return (new ActionForward(mapping.getInput()));
         }
-
+        
+        String status = ((UpdateCloneStatusForm) form).getStatus();
         String comments = ((UpdateCloneStatusForm) form).getComments();
         String message = "";
         DatabaseTransaction t = null;
@@ -55,7 +56,7 @@ public class UpdateCloneStatusAction extends InternalUserAction {
             t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
             CloneManager manager = new CloneManager(conn);
-            manager.updateCloneStatus(clones, comments);
+            manager.updateCloneStatus(clones, status, comments);
             message = "Clones are updated successfully.";
             DatabaseTransaction.commit(conn);
             ((UpdateCloneStatusForm)form).setCloneList(null);

@@ -18,6 +18,7 @@ import org.apache.struts.action.ActionMapping;
 public class UpdateCloneStatusForm extends ActionForm {
     private String cloneList;
     private String comments;
+    private String status;
     
     /** Creates a new instance of FindClonesForm */
     public UpdateCloneStatusForm() {
@@ -62,5 +63,19 @@ public class UpdateCloneStatusForm extends ActionForm {
 
     public void setComments(String comments) {
         this.comments = comments;
+    }
+
+    /**
+     * @return the status
+     */
+    public String getStatus() {
+        return status;
+    }
+
+    /**
+     * @param status the status to set
+     */
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

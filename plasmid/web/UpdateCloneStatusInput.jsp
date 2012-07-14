@@ -1,6 +1,7 @@
 <%@ page language="java" %>
 <%@ page errorPage="ProcessError.do"%>
 <%@ page import="plasmid.coreobject.Process" %> 
+<%@ page import="plasmid.coreobject.Clone" %>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -14,7 +15,7 @@
         <META HTTP-EQUIV="Expires" CONTENT="-1">
         <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
     </head>
-    
+
     <body>
         <jsp:include page="internalHomeTitle.jsp" />
         <table width="1000" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
@@ -27,7 +28,7 @@
                     <html:errors/>
                     <html:form action="UpdateCloneStatus.do">
                         <logic:present name="updateCloneStatusMessage">
-                        <p class="alert"><bean:write name="updateCloneStatusMessage"/></p>
+                            <p class="alert"><bean:write name="updateCloneStatusMessage"/></p>
                         </logic:present>
                         <table width="100%" border="0">
                             <tr> 
@@ -36,6 +37,12 @@
                             <tr> 
                                 <td>
                                     <html:textarea styleClass="itemtext" property="cloneList" rows="10" cols="50"/>
+                                </td>
+                            </tr>
+                            <tr> 
+                                <td>
+                                    <html:radio styleClass="itemtext" property="status" value="<%=Clone.AVAILABLE%>">Available</html:radio>
+                                    <html:radio styleClass="itemtext" property="status" value="<%=Clone.NOT_AVAILABLE%>">Not Available</html:radio>
                                 </td>
                             </tr>
                             <tr> 
@@ -52,7 +59,7 @@
                                 </td>
                             </tr>
                         </table>
-                </html:form></td>
+                    </html:form></td>
             </tr>
         </table>
         <jsp:include page="footer.jsp" />

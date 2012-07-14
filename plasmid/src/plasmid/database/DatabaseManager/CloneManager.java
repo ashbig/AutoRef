@@ -2108,8 +2108,8 @@ public class CloneManager extends TableManager {
         return true;
     }
 
-    public void updateCloneStatus(List clonenames, String comments) throws Exception {
-        String sql = "update clone set status='" + Clone.NOT_AVAILABLE + "', comments=comments||? where clonename=?";
+    public void updateCloneStatus(List clonenames, String status, String comments) throws Exception {
+        String sql = "update clone set status='" + status + "', comments=comments||? where clonename=?";
         PreparedStatement stmt = null;
         String errorClone = "";
         try {
@@ -2157,8 +2157,8 @@ public class CloneManager extends TableManager {
     }
 
     public static void main(String args[]) {
-        String file = "C:\\dev\\plasmid_support\\blastdb\\cloneid_2.txt";
-        String output = "C:\\dev\\plasmid_support\\blastdb\\cloneseq_2.txt";
+        String file = "C:\\dev\\plasmid_support\\blastdb\\cloneid201206.txt";
+        String output = "C:\\dev\\plasmid_support\\blastdb\\cloneseq201206.txt";
         DatabaseTransaction dt = null;
         Connection conn = null;
 
