@@ -40,7 +40,7 @@
                                 </td>
                             </tr>
                             <tr> 
-                                <td>
+                                <td class="itemtext">
                                     <html:radio styleClass="itemtext" property="status" value="<%=Clone.AVAILABLE%>">Available</html:radio>
                                     <html:radio styleClass="itemtext" property="status" value="<%=Clone.NOT_AVAILABLE%>">Not Available</html:radio>
                                 </td>

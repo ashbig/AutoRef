@@ -10,6 +10,7 @@ import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
+import plasmid.coreobject.Clone;
 
 /**
  *
@@ -22,6 +23,7 @@ public class UpdateCloneStatusForm extends ActionForm {
     
     /** Creates a new instance of FindClonesForm */
     public UpdateCloneStatusForm() {
+        status=Clone.AVAILABLE;
     }
         
     /**
@@ -47,6 +49,7 @@ public class UpdateCloneStatusForm extends ActionForm {
     public void reset(ActionMapping mapping, HttpServletRequest request) {
         this.cloneList = null;
         this.comments = null;
+        this.status = Clone.AVAILABLE;
     } 
     
     public String getCloneList() {
