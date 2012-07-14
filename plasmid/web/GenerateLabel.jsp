@@ -1315,7 +1315,7 @@ Address 2</span>
 </td>
 					<td style="width: 65%">
 					<!-- begin ddlRecipientCanadaStates -->
-						<select name="ddlRecipientCanadaStates" id="ddlRecipientCanadaStates" class="dropdown" style='width: 180px; background-color:Whitesmoke; font-family:Arial; font-size:11px; color:Black;' >
+                                        <select name="ddlRecipientCanadaStates" contenteditable="true" id="ddlRecipientCanadaStates" class="dropdown" style='width: 180px; background-color:Whitesmoke; font-family:Arial; font-size:11px; color:Black;' >
     <logic:present name="state">
         <option  value="<bean:write name="state" property="code"/>" selected="true"/><bean:write name="state" property="name"/>
     </logic:present>
