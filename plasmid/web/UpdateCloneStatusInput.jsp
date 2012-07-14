@@ -32,29 +32,30 @@
                         </logic:present>
                         <table width="100%" border="0">
                             <tr> 
-                                <td class="formlabel">Please enter the PlasmID Clone IDs: (e.g. HsCD00000196, separate each ID with white space)</td>
+                                <td colspan="2" class="formlabel">Please enter the PlasmID Clone IDs: (e.g. HsCD00000196, separate each ID with white space)</td>
                             </tr>
                             <tr> 
-                                <td>
+                                <td colspan="2">
                                     <html:textarea styleClass="itemtext" property="cloneList" rows="10" cols="50"/>
                                 </td>
                             </tr>
                             <tr> 
+                                <td class="formlabel">Make clones: </td>
                                 <td class="itemtext">
                                     <html:radio styleClass="itemtext" property="status" value="<%=Clone.AVAILABLE%>">Available</html:radio>
                                     <html:radio styleClass="itemtext" property="status" value="<%=Clone.NOT_AVAILABLE%>">Not Available</html:radio>
                                 </td>
                             </tr>
                             <tr> 
-                                <td class="formlabel">Please enter comments:</td>
+                                <td colspan="2" class="formlabel">Please enter comments:</td>
                             </tr>
                             <tr> 
-                                <td>
+                                <td colspan="2">
                                     <html:textarea styleClass="itemtext" property="comments" rows="10" cols="50"/>
                                 </td>
                             </tr>
                             <tr> 
-                                <td>
+                                <td colspan="2">
                                     <html:submit styleClass="itemtext" value="Submit"/>
                                 </td>
                             </tr>
