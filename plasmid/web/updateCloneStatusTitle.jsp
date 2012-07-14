@@ -6,6 +6,6 @@
           <td height="29" valign="bottom" bgcolor="#FFFFFF" class="mainbodytextlarge">Update Clone Status</td>
         </tr>
         <tr>
-          <td bgcolor="#FFFFFF" class="mainbodytexthead">Make clones unavailable for distribution.</td>
+          <td bgcolor="#FFFFFF" class="mainbodytexthead">Make clones available or unavailable for distribution.</td>
         </tr>
       </table>
