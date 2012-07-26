@@ -611,6 +611,7 @@
             <forward  name="success_confirm"   path="/ConfirmRegistration.jsp"/>
             <forward  name="success"   path="/Login.jsp"/>
             <forward  name="success_update"   path="/Account.jsp"/>
+            <forward  name="pierror"   path="/Pierror.jsp"/>
         </action>
         <action    path="/SearchClone"
                type="plasmid.action.SearchCloneAction"

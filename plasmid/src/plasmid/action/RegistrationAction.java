@@ -77,9 +77,9 @@ public class RegistrationAction extends Action {
         boolean isnewinstitution = false;
         Institution institute = null;
         boolean ismember = ((RegistrationForm) form).isIsmember();
-        
-        ((RegistrationForm)form).setFirst(false);
-        
+
+        ((RegistrationForm) form).setFirst(false);
+
         if (!password.equals(password2)) {
             errors.add(ActionErrors.GLOBAL_ERROR,
                     new ActionError("error.password2.nomatch"));
@@ -151,11 +151,8 @@ public class RegistrationAction extends Action {
         if (pi == null || pi.trim().length() < 1) {
             if (group.equals(User.HARVARD_UNIVERSITY) || group.equals(User.HARVARD) || group.equals(User.ACADEMIC)) {
                 if (manager.piExist(pifirstname, pilastname, piemail)) {
-                    errors.add(ActionErrors.GLOBAL_ERROR,
-                            new ActionError("error.pi.exist"));
-                    saveErrors(request, errors);
                     DatabaseTransaction.closeConnection(conn);
-                    return (new ActionForward(mapping.getInput()));
+                    return (mapping.findForward("pierror"));
                 }
 
                 pname = pilastname.trim().toUpperCase() + ", " + pifirstname.trim();
@@ -245,8 +242,7 @@ public class RegistrationAction extends Action {
 
         DatabaseTransaction.commit(conn);
         DatabaseTransaction.closeConnection(conn);
-        ((RegistrationForm)form).reset(mapping);
+        ((RegistrationForm) form).reset(mapping);
         return mapping.findForward(next);
     }
 }
-
