@@ -117,7 +117,7 @@ public class CheckoutConfirmAction extends UserAction {
             errors.add("billingfax", new ActionError("error.billingfax.require"));
         }
         if (billingemail == null || billingemail.trim().length() < 1) {
-            errors.add("billingemail", new ActionError("error.billingemail.require"));
+            errors.add("billingemail", new ActionError("error.billingemail.required"));
         }
         List shoppingcart = (List) request.getSession().getAttribute(Constants.CART);
 

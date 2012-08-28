@@ -355,7 +355,7 @@
         <action     path="/EnterAddress"
                 type="plasmid.action.EnterAddressAction"
                name="checkoutForm"
-              input="/ChooseShipping.jsp">
+              input="/CheckoutContinue.do">
             <forward  name="success"  path="/Checkout.jsp"/>
         </action>
         <action     path="/EnterInvoicePayment"

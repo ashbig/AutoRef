@@ -5,6 +5,10 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 /*
  * To change this template, choose Tools | Templates
@@ -21,6 +25,7 @@ import plasmid.blast.BlastInfo;
 import plasmid.blast.BlastParser;
 import plasmid.blast.BlastWrapper;
 import plasmid.coreobject.Dnasequence;
+import plasmid.database.DatabaseTransaction;
 
 /**
  *
@@ -304,6 +309,41 @@ public class SequenceAnalyzer {
         out.close();
     }
     
+    public void findFailedImageClone(String input, String output) throws Exception {
+        BufferedReader in = new BufferedReader(new FileReader(input));
+        PrintWriter out = new PrintWriter(new FileWriter(new File(output)));
+        out.println("Image ID\tspecies\texternal_id\tacc_num\tproblem_type\tcomments\treported_by\tdate_entered\tdate_modified\tClone ID\tClone Name\tSource");
+        
+        DatabaseTransaction t = DatabaseTransaction.getInstance();
+        Connection conn = t.requestConnection();
+        String sql = "select cloneid,clonename,source from clone where cloneid in"+
+                    " (select cloneid from clonename where namevalue=? and nametype='IMAGE ID')"+
+                    " and status='AVAILABLE'";
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        ResultSet rs = null;
+        
+        String line = null;
+        while ((line = in.readLine()) != null) {
+            String [] s = line.split("\t");
+            String imageid = s[0];
+            System.out.println(imageid);
+            stmt.setString(1, imageid);
+            rs = DatabaseTransaction.executeQuery(stmt);
+            while(rs.next()) {
+                int cloneid = rs.getInt(1);
+                String name = rs.getString(2);
+                String source = rs.getString(3);
+                out.println(line+"\t"+cloneid+"\t"+name+"\t"+source);
+            }
+            DatabaseTransaction.closeResultSet(rs);
+        }
+        DatabaseTransaction.closeStatement(stmt);
+        DatabaseTransaction.closeConnection(conn);
+        
+        in.close();
+        out.close();
+    }
+    
     public static void main(String args []) {
         String input = "C:\\dev\\plasmid_support\\PlasmidAnalysis_201203\\input_for_stringcompare.txt";
         String output = "C:\\dev\\plasmid_support\\PlasmidAnalysis_201203\\output_for_stringcompare.txt";
@@ -319,9 +359,12 @@ public class SequenceAnalyzer {
         String cloneseqInput = FILE_PATH+"ORFeome8\\Input_for_clone_seq.txt";
         String cloneseqOutput = FILE_PATH+"ORFeome8\\Output_for_clone_seq.txt";
         
+        String failedImageInput = "C:\\dev\\plasmid_support\\production\\platinum_failed_201207\\problemClones_20120808.txt";
+        String failedImageOutput = "C:\\dev\\plasmid_support\\production\\platinum_failed_201207\\problemClones_output.txt";
+        
         SequenceAnalyzer analyzer = new SequenceAnalyzer();
         //analyzer.analyzeByStringCompare(input, output);
-        analyzer.analyzeByBlast(blastinput, blastoutput);
+        //analyzer.analyzeByBlast(blastinput, blastoutput);
         
         /**
         try {
@@ -350,6 +393,13 @@ public class SequenceAnalyzer {
          */
         
         //analyzer.findMatchingRefseq(blastRefseqInput, blastRefseqOutput, FILE_PATH+"refseqAll.fasta");
+        
+        try {
+            analyzer.findFailedImageClone(failedImageInput, failedImageOutput);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            System.exit(1);
+        }
         
         System.exit(0);
     }
