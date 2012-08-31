@@ -195,8 +195,10 @@ public class CheckoutConfirmAction extends UserAction {
         double clonePrice = ((CheckoutForm) form).getCostOfClones();
         double collectionPrice = ((CheckoutForm) form).getCostOfCollections();
         double costOfPlatinum = ((CheckoutForm) form).getCostOfPlatinum();
-        if ((!shippingMethod.equals(Constants.SHIPPING_METHOD_PICKUP)) &&
-                (accountNumber == null || accountNumber.trim().length() < 1)) {
+        if ((shippingMethod.equals(Constants.SHIPPING_METHOD_PICKUP)) ||
+                (shippingMethod.equals("FedEx") && accountNumber != null && accountNumber.trim().length() > 0)) {
+            shippingCost = 0.0;
+        } else {
             if (country.equals(Constants.COUNTRY_USA)) {
                 shippingCost = 10;
             } else {
