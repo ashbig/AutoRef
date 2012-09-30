@@ -21,6 +21,7 @@ public class OrderCloneValidation {
     private String who;
     private String when;
     private int userid;
+    private int phred;
 
     private OrderClones orderclone;
     
@@ -102,5 +103,19 @@ public class OrderCloneValidation {
 
     public void setOrderclone(OrderClones orderclone) {
         this.orderclone = orderclone;
+    }
+
+    /**
+     * @return the phred
+     */
+    public int getPhred() {
+        return phred;
+    }
+
+    /**
+     * @param phred the phred to set
+     */
+    public void setPhred(int phred) {
+        this.phred = phred;
     }
 }

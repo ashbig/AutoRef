@@ -296,7 +296,7 @@ public class OrderProcessManager {
         return newShoppingcart;
     }
 
-    public List getShoppingCartClones(List cloneids, List clones, List batchorders, String isbatch) {
+    public List getShoppingCartClones(List cloneids, List clones, List batchorders, String isbatch, List removelist) {
         DatabaseTransaction t = null;
         Connection conn = null;
         try {
@@ -311,6 +311,10 @@ public class OrderProcessManager {
                 String cloneid = item.getItemid();
                 int quantity = item.getQuantity();
                 CloneInfo cloneInfo = (CloneInfo) found.get(cloneid);
+                if(cloneInfo==null) {
+                    removelist.add(item);
+                    continue;
+                }
                 cloneInfo.setQuantity(quantity);
                 if ("Y".equals(isbatch)) {
                     for (int j = 0; j < batchorders.size(); j++) {
@@ -336,7 +340,27 @@ public class OrderProcessManager {
         }
     }
 
-    public List getShoppingCartCollections(List collectionNames, List collections) {
+    public void removeShoppingCartItems(List clones) {
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+
+            CloneManager manager = new CloneManager(conn);
+            manager.removeShoppingCartItem(clones);
+            DatabaseTransaction.commit(conn);
+        } catch (Exception ex) {
+            if (Constants.DEBUG) {
+                System.out.println(ex);
+            }
+            DatabaseTransaction.rollback(conn);
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
+        }
+    }
+
+    public List getShoppingCartCollections(List collectionNames, List collections, List removelist) {
         DatabaseTransaction t = null;
         Connection conn = null;
         try {
@@ -351,6 +375,10 @@ public class OrderProcessManager {
                 String itemid = item.getItemid();
                 int quantity = item.getQuantity();
                 CollectionInfo info = (CollectionInfo) foundCollections.get(itemid);
+                if(info==null) {
+                    removelist.add(item);
+                    continue;
+                }
                 info.setQuantity(quantity);
                 newShoppingcartCollections.add(info);
                 item.setCloneCount(info.getCloneCount());

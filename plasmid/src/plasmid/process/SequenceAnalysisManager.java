@@ -24,6 +24,8 @@ public class SequenceAnalysisManager {
     public static final double PID = 90.0;
     public static final double EXPECT = BlastWrapper.DEFAULT_EXPECT;
     public static final String SEQUENCE_PATH = Constants.SEQ_ANALYSIS_PATH;
+    public static final int PHRED_LOW = 350;
+    public static final int PHRED_HIGH = 650;
     private double pid;
     private int alength;
 
@@ -55,20 +57,28 @@ public class SequenceAnalysisManager {
                     filename = filename.substring(0, sep);
                 }
                 if (file.isFile() && filename.equalsIgnoreCase(clonename)) {
+                    OrderCloneValidation validation = new OrderCloneValidation(orderClone);
+                    orderClone.setValidation(validation);
+                    validation.setMethod(OrderProcessManager.PLATINUM_VALIDATION_METHOD_END_SEQ);
+
                     BufferedReader f = new BufferedReader(new FileReader(file));
                     String seq = "";
                     String line = null;
                     while ((line = f.readLine()) != null) {
                         if (line.indexOf(">") >= 0) {
+                            try {
+                                String[] s = line.split(" ");
+                                int phred = Integer.parseInt(s[1]);
+                                validation.setPhred(phred);
+                            } catch (Exception ex) {
+                                throw new Exception("Wrong file format.");
+                            }
                             continue;
                         }
                         seq = seq + line;
                     }
                     f.close();
                     file.delete();
-                    OrderCloneValidation validation = new OrderCloneValidation(orderClone);
-                    orderClone.setValidation(validation);
-                    validation.setMethod(OrderProcessManager.PLATINUM_VALIDATION_METHOD_END_SEQ);
                     validation.setSequence(seq);
                     break;
                 }
@@ -82,6 +92,15 @@ public class SequenceAnalysisManager {
             OrderClones orderClone = (OrderClones) clones.get(i);
             OrderCloneValidation validation = orderClone.getValidation();
             if (validation == null) {
+                continue;
+            }
+
+            int phred = validation.getPhred();
+            if (phred < PHRED_LOW) {
+                validation.setResult(OrderCloneValidation.RESULT_FAIL);
+                continue;
+            }
+            if (phred < PHRED_HIGH) {
                 continue;
             }
 

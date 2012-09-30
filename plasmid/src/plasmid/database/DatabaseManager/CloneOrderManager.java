@@ -967,8 +967,8 @@ public class CloneOrderManager extends TableManager {
 
     public boolean addOrderCloneValidation(List validations) {
         String sql = "insert into orderclonevalidation"
-                + " (orderid,cloneid,method,sequence,result,userid,when,researchername)"
-                + " values(?,?,?,?,?,?,sysdate,?)";
+                + " (orderid,cloneid,method,sequence,result,userid,when,researchername,phred)"
+                + " values(?,?,?,?,?,?,sysdate,?,?)";
         PreparedStatement stmt = null;
 
         try {
@@ -982,6 +982,7 @@ public class CloneOrderManager extends TableManager {
                 stmt.setString(5, clone.getResult());
                 stmt.setInt(6, clone.getUserid());
                 stmt.setString(7, clone.getWho());
+                stmt.setInt(8, clone.getPhred());
                 DatabaseTransaction.executeUpdate(stmt);
             }
         } catch (Exception ex) {

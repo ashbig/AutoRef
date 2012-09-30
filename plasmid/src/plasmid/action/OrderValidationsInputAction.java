@@ -145,6 +145,7 @@ public class OrderValidationsInputAction extends InternalUserAction {
                         validation.setMethod(method);
                         validation.setWho(researcher);
                         validation.setUserid(user.getUserid());
+                        validation.setPhred(clone.getValidation().getPhred());
                         validations.add(validation);
                     }
                 }
