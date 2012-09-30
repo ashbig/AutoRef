@@ -67,7 +67,7 @@ public class CheckoutContinueAction extends UserAction {
         
         m.processShoppingCartItems(shoppingcart);
         List collectionNames = m.getCollectionNames();
-        List collections = m.getShoppingCartCollections(collectionNames, m.getCollections());
+        List collections = m.getShoppingCartCollections(collectionNames, m.getCollections(), new ArrayList());
         if(collections == null) {
             if(Constants.DEBUG)
                 System.out.println("Database error occured.");

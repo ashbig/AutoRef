@@ -81,8 +81,8 @@ public class UpdateCartAction extends Action {
                 return (mapping.findForward("success_empty"));
             }
             
-            List clones = m.getShoppingCartClones(cloneids, m.getClones(), batchOrderClones, isBatch);
-            List collections = m.getShoppingCartCollections(collectionNames, m.getCollections());
+            List clones = m.getShoppingCartClones(cloneids, m.getClones(), batchOrderClones, isBatch, new ArrayList());
+            List collections = m.getShoppingCartCollections(collectionNames, m.getCollections(), new ArrayList());
             
             if(clones == null && !("Save Cart".equals(ret))) {
                 errors.add(ActionErrors.GLOBAL_ERROR,

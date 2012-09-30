@@ -66,8 +66,14 @@ public class ViewCartAction extends Action {
             
             String isbatch = ((ViewCartForm)form).getIsBatch();
             List batchorders = (List)request.getSession().getAttribute(Constants.BATCH_ORDER_CLONES);
-            List newShoppingcart = manager.getShoppingCartClones(cloneids, clones, batchorders, isbatch);
-            List newShoppingcartCollections = manager.getShoppingCartCollections(collectionNames, collections);
+            List removelist = new ArrayList();
+            List newShoppingcart = manager.getShoppingCartClones(cloneids, clones, batchorders, isbatch, removelist);
+            List newShoppingcartCollections = manager.getShoppingCartCollections(collectionNames, collections, removelist);
+            if(!removelist.isEmpty()) {
+                manager.removeShoppingCartItems(removelist);
+                errors.add(ActionErrors.GLOBAL_ERROR,
+                new ActionError("error.general","Some items are removed from your shopping cart due to status change."));
+            }
             
             if(newShoppingcart == null || newShoppingcartCollections == null) {
                 if(Constants.DEBUG)
