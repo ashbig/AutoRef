@@ -70,8 +70,11 @@ public class OrderValidationsInputAction extends InternalUserAction {
             }
 
             try {
+                System.out.println("getsequences");
                 m.getCloneSequences(clones, seqdir);
+                System.out.println("run blast");
                 m.runBlast(clones);
+                System.out.println("blast finished");
 
                 for (int i = 0; i < clones.size(); i++) {
                     OrderClones clone = (OrderClones) clones.get(i);
