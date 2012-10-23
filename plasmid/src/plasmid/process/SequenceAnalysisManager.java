@@ -57,7 +57,7 @@ public class SequenceAnalysisManager {
                     filename = filename.substring(0, sep);
                 }
                 if (file.isFile() && filename.equalsIgnoreCase(clonename)) {
-                    System.out.println(filename);
+                    System.out.println(file.getName());
                     OrderCloneValidation validation = new OrderCloneValidation(orderClone);
                     orderClone.setValidation(validation);
                     validation.setMethod(OrderProcessManager.PLATINUM_VALIDATION_METHOD_END_SEQ);
@@ -67,8 +67,10 @@ public class SequenceAnalysisManager {
                     String line = null;
                     while ((line = f.readLine()) != null) {
                         if (line.indexOf(">") >= 0) {
+                            System.out.println(line);
                             try {
                                 String[] s = line.split(" ");
+                                System.out.println(s);
                                 System.out.println(s[1]);
                                 int phred = Integer.parseInt(s[1]);
                                 validation.setPhred(phred);
