@@ -40,6 +40,7 @@ public class EnterPlatinumResultForm extends ActionForm {
         this.methods = new ArrayList();
     }
         
+    /**
     public void reset(ActionMapping mapping, HttpServletRequest request) {
         if(sequences != null) {
             sequences = new ArrayList(sequences.size());
@@ -50,7 +51,7 @@ public class EnterPlatinumResultForm extends ActionForm {
         if(methods != null) {
             methods = new ArrayList(methods.size());
         }
-    }
+    }*/
    
     public String getOrderid() {
         return orderid;
