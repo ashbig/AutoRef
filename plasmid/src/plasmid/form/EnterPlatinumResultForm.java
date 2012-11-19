@@ -7,7 +7,9 @@ package plasmid.form;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionMapping;
 
 /**
  *
@@ -37,7 +39,19 @@ public class EnterPlatinumResultForm extends ActionForm {
         this.results = new ArrayList();
         this.methods = new ArrayList();
     }
-    
+        
+    public void reset(ActionMapping mapping, HttpServletRequest request) {
+        if(sequences != null) {
+            sequences = new ArrayList(sequences.size());
+        }
+        if(results != null) {
+            results = new ArrayList(results.size());
+        }
+        if(methods != null) {
+            methods = new ArrayList(methods.size());
+        }
+    }
+   
     public String getOrderid() {
         return orderid;
     }
