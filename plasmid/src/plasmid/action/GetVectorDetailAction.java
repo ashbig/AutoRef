@@ -6,13 +6,10 @@
 
 package plasmid.action;
 
-import java.util.*;
 import java.io.*;
 import java.sql.*;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionError;
@@ -20,8 +17,6 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionServlet;
-import org.apache.struts.util.MessageResources;
 
 import plasmid.database.*;
 import plasmid.database.DatabaseManager.*;
@@ -71,7 +66,9 @@ public class GetVectorDetailAction extends Action {
                 new ActionError("error.database.error","Database error occured."));
                 return (mapping.findForward("error")); 
             }
+            String filename = printVectorXML(v);
             request.setAttribute("vector", v);
+            request.setAttribute("vectorfilename", filename);
             return mapping.findForward("success");
         } catch (Throwable th) {
             if(Constants.DEBUG)
@@ -83,5 +80,13 @@ public class GetVectorDetailAction extends Action {
         } finally {
             DatabaseTransaction.closeConnection(conn);
         }
-    }       
+    }    
+    
+    private String printVectorXML(CloneVector v) throws IOException {
+        String file = Constants.FILE_PATH+"vector/"+v.getName()+".xml";
+        PrintWriter out = new PrintWriter(new FileWriter(new File(file)));
+        out.print(v.getVectorMapXML());
+        out.close();
+        return file;
+    }
 }

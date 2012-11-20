@@ -8,6 +8,9 @@ package plasmid.coreobject;
 import java.util.*;
 import java.lang.*;
 import java.io.*;
+import java.sql.Connection;
+import plasmid.database.DatabaseManager.VectorManager;
+import plasmid.database.DatabaseTransaction;
 
 import plasmid.util.StringConvertor;
 
@@ -69,6 +72,15 @@ public class CloneVector implements Serializable {
         this.status = status;
         this.userid = userid;
         this.cloneid = cloneid;
+    }
+    
+    public String toXML() {
+        String s = "<VECTOR>\n";
+        s += "<NAME>"+getName()+"</NAME>\n";
+        s += "<DESCRIPTION>"+getDescription()+"</DESCRIPTION>\n";
+        s += "<SIZEINBP>"+getSize()+"</SIZEINBP>\n";
+	s += "</VECTOR>";
+        return s;
     }
 
     public int getVectorid() {
@@ -375,8 +387,36 @@ public class CloneVector implements Serializable {
         StringConvertor sc = new StringConvertor();
         return sc.convertFromListToString(property);
     }
+    
+    public String getVectorMapXML() {
+        String s = "<VECTORMAP>\n";
+        s += this.toXML()+"\n";
+        for(int i=0; i<getVectorfeatures().size(); i++) {
+            VectorFeature f = (VectorFeature)getVectorfeatures().get(i);
+            s += f.toXML()+"\n";
+        }
+        s += "</VECTORMAP>\n";
+        return s;
+    }
 
     public static void main(String args[]) {
+        DatabaseTransaction dt = null;
+        Connection conn = null;
+        try {
+            dt = DatabaseTransaction.getInstance();
+            conn = dt.requestConnection();
+            VectorManager manager = new VectorManager(conn);
+            CloneVector v = manager.queryCloneVector(24);
+            if(v == null) {
+                throw new Exception("Cannot get vector.");
+            }
+            System.out.println(v.getVectorMapXML());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
+        }
+        /**
         CloneVector v = new CloneVector();
         List l = new ArrayList();
         l.add("abc");
@@ -384,6 +424,7 @@ public class CloneVector implements Serializable {
         l.add("mnh");
         v.setSynonyms(l);
         System.out.println(v.getSynonymString());
+         * */
         System.exit(0);
     }
 

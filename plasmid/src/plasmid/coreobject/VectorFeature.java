@@ -49,4 +49,15 @@ public class VectorFeature {
     public void setStop(int i) {this.stop = i;}
     public void setMaptype(String s) {this.maptype=s;}
     public void setVectorid(int vectorid) {this.vectorid = vectorid;}
+    
+    public String toXML() {
+        String s = "<VECTORFEATURE>\n";
+        s += "<MAPTYPE>"+getMaptype()+"</MAPTYPE>\n";
+        s += "<NAME>"+getName()+"</NAME>\n";
+        s += "<DESCRIPTION>"+getDescription()+"</DESCRIPTION>\n";
+        s += "<STARTPOS>"+getStart()+"</STARTPOS>\n";
+        s += "<ENDPOS>"+getStop()+"</ENDPOS>\n";
+	s += "</VECTORFEATURE>";
+        return s;
+    }
 }
