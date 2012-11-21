@@ -503,7 +503,7 @@ public class SEQ_OrderProcessManager {
         if (isOther) {
             ccs.add(order.getPiemail());
         }
-        String subject = "Invoice for order " + invoice.getOrderid();
+        String subject = "Invoice " + invoice.getInvoicenum();
         String text = "Dear Accounts Payable Representative:\n\n" +
                 "Payment is requested for the attached invoice from the DF/HCC DNA Resource Core" +
                 " at Harvard Medical School.\n\n" +
