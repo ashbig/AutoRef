@@ -17,6 +17,6 @@
 </head>
 <body>
     <div class="map""></div>
-    <input type="hidden" name="XML_location" id="XML_location" value="http://plasmid.med.harvard.edu/PlasmidRepository/file/vector/<bean:write name="vectorname"/>"/>
+    <input type="hidden" name="XML_location" id="XML_location" value="<bean:write name="vectormapurl"/>"/>
 </body>
 </html>

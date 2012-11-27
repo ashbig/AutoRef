@@ -13,6 +13,7 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import plasmid.Constants;
 import plasmid.form.ViewVectormapForm;
 
 /**
@@ -45,7 +46,8 @@ public class ViewVectormapAction extends Action {
         // get the parameters specified by the customer
         ActionErrors errors = new ActionErrors();
         String vectorname = ((ViewVectormapForm) form).getVectorname();
-        request.setAttribute("vectorname", vectorname);
+        String vectormap = Constants.VECTOR_MAP_URL+vectorname;
+        request.setAttribute("vectormapurl", vectormap);
         return mapping.findForward("success");
     }
 }

@@ -48,6 +48,7 @@ public class Constants {
     public static final String SEQ_ANALYSIS_PATH = FlexProperties.getInstance().getProperty("sequencepath");
     public static final String FILE_PATH = FlexProperties.getInstance().getProperty("filepath");
     public static final String TMP = FlexProperties.getInstance().getProperty("tmp");
+    public static final String VECTOR_MAP_URL = FlexProperties.getInstance().getProperty("vectormapurl");
     
     public static final String COLLECTION = "Collections";
     public static final String SINGLECOLLECTION = "Collection";
