@@ -48,7 +48,6 @@
     <td class="mainbodytexthead">Vector Map:</td>
     <td class="mainbodytext">
         <a target="blank" href="../PlasmidRepository/file/map/<bean:write name="vector" property="mapfilename"/>"><bean:write name="vector" property="mapfilename"/></a>|
-        <a target="blank" href="ViewVectormap.do?vectorname=<bean:write name="vectorfilename"/>">Another <bean:write name="vector" property="mapfilename"/></a>
     </td>
   </tr>
   <tr> 
@@ -62,7 +61,12 @@
 </table>
 
 <logic:present name="vector" property="vectorfeatures">
-<p class="text">Features:</p>
+<p class="text">Features:
+    <html:form action="ViewVectormap.do">
+        <input type="hidden" name="vectorname" value="<bean:write name="vectorfilename"/>"/>
+        <input name="button" type="submit" class="itemtext" value="Map the features"/>
+    </html:form>
+</p>
 <table width="700" border="0">
   <tr>
     <td width="110" class="tablebody">Type</td>
