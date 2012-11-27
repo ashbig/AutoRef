@@ -166,7 +166,8 @@
                     type="plasmid.form.UpdateBillingForm"/>
         <form-bean      name="generateFedexLabelForm"
                     type="plasmid.form.GenerateFedexLabelForm"/>
-                    
+        <form-bean      name="viewVectormapForm"
+                    type="plasmid.form.ViewVectormapForm"/>
     </form-beans>
 
   <!-- ========== Global Forward Definitions ============================== -->
@@ -894,6 +895,13 @@
             <forward  name="email_successful"   path="/EmailInvoiceSuccessful.jsp"/>
             <forward  name="email_fail"   path="/EmailInvoiceFail.jsp"/>
             <forward  name="no_invoice_selected"   path="/InvoiceSelectEmpty.jsp"/>
+        </action>
+        <action    path="/ViewVectormap"
+               type="plasmid.action.ViewVectormapAction"
+               name="viewVectormapForm"
+              scope="request"
+              input="/ViewVectorDetail.jsp">
+            <forward  name="success"   path="/Vectormap.jsp"/>
         </action>
         <action    path="/WorklistInput"
                type="plasmid.action.WorklistInputAction"

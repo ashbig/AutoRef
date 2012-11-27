@@ -46,7 +46,10 @@
   </tr>
   <tr> 
     <td class="mainbodytexthead">Vector Map:</td>
-    <td class="mainbodytext"><a target="blank" href="../PlasmidRepository/file/map/<bean:write name="vector" property="mapfilename"/>"><bean:write name="vector" property="mapfilename"/></a></td>
+    <td class="mainbodytext">
+        <a target="blank" href="../PlasmidRepository/file/map/<bean:write name="vector" property="mapfilename"/>"><bean:write name="vector" property="mapfilename"/></a>|
+        <a target="blank" href="/ViewVectormap.do?vectorname=<bean:write name="vectorfilename"/>">Another <bean:write name="vector" property="mapfilename"/></a>
+    </td>
   </tr>
   <tr> 
     <td class="mainbodytexthead">Vector Sequence:</td>
