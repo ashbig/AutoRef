@@ -87,6 +87,6 @@ public class GetVectorDetailAction extends Action {
         PrintWriter out = new PrintWriter(new FileWriter(new File(file)));
         out.print(v.getVectorMapXML());
         out.close();
-        return file;
+        return v.getName()+".xml";
     }
 }
