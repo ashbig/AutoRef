@@ -61,7 +61,7 @@
 </table>
 
 <logic:present name="vector" property="vectorfeatures">
-    <html:form action="ViewVectormap.do">
+    <html:form action="ViewVectormap.do" target="blank">
         <p class="text">Features:
             <input type="hidden" name="vectorname" value="<bean:write name="vectorfilename"/>"/>
             <input name="button" type="submit" class="itemtext" value="Map the features"/>
