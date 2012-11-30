@@ -11,7 +11,9 @@ package plasmid.coreobject;
  */
 public class OrderCloneValidation {
     public static final String RESULT_PASS = "Pass";
-    public static final String RESULT_FAIL = "Fail";
+    public static final String RESULT_FAIL_LOWSCORE = "Fail: Low PHRED";
+    public static final String RESULT_FAIL_MISMATCH = "Fail: Mismatch";
+    public static final String RESULT_MANUAL = "Manual";
     
     private int orderid;
     private int cloneid;

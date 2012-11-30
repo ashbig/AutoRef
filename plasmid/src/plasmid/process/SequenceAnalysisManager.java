@@ -98,10 +98,11 @@ public class SequenceAnalysisManager {
 
             int phred = validation.getPhred();
             if (phred < PHRED_LOW) {
-                validation.setResult(OrderCloneValidation.RESULT_FAIL);
+                validation.setResult(OrderCloneValidation.RESULT_FAIL_LOWSCORE);
                 continue;
             }
             if (phred < PHRED_HIGH) {
+                validation.setResult(OrderCloneValidation.RESULT_MANUAL);
                 continue;
             }
 
@@ -130,7 +131,7 @@ public class SequenceAnalysisManager {
                 if (infos.size() > 0) {
                     validation.setResult(OrderCloneValidation.RESULT_PASS);
                 } else {
-                    validation.setResult(OrderCloneValidation.RESULT_FAIL);
+                    validation.setResult(OrderCloneValidation.RESULT_FAIL_MISMATCH);
                 }
             }
         }

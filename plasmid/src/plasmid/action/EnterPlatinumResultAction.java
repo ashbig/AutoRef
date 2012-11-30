@@ -89,7 +89,9 @@ public class EnterPlatinumResultAction extends InternalUserAction {
         validationStatus.add(CloneOrder.PLATINUM_STATUS_COMPLETE);
         List validationResults = new ArrayList();
         validationResults.add(OrderCloneValidation.RESULT_PASS);
-        validationResults.add(OrderCloneValidation.RESULT_FAIL);
+        validationResults.add(OrderCloneValidation.RESULT_FAIL_MISMATCH);
+        validationResults.add(OrderCloneValidation.RESULT_FAIL_LOWSCORE);
+        validationResults.add(OrderCloneValidation.RESULT_MANUAL);
         
         request.setAttribute("validationMethods", validationMethods);
         request.setAttribute("validationStatus", validationStatus);

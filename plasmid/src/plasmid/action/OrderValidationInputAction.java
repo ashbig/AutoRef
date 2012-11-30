@@ -46,7 +46,9 @@ public class OrderValidationInputAction extends InternalUserAction {
         validationStatus.add(CloneOrder.PLATINUM_STATUS_COMPLETE);
         List validationResults = new ArrayList();
         validationResults.add(OrderCloneValidation.RESULT_PASS);
-        validationResults.add(OrderCloneValidation.RESULT_FAIL);
+        validationResults.add(OrderCloneValidation.RESULT_FAIL_MISMATCH);
+        validationResults.add(OrderCloneValidation.RESULT_FAIL_LOWSCORE);
+        validationResults.add(OrderCloneValidation.RESULT_MANUAL);
         CloneOrder order = (CloneOrder) request.getSession().getAttribute(Constants.CLONEORDER);
 
         request.setAttribute("validationMethods", validationMethods);
