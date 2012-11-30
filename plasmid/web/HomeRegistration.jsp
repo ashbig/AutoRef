@@ -90,7 +90,7 @@
                                         </tr>
                                         <tr>
                                             <td class="text" colspan="2">
-                                                <html:text maxlength="250" property="institution3" size="100" styleClass="text"/>
+                                                <html:text maxlength="100" property="institution3" size="100" styleClass="text"/>
                                             </td>
                                         </tr>
                                         <tr>
