@@ -61,6 +61,9 @@
 </table>
 
 <logic:present name="vector" property="vectorfeatures">
+    <logic:equal name="vector" property="featureEmpty" value="true">
+        <p class="text">Features:</p>
+    </logic:equal>
     <logic:equal name="vector" property="featureEmpty" value="false">
     <html:form action="ViewVectormap.do" target="blank">
         <p class="text">Features:
