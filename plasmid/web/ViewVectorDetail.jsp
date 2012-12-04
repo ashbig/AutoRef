@@ -61,12 +61,14 @@
 </table>
 
 <logic:present name="vector" property="vectorfeatures">
+    <logic:equal name="vector" property="featureEmpty" value="false">
     <html:form action="ViewVectormap.do" target="blank">
         <p class="text">Features:
             <input type="hidden" name="vectorname" value="<bean:write name="vectorfilename"/>"/>
             <input name="button" type="submit" class="itemtext" value="Map the features"/>
         </p>
     </html:form>
+    </logic:equal>
 <table width="700" border="0">
   <tr>
     <td width="110" class="tablebody">Type</td>

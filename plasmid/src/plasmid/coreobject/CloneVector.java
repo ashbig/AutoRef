@@ -399,7 +399,7 @@ public class CloneVector implements Serializable {
         return s;
     }
     
-    public boolean isFeatureEmpty() {
+    public boolean getFeatureEmpty() {
         if(vectorfeatures==null || vectorfeatures.size()==0)
             return true;
         return false;
