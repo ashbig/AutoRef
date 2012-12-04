@@ -83,10 +83,17 @@ public class GetVectorDetailAction extends Action {
     }    
     
     private String printVectorXML(CloneVector v) throws IOException {
-        String file = Constants.FILE_PATH+"vector/"+v.getName()+".xml";
+        char[] cs = {'#', '%', '&', '*', '{', '}', '\\', ':', '<', '>', '?', '/', '+'};
+        String name = v.getName();
+        for(int i=0; i<cs.length; i++) {
+            char c = cs[i];
+            name.replace(c, '-');
+        }
+        
+        String file = Constants.FILE_PATH+"vector/"+name+".xml";
         PrintWriter out = new PrintWriter(new FileWriter(new File(file)));
         out.print(v.getVectorMapXML());
         out.close();
-        return v.getName()+".xml";
+        return name+".xml";
     }
 }
