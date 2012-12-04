@@ -67,6 +67,8 @@ public class GetVectorDetailAction extends Action {
                 return (mapping.findForward("error")); 
             }
             String filename = printVectorXML(v);
+            
+        System.out.println("3:"+filename);
             request.setAttribute("vector", v);
             request.setAttribute("vectorfilename", filename);
             return mapping.findForward("success");
@@ -85,10 +87,12 @@ public class GetVectorDetailAction extends Action {
     private String printVectorXML(CloneVector v) throws IOException {
         char[] cs = {'#', '%', '&', '*', '{', '}', '\\', ':', '<', '>', '?', '/', '+'};
         String name = v.getName();
+        System.out.println("1:"+name);
         for(int i=0; i<cs.length; i++) {
             char c = cs[i];
             name.replace(c, '-');
         }
+        System.out.println("2:"+name);
         
         String file = Constants.FILE_PATH+"vector/"+name+".xml";
         PrintWriter out = new PrintWriter(new FileWriter(new File(file)));
