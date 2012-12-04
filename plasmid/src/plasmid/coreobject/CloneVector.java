@@ -398,6 +398,12 @@ public class CloneVector implements Serializable {
         s += "</VECTORMAP>\n";
         return s;
     }
+    
+    public boolean isFeatureEmpty() {
+        if(vectorfeatures==null || vectorfeatures.size()==0)
+            return true;
+        return false;
+    }
 
     public static void main(String args[]) {
         DatabaseTransaction dt = null;
