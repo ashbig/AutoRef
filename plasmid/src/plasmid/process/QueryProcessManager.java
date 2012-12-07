@@ -286,6 +286,26 @@ public class QueryProcessManager {
         }
         return foundSet;
     }
+    
+    public List<CloneInfo> getVectorsByProperty(String property, String status, List restrictions) {
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        List<CloneInfo> found = new ArrayList();
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            CloneManager manager = new CloneManager(conn);
+            found = manager.queryVectorsByProperty(property, status, restrictions);
+            return found;
+        } catch (Exception ex) {
+            if(Constants.DEBUG) {
+                System.out.println(ex);
+            }
+            return null;
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
+        }
+    }
       
     /**
     public Set processAdvancedQuery(Set foundSet, GeneQueryHandler handler, List restrictions, String species, boolean isClonename) throws Exception {

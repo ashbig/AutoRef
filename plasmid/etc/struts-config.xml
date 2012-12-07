@@ -168,6 +168,8 @@
                     type="plasmid.form.GenerateFedexLabelForm"/>
         <form-bean      name="viewVectormapForm"
                     type="plasmid.form.ViewVectormapForm"/>
+        <form-bean      name="getVectorsByTypeForm"
+                    type="plasmid.form.GetVectorsByTypeForm"/>
     </form-beans>
 
   <!-- ========== Global Forward Definitions ============================== -->
@@ -472,6 +474,13 @@
                type="plasmid.action.GetVectorPropertyTypesAction"
                input="/GetVectorPropertyTypes.do">
             <forward  name="success"   path="/VectorSearch.jsp"/>
+        </action>
+        <action    path="/GetVectorsByType"
+               type="plasmid.action.GetVectorsByTypeAction"
+              name="getVectorsByTypeForm"
+              scope="request">
+            <forward  name="success"   path="/DisplayVectors.jsp"/>
+            <forward  name="empty"   path="/DisplayVectorsEmpty.jsp"/>
         </action>
         <action    path="/LabelPlates"
                type="plasmid.action.LabelPlatesAction"

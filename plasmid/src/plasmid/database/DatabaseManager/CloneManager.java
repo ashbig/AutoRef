@@ -2185,6 +2185,52 @@ public class CloneManager extends TableManager {
         }
     }
 
+    public List<CloneInfo> queryVectorsByProperty(String property, String status, List restrictions) {
+        if(property==null)
+            return new ArrayList<CloneInfo>();
+        
+        String sql = "select cloneid,clonename,restriction,vectorid,vectorname,specialtreatment,description"+
+                " from clone where clonetype='No insert' and vectorid in"+
+                " (select vectorid from vectorproperty where lower(propertytype)=?)";
+
+        if (restrictions != null) {
+            String s = StringConvertor.convertFromListToSqlString(restrictions);
+            sql = sql + " and restriction in (" + s + ")";
+        }
+        
+        if (status != null) {
+            sql += " and status='" + status + "'";
+        }
+        
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        List<CloneInfo> clones = new ArrayList<CloneInfo>();
+        try {
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, property.toLowerCase());
+            rs = DatabaseTransaction.executeQuery(stmt);
+            while(rs.next()) {
+                int cloneid = rs.getInt(1);
+                String clonename = rs.getString(2);
+                String restriction = rs.getString(3);
+                int vectorid = rs.getInt(4);
+                String vectorname = rs.getString(5);
+                String specialtreatment = rs.getString(6);
+                String description = rs.getString(7);
+                CloneInfo clone = new CloneInfo(cloneid, clonename, null,null,null,null,null,restriction,null,vectorid,vectorname,null,status,specialtreatment,null,description);
+                clones.add(clone);
+            }
+            return clones;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            handleError(ex, "Error occured while query clones");
+            return null;
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+        }
+    }
+    
     public static void main(String args[]) {
         String file = "C:\\dev\\plasmid_support\\blastdb\\cloneid201206.txt";
         String output = "C:\\dev\\plasmid_support\\blastdb\\cloneseq201206.txt";
