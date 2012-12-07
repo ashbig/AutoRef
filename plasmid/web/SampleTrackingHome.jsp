@@ -37,7 +37,47 @@
     <li class="text"><a href="Plate96To384Input.jsp">Generate Condensed Archive Plates</a>
     <li class="text"><a href="Plate384To96Input.jsp">Reverse Plate Condensation</a>
 </ul>
-
+<table width="100%" border="0">
+        <tr> 
+          <td height="15" class="mainbodytext">Vector Collection</td>
+        </tr>
+        <tr> 
+          <td height="15" class="lftsubtxt">- <a href="GetAllVectors.do?PSI=false" class="leftsubnavtext">all empty vectors</a></td>
+        </tr>
+        <tr> 
+          <td height="15" class="lftsubtxt">- <a href="GetVectorsByType.do?type=viral%20production" class="leftsubnavtext">viral production</a></td>
+        </tr>
+        <tr> 
+          <td height="15" class="lftsubtxt">- <a href="GetVectorsByType.do?type=RNA%20interference" class="leftsubnavtext">RNA interference</a></td>
+        </tr>
+        <tr> 
+          <td height="15" class="lftsubtxt">- <a href="GetVectorsByType.do?type=mammalian%20expression" class="leftsubnavtext">mammalian expression</a></td>
+        </tr>
+        <tr> 
+          <td height="15" class="lftsubtxt">- <a href="GetVectorsByType.do?type=drosophila%20in%20vitro%20and%20in%20vivo%20expression" class="leftsubnavtext">drosophila in vitro and in vivo expression</a></td>
+        </tr>
+        <tr> 
+          <td height="15" class="lftsubtxt">- <a href="GetVectorsByType.do?type=bacterial%20expression" class="leftsubnavtext">bacterial expression</a></td>
+        </tr>
+        <tr> 
+          <td height="15" class="lftsubtxt">- <a href="GetVectorsByType.do?type=baculovirus/insect%20cell%20expression" class="leftsubnavtext">baculovirus/insect cell expression</a></td>
+        </tr>
+        <tr> 
+          <td height="15" class="lftsubtxt">- <a href="GetVectorsByType.do?type=cloning%20vector" class="leftsubnavtext">cloning vector</a></td>
+        </tr>
+        <tr> 
+          <td height="15" class="lftsubtxt">- <a href="GetVectorsByType.do?type=mutagenesis%20vector" class="leftsubnavtext">mutagenesis vector</a></td>
+        </tr>
+        <tr> 
+          <td height="15" class="lftsubtxt">- <a href="GetVectorsByType.do?type=Yeast%20Expression" class="leftsubnavtext">Yeast Expression</a></td>
+        </tr>
+        <tr> 
+          <td height="15" class="lftsubtxt">- <a href="GetVectorsByType.do?type=fluorescent%20marker" class="leftsubnavtext">fluorescent marker</a></td>
+        </tr>
+        <!--<tr> 
+          <td height="15" class="lftsubtxt">- <a href="GetAllVectors.do?PSI=true" class="leftsubnavtext">PSI empty vectors</a></td>
+        </tr>-->
+      </table>
     </td>
   </tr>
 </table>
