@@ -11,6 +11,8 @@ package plasmid.coreobject;
  * @author  DZuo
  */
 public class VectorFeature {
+    public static final String MAPTYPE_TAG = "tag";
+    
     private int featureid;
     private String name;
     private String description;

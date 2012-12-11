@@ -295,7 +295,7 @@ public class QueryProcessManager {
             t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
             CloneManager manager = new CloneManager(conn);
-            found = manager.queryVectorsByProperty(property, status, restrictions);
+            found = manager.queryVectorsByProperty(property, status, restrictions, true, true);
             return found;
         } catch (Exception ex) {
             if(Constants.DEBUG) {

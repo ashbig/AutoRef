@@ -18,6 +18,7 @@ public class VectorProperty {
     private int vectorid;
     private String propertyType;
     private String displayValue;
+    private String category;
     
     /** Creates a new instance of VectorProperty */
     public VectorProperty() {
@@ -46,4 +47,18 @@ public class VectorProperty {
     public void setVectorid(int id) {this.vectorid = id;}
     public void setPropertyType(String type) {this.propertyType = type;}
     public void setDisplayValue(String s) {this.displayValue = s;}
+
+    /**
+     * @return the category
+     */
+    public String getCategory() {
+        return category;
+    }
+
+    /**
+     * @param category the category to set
+     */
+    public void setCategory(String category) {
+        this.category = category;
+    }
 }

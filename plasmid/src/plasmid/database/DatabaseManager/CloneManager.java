@@ -2185,31 +2185,35 @@ public class CloneManager extends TableManager {
         }
     }
 
-    public List<CloneInfo> queryVectorsByProperty(String property, String status, List restrictions) {
-        if(property==null)
-            return new ArrayList<CloneInfo>();
+    public List<CloneInfo> queryVectorsByProperty(String property, String status, List restrictions, boolean isFeature, boolean isProperty) {
+        String sql = "select cloneid,clonename,restriction,vectorid,vectorname,specialtreatment,description"
+                + " from clone where clonetype='No insert' and vectorid in"
+                + " (select vectorid from vectorproperty where lower(propertytype)=?)";
         
-        String sql = "select cloneid,clonename,restriction,vectorid,vectorname,specialtreatment,description"+
-                " from clone where clonetype='No insert' and vectorid in"+
-                " (select vectorid from vectorproperty where lower(propertytype)=?)";
-
+        if (property == null) {
+         sql = "select cloneid,clonename,restriction,vectorid,vectorname,specialtreatment,description"
+                + " from clone where clonetype='No insert'";
+        }
+        
         if (restrictions != null) {
             String s = StringConvertor.convertFromListToSqlString(restrictions);
             sql = sql + " and restriction in (" + s + ")";
         }
-        
+
         if (status != null) {
             sql += " and status='" + status + "'";
         }
-        
+
         PreparedStatement stmt = null;
         ResultSet rs = null;
         List<CloneInfo> clones = new ArrayList<CloneInfo>();
         try {
             stmt = conn.prepareStatement(sql);
-            stmt.setString(1, property.toLowerCase());
+            if(property != null) {
+                stmt.setString(1, property.toLowerCase());
+            }
             rs = DatabaseTransaction.executeQuery(stmt);
-            while(rs.next()) {
+            while (rs.next()) {
                 int cloneid = rs.getInt(1);
                 String clonename = rs.getString(2);
                 String restriction = rs.getString(3);
@@ -2217,7 +2221,25 @@ public class CloneManager extends TableManager {
                 String vectorname = rs.getString(5);
                 String specialtreatment = rs.getString(6);
                 String description = rs.getString(7);
-                CloneInfo clone = new CloneInfo(cloneid, clonename, null,null,null,null,null,restriction,null,vectorid,vectorname,null,status,specialtreatment,null,description);
+                CloneInfo clone = new CloneInfo(cloneid, clonename, null, null, null, null, null, restriction, null, vectorid, vectorname, null, status, specialtreatment, null, description);
+                CloneVector vector = new CloneVector();
+                if(isFeature) {
+                    List<VectorFeature> features = getVectorFeatures(vectorid);
+                    if(features == null) {
+                        throw new Exception("Cannot get vector feature for vector "+vectorname);
+                    } else {
+                        vector.setVectorfeatures(features);
+                    }
+                }
+                if(isProperty) {
+                    List<VectorProperty> properties = getVectorProperties(vectorid);
+                    if(properties == null) {
+                        throw new Exception("Cannot get vector property for vector "+vectorname);
+                    } else {
+                        vector.setProperty(properties);
+                    }
+                }
+                clone.setVector(vector);
                 clones.add(clone);
             }
             return clones;
@@ -2230,7 +2252,62 @@ public class CloneManager extends TableManager {
             DatabaseTransaction.closeStatement(stmt);
         }
     }
-    
+
+    public List<VectorFeature> getVectorFeatures(int vectorid) {
+        String sql = "select featureid,maptype,name,description,startpos,endpos"
+                + " from vectorfeature where vectorid=" + vectorid + " order by startpos";
+        DatabaseTransaction t = null;
+        ResultSet rs2 = null;
+        try {
+            List<VectorFeature> features = new ArrayList();
+            t = DatabaseTransaction.getInstance();
+            rs2 = t.executeQuery(sql);
+            while (rs2.next()) {
+                int featureid = rs2.getInt(1);
+                String maptype = rs2.getString(2);
+                String n = rs2.getString(3);
+                String d = rs2.getString(4);
+                int start = rs2.getInt(5);
+                int end = rs2.getInt(6);
+                VectorFeature feature = new VectorFeature(featureid, n, d, start, end, vectorid, maptype);
+                features.add(feature);
+            }
+            return features;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        } finally {
+            DatabaseTransaction.closeResultSet(rs2);
+        }
+    }
+
+    public List<VectorProperty> getVectorProperties(int vectorid) {
+        String sql = "select propertytype, category, displayvalue from vectorpropertytype"
+                + " where propertytype in (select propertytype from vectorproperty"
+                + " where vectorid=" + vectorid + ")";
+        DatabaseTransaction t = null;
+        ResultSet rs = null;
+        try {
+            List<VectorProperty> properties = new ArrayList();
+            t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            while (rs.next()) {
+                String propertytype = rs.getString(1);
+                String category = rs.getString(2);
+                String propertyvalue = rs.getString(3);
+                VectorProperty property = new VectorProperty(propertytype, propertyvalue);
+                property.setCategory(category);
+                properties.add(property);
+            }
+            return properties;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+    }
+
     public static void main(String args[]) {
         String file = "C:\\dev\\plasmid_support\\blastdb\\cloneid201206.txt";
         String output = "C:\\dev\\plasmid_support\\blastdb\\cloneseq201206.txt";

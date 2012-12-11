@@ -6,7 +6,6 @@
 package plasmid.coreobject;
 
 import java.util.*;
-import java.lang.*;
 import java.io.*;
 import java.sql.Connection;
 import plasmid.database.DatabaseManager.VectorManager;
@@ -19,7 +18,6 @@ import plasmid.util.StringConvertor;
  * @author  DZuo
  */
 public class CloneVector implements Serializable {
-
     private int vectorid;
     private int cloneid;
     private String name;
@@ -403,6 +401,45 @@ public class CloneVector implements Serializable {
         if(vectorfeatures==null || vectorfeatures.size()==0)
             return true;
         return false;
+    }
+    
+    public String getVectorTag() {
+        List<VectorFeature> features = getVectorfeatures();
+        if(features == null) {
+            return "";
+        }
+        
+        String tag = "";
+        for(VectorFeature fs:features) {
+            if(VectorFeature.MAPTYPE_TAG.equals(fs.getMaptype())) {
+                if(tag.equals("")) {
+                    tag = fs.getName();
+                } else {
+                    tag += "; "+fs.getName();
+                }
+            }
+        }
+        return tag;
+        
+    }
+    
+    public String getCloningSystem() {
+        List<VectorProperty> ps = getProperty();
+        if(ps == null) {
+            return "";
+        }
+        
+        String property = "";
+        for(VectorProperty p:ps) {
+            if(VectorProperty.CLONING.equals(p.getCategory())) {
+                if(property.equals("")) {
+                    property = p.getDisplayValue();
+                } else {
+                    property += "; "+p.getDisplayValue();
+                }
+            }
+        }
+        return property;
     }
 
     public static void main(String args[]) {
