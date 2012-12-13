@@ -14,10 +14,10 @@
     </head>
     
     <body>
-        <jsp:include page="homeTitle.jsp" /><table width="973" height="538" border="0">
+        <jsp:include page="homeTitle.jsp" /><table width="973"  border="0">
             
             <tr>
-                <td height="300"><table width="800" height="259" border="0" align="center" bgcolor="#EFEFEF" id="form">
+                <td height="250"><table width="800" height="259" border="0" align="center" bgcolor="#EFEFEF" id="form">
                         <tr>
                             <td width="800" height="112">
                                 
@@ -112,18 +112,10 @@
             <tr>
                 <td><table width="800" border="5" align="center" bordercolor="#999999" id="gray">
                         <tr>
-                            <td width="800" height="180"><h1 align="center">What's New? </h1>
-                                <ul type= circles>  
-                                    <li class="mainbodytext">06/01/10 - <a href="http://www.hms.harvard.edu/dms/bbs/fac/harper.html" target="_blank">Dr. Wade Harper</a> has joined the DNA Resource CORE as the CORE Director. </li>
-                                    <li class="mainbodytext">10/14/09 - PSI Clones have migrated to our sister site at <a href="http://dnasu.asu.edu/DNASU/" target="_blank">DNASU</a>.</li>
-                                    <li class="mainbodytext">10/13/09 - Platinum Clones are now available! Please use this service to request additional QC data from your specific order.</li>
-                                    <li class="mainbodytext">07/24/09 - Kinase shRNA hairpins Now Available! Browse collection <a href="http://plasmid.med.harvard.edu/PLASMID/GetCollection.do?collectionName=shRNA Kinase Collection (pLKO.1)">here</a>.</li>
-                                    <li class="mainbodytext"> 02/15/09 - No charge for pick up orders. Orders will be available in second floor hallway freezer of the Seeley G. Mudd Building.<br>
-                                    *You MUST have access to the building and select this option at check-out to take advantage of this option. </li> 
-                                    <li class="mainbodytext">01/01/09 - PlasmID ships internationally! Here's a <a href="http://www.batchgeocode.com/map/?i=bb69e015b8bfb20e06150bb05f4c95e3">map</a> of where the repository has shipped plasmids. </li>
-                                    <li class="mainbodytext">01/01/09 - Search our collection using primary sequence or accession number with our new <a href="PrepareBlast.do">Blast search</a>. </li>
-                                    
-                            </ul></td>
+                            <td width="800" height="70">
+                                <p class="alert">Notice: The PlasmID Repository will observe the upcoming Winter Recess at Harvard Medical School (December 24-January 1). Our staff will be unable to process orders during this break. All outgoing shipments will be suspended starting December 19 to avoid delays associated with peak holiday shipping and the closure of receiving docks.  If you have any questions or concerns about your order please feel free to contact plasmidhelp@hms.harvard.edu.
+                                </p>
+                            </td>
                         </tr>
                 </table></td>
             </tr>
