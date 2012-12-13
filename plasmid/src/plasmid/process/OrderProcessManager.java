@@ -1250,7 +1250,7 @@ public class OrderProcessManager {
 
     public void sendOrderFailEmail(CloneOrder order, String email) {
         String subject = "order " + order.getOrderid();
-        String text = "Your order " + order.getOrderid() + " was not processed successfully. Please contact us at plasmidhelp@hms.harvard.edu to solve the problem.\n";
+        String text = "Your order " + order.getOrderid() + " was not processed successfully. Please contact us at plasmidhelp@hms.harvard.edu to solve the problem.\n\n";
 
         try {
             Mailer.sendMessage(email, Constants.EMAIL_FROM, Constants.EMAIL_FROM, subject, text);
@@ -1272,7 +1272,7 @@ public class OrderProcessManager {
 
     public void sendOrderCancelEmail(CloneOrder order, String email) {
         String subject = "PlasmID Order "+order.getOrderid()+" Cancelled";
-        String text = "Your order " + order.getOrderid() + " has been cancelled. Please contact us at plasmidhelp@hms.harvard.edu for any questions. Thank you for using PlasmID.\n";
+        String text = "Your order " + order.getOrderid() + " has been cancelled. Please contact us at plasmidhelp@hms.harvard.edu for any questions. Thank you for using PlasmID.\n\n";
 
         try {
             Mailer.sendMessage(email, Constants.EMAIL_FROM, Constants.EMAIL_FROM, subject, text);
@@ -1304,7 +1304,7 @@ public class OrderProcessManager {
                 + "Thank you for using PlasmID,\n"
                 + "The DF/HCC DNA Resource Core PlasmID Respository\n"
                 + "http://plasmid.med.harvard.edu/PLASMID/\n\n"
-                + "If you have further questions, please contact us at plasmidhelp@hms.harvard.edu\n";
+                + "If you have further questions, please contact us at plasmidhelp@hms.harvard.edu\n\n";
 
         try {
             Mailer.sendMessage(email, Constants.EMAIL_FROM, subject, text);
@@ -1315,7 +1315,7 @@ public class OrderProcessManager {
     
     public void sendPendingAQISEmail(CloneOrder order, String email) {
         String subject = "PlasmID Order "+order.getOrderid()+" Pending Customs Documentation";
-        String text = "Your order "+order.getOrderid()+" requires additional information. To clear customs your country requires that your shipment include a health, ANVISA, AQIS, CIQ, MAF or other certificate.  Your order has been placed on hold pending this documentation. Please email a copy of the required customs form to plasmidhelp@hms.harvard.edu. Please feel free to contact us at the same email address for any questions. Thank you for using PlasmID.\n";
+        String text = "Your order "+order.getOrderid()+" requires additional information. To clear customs your country requires that your shipment include a health, ANVISA, AQIS, CIQ, MAF or other certificate.  Your order has been placed on hold pending this documentation. Please email a copy of the required customs form to plasmidhelp@hms.harvard.edu. Please feel free to contact us at the same email address for any questions. Thank you for using PlasmID.\n\n";
   
         try {
             Mailer.sendMessage(email, Constants.EMAIL_FROM, subject, text);
@@ -1330,7 +1330,7 @@ public class OrderProcessManager {
         text += "DF/HCC DNA Resource Core\n";
         text += "Harvard Medical School\n";
         text += "240 Longwood Ave, SGM 228\n";
-        text += "Boston, MA 02115\n";
+        text += "Boston, MA 02115\n\n";
 
         try {
             Mailer.sendMessage(email, Constants.EMAIL_FROM, subject, text);
@@ -1348,7 +1348,7 @@ public class OrderProcessManager {
                 + "If substitution with an alternate clone  is not possible we are also happy to adjust the price of your order and ship the remaining constructs. Please contact me at your earliest convenience so that we may work together to complete your order.\n\n"
                 + "Sincerely,\n\n"
                 + "The PlasmID Repository Staff\n"
-                + "plasmidhelp@hms.harvard.edu\n";
+                + "plasmidhelp@hms.harvard.edu\n\n";
         try {
             Mailer.sendMessage(email, Constants.EMAIL_FROM, subject, text);
         } catch (Exception ex) {
@@ -2161,7 +2161,7 @@ public class OrderProcessManager {
         text += "===========================================================\n";
         text += "Tracking Number: "+order.getTrackingnumber()+"\n";
         if(order.getComments()!=null && order.getComments().trim().length()>0) {
-            text += order.getComments()+"\n";
+            text += order.getComments()+"\n\n";
         }
         Mailer.sendMessage(to, Constants.EMAIL_FROM, subject, text);
 
@@ -2182,7 +2182,7 @@ public class OrderProcessManager {
                     + "This invoice was generated upon completion and shipment of your order. Any discounts, price modifications, and credit card payments should already be reflected on this invoice. If you have received this notification in error, or believe that a clerical mistake has occurred please contact us as soon as possible to resolve the issue. Please find payment instructions attached to this email and ALWAYS BE SURE TO INCLUDE YOUR INVOICE NUMBER WITH PAYMENT and ADD ANY WIRE TRANSFER FEES TO YOUR TOTAL.\n\n"
                     + "As a part of our continued environmental efforts this email will serve as your sole notification, and no paper copy will be mailed to your facility.\n\n"
                     + "Payment Terms: Net 30\n"
-                    + "Enclosures: Invoice, Payment Instructions\n";
+                    + "Enclosures: Invoice, Payment Instructions\n\n";
 
             Mailer.sendMessage(billingemail, Constants.EMAIL_FROM, to, subject, text, files);
         }
