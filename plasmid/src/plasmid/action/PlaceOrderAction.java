@@ -117,7 +117,7 @@ public class PlaceOrderAction extends Action {
                         }
                         boolean b = manager.updateOrderStatus(orderid, status);
                         if(b) {
-                            manager.sendOrderEmail(order, email);
+                            manager.sendOrderEmail(order, email, status);
                         } else {
                             manager.sendOrderFailEmail(order, email);
                         }

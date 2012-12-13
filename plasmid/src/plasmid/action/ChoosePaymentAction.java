@@ -293,7 +293,7 @@ public class ChoosePaymentAction extends UserAction {
 
         if (errors.empty()) {
             if (Constants.PO.equals(payment)) {
-                manager.sendOrderEmail(order, user.getEmail());
+                manager.sendOrderEmail(order, user.getEmail(), status);
                 order.setEmail(user.getEmail());
                 order.setPhone(user.getPhone());
                 order.setPiname(user.getPiname());
