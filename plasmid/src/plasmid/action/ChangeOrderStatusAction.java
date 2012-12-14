@@ -93,6 +93,13 @@ public class ChangeOrderStatusAction extends InternalUserAction {
                 String email = manager.getCloneOrder(id).getEmail();
                 manager.sendTroubleshootingEmail(id, email);
             }
+
+            if (CloneOrder.CANCEL.equals(s) && !CloneOrder.CANCEL.equals(os)) {
+                String email = manager.getCloneOrder(id).getEmail();
+                CloneOrder o = new CloneOrder();
+                o.setOrderid(id);
+                manager.sendOrderCancelEmail(o, email);
+            }
         }
 
         if (!manager.updateAllOrderStatus(orders, user.getFirstname()+" "+user.getLastname())) {
