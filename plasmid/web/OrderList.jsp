@@ -138,6 +138,12 @@
             <logic:notEqual name="order" property="status" value="<%=CloneOrder.PARTIALLY_SHIPPED%>">
             <option value="<%=CloneOrder.PARTIALLY_SHIPPED%>" /><%=CloneOrder.PARTIALLY_SHIPPED%>
             </logic:notEqual>
+            <logic:equal name="order" property="status" value="<%=CloneOrder.INVALIDE_PAYMENT%>">
+            <option value="<%=CloneOrder.PARTIALLY_SHIPPED%>" selected/><%=CloneOrder.INVALIDE_PAYMENT%>
+            </logic:equal>
+            <logic:notEqual name="order" property="status" value="<%=CloneOrder.INVALIDE_PAYMENT%>">
+            <option value="<%=CloneOrder.PARTIALLY_SHIPPED%>" /><%=CloneOrder.INVALIDE_PAYMENT%>
+            </logic:notEqual>
         </select>
     </td>
     </logic:equal>
