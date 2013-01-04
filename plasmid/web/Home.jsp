@@ -113,7 +113,14 @@
                 <td><table width="800" border="5" align="center" bordercolor="#999999" id="gray">
                         <tr>
                             <td width="800" height="70">
-                                <p class="alert">Notice: The PlasmID Repository will observe the upcoming Winter Recess at Harvard Medical School (December 24-January 1). Our staff will be unable to process orders during this break. All outgoing shipments will be suspended starting December 19 to avoid delays associated with peak holiday shipping and the closure of receiving docks.  If you have any questions or concerns about your order please feel free to contact plasmidhelp@hms.harvard.edu.
+                                <p/>
+                                <p class="mainbodytext">What's New?
+                                <ul class="mainbodytext">
+                                    <li>Vector Collection organized by downstream use</li>
+                                    <li>Viral packaging plasmids and scramble hairpin now available [<a href="http://plasmid.med.harvard.edu/PLASMID/GetVectorsByType.do?type=viral%20production">go there</a>]</li>
+                                    <li>hORFV8.1 in pENTR223 now available [PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed?cmd=Search&db=pubmed&term=21706014" target="_blank">21706014]</a></li>
+                                    <li>Complete collection from <a href="http://www.orfeomecollaboration.org/" target="_blank">ORFeome Collaboration</a> now available</li>
+                                </ul>
                                 </p>
                             </td>
                         </tr>
