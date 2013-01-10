@@ -22,27 +22,27 @@
 <table width="100%" border="0">
   <tr> 
     <td width="58%" height="444" valign="top"> 
-      <p class="mainbodytextlarge">The <a href="http://dnaseq.med.harvard.edu/" title="DNA Resource Core" target="_blank">DF/HCC 
+      <p class="mainbodytext">The <a href="http://dnaseq.med.harvard.edu/" title="DNA Resource Core" target="_blank">DF/HCC 
         DNA Resource Core</a> provides DNA sequencing services in addition to 
         plasmid repository services. </p>
-      <p class="mainbodytextlarge">The core is hosted by the Harvard Institute of 
+      <p class="mainbodytext">The core is hosted by the Harvard Institute of 
         Proteomics (<a href="http://www.hip.harvard.edu/" title="Harvard Institute of Proteomics" target="_blank">HIP</a>) 
         at <a href="http://hms.harvard.edu/hms/home.asp" title="Harvard Medical School" target="_blank">Harvard 
         Medical School</a>.</p>
-      <p class="mainbodytextlarge">We are located  in the LHRRB building at the Harvard Medical School in Boston.</p>
+      <p class="mainbodytext">We are located  in the Seeley G. Mudd building at the Harvard Medical School in Boston.</p>
       <blockquote>
-        <p class="mainbodytextlarge"><strong>Mailing address:</strong><br>
+        <p class="mainbodytext"><strong>Mailing address:</strong><br>
         SGM 228<br>
         240 Longwood Ave<br>
         Boston, MA 02115</p>
-        <p class="mainbodytextlarge"><strong>Our billing (for your PO) is handled 
+        <p class="mainbodytext"><strong>Our billing (for your PO) is handled 
           by:</strong><br>
            DF/HCC DNA Resource Core<br>
           BCMP Department<br>
           240 Longwood Ave.<br>
           Boston, MA 02115</p>
           </blockquote>
-          <p class="mainbodytextlarge"><strong>Contact Info:</strong><br>
+          <p class="mainbodytext"><strong>Contact Info:</strong><br>
           Questions about PlasmID? Please contact <a href="mailto:plasmidhelp@hms.harvard.edu">PlasmID help</a>.<br>
           Questions about Material Transfer Agreements (MTAs)? Contact <a href="mailto:plasmidMTA@hms.harvard.edu">MTA help</a>.</p>
           </td>
