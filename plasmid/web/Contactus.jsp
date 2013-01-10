@@ -25,8 +25,8 @@
       <p class="mainbodytext">The <a href="http://dnaseq.med.harvard.edu/" title="DNA Resource Core" target="_blank">DF/HCC 
         DNA Resource Core</a> provides DNA sequencing services in addition to 
         plasmid repository services. </p>
-      <p class="mainbodytext">The core is hosted by the Harvard Institute of 
-        Proteomics (<a href="http://www.hip.harvard.edu/" title="Harvard Institute of Proteomics" target="_blank">HIP</a>) 
+      <p class="mainbodytext">The core is hosted by the Department of Biological Chemistry and Molecular Pharmacology 
+        and the Department of Cell Biology
         at <a href="http://hms.harvard.edu/hms/home.asp" title="Harvard Medical School" target="_blank">Harvard 
         Medical School</a>.</p>
       <p class="mainbodytext">We are located  in the Seeley G. Mudd building at the Harvard Medical School in Boston.</p>
