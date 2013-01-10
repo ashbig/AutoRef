@@ -32,7 +32,7 @@
       <p class="mainbodytextlarge">We are located  in the LHRRB building at the Harvard Medical School in Boston.</p>
       <blockquote>
         <p class="mainbodytextlarge"><strong>Mailing address:</strong><br>
-          LHRRB<br>
+        SGM 228<br>
         240 Longwood Ave<br>
         Boston, MA 02115</p>
         <p class="mainbodytextlarge"><strong>Our billing (for your PO) is handled 
