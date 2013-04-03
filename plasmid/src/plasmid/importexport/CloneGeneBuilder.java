@@ -401,8 +401,8 @@ public class CloneGeneBuilder {
     }
     
     public static void main(String args[]) {
-        int lastInsertid = 59129;
-        int lastCloneid = 84286;
+        int lastInsertid = 316109;
+        int lastCloneid = 438085;
         DatabaseTransaction t = null;
         Connection conn = null;
         CloneGeneBuilder builder = new CloneGeneBuilder();

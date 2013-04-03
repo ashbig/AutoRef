@@ -45,6 +45,7 @@ public class CloneImporter {
                 if("clonename".equalsIgnoreCase(columnName)) {
                     //System.out.println(columnInfo+"="+id);
                     idmap.put(columnInfo, new Integer(id));
+                    System.out.println(columnInfo+"\t"+id);
                 }
                 if("clonetype".equalsIgnoreCase(columnName)) {
                     c.setType(columnInfo);

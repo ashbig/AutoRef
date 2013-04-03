@@ -109,8 +109,13 @@ public class Importer {
     //public static final String filepath = "G:\\plasmid\\PSI_2008_07_2\\";
     //public static final String filepath = "C:\\dev\\plasmidsupport\\import\\batch9\\";
     //public static final String filepath = "C:\\dev\\plasmidsupport\\Orfeome201103\\import\\";
-    public static final String filepath = "C:\\dev\\plasmidsupport\\Orfeome201104\\import\\";
-   
+    //public static final String filepath = "C:\\dev\\plasmidsupport\\Orfeome201104\\import\\";
+    //public static final String filepath = "C:\\dev\\plasmid_support\\wilson_201201\\import\\";
+    //public static final String filepath = "C:\\dev\\plasmid_support\\wilson_201201\\import_empty_vector\\";
+    //public static final String filepath = "C:\\dev\\plasmid_support\\OC_missing\\import\\";
+    //public static final String filepath = "C:\\dev\\plasmid_support\\mgc_import_201111\\import3\\";
+    public static final String filepath = "C:\\dev\\plasmid_support\\ccsb_201210\\import\\";
+     
     private List tables;
     private String error;
     

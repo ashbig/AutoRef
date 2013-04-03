@@ -26,6 +26,7 @@ public class BatchSeqRetriever {
     public static final String TYPE_NT = "nt";
     public static final String TYPE_AA = "aa";
     public static final String TYPE_CDS = "cds";
+    public static final String TYPE_GB = "gb";
     
     public String retriveSequence(List<String> gis, String type) {
         String url = getUrl(type);
@@ -61,7 +62,10 @@ public class BatchSeqRetriever {
             return BASEURL + "?db=nuccore&rettype=" + CDS_NT + "&retmode=text&id=";
         else if(TYPE_NT.equals(type))
             return BASEURL + "?db=nucleotide&rettype=fasta&retmode=text&id=";
-        return BASEURL + "?db=protein&rettype=fasta&retmode=text&id=";
+        else if(TYPE_AA.equals(type))
+            return BASEURL + "?db=protein&rettype=fasta&retmode=text&id=";
+        else
+            return BASEURL + "?db=nuccore&rettype=" + TYPE_GB + "&retmode=text&id=";
     }
     public List<String> readInput(String filename) throws Exception {
         List<String> gis = new ArrayList();
@@ -79,8 +83,8 @@ public class BatchSeqRetriever {
     }
 
     public static void main(String args[]) {
-        String input = "C:\\dev\\plasmid_support\\PlasmidAnalysis201212\\Refseq\\refseq_proteincoding_accession.txt";
-        String output = "C:\\dev\\plasmid_support\\PlasmidAnalysis201212\\Refseq\\refseq_proteincoding_accession_output.txt";
+        String input = "C:\\dev\\plasmid_support\\Gene_20130402\\gi.txt";
+        String output = "C:\\dev\\plasmid_support\\Gene_20130402\\genbank_gb.txt";
 
         BatchSeqRetriever bsr = new BatchSeqRetriever();
         try {
@@ -93,14 +97,14 @@ public class BatchSeqRetriever {
                 l.add(gi);
                 n++;
                 if (n == 200) {
-                    String s = bsr.retriveSequence(l, BatchSeqRetriever.TYPE_CDS);
+                    String s = bsr.retriveSequence(l, BatchSeqRetriever.TYPE_GB);
                     out.println(s);
                     n = 0;
                     l = new ArrayList<String>();
                 }
             }
             if (!l.isEmpty()) {
-                String s = bsr.retriveSequence(l, BatchSeqRetriever.TYPE_CDS);
+                String s = bsr.retriveSequence(l, BatchSeqRetriever.TYPE_GB);
                 out.println(s);
             }
             out.close();

@@ -83,8 +83,8 @@ public class PlatePositionConvertor {
     public static void main(String args[]) {
         //String inputFile = "G:\\plasmid\\plate_outside_200704\\plate.txt";
         //String outputFile = "G:\\plasmid\\plate_outside_200704\\plateout.txt";
-        String inputFile = "C:\\dev\\plasmid_support\\OC_missing\\pos_in.txt";
-        String outputFile = "C:\\dev\\plasmid_support\\OC_missing\\pos_out.txt";
+        String inputFile = "C:\\dev\\plasmid_support\\ccsb_201210\\well_in.txt";
+        String outputFile = "C:\\dev\\plasmid_support\\ccsb_201210\\well_out.txt";
         String line;
 
         try {
