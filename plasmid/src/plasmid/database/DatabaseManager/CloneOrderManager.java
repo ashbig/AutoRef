@@ -725,11 +725,11 @@ public class CloneOrderManager extends TableManager {
             }
         }
     }
-    
+
     public UserAddress queryCloneShippingAddress(int orderid) {
-        String sql = "select addresstype,name,organization,addressline1," +
-                " addressline2,city,state,zipcode,country,phone,fax,email" +
-                " from orderaddress where orderid=" + orderid;
+        String sql = "select addresstype,name,organization,addressline1,"
+                + " addressline2,city,state,zipcode,country,phone,fax,email"
+                + " from orderaddress where orderid=" + orderid;
 
         ResultSet rs = null;
         DatabaseTransaction t = null;
@@ -767,68 +767,88 @@ public class CloneOrderManager extends TableManager {
         String sql = "select c.cloneid, c.clonename from clone c, orderclones o"
                 + " where c.cloneid=o.cloneid"
                 + " and o.orderid=?";
-        String sql2 = "select method,sequence,result,researchername,when,userid"
+        String sql2 = "select method,sequence,result,researchername,when,userid,phred,isolatename,read,workflow"
                 + " from orderclonevalidation where orderid=? and cloneid=?"
                 + " order by when desc";
+        String sql3 = "select PLATINUMSERVICESTATUS from cloneorder where orderid=?";
 
         DatabaseTransaction t = null;
         ResultSet rs = null;
         ResultSet rs2 = null;
+        ResultSet rs3 = null;
         PreparedStatement stmt = null;
         PreparedStatement stmt2 = null;
+        PreparedStatement stmt3 = null;
         Connection connection = null;
 
         try {
             t = DatabaseTransaction.getInstance();
             connection = t.requestConnection();
             stmt = connection.prepareStatement(sql);
+            stmt3 = connection.prepareStatement(sql3);
 
             if (isvalidation) {
                 stmt2 = connection.prepareStatement(sql2);
             }
+
             List cloneorders = new ArrayList();
             for (int i = 0; i < orderids.size(); i++) {
                 int orderid = Integer.parseInt((String) orderids.get(i));
-                CloneOrder cloneOrder = new CloneOrder();
-                cloneOrder.setOrderid(orderid);
-                stmt.setInt(1, orderid);
-                rs = DatabaseTransaction.executeQuery(stmt);
+                stmt3.setInt(1, orderid);
+                rs3 = DatabaseTransaction.executeQuery(stmt3);
+                if (rs3.next()) {
+                    String platinumstatus = rs3.getString(1);
+                    CloneOrder cloneOrder = new CloneOrder();
+                    cloneOrder.setOrderid(orderid);
+                    cloneOrder.setPlatinumServiceStatus(platinumstatus);
 
-                while (rs.next()) {
-                    int cloneid = rs.getInt(1);
-                    String clonename = rs.getString(2);
-                    Clone clone = new Clone();
-                    clone.setCloneid(cloneid);
-                    clone.setName(clonename);
-                    OrderClones orderClone = new OrderClones(orderid, cloneid, null, 0);
-                    orderClone.setClone(clone);
+                    stmt.setInt(1, orderid);
+                    rs = DatabaseTransaction.executeQuery(stmt);
 
-                    if (isvalidation) {
-                        stmt2.setInt(1, orderid);
-                        stmt2.setInt(2, cloneid);
-                        rs2 = DatabaseTransaction.executeQuery(stmt2);
-                        while (rs2.next()) {
-                            String method = rs2.getString(1);
-                            String sequence = rs2.getString(2);
-                            String result = rs2.getString(3);
-                            String researcher = rs2.getString(4);
-                            String when = rs2.getString(5);
-                            int userid = rs2.getInt(6);
-                            OrderCloneValidation oc = new OrderCloneValidation(orderClone);
-                            oc.setMethod(method);
-                            oc.setSequence(Dnasequence.convertToFasta(sequence));
-                            oc.setResult(result);
-                            oc.setWhen(when);
-                            oc.setWho(researcher);
-                            oc.setUserid(userid);
-                            orderClone.addValidation(oc);
+                    while (rs.next()) {
+                        int cloneid = rs.getInt(1);
+                        String clonename = rs.getString(2);
+                        Clone clone = new Clone();
+                        clone.setCloneid(cloneid);
+                        clone.setName(clonename);
+                        OrderClones orderClone = new OrderClones(orderid, cloneid, null, 0);
+                        orderClone.setClone(clone);
+
+                        if (isvalidation) {
+                            stmt2.setInt(1, orderid);
+                            stmt2.setInt(2, cloneid);
+                            rs2 = DatabaseTransaction.executeQuery(stmt2);
+                            while (rs2.next()) {
+                                String method = rs2.getString(1);
+                                String sequence = rs2.getString(2);
+                                String result = rs2.getString(3);
+                                String researcher = rs2.getString(4);
+                                String when = rs2.getString(5);
+                                int userid = rs2.getInt(6);
+                                int phred = rs2.getInt(7);
+                                String readname = rs2.getString(8);
+                                String read = rs2.getString(9);
+                                String workflow = rs2.getString(10);
+                                OrderCloneValidation oc = new OrderCloneValidation(orderClone);
+                                oc.setMethod(method);
+                                oc.setSequence(Dnasequence.convertToFasta(sequence));
+                                oc.setResult(result);
+                                oc.setWhen(when);
+                                oc.setWho(researcher);
+                                oc.setUserid(userid);
+                                oc.setPhred(phred);
+                                oc.setReadname(readname);
+                                oc.setRead(read);
+                                oc.setWorkflow(workflow);
+                                orderClone.addHistory(oc);
+                            }
+                            DatabaseTransaction.closeResultSet(rs2);
                         }
-                        DatabaseTransaction.closeResultSet(rs2);
+                        cloneOrder.addClone(orderClone);
                     }
-                    cloneOrder.addClone(orderClone);
+                    DatabaseTransaction.closeResultSet(rs);
+                    cloneorders.add(cloneOrder);
                 }
-                DatabaseTransaction.closeResultSet(rs);
-                cloneorders.add(cloneOrder);
             }
             return cloneorders;
         } catch (Exception ex) {
@@ -847,6 +867,12 @@ public class CloneOrderManager extends TableManager {
             }
             if (stmt2 != null) {
                 DatabaseTransaction.closeStatement(stmt2);
+            }
+            if (rs3 != null) {
+                DatabaseTransaction.closeResultSet(rs3);
+            }
+            if (stmt3 != null) {
+                DatabaseTransaction.closeStatement(stmt3);
             }
             if (connection != null) {
                 DatabaseTransaction.closeConnection(connection);
@@ -967,8 +993,8 @@ public class CloneOrderManager extends TableManager {
 
     public boolean addOrderCloneValidation(List validations) {
         String sql = "insert into orderclonevalidation"
-                + " (orderid,cloneid,method,sequence,result,userid,when,researchername,phred)"
-                + " values(?,?,?,?,?,?,sysdate,?,?)";
+                + " (orderid,cloneid,method,sequence,result,userid,when,researchername,phred,read,isolatename,workflow)"
+                + " values(?,?,?,?,?,?,sysdate,?,?,?,?,?)";
         PreparedStatement stmt = null;
 
         try {
@@ -983,6 +1009,9 @@ public class CloneOrderManager extends TableManager {
                 stmt.setInt(6, clone.getUserid());
                 stmt.setString(7, clone.getWho());
                 stmt.setInt(8, clone.getPhred());
+                stmt.setString(9, clone.getRead());
+                stmt.setString(10, clone.getReadname());
+                stmt.setString(11, clone.getWorkflow());
                 DatabaseTransaction.executeUpdate(stmt);
             }
         } catch (Exception ex) {
@@ -1349,7 +1378,7 @@ public class CloneOrderManager extends TableManager {
             DatabaseTransaction.closeStatement(stmt);
         }
     }
-    
+
     public static Country getCountry(String name) {
         String sql = "select code from country where name=?";
         DatabaseTransaction t = null;
@@ -1363,11 +1392,11 @@ public class CloneOrderManager extends TableManager {
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, name);
             rs = DatabaseTransaction.executeQuery(stmt);
-            if(rs.next()) {
+            if (rs.next()) {
                 String code = rs.getString(1);
-                country = new Country(name, code); 
+                country = new Country(name, code);
             } else {
-                System.out.println("Cannot find country: "+name);
+                System.out.println("Cannot find country: " + name);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -1378,7 +1407,7 @@ public class CloneOrderManager extends TableManager {
         }
         return country;
     }
-    
+
     public static State getState(String code) {
         String sql = "select name from state where code=?";
         DatabaseTransaction t = null;
@@ -1392,11 +1421,11 @@ public class CloneOrderManager extends TableManager {
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, code);
             rs = DatabaseTransaction.executeQuery(stmt);
-            if(rs.next()) {
+            if (rs.next()) {
                 String name = rs.getString(1);
-                state = new State(name, code); 
+                state = new State(name, code);
             } else {
-                System.out.println("Cannot find state: "+code);
+                System.out.println("Cannot find state: " + code);
             }
         } catch (Exception ex) {
             ex.printStackTrace();

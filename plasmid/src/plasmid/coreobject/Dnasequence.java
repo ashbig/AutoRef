@@ -45,7 +45,10 @@ public class Dnasequence {
     public void setSequence(String s) {this.sequence = s;}
     public void setInsertid(int id) {this.insertid = id;}
     
-    public static String convertToFasta(String sequenceString) {        
+    public static String convertToFasta(String sequenceString) {      
+        if(sequenceString==null)
+            return "";
+        
         StringBuffer seqBuff = new StringBuffer();
         
         for (int i=0; i < sequenceString.length(); i++){

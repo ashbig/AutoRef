@@ -736,6 +736,68 @@ public class CloneManager extends TableManager {
         return seq;
     }
 
+    public static void queryCloneSequenceForValidation(CloneOrder order) {
+        List<OrderClones> clones = order.getClones();
+        DatabaseTransaction t = null;
+        String error = null;
+        try {
+            t = DatabaseTransaction.getInstance();
+
+            for (OrderClones orderClone : clones) {
+                Clone clone = orderClone.getClone();
+                error = clone.getName();
+                String seq = "";
+                String sql2 = "select insertid from cloneinsert where cloneid=" + clone.getCloneid();
+                ResultSet rs2 = t.executeQuery(sql2);
+                String insertid = null;
+                while (rs2.next()) {
+                    if (insertid == null) {
+                        insertid = rs2.getString(1);
+                    } else {
+                        insertid = insertid + "," + rs2.getString(1);
+                    }
+                }
+                DatabaseTransaction.closeResultSet(rs2);
+                if (insertid == null) {
+                    String refseqid = null;
+                    String sql4 = "select refseqid from dnainsert where insertid in"
+                            + "(select insertid from cloneinsert where cloneid=" + clone.getCloneid() + ")";
+                    ResultSet rs4 = t.executeQuery(sql4);
+                    while (rs4.next()) {
+                        if (refseqid == null) {
+                            refseqid = rs4.getString(1);
+                        } else {
+                            refseqid = refseqid + "," + rs4.getString(1);
+                        }
+                    }
+                    DatabaseTransaction.closeResultSet(rs4);
+                    if (refseqid != null) {
+                        String sql5 = "select seqtext from seqtext t, dnasequence d where t.sequenceid=d.sequenceid and d.referenceid in (" + refseqid + ") order by seqorder";
+                        ResultSet rs5 = t.executeQuery(sql5);
+                        while (rs5.next()) {
+                            String seqtext = rs5.getString(1);
+                            seq += seqtext;
+                        }
+                        DatabaseTransaction.closeResultSet(rs5);
+                    }
+                } else {
+                    String sql3 = "select seqtext from seqtext t, dnasequence d where t.sequenceid=d.sequenceid and d.insertid in (" + insertid + ") order by seqorder";
+                    ResultSet rs3 = t.executeQuery(sql3);
+                    while (rs3.next()) {
+                        String seqtext = rs3.getString(1);
+                        seq += seqtext;
+                    }
+                    DatabaseTransaction.closeResultSet(rs3);
+                }
+
+                clone.setSequence(seq);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            System.out.println(ex.getMessage() + "\n" + "Error occured while query clone sequence by cloneid: " + error);
+        }
+    }
+
     public Clone queryCloneByCloneid(int cloneid) {
         return queryCloneByCloneid(cloneid, false);
     }
@@ -2189,12 +2251,12 @@ public class CloneManager extends TableManager {
         String sql = "select cloneid,clonename,restriction,vectorid,vectorname,specialtreatment,description"
                 + " from clone where clonetype='No insert' and vectorid in"
                 + " (select vectorid from vectorproperty where lower(propertytype)=?)";
-        
+
         if (property == null) {
-         sql = "select cloneid,clonename,restriction,vectorid,vectorname,specialtreatment,description"
-                + " from clone where clonetype='No insert'";
+            sql = "select cloneid,clonename,restriction,vectorid,vectorname,specialtreatment,description"
+                    + " from clone where clonetype='No insert'";
         }
-        
+
         if (restrictions != null) {
             String s = StringConvertor.convertFromListToSqlString(restrictions);
             sql = sql + " and restriction in (" + s + ")";
@@ -2209,7 +2271,7 @@ public class CloneManager extends TableManager {
         List<CloneInfo> clones = new ArrayList<CloneInfo>();
         try {
             stmt = conn.prepareStatement(sql);
-            if(property != null) {
+            if (property != null) {
                 stmt.setString(1, property.toLowerCase());
             }
             rs = DatabaseTransaction.executeQuery(stmt);
@@ -2223,18 +2285,18 @@ public class CloneManager extends TableManager {
                 String description = rs.getString(7);
                 CloneInfo clone = new CloneInfo(cloneid, clonename, null, null, null, null, null, restriction, null, vectorid, vectorname, null, status, specialtreatment, null, description);
                 CloneVector vector = new CloneVector();
-                if(isFeature) {
+                if (isFeature) {
                     List<VectorFeature> features = getVectorFeatures(vectorid);
-                    if(features == null) {
-                        throw new Exception("Cannot get vector feature for vector "+vectorname);
+                    if (features == null) {
+                        throw new Exception("Cannot get vector feature for vector " + vectorname);
                     } else {
                         vector.setVectorfeatures(features);
                     }
                 }
-                if(isProperty) {
+                if (isProperty) {
                     List<VectorProperty> properties = getVectorProperties(vectorid);
-                    if(properties == null) {
-                        throw new Exception("Cannot get vector property for vector "+vectorname);
+                    if (properties == null) {
+                        throw new Exception("Cannot get vector property for vector " + vectorname);
                     } else {
                         vector.setProperty(properties);
                     }
@@ -2309,8 +2371,8 @@ public class CloneManager extends TableManager {
     }
 
     public static void main(String args[]) {
-        String file = "C:\\dev\\plasmid_support\\blastdb\\cloneid201206.txt";
-        String output = "C:\\dev\\plasmid_support\\blastdb\\cloneseq201206.txt";
+        String file = "C:\\dev\\plasmid_support\\PlasmidAnalysis201212\\Core\\cloneid_missing_seq_2.txt";
+        String output = "C:\\dev\\plasmid_support\\PlasmidAnalysis201212\\Core\\cloneseq_5.txt";
         DatabaseTransaction dt = null;
         Connection conn = null;
 

@@ -138,8 +138,6 @@
                     type="plasmid.form.QueryVectorForm"/>
         <form-bean      name="blastForm"
                     type="plasmid.form.BlastForm"/>
-        <form-bean      name="enterPlatinumResultForm"
-                    type="plasmid.form.EnterPlatinumResultForm"/>
         <form-bean      name="viewPlatinumResultForm"
                     type="plasmid.form.ViewPlatinumResultForm"/>
         <form-bean      name="viewInvoiceForm"
@@ -170,6 +168,8 @@
                     type="plasmid.form.ViewVectormapForm"/>
         <form-bean      name="getVectorsByTypeForm"
                     type="plasmid.form.GetVectorsByTypeForm"/>
+        <form-bean      name="cloneValidationForm"
+                    type="plasmid.form.CloneValidationForm"/>
     </form-beans>
 
   <!-- ========== Global Forward Definitions ============================== -->
@@ -316,6 +316,19 @@
             <forward  name="success"  path="/ViewOrderDetail.jsp"/>
             <forward  name="success_paypal"  path="/ChoosePayment.jsp"/>
         </action>
+        <action     path="/CloneValidationInput"
+                type="plasmid.action.CloneValidationInputAction"
+               name="cloneValidationForm"
+              input="/CloneValidationInput.jsp">
+            <forward  name="success"  path="/CloneValidation.jsp"/>
+        </action>
+        <action    path="/CloneValidation"
+               type="plasmid.action.CloneValidationAction"
+               name="cloneValidationForm"
+              input="/CloneValidation.jsp"
+              scope="session">
+            <forward  name="success"   path="/CloneValidationInput.jsp"/>
+        </action>
         <action     path="/ConfirmLogout"
                 type="plasmid.action.ConfirmLogoutAction"
                name="logoutForm"
@@ -366,18 +379,6 @@
                name="invoiceForm"
               input="/EnterInvoicePayment.do">
             <forward  name="success"  path="/EnterInvoicePayment.jsp"/>
-        </action>
-        <action     path="/EnterPlatinumResult"
-                type="plasmid.action.EnterPlatinumResultAction"
-               name="enterPlatinumResultForm"
-              input="/EnterPlatinumResult.do">
-            <forward  name="success"  path="/OrderValidationInput.jsp"/>
-        </action>
-        <action     path="/EnterPlatinumResultsInput"
-                type="plasmid.action.EnterPlatinumResultsInputAction"
-               name="enterPlatinumResultForm"
-              input="/EnterPlatinumResultsInput.jsp">
-            <forward  name="success"  path="/OrderValidationsInput.jsp"/>
         </action>
         <action     path="/EnterShipping"
                 type="plasmid.action.EnterShippingAction"
@@ -520,20 +521,6 @@
               input="/MultipleWorklistInput.jsp"
               validate="true">
             <forward  name="success"   path="/WorklistOutput.jsp"/>
-        </action>
-        <action    path="/OrderValidationInput"
-               type="plasmid.action.OrderValidationInputAction"
-               name="enterPlatinumResultForm"
-              input="/OrderValidationInput.jsp"
-              validate="true">
-            <forward  name="success"   path="/ViewOrderDetail.do"/>
-        </action>
-        <action    path="/OrderValidationsInput"
-               type="plasmid.action.OrderValidationsInputAction"
-               name="enterPlatinumResultForm"
-              input="/OrderValidationsInput.jsp"
-              validate="true">
-            <forward  name="success"   path="/EnterPlatinumResultsInput.jsp"/>
         </action>
         <action     path="/PlaceOrder"
                 type="plasmid.action.PlaceOrderAction"

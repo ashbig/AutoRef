@@ -6,6 +6,7 @@
 
 package plasmid.coreobject;
 
+import java.io.Serializable;
 import java.util.*;
 import plasmid.util.StringConvertor;
 
@@ -13,7 +14,7 @@ import plasmid.util.StringConvertor;
  *
  * @author  DZuo
  */
-public class CloneOrder {
+public class CloneOrder implements Serializable {
     public static final String COL_ORDERID = "c.ORDERID";
     public static final String COL_ORDERDATE = "ORDERDATE";
     public static final String COL_PLATINUM = "ISPLATINUM";
@@ -107,7 +108,7 @@ public class CloneOrder {
     protected String isplatinum;
     protected String platinumServiceStatus;
     
-    protected List clones;
+    private List clones;
     protected int invoiceid;
     protected String billingemail;
     protected String ismember;
@@ -336,10 +337,10 @@ public class CloneOrder {
     }
     
     public void addClone(OrderClones c) {
-        if(clones == null) {
-            clones = new ArrayList();
+        if(getClones() == null) {
+            setClones(new ArrayList());
         }
-        clones.add(c);
+        getClones().add(c);
     }
 
     public String getPlatinumServiceStatus() {

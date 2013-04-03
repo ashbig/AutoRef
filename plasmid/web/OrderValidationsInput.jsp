@@ -52,12 +52,13 @@
                     <html:options name="validationStatus"/>
                 </html:select>   
     </td>
+  </tr>
 </table>
 
 <p class="formlabel">Sequence analysis criteria:</p> 
 <table width="100%" border="0">
     <tr> 
-        <td width="30%" class="text">Minumum percent (%) identity:</td>
+        <td width="30%" class="text">Minimum percent (%) identity:</td>
         <td class="itemtext">
             <html:text property="pid" styleClass="itemtext"/>%
         </td>

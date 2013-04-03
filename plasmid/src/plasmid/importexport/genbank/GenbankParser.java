@@ -301,8 +301,7 @@ public class GenbankParser {
             if (line.trim().length() <= 0) {
                 continue;
             }
-
-            //>lcl|NM_001124.1_cdsid_NP_001115.1 [gene=ADM] [protein=ADM precursor] [protein_id=NP_001115.1] [location=157..714]
+            
             if (line.trim().indexOf(">") == 0) {
                 if (isStart) {
                     GenbankInfo info = new GenbankInfo();
@@ -317,14 +316,16 @@ public class GenbankParser {
                 if (!isStart) {
                     isStart = true;
                 }
-
-                //accession = line.substring(line.indexOf("|") + 1, line.indexOf("_cdsid"));
+                
+                //>lcl|NM_001124.1_cdsid_NP_001115.1 [gene=ADM] [protein=ADM precursor] [protein_id=NP_001115.1] [location=157..714]
+                accession = line.substring(line.indexOf("|") + 1, line.indexOf("_cdsid"));
+                
                 //>gi|4501944|ref|NM_001124.1| Homo sapiens adrenomedullin (ADM), mRNA
-                StringTokenizer st = new StringTokenizer(line, "|");
-                String s = st.nextToken();
-                s = st.nextToken();
-                s = st.nextToken();
-                accession = st.nextToken();
+                //StringTokenizer st = new StringTokenizer(line, "|");
+                //String s = st.nextToken();
+                //s = st.nextToken();
+                //s = st.nextToken();
+                //accession = st.nextToken();
 
                 continue;
             }

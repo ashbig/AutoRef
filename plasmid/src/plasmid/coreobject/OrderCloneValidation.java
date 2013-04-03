@@ -14,6 +14,10 @@ public class OrderCloneValidation {
     public static final String RESULT_FAIL_LOWSCORE = "Fail: Low PHRED";
     public static final String RESULT_FAIL_MISMATCH = "Fail: Mismatch";
     public static final String RESULT_MANUAL = "Manual";
+    public static final String RESULT_MANUAL_NO_CLONE_SEQ = "Manual: No Clone Sequence";
+    public static final String RESULT_MANUAL_NO_READ_SEQ = "Manual: No Read Sequence";
+    public static final String WORKFLOW_INITIAL = "Initial validation";
+    public static final String WORKFLOW_TROUBLESHOOTING = "Trouble shooting";
     
     private int orderid;
     private int cloneid;
@@ -24,6 +28,10 @@ public class OrderCloneValidation {
     private String when;
     private int userid;
     private int phred;
+    private String readname;
+    private String read;
+    private String clonename;
+    private String workflow;
 
     private OrderClones orderclone;
     
@@ -119,5 +127,63 @@ public class OrderCloneValidation {
      */
     public void setPhred(int phred) {
         this.phred = phred;
+    }
+
+    /**
+     * @return the readname
+     */
+    public String getReadname() {
+        return readname;
+    }
+
+    /**
+     * @param readname the readname to set
+     */
+    public void setReadname(String readname) {
+        this.readname = readname;
+    }
+
+    /**
+     * @return the read
+     */
+    public String getRead() {
+        if(read==null || read.length()==0)
+            return sequence;
+        return read;
+    }
+
+    /**
+     * @param read the read to set
+     */
+    public void setRead(String read) {
+        this.read = read;
+    }
+
+    /**
+     * @return the clonename
+     */
+    public String getClonename() {
+        return clonename;
+    }
+
+    /**
+     * @param clonename the clonename to set
+     */
+    public void setClonename(String clonename) {
+        this.clonename = clonename;
+    }
+
+    /**
+     * @return the workflow
+     */
+    public String getWorkflow() {
+        return workflow;
+    }
+
+    /**
+     * @param workflow the workflow to set
+     */
+    public void setWorkflow(String workflow) {
+        this.workflow = workflow;
     }
 }

@@ -1799,7 +1799,13 @@ public class OrderProcessManager {
             t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
             CloneOrderManager manager = new CloneOrderManager(conn);
-            if (manager.addOrderCloneValidation(validations) && manager.updatePlatinumServiceStatus(order)) {
+            boolean b1 = manager.addOrderCloneValidation(validations);
+            boolean b2 = true;
+            if(order != null) {
+                b2 = manager.updatePlatinumServiceStatus(order);
+            }
+            
+            if (b1 && b2 ) {
                 DatabaseTransaction.commit(conn);
                 return true;
             } else {

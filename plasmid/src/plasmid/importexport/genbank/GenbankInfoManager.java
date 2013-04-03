@@ -213,11 +213,11 @@ public class GenbankInfoManager {
     }
 
     public static void main(String args[]) throws Exception {
-        String genbankInput = "C:\\dev\\plasmid_support\\wade\\raphel\\seq-Sep18-10-31-46-genbank.gb";
-        String referenceFile = "C:\\dev\\plasmid_support\\wade\\raphel\\seq-Sep18-10-31-46-genbank.txt";
-        String referenceNameFile = "C:\\dev\\plasmid_support\\OC_missing\\clone_name.txt";
-        String publication = "C:\\dev\\plasmid_support\\OC_missing\\clone_publication.txt";
-        String sequenceFile = "C:\\dev\\plasmid_support\\PlasmidAnalysis_201203\\Riken\\Clonesequence_more.txt";
+        String genbankInput = "C:\\dev\\plasmid_support\\PlasmidAnalysis201212\\RIKEN\\missing_sequence_accession_output.txt";
+        String referenceFile = "C:\\dev\\plasmid_support\\ccsb_201210\\reference.txt";
+        String referenceNameFile = "C:\\dev\\plasmid_support\\ccsb_201210\\refname.txt";
+        String publication = "C:\\dev\\plasmid_support\\ccsb_201210\\publication.txt";
+        String sequenceFile = "C:\\dev\\plasmid_support\\PlasmidAnalysis201212\\RIKEN\\missing_sequence.txt";;
 
         GenbankInfoManager manager = new GenbankInfoManager();
         GenbankParser parser = new GenbankParser();
@@ -253,16 +253,16 @@ public class GenbankInfoManager {
         }*/
         List infos = new ArrayList();
         try {
-            infos = parser.parseGenbanksOffline(genbankInput);
-            //infos = parser.parseGenbankSeqsOffline(genbankInput);
+            //infos = parser.parseGenbanksOffline(genbankInput);
+            infos = parser.parseGenbankSeqsOffline(genbankInput);
         } catch (Exception ex) {
             ex.printStackTrace();
             System.exit(1);
         }
-        manager.printGenbankInfo(infos, referenceFile);
+        //manager.printGenbankInfo(infos, referenceFile);
         //manager.printGenbankNames(infos, referenceNameFile);
         //manager.printPublications(infos, publication);
-        //manager.printGenbankSeqs(infos, sequenceFile);
+        manager.printGenbankSeqs(infos, sequenceFile);
 
         System.exit(0);
     }

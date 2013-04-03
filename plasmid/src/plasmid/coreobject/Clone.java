@@ -72,7 +72,10 @@ public class Clone implements Serializable {
     protected int orderid;
     protected String newTubeLabel;
     protected List samples;
-    private String importdate;
+    protected String importdate;
+    
+    protected String sequence;
+    protected String read;
     
     /** Creates a new instance of Clone */
     public Clone() {
@@ -648,5 +651,33 @@ public class Clone implements Serializable {
      */
     public void setImportdate(String importdate) {
         this.importdate = importdate;
+    }
+
+    /**
+     * @return the sequence
+     */
+    public String getSequence() {
+        return sequence;
+    }
+
+    /**
+     * @param sequence the sequence to set
+     */
+    public void setSequence(String sequence) {
+        this.sequence = sequence;
+    }
+
+    /**
+     * @return the read
+     */
+    public String getRead() {
+        return read;
+    }
+
+    /**
+     * @param read the read to set
+     */
+    public void setRead(String read) {
+        this.read = read;
     }
 }

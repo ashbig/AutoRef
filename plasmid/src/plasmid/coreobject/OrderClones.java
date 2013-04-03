@@ -24,10 +24,12 @@ public class OrderClones {
     private Clone clone;
     private List validations;
     private OrderCloneValidation validation;
+    private List history;
     
     /** Creates a new instance of OrderClones */
     public OrderClones() {
         validations = new ArrayList();
+        history = new ArrayList();
     }
     
     public OrderClones(int orderid, int cloneid, String collectionname, int quantity) {
@@ -36,6 +38,7 @@ public class OrderClones {
         this.collectionname = collectionname;
         this.quantity = quantity;
         validations = new ArrayList();
+        history = new ArrayList();
     }
     
     public int getOrderid() {return orderid;}
@@ -71,6 +74,10 @@ public class OrderClones {
     public void addValidation(OrderCloneValidation v) {
         this.validations.add(v);
     }
+    
+    public void addHistory(OrderCloneValidation v) {
+        this.history.add(v);
+    }
 
     public OrderCloneValidation getValidation() {
         return validation;
@@ -85,5 +92,26 @@ public class OrderClones {
             return 0;
         else
             return 1;
+    }
+    
+    public int getHasHistory() {
+        if((this.getHistory()==null) || (this.getHistory().size()==0))
+            return 0;
+        else
+            return 1;
+    }
+
+    /**
+     * @return the history
+     */
+    public List getHistory() {
+        return history;
+    }
+
+    /**
+     * @param history the history to set
+     */
+    public void setHistory(List history) {
+        this.history = history;
     }
 }
