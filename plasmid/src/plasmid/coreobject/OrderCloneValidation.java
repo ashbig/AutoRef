@@ -151,6 +151,13 @@ public class OrderCloneValidation {
             return sequence;
         return read;
     }
+    
+    public String getReadForWeb() {
+        String s = getRead();
+        if(s==null || s.trim().length()==0)
+            s = "NA";
+        return s;
+    }
 
     /**
      * @param read the read to set
@@ -177,6 +184,12 @@ public class OrderCloneValidation {
      * @return the workflow
      */
     public String getWorkflow() {
+        return workflow;
+    }
+    
+    public String getWorkflowStringForWeb() {
+        if(workflow==null || workflow.trim().length()==0)
+            workflow="NA";
         return workflow;
     }
 

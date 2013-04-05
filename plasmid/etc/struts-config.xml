@@ -380,6 +380,12 @@
               input="/EnterInvoicePayment.do">
             <forward  name="success"  path="/EnterInvoicePayment.jsp"/>
         </action>
+        <action     path="/EnterPlatinumResult"
+                type="plasmid.action.EnterPlatinumResultAction"
+               name="viewPlatinumResultForm"
+              input="ViewOrderDetail.jsp/">
+            <forward  name="success"  path="/CloneValidationInput.do"/>
+        </action>
         <action     path="/EnterShipping"
                 type="plasmid.action.EnterShippingAction"
                name="processShippingForm"

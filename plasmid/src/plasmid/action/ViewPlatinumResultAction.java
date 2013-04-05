@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package plasmid.action;
 
 import java.io.IOException;
@@ -19,6 +18,8 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import plasmid.Constants;
 import plasmid.coreobject.CloneOrder;
+import plasmid.coreobject.OrderCloneValidation;
+import plasmid.coreobject.OrderClones;
 import plasmid.database.DatabaseManager.CloneOrderManager;
 import plasmid.form.ViewPlatinumResultForm;
 import plasmid.process.OrderProcessManager;
@@ -28,7 +29,7 @@ import plasmid.process.OrderProcessManager;
  * @author DZuo
  */
 public class ViewPlatinumResultAction extends Action {
-    
+
     /** Does the real work for the perform method which must be overriden by the
      * Child classes.
      *
@@ -41,27 +42,27 @@ public class ViewPlatinumResultAction extends Action {
      * @exception ServletException if a servlet exception occurs
      *
      */
-    public ActionForward perform(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {     
+    public ActionForward perform(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
-        String orderid = ((ViewPlatinumResultForm)form).getOrderid();
-        
+        String orderid = ((ViewPlatinumResultForm) form).getOrderid();
+
         OrderProcessManager manager = new OrderProcessManager();
         CloneOrder order = manager.getCloneOrder(Integer.parseInt(orderid));
-        
-        if(order == null) {
+
+        if (order == null) {
             errors.add(ActionErrors.GLOBAL_ERROR,
-            new ActionError("error.general", "Cannot get order."));
-            saveErrors(request,errors);
+                    new ActionError("error.general", "Cannot get order."));
+            saveErrors(request, errors);
             return mapping.findForward("error");
         }
-        
+
         List orderids = new ArrayList();
         orderids.add(orderid);
-        List cloneorders = CloneOrderManager.queryCloneOrdersForValidation(orderids, true);
-        CloneOrder co = (CloneOrder)cloneorders.get(0);
+        List<CloneOrder> cloneorders = CloneOrderManager.queryCloneOrdersForValidation(orderids, true);
+        CloneOrder co = (CloneOrder) cloneorders.get(0);
         order.setClones(co.getClones());
-        request.setAttribute(Constants.CLONEORDER, order);
-            
+        request.setAttribute(Constants.CLONEORDER, co);
+
         return mapping.findForward("success");
     }
 }

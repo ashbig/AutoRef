@@ -6,24 +6,14 @@
 package plasmid.action;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import plasmid.Constants;
-import plasmid.coreobject.CloneOrder;
-import plasmid.coreobject.OrderCloneValidation;
-import plasmid.coreobject.User;
-import plasmid.database.DatabaseManager.CloneOrderManager;
-import plasmid.database.DatabaseManager.DefTableManager;
-import plasmid.form.EnterPlatinumResultForm;
-import plasmid.process.OrderProcessManager;
+import plasmid.form.CloneValidationForm;
+import plasmid.form.ViewPlatinumResultForm;
 
 /**
  *
@@ -44,60 +34,10 @@ public class EnterPlatinumResultAction extends InternalUserAction {
      *
      */
     public ActionForward internalUserPerform(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
-        ActionErrors errors = new ActionErrors();
-        User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
-        String orderid = ((EnterPlatinumResultForm)form).getOrderid();
-        
-        OrderProcessManager manager = new OrderProcessManager();
-        CloneOrder order = manager.getCloneOrder(user, Integer.parseInt(orderid));
-        
-        if(order == null) {
-            errors.add(ActionErrors.GLOBAL_ERROR,
-            new ActionError("error.general", "Cannot get order."));
-            saveErrors(request,errors);
-            return mapping.findForward("error");
-        }
-        
-        List orderids = new ArrayList();
-        orderids.add(orderid);
-        List cloneorders = CloneOrderManager.queryCloneOrdersForValidation(orderids, true);
-        CloneOrder co = (CloneOrder)cloneorders.get(0);
-        order.setClones(co.getClones());
-        
-        ((EnterPlatinumResultForm)form).setOrderid(orderid);
-        ((EnterPlatinumResultForm)form).setResearcher(user.getUsername());
-        ((EnterPlatinumResultForm)form).setStatus(order.getPlatinumServiceStatus());
-        
-        List clones = order.getClones();
-        List sequences = new ArrayList();
-        List results = new ArrayList();
-        List methods = new ArrayList();
-        for(int i=0; i<clones.size(); i++) {
-            sequences.add(null);
-            results.add(null);
-            methods.add(null);
-        }
-        ((EnterPlatinumResultForm)form).setSequences(sequences);
-        ((EnterPlatinumResultForm)form).setResults(results);
-        ((EnterPlatinumResultForm)form).setMethods(methods);
-        
-        List validationMethods = DefTableManager.getVocabularies("platinumvalidationmethod", "method");
-        List validationStatus = new ArrayList();
-        validationStatus.add(CloneOrder.PLATINUM_STATUS_REQUESTED);
-        validationStatus.add(CloneOrder.PLATINUM_STATUS_INPROCESS);
-        validationStatus.add(CloneOrder.PLATINUM_STATUS_COMPLETE);
-        List validationResults = new ArrayList();
-        validationResults.add(OrderCloneValidation.RESULT_PASS);
-        validationResults.add(OrderCloneValidation.RESULT_FAIL_MISMATCH);
-        validationResults.add(OrderCloneValidation.RESULT_FAIL_LOWSCORE);
-        validationResults.add(OrderCloneValidation.RESULT_MANUAL);
-        
-        request.setAttribute("validationMethods", validationMethods);
-        request.setAttribute("validationStatus", validationStatus);
-        request.setAttribute("validationResults", validationResults);
-        request.getSession().setAttribute(Constants.CLONEORDER, order);
-            
+        String orderid = ((ViewPlatinumResultForm)form).getOrderid();
+        CloneValidationForm form1 = new CloneValidationForm();
+        form1.setOrderids(orderid);
+        request.getSession().setAttribute("cloneValidationForm", form1);
         return mapping.findForward("success");
     }
 }

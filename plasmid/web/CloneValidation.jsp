@@ -140,15 +140,17 @@
                                                         <td class="tableheader">Read</td>
                                                         <td class="tableheader">Validation Result</td>
                                                         <td class="tableheader">Validation Method</td>
+                                                        <td class="tableheader">Workflow</td>
                                                         <td class="tableheader">Researcher</td>
                                                         <td class="tableheader">Date</td>
                                                     </tr>
 
                                                     <logic:iterate name="clone" property="history" id="v">
                                                         <tr class="tableinfo"> 
-                                                            <td width="20"><bean:write name="v" property="read"/></td>
+                                                            <td width="20"><bean:write name="v" property="readForWeb"/></td>
                                                             <td><bean:write name="v" property="result"/></td>
                                                             <td><bean:write name="v" property="method"/></td>
+                                                            <td><bean:write name="v" property="workflowStringForWeb"/></td>
                                                             <td><bean:write name="v" property="who"/></td>
                                                             <td><bean:write name="v" property="when"/></td>
                                                         </logic:iterate>
