@@ -41,7 +41,7 @@
           <td height="15" valign="middle"><a href="pReceiveSearch.jsp" class="leftnavtext">Receive Plasmids</a></td>
         </tr>
         <tr> 
-          <td height="15" valign="middle"><a href="EnterPlatinumResultsInput.jsp" class="leftnavtext">Enter Platinum Results</a></td>
+          <td height="15" valign="middle"><a href="CloneValidationInput.jsp" class="leftnavtext">Clone Validation</a></td>
         </tr>
         <tr> 
           <td height="15" valign="middle"><a href="AddInstitutionsInput.jsp" class="leftnavtext">Add Institutions</a></td>
