@@ -171,9 +171,9 @@ public class CloneValidationAction extends InternalUserAction {
                             saveErrors(request, errors);
                             return (new ActionForward(mapping.getInput()));
                         }
-                        if (phred < SequenceAnalysisManager.PHRED_HIGH) {
+                        if (phred <= 0) {
                             errors.add(ActionErrors.GLOBAL_ERROR,
-                                    new ActionError("error.general", "Please enter the valid phred score (>=" + SequenceAnalysisManager.PHRED_HIGH + ") for clone " + clone.getClone().getName()));
+                                    new ActionError("error.general", "Please enter the valid phred score for clone " + clone.getClone().getName()));
                             saveErrors(request, errors);
                             return (new ActionForward(mapping.getInput()));
                         }
