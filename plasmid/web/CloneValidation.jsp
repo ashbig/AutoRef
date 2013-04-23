@@ -101,7 +101,7 @@
                                     <tr align="top,top">
                                         <td width="20">&nbsp;</td>
                                         <td class="formlabel">Enter sequence:</td>
-                                        <td class="text"><html:textarea rows="5" cols="80" name="cloneValidationForm" property='<%="sequence[" + i + "]"%>' styleClass="text"/></td>
+                                        <td><pre><html:textarea rows="5" cols="80" name="cloneValidationForm" property='<%="sequence[" + i + "]"%>'/></pre></td>
                                     </tr>
                                     <tr>
                                         <td width="20">&nbsp;</td>
@@ -125,7 +125,7 @@
                                     <tr align="top,top">
                                         <td width="20">&nbsp;</td>
                                         <td class="formlabel">Enter read:</td>
-                                        <td class="text"><html:textarea rows="5" cols="80" name="cloneValidationForm" property='<%="read[" + i + "]"%>' styleClass="text"/></td>
+                                        <td><pre><html:textarea rows="5" cols="80" name="cloneValidationForm" property='<%="read[" + i + "]"%>'/></pre></td>
                                     </tr>
                                     <tr>
                                         <td width="20">&nbsp;</td>
