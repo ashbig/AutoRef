@@ -147,7 +147,7 @@
 
                                                     <logic:iterate name="clone" property="history" id="v">
                                                         <tr class="tableinfo"> 
-                                                            <td width="20"><bean:write name="v" property="readForWeb"/></td>
+                                                            <td width="20"><pre><bean:write name="v" property="readForWeb"/></pre></td>
                                                             <td><bean:write name="v" property="result"/></td>
                                                             <td><bean:write name="v" property="method"/></td>
                                                             <td><bean:write name="v" property="workflowStringForWeb"/></td>
