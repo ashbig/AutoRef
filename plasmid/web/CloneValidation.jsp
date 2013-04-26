@@ -56,7 +56,37 @@
                             </tr> 
                         </table>
 
-                        <p>    
+                        <logic:equal name="cloneValidationForm" property="displaySummary" value="true">
+                            <p> Summary 
+                                <% int m = 0;%>
+                                <% int k = 0;%>
+                                <logic:iterate name="<%=Constants.CLONEORDER%>" id="cloneorder">
+                                <p class="formlabel">Order ID: <bean:write name="cloneorder" property="orderid"/></p>
+                                <table width="100%" border="1">
+                                    <tr>
+                                        <td class="tableheader">CloneID</td>
+                                        <td class="tableheader">Workflow</td>
+                                        <td class="tableheader">Validation Result</td>
+                                        <td class="tableheader">Isolate</td>
+                                        <td class="tableheader">Phred</td>
+                                    </tr>
+
+                                    <logic:iterate name="cloneorder" property="clones" id="clone">
+                                        <tr class="tableinfo"> 
+                                            <td><bean:write name="clone" property="clone.name"/></td>
+                                            <td><bean:write name="cloneValidationForm" property='<%="workflow[" + m + "]"%>'/>&nbsp;</td>
+                                            <td><bean:write name="cloneValidationForm" property='<%="result[" + m + "]"%>'/>&nbsp;</td>
+                                            <td><bean:write name="cloneValidationForm" property='<%="readname[" + m + "]"%>'/>&nbsp;</td>
+                                            <td><bean:write name="cloneValidationForm" property='<%="phred[" + m + "]"%>'/>&nbsp;</td>
+                                        </logic:iterate>
+                                        <% m++;%>
+                                </table>
+                                <% k++;%>
+                            </logic:iterate>
+                            </p>
+                        </logic:equal>
+
+                        <p> Analysis Details
                             <% int n = 0;%>
                             <% int i = 0;%>
                             <logic:iterate name="<%=Constants.CLONEORDER%>" id="cloneorder">

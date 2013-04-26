@@ -114,4 +114,10 @@ public class OrderClones {
     public void setHistory(List history) {
         this.history = history;
     }
+    
+    public boolean getHasValidation() {
+        if(validation ==null)
+            return false;
+        return true;
+    }
 }

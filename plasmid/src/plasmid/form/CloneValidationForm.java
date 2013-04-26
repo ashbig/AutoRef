@@ -28,6 +28,7 @@ public class CloneValidationForm extends ActionForm {
     private String submit;
     private int alength;
     private double pid;
+    private boolean displaySummary;
 
     public CloneValidationForm() {
         super();
@@ -45,6 +46,7 @@ public class CloneValidationForm extends ActionForm {
         this.setReadnames(new ArrayList());
         this.setPhreds(new ArrayList());
         this.setWorkflows(new ArrayList());
+        setDisplaySummary(false);
     }
 
     public String getSequence(int i) {
@@ -319,5 +321,19 @@ public class CloneValidationForm extends ActionForm {
      */
     public void setStatusList(List statusList) {
         this.statusList = statusList;
+    }
+
+    /**
+     * @return the displaySummary
+     */
+    public boolean isDisplaySummary() {
+        return displaySummary;
+    }
+
+    /**
+     * @param displaySummary the displaySummary to set
+     */
+    public void setDisplaySummary(boolean displaySummary) {
+        this.displaySummary = displaySummary;
     }
 }

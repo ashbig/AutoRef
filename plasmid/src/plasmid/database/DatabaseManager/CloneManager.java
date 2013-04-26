@@ -2371,8 +2371,8 @@ public class CloneManager extends TableManager {
     }
 
     public static void main(String args[]) {
-        String file = "C:\\dev\\plasmid_support\\PlasmidAnalysis201212\\Core\\cloneid_missing_seq_2.txt";
-        String output = "C:\\dev\\plasmid_support\\PlasmidAnalysis201212\\Core\\cloneseq_5.txt";
+        String file = "C:\\dev\\plasmid_support\\blastdb\\tmp.txt";
+        String output = "C:\\dev\\plasmid_support\\blastdb\\tmp_out.txt";
         DatabaseTransaction dt = null;
         Connection conn = null;
 
@@ -2388,10 +2388,12 @@ public class CloneManager extends TableManager {
             List clones = new ArrayList();
             int count = 0;
             while ((line = in.readLine()) != null) {
+                //System.out.println(line);
                 int cloneid = Integer.parseInt(line.trim());
-                System.out.println("clone:" + cloneid);
+                System.out.println(count+":" + cloneid);
                 //String seq = manager.queryReferenceSequenceByCloneid(cloneid);
                 String seq = manager.queryCloneSequenceByCloneid(dt, cloneid);
+                System.out.println("seq="+seq);
                 Dnasequence s = new Dnasequence();
                 s.setInsertid(cloneid);
                 s.setSequence(seq);

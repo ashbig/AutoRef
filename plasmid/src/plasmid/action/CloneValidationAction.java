@@ -113,6 +113,7 @@ public class CloneValidationAction extends InternalUserAction {
                 saveErrors(request, errors);
                 return (new ActionForward(mapping.getInput()));
             }
+            ((CloneValidationForm)form).setDisplaySummary(true);
             return (new ActionForward(mapping.getInput()));
         }
 
@@ -189,6 +190,7 @@ public class CloneValidationAction extends InternalUserAction {
                         validation.setPhred(phred);
                     }
                     validations.add(validation);
+                    clone.setValidation(validation);
                 }
             }
 
@@ -205,10 +207,11 @@ public class CloneValidationAction extends InternalUserAction {
             }
         }
 
-        //((CloneValidationForm) form).resetSequencesAndResults();
-        //((CloneValidationForm) form).setOrderids(null);
+        ((CloneValidationForm) form).resetSequencesAndResults();
+        ((CloneValidationForm) form).setOrderids(null);
         request.getSession().removeAttribute(Constants.CLONEORDER);
         request.getSession().removeAttribute("cloneValidationForm");
+        request.setAttribute(Constants.CLONEORDER, orders);
         return mapping.findForward("success");
     }
 }
