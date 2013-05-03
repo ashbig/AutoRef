@@ -43,7 +43,7 @@ public class RefseqManager extends TableManager {
                 stmt.setInt(5, c.getCdsstart());
                 stmt.setInt(6, c.getCdsstop());
                 stmt.setString(7, c.getSpecies());
-                //System.out.println(c.getRefseqid()+"\t"+c.getDescription()+"\t"+c.getSpecies());
+                System.out.println(c.getRefseqid()+"\t"+c.getDescription()+"\t"+c.getSpecies());
                 DatabaseTransaction.executeUpdate(stmt);
             }
             DatabaseTransaction.closeStatement(stmt);
@@ -127,7 +127,7 @@ public class RefseqManager extends TableManager {
                 stmt.setString(2, c.getNametype());
                 stmt.setString(3, c.getNamevalue());
                 stmt.setString(4, c.getNameurl());
-                //System.out.println(c.getRefseqid()+"\t"+c.getNamevalue());
+                //System.out.println(c.getRefseqid()+"\t"+c.getNametype()+"\t"+c.getNamevalue());
                 DatabaseTransaction.executeUpdate(stmt);
             }
             DatabaseTransaction.closeStatement(stmt);

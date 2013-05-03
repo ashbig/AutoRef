@@ -67,13 +67,13 @@ public class RefseqImporter {
                 String columnInfo = (String) row.get(i);
                 //System.out.println(columnName+"\t"+columnInfo);
                 if ("refseqid".equalsIgnoreCase(columnName)) {
-                    try {
-                        RefseqManager man = new RefseqManager(manager.getConnection());
-                        id = man.findRefseq(RefseqNameType.GI, columnInfo);
+                   // try {
+                   //     RefseqManager man = new RefseqManager(manager.getConnection());
+                   //     id = man.findRefseq(RefseqNameType.GI, columnInfo);
                     //System.out.println("seqid: "+seqid);
-                    } catch (Exception ex) {
-                        throw new Exception("Error occured while trying to find matching reference sequence: " + columnInfo + " from database.");
-                    }
+                   // } catch (Exception ex) {
+                  //      throw new Exception("Error occured while trying to find matching reference sequence: " + columnInfo + " from database.");
+                  //  }
 
                     if (id > 0) {
                         idmap.put(columnInfo, new Integer(id));

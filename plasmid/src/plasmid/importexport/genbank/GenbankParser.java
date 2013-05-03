@@ -75,7 +75,7 @@ public class GenbankParser {
         String vector = "";
 
         while ((line = in.readLine()) != null) {
-            //System.out.println(line);
+            System.out.println(line);
             if (line.trim().length() <= 0) {
                 continue;
             }

@@ -50,7 +50,7 @@ public class InsertImporter {
             for(int i=0; i<columns.size(); i++) {
                 String columnName = (String)columns.get(i);
                 String columnInfo = (String)row.get(i);
-                //System.out.println(i+": "+columnInfo);
+                System.out.println(i+": "+columnInfo);
                 if("insertid".equalsIgnoreCase(columnName)) {
                     idmap.put(columnInfo, new Integer(id));
                 }
@@ -108,7 +108,7 @@ public class InsertImporter {
                 }
                 if("refseqid".equalsIgnoreCase(columnName)) {
                     int refseqid = 0;
-                    
+                    /**
                     if(columnInfo != null) {
                         if(refseqidmap != null) {
                             Integer seqid = (Integer)refseqidmap.get(columnInfo);
@@ -126,8 +126,10 @@ public class InsertImporter {
                         if(refseqid == 0) {
                             throw new Exception("Cannot find matching reference sequence: "+columnInfo+".");
                         }
+                    }*/
+                    if(columnInfo != null) {
+                        refseqid=Integer.parseInt(columnInfo);
                     }
-                    
                     if(refseqid > 0) {
                         c.setRefseqid(refseqid);
                     }

@@ -402,7 +402,7 @@ public class CloneGeneBuilder {
     
     public static void main(String args[]) {
         int lastInsertid = 316109;
-        int lastCloneid = 438085;
+        int lastCloneid = 438621;
         DatabaseTransaction t = null;
         Connection conn = null;
         CloneGeneBuilder builder = new CloneGeneBuilder();

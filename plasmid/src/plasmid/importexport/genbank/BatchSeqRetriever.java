@@ -83,8 +83,8 @@ public class BatchSeqRetriever {
     }
 
     public static void main(String args[]) {
-        String input = "C:\\dev\\plasmid_support\\Gene_20130402\\gi.txt";
-        String output = "C:\\dev\\plasmid_support\\Gene_20130402\\genbank_gb.txt";
+        String input = "C:\\dev\\plasmid_support\\Gene_20130402\\PlasmidAnalysis\\giforcds.txt";
+        String output = "C:\\dev\\plasmid_support\\Gene_20130402\\PlasmidAnalysis\\cds2.fasta";
 
         BatchSeqRetriever bsr = new BatchSeqRetriever();
         try {
@@ -96,15 +96,15 @@ public class BatchSeqRetriever {
                 System.out.println("gi:"+gi);
                 l.add(gi);
                 n++;
-                if (n == 200) {
-                    String s = bsr.retriveSequence(l, BatchSeqRetriever.TYPE_GB);
+                if (n == 1) {
+                    String s = bsr.retriveSequence(l, BatchSeqRetriever.TYPE_CDS);
                     out.println(s);
                     n = 0;
                     l = new ArrayList<String>();
                 }
             }
             if (!l.isEmpty()) {
-                String s = bsr.retriveSequence(l, BatchSeqRetriever.TYPE_GB);
+                String s = bsr.retriveSequence(l, BatchSeqRetriever.TYPE_CDS);
                 out.println(s);
             }
             out.close();
