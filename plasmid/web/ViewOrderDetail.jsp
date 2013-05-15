@@ -139,7 +139,7 @@
         </logic:equal>
         </logic:equal>
     </td>
-    <td>  
+    <td align="center" class="text">  
         <logic:equal name="<%=Constants.CLONEORDER%>" property="isplatinum" value="Yes">
         <logic:equal name="<%=Constants.CLONEORDER%>" property="displayPlatinumBasedOnStatus" value="<%=CloneOrder.PLATINUM_DISPLAY_RESULTS%>">
         <html:form action="ViewPlatinumResult.do">
