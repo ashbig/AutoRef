@@ -93,7 +93,7 @@
                                     </logic:iterate>
                             </table>
                         </logic:equal>
-                        <logic:equal name="c" property="hasValidations" value="0">
+                        <logic:equal name="c" property="hasHistory" value="0">
                             <p class="text">No validation history.</p>
                         </logic:equal>
                     </logic:iterate>
