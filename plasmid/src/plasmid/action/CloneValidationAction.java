@@ -32,7 +32,9 @@ import plasmid.process.SequenceAnalysisManager;
  */
 public class CloneValidationAction extends InternalUserAction {
 
-    /** Creates a new instance of WorklistInputAction */
+    /**
+     * Creates a new instance of WorklistInputAction
+     */
     public CloneValidationAction() {
     }
 
@@ -82,13 +84,15 @@ public class CloneValidationAction extends InternalUserAction {
                 m.readIsolates(clones, seqdir);
 
                 /**
-                List unqualifiedClones = m.checkIsolates(clones);
-                if (unqualifiedClones.size() > 0) {
-                errors.add(ActionErrors.GLOBAL_ERROR,
-                new ActionError("error.general", "The following clones have less than two isolates: " + StringConvertor.convertFromListToSqlString(unqualifiedClones)));
-                saveErrors(request, errors);
-                return (new ActionForward(mapping.getInput()));
-                }*/
+                 * List unqualifiedClones = m.checkIsolates(clones); if
+                 * (unqualifiedClones.size() > 0) {
+                 * errors.add(ActionErrors.GLOBAL_ERROR, new
+                 * ActionError("error.general", "The following clones have less
+                 * than two isolates: " +
+                 * StringConvertor.convertFromListToSqlString(unqualifiedClones)));
+                 * saveErrors(request, errors); return (new
+                 * ActionForward(mapping.getInput())); }
+                 */
                 m.sortClones(clones);
                 int n = 0;
                 for (OrderClones clone : clones) {
@@ -113,7 +117,7 @@ public class CloneValidationAction extends InternalUserAction {
                 saveErrors(request, errors);
                 return (new ActionForward(mapping.getInput()));
             }
-            ((CloneValidationForm)form).setDisplaySummary(true);
+            ((CloneValidationForm) form).setDisplaySummary(true);
             return (new ActionForward(mapping.getInput()));
         }
 
@@ -136,7 +140,8 @@ public class CloneValidationAction extends InternalUserAction {
                 int phred = 0;
                 try {
                     phred = Integer.parseInt(((CloneValidationForm) form).getPhred(n + i));
-                } catch (Exception ex) {}
+                } catch (Exception ex) {
+                }
 
                 if (result != null && result.trim().length() > 0) {
                     if (workflow == null || workflow.trim().length() == 0) {
@@ -196,14 +201,21 @@ public class CloneValidationAction extends InternalUserAction {
 
             n += clones.size();
 
+            OrderProcessManager manager = new OrderProcessManager();
             if (validations.size() > 0) {
-                OrderProcessManager manager = new OrderProcessManager();
                 if (!manager.addCloneValidationResults(validations, order)) {
                     errors.add(ActionErrors.GLOBAL_ERROR,
                             new ActionError("error.general", "Cannot add clone validation results to the database for order: " + order.getOrderid() + "."));
                     saveErrors(request, errors);
                     return mapping.findForward("error");
                 }
+            }
+
+            if (!manager.updateValidationStatus(order)) {
+                errors.add(ActionErrors.GLOBAL_ERROR,
+                        new ActionError("error.general", "Cannot update validation status to the database for order: " + order.getOrderid() + "."));
+                saveErrors(request, errors);
+                return mapping.findForward("error");
             }
         }
 

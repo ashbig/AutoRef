@@ -28,7 +28,7 @@ import java.text.SimpleDateFormat;
 
 /**
  *
- * @author  DZuo
+ * @author DZuo
  */
 public class OrderProcessManager {
 
@@ -42,7 +42,9 @@ public class OrderProcessManager {
     private List cloneids;
     private List collectionNames;
 
-    /** Creates a new instance of OrderProcessManager */
+    /**
+     * Creates a new instance of OrderProcessManager
+     */
     public OrderProcessManager() {
     }
 
@@ -311,7 +313,7 @@ public class OrderProcessManager {
                 String cloneid = item.getItemid();
                 int quantity = item.getQuantity();
                 CloneInfo cloneInfo = (CloneInfo) found.get(cloneid);
-                if(cloneInfo==null) {
+                if (cloneInfo == null) {
                     removelist.add(item);
                     continue;
                 }
@@ -375,7 +377,7 @@ public class OrderProcessManager {
                 String itemid = item.getItemid();
                 int quantity = item.getQuantity();
                 CollectionInfo info = (CollectionInfo) foundCollections.get(itemid);
-                if(info==null) {
+                if (info == null) {
                     removelist.add(item);
                     continue;
                 }
@@ -1260,7 +1262,7 @@ public class OrderProcessManager {
     }
 
     public void sendOrderInvalidePaymentEmail(int orderid, String email) {
-        String subject = "PlasmID Order "+orderid+" Cancelled";
+        String subject = "PlasmID Order " + orderid + " Cancelled";
         String text = "Your order " + orderid + " was not processed successfully because we didn't received a valid payment. We have cancelled this order. Please contact us at plasmidhelp@hms.harvard.edu if you have any questions. Thank you for using PlasmID.\n";
 
         try {
@@ -1271,7 +1273,7 @@ public class OrderProcessManager {
     }
 
     public void sendOrderCancelEmail(CloneOrder order, String email) {
-        String subject = "PlasmID Order "+order.getOrderid()+" Cancelled";
+        String subject = "PlasmID Order " + order.getOrderid() + " Cancelled";
         String text = "Your order " + order.getOrderid() + " has been cancelled. Please contact us at plasmidhelp@hms.harvard.edu for any questions. Thank you for using PlasmID.\n\n";
 
         try {
@@ -1282,17 +1284,17 @@ public class OrderProcessManager {
     }
 
     public void sendOrderEmail(CloneOrder order, String email, String status) {
-        if(CloneOrder.PENDING.equals(status)) {
+        if (CloneOrder.PENDING.equals(status)) {
             sendPendingEmail(order, email);
         }
-        if(CloneOrder.PENDING_AQIS.equals(status)) {
+        if (CloneOrder.PENDING_AQIS.equals(status)) {
             sendPendingAQISEmail(order, email);
         }
-        if(CloneOrder.PENDING_MTA.equals(status)) {
+        if (CloneOrder.PENDING_MTA.equals(status)) {
             sendPendingMTAEmail(order, email);
         }
     }
-    
+
     public void sendPendingEmail(CloneOrder order, String email) {
         String subject = "PlasmID Order Confirmation (order ID: " + order.getOrderid() + ")";
         String text = "Thank you for placing a clone request with PlasmID. Please note your order ID number and save this email for your future reference. You may check the progress of your order at any time by logging into your account and then selecting 'View Orders.' Orders of < 48 clones typically ship within 7-10 days. We ask that you please allow additional time for large orders or when requesting QC testing. Orders will ship as glycerol stocks when allowed by local law. Some international orders may ship as purified DNA or stabilized in special tubes to comply with local import law or to accommodate slower shipping routes. Please contact plasmidhelp@hms.harvard.edu with any questions or concerns.\n\n";
@@ -1312,21 +1314,21 @@ public class OrderProcessManager {
             System.out.println(ex);
         }
     }
-    
+
     public void sendPendingAQISEmail(CloneOrder order, String email) {
-        String subject = "PlasmID Order "+order.getOrderid()+" Pending Customs Documentation";
-        String text = "Your order "+order.getOrderid()+" requires additional information. To clear customs your country requires that your shipment include a health, ANVISA, AQIS, CIQ, MAF or other certificate.  Your order has been placed on hold pending this documentation. Please email a copy of the required customs form to plasmidhelp@hms.harvard.edu. Please feel free to contact us at the same email address for any questions. Thank you for using PlasmID.\n\n";
-  
+        String subject = "PlasmID Order " + order.getOrderid() + " Pending Customs Documentation";
+        String text = "Your order " + order.getOrderid() + " requires additional information. To clear customs your country requires that your shipment include a health, ANVISA, AQIS, CIQ, MAF or other certificate.  Your order has been placed on hold pending this documentation. Please email a copy of the required customs form to plasmidhelp@hms.harvard.edu. Please feel free to contact us at the same email address for any questions. Thank you for using PlasmID.\n\n";
+
         try {
             Mailer.sendMessage(email, Constants.EMAIL_FROM, subject, text);
         } catch (Exception ex) {
             System.out.println(ex);
         }
     }
-    
+
     public void sendPendingMTAEmail(CloneOrder order, String email) {
-        String subject = "PlasmID Order "+order.getOrderid()+" Pending MTA";
-        String text = "Your order "+order.getOrderid()+" requires additional information. One or more of the clones in your order requires the completion of a Materials Transfer Agreement (MTA).  Your order has been placed on hold pending this documentation. Please download the required MTA from this web page http://plasmid.med.harvard.edu/PLASMID/TermAndCondition.jsp. Please email a copy of the fully executed MTA to plasmidmta@hms.harvard.edu, then mail the original signed document to the address below. Please feel free to contact us at the same email address for any questions. Thank you for using PlasmID.\n\n";
+        String subject = "PlasmID Order " + order.getOrderid() + " Pending MTA";
+        String text = "Your order " + order.getOrderid() + " requires additional information. One or more of the clones in your order requires the completion of a Materials Transfer Agreement (MTA).  Your order has been placed on hold pending this documentation. Please download the required MTA from this web page http://plasmid.med.harvard.edu/PLASMID/TermAndCondition.jsp. Please email a copy of the fully executed MTA to plasmidmta@hms.harvard.edu, then mail the original signed document to the address below. Please feel free to contact us at the same email address for any questions. Thank you for using PlasmID.\n\n";
         text += "DF/HCC DNA Resource Core\n";
         text += "Harvard Medical School\n";
         text += "240 Longwood Ave, SGM 228\n";
@@ -1340,7 +1342,7 @@ public class OrderProcessManager {
     }
 
     public void sendTroubleshootingEmail(int orderid, String email) {
-        String subject = "PlasmID Order "+orderid+" Currently in Troubleshooting";
+        String subject = "PlasmID Order " + orderid + " Currently in Troubleshooting";
         String text =
                 "Dear PlasmID User,\n\n"
                 + "I write in regard to your recent order from the PlasmID Repository. Unfortunately one or more of the clones in your order did not pass our Platinum quality control (QC) test.  To view the results of our QC testing please log into your account, select the appropriate order number, and then select \"View Platinum Results\". We have already streaked the failed construct(s) on agar and selected four isolates for further analysis. Unfortunately none of those isolates passed our quality control testing.\n\n"
@@ -1800,18 +1802,41 @@ public class OrderProcessManager {
             conn = t.requestConnection();
             CloneOrderManager manager = new CloneOrderManager(conn);
             boolean b1 = manager.addOrderCloneValidation(validations);
-            boolean b2 = true;
-            if(order != null) {
-                b2 = manager.updatePlatinumServiceStatus(order);
-            }
-            
-            if (b1 && b2 ) {
+            if (b1) {
                 DatabaseTransaction.commit(conn);
-                return true;
             } else {
                 DatabaseTransaction.rollback(conn);
-                return false;
             }
+            return b1;
+        } catch (Exception ex) {
+            DatabaseTransaction.rollback(conn);
+            if (Constants.DEBUG) {
+                ex.printStackTrace();
+            }
+            return false;
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
+        }
+    }
+
+    public boolean updateValidationStatus(CloneOrder order) {
+        DatabaseTransaction t = null;
+        Connection conn = null;
+
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            CloneOrderManager manager = new CloneOrderManager(conn);
+            boolean b2 = true;
+            if (order != null) {
+                b2 = manager.updatePlatinumServiceStatus(order);
+                if (b2) {
+                    DatabaseTransaction.commit(conn);
+                } else {
+                    DatabaseTransaction.rollback(conn);
+                }
+            }
+            return b2;
         } catch (Exception ex) {
             DatabaseTransaction.rollback(conn);
             if (Constants.DEBUG) {
@@ -2161,13 +2186,13 @@ public class OrderProcessManager {
     public void sendShippingEmails(CloneOrder order, Invoice invoice) throws Exception {
         int orderid = order.getOrderid();
         String to = order.getEmail();
-        String subject = "PlasmID Order "+orderid+" Shipped";
-        String text = "Your PlasmID order "+orderid+" has shipped. Please note your tracking number and any shipping comments below. If you have requested the Platinum QC Service, end-read sequences are  available in  your account at http://plasmid.med.harvard.edu/PLASMID/Login.jsp. To view the results of our QC testing please log into your account, select the appropriate order number, and then select \"View Platinum Results.\" Please remember that a single end-read sequence is not able to verify your entire construct. Feel free to contact us at plasmidhelp@hms.harvard.edu if you have any questions. Thank you for using PlasmID.\n\n";
+        String subject = "PlasmID Order " + orderid + " Shipped";
+        String text = "Your PlasmID order " + orderid + " has shipped. Please note your tracking number and any shipping comments below. If you have requested the Platinum QC Service, end-read sequences are  available in  your account at http://plasmid.med.harvard.edu/PLASMID/Login.jsp. To view the results of our QC testing please log into your account, select the appropriate order number, and then select \"View Platinum Results.\" Please remember that a single end-read sequence is not able to verify your entire construct. Feel free to contact us at plasmidhelp@hms.harvard.edu if you have any questions. Thank you for using PlasmID.\n\n";
         text += "If you have selected \"pickup\" as your shipment option please pick up your order from the second floor of the Seeley G. Mudd building.  Samples can be found in the hallway refrigerator.\n\n";
         text += "===========================================================\n";
-        text += "Tracking Number: "+order.getTrackingnumber()+"\n";
-        if(order.getComments()!=null && order.getComments().trim().length()>0) {
-            text += order.getComments()+"\n\n";
+        text += "Tracking Number: " + order.getTrackingnumber() + "\n";
+        if (order.getComments() != null && order.getComments().trim().length() > 0) {
+            text += order.getComments() + "\n\n";
         }
         Mailer.sendMessage(to, Constants.EMAIL_FROM, subject, text);
 
