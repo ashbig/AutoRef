@@ -60,7 +60,14 @@ public class ViewPlatinumResultAction extends Action {
         orderids.add(orderid);
         List<CloneOrder> cloneorders = CloneOrderManager.queryCloneOrdersForValidation(orderids, true);
         CloneOrder co = (CloneOrder) cloneorders.get(0);
-        order.setClones(co.getClones());
+        List<OrderClones> clones = co.getClones();
+        order.setClones(clones);
+        for(OrderClones clone:clones) {
+            List<OrderCloneValidation> validations = clone.getHistory();
+            if(validations != null) {
+                clone.setValidation(validations.get(0));
+            }
+        }
         request.setAttribute(Constants.CLONEORDER, co);
 
         return mapping.findForward("success");

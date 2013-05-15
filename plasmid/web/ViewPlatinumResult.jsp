@@ -35,6 +35,32 @@
                         </tr>
                     </table>
 
+                    <p class="homeMainText">Validation Summary</p>
+                    <table width="100%" border="1">
+                        <tr>
+                            <td class="tableheader">CloneID</td>
+                            <td class="tableheader">Sequence</td>
+                            <td class="tableheader">Validation Result</td>
+                            <td class="tableheader">Validation Method</td>
+                            <td class="tableheader">Workflow</td>
+                            <td class="tableheader">Researcher</td>
+                            <td class="tableheader">Date</td>
+                        </tr>
+                        <logic:iterate name="<%=Constants.CLONEORDER%>" property="clones" id="c">
+                            <logic:equal name="c" property="hasHistory" value="1">
+                                <tr class="tableinfo"> 
+                                    <td><bean:write name="c" property="clone.name"/></td>
+                                    <td><bean:write name="c" property="validation.readForWeb"/></td>
+                                    <td><bean:write name="c" property="validation.result"/></td>
+                                    <td><bean:write name="c" property="validation.method"/></td>
+                                    <td><bean:write name="c" property="validation.workflowStringForWeb"/></td>
+                                    <td><bean:write name="c" property="validation.who"/></td>
+                                    <td><bean:write name="c" property="validation.when"/></td>
+                                </tr>
+                            </logic:equal>
+                        </logic:iterate>
+                    </table>
+
                     <p class="homeMainText">Validation History</p>
 
                     <logic:iterate name="<%=Constants.CLONEORDER%>" property="clones" id="c">
