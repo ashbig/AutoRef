@@ -64,7 +64,7 @@ public class ViewPlatinumResultAction extends Action {
         order.setClones(clones);
         for(OrderClones clone:clones) {
             List<OrderCloneValidation> validations = clone.getHistory();
-            if(validations != null) {
+            if(validations != null && !validations.isEmpty()) {
                 clone.setValidation(validations.get(0));
             }
         }

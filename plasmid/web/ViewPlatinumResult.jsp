@@ -49,7 +49,7 @@
                             <td class="tableheader">Date</td>
                         </tr>
                         <logic:iterate name="<%=Constants.CLONEORDER%>" property="clones" id="c">
-                            <logic:equal name="c" property="hasHistory" value="1">
+                            <logic:equal name="c" property="hasValidations" value="1">
                                 <tr class="tableinfo"> 
                                     <td><bean:write name="c" property="clone.name"/></td>
                                     <td><bean:write name="c" property="validation.result"/></td>
