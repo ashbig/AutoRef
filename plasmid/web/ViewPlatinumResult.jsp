@@ -36,7 +36,7 @@
                         </tr>
                     </table>
 
-                    <p class="homeMainText">Validation Summary: Pass-<bean:write name="pass"/>; Fail-<bean:write name="fail"/>; Manual:<bean:write name="manual"/></p>
+                    <p class="homeMainText">Validation Summary: Pass-<bean:write name="pass"/>; Fail-<bean:write name="fail"/>; Manual-<bean:write name="manual"/></p>
                     <table width="100%" border="1">
                         <tr>
                             <td class="tableheader">CloneID</td>
