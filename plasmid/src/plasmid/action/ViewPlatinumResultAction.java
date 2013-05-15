@@ -62,13 +62,34 @@ public class ViewPlatinumResultAction extends Action {
         CloneOrder co = (CloneOrder) cloneorders.get(0);
         List<OrderClones> clones = co.getClones();
         order.setClones(clones);
+        int countPass = 0;
+        int countFail = 0;
+        int countManual = 0;
+        
         for(OrderClones clone:clones) {
             List<OrderCloneValidation> validations = clone.getHistory();
             if(validations != null && validations.size()>0) {
-                clone.setValidation(validations.get(0));
+                OrderCloneValidation validation = validations.get(0);
+                if(OrderCloneValidation.RESULT_PASS.equals(validation.getResult())) {
+                    countPass++;
+                } 
+                if(OrderCloneValidation.RESULT_FAIL_LOWSCORE.equals(validation.getResult())
+                        || OrderCloneValidation.RESULT_FAIL_MISMATCH.equals(validation.getResult())
+                        || "Fail".equals(validation.getResult())) {
+                    countFail++;
+                } 
+                if(OrderCloneValidation.RESULT_MANUAL.equals(validation.getResult())
+                        || OrderCloneValidation.RESULT_MANUAL_NO_CLONE_SEQ.equals(validation.getResult())
+                        || OrderCloneValidation.RESULT_MANUAL_NO_READ_SEQ.equals(validation.getResult())) {
+                    countManual++;
+                } 
+                clone.setValidation(validation);
             }
         }
         request.setAttribute(Constants.CLONEORDER, co);
+        request.setAttribute("pass", countPass);
+        request.setAttribute("fail", countFail);
+        request.setAttribute("manual", countManual);
 
         return mapping.findForward("success");
     }

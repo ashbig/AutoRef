@@ -36,15 +36,15 @@
                         </tr>
                     </table>
 
-                    <p class="homeMainText">Validation Summary</p>
+                    <p class="homeMainText">Validation Summary: Pass-<bean:write name="pass"/>; Fail-<bean:write name="fail"/>; Manual:<bean:write name="manual"/></p>
                     <table width="100%" border="1">
                         <tr>
                             <td class="tableheader">CloneID</td>
                             <td class="tableheader">Validation Result</td>
                             <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
-                            <td class="tableheader">Validation Method</td>
-                            <td class="tableheader">Workflow</td>
-                            <td class="tableheader">Researcher</td>
+                                <td class="tableheader">Validation Method</td>
+                                <td class="tableheader">Workflow</td>
+                                <td class="tableheader">Researcher</td>
                             </logic:equal>
                             <td class="tableheader">Date</td>
                         </tr>
@@ -54,9 +54,9 @@
                                     <td><bean:write name="c" property="clone.name"/></td>
                                     <td><bean:write name="c" property="validation.result"/></td>
                                     <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
-                                    <td><bean:write name="c" property="validation.method"/></td>
-                                    <td><bean:write name="c" property="validation.workflowStringForWeb"/></td>
-                                    <td><bean:write name="c" property="validation.who"/></td>
+                                        <td><bean:write name="c" property="validation.method"/></td>
+                                        <td><bean:write name="c" property="validation.workflowStringForWeb"/></td>
+                                        <td><bean:write name="c" property="validation.who"/></td>
                                     </logic:equal>
                                     <td><bean:write name="c" property="validation.when"/></td>
                                 </tr>
@@ -81,8 +81,8 @@
                                     <td class="tableheader">Validation Result</td>
                                     <td class="tableheader">Validation Method</td>
                                     <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
-                                    <td class="tableheader">Workflow</td>
-                                    <td class="tableheader">Researcher</td>
+                                        <td class="tableheader">Workflow</td>
+                                        <td class="tableheader">Researcher</td>
                                     </logic:equal>
                                     <td class="tableheader">Date</td>
                                 </tr>
@@ -92,10 +92,10 @@
                                         <td><bean:write name="v" property="readForWeb"/></td>
                                         <td><bean:write name="v" property="result"/></td>
                                         <td><bean:write name="v" property="method"/></td>
-                                    <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
-                                        <td><bean:write name="v" property="workflowStringForWeb"/></td>
-                                        <td><bean:write name="v" property="who"/></td>
-                                    </logic:equal>
+                                        <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
+                                            <td><bean:write name="v" property="workflowStringForWeb"/></td>
+                                            <td><bean:write name="v" property="who"/></td>
+                                        </logic:equal>
                                         <td><bean:write name="v" property="when"/></td>
                                     </logic:iterate>
                             </table>
