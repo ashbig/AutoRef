@@ -124,11 +124,20 @@ public class BlastWrapper {
         return cmd;
     }
     
-    public String getBlastxCmd(String programPath) {
+    public String getBlastx2SeqCmd(String programPath) {
         String cmd = programPath+"blastx -query "+getInput()+
                 " -subject "+getInput2()+" -out "+getBl2seqOutput()+ 
                 " -seg "+getLowcomp()+
                 " -outfmt "+BLASTX_TABULAR_FORMAT;
+        
+        return cmd;
+    }
+    
+    public String getBlastxCmd(String programPath) {
+        String cmd = programPath+"blastx -query "+getInput()+
+                " -db "+getDatabase()+" -out "+getOutput()+
+                " -seg "+getLowcomp()+
+                " -outfmt "+BLASTX_TABULAR_FORMAT+" -max_target_seqs 1";
         
         return cmd;
     }
