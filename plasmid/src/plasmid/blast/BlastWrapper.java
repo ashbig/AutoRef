@@ -157,8 +157,8 @@ public class BlastWrapper {
     }
 
     public void runBlast2Seq() throws Exception {
-        //String cmd = getBl2seqCmd();
-        String cmd = getNewBl2seqCmd("c:\\blast-2.2.26+\\bin\\");
+        String cmd = getBl2seqCmd();
+        //String cmd = getNewBl2seqCmd("C:\\NCBI\\blast-2.2.28+\\bin\\");
         executeBlast(cmd);
     }
     
