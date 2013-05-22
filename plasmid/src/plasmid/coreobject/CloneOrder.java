@@ -279,6 +279,14 @@ public class CloneOrder implements Serializable {
         
         return false;
     }
+    
+    public boolean getShowPackingSlip() {
+        if(CloneOrder.INPROCESS.equals(status) || CloneOrder.PARTIALLY_SHIPPED.equals(status)
+                || CloneOrder.SHIPPED.equals(status) || CloneOrder.TROUBLESHOOTING.equals(status))
+            return true;
+        
+        return false;
+    }
 
     public String getPiinstitution() {
         return piinstitution;

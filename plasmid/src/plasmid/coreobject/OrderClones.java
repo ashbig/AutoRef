@@ -20,11 +20,13 @@ public class OrderClones {
     private int quantity;
     private String plate;
     private String well;
+    private String clonename;
     
     private Clone clone;
     private List validations;
     private OrderCloneValidation validation;
     private List history;
+    private boolean shipped;
     
     /** Creates a new instance of OrderClones */
     public OrderClones() {
@@ -119,5 +121,33 @@ public class OrderClones {
         if(validation ==null)
             return false;
         return true;
+    }
+
+    /**
+     * @return the shipped
+     */
+    public boolean isShipped() {
+        return shipped;
+    }
+
+    /**
+     * @param shipped the shipped to set
+     */
+    public void setShipped(boolean shipped) {
+        this.shipped = shipped;
+    }
+
+    /**
+     * @return the clonename
+     */
+    public String getClonename() {
+        return clonename;
+    }
+
+    /**
+     * @param clonename the clonename to set
+     */
+    public void setClonename(String clonename) {
+        this.clonename = clonename;
     }
 }

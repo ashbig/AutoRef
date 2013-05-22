@@ -124,8 +124,10 @@
                     </td>
                 </tr>
             </logic:present>
+        </table>
+        <table width="100%" border="0">
             <tr>
-                <td align="center" class="text">
+                <td width="20%" align="left" class="text">
                     <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
                         <logic:equal name="<%=Constants.CLONEORDER%>" property="isplatinum" value="Yes">
                             <html:form action="EnterPlatinumResult.do">
@@ -135,7 +137,7 @@
                         </logic:equal>
                     </logic:equal>
                 </td>
-                <td align="center" class="text">  
+                <td width="20%" align="left" class="text">  
                     <logic:equal name="<%=Constants.CLONEORDER%>" property="isplatinum" value="Yes">
                         <logic:equal name="<%=Constants.CLONEORDER%>" property="displayPlatinumBasedOnStatus" value="<%=CloneOrder.PLATINUM_DISPLAY_RESULTS%>">
                             <html:form action="ViewPlatinumResult.do">
@@ -144,8 +146,22 @@
                             </html:form>
                         </logic:equal>
                     </logic:equal>
+                </td>             
+                <td width="20%" align="left" class="text">
+                    <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
+                        <logic:equal name="<%=Constants.CLONEORDER%>" property="showPackingSlip" value="true">
+                            <html:form action="GeneratePackingSlip.do">
+                                <html:hidden name="<%=Constants.CLONEORDER%>" property="orderid"/>
+                                <html:hidden name="<%=Constants.CLONEORDER%>" property="orderDate"/>
+                                <html:hidden name="<%=Constants.CLONEORDER%>" property="ponumber"/>
+                                <html:hidden name="<%=Constants.CLONEORDER%>" property="email"/>
+                                <html:hidden name="<%=Constants.CLONEORDER%>" property="phone"/>
+                                <html:submit styleClass="text" value="Generate Packing Slip"/>
+                            </html:form>
+                        </logic:equal>
+                    </logic:equal>
                 </td>
-                <td align="center" class="text">
+                <td width="20%" align="left" class="text">
                     <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
                         <logic:equal name="<%=Constants.CLONEORDER%>" property="isProcessShipping" value="true">
                             <html:form action="GenerateFedexLabel.do" target="_blank">
@@ -154,8 +170,8 @@
                             </html:form>
                         </logic:equal>
                     </logic:equal>
-                </td>
-                <td align="center" class="text">
+                </td>    
+                <td width="20%" align="left" class="text">
                     <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
                         <logic:equal name="<%=Constants.CLONEORDER%>" property="isProcessShipping" value="true">
                             <html:form action="ProcessShipping.do">
@@ -164,8 +180,7 @@
                             </html:form>
                         </logic:equal>
                     </logic:equal>
-                </td>
-                <td>&nbsp;</td>
+                </td> 
             </tr>
         </table>
 

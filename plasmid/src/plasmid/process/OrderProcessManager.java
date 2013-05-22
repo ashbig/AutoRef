@@ -440,13 +440,13 @@ public class OrderProcessManager {
                 if ("Y".equals(isBatch)) {
                     clones = m.queryBatchOrderClones(orderid, null);
                 } else {
-                    clones = m.queryOrderClones(orderid, null);
+                    clones = m.queryOrderClones(orderid, null, false);
                 }
             } else {
                 if ("Y".equals(isBatch)) {
                     clones = m.queryBatchOrderClones(orderid, user);
                 } else {
-                    clones = m.queryOrderClones(orderid, user);
+                    clones = m.queryOrderClones(orderid, user, false);
                 }
             }
 
@@ -2226,6 +2226,85 @@ public class OrderProcessManager {
             }
         }
         return false;
+    }
+
+    public List<OrderClones> getOrderClones(int orderid, User user) {
+        CloneOrderManager manager = new CloneOrderManager();
+        if (User.INTERNAL.equals(user.getIsinternal())) {
+            user = null;
+        }
+        return manager.queryOrderClones(orderid, user, true);
+    }
+
+    public void printPackingSlip(OutputStream file, CloneOrder order) {
+        try {
+            Document document = new Document();
+            PdfWriter.getInstance(document, file);
+            document.open();
+
+            document.add(PdfEditor.makeTitle("Packing Slip"));
+            document.add(PdfEditor.makeTitle(" "));
+
+            PdfPTable table = new PdfPTable(2);
+            table.setWidthPercentage(100);
+            table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
+            table.addCell(PdfEditor.makeSmallBold("Order#:\t" + order.getOrderid()));
+            table.addCell(PdfEditor.makeSmallBold("Order Date:\t" + order.getOrderDate()));
+            table.addCell(PdfEditor.makeSmallBold("Email:\t" + order.getEmail()));
+            table.addCell(PdfEditor.makeSmallBold("Phone:\t" + order.getPhone()));
+            PdfPCell cell = new PdfPCell(PdfEditor.makeSmallBold("PO/Billing Number:\t" + order.getPonumber()));
+            cell.setColspan(2);
+            cell.setBorder(Rectangle.NO_BORDER);
+            table.addCell(cell);
+            document.add(table);
+
+            document.add(PdfEditor.makeTitle(" "));
+            table = new PdfPTable(4);
+            table.setWidthPercentage(100);
+            cell = new PdfPCell(PdfEditor.makeSmallBold("Item"));
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(cell);
+            cell = new PdfPCell(PdfEditor.makeSmallBold("Quantity"));
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(cell);
+            cell = new PdfPCell(PdfEditor.makeSmallBold("Platinum Result"));
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(cell);
+            cell = new PdfPCell(PdfEditor.makeSmallBold("Shipped"));
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(cell);
+            List<OrderClones> clones = order.getClones();
+            for (OrderClones clone : clones) {
+                //if (clone.isShipped()) {
+                cell = new PdfPCell(PdfEditor.makeSmall(clone.getClonename()));
+                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                table.addCell(cell);
+                cell = new PdfPCell(PdfEditor.makeSmall("" + clone.getQuantity()));
+                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                table.addCell(cell);
+                String result = "NA";
+                if (clone.getValidation() != null) {
+                    result = clone.getValidation().getResult();
+                }
+                cell = new PdfPCell(PdfEditor.makeSmall(result));
+                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                table.addCell(cell);
+                String isShipped = "No";
+                if (clone.isShipped()) {
+                    isShipped = "Yes";
+                }
+                cell = new PdfPCell(PdfEditor.makeSmall(isShipped));
+                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                table.addCell(cell);
+                //}
+            }
+            document.add(table);
+
+            document.close();
+            file.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static final void main(String args[]) {

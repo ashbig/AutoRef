@@ -177,7 +177,8 @@
             showInput(t);
             f.elements["pmid"].value = "";
             f.elements["title"].value = "";
-            document.getElementById("publicationid") = "0";
+            f.elements["publicationid"] = "0";
+            //document.getElementById("publicationid") = "0";
         }
         
         function checkNext() {

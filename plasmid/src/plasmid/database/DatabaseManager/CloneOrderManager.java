@@ -189,26 +189,55 @@ public class CloneOrderManager extends TableManager {
         return orderid;
     }
 
-    public List queryOrderClones(int orderid, User user) {
-        String sql = "select o.cloneid, o.quantity"
-                + " from orderclones o, cloneorder c"
-                + " where o.orderid=c.orderid and "
-                + " o.collectionname is null and c.orderid=" + orderid;
+    public List queryOrderClones(int orderid, User user, boolean isValidation) {
+        String sql = "select o.cloneid, o.quantity, cl.clonename"
+                + " from orderclones o, cloneorder c, clone cl"
+                + " where o.orderid=c.orderid"
+                + " and o.cloneid=cl.cloneid"
+                + " and o.collectionname is null and c.orderid=" + orderid;
 
         if (user != null) {
             sql = sql + " and c.userid=" + user.getUserid();
         }
 
+        String sql2 = "select method,result,to_char(when, 'YYYY-MM-DD') from orderclonevalidation"+
+                " where cloneid=? and orderid="+orderid+" order by when desc";
+        
         DatabaseTransaction t = null;
         ResultSet rs = null;
+        ResultSet rs2 = null;
+        PreparedStatement stmt = null;
+        Connection conn = null;
         List clones = new ArrayList();
         try {
             t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            stmt = conn.prepareStatement(sql2);
             rs = t.executeQuery(sql);
             while (rs.next()) {
                 int cloneid = rs.getInt(1);
                 int quantity = rs.getInt(2);
+                String clonename = rs.getString(3);
                 OrderClones clone = new OrderClones(orderid, cloneid, null, quantity);
+                clone.setClonename(clonename);
+                clone.setShipped(false);
+                
+                stmt.setInt(1, cloneid);
+                rs2 = DatabaseTransaction.executeQuery(stmt);
+                if(rs2.next()) {
+                    String method = rs2.getString(1);
+                    String result = rs2.getString(2);
+                    String when = rs2.getString(3);
+                    OrderCloneValidation validation = new OrderCloneValidation();
+                    validation.setMethod(method);
+                    validation.setResult(result);
+                    validation.setWhen(when);
+                    if(OrderCloneValidation.RESULT_PASS.equals(result)) {
+                        clone.setShipped(true);
+                    }
+                    clone.setValidation(validation);
+                }
+                DatabaseTransaction.closeResultSet(rs2);
                 clones.add(clone);
             }
             return clones;
@@ -217,6 +246,8 @@ public class CloneOrderManager extends TableManager {
             return null;
         } finally {
             DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+            DatabaseTransaction.closeConnection(conn);
         }
     }
 
