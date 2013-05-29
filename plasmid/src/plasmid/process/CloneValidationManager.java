@@ -98,6 +98,7 @@ public class CloneValidationManager {
                         if (line.indexOf(">") >= 0) {
                             try {
                                 String[] s = line.split(" ");
+                                //The first number is the phred score
                                 int phred = Integer.parseInt(s[1]);
                                 validation.setPhred(phred);
                             } catch (Exception ex) {
