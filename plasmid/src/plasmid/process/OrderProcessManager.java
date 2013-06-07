@@ -2156,6 +2156,7 @@ public class OrderProcessManager {
     }
 
     public void emailInvoice(CloneOrder order, Invoice invoice, boolean isOther) throws Exception {
+        invoice.setOrder(order);
         String filename = Constants.TMP + "Invoice_" + order.getOrderid() + ".pdf";
         File f1 = new File(filename);
         OutputStream file = new FileOutputStream(f1);
