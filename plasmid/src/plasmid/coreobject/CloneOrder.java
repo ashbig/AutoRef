@@ -115,6 +115,7 @@ public class CloneOrder implements Serializable {
     private String updatedby;
     private String updatedon;
     private UserAddress shippingInfo;
+    private boolean hasPlatinumResult;
     
     /** Creates a new instance of CloneOrder */
     public CloneOrder() {
@@ -122,6 +123,7 @@ public class CloneOrder implements Serializable {
         this.batches = new ArrayList();
         this.isaustralia = "N";
         this.ismta = ISMTA_NO;
+        this.hasPlatinumResult = false;
     }
     
     public CloneOrder(int orderid,String orderDate, String status, String ponumber,String shippingTo,String billingTo,
@@ -148,6 +150,7 @@ public class CloneOrder implements Serializable {
         this.batches = new ArrayList();
         this.isaustralia = "N";
         this.ismta = ISMTA_NO;
+        this.hasPlatinumResult = false;
     }
     
     public int getOrderid() {return orderid;}
@@ -434,5 +437,19 @@ public class CloneOrder implements Serializable {
      */
     public void setShippingInfo(UserAddress shippingInfo) {
         this.shippingInfo = shippingInfo;
+    }
+
+    /**
+     * @return the hasPlatinumResult
+     */
+    public boolean isHasPlatinumResult() {
+        return hasPlatinumResult;
+    }
+
+    /**
+     * @param hasPlatinumResult the hasPlatinumResult to set
+     */
+    public void setHasPlatinumResult(boolean hasPlatinumResult) {
+        this.hasPlatinumResult = hasPlatinumResult;
     }
 }

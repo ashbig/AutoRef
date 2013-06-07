@@ -347,7 +347,8 @@ public class CloneOrderManager extends TableManager {
                 + " from cloneorder c, userprofile u where c.userid=u.userid and c.orderid=" + orderid;
 
         String sql2 = "select invoiceid from invoice where orderid=" + orderid;
-
+        String sql3 = "select count(*) from orderclonevalidation where orderid=" + orderid;
+              
         if (user != null) {
             sql = sql + " and u.userid=" + user.getUserid();
         }
@@ -355,6 +356,7 @@ public class CloneOrderManager extends TableManager {
         DatabaseTransaction t = null;
         ResultSet rs = null;
         ResultSet rs2 = null;
+        ResultSet rs3 = null;
         CloneOrder order = null;
         try {
             t = DatabaseTransaction.getInstance();
@@ -437,6 +439,14 @@ public class CloneOrderManager extends TableManager {
                     int invoiceid = rs2.getInt(1);
                     order.setInvoiceid(invoiceid);
                 }
+
+                rs3 = t.executeQuery(sql3);
+                if (rs3.next()) {
+                    int count = rs3.getInt(1);
+                    if(count>0) {
+                        order.setHasPlatinumResult(true);
+                    }
+                }
             }
         } catch (Exception ex) {
             handleError(ex, "Cannot query cloneorder.");
@@ -444,6 +454,7 @@ public class CloneOrderManager extends TableManager {
         } finally {
             DatabaseTransaction.closeResultSet(rs);
             DatabaseTransaction.closeResultSet(rs2);
+            DatabaseTransaction.closeResultSet(rs3);
         }
         return order;
     }
