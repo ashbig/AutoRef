@@ -23,10 +23,6 @@
                 <td width="864" align="left" valign="top">
                     <jsp:include page="blastSearchTitle.jsp" />
                     
-                    <bean:define id="size" name="blastForm" property="pagesize"/>
-                    <bean:define id="p" name="blastForm" property="page"/>
-                    <bean:define id="total" name="numOfFound"/>
-                    
                     <h:form action="GetAlignment.do">
                         <html:hidden name="blastForm" property="program"/>
                         <html:hidden name="blastForm" property="sequence"/>
@@ -39,20 +35,25 @@
                     <p class="mainbodytexthead">List of search terms found<br>
                             <em>Click link in the &quot;Search Term&quot; field to view the alignment</em><br>
                     </p>
+                    
+                    <bean:define id="size" name="blastForm" property="pagesize"/>
+                    <bean:define id="p" name="blastForm" property="page"/>
+                    <bean:define id="total" name="numOfFound"/>
+                    
                     <html:form action="SetDisplay.do">
                         <table width="100%" border="0">
                             <tr class="mainbodytexthead">
                               <td align="left" class="mainbodytexthead">Page: 
                                     <html:select property="page">
-                                        <%  int k = 0;
-            while (k < Integer.parseInt(total.toString()) / Integer.parseInt(size.toString())) {
+                                        <%  int i = 0;
+            while (i < Integer.parseInt(total.toString()) / Integer.parseInt(size.toString())) {
                                         %>
-                                        <html:option value="<%=(new Integer(k+1)).toString()%>"/>
-                                        <%      k++;
+                                        <html:option value="<%=(new Integer(i+1)).toString()%>"/>
+                                        <%      i++;
             }
             if ((Integer.parseInt(total.toString()) % Integer.parseInt(size.toString())) > 0)
                                         %>
-                                        <html:option value="<%=(new Integer(k+1)).toString()%>"/>
+                                        <html:option value="<%=(new Integer(i+1)).toString()%>"/>
                                     </html:select>
                                     <html:submit property="button" value="Display"/>
                                 </td>
