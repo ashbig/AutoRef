@@ -148,6 +148,7 @@ public class BlastSearchAction extends Action {
                 request.getSession().setAttribute("refseqSearchForm", f);
             }
             f.setForward("blast");
+            request.getSession().setAttribute("numOfFound", new Integer(infos.size()));
             request.getSession().setAttribute("found", infos);
 
             return (mapping.findForward("success"));

@@ -25,7 +25,7 @@
                     
                     <bean:define id="size" name="blastForm" property="pagesize"/>
                     <bean:define id="p" name="blastForm" property="page"/>
-                    <bean:define id="total" name="blastForm" property="total"/>
+                    <bean:define id="total" name="numOfFound"/>
                     
                     <h:form action="GetAlignment.do">
                         <html:hidden name="blastForm" property="program"/>
