@@ -73,6 +73,8 @@ public class BlastSearchAction extends Action {
             return (new ActionForward(mapping.getInput()));
         }
 
+        ((BlastForm) form).setPage(1);
+        ((BlastForm) form).setPagesize(Constants.PAGESIZE);
         User user = (User) request.getSession().getAttribute(Constants.USER_KEY);
         List restrictions = new ArrayList();
         restrictions.add(Clone.NO_RESTRICTION);
