@@ -57,6 +57,7 @@
                                     </html:select>
                                     <html:submit property="button" value="Display"/>
                                 </td>
+                                <td class="mainbodytexthead"><html:submit property="button" value="<%=Constants.DOWNLOAD%>"/></td>
                                 <td align="right" class="mainbodytexthead"><a target="_blank" href="TermDefinition.jsp">Explanation of Terms</a></td>
                             </tr>
                         </table>
@@ -170,6 +171,7 @@
                                     </html:select>
                                     <html:submit property="button" value="Display"/>
                                 </td>
+                                <td class="mainbodytexthead"><html:submit property="button" value="<%=Constants.DOWNLOAD%>"/></td>
                                 <td align="right" class="mainbodytexthead"><a target="_blank" href="TermDefinition.jsp">Explanation of Terms</a></td>
                             </tr>
                         </table>
