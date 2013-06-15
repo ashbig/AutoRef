@@ -36,8 +36,8 @@
                             <em>Click link in the &quot;Search Term&quot; field to view the alignment</em><br>
                     </p>
                     
-                    <bean:define id="size" name="blastForm" property="pagesize"/>
-                    <bean:define id="p" name="blastForm" property="page"/>
+                    <bean:define id="size" name="refseqSearchForm" property="pagesize"/>
+                    <bean:define id="p" name="refseqSearchForm" property="page"/>
                     <bean:define id="total" name="numOfFound"/>
                     
                     <html:form action="SetDisplay.do">

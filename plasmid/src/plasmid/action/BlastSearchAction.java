@@ -73,8 +73,6 @@ public class BlastSearchAction extends Action {
             return (new ActionForward(mapping.getInput()));
         }
 
-        ((BlastForm) form).setPage(1);
-        ((BlastForm) form).setPagesize(Constants.PAGESIZE);
         User user = (User) request.getSession().getAttribute(Constants.USER_KEY);
         List restrictions = new ArrayList();
         restrictions.add(Clone.NO_RESTRICTION);
@@ -145,8 +143,10 @@ public class BlastSearchAction extends Action {
             RefseqSearchForm f = (RefseqSearchForm) request.getSession().getAttribute("refseqSearchForm");
             if (f == null) {
                 f = new RefseqSearchForm();
-                request.getSession().setAttribute("refseqSearchForm", f);
             }
+            f.setPage(1);
+            f.setPagesize(Constants.PAGESIZE);
+            request.getSession().setAttribute("refseqSearchForm", f);
             f.setForward("blast");
             request.getSession().setAttribute("numOfFound", new Integer(infos.size()));
             request.getSession().setAttribute("found", infos);
