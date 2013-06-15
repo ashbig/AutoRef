@@ -118,7 +118,6 @@ public class SetDisplayAction extends Action {
             return (mapping.findForward("success"));
         }
         if (button != null && button.equals(Constants.DOWNLOAD)) {
-            System.out.println("clones="+clones);
             if (clones == null && Constants.BOOLEAN_ISDOWNLOAD_YES.equals(isDownload)) {
                 QueryProcessManager manager = new QueryProcessManager();
                 User user = (User) request.getSession().getAttribute(Constants.USER_KEY);
@@ -132,12 +131,10 @@ public class SetDisplayAction extends Action {
                 CollectionInfo info = manager.getCollection(collectionName, CollectionInfo.DISTRIBUTION, restrictions, true);
                 clones = info.getClones();
             }
-            System.out.println("clones1="+clones);
             response.setContentType("application/x-msexcel");
             response.setHeader("Content-Disposition", "attachment;filename=Clones.xls");
             PrintWriter out = response.getWriter();
             OrderProcessManager manager = new OrderProcessManager();
-            System.out.println("clones2="+clones);
             manager.writeCloneList(clones, out, false, false);
             return null;
         }

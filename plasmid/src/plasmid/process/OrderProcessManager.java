@@ -918,7 +918,6 @@ public class OrderProcessManager {
     }
 
     public void writeCloneList(List clones, PrintWriter out, boolean isWorkingStorage, boolean isQuantity) {
-            System.out.println("start="+clones);
         if (isWorkingStorage) {
             out.print("Clone ID\tClone Type\tGene ID\tGene Symbol\tGene Name\tReference Sequence Genbank Accession\tReference Sequence GI\tInsert Format\tVector\tGrowth Condition\tSelection Markers\tMutation\tDiscrepancy\tSpecies\tSpecial MTA");
             if (isQuantity) {
@@ -969,6 +968,7 @@ System.out.println("10");
                 for (int j = 0; j < inserts.size(); j++) {
 System.out.println("11");
                     DnaInsert insert = (DnaInsert) inserts.get(j);
+System.out.println("growthcondition="+c.getRecommendedGrowthCondition());
                     out.print(c.getName() + "\t" + c.getType() + "\t" + insert.getGeneid() + "\t" + insert.getName() + "\t" + insert.getDescription() + "\t" + insert.getTargetgenbank() + "\t" + insert.getTargetseqid() + "\t" + insert.getFormat() + "\t" + c.getVectorname() + "\t" + c.getRecommendedGrowthCondition().getName() + "\t");
 
 System.out.println("12");
