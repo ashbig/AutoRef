@@ -160,7 +160,7 @@ public class BlastManager {
             CloneInfo clone = (CloneInfo) foundClones.get(cloneid);
             if (clone != null) {
                 info.setCloneinfo(clone);
-                clone.setTerm(info.getQueryid());
+                info.setTerm(info.getQueryid());
                 found.add(info);
             }
         }
