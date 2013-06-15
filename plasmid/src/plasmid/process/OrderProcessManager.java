@@ -919,21 +919,25 @@ public class OrderProcessManager {
 
     public void writeCloneList(List clones, PrintWriter out, boolean isWorkingStorage, boolean isQuantity) {
         if (isWorkingStorage) {
-            out.print("Clone ID\tClone Type\tGene ID\tGene Symbol\tGene Name\tReference Sequence Genbank Accession\tReference Sequence GI\tInsert Format\tVector\tGrowth Condition\tSelection Markers\tMutation\tDiscrepancy\tSpecies\tSpecial MTA");
+            out.print("Search Term\tClone ID\tClone Type\tGene ID\tGene Symbol\tGene Name\tReference Sequence Genbank Accession\tReference Sequence GI\tInsert Format\tVector\tGrowth Condition\tSelection Markers\tMutation\tDiscrepancy\tSpecies\tSpecial MTA");
             if (isQuantity) {
                 out.print("\tQuantity");
             }
             out.println("\tContainer\tWell\tPosition");
         } else {
             if (isQuantity) {
-                out.println("Clone ID\tClone Type\tGene ID\tGene Symbol\tGene Name\tReference Sequence Genbank Accession\tReference Sequence GI\tInsert Format\tVector\tGrowth Condition\tSelection Markers\tMutation\tDiscrepancy\tSpecies\tSpecial MTA\tQuantity");
+                out.println("Search Term\tClone ID\tClone Type\tGene ID\tGene Symbol\tGene Name\tReference Sequence Genbank Accession\tReference Sequence GI\tInsert Format\tVector\tGrowth Condition\tSelection Markers\tMutation\tDiscrepancy\tSpecies\tSpecial MTA\tQuantity");
             } else {
-                out.println("Clone ID\tClone Type\tGene ID\tGene Symbol\tGene Name\tReference Sequence Genbank Accession\tReference Sequence GI\tInsert Format\tVector\tGrowth Condition\tSelection Markers\tMutation\tDiscrepancy\tSpecies\tSpecial MTA");
+                out.println("Search Term\tClone ID\tClone Type\tGene ID\tGene Symbol\tGene Name\tReference Sequence Genbank Accession\tReference Sequence GI\tInsert Format\tVector\tGrowth Condition\tSelection Markers\tMutation\tDiscrepancy\tSpecies\tSpecial MTA");
             }
         }
 
         for (int i = 0; i < clones.size(); i++) {
             CloneInfo c = (CloneInfo) clones.get(i);
+            if(c.getTerm()==null)
+                out.print("\t");
+            else 
+                out.print(c.getTerm()+"\t");
             if (Clone.NOINSERT.equals(c.getType())) {
                 out.print(c.getName() + "\t" + c.getType() + "\t\t\t\t\t\t\t" + c.getVectorname() + "\t" + c.getRecommendedGrowthCondition().getName() + "\t");
 
