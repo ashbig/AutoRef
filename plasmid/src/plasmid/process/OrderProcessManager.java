@@ -931,16 +931,22 @@ public class OrderProcessManager {
                 out.println("Clone ID\tClone Type\tGene ID\tGene Symbol\tGene Name\tReference Sequence Genbank Accession\tReference Sequence GI\tInsert Format\tVector\tGrowth Condition\tSelection Markers\tMutation\tDiscrepancy\tSpecies\tSpecial MTA");
             }
         }
-
+System.out.println("1");
         for (int i = 0; i < clones.size(); i++) {
             CloneInfo c = (CloneInfo) clones.get(i);
             if (Clone.NOINSERT.equals(c.getType())) {
+System.out.println("2");
                 out.print(c.getName() + "\t" + c.getType() + "\t\t\t\t\t\t\t" + c.getVectorname() + "\t" + c.getRecommendedGrowthCondition().getName() + "\t");
 
+System.out.println("3");
                 List selections = c.getSelections();
+System.out.println("4");
                 for (int n = 0; n < selections.size(); n++) {
+System.out.println("5");
                     CloneSelection cs = (CloneSelection) selections.get(n);
+System.out.println("6");
                     out.print(cs.getHosttype() + ": " + cs.getMarker() + ";");
+System.out.println("7");
                 }
 
                 out.print("\t\t\t\t" + c.getSpecialtreatment());
@@ -949,34 +955,46 @@ public class OrderProcessManager {
                     out.print("\t" + c.getQuantity());
                 }
 
+System.out.println("8");
                 if (isWorkingStorage) {
+System.out.println("9");
                     out.println("\t" + c.getPlate() + "\t" + c.getWell() + "\t" + c.getPosition());
                 } else {
                     out.println();
                 }
             } else {
+System.out.println("10");
                 List inserts = c.getInserts();
                 for (int j = 0; j < inserts.size(); j++) {
+System.out.println("11");
                     DnaInsert insert = (DnaInsert) inserts.get(j);
                     out.print(c.getName() + "\t" + c.getType() + "\t" + insert.getGeneid() + "\t" + insert.getName() + "\t" + insert.getDescription() + "\t" + insert.getTargetgenbank() + "\t" + insert.getTargetseqid() + "\t" + insert.getFormat() + "\t" + c.getVectorname() + "\t" + c.getRecommendedGrowthCondition().getName() + "\t");
 
+System.out.println("12");
                     List selections = c.getSelections();
                     for (int n = 0; n < selections.size(); n++) {
                         CloneSelection cs = (CloneSelection) selections.get(n);
+System.out.println("13");
                         out.print(cs.getHosttype() + ": " + cs.getMarker() + ";");
                     }
 
+System.out.println("14");
                     out.print("\t" + insert.getHasmutation() + "\t" + insert.getHasdiscrepancy() + "\t" + insert.getSpecies() + "\t" + c.getSpecialtreatment());
 
+System.out.println("15");
                     if (isQuantity) {
                         out.print("\t" + c.getQuantity());
                     }
 
+System.out.println("16");
                     if (isWorkingStorage) {
+System.out.println("17");
                         out.println("\t" + c.getPlate() + "\t" + c.getWell() + "\t" + c.getPosition());
+System.out.println("18");
                     } else {
                         out.println();
                     }
+System.out.println("19");
                 }
             }
         }
