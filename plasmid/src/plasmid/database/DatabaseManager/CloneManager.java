@@ -568,7 +568,7 @@ public class CloneManager extends TableManager {
                 + " domain, subdomain, restriction, comments, vectorid, vectorname,"
                 + " clonemapfilename,status,specialtreatment,source,description,cloneid"
                 + " from clone where cloneid =?";
-System.out.println("isGrowth="+isGrowth);
+
         if (clonetypes != null) {
             String s = StringConvertor.convertFromListToSqlString(clonetypes);
             sq = sq + " and clonetype in (" + s + ")";
@@ -1072,7 +1072,7 @@ System.out.println("isGrowth="+isGrowth);
         if (cloneids == null || cloneids.size() == 0) {
             return clones;
         }
-System.out.println("growth="+isGrowth);
+
         String sql2 = getInsertSql();
         String sql3 = getSelectionSql();
         String sql4 = getStorageSql();

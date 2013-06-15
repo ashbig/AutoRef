@@ -60,6 +60,7 @@ public class BlastHit extends CloneInfo implements Serializable {
         this.setPublications(c.getPublications());
         this.setSelections(c.getSelections());
         this.setSynonyms(c.getSynonyms());
+        this.setRecommendedGrowthCondition(c.getRecommendedGrowthCondition());
     }
     
     public void addBlastinfo(BlastInfo info) {
