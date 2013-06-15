@@ -918,6 +918,7 @@ public class OrderProcessManager {
     }
 
     public void writeCloneList(List clones, PrintWriter out, boolean isWorkingStorage, boolean isQuantity) {
+            System.out.println("start="+clones);
         if (isWorkingStorage) {
             out.print("Clone ID\tClone Type\tGene ID\tGene Symbol\tGene Name\tReference Sequence Genbank Accession\tReference Sequence GI\tInsert Format\tVector\tGrowth Condition\tSelection Markers\tMutation\tDiscrepancy\tSpecies\tSpecial MTA");
             if (isQuantity) {
