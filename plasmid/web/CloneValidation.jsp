@@ -78,8 +78,8 @@
                                             <td><bean:write name="cloneValidationForm" property='<%="result[" + m + "]"%>'/>&nbsp;</td>
                                             <td><bean:write name="cloneValidationForm" property='<%="readname[" + m + "]"%>'/>&nbsp;</td>
                                             <td><bean:write name="cloneValidationForm" property='<%="phred[" + m + "]"%>'/>&nbsp;</td>
+                                            <% m++;%>
                                         </logic:iterate>
-                                        <% m++;%>
                                 </table>
                                 <% k++;%>
                             </logic:iterate>
