@@ -35,10 +35,9 @@
         SGM 228<br>
         240 Longwood Ave<br>
         Boston, MA 02115</p>
-        <p class="mainbodytext"><strong>Our billing (for your PO) is handled 
-          by:</strong><br>
-           DF/HCC DNA Resource Core<br>
-          BCMP Department<br>
+        <p class="mainbodytext"><strong>Remit Payment To:</strong><br>
+          Harvard Medical School<br>
+          Dept. BCMP, C1-214<br>
           240 Longwood Ave.<br>
           Boston, MA 02115</p>
           </blockquote>
