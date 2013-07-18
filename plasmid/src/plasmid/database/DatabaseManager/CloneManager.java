@@ -516,7 +516,7 @@ public class CloneManager extends TableManager {
                 + " domain, subdomain, restriction, comments, vectorid, vectorname,"
                 + " clonemapfilename,status,specialtreatment,source,description,c.cloneid,o.orderid"
                 + " from clone c, orderclones o where c.cloneid=o.cloneid and o.orderid in (" + orderidString + ")"
-                + " order by o.orderid";
+                + " order by o.orderid, c.cloneid";
         DatabaseTransaction t = null;
         ResultSet rs = null;
         List clones = new ArrayList();
@@ -1069,7 +1069,7 @@ public class CloneManager extends TableManager {
 
     private Map performQueryClones(List cloneids, boolean isInsert, boolean isSelection, boolean isWorkingStorage, boolean isGrowth, String sql, boolean isInsertseq, boolean isClonename) {
         Map clones = new TreeMap();
-        if (cloneids == null || cloneids.size() == 0) {
+        if (cloneids == null || cloneids.isEmpty()) {
             return clones;
         }
 
@@ -1550,6 +1550,7 @@ public class CloneManager extends TableManager {
         if (isPSI) {
             sql = sql + " and cloneid in (select cloneid from cloneproperty where propertytype='Collection' and propertyvalue='PSI')";
         }
+        sql += " order by cloneid";
 
         PreparedStatement stmt = null;
 
@@ -1572,7 +1573,7 @@ public class CloneManager extends TableManager {
     }
 
     public static int queryCloneCounts(Map foundList, List nofound, String sql) {
-        if (foundList == null || foundList.size() == 0) {
+        if (foundList == null || foundList.isEmpty()) {
             return 0;
         }
 
@@ -2265,6 +2266,7 @@ public class CloneManager extends TableManager {
         if (status != null) {
             sql += " and status='" + status + "'";
         }
+        sql += " order by cloneid";
 
         PreparedStatement stmt = null;
         ResultSet rs = null;

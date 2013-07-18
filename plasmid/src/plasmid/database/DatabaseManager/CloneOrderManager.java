@@ -199,6 +199,7 @@ public class CloneOrderManager extends TableManager {
         if (user != null) {
             sql = sql + " and c.userid=" + user.getUserid();
         }
+        sql += " order by o.cloneid";
 
         String sql2 = "select method,result,to_char(when, 'YYYY-MM-DD') from orderclonevalidation"+
                 " where cloneid=? and orderid="+orderid+" order by when desc";
@@ -267,6 +268,7 @@ public class CloneOrderManager extends TableManager {
         if (user != null) {
             sql = sql + " and c.userid=" + user.getUserid();
         }
+        sql += " order by b.plate, b.well";
 
         DatabaseTransaction t = null;
         ResultSet rs = null;
@@ -304,6 +306,7 @@ public class CloneOrderManager extends TableManager {
         if (user != null) {
             sql = sql + " and c.userid=" + user.getUserid();
         }
+        sql += " order by o.collectionname";
 
         DatabaseTransaction t = null;
         ResultSet rs = null;
@@ -808,7 +811,7 @@ public class CloneOrderManager extends TableManager {
     public static List queryCloneOrdersForValidation(List orderids, boolean isvalidation) {
         String sql = "select c.cloneid, c.clonename from clone c, orderclones o"
                 + " where c.cloneid=o.cloneid"
-                + " and o.orderid=?";
+                + " and o.orderid=? order by c.cloneid";
         String sql2 = "select method,sequence,result,researchername,when,userid,phred,isolatename,read,workflow"
                 + " from orderclonevalidation where orderid=? and cloneid=?"
                 + " order by when desc";
