@@ -20,7 +20,7 @@
       <img height="83" width="77" src="dnacore.jpg"/><img height="81" width="222" src="PlasmID_logo.jpg"/></td>
   </tr>
   <tr>
-    <td width="100%" rowspan="2" align="center" valign="top" class="homepageLink"><a href="http://dnaseq.med.harvard.edu" target="_blank">DF/HCC DNA Resource Core</a></td>
+    <td width="100%" rowspan="2" align="center" valign="top" class="homepageLink">DF/HCC DNA Resource Core</td>
     <td rowspan="2"> 
      <a target="_blank" href="FAQ.jsp" class="countrytext">FAQ</a></td>
   </tr>
@@ -62,6 +62,7 @@
                                     </p>
                                     <p align="center"><span class="alert">Saturday July 27 from</span></p>
                                     <p align="center"><span class="alert">04:00 AM - 08:00 AM EDT</span></p>
+                                    <p align="center"><span class="formlabel">We apologize for any inconvenience and look forward to helping your research again ASAP.</span></p>
                              
                             
                                <!-- 
@@ -163,8 +164,8 @@
               &#149; Plasmid Submission &#149; Search & Order
               &#149; Contact Us</p>
         <p align="center" class="homeMainText">PlasmID was created and is maintained 
-          by the <a href="http://dnaseq.med.harvard.edu" target="_blank">DF/HCC 
-          DNA Resource Core</a></p>
+          by the DF/HCC 
+          DNA Resource Core</p>
             <p class="footertext">©2004-2010 Harvard Medical School</p></td>
         </tr>
       </table></td>
