@@ -152,7 +152,7 @@ public class CloneValidationManager {
         if (validations.size() > 1) {
             workflow = OrderCloneValidation.WORKFLOW_TROUBLESHOOTING;
         }
-        
+
         int manual = 0;
         int mismatch = 0;
         OrderCloneValidation mismatchIsolate = null;
@@ -215,7 +215,11 @@ public class CloneValidationManager {
         String output = BlastWrapper.BLAST_FILE_PATH + clonename + ".out";
         String s = bm.runBl2seq(BlastWrapper.PROGRAM_BLASTN, cloneseq, ">" + clonename + "\n" + seq, SequenceAnalysisManager.EXPECT, true, false, false, output, BlastWrapper.DEFAULT_OUTPUT, false);
         BlastParser parser = new BlastParser(output);
-        parser.setAlength(getAlength());
+        if (cloneseq.length() >= ALENGTH) {
+            parser.setAlength(getAlength());
+        } else {
+            parser.setAlength(cloneseq.length());
+        }
         parser.setPid(getPid());
         parser.parseTabularOutput();
         List infos = parser.getInfos();
