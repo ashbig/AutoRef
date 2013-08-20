@@ -94,7 +94,7 @@ public class GenerateContainersAction extends Action {
               
                 if(Container.MICRONIC96TUBEMP16.equals(c.getType())) {
                     String label = c.getLabel();
-                    Map m = manager.readTubeMappingFile(ContainerProcessManager.TUBEMAPFILEPATH+label+".trx");
+                    Map m = manager.readTubeMappingFile(ContainerProcessManager.TUBEMAPFILEPATH+label+".txt");
                     
                     if(m == null) {
                         throw new Exception("Cannot read tube mapping file for container: "+label);
