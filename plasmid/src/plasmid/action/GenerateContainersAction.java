@@ -55,7 +55,11 @@ public class GenerateContainersAction extends Action {
         try {
             int begin = worklistname.indexOf("_");
             int end = worklistname.indexOf(".");
-            int worklistid = Integer.parseInt(worklistname.substring(begin+1, end));
+            String worklistidString = worklistname;
+            if(begin>=0 && end>=0) {
+                worklistidString=worklistname.substring(begin+1, end);
+            }
+            int worklistid = Integer.parseInt(worklistidString);
             WorklistInfo info = ProcessManager.getWorklistInfo(worklistid);
             if(info == null) {
                 throw new Exception("Cannot get data from WORKLISTINFO with worklistid: "+worklistid);
