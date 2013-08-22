@@ -49,10 +49,7 @@ public class GetAlignmentAction extends Action {
         String program = ((BlastForm) form).getProgram();
         String sequence = ((BlastForm) form).getSequence();
         //int maxseqs = ((BlastForm) form).getMaxseqs();
-        double expect = ((BlastForm) form).getExpect();
         boolean isLowcomp = ((BlastForm) form).isIsLowcomp();
-        boolean isMaskLowercase = ((BlastForm) form).getIsMaskLowercase();
-        boolean isMegablast = ((BlastForm) form).isIsMegablast();
         String queryid = ((BlastForm) form).getQueryid();
         String subjectid = ((BlastForm) form).getSubjectid();
         String clonename = ((BlastForm)form).getClonename();
@@ -71,7 +68,7 @@ public class GetAlignmentAction extends Action {
         }
         
         try {
-            String output = manager.runBl2seq(program, querySeq, subjectSeq, expect, isLowcomp, isMaskLowercase, isMegablast);
+            String output = manager.runBl2seq(program, querySeq, subjectSeq, isLowcomp);
             request.setAttribute("alignment", output);
             return (mapping.findForward("success"));
         } catch (Exception ex) {

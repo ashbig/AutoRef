@@ -12,8 +12,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.6 $
- * $Date: 2009-01-06 18:34:44 $
+ * $Revision: 1.7 $
+ * $Date: 2013-08-22 18:54:03 $
  * $Author: dz4 $
  *
  ******************************************************************************
@@ -38,6 +38,8 @@ package plasmid.database;
 
 import java.sql.*;
 import java.util.*;
+import java.util.logging.Logger;
+import javax.naming.InitialContext;
 
 import javax.sql.*;
 
@@ -54,35 +56,28 @@ import sun.jdbc.rowset.*;
  */
 public class DatabaseTransaction {
 
-    // singleton instance.
-    private static DatabaseTransaction instance = null;
-    // the datasource to get the pooled connections from
-    private static DataSource ds = null;
+    static final Logger logger = Logger.getLogger(DatabaseTransaction.class.getName());
+    private static DatabaseTransaction pool = null;
+    private static DataSource dataSource = null;
 
-    // Private constructor method. Autocommit is set to false.
-    protected DatabaseTransaction(DataSource ds) {
-        this.ds = ds;
-    } // end constructor
 
-    public static void init(DataSource ds) {
-        instance = new DatabaseTransaction(ds);
+    public synchronized static DatabaseTransaction getInstance() {
+        if (pool == null) {
+            pool = new DatabaseTransaction();
+        }
+        return pool;
     }
 
-    /**
-     * This class is implemented as a Singleton.
-     * Returns a <code>DatabaseTransaction</code> object.
-     *
-     * @return A <code>DatabaseTransaction</code> object.
-     */
-    public static DatabaseTransaction getInstance()
-            throws DatabaseException {
-        if (instance == null) {
-            throw new DatabaseException("Pool not initialized.");
+    private DatabaseTransaction() {
+        try {
+            InitialContext ic = new InitialContext();
+            dataSource = (DataSource) ic.lookup("java:/comp/env/jdbc/plasmid");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            System.out.println("cannot get database connection.\n" + ex.getMessage());
+            //logger.warning("cannot get database connection.\n" + ex.getMessage());
         }
-
-        return instance;
-
-    } // end getInstance()
+    }
 
     /**
      * Requests a Connection from the pool.
@@ -98,7 +93,7 @@ public class DatabaseTransaction {
             throws DatabaseException {
         Connection conn = null;
         try {
-            conn = ds.getConnection();
+            conn = dataSource.getConnection();
             conn.setAutoCommit(autoCommit);
             return conn;
         } catch (SQLException sqlE) {

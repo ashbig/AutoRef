@@ -3,158 +3,193 @@
  *
  * Created on March 31, 2005, 11:56 AM
  */
-
 package plasmid.util;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.*;
 import java.lang.*;
+import java.sql.Clob;
+import java.sql.SQLException;
 
 import plasmid.Constants;
 import plasmid.query.coreobject.QueryOperator;
 
 /**
  *
- * @author  DZuo
+ * @author DZuo
  */
 public class StringConvertor {
-    
-    /** Creates a new instance of StringConvertor */
+
+    /**
+     * Creates a new instance of StringConvertor
+     */
     public StringConvertor() {
     }
-    
+
     public String convertFromListToString(List l) {
-        if(l == null)
+        if (l == null) {
             return "";
-        
-        String s = "";
-        for(int i=0; i<l.size(); i++) {
-            s = s + l.get(i)+", ";
         }
-        
+
+        String s = "";
+        for (int i = 0; i < l.size(); i++) {
+            s = s + l.get(i) + ", ";
+        }
+
         int index = s.lastIndexOf(",");
-        if(index > 0)
+        if (index > 0) {
             s = s.substring(0, index);
-        
+        }
+
         return s;
     }
-    
+
     public static String staticConvertFromListToString(List l) {
-        if(l == null)
+        if (l == null) {
             return "";
-        
-        String s = "";
-        for(int i=0; i<l.size(); i++) {
-            s = s + l.get(i)+", ";
         }
-        
+
+        String s = "";
+        for (int i = 0; i < l.size(); i++) {
+            s = s + l.get(i) + ", ";
+        }
+
         int index = s.lastIndexOf(",");
-        if(index > 0)
+        if (index > 0) {
             s = s.substring(0, index);
-        
+        }
+
         return s;
     }
-    
+
     public static String convertFromListToSqlList(List l) {
-        if(l == null)
+        if (l == null) {
             return "";
-        
-        String s = "";
-        for(int i=0; i<l.size(); i++) {
-            s = s + l.get(i)+", ";
         }
-        
+
+        String s = "";
+        for (int i = 0; i < l.size(); i++) {
+            s = s + l.get(i) + ", ";
+        }
+
         int index = s.lastIndexOf(",");
-        if(index > 0)
+        if (index > 0) {
             s = s.substring(0, index);
-        
+        }
+
         return s;
     }
-   
+
     public List convertFromStringToList(String s, String delimiter) {
         List l = new ArrayList();
-        
-        if(s == null)
+
+        if (s == null) {
             return l;
-        
+        }
+
         StringTokenizer tokenizer = new StringTokenizer(s, delimiter);
         try {
-            while(tokenizer.hasMoreTokens()) {
+            while (tokenizer.hasMoreTokens()) {
                 String st = tokenizer.nextToken().trim();
-                if(st.length()>0)
+                if (st.length() > 0) {
                     l.add(st);
+                }
             }
         } catch (Exception ex) {
-            if(Constants.DEBUG) {
+            if (Constants.DEBUG) {
                 System.out.println(ex);
             }
         }
-        
-        return l;            
+
+        return l;
     }
-   
+
     public List convertFromStringToCapList(String s, String delimiter) {
         List l = new ArrayList();
-        
-        if(s == null)
+
+        if (s == null) {
             return l;
-        
+        }
+
         StringTokenizer tokenizer = new StringTokenizer(s, delimiter);
         try {
-            while(tokenizer.hasMoreTokens()) {
+            while (tokenizer.hasMoreTokens()) {
                 String st = tokenizer.nextToken().trim();
-                if(st.length()>0)
+                if (st.length() > 0) {
                     l.add(st.toUpperCase());
+                }
             }
         } catch (Exception ex) {
-            if(Constants.DEBUG) {
+            if (Constants.DEBUG) {
                 System.out.println(ex);
             }
         }
-        
-        return l;            
+
+        return l;
     }
-       
+
     public static String convertFromListToSqlString(List l) {
-        if(l == null)
+        if (l == null) {
             return "''";
-        
-        String s = "";
-        for(int i=0; i<l.size(); i++) {
-            s = s + "'"+l.get(i)+"', ";
         }
-        
+
+        String s = "";
+        for (int i = 0; i < l.size(); i++) {
+            s = s + "'" + l.get(i) + "', ";
+        }
+
         int index = s.lastIndexOf(",");
-        if(index > 0)
+        if (index > 0) {
             s = s.substring(0, index);
-        
+        }
+
         return s;
     }
-    
+
     public static String convertFromQueryOperatorToSqlString(List operators, String logicOperator, String columnName) {
         String sql = null;
-        for(int i=0; i<operators.size();i++) {
-            if(sql != null) {
-                sql += " "+logicOperator;
+        for (int i = 0; i < operators.size(); i++) {
+            if (sql != null) {
+                sql += " " + logicOperator;
             }
-            
-            QueryOperator op = (QueryOperator)operators.get(i);
+
+            QueryOperator op = (QueryOperator) operators.get(i);
             String logicOp = op.getLogicOperator();
             List l = op.getValues();
-            for(int j=0; j<l.size(); j++) {
-                String s = (String)l.get(j);
-                if(sql == null) {
-                    sql = "("+columnName+"='"+s+"'";
-                } else if(j==0) {
-                    sql += " ("+columnName+"='"+s+"'";
+            for (int j = 0; j < l.size(); j++) {
+                String s = (String) l.get(j);
+                if (sql == null) {
+                    sql = "(" + columnName + "='" + s + "'";
+                } else if (j == 0) {
+                    sql += " (" + columnName + "='" + s + "'";
                 } else {
-                    sql += " "+logicOp+" "+columnName+"='"+s+"'";
+                    sql += " " + logicOp + " " + columnName + "='" + s + "'";
                 }
             }
             sql += ")";
         }
         return sql;
     }
-    
+
+    public static String convertClobToString(Clob clb) throws IOException, SQLException {
+        if (clb == null) {
+            return "";
+        }
+
+        StringBuffer str = new StringBuffer();
+        String strng;
+
+
+        BufferedReader bufferRead = new BufferedReader(clb.getCharacterStream());
+
+        while ((strng = bufferRead.readLine()) != null) {
+            str.append(strng);
+        }
+
+        return str.toString();
+    }
+
     public static void main(String args[]) {
         StringConvertor sc = new StringConvertor();
         List l = new ArrayList();
@@ -162,11 +197,11 @@ public class StringConvertor {
         l.add("def");
         l.add("mnh");
         System.out.println(sc.convertFromListToString(l));
-        
+
         String s = "abc\ndef\n gh   jk";
         List lt = sc.convertFromStringToList(s, "\n \t");
         System.out.println(lt);
-        
+
         System.exit(0);
     }
 }

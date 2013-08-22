@@ -1,0 +1,40 @@
+/* 
+    Document   : basic
+    Created on : Jul 5, 2013, 11:55:29 AM
+    Author     : Lab User
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+root { 
+    display: block;
+}
+
+/**.ui-widget, .ui-widget .ui-widget {
+    font-size: 90% !important;
+}*/
+
+.selectitem {
+    font-size: 8px;
+}
+
+.ui-panelgrid td, .ui-panelgrid tr
+{
+    border-style: none !important
+}
+
+.alignmentLeft {
+ vertical-align: top;
+ column-width: 80%;
+}
+
+.alignmentRight {
+ vertical-align: top;
+}
+
+.ui-panel-titlebar-icon.ui-corner-all {
+   float: left;
+   margin-right: 5px;
+}
+
+

@@ -18,7 +18,7 @@
     <td width="64%" align="center" valign="bottom" class="title"> 
       <img height="83" width="77" src="dnacore.jpg"/><img height="81" width="222" src="PlasmID_logo.jpg"/></td>
     <td width="18%" height="54" align="right" valign="bottom" class="countrytext"> 
-      <p><a href="ViewCart.do" border="0"><img src="shoppingcart2.gif" width="105" height="18"></a></p></td>
+      <p><a href="ViewCart.do" border="0"><img src="shoppingcart2.gif" width="105" height="18"/></a></p></td>
   </tr>
   <tr>
     <!--<td width="64%" rowspan="2" align="center" valign="top" class="homepageLink"><a href="http://psimr.asu.edu" target="_blank">Protein Structure Initiative

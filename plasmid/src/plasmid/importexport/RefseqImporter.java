@@ -53,7 +53,7 @@ public class RefseqImporter {
         List columns = table.getColumnNames();
         List contents = table.getColumnInfo();
         for (int n = 0; n < contents.size(); n++) {
-            Refseq c = new Refseq();
+            ReferenceSequence c = new ReferenceSequence();
             Dnasequence seq = new Dnasequence();
 
             String isNew = null;

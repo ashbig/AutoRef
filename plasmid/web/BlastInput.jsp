@@ -102,31 +102,13 @@
                             <tr> 
                                 <td width="20%" class="formlabel">Optimize for: <a href="blasthelp.html#optimization" target="blasthelp">[i]</a></td>
                                 <td class="itemtext">
-                                    <html:checkbox property="isMegablast">Highly similar sequences (megablast)</html:checkbox>
-                                </td>
-                            </tr>
-                            <tr> 
-                                <td width="20%" class="formlabel">&nbsp;</td>
-                                <td class="itemtext">
                                     <html:checkbox property="isLowcomp">Filter low complexity regions</html:checkbox>
-                                </td>
-                            </tr>
-                            <tr> 
-                                <td width="20%" class="formlabel">&nbsp;</td>
-                                <td class="itemtext">
-                                    <html:checkbox property="isMaskLowercase">Mask lower case letters </html:checkbox>
                                 </td>
                             </tr>
                         </table>
                         
                         <p class="formlabelitalic">Parameters <a href="blasthelp.html#parameters" target="blasthelp">[i]</a></p>
                         <table width="100%" border="0">
-                            <tr> 
-                                <td width="20%" class="text">Expect threshold:</td>
-                                <td>
-                                    <html:text property="expect" styleClass="itemtext"/>
-                                </td>
-                            </tr>
                             <tr> 
                                 <td width="20%" class="text">Minumum percent (%) identity:</td>
                                 <td class="itemtext">

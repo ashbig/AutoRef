@@ -35,7 +35,7 @@ public class RefseqManager extends TableManager {
             PreparedStatement stmt = conn.prepareStatement(sql);
             
             for(int i=0; i<seqs.size(); i++) {
-                Refseq c = (Refseq)seqs.get(i);
+                ReferenceSequence c = (ReferenceSequence)seqs.get(i);
                 stmt.setInt(1, c.getRefseqid());
                 stmt.setString(2, c.getType());
                 stmt.setString(3, c.getName());

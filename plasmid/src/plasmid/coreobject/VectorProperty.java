@@ -14,6 +14,7 @@ public class VectorProperty {
     public static final String ASSAY="Assay";
     public static final String CLONING="Cloning System";
     public static final String EXPRESSION="Expression";
+    public static final String TYPE = "Type";
     
     private int vectorid;
     private String propertyType;

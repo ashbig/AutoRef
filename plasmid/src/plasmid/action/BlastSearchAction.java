@@ -58,13 +58,9 @@ public class BlastSearchAction extends Action {
         String program = ((BlastForm) form).getProgram();
         String database = ((BlastForm) form).getDatabase();
         String sequence = ((BlastForm) form).getSequence();
-        //int maxseqs = ((BlastForm) form).getMaxseqs();
-        double expect = ((BlastForm) form).getExpect();
         boolean isLowcomp = ((BlastForm) form).isIsLowcomp();
-        boolean isMaskLowercase = ((BlastForm) form).getIsMaskLowercase();
         int alength = ((BlastForm) form).getAlength();
         double pid = ((BlastForm) form).getPid();
-        boolean isMegablast = ((BlastForm) form).isIsMegablast();
         String inputformat = ((BlastForm) form).getInputformat();
 
         if (sequence == null || sequence.trim().length() == 0) {
@@ -105,7 +101,7 @@ public class BlastSearchAction extends Action {
              */
             List l = null;
             try {
-                l = manager.runBlast(program, database, sequence, expect, pid, alength, isLowcomp, isMaskLowercase, isMegablast);
+                l = manager.runBlast(program, database, sequence, pid, alength, isLowcomp);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -117,7 +113,7 @@ public class BlastSearchAction extends Action {
                     program = BlastWrapper.PROGRAM_BLASTN;
                 }
                 try {
-                    l = manager.runBlast(program, database, sequence, expect, pid, alength, isLowcomp, isMaskLowercase, isMegablast);
+                    l = manager.runBlast(program, database, sequence, pid, alength, isLowcomp);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }

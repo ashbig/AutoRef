@@ -22,7 +22,6 @@ public class SequenceAnalysisManager {
 
     public static final int ALENGTH = 100;
     public static final double PID = 90.0;
-    public static final double EXPECT = BlastWrapper.DEFAULT_EXPECT;
     public static final String SEQUENCE_PATH = Constants.SEQ_ANALYSIS_PATH;
     public static final int PHRED_LOW = 350;
     public static final int PHRED_HIGH = 650;
@@ -121,7 +120,7 @@ public class SequenceAnalysisManager {
             String seq = validation.getSequence();
             String output = BlastWrapper.BLAST_FILE_PATH + clonename + ".out";
             if (seq != null && seq.trim().length() > 0) {
-                String s = bm.runBl2seq(BlastWrapper.PROGRAM_BLASTN, cloneseq, ">" + clonename + "\n" + seq, this.EXPECT, true, false, false, output, BlastWrapper.DEFAULT_OUTPUT, false);
+                String s = bm.runBl2seq(BlastWrapper.PROGRAM_BLASTN, cloneseq, ">" + clonename + "\n" + seq, true, output, BlastWrapper.PAIRWISE_OUTPUT, false);
                 BlastParser parser = new BlastParser(output);
                 parser.setAlength(getAlength());
                 parser.setPid(getPid());

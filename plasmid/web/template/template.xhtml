@@ -1,0 +1,207 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets" >
+    <h:head>
+        <title>PlasmID Database</title>
+        <link rel="stylesheet" type="text/css" href="#{request.contextPath}/css/basic.css" />  
+        <link rel="stylesheet" type="text/css" href="#{request.contextPath}/plasmidstyle.css" /> 
+    </h:head>
+    <h:body>
+
+        <table width="1000" height="86" border="0" align="center">
+            <tr> 
+                <td colspan="3" rowspan="2">
+                    <h:outputLink value="SampleTrackingHome.jsp" rendered="#{plasmidBean.userInternal}">Sample Tracking</h:outputLink>            
+                    <h:outputLink value="SEQ_InvoiceHome.jsp"  rendered="#{plasmidBean.userInternal}">Sequencing</h:outputLink>            
+                </td>
+                <td width="64%" align="center" valign="bottom" class="title"> 
+                    <img height="83" width="77" src="dnacore.jpg"/><img height="81" width="222" src="PlasmID_logo.jpg"/></td>
+                <td width="18%" height="54" align="right" valign="bottom" class="countrytext"> 
+                    <p><a href="ViewCart.do" border="0"><img src="shoppingcart2.gif" width="105" height="18"/></a></p></td>
+            </tr>
+            <tr>    <td width="64%" rowspan="2" align="center" valign="top" class="homepageLink"><a href="http://dnaseq.med.harvard.edu" target="_blank">DF/HCC DNA Resource Core</a></td>
+                <td rowspan="2"> 
+                    <h:outputLink value="Logout.do" class="countrytext" rendered="#{plasmidBean.userExist}">Sign Out |</h:outputLink> 
+                    <h:outputLink value="Account.jsp" class="countrytext" rendered="#{plasmidBean.userExist}"> My Account</h:outputLink>
+
+                    <h:outputLink value="Login.jsp" class="countrytext" rendered="#{!plasmidBean.userExist}">Sign In |</h:outputLink> 
+                    <h:outputLink value="PrepareRegistration.do" class="countrytext" rendered="#{!plasmidBean.userExist}"> Registration |</h:outputLink> 
+                    <a target="_blank" href="FAQ.jsp" class="countrytext"> FAQ</a></td>
+            </tr>
+            <tr>
+                <td height="26" colspan="3">&nbsp;</td>
+            </tr>
+        </table>
+
+        <table width="1000" height="49" border="0" align="center">
+            <tr> 
+                <td height="45"> 
+                    <table width="100%" height="36" border="0" cellpadding="0" cellspacing="0" bgcolor="#333333">
+                        <tr> 
+                            <td><table width="100%" height="33" border="0" cellpadding="4" cellspacing="1" bgcolor="#FFFFFF">
+                                    <tr> 
+                                        <td width="16%" align="center" bgcolor="#6699CC"><strong><a href="Home.jsp" STYLE="text-decoration:none; font-size: 16px"><font>Home</font></a></strong></td>
+                                        <td width="28%" align="center" bgcolor="#6699CC"><a href="Submission.jsp" STYLE="text-decoration:none; font-size: 16px"><font><strong>Plasmid 
+                                                        Submission </strong></font></a></td>
+                                        <td width="28%" align="center" bgcolor="#6699CC" STYLE="text-decoration:none; font-size: 16px"><font color="#CCCCCC">
+                                                <strong>Search &#38; Order </strong></font></td>
+                                        <td width="28%" align="center" bgcolor="#6699CC"><a href="Contactus.jsp" STYLE="text-decoration:none; font-size: 16px"><font><strong>Contact 
+                                                        Us </strong></font></a></td>
+                                    </tr>
+                                </table></td>
+                        </tr>
+                    </table></td>
+            </tr>
+        </table>
+
+        <table width="1000" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
+            <tr> 
+                <td width="17%" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle"> 
+
+                    <table width="136" border="0">
+                        <tr> 
+                            <td height="31" align="center" valign="middle"><font size="2" face="Verdana, Arial, Helvetica, sans-serif">
+                                    <strong>Search &#38; Order</strong></font></td>
+                        </tr>
+                    </table>
+                    <table width="97%" height="115" border="1" bordercolor="#0099FF">
+                        <tr> 
+                            <td height="25"><a href="OrderOverview.jsp" class="leftnavtext">Overview</a></td>
+                        </tr>
+                        <tr> 
+                            <td valign="middle"> <table width="100%" border="0">
+                                    <tr> 
+                                        <td height="15" class="mainbodytext">Search Plasmids</td>
+                                    </tr>
+                                    <tr> 
+                                        <td height="15" class="lftsubtxt">- <a href="PrepareAdvancedSearch.do?psi=0" class="leftsubnavtext">advanced text search</a></td>
+                                    </tr>
+                                    <tr> 
+                                        <td height="15" class="lftsubtxt">- <a href="GetDataForRefseqSearch.do" class="leftsubnavtext">by 
+                                                gene</a></td>
+                                    </tr>
+                                    <tr> 
+                                        <td height="15" class="lftsubtxt">- <a href="GetVectorPropertyTypes.do" class="leftsubnavtext">by 
+                                                vector</a></td>
+                                    </tr>
+                                    <tr> 
+                                        <td height="15" class="lftsubtxt">- <a href="SearchClone.jsp" class="leftsubnavtext">by 
+                                                clone identifier</a></td>
+                                    </tr>
+                                    <!--<tr> 
+                                      <td height="15" class="lftsubtxt">- <a href="PrepareAdvancedSearch.do?psi=1" class="leftsubnavtext">PSI-MR search</a></td>
+                                    </tr>-->
+                                    <tr> 
+                                        <td height="15" class="lftsubtxt">- <a href="PrepareBlast.do" class="leftsubnavtext">blast search</a></td>
+                                    </tr>
+                                </table></td>
+                        </tr>
+                        <tr> 
+                            <td height="45" valign="middle"> <table width="100%" border="0">
+                                    <tr> 
+                                        <td height="15" class="mainbodytext">Plasmid Collections</td>
+                                    </tr>
+                                    <tr> 
+                                        <td height="15" class="lftsubtxt">- <a href="GetCollectionList.do" class="leftsubnavtext">view collections</a></td>
+                                    </tr>
+                                </table></td>
+                        </tr>
+                        <tr> 
+                            <td height="45" valign="middle"> <table width="100%" border="0">
+                                    <tr> 
+                                        <td height="15" class="mainbodytext">Vector Collection</td>
+                                    </tr>
+                                    <tr> 
+                                        <td height="15" class="lftsubtxt">- <a href="GetVectorsByType.do" class="leftsubnavtext">all empty vectors</a></td>
+                                    </tr>
+                                    <tr> 
+                                        <td height="15" class="lftsubtxt">- <a href="GetVectorsByType.do?type=viral%20production" class="leftsubnavtext">viral production</a></td>
+                                    </tr>
+                                    <tr> 
+                                        <td height="15" class="lftsubtxt">- <a href="GetVectorsByType.do?type=RNA%20interference" class="leftsubnavtext">RNA interference</a></td>
+                                    </tr>
+                                    <tr> 
+                                        <td height="15" class="lftsubtxt">- <a href="GetVectorsByType.do?type=mammalian%20expression" class="leftsubnavtext">mammalian expression</a></td>
+                                    </tr>
+                                    <tr> 
+                                        <td height="15" class="lftsubtxt">- <a href="GetVectorsByType.do?type=drosophila%20in%20vitro%20and%20in%20vivo%20expression" class="leftsubnavtext">drosophila in vitro and in vivo expression</a></td>
+                                    </tr>
+                                    <tr> 
+                                        <td height="15" class="lftsubtxt">- <a href="GetVectorsByType.do?type=bacterial%20expression" class="leftsubnavtext">bacterial expression</a></td>
+                                    </tr>
+                                    <tr> 
+                                        <td height="15" class="lftsubtxt">- <a href="GetVectorsByType.do?type=baculovirus/insect%20cell%20expression" class="leftsubnavtext">baculovirus/insect cell expression</a></td>
+                                    </tr>
+                                    <tr> 
+                                        <td height="15" class="lftsubtxt">- <a href="GetVectorsByType.do?type=cloning%20vector" class="leftsubnavtext">cloning vector</a></td>
+                                    </tr>
+                                    <tr> 
+                                        <td height="15" class="lftsubtxt">- <a href="GetVectorsByType.do?type=mutagenesis%20vector" class="leftsubnavtext">mutagenesis vector</a></td>
+                                    </tr>
+                                    <tr> 
+                                        <td height="15" class="lftsubtxt">- <a href="GetVectorsByType.do?type=Yeast%20Expression" class="leftsubnavtext">Yeast Expression</a></td>
+                                    </tr>
+                                    <tr> 
+                                        <td height="15" class="lftsubtxt">- <a href="GetVectorsByType.do?type=fluorescent%20marker" class="leftsubnavtext">fluorescent marker</a></td>
+                                    </tr>
+                                    <!--<tr> 
+                                      <td height="15" class="lftsubtxt">- <a href="GetAllVectors.do?PSI=true" class="leftsubnavtext">PSI empty vectors</a></td>
+                                    </tr>-->
+                                </table></td>
+                        </tr>
+                        <tr> 
+                            <td height="45" valign="middle"> <table width="100%" border="0">
+                                    <tr> 
+                                        <td height="15" class="mainbodytext">Customized Request</td>
+                                    </tr>
+                                    <tr> 
+                                        <td height="15" class="lftsubtxt">- <a href="BatchOrder.jsp" class="leftsubnavtext">arrange plasmids in specific orders</a></td>
+                                    </tr>
+                                </table></td>
+                        </tr>
+                    </table>
+
+
+                </td>
+                <td width="83%" align="left" valign="top">
+                    <table width="100%" border="0">
+                        <tr> 
+                            <td bgcolor="#6699CC" class="mainbodytexthead">Search %20 Order &gt; Search 
+                                Plasmids &gt; search human and mouse genes</td>
+                        </tr>
+                        <tr>
+                            <td height="29" valign="bottom" bgcolor="#FFFFFF" class="mainbodytextlarge">Search Human and Mouse Genes</td>
+                        </tr>
+                        <tr>
+                            <td bgcolor="#FFFFFF" class="mainbodytexthead">Search available human and mouse plamids using gene symbols.
+                                To search with more than one gene, separate gene symbols with a comma (,). Search up to 100 genes.</td>
+                        </tr>
+                    </table>
+
+                    <ui:insert name="content"/>
+
+                </td>
+            </tr>
+        </table> 
+        <hr align="center" width="1000" size="2"/>
+        <table width="1000" height="58" border="0" align="center">
+            <tr> 
+                <td height="54"> <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                        <tr align="center"> 
+                            <td height="52"> <p class="footertext"><a href="Home.jsp" class="footertext">Home</a> 
+                                    &#149; <a href="Submission.jsp" class="footertext">Plasmid 
+                                        Submission</a> &#149; <a href="OrderOverview.jsp" class="footertext">Search %20 Order</a> 
+                                    &#149; <a href="Contactus.jsp" class="footertext">Contact Us</a></p>
+                                <p align="center" class="homeMainText">PlasmID was created and is maintained 
+                                    by the <a href="http://dnaseq.med.harvard.edu" target="_blank">DF/HCC 
+                                        DNA Resource Core</a></p>
+                                <p class="footertext">©2004-2010 Harvard Medical School</p></td>
+                        </tr>
+                    </table></td>
+            </tr>
+        </table>
+    </h:body>
+</html>

@@ -1,0 +1,291 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"  
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="/template/template.xhtml">
+    <ui:define name="content">
+        <h:form id="searchForm">  
+            <p:panel id="searchPanel" header="Gene Search" style="margin-bottom:10px;">  
+                <p:messages id="messages"/> 
+                <p:panelGrid> 
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel for="genenames" value="Gene name: "/>
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="genenames" value="#{geneSearchBean.genenames}" required="true"
+                                         requiredMessage="Please enter the search term."/> 
+                        </p:column>
+                        <p:column>
+                            <p:commandButton id="submitButton" value="Search" update="resultview" actionListener="#{geneSearchBean.doSearch}" ajax="false"/> 
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel for="caseid" value="Case sensitive: "/>
+                        </p:column>
+                        <p:column>
+                            <p:selectOneRadio id="caseid" value="#{geneSearchBean.caseSensitive}">  
+                                <f:selectItem itemLabel="Yes" itemValue="yes" /> 
+                                <f:selectItem itemLabel="No" itemValue="no" />
+                            </p:selectOneRadio>  
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>                                       
+                <p:panel style="width: 400px" id="filterView" header="Filters" toggleable="true" toggleSpeed="500" collapsed="#{geneSearchBean.filterToggle}"> 
+                    <p:outputLabel value="Type"/>
+                    <p:selectManyCheckbox value="#{geneSearchBean.species}" label="Species" layout="pageDirection">  
+                        <f:selectItem itemValue="9606" itemLabel="Human"/>  
+                        <f:selectItem itemValue="10090" itemLabel="Mouse" />  
+                    </p:selectManyCheckbox>  
+                    
+                    <p:outputLabel value="Type"/>
+                    <p:selectManyCheckbox value="#{geneSearchBean.vpForType}" label="Type" layout="pageDirection">  
+                        <f:selectItems value="#{geneSearchBean.allVpForType}" />  
+                    </p:selectManyCheckbox>  
+
+                    <p:outputLabel value="Expression"/>
+                    <p:selectManyCheckbox value="#{geneSearchBean.vpForExpression}" label="Expression" layout="pageDirection">  
+                        <f:selectItems value="#{geneSearchBean.allVpForExpression}" />  
+                    </p:selectManyCheckbox>  
+
+                    <p:outputLabel value="Assay"/>
+                    <p:selectManyCheckbox value="#{geneSearchBean.vpForAssay}" label="Assay" layout="pageDirection">  
+                        <f:selectItems value="#{geneSearchBean.allVpForAssay}" />  
+                    </p:selectManyCheckbox>  
+
+                    <p:outputLabel value="Cloning System"/>
+                    <p:selectManyCheckbox value="#{geneSearchBean.vpForCloning}" label="Cloning System" layout="pageDirection">  
+                        <f:selectItems value="#{geneSearchBean.allVpForCloning}" />  
+                    </p:selectManyCheckbox>  
+
+                    <p:commandButton value="Update" 
+                                     actionListener="#{geneSearchBean.doSearch}" 
+                                     update=":searchForm:resultview"
+                                     ajax="false"/>  
+                </p:panel>
+            </p:panel>  
+
+            <p:tabView id="resultview" dynamic="true" cache="false" rendered="#{geneSearchBean.showResult}">  
+                <p:ajax event="tabChange" listener="#{geneSearchBean.onTabChange}"/> 
+                <p:tab title="Gene View">  
+                    <p:accordionPanel id="geneview2" value="#{geneSearchBean.genes}" var="gene" dynamic ="true" activeIndex="#{geneSearchBean.genePanel}" cache="false">          
+                        <p:ajax event="tabChange" listener="#{geneSearchBean.geneViewTabChange}"/>
+                        <p:tab title="Search term: #{gene.term}, Gene: #{gene.symbol}, Total plasmids found: #{gene.cloneCount}">  
+                            <p:panelGrid> 
+                                <p:row>
+                                    <p:column>
+                                        <h:outputText value="Gene ID:"/>
+                                    </p:column>
+                                    <p:column colspan="3">
+                                        <h:outputLink target="_blank" value="http://www.ncbi.nlm.nih.gov/gene/?term=#{gene.geneid}">#{gene.geneid}</h:outputLink>
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column>
+                                        <h:outputText value="Official gene symbol:"/>
+                                    </p:column>
+                                    <p:column colspan="3">
+                                        <h:outputText value="#{gene.symbol}"/>
+                                    </p:column>
+                                </p:row>
+
+                                <p:row>
+                                    <p:column>
+                                        <h:outputText value="Synonyms:"/>
+                                    </p:column>
+                                    <p:column colspan="3">
+                                        <h:outputText value="#{gene.synonyms}"/>
+                                    </p:column>
+                                </p:row>
+
+                                <p:row>
+                                    <p:column>Description:</p:column>
+                                    <p:column colspan="3"><h:outputText value="#{gene.description}"/></p:column>
+                                </p:row>
+
+                                <p:row>
+                                    <p:column>
+                                        <h:outputText value="Type of gene:"/>
+                                    </p:column>
+                                    <p:column colspan="3">
+                                        <h:outputText value="#{gene.type}"/>
+                                    </p:column>
+                                </p:row>
+
+                                <p:row>
+                                    <p:column>
+                                        <h:outputText value="Locus tag:"/>
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="#{gene.locustag}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="Chromosome:"/>
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="#{gene.chromosome}"/>
+                                    </p:column>
+                                </p:row>
+
+                                <p:row>
+                                    <p:column>
+                                        <h:outputText value="Tax ID:"/>
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="#{gene.taxid} (#{gene.species})"/>
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="Map location:"/>
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="#{gene.maplocation}"/>
+                                    </p:column>
+                                </p:row>
+                            </p:panelGrid>
+
+                            <p:spacer height="10"/>
+
+                            <p:panel header="NCBI Reference Sequences (RefSeq) - mRNA and Protein(s)" toggleable="true" toggleSpeed="500" collapsed="#{geneSearchBean.refseqView}">  
+                                <p:ajax event="toggle" listener="#{geneSearchBean.findRefseqs(gene.geneid)}" update="seqView" /> 
+
+                                <p:accordionPanel id="seqView" value="#{geneSearchBean.seqs}" var="seq" activeIndex="#{geneSearchBean.refseqPanel}" dynamic="true" cache="false">  
+                                    <p:ajax event="tabChange" listener="#{geneSearchBean.seqViewTabChange}"/>
+                                    <p:tab title="RefSeq sequence: #{seq.accession} -> #{seq.proteinacc}, Total plasmids found: #{seq.cloneCount}"> 
+                                        <p:panelGrid columns="4">
+                                            <h:outputLabel value="GenBank Accession:"/>
+                                            <h:outputLink target="_blank" value="http://www.ncbi.nlm.nih.gov/nuccore/#{seq.gi}">#{seq.accession}</h:outputLink>
+                                            <h:outputLabel value="GI:"/>
+                                            <h:outputText value="#{seq.gi}"/>
+                                            <h:outputLabel value="Protein Accession:"/>
+                                            <h:outputLink target="_blank" value="http://www.ncbi.nlm.nih.gov/protein/#{seq.proteingi}">#{seq.proteinacc}</h:outputLink>
+                                            <h:outputLabel value="Protein GI:"/>
+                                            <h:outputText value="#{seq.proteingi}"/>
+                                            <h:outputLabel value="Status:"/>
+                                            <h:outputText value="#{seq.status}"/>
+                                            <h:outputLabel value="Sequence length:"/>
+                                            <h:outputText value="#{seq.seqLength} bp"/>
+                                            <h:outputLabel value="CDS length:"/>
+                                            <h:outputText value="#{seq.cdsLength} bp"/>
+                                            <h:outputLabel value="Protein length:"/>
+                                            <h:outputText value="#{seq.proteinLength} aa"/>
+                                        </p:panelGrid>
+                                        <p:spacer height="5"/>
+
+                                        <p:panel header="Available Plasmids" toggleable="true" toggleSpeed="500" collapsed="#{geneSearchBean.cloneView}">
+                                            <p:ajax event="toggle" listener="#{geneSearchBean.findPlasmids(seq.gi)}" update=":searchForm:resultview:geneview2:seqView:plasmidView"/>
+
+                                                <p:dataTable var="clone" value="#{geneSearchBean.clones}" id="plasmidView">        
+                                                    <p:column headerText="Plasmid ID">  
+                                                        <h:outputLink target="_blank" value="GetCloneDetail.do?cloneid=#{clone.cloneid}&amp;species=">#{clone.clonename}</h:outputLink>
+                                                    </p:column> 
+
+                                                    <p:column headerText="Size (bp)">  
+                                                        <h:outputText value="#{clone.size}" />  
+                                                    </p:column>     
+
+                                                    <p:column headerText="Vector">  
+                                                        <h:outputLink target="_blank" value="GetVectorDetail.do?vectorid=#{clone.vectorid}">#{clone.vector}</h:outputLink>
+                                                    </p:column>  
+
+                                                    <p:column headerText="Format">  
+                                                        <h:outputText value="#{clone.format}" />  
+                                                    </p:column>  
+
+                                                    <p:column headerText="Restriction">  
+                                                        <h:outputText value="#{clone.restriction}" />  
+                                                    </p:column>  
+
+                                                    <p:column headerText="PID/Alength">  
+                                                        <h:outputText value="#{clone.percentid}/#{clone.alength}" />  
+                                                    </p:column>  
+
+                                                    <p:column headerText="CDS Coverage">  
+                                                        <h:outputText value="#{clone.coverage}" />  
+                                                    </p:column>  
+
+                                                    <p:column headerText="Mutation">  
+                                                        <h:outputText value="#{clone.mutation}" />  
+                                                    </p:column>  
+
+                                                    <p:column headerText="">  
+                                                        <p:commandButton value="Blast Alignment" 
+                                                                         actionListener="#{geneSearchBean.viewAlignment}" 
+                                                                         update=":searchForm:alignmentView"
+                                                                         oncomplete="blastDialog.show()">
+                                                            <f:param id="cloneid" name="cloneid" value="#{clone.cloneid}"/>
+                                                            <f:param id="gi" name="gi" value="#{clone.gi}"/>
+                                                            <f:param id="clonename" name="clonename" value="#{clone.clonename}"/>
+                                                            <f:param id="accession" name="accession" value="#{seq.accession}"/>
+                                                            <f:param id="proteinaccession" name="proteinaccession" value="#{seq.proteinacc}"/>
+                                                        </p:commandButton> 
+                                                    </p:column>  
+
+                                                    <p:column headerText="" >  
+                                                        <p:commandButton rendered="#{!clone.inCart}" value="Add To Cart" 
+                                                                         actionListener="#{geneSearchBean.addToCart}" 
+                                                                         update=":searchForm:resultview:geneview2:seqView:plasmidView"
+                                                                         ajax="true">
+                                                            <f:param id="cloneid2" name="cloneid" value="#{clone.cloneid}"/>
+                                                        </p:commandButton> 
+                                                        <p:commandButton rendered="#{clone.inCart}" value="In Cart" 
+                                                                         disabled="true"/>
+                                                    </p:column>  
+                                                </p:dataTable>
+
+                                        </p:panel>
+                                    </p:tab>
+                                </p:accordionPanel> 
+                            </p:panel>  
+                        </p:tab>
+
+                    </p:accordionPanel>  
+
+                </p:tab>
+
+                <!--p:tab title="Clone View" id="cloneview">   
+                </p:tab-->
+            </p:tabView>  
+
+            <p:dialog id="alignmentView" header="Blast Alignment" widgetVar="blastDialog" resizable="true" appendToBody="false" 
+                      modal="true" width="1000" height="500"> 
+
+                <h:panelGrid columns="3" cellpadding="5">  
+                    <p:commandLink actionListener="#{geneSearchBean.displayAlignment(geneSearchBean.typeCDS)}" 
+                                   rendered="#{geneSearchBean.renderCDS}"
+                                   update=":searchForm:alignmentView"
+                                   oncomplete="blastDialog.show()"> 
+                        <h:outputText value="[CDS Sequence Alignment]"/>
+                    </p:commandLink>  
+                    <h:outputText rendered="#{!geneSearchBean.renderCDS}" value="[CDS Sequence Alignment]"/>
+
+                    <p:commandLink actionListener="#{geneSearchBean.displayAlignment(geneSearchBean.typeNT)}" 
+                                   rendered="#{geneSearchBean.renderNT}"
+                                   update=":searchForm:alignmentView"
+                                   oncomplete="blastDialog.show()"> 
+                        <h:outputText value="[Nucleotide Sequence Alignment]"/>
+                    </p:commandLink>  
+                    <h:outputText rendered="#{!geneSearchBean.renderNT}" value="[Nucleotide Sequence Alignment]"/>
+
+                    <p:commandLink actionListener="#{geneSearchBean.displayAlignment(geneSearchBean.typeAA)}" 
+                                   rendered="#{geneSearchBean.renderAA}"
+                                   ajax="true"
+                                   update=":searchForm:alignmentView"
+                                   oncomplete="blastDialog.show()"> 
+                        <h:outputText value="[Amino Acid Sequence Alignment]"/>
+                    </p:commandLink>  
+                    <h:outputText rendered="#{!geneSearchBean.renderAA}" value="[Amino Acid Sequence Alignment]"/>
+                </h:panelGrid>
+
+                <p:spacer height="10"/>
+
+                <pre>
+		                        <h:outputText value="#{geneSearchBean.blastoutput}"/>
+                </pre>
+            </p:dialog>    
+        </h:form> 
+
+    </ui:define>
+</ui:composition>
+

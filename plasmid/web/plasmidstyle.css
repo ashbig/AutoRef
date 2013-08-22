@@ -87,7 +87,7 @@ UL.homeBullet LI {font-family:Arial,Helvetica,sans-serif; font-size:12px; paddin
 .itemtext A:visited {COLOR:#7C1D20; text-decoration:none; BORDER-BOTTOM:none;}
 .itemtext A:hover {color:#666666; text-decoration:none; BORDER-BOTTOM:none;}
 .itemtext A:active {color:#7C1D20; text-decoration:underline; BORDER-BOTTOM:none;}
-A.leftnavtext {background-image: url(../../../../Local%20Settings/Temporary%20Internet%20Files/Content.IE5/LF7V9TGA/leftnavarrow.gif); background-repeat:no-repeat; font-family:Arial,Helvetica,sans-serif; font-size:12px; line-height:15px; color:#000000; padding-left:7px; padding-right:0px; margin-left:4px; text-decoration:none;}
+A.leftnavtext {font-family:Arial,Helvetica,sans-serif; font-size:12px; line-height:15px; color:#000000; padding-left:7px; padding-right:0px; margin-left:4px; text-decoration:none;}
 A.leftnavtext:link {color:#000000;}
 A.leftnavtext:visited {COLOR:#000000;}
 A.leftnavtext:hover {color:#0054A6;}
@@ -97,7 +97,7 @@ A.leftnavtext_high:link {color:#FFFFFF;}
 A.leftnavtext_high:visited {color:#FFFFFF;}
 A.leftnavtext_high:hover {color:#FFFFFF;}
 A.leftnavtext_high:active {color:#FFFFFF;}
-.leftsectiontitle {font-family:Arial,Helvetica,sans-serif; font-size:12px; background-color:#E0E0E0; color:#000000; text-align:center; font-weight:bold; padding-bottom:23px; padding-right:6px;}
+.leftsectiontitle {font-family:Arial,Helvetica,sans-serif; font-size:12px; background-color:#E0E0E0; color:#000000; padding-bottom:23px; padding-right:6px;}
 A.leftsubnavon {font-family:Arial,Helvetica,sans-serif; font-size:12px; line-height:15px; color:#0054A6; text-decoration:none; padding-top:3px; padding-bottomt:0px; font-weight:bold;}
 A.leftsubnavon:link {color:#0054A6;}
 A.leftsubnavon:visited {color:#0054A6;}

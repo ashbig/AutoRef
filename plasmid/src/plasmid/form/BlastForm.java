@@ -19,13 +19,9 @@ public class BlastForm extends ActionForm {
     private String program;
     private String database;
     private String sequence;
-    //private int maxseqs;
-    private double expect;
     private boolean isLowcomp;
-    private boolean isMaskLowercase;
     private int alength;
     private double pid;
-    private boolean isMegablast;
     private int pagesize;
     private int page;
     private List infos;
@@ -44,13 +40,9 @@ public class BlastForm extends ActionForm {
         program = BlastWrapper.PROGRAM_BLASTN;
         database = BlastWrapper.DATABASE_ALL;
         sequence = "";
-        //maxseqs = BlastWrapper.DEFAULT_MAXSEQ;
-        expect = BlastWrapper.DEFAULT_EXPECT;
         isLowcomp = true;
-        isMaskLowercase = false;
         alength = 100;
         pid = 90.0;
-        isMegablast = false;
         pagesize = Constants.PAGESIZE;
         page = 1;
         infos = null;
@@ -84,14 +76,6 @@ public class BlastForm extends ActionForm {
     public void setSequence(String sequence) {
         this.sequence = sequence;
     }
-
-    public double getExpect() {
-        return expect;
-    }
-
-    public void setExpect(double expect) {
-        this.expect = expect;
-    }
     
     public boolean isIsLowcomp() {
         return isLowcomp;
@@ -99,14 +83,6 @@ public class BlastForm extends ActionForm {
 
     public void setIsLowcomp(boolean isLowcomp) {
         this.isLowcomp = isLowcomp;
-    }
-
-    public boolean getIsMaskLowercase() {
-        return isMaskLowercase;
-    }
-
-    public void setIsMaskLowercase(boolean isMaskLowercase) {
-        this.isMaskLowercase = isMaskLowercase;
     }
 
     public int getAlength() {
@@ -123,14 +99,6 @@ public class BlastForm extends ActionForm {
 
     public void setPid(double pid) {
         this.pid = pid;
-    }
-
-    public boolean isIsMegablast() {
-        return isMegablast;
-    }
-
-    public void setIsMegablast(boolean isMegablast) {
-        this.isMegablast = isMegablast;
     }
 
     public int getPagesize() {

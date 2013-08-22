@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
@@ -24,6 +25,7 @@ import plasmid.blast.BlastParser;
 import plasmid.blast.BlastProgram;
 import plasmid.blast.BlastWrapper;
 import plasmid.coreobject.Clone;
+import plasmid.coreobject.CloneAnalysis;
 import plasmid.coreobject.Dnasequence;
 import plasmid.database.DatabaseManager.CloneManager;
 import plasmid.database.DatabaseTransaction;
@@ -98,16 +100,12 @@ public class BlastManager {
     }
 
     public List runBlast(String program, String database, String sequence,
-            double expect, double pid, int alength,
-            boolean isLowcomp, boolean ismaskLowercase, boolean isMegablast) throws Exception {
+            double pid, int alength,boolean isLowcomp) throws Exception {
         String queryfile = makeQueryFile(sequence);
         String outputfile = queryfile + ".out";
 
         BlastWrapper blaster = new BlastWrapper(program, BlastWrapper.BLAST_DB_PATH + database, queryfile, outputfile);
-        blaster.setExpect(expect);
-        blaster.setIsLowcomp(getBooleanValue(isLowcomp));
-        blaster.setIsMaskLowercase(getBooleanValue(ismaskLowercase));
-        blaster.setIsMegablast(getBooleanValue(isMegablast));
+        blaster.setIsLowcomp(isLowcomp);
         List infos = null;
 
         try {
@@ -168,9 +166,7 @@ public class BlastManager {
     }
 
     public String runBl2seq(String program, String seq1, String seq2,
-            double expect, boolean isLowcomp,
-            boolean ismaskLowercase, boolean isMegablast, String output,
-            int outputformat, boolean isDelete)
+            boolean isLowcomp,String output,int outputformat, boolean isDelete)
             throws Exception {
         String file1 = makeQueryFile(seq1);
         String file2 = makeQueryFile(seq2);
@@ -179,12 +175,8 @@ public class BlastManager {
         blaster.setProgram(program);
         blaster.setInput(file1);
         blaster.setInput2(file2);
-        blaster.setBl2seqOutput(output);
-        //blaster.setMaxseqs(maxseqs);
-        blaster.setExpect(expect);
-        blaster.setIsLowcomp(getBooleanValue(isLowcomp));
-        blaster.setIsMaskLowercase(getBooleanValue(ismaskLowercase));
-        blaster.setIsMegablast(getBooleanValue(isMegablast));
+        blaster.setOutput(output);
+        blaster.setIsLowcomp(isLowcomp);
         blaster.setAlignmentview(outputformat);
 
         String s = "";
@@ -210,19 +202,55 @@ public class BlastManager {
         return s;
     }
 
-    public String runBl2seq(String program, String seq1, String seq2,
-            double expect, boolean isLowcomp,
-            boolean ismaskLowercase, boolean isMegablast) throws Exception {
-        return runBl2seq(program, seq1, seq2, expect, isLowcomp, ismaskLowercase, isMegablast, BlastWrapper.BLAST_FILE_PATH + "out", BlastWrapper.PAIRWISE_OUTPUT, true);
+    public String runBl2seq(String program, String seq1, String seq2,boolean isLowcomp) throws Exception {
+        return runBl2seq(program, seq1, seq2, isLowcomp, BlastWrapper.BLAST_FILE_PATH + "out", BlastWrapper.PAIRWISE_OUTPUT, true);
     }
 
-    public String makeQueryFile(String sequence) throws Exception {
+    public String runPairwiseBlast(String queryid, String queryseq, String subid, String subseq, String type)
+            throws IOException, ProcessException, Exception {
+        String output = BlastWrapper.BLAST_FILE_PATH + queryid+"_"+subid+"_"+type;
+        BlastWrapper blaster = new BlastWrapper();
+        String inputfile1 = makeQueryFile(queryid, queryseq);
+        String inputfile2 = makeQueryFile(subid, subseq);
+        blaster.setInput(inputfile1);
+        blaster.setInput2(inputfile2);
+        blaster.setOutput(output);
+        blaster.setAlignmentview(BlastWrapper.PAIRWISE_OUTPUT);
+        if(CloneAnalysis.TYPE_AA.equals(type)) {
+            blaster.setProgram(BlastWrapper.PROGRAM_BLASTX);
+        }
+        blaster.runBlast2Seq();
+        blaster.delete(inputfile1);
+        blaster.delete(inputfile2);
+        
+        BufferedReader in = new BufferedReader(new FileReader(output));
+        StringBuilder sb = new StringBuilder();
+        String inputLine;
+        while ((inputLine = in.readLine()) != null) {
+            sb.append(inputLine).append("\n");
+        }
+        in.close();
+
+        blaster.delete(output);
+        return sb.toString();
+    }
+
+    public String makeQueryFile(String sequence) throws ProcessException {
+        return makeQueryFile("query", sequence);
+    }
+
+    public String makeQueryFile(String id, String sequence) throws ProcessException {
         Random generator = new Random();
         int i = generator.nextInt();
-        String file = BlastWrapper.BLAST_FILE_PATH + "query" + i;
-        FileWriter out = new FileWriter(new File(file));
-        out.write(sequence);
-        out.close();
+        String file = BlastWrapper.BLAST_FILE_PATH + id + i;
+        try {
+            FileWriter out = new FileWriter(new File(file));
+            out.write(">" + id + "\n");
+            out.write(sequence);
+            out.close();
+        } catch (Exception ex) {
+            throw new ProcessException("Cannot make query file: " + id);
+        }
         return file;
     }
 
@@ -251,14 +279,6 @@ public class BlastManager {
         CloneManager m = new CloneManager();
         String s = m.queryReferenceSequenceByCloneid(cloneid);
         return Dnasequence.convertToFasta(s);
-    }
-    
-    private String getBooleanValue(boolean b) {
-        if (b) {
-            return BlastWrapper.BOOLEAN_TRUE;
-        } else {
-            return BlastWrapper.BOOLEAN_FALSE;
-        }
     }
 
     public static boolean isAminoAcidSeq(String aa) {

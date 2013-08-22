@@ -34,23 +34,23 @@ import plasmid.database.DatabaseTransaction;
  */
 public class SequenceAnalyzer {
 
-    public static final String BLAST_PROGRAM_PATH = "c:\\blast-2.2.26+\\bin\\";
-    public static final String BLAST_FILE_PATH = "C:\\dev\\plasmid_support\\PlasmidAnalysis201212\\blast\\";
-    public static final String FILE_PATH = "C:\\dev\\plasmid_support\\PlasmidAnalysis201212\\Analysis\\";
-    public static final String BLASTABLE_DB_PATH = "C:\\dev\\plasmid_support\\PlasmidAnalysis201212\\Refseq\\blastdb\\";
+    public static final String BLAST_PROGRAM_PATH = "C:\\NCBI\\blast-2.2.28+\\bin\\";
+    public static final String BLAST_FILE_PATH = "D:\\dev\\blast\\tmp\\";
+    public static final String FILE_PATH = "D:\\dev\\Gene_20130402\\PlasmidAnalysis\\analysis\\pairwise\\";
+    public static final String BLASTABLE_DB_PATH = "D:\\dev\\blast\\db\\";
 
     public String getBestMatchByBlast(Dnasequence sequence, String db) {
         try {
             BlastWrapper blaster = new BlastWrapper();
-            String outputfile = BLAST_FILE_PATH+sequence.getReferenceid()+"_out.txt";
+            String outputfile = BLAST_FILE_PATH + sequence.getReferenceid() + "_out.txt";
             blaster.setOutput(outputfile);
             String inputfile = makeQueryFile("" + sequence.getReferenceid(), sequence.getSequence());
             blaster.setInput(inputfile);
             blaster.setDatabase(db);
-            blaster.setLowcomp("yes");
-            String cmd = blaster.getBlastnCmd(BLAST_PROGRAM_PATH);
-            System.out.println(cmd);
-            blaster.executeBlast(cmd);
+            //default set to yes
+            blaster.setIsLowcomp(true);
+            blaster.setProgram(BlastWrapper.PROGRAM_BLASTN);
+            blaster.runBlast();
 
             BlastParser parser = new BlastParser(outputfile);
             parser.setAlength(0);
@@ -82,47 +82,47 @@ public class SequenceAnalyzer {
         try {
             BufferedReader in = new BufferedReader(new FileReader(input));
             OutputStreamWriter out = new FileWriter(output);
-            out.write("RefseqID\tCloneid\n");
-            
+            out.write("SubjectID\tQueryID\n");
+
             String line = in.readLine();
-            //cloneid\tsequence
+            //queryid\tsequence
             while ((line = in.readLine()) != null) {
                 StringTokenizer st = new StringTokenizer(line, "\t");
-                int cloneid = Integer.parseInt(st.nextToken());
+                int queryid = Integer.parseInt(st.nextToken());
                 String seq = st.nextToken();
                 Dnasequence sequence = new Dnasequence();
-                sequence.setReferenceid(cloneid);
+                sequence.setReferenceid(queryid);
                 sequence.setSequence(seq);
                 String refseqid = getBestMatchByBlast(sequence, db);
-                out.write(refseqid+"\t"+cloneid+"\n");
+                out.write(refseqid + "\t" + queryid + "\n");
             }
             out.close();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
-    
+
     public void analyzeByBlast(String input, String output) {
         try {
             BufferedReader in = new BufferedReader(new FileReader(input));
             OutputStreamWriter out = new FileWriter(output);
-            out.write("ID\tPercentid\tAlength\tMismatch\tGap\tEvalue\tScore\tqStart\tqEnd\tsStart\tsEnd\n");
+            out.write("Cloneid\tRefseqGI\tPercentid\tAlength\tMismatch\tGap\tEvalue\tScore\tqStart\tqEnd\tsStart\tsEnd\n");
 
             BlastWrapper blaster = new BlastWrapper();
-            //blaster.setLowcomp("yes");
-            blaster.setLowcomp("no");
+            blaster.setIsLowcomp(true);
+            //blaster.setLowcomp("no");
             //blaster.setWordsize(5);
             //blaster.setExpect(1000);
             blaster.setAlignmentview(1);
             String line = in.readLine();
             while ((line = in.readLine()) != null) {
                 //ID    queryid	Plasmidcloneseq_Sequence    subjectid	ReferenceProtein_Sequence
-                String[] column = line.split("\t", 5);
-                String queryid = column[1];
-                String cloneseq = column[2];
-                String subid = column[3];
-                String proteinSeq = column[4];
-                System.out.println(column[0] + "\t" + queryid + "\t" + subid);
+                String[] column = line.split("\t", 4);
+                String queryid = column[0];
+                String cloneseq = column[1];
+                String subid = column[2];
+                String proteinSeq = column[3];
+                System.out.println(queryid + "\t" + subid);
                 if (cloneseq == null || cloneseq.length() == 0 || proteinSeq == null || proteinSeq.length() == 0) {
                     continue;
                 }
@@ -131,11 +131,10 @@ public class SequenceAnalyzer {
                 String outputfile = BLAST_FILE_PATH + "blastout.txt";
                 blaster.setInput(inputfile1);
                 blaster.setInput2(inputfile2);
-                blaster.setBl2seqOutput(outputfile);
-                //String cmd = blaster.getNewBl2seqCmd(BLAST_PROGRAM_PATH);
-                String cmd = blaster.getBlastxCmd(BLAST_PROGRAM_PATH);
-                System.out.println(cmd);
-                blaster.executeBlast(cmd);
+                blaster.setOutput(outputfile);
+                blaster.setAlignmentview(BlastWrapper.PAIRWISE_OUTPUT);
+                blaster.setProgram(BlastWrapper.PROGRAM_BLASTN);
+                blaster.runBlast2Seq();
 
                 BlastParser parser = new BlastParser(outputfile);
                 parser.setAlength(0);
@@ -153,7 +152,7 @@ public class SequenceAnalyzer {
                 }
                 BlastInfo info = (BlastInfo) blastInfos.get(0);
                 //int mismatch = info.getMismatch() + info.getGap();
-                out.write(column[0] + "\t" + info.getPid()
+                out.write(queryid + "\t" + subid + "\t" + info.getPid()
                         + "\t" + info.getAlength()
                         + "\t" + info.getMismatch()
                         + "\t" + info.getGap()
@@ -222,7 +221,7 @@ public class SequenceAnalyzer {
             ex.printStackTrace();
         }
     }
-    
+
     public void generateFastaDatabase(String input, String output) throws Exception {
         BufferedReader in = new BufferedReader(new FileReader(input));
         String line = in.readLine();
@@ -230,21 +229,25 @@ public class SequenceAnalyzer {
         int n = 0;
         while ((line = in.readLine()) != null) {
             n++;
-            if(n%1000==0) {
+            if (n % 1000 == 0) {
                 makeFastaDatabase(seqs, output, true);
                 seqs = new ArrayList<Dnasequence>();
             }
-            StringTokenizer st = new StringTokenizer(line, "\t");
-            int id = Integer.parseInt(st.nextToken());
-            String seq = st.nextToken();
+            String[] s = line.split("\t");
+            //cloneid   sequence
+            String id = s[0];
+            String seq = s[1];
+            //accession taxid   geneid  symbol  description seq
+            //String id = "Accession:"+s[0]+"|taxid:"+s[1]+"|geneid:"+s[2]+"|symbol:"+s[3]+"|"+s[4];
+            //String seq = s[5];
             Dnasequence sequence = new Dnasequence();
-            sequence.setReferenceid(id);
+            sequence.setType(id);
             sequence.setSequence(seq);
             seqs.add(sequence);
-            System.out.println(n+": "+id);
+            System.out.println(n + ": " + id);
         }
-        
-        if(seqs.size()>0) {
+
+        if (seqs.size() > 0) {
             makeFastaDatabase(seqs, output, true);
         }
     }
@@ -252,7 +255,7 @@ public class SequenceAnalyzer {
     public void makeFastaDatabase(List<Dnasequence> sequences, String file, boolean append) throws Exception {
         FileWriter out = new FileWriter(new File(file), append);
         for (Dnasequence seq : sequences) {
-            out.write(">" + seq.getReferenceid() + "\n");
+            out.write(">" + seq.getType() + "\n");
             out.write(Dnasequence.convertToFasta(seq.getSequence()) + "\n");
         }
         out.close();
@@ -279,15 +282,15 @@ public class SequenceAnalyzer {
         FileWriter out = new FileWriter(new File(output));
         out.write("ID\tSequence\n");
         String line = in.readLine();
-        
+
         while ((line = in.readLine()) != null) {
-            String [] s = line.split("\t");
+            String[] s = line.split("\t");
             int id = Integer.parseInt(s[0]);
-            int index = Integer.parseInt(s[1])-1;
-            String seq = s[3].substring(0, index)+s[2]+s[3].substring(index+1);
-            out.write(id+"\t"+seq+"\n");
+            int index = Integer.parseInt(s[1]) - 1;
+            String seq = s[3].substring(0, index) + s[2] + s[3].substring(index + 1);
+            out.write(id + "\t" + seq + "\n");
         }
-        
+
         in.close();
         out.close();
     }
@@ -298,146 +301,156 @@ public class SequenceAnalyzer {
         HashMap info = new HashMap();
         //Geneid\tID\tCoverage\tMutation
         while ((line = in.readLine()) != null) {
-            String [] s = line.split("\t");
+            String[] s = line.split("\t");
             info.put(s[0], s);
         }
         in.close();
-        
+
         Set genes = info.keySet();
         Iterator iter = genes.iterator();
-        while(iter.hasNext()) {
-            String gene = (String)iter.next();
-            
+        while (iter.hasNext()) {
+            String gene = (String) iter.next();
+
         }
-        
+
         FileWriter out = new FileWriter(new File(output));
         out.write("ID\tCoverage\n");
         out.close();
     }
-    
+
     public void findFailedImageClone(String input, String output) throws Exception {
         BufferedReader in = new BufferedReader(new FileReader(input));
         PrintWriter out = new PrintWriter(new FileWriter(new File(output)));
         out.println("Image ID\tspecies\texternal_id\tacc_num\tproblem_type\tcomments\treported_by\tdate_entered\tdate_modified\tClone ID\tClone Name\tSource");
-        
+
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         Connection conn = t.requestConnection();
-        String sql = "select cloneid,clonename,source from clone where cloneid in"+
-                    " (select cloneid from clonename where namevalue=? and nametype='IMAGE ID')"+
-                    " and status='AVAILABLE'";
+        String sql = "select cloneid,clonename,source from clone where cloneid in"
+                + " (select cloneid from clonename where namevalue=? and nametype='IMAGE ID')"
+                + " and status='AVAILABLE'";
         PreparedStatement stmt = conn.prepareStatement(sql);
         ResultSet rs = null;
-        
+
         String line = null;
         while ((line = in.readLine()) != null) {
-            String [] s = line.split("\t");
+            String[] s = line.split("\t");
             String imageid = s[0];
             System.out.println(imageid);
             stmt.setString(1, imageid);
             rs = DatabaseTransaction.executeQuery(stmt);
-            while(rs.next()) {
+            while (rs.next()) {
                 int cloneid = rs.getInt(1);
                 String name = rs.getString(2);
                 String source = rs.getString(3);
-                out.println(line+"\t"+cloneid+"\t"+name+"\t"+source);
+                out.println(line + "\t" + cloneid + "\t" + name + "\t" + source);
             }
             DatabaseTransaction.closeResultSet(rs);
         }
         DatabaseTransaction.closeStatement(stmt);
         DatabaseTransaction.closeConnection(conn);
-        
+
         in.close();
         out.close();
     }
-    
+
     public void parseSynonyms(String input, String output) throws Exception {
         BufferedReader in = new BufferedReader(new FileReader(input));
         FileWriter out = new FileWriter(new File(output));
         out.write("GeneID\tSynonym\n");
-        
+
         //Geneid\tSynonyms
         String line = in.readLine();
         while ((line = in.readLine()) != null) {
-            String [] s = line.split("\t");
-            String [] synonyms = s[1].split(":");
-            for(int i=0; i<synonyms.length; i++) {
-                out.write(s[0]+"\t"+synonyms[i]+"\n");
+            String[] s = line.split("\t");
+            String ss = s[1].replace("|", ":");
+            String[] synonyms = ss.split(":");
+            for (int i = 0; i < synonyms.length; i++) {
+                out.write(s[0] + "\t" + synonyms[i] + "\n");
             }
         }
         in.close();
         out.close();
     }
-    
-    public static void main(String args []) {
+
+    public void aggregateField(String input, String output) throws Exception {
+        BufferedReader in = new BufferedReader(new FileReader(input));
+        FileWriter out = new FileWriter(new File(output));
+        out.write("GeneID\tGO\n");
+
+        //Geneid\tSynonyms
+        String line = in.readLine();
+        String geneid = null;
+        String go = "";
+        while ((line = in.readLine()) != null) {
+            String[] s = line.split("\t");
+            if (s[0].equals(geneid)) {
+                go = go + "|" + s[1];
+            } else {
+                if (geneid != null) {
+                    out.write(geneid + "\t" + go + "\n");
+                }
+                geneid = s[0];
+                go = s[1];
+            }
+        }
+        in.close();
+        out.close();
+    }
+
+    public static void main(String args[]) {
         String input = "C:\\dev\\plasmid_support\\ccsb_201210\\stringcompare_input.txt";
         String output = "C:\\dev\\plasmid_support\\ccsb_201210\\stringcompare_output.txt";
-        String blastinput = SequenceAnalyzer.FILE_PATH+"Riken\\blast_input.txt";
-        String blastoutput = SequenceAnalyzer.FILE_PATH+"Riken\\blast_output_lowcomp.txt";
+        String blastinput = SequenceAnalyzer.FILE_PATH + "Plasmid_human_analysis_cds_input.txt";
+        String blastoutput = SequenceAnalyzer.FILE_PATH + "Plasmid_human_analysis_cds_lowcomp_yes.txt";
 
-        String refseqfile = "C:\\dev\\plasmid_support\\PlasmidAnalysis201212\\Refseq\\refseq_all_fasta_input.txt";
-        String refseqFastaFile = "C:\\dev\\plasmid_support\\PlasmidAnalysis201212\\Refseq\\blastdb\\refseq_all";
+        String refseqfile = "D:\\dev\\blast\\db\\refseq_mouse_cds.txt";
+        String refseqFastaFile = "D:\\dev\\blast\\db\\refseq_mouse_cds_fasta";
 
-        String blastRefseqInput = "C:\\dev\\plasmid_support\\PlasmidAnalysis201212\\RIKEN\\missing_geneid_input_3.txt";
-        String blastRefseqOutput = "C:\\dev\\plasmid_support\\PlasmidAnalysis201212\\RIKEN\\missing_geneid_output_3.txt";
-        
-        String cloneseqInput = FILE_PATH+"ORFeome8\\Input_for_clone_seq.txt";
-        String cloneseqOutput = FILE_PATH+"ORFeome8\\Output_for_clone_seq.txt";
-        
+        String blastRefseqInput = "D:\\dev\\Gene_20130402\\PlasmidAnalysis\\analysis\\plasmid_human_blast_input6.txt";
+        String blastRefseqOutput = "D:\\dev\\Gene_20130402\\PlasmidAnalysis\\analysis\\plasmid_human_analysis_aa2.txt";
+
+        String cloneseqInput = FILE_PATH + "ORFeome8\\Input_for_clone_seq.txt";
+        String cloneseqOutput = FILE_PATH + "ORFeome8\\Output_for_clone_seq.txt";
+
         String failedImageInput = "C:\\dev\\plasmid_support\\production\\platinum_failed_201207\\problemClones_20120808.txt";
         String failedImageOutput = "C:\\dev\\plasmid_support\\production\\platinum_failed_201207\\problemClones_output.txt";
-        
-        String synonymInput = "C:\\dev\\plasmid_support\\PlasmidAnalysis201212\\Refseq\\synonym_input.txt";
-        String synonymOutput = "C:\\dev\\plasmid_support\\PlasmidAnalysis201212\\Refseq\\synonym_output.txt";
-        
+
+        String synonymInput = "D:\\wade\\Gene_20130402\\data\\synonym_input.txt";
+        String synonymOutput = "D:\\wade\\Gene_20130402\\data\\synonyms.txt";
+        String goinput = "D:\\wade\\Gene_20130402\\data\\domain_input.txt";
+        String gooutput = "D:\\wade\\Gene_20130402\\data\\domain_output.txt";
+
         SequenceAnalyzer analyzer = new SequenceAnalyzer();
         //analyzer.analyzeByStringCompare(input, output);
         analyzer.analyzeByBlast(blastinput, blastoutput);
-        
+
         /**
-        try {
-            analyzer.constructCloneSeq(cloneseqInput, cloneseqOutput);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            System.exit(1);
+         * try { analyzer.constructCloneSeq(cloneseqInput, cloneseqOutput); }
+         * catch (Exception ex) { ex.printStackTrace(); System.exit(1); }
+         */
+        /**
+         * try { List<Dnasequence> seqs = analyzer.readSequences(refseqfile);
+         * analyzer.makeFastaDatabase(seqs, refseqFastaFile, false); } catch
+         * (Exception ex) { ex.printStackTrace(); System.exit(1); }
+         */
+        /**
+         * try { analyzer.generateFastaDatabase(refseqfile, refseqFastaFile); }
+         * catch (Exception ex) { ex.printStackTrace(); System.exit(1);
         }
          */
-        
+        //analyzer.findMatchingRefseq(blastRefseqInput, blastRefseqOutput, BLASTABLE_DB_PATH+"refseq_human_proteinseq_fasta");
         /**
-        try {
-            List<Dnasequence> seqs = analyzer.readSequences(refseqfile);
-            analyzer.makeFastaDatabase(seqs, refseqFastaFile, false);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            System.exit(1);
+         * try { analyzer.findFailedImageClone(failedImageInput,
+         * failedImageOutput); } catch (Exception ex) { ex.printStackTrace();
+         * System.exit(1);
         }
          */
-        
         /**
-        try {
-            analyzer.generateFastaDatabase(refseqfile, refseqFastaFile);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            System.exit(1);
+         * try { //analyzer.parseSynonyms(synonymInput, synonymOutput);
+         * analyzer.aggregateField(goinput, gooutput); } catch (Exception ex) {
+         * ex.printStackTrace(); System.exit(1);
         }
          */
-        
-        //analyzer.findMatchingRefseq(blastRefseqInput, blastRefseqOutput, BLASTABLE_DB_PATH+"refseq_all");
-        /**
-        try {
-            analyzer.findFailedImageClone(failedImageInput, failedImageOutput);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            System.exit(1);
-        }*/
-          
-        /**
-        try {
-            analyzer.parseSynonyms(synonymInput, synonymOutput);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            System.exit(1);
-        }*/
-        
         System.exit(0);
     }
 }

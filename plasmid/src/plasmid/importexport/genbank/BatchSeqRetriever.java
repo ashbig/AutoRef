@@ -83,8 +83,8 @@ public class BatchSeqRetriever {
     }
 
     public static void main(String args[]) {
-        String input = "C:\\dev\\plasmid_support\\Gene_20130402\\PlasmidAnalysis\\giforcds.txt";
-        String output = "C:\\dev\\plasmid_support\\Gene_20130402\\PlasmidAnalysis\\cds2.fasta";
+        String input = "D:\\dev\\Gene_20130402\\PlasmidAnalysis\\giforcds5.txt";
+        String output = "D:\\dev\\Gene_20130402\\PlasmidAnalysis\\cds5.fasta";
 
         BatchSeqRetriever bsr = new BatchSeqRetriever();
         try {
