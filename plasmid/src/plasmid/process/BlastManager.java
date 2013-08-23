@@ -251,6 +251,7 @@ public class BlastManager {
             out.write(sequence);
             out.close();
         } catch (Exception ex) {
+            ex.printStackTrace();
             throw new ProcessException("Cannot make query file: " + id);
         }
         return file;
