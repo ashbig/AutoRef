@@ -116,11 +116,10 @@ public class SequenceAnalysisManager {
             }
 
             String clonename = orderClone.getClone().getName();
-            cloneseq = ">PlasmID|" + clonename + "\n" + cloneseq;
             String seq = validation.getSequence();
             String output = BlastWrapper.BLAST_FILE_PATH + clonename + ".out";
             if (seq != null && seq.trim().length() > 0) {
-                String s = bm.runBl2seq(BlastWrapper.PROGRAM_BLASTN, cloneseq, ">" + clonename + "\n" + seq, true, output, BlastWrapper.PAIRWISE_OUTPUT, false);
+                String s = bm.runBl2seq(BlastWrapper.PROGRAM_BLASTN, "PlasmID|" + clonename, cloneseq, clonename, seq, true, output, BlastWrapper.PAIRWISE_OUTPUT, false);
                 BlastParser parser = new BlastParser(output);
                 parser.setAlength(getAlength());
                 parser.setPid(getPid());

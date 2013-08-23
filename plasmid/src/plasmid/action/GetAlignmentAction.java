@@ -54,21 +54,20 @@ public class GetAlignmentAction extends Action {
         String subjectid = ((BlastForm) form).getSubjectid();
         String clonename = ((BlastForm)form).getClonename();
 
-        BlastManager manager = new BlastManager();
-        String querySeq = manager.getQuerySequence(queryid, sequence);
-        if(querySeq == null) {
+        if(sequence == null) {
             System.out.println("Cannot get query sequence with queryid="+queryid);
             return (mapping.findForward("error"));
         }
         
-        String subjectSeq = manager.getCloneSequenceWithBlastHeader(Integer.parseInt(subjectid),clonename);
+        BlastManager manager = new BlastManager();
+        String subjectSeq = manager.getCloneSequence(Integer.parseInt(subjectid));
         if(subjectSeq == null) {
             System.out.println("Cannot get clone sequence with cloneid="+clonename);
             return (mapping.findForward("error"));
         }
         
         try {
-            String output = manager.runBl2seq(program, querySeq, subjectSeq, isLowcomp);
+            String output = manager.runBl2seq(program, null, sequence, "PlasmID|" + clonename ,subjectSeq, isLowcomp);
             request.setAttribute("alignment", output);
             return (mapping.findForward("success"));
         } catch (Exception ex) {

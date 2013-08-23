@@ -100,6 +100,7 @@ public class BlastWrapper {
     
     public void runBlast() throws Exception {
         String cmd = getBlastCmd();
+        //System.out.println(cmd);
         executeBlast(cmd);
     }
 

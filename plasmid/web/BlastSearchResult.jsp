@@ -26,10 +26,7 @@
                     <h:form action="GetAlignment.do">
                         <html:hidden name="blastForm" property="program"/>
                         <html:hidden name="blastForm" property="sequence"/>
-                        <html:hidden name="blastForm" property="expect"/>
                         <html:hidden name="blastForm" property="isLowcomp"/>
-                        <html:hidden name="blastForm" property="isMaskLowercase"/>
-                        <html:hidden name="blastForm" property="isMegablast"/>
                     </h:form>
                     
                     <p class="mainbodytexthead">List of search terms found<br>
