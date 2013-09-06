@@ -12,6 +12,7 @@ public class CloneAnalysis {
     public static final String TYPE_NT = "nt";
     public static final String TYPE_CDS = "cds";
     public static final String TYPE_AA = "aa";
+    public static final String TYPE_NOSEQ = "noseq";
     
     private int cloneid;
     private int gi;

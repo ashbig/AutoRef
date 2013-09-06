@@ -98,8 +98,9 @@ public class GeneQueryManager {
             sql += " and g.taxid in ("+StringConvertor.convertFromListToSqlString(speciesList)+")";
         }
         String sql2 = "select count(cloneid) from clone where cloneid in"
-                + "(select cloneid from cloneanalysis where type='" 
-                + CloneAnalysis.TYPE_CDS + "' and percentid>90 and alength>100"
+                + "(select cloneid from cloneanalysis where ((type='" 
+                + CloneAnalysis.TYPE_CDS + "' and percentid>90 and alength>100)"
+                + " or (type='"+CloneAnalysis.TYPE_NOSEQ+"'))"
                 + " and gi_nt in (select gi_nt from gene2rerseq where geneid=?))"
                 + " and status='AVAILABLE'";
           
@@ -258,8 +259,9 @@ public class GeneQueryManager {
         String sql2 = "select seq,cds,proteinseq from refseq where gi_nt=?";
         
         String sql3 = "select count(cloneid) from clone where cloneid in"
-                + "(select cloneid from cloneanalysis where type='" 
-                + CloneAnalysis.TYPE_CDS + "' and percentid>90 and alength>100"
+                + "(select cloneid from cloneanalysis where ((type='" 
+                + CloneAnalysis.TYPE_CDS + "' and percentid>90 and alength>100)"
+                + " or (type='"+CloneAnalysis.TYPE_NOSEQ+"'))"
                 + " and gi_nt=?) and status='AVAILABLE'";
         String vptype = null;
         if(vptypes != null && vptypes.size()>0) {
@@ -390,8 +392,10 @@ public class GeneQueryManager {
                 + " and c.cloneid=ci.cloneid"
                 + " and ci.insertid=d.insertid"
                 + " and c.status='AVAILABLE'"
-                + " and ca.type='" + CloneAnalysis.TYPE_CDS + "' and ca.gi_nt=" + giInt
-                + " and ca.percentid>90 and ca.alength>100";
+                + " and ((ca.type='" + CloneAnalysis.TYPE_CDS 
+                + "' and ca.percentid>90 and ca.alength>100)"
+                + " or (ca.type='"+CloneAnalysis.TYPE_NOSEQ+"'))"
+                + " and ca.gi_nt=" + giInt;
         String vptype = null;
         if(vptypes != null && vptypes.size()>0) {
             vptype = StringConvertor.convertFromListToSqlString(vptypes);
