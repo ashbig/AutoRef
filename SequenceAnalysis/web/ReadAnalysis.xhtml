@@ -1,0 +1,120 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"  
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="/templates/template.xhtml">
+    <ui:define name="content">
+        <h:form id="form">  
+            <p:fieldset id="inputid" legend="Analyze Sequencing Plate" toggleable="true">  
+                
+                <h:outputText value="This program is developed for the DNA Resource Core sequencing users to identify 
+                    their sequencing samples provided that these samples are human or mouse genes. 
+                    Users can directly upload the sequencing results to the program and blast the 
+                    RefSeq human or mouse database to find the best matched genes for each sample. 
+                    For samples that encode genes for other species, or if you want to blast your own 
+                    sequence library, please contact us."/>
+                [<h:outputLink value="readme.pdf" target="_blank">help</h:outputLink>]
+                <p:separator/>
+                
+                <p:messages id="msgs"/> 
+                <p:growl id="messages" showDetail="false"/>  
+                <p:panelGrid>  
+                    <p:row>
+                        <p:column colspan="2">
+                            <h:outputText value="*Place your mouse over the label for hint."/>
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel for="trimLeft" value="Sequence trim on the left:"
+                                         title="Trim off the unwanted sequences on the 5’ end."/>
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="trimLeft" value="#{readAnalysisBean.trimLeft}" required="false"/>nt 
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel for="alength" value="Minimum alignment length:"
+                                           title="The minimum length of the longest blast alignment that would allow a match to be called."/>
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="alength" value="#{readAnalysisBean.alength}" required="false"/>nt
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel for="pid" value="Minimum percent identity:"
+                                           title="The minimum percent identity of the longest blast alignment that would allow a match to be called."/>
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="pid" value="#{readAnalysisBean.pid}" required="false"/>%
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel for="phredLow" value="Low phred cutoff:"
+                                           title="The minimum phred score that would allow blast to be performed."/>
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="phredLow" value="#{readAnalysisBean.phredLow}" required="true"
+                                         requiredMessage="Low phred cutoff is required."/> 
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel for="phredHigh" value="High phred cutoff:"
+                                           title="The minimum phred score that would allow no match to be called. If the sample falls between the low phred cutoff and high phred cutoff, and blast finds no match, the final result will be manual analysis."/>
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="phredHigh" value="#{readAnalysisBean.phredHigh}" required="true"
+                                         requiredMessage="High phred cutoff is required."/> 
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel for="bestMatch" value="First match only:"/>
+                        </p:column>
+                        <p:column>
+                            <p:selectBooleanCheckbox  id="bestMatch" value="#{readAnalysisBean.bestMatch}"/> 
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel for="db" value="Sequence database:" title="The database to be blasted."/>  
+                        </p:column>
+                        <p:column>
+                            <p:selectOneMenu id="db" value="#{readAnalysisBean.db}">  
+                                <f:selectItem itemLabel="#{readAnalysisBean.dbRefseqHumanSeq}" itemValue="#{readAnalysisBean.dbRefseqHumanSeq}" />  
+                                <f:selectItem itemLabel="#{readAnalysisBean.dbRefseqMouseSeq}" itemValue="#{readAnalysisBean.dbRefseqMouseSeq}" /> 
+                                <f:selectItem itemLabel="#{readAnalysisBean.dbRefseqHumanCds}" itemValue="#{readAnalysisBean.dbRefseqHumanCds}" /> 
+                                <f:selectItem itemLabel="#{readAnalysisBean.dbRefseqMouseCds}" itemValue="#{readAnalysisBean.dbRefseqMouseCds}" /> 
+                            </p:selectOneMenu>  
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column colspan="2">
+                            <center>
+                                <p:commandButton ajax="false" id="submitButton" value="Continue" action="#{readAnalysisBean.gonext}"/>
+                                <p:spacer width="20"/>
+                                <p:commandButton value="Reset" update="form:inputid" process="@this" actionListener="#{readAnalysisBean.resetValue}"/>
+                            </center>
+                        </p:column>
+                    </p:row>
+
+                </p:panelGrid>
+            </p:fieldset>  
+
+        </h:form>  
+    </ui:define>
+</ui:composition>
+
