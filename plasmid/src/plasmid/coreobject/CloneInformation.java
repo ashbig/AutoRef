@@ -22,11 +22,18 @@ public class CloneInformation {
     private int size;
     private int vectorid;
     private boolean inCart;
+    private String type;
 
     public CloneInformation() {
         this.inCart = false;
     }
     
+    public boolean isShowAlignment() {
+        if(CloneAnalysis.TYPE_NOSEQ.equals(type)) {
+            return false;
+        }
+        return true;
+    }
     /**
      * @return the cloneid
      */
@@ -207,5 +214,19 @@ public class CloneInformation {
      */
     public void setInCart(boolean inCart) {
         this.inCart = inCart;
+    }
+
+    /**
+     * @return the type
+     */
+    public String getType() {
+        return type;
+    }
+
+    /**
+     * @param type the type to set
+     */
+    public void setType(String type) {
+        this.type = type;
     }
 }

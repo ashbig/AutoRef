@@ -213,7 +213,8 @@
                                                         <p:commandButton value="Blast Alignment" 
                                                                          actionListener="#{geneSearchBean.viewAlignment}" 
                                                                          update=":searchForm:alignmentView"
-                                                                         oncomplete="blastDialog.show()">
+                                                                         oncomplete="blastDialog.show()"
+                                                                         rendered="#{clone.showAlignment}">
                                                             <f:param id="cloneid" name="cloneid" value="#{clone.cloneid}"/>
                                                             <f:param id="gi" name="gi" value="#{clone.gi}"/>
                                                             <f:param id="clonename" name="clonename" value="#{clone.clonename}"/>

@@ -386,7 +386,7 @@ public class GeneQueryManager {
         }
 
         String sql = "select ca.cloneid,ca.percentid,ca.alength,ca.coverage,ca.mutation,"
-                + " c.clonename,c.restriction,c.vectorname,d.format,d.sizeinbp,c.vectorid"
+                + " c.clonename,c.restriction,c.vectorname,d.format,d.sizeinbp,c.vectorid,ca.type"
                 + " from cloneanalysis ca, clone c, dnainsert d, cloneinsert ci"
                 + " where ca.cloneid=c.cloneid"
                 + " and c.cloneid=ci.cloneid"
@@ -425,6 +425,7 @@ public class GeneQueryManager {
                 String format = rs.getString(9);
                 int size = rs.getInt(10);
                 int vectorid = rs.getInt(11);
+                String type = rs.getString(12);
                 CloneInformation c = new CloneInformation();
                 c.setCloneid(cloneid);
                 c.setPercentid(percentid);
@@ -438,6 +439,7 @@ public class GeneQueryManager {
                 c.setFormat(format);
                 c.setSize(size);
                 c.setVectorid(vectorid);
+                c.setType(type);
                 clones.add(c);
             }
         } catch (SQLException ex) {
