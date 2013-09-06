@@ -198,15 +198,15 @@
                                                     </p:column>  
 
                                                     <p:column headerText="PID/Alength">  
-                                                        <h:outputText value="#{clone.percentid}/#{clone.alength}" />  
+                                                        <h:outputText value="#{clone.percentid}/#{clone.alength}" rendered="#{clone.showAlignment}"/>  
                                                     </p:column>  
 
                                                     <p:column headerText="CDS Coverage">  
-                                                        <h:outputText value="#{clone.coverage}" />  
+                                                        <h:outputText value="#{clone.coverage}" rendered="#{clone.showAlignment}"/>  
                                                     </p:column>  
 
                                                     <p:column headerText="Mutation">  
-                                                        <h:outputText value="#{clone.mutation}" />  
+                                                        <h:outputText value="#{clone.mutation}" rendered="#{clone.showAlignment}"/>  
                                                     </p:column>  
 
                                                     <p:column headerText="">  
