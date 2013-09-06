@@ -1,0 +1,178 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"  
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="/templates/template.xhtml">
+    <ui:define name="content">
+
+        <h:form id="form2" enctype="multipart/form-data">
+            <p:fieldset id="inputid" legend="Analyze Sequencing Plate" toggleable="true">  
+                
+                <h:outputText value="This program is developed for the DNA Resource Core sequencing users to identify 
+                    their sequencing samples provided that these samples are human or mouse genes. 
+                    Users can directly upload the sequencing results to the program and blast the 
+                    RefSeq human or mouse database to find the best matched genes for each sample. 
+                    For samples that encode genes for other species, or if you want to blast your own 
+                    sequence library, please contact us."/>
+                [<h:outputLink value="readme.pdf" target="_blank">help</h:outputLink>]
+                <p:separator/>
+                
+                <p:messages id="msgs"/> 
+                <p:growl id="messages" showDetail="false"/>  
+                <p:panelGrid>  
+
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="Sequence trim on the left:"/>
+                        </p:column>
+                        <p:column>
+                            <h:outputLabel value="#{readAnalysisBean.trimLeft}"/>nt
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="Minimum alignment length:"/>
+                        </p:column>
+                        <p:column>
+                            <h:outputLabel value="#{readAnalysisBean.alength}"/>nt
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="Minimum percent identity:"/>
+                        </p:column>
+                        <p:column>
+                            <h:outputLabel value="#{readAnalysisBean.pid}"/>% 
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="Low phred cutoff:"/>
+                        </p:column>
+                        <p:column>
+                            <h:outputLabel value="#{readAnalysisBean.phredLow}"/> 
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="High phred cutoff:"/>
+                        </p:column>
+                        <p:column>
+                            <h:outputLabel value="#{readAnalysisBean.phredHigh}"/> 
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel for="bestMatch" value="First match only:"/>
+                        </p:column>
+                        <p:column>
+                            <h:outputLabel  id="bestMatch" value="#{readAnalysisBean.bestMatchString}"/> 
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="Sequence database:" />  
+                        </p:column>
+                        <p:column>
+                            <h:outputLabel value="#{readAnalysisBean.db}"/> 
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel for="files" value="Upload sequencing files:"/>
+                        </p:column>
+                        <p:column>
+                            <p:fileUpload id="files" fileUploadListener="#{readAnalysisBean.handleFileUpload}"  
+                                          mode="advanced"  
+                                          update="messages"   
+                                          multiple="true"  
+                                          sizeLimit="100000" /> 
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column colspan="2">
+                            <center>
+                                <p:commandButton widgetVar="submitButton" value="Analyze" 
+                                                 actionListener="#{readAnalysisBean.analyze}"   
+                                                 update=":form2:searchResult" ajax="false"
+                                                 onclick="jQuery(this).addClass('ui-state-disabled');" />
+                                <p:spacer width="20"/>
+                                <p:commandButton id="backButton" value="Home" action="#{readAnalysisBean.goback}"/>
+                            </center>
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+            </p:fieldset>  
+
+            <p:spacer height="10" />
+            <p:panel id="searchResult" header="Report" rendered="#{readAnalysisBean.isShowResult}">
+
+                <p:dataTable resizableColumns="true" var="r" value="#{readAnalysisBean.readsTable}" paginator="false" id="readTable">  
+ 
+                    <p:column headerText="Read">  
+                        <p:commandLink actionListener="#{readAnalysisBean.showRead}" update=":form2:readView" oncomplete="readDialog.show()"> 
+                            <f:param id="currentReadid" name="currentReadid" value="#{r.readname}"/> 
+                            <h:outputText value="#{r.readname}"/>
+                        </p:commandLink>  
+                    </p:column>  
+                    <p:column headerText="Phred">  
+                        <h:outputText value="#{r.phred}"/>
+                    </p:column>  
+                    <p:column headerText="Result">  
+                        <p:commandLink rendered="#{r.blastExist}" actionListener="#{readAnalysisBean.viewBlastAlignment}" update=":form2:alignmentView" oncomplete="blastDialog.show()"> 
+                            <f:param id="positionid" name="positionid" value="#{r.readname}"/> 
+                            <h:outputText rendered="#{r.validationExist}" value="#{r.currentValidation.result}"/>
+                        </p:commandLink>  
+                        <h:outputText rendered="#{r.blastNotExist}" value="#{r.currentValidation.result}"/>
+                    </p:column> 
+                    <p:column headerText="GI">  
+                        <h:outputText rendered="#{r.validationExist}" value="#{r.currentValidation.subjectid}"/>
+                    </p:column> 
+                    <p:column headerText="GenBank Accession">  
+                        <h:outputLink rendered="#{r.validationExist}" value="http://www.ncbi.nlm.nih.gov/nuccore/#{r.currentValidation.accession}" target="_blank"> 
+                            <h:outputText rendered="#{r.validationExist}" value="#{r.currentValidation.accession}"/>
+                        </h:outputLink>  
+                    </p:column> 
+                    <p:column headerText="Gene ID">                          
+                        <h:outputLink rendered="#{r.validationExist}" value="http://www.ncbi.nlm.nih.gov/gene/#{r.currentValidation.geneid}" target="_blank"> 
+                            <h:outputText rendered="#{r.validationExist}" value="#{r.currentValidation.geneid}"/>
+                        </h:outputLink>
+                    </p:column> 
+                    <p:column headerText="Symbol">  
+                        <h:outputText rendered="#{r.validationExist}" value="#{r.currentValidation.symbol}"/>
+                    </p:column> 
+                    <p:column headerText="Synonyms">  
+                        <h:outputText rendered="#{r.validationExist}" value="#{r.currentValidation.synonyms}"/>
+                    </p:column> 
+                </p:dataTable> 
+                <p:spacer height="2"/>
+                <p align="center"><h:commandButton value="Download" action="#{readAnalysisBean.download}"/> </p>
+            </p:panel>
+
+            <p:dialog id="readView" header="Read" widgetVar="readDialog" resizable="true" appendToBody="true" 
+                      modal="true" width="1000" height="500"> 
+                <pre>
+		 <h:outputText value="#{readAnalysisBean.currentRead.read}"/>
+                </pre>
+            </p:dialog>
+
+            <p:dialog id="alignmentView" header="Blast Alignment" widgetVar="blastDialog" resizable="true" appendToBody="true" 
+                      modal="true" width="1000" height="500"> 
+                <pre>
+		                        <h:outputText value="#{readAnalysisBean.blastoutput}"/>
+                </pre>
+            </p:dialog>
+        </h:form>
+
+    </ui:define>
+</ui:composition>
+

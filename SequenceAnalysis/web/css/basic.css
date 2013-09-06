@@ -1,0 +1,22 @@
+/* 
+    Document   : basic
+    Created on : Jul 5, 2013, 11:55:29 AM
+    Author     : Lab User
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+root { 
+    display: block;
+}
+
+.ui-widget, .ui-widget .ui-widget {
+    font-size: 90% !important;
+}
+
+.selectitem {
+    font-size: 8px;
+}
+
+
+
