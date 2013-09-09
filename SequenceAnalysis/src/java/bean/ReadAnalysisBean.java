@@ -67,6 +67,7 @@ public class ReadAnalysisBean implements Serializable {
         this.db = null;
         this.isShowResult = false;
         this.reads = null;
+        this.readsTable = null;
         this.currentRead = null;
         this.setBestMatch(false);
         this.dirName = null;
@@ -77,6 +78,13 @@ public class ReadAnalysisBean implements Serializable {
         return "ReadAnalysis.xhtml";
     }
 
+    public void reset() {
+        this.isShowResult = false;
+        this.reads = null;
+        this.readsTable = null;
+        this.currentRead = null;
+    }
+    
     public String gonext() {
         Random randomGenerator = new Random();
         dirName = "" + randomGenerator.nextInt();

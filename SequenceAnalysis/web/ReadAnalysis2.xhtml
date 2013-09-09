@@ -107,6 +107,9 @@
                                                  onclick="jQuery(this).addClass('ui-state-disabled');" />
                                 <p:spacer width="20"/>
                                 <p:commandButton id="backButton" value="Home" action="#{readAnalysisBean.goback}"/>
+                                <p:spacer width="20"/>
+                                <p:commandButton id="resetButton" value="Reset" action="#{readAnalysisBean.reset}"
+                                             update=":form2:searchResult" ajax="false"/>
                             </center>
                         </p:column>
                     </p:row>

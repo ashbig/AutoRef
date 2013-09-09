@@ -6,13 +6,14 @@
 
 package plasmid.coreobject;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
  *
  * @author  DZuo
  */
-public class ShoppingCartItem {
+public class ShoppingCartItem implements Serializable {
     public static final String CLONE = "Clone";
     public static final String COLLECTION = "Collection";
     

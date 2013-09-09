@@ -6,11 +6,13 @@
 
 package plasmid.coreobject;
 
+import java.io.Serializable;
+
 /**
  *
  * @author  DZuo
  */
-public class CloneSelection {
+public class CloneSelection implements Serializable {
     private int cloneid;
     private String hosttype;
     private String marker;
