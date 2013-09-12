@@ -1060,6 +1060,7 @@ public class CloneOrderManager extends TableManager {
                 DatabaseTransaction.executeUpdate(stmt);
             }
         } catch (Exception ex) {
+            ex.printStackTrace();
             handleError(ex, "Cannot add clone validation results.");
             return false;
         } finally {
