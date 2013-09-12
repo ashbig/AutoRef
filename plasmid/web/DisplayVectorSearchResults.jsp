@@ -14,9 +14,16 @@
         <title>PlasmID Database</title>
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
         <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
+
+<script language="JavaScript">
+function readCookie(name){
+return(document.cookie.match('(^|; )'+name+'=([^;]*)')||0)[2]
+}
+</script>
+
     </head>
-    
-    <body>
+
+    <body onScroll="document.cookie='ypos=' + window.pageYOffset" onLoad="window.scrollTo(0,readCookie('ypos'))">
         <jsp:include page="orderTitle.jsp" />
         <table width="1000" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
             <tr> 
@@ -25,25 +32,25 @@
                 </td>
                 <td width="864" align="left" valign="top">
                     <jsp:include page="searchResultTitle.jsp" />
-                    
+
                     <bean:define id="size" name="refseqSearchForm" property="pagesize"/>
                     <bean:define id="p" name="refseqSearchForm" property="page"/>
                     <bean:define id="total" name="numOfFound"/>
-                    
+
                     <html:form action="SetDisplay.do">
-                    
+
                         <p class="mainbodytexthead">List of search terms found</p>
                         <table width="100%" border="0">
                             <tr class="mainbodytexthead">
                                 <td align="left" class="mainbodytexthead">Page: 
                                     <html:select property="page">
                                         <%  int i = 0;
-            while (i < Integer.parseInt(total.toString()) / Integer.parseInt(size.toString())) {
+                                            while (i < Integer.parseInt(total.toString()) / Integer.parseInt(size.toString())) {
                                         %>
-                                        <html:option value="<%=(new Integer(i+1)).toString()%>"/>
+                                        <html:option value="<%=(new Integer(i + 1)).toString()%>"/>
                                         <%      i++;
-            }
-            if ((Integer.parseInt(total.toString()) % Integer.parseInt(size.toString())) > 0)
+                                            }
+                                            if ((Integer.parseInt(total.toString()) % Integer.parseInt(size.toString())) > 0)
                                         %>
                                         <html:option value="<%=(new Integer(i+1)).toString()%>"/>
                                     </html:select>
@@ -53,7 +60,7 @@
                                 <td align="right" class="mainbodytexthead"><a target="_blank" href="TermDefinition.jsp">Explanation of Terms</a></td>
                             </tr>
                         </table>
-                        
+
                         <p>
                         <table width="100%" border="0">
                             <tr>
@@ -73,11 +80,11 @@
                                 <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=selection">Selection Markers</a></td>
                                 <td class="tableheader">&nbsp;</td>
                             </tr>
-                            
+
                             <% int i = Integer.parseInt(size.toString()) * (Integer.parseInt(p.toString()) - 1);
                             %>
                             <logic:iterate name="found" id="clone" length="size" offset="<%=(new Integer(i)).toString()%>">
-                            
+
                                 <tr class="tableinfo"> 
                                     <td><%=++i%></td>
                                     <td><bean:write name="clone" property="term"/></td>
@@ -93,36 +100,36 @@
                                         <td>&nbsp;</td>
                                         <td>&nbsp;</td>
                                     </logic:equal>
-                                    
+
                                     <logic:notEqual name="clone" property="type" value="<%=Clone.NOINSERT%>">
                                         <logic:iterate name="clone" property="inserts" id="insert">
                                             <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.GENEID%>">
                                                 <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=gene&cmd=Retrieve&dopt=Graphics&list_uids=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
-                                            </logic:equal>
-                                            <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.PA%>">
+                                                </logic:equal>
+                                                <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.PA%>">
                                                 <td><a target="_blank" href="http://www.pseudomonas.com/AnnotationByPAU.asp?PA=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
-                                            </logic:equal>
-                                            <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.SGD%>">
+                                                </logic:equal>
+                                                <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.SGD%>">
                                                 <td><a target="_blank" href="http://db.yeastgenome.org/cgi-bin/locus.pl?locus=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
-                                            </logic:equal>
-                                            <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.GENBANK%>">
+                                                </logic:equal>
+                                                <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.GENBANK%>">
                                                 <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/nuccore/<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
-                                            </logic:equal>
-                                            <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.PRO_GI%>">
+                                                </logic:equal>
+                                                <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.PRO_GI%>">
                                                 <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/protein/<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
-                                            </logic:equal>
-                                            <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.FBID%>">
+                                                </logic:equal>
+                                                <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.FBID%>">
                                                 <td><a target="_blank" href="http://www.flybase.org/.bin/fbidq.html?<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
-                                            </logic:equal>
-                                            <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.WBGENEID%>">
+                                                </logic:equal>
+                                                <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.WBGENEID%>">
                                                 <td><a target="_blank" href="http://www.wormbase.org/db/gene/gene?name=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
-                                            </logic:equal>
-                                            <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.TAIR%>">
+                                                </logic:equal>
+                                                <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.TAIR%>">
                                                 <td><a target="_blank" href="http://arabidopsis.org/servlets/TairObject?type=locus&name=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
-                                            </logic:equal>
-                                            <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.LOCUS_TAG%>">
+                                                </logic:equal>
+                                                <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.LOCUS_TAG%>">
                                                 <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/sites/entrez?db=gene&cmd=&term=<bean:write name="insert" property="geneid"/>&go=Go"><bean:write name="insert" property="geneid"/></a></td>
-                                            </logic:equal>
+                                                </logic:equal>
                                             <td><bean:write name="insert" property="name"/></td>
                                             <td><bean:write name="insert" property="annotation"/></td>
                                             <td><bean:write name="insert" property="description"/></td>
@@ -138,51 +145,51 @@
                                         </logic:iterate>
                                     </td>
                                     <html:form action="SetDisplay.do">
-                                        <input type="hidden" name="displayPage" value="indirect"/>
-                                        <input type="hidden" name="forward" value="vectorSearchResult"/>
-                                        <input type="hidden" name="cloneid" value="<bean:write name="clone" property="cloneid"/>"/>
-                                        <logic:equal name="clone" property="isAddedToCart" value="true">
-                                            <TD valign="center" bgcolor="blue">
-                                                <input name="button" type="submit" class="itemtext" value="Add To Cart"/>
-                                            </td>
-                                        </logic:equal>
-                                        <logic:notEqual name="clone" property="isAddedToCart" value="true">
-                                            <TD valign="center">
-                                                <input name="button" type="submit" class="itemtext" value="Add To Cart"/>
-                                            </td>
-                                        </logic:notEqual>
-                                    </html:form>
-                                </tr>
-                            </logic:iterate> 
-                        </table>
-                    </html:form>
-                    
-                    <html:form action="SetDisplay.do">
-                        <table width="100%" border="0">
-                            <tr class="mainbodytexthead">
-                                <td align="left" class="mainbodytexthead">Page: 
-                                    <html:select property="page">
-                                        <%  int k = 0;
-            while (k < Integer.parseInt(total.toString()) / Integer.parseInt(size.toString())) {
-                                        %>
-                                        <html:option value="<%=(new Integer(k+1)).toString()%>"/>
-                                        <%      k++;
-            }
-            if ((Integer.parseInt(total.toString()) % Integer.parseInt(size.toString())) > 0)
-                                        %>
-                                        <html:option value="<%=(new Integer(k+1)).toString()%>"/>
-                                    </html:select>
-                                    <html:submit property="button" value="Display"/>
-                                </td>
-                                <td class="mainbodytexthead"><html:submit property="button" value="<%=Constants.DOWNLOAD%>"/></td>
-                                <td align="right" class="mainbodytexthead"><a target="_blank" href="TermDefinition.jsp">Explanation of Terms</a></td>
-                            </tr>
-                        </table>
-                    </html:form>
-                    
-                </td>
-            </tr>
-        </table>
-    <jsp:include page="footer.jsp" /></body>
+                                    <input type="hidden" name="displayPage" value="indirect"/>
+                                    <input type="hidden" name="forward" value="vectorSearchResult"/>
+                                    <input type="hidden" name="cloneid" value="<bean:write name="clone" property="cloneid"/>"/>
+                                    <logic:equal name="clone" property="isAddedToCart" value="true">
+                                        <TD valign="center">
+                                            <input name="button" type="submit" class="itemtext" value="In Cart" disabled="true"/>
+                                        </td>
+                                    </logic:equal>
+                                    <logic:notEqual name="clone" property="isAddedToCart" value="true">
+                                        <TD valign="center">
+                                            <input name="button" type="submit" class="itemtext" value="Add To Cart"/>
+                                        </td>
+                                    </logic:notEqual>
+                                </html:form>
+                    </tr>
+                </logic:iterate> 
+            </table>
+        </html:form>
+
+        <html:form action="SetDisplay.do">
+            <table width="100%" border="0">
+                <tr class="mainbodytexthead">
+                    <td align="left" class="mainbodytexthead">Page: 
+                        <html:select property="page">
+                            <%  int k = 0;
+                                while (k < Integer.parseInt(total.toString()) / Integer.parseInt(size.toString())) {
+                            %>
+                            <html:option value="<%=(new Integer(k + 1)).toString()%>"/>
+                            <%      k++;
+                                }
+                                if ((Integer.parseInt(total.toString()) % Integer.parseInt(size.toString())) > 0)
+                            %>
+                            <html:option value="<%=(new Integer(k+1)).toString()%>"/>
+                        </html:select>
+                        <html:submit property="button" value="Display"/>
+                    </td>
+                    <td class="mainbodytexthead"><html:submit property="button" value="<%=Constants.DOWNLOAD%>"/></td>
+                    <td align="right" class="mainbodytexthead"><a target="_blank" href="TermDefinition.jsp">Explanation of Terms</a></td>
+                </tr>
+            </table>
+        </html:form>
+
+    </td>
+</tr>
+</table>
+<jsp:include page="footer.jsp" /></body>
 </html>
 

@@ -19,12 +19,14 @@ import org.apache.struts.action.ActionMapping;
 import plasmid.Constants;
 import plasmid.blast.BlastWrapper;
 import plasmid.coreobject.Clone;
+import plasmid.coreobject.ShoppingCartItem;
 import plasmid.coreobject.User;
 import plasmid.database.DatabaseManager.UserManager;
 import plasmid.form.BlastForm;
 import plasmid.form.RefseqSearchForm;
 import plasmid.process.BlastManager;
 import plasmid.query.handler.GeneQueryHandler;
+import plasmid.query.handler.VectorQueryHandler;
 
 /**
  *
@@ -70,6 +72,7 @@ public class BlastSearchAction extends Action {
         }
 
         User user = (User) request.getSession().getAttribute(Constants.USER_KEY);
+        List<ShoppingCartItem> shoppingcart = (List) request.getSession().getAttribute(Constants.CART);
         List restrictions = new ArrayList();
         restrictions.add(Clone.NO_RESTRICTION);
         restrictions.add(Clone.NON_PROFIT);
@@ -144,6 +147,8 @@ public class BlastSearchAction extends Action {
             f.setPagesize(Constants.PAGESIZE);
             request.getSession().setAttribute("refseqSearchForm", f);
             f.setForward("blast");
+            GeneQueryHandler handler = new VectorQueryHandler();
+            handler.setInCartClones(infos, shoppingcart);
             request.getSession().setAttribute("numOfFound", new Integer(infos.size()));
             request.getSession().setAttribute("found", infos);
 

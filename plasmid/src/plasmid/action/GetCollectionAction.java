@@ -23,6 +23,8 @@ import plasmid.Constants;
 import plasmid.database.DatabaseManager.*;
 import plasmid.process.QueryProcessManager;
 import plasmid.form.*;
+import plasmid.query.handler.GeneQueryHandler;
+import plasmid.query.handler.VectorQueryHandler;
 
 /**
  *
@@ -59,6 +61,7 @@ public class GetCollectionAction extends Action {
         int numOfClones = manager.getClonenumInCollection(collectionName);
         
         User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
+        List<ShoppingCartItem> shoppingcart = (List) request.getSession().getAttribute(Constants.CART);
         List restrictions = new ArrayList();
         restrictions.add(Clone.NO_RESTRICTION);
         restrictions.add(Clone.NON_PROFIT);
@@ -93,6 +96,8 @@ public class GetCollectionAction extends Action {
             return (mapping.findForward("error"));
         }
         
+        GeneQueryHandler handler = new VectorQueryHandler();
+        handler.setInCartClones(info.getClones(), shoppingcart);
         request.getSession().setAttribute(Constants.SINGLECOLLECTION, info);
         request.getSession().setAttribute("found", info.getClones());
         

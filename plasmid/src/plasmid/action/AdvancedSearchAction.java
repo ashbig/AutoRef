@@ -362,6 +362,8 @@ public class AdvancedSearchAction extends Action {
 
         List founds = new ArrayList();
         founds.addAll(handler.convertFoundToCloneinfo());
+        List<ShoppingCartItem> shoppingcart = (List) request.getSession().getAttribute(Constants.CART);
+        handler.setInCartClones(founds, shoppingcart);
         request.getSession().setAttribute("numOfFound", new Integer(founds.size()));
         request.getSession().setAttribute("found", founds);
 

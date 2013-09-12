@@ -22,9 +22,11 @@ import plasmid.form.VectorSearchForm;
 import plasmid.form.RefseqSearchForm;
 import plasmid.Constants;
 import plasmid.process.QueryProcessManager;
-import plasmid.coreobject.Clone;
 import plasmid.coreobject.User;
 import plasmid.coreobject.CloneVector;
+import plasmid.coreobject.ShoppingCartItem;
+import plasmid.query.handler.GeneQueryHandler;
+import plasmid.query.handler.VectorQueryHandler;
 
 /**
  *
@@ -60,6 +62,7 @@ public class VectorSearchContinueAction extends Action {
         List clones = ((VectorSearchForm)form).getClones();
         
         User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
+        List<ShoppingCartItem> shoppingcart = (List) request.getSession().getAttribute(Constants.CART);
                 
         QueryProcessManager manager = new QueryProcessManager();
         
@@ -105,6 +108,8 @@ public class VectorSearchContinueAction extends Action {
         }
         
         int totalCount = found.size();
+        GeneQueryHandler handler = new VectorQueryHandler();    
+        handler.setInCartClones(found, shoppingcart);
         request.getSession().setAttribute("totalCount", new Integer(totalCount));
         request.getSession().setAttribute("numOfFound", new Integer(totalCount));
         request.getSession().setAttribute("found", found);

@@ -14,9 +14,14 @@
 <title>PlasmID Database</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
+<script language="JavaScript">
+function readCookie(name){
+return(document.cookie.match('(^|; )'+name+'=([^;]*)')||0)[2]
+}
+</script>
 </head>
 
-<body>
+<body onScroll="document.cookie='ypos=' + window.pageYOffset" onLoad="window.scrollTo(0,readCookie('ypos'))">
 <jsp:include page="orderTitle.jsp" />
 <table width="1000" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
   <tr> 
@@ -143,8 +148,8 @@
         <input type="hidden" name="forward" value="vectorSearchResult"/>
         <input type="hidden" name="cloneid" value="<bean:write name="clone" property="cloneid"/>"/>
     <logic:equal name="clone" property="isAddedToCart" value="true">
-        <TD valign="center" bgcolor="blue">
-            <input name="button" type="submit" class="itemtext" value="Add To Cart"/>
+        <TD valign="center">
+            <input name="button" type="submit" class="itemtext" value="In Cart" disabled="true"/>
         </td>
     </logic:equal>
     <logic:notEqual name="clone" property="isAddedToCart" value="true">

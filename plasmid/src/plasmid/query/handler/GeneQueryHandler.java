@@ -403,4 +403,25 @@ public abstract class GeneQueryHandler {
     public void setIsClonename(boolean isClonename) {
         this.isClonename = isClonename;
     }
+        
+    public void setInCartClones(List<CloneInfo> clones, List<ShoppingCartItem> shoppingcart) {
+        if(shoppingcart == null)
+            return;
+        
+        for (ShoppingCartItem clone : shoppingcart) {
+            CloneInfo c = findClone(clones, clone.getItemid());
+            if (c != null) {
+                c.setIsAddedToCart(true);
+            }
+        }
+    }
+
+    private CloneInfo findClone(List<CloneInfo> cloneList, String cloneid) {
+        for (CloneInfo clone : cloneList) {
+            if (("" + clone.getCloneid()).equals(cloneid)) {
+                return clone;
+            }
+        }
+        return null;
+    }
 }

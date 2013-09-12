@@ -26,16 +26,17 @@ import plasmid.query.handler.*;
 
 /**
  *
- * @author  DZuo
+ * @author DZuo
  */
 public class RefseqSearchContinueAction extends Action {
 
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
      * response (or forward to another web component that will create it).
-     * Return an <code>ActionForward</code> instance describing where and how
-     * control should be forwarded, or <code>null</code> if the response has
-     * already been completed.
+     * Return an
+     * <code>ActionForward</code> instance describing where and how control
+     * should be forwarded, or
+     * <code>null</code> if the response has already been completed.
      *
      * @param mapping The ActionMapping used to select this instance
      * @param actionForm The optional ActionForm bean for this request (if any)
@@ -69,6 +70,8 @@ public class RefseqSearchContinueAction extends Action {
         boolean genome = ((RefseqSearchForm) form).getGenome();
         ((RefseqSearchForm) form).setPage(1);
         ((RefseqSearchForm) form).setForward("success");
+
+        List<ShoppingCartItem> shoppingcart = (List) request.getSession().getAttribute(Constants.CART);
 
         List clonetypes = new ArrayList();
         if (cdna) {
@@ -140,6 +143,7 @@ public class RefseqSearchContinueAction extends Action {
                 directFoundList = handler.convertFoundToCloneinfo();
                 searchList = handler.getNofound();
                 totalFoundCloneCount = handler.getFoundCloneCount();
+                handler.setInCartClones(directFoundList, shoppingcart);
                 request.getSession().setAttribute("directFounds", directFoundList);
                 request.getSession().setAttribute("numOfDirectFound", new Integer(totalFoundCloneCount));
             } catch (Exception ex) {
@@ -162,7 +166,7 @@ public class RefseqSearchContinueAction extends Action {
         try {
             Set cloneids = handler.doQuery(restrictions, clonetypes, species, -1, -1);
 
-            if ((cloneids.size()+totalFoundCloneCount) > GeneQueryHandler.MAXCLONECOUNT) {
+            if ((cloneids.size() + totalFoundCloneCount) > GeneQueryHandler.MAXCLONECOUNT) {
                 return (mapping.findForward("summary"));
             }
 
@@ -171,6 +175,7 @@ public class RefseqSearchContinueAction extends Action {
             List nofounds = handler.getNofound();
             totalFoundCloneCount = handler.getFoundCloneCount();
             int numOfNoFounds = nofounds.size();
+            handler.setInCartClones(founds, shoppingcart);
             request.getSession().setAttribute("numOfFound", new Integer(totalFoundCloneCount));
             request.getSession().setAttribute("numOfNoFounds", new Integer(numOfNoFounds));
             request.getSession().setAttribute("found", founds);
@@ -186,4 +191,3 @@ public class RefseqSearchContinueAction extends Action {
         }
     }
 }
-

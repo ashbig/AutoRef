@@ -68,6 +68,7 @@ public class SearchCloneAction extends Action {
         request.getSession().setAttribute("refseqSearchForm", f);
 
         User user = (User) request.getSession().getAttribute(Constants.USER_KEY);
+        List<ShoppingCartItem> shoppingcart = (List) request.getSession().getAttribute(Constants.CART);
         List restrictions = new ArrayList();
         restrictions.add(Clone.NO_RESTRICTION);
         restrictions.add(Clone.NON_PROFIT);
@@ -107,6 +108,7 @@ public class SearchCloneAction extends Action {
             List nofounds = handler.getNofound();
             totalFoundCloneCount = handler.getFoundCloneCount();
             int numOfNoFounds = nofounds.size();
+            handler.setInCartClones(founds, shoppingcart);
             request.getSession().setAttribute("numOfFound", new Integer(totalFoundCloneCount));
             request.getSession().setAttribute("numOfNoFounds", new Integer(numOfNoFounds));
             request.getSession().setAttribute("found", founds);
