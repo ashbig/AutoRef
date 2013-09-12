@@ -3,7 +3,6 @@
  *
  * Created on April 6, 2006, 10:42 AM
  */
-
 package plasmid.action;
 
 import java.io.*;
@@ -20,15 +19,15 @@ import plasmid.form.ProcessShippingForm;
 import plasmid.coreobject.*;
 import plasmid.process.*;
 import plasmid.Constants;
-import plasmid.util.Mailer;
 
 /**
  *
- * @author  DZuo
+ * @author DZuo
  */
 public class EnterShippingAction extends InternalUserAction {
-    
-    /** Does the real work for the perform method which must be overriden by the
+
+    /**
+     * Does the real work for the perform method which must be overriden by the
      * Child classes.
      *
      * @param mapping The ActionMapping used to select this instance
@@ -41,69 +40,64 @@ public class EnterShippingAction extends InternalUserAction {
      *
      */
     public ActionForward internalUserPerform(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
+
         ActionErrors errors = new ActionErrors();
-        User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
-        
-        int orderid = Integer.parseInt(((ProcessShippingForm)form).getOrderid());
-        String shippingMethod = ((ProcessShippingForm)form).getShippingMethod();
-        String shippingDate = ((ProcessShippingForm)form).getShippingDate();
-        String whoShipped = ((ProcessShippingForm)form).getWhoShipped();
-       // String shippingAccount = ((ProcessShippingForm)form).getShippingAccount();
-        String trackingNumber = ((ProcessShippingForm)form).getTrackingNumber();
-      //  double shippingCharge = ((ProcessShippingForm)form).getShippingCharge();
-      //  String labels = ((ProcessShippingForm)form).getContainers();
-        String comments = ((ProcessShippingForm)form).getComments();
-        String status = ((ProcessShippingForm)form).getShippingStatus();
-        double adjustment = ((ProcessShippingForm)form).getAdjustment();
-        String reason = ((ProcessShippingForm)form).getReason();
-        String newAccount = ((ProcessShippingForm)form).getNewAccount();
-        
+        User user = (User) request.getSession().getAttribute(Constants.USER_KEY);
+
+        int orderid = Integer.parseInt(((ProcessShippingForm) form).getOrderid());
+        String shippingMethod = ((ProcessShippingForm) form).getShippingMethod();
+        String shippingDate = ((ProcessShippingForm) form).getShippingDate();
+        String whoShipped = ((ProcessShippingForm) form).getWhoShipped();
+        // String shippingAccount = ((ProcessShippingForm)form).getShippingAccount();
+        String trackingNumber = ((ProcessShippingForm) form).getTrackingNumber();
+        //  double shippingCharge = ((ProcessShippingForm)form).getShippingCharge();
+        //  String labels = ((ProcessShippingForm)form).getContainers();
+        String comments = ((ProcessShippingForm) form).getComments();
+        String status = ((ProcessShippingForm) form).getShippingStatus();
+        double adjustment = ((ProcessShippingForm) form).getAdjustment();
+        String reason = ((ProcessShippingForm) form).getReason();
+        String newAccount = ((ProcessShippingForm) form).getNewAccount();
+
         OrderProcessManager manager = new OrderProcessManager();
         CloneOrder order = manager.getCloneOrder(user, orderid);
-        if(order == null) {
+        if (order == null) {
             errors.add(ActionErrors.GLOBAL_ERROR,
-            new ActionError("error.general", "Cannot get order."));
-            saveErrors(request,errors);
+                    new ActionError("error.general", "Cannot get order."));
+            saveErrors(request, errors);
             return mapping.findForward("error");
         }
-        
+
         request.setAttribute(Constants.CLONEORDER, order);
-        
-       // StringConvertor sc = new StringConvertor();
-       // List labelList = sc.convertFromStringToList(labels, " \n\t");
+
+        // StringConvertor sc = new StringConvertor();
+        // List labelList = sc.convertFromStringToList(labels, " \n\t");
         /**
-        if(labelList.size()==0) {
-            errors.add(ActionErrors.GLOBAL_ERROR,
-            new ActionError("error.general", "Please enter valid containers."));
-            saveErrors(request, errors);
-            
-            List shippingMethods = DefTableManager.getVocabularies("shippingmethod", "method");
-            request.setAttribute("shippingMethods", shippingMethods);
-            
-            return (new ActionForward(mapping.getInput()));
-        }
-        
-        ContainerProcessManager m = new ContainerProcessManager();
-        List containers = m.getContainers(labelList, false);
-        List noFoundContainers = m.getNofoundContainers(labelList, containers);
-        if(noFoundContainers.size()>0) {
-            String s = sc.convertFromListToString(noFoundContainers);
-            errors.add(ActionErrors.GLOBAL_ERROR,
-            new ActionError("error.container.notfound", s));
-            saveErrors(request, errors);
-            return (new ActionForward(mapping.getInput()));
-        }
-        
-        List emptyContainers = m.checkEmptyContainers(containers, Container.EMPTY);
-        if(emptyContainers.size()>0) {
-            String s = sc.convertFromListToString(emptyContainers);
-            errors.add(ActionErrors.GLOBAL_ERROR,
-            new ActionError("error.container.empty", s));
-            saveErrors(request, errors);
-            return (new ActionForward(mapping.getInput()));
-        }
-        */
+         * if(labelList.size()==0) { errors.add(ActionErrors.GLOBAL_ERROR, new
+         * ActionError("error.general", "Please enter valid containers."));
+         * saveErrors(request, errors);
+         *
+         * List shippingMethods =
+         * DefTableManager.getVocabularies("shippingmethod", "method");
+         * request.setAttribute("shippingMethods", shippingMethods);
+         *
+         * return (new ActionForward(mapping.getInput())); }
+         *
+         * ContainerProcessManager m = new ContainerProcessManager(); List
+         * containers = m.getContainers(labelList, false); List
+         * noFoundContainers = m.getNofoundContainers(labelList, containers);
+         * if(noFoundContainers.size()>0) { String s =
+         * sc.convertFromListToString(noFoundContainers);
+         * errors.add(ActionErrors.GLOBAL_ERROR, new
+         * ActionError("error.container.notfound", s)); saveErrors(request,
+         * errors); return (new ActionForward(mapping.getInput())); }
+         *
+         * List emptyContainers = m.checkEmptyContainers(containers,
+         * Container.EMPTY); if(emptyContainers.size()>0) { String s =
+         * sc.convertFromListToString(emptyContainers);
+         * errors.add(ActionErrors.GLOBAL_ERROR, new
+         * ActionError("error.container.empty", s)); saveErrors(request,
+         * errors); return (new ActionForward(mapping.getInput())); }
+         */
         order.setPonumber(newAccount);
         order.setStatus(status);
         order.setShippingmethod(shippingMethod);
@@ -122,12 +116,12 @@ public class EnterShippingAction extends InternalUserAction {
         } catch (Exception ex) {
             ex.printStackTrace();
             errors.add(ActionErrors.GLOBAL_ERROR,
-            new ActionError("error.general", "Error occured while querying invoice."));
+                    new ActionError("error.general", "Error occured while querying invoice."));
             saveErrors(request, errors);
         }
-        
+
         boolean isNewInvoice = false;
-        if(invoice == null) {
+        if (invoice == null) {
             invoice = manager.generateInvoice(order, reason, adjustment, newAccount);
             isNewInvoice = true;
         } else {
@@ -135,24 +129,26 @@ public class EnterShippingAction extends InternalUserAction {
             invoice.setAdjustment(adjustment);
             invoice.setReasonforadj(reason);
         }
-        
-        if(!manager.updateShipping(order, invoice, isNewInvoice)) {
+
+        if (!manager.updateShipping(order, invoice, isNewInvoice)) {
             errors.add(ActionErrors.GLOBAL_ERROR,
-            new ActionError("error.general", "Error occured while updating database with shipping information."));
-            saveErrors(request,errors);
+                    new ActionError("error.general", "Error occured while updating database with shipping information."));
+            saveErrors(request, errors);
             return mapping.findForward("error");
         }
-        
+
         try {
-            manager.sendShippingEmails(order, invoice);
+            if (CloneOrder.SHIPPED.equals(status)) {
+                manager.sendShippingEmails(order, invoice);
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
             errors.add(ActionErrors.GLOBAL_ERROR,
-            new ActionError("error.general", "Email notification to user has been failed."));
+                    new ActionError("error.general", "Email notification to user has been failed."));
             saveErrors(request, errors);
         }
-        
-        ((ProcessShippingForm)form).resetValues();
+
+        ((ProcessShippingForm) form).resetValues();
         order.setInvoiceid(invoice.getInvoiceid());
         return mapping.findForward("success");
     }
