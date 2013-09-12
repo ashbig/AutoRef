@@ -24,6 +24,7 @@ import plasmid.coreobject.*;
 import plasmid.util.*;
 import plasmid.process.OrderProcessManager;
 import plasmid.process.QueryProcessManager;
+import plasmid.query.coreobject.CloneInfo;
 
 /**
  *
@@ -71,7 +72,7 @@ public class SetDisplayAction extends Action {
         request.setAttribute("refseqType", refseqType);
         request.setAttribute("psi", new Integer(psi));
         
-        List clones = null;
+        List<CloneInfo> clones = null;
         if("blast".equals(forward)) {
             displayPage = "indirect";
         }
@@ -117,6 +118,36 @@ public class SetDisplayAction extends Action {
             }
             return (mapping.findForward("success"));
         }
+        
+        if (button != null && button.equals("Add All To Cart")) {
+            List shoppingcart = (List) request.getSession().getAttribute(Constants.CART);
+            if (shoppingcart == null) {
+                shoppingcart = new ArrayList();
+            }
+            OrderProcessManager m = new OrderProcessManager();
+            for(CloneInfo clone:clones) {
+                ShoppingCartItem item = new ShoppingCartItem(0, ""+clone.getCloneid(), 1, ShoppingCartItem.CLONE);
+                ShoppingCartItem.addToCart(shoppingcart, item);
+                m.setAddToCartStatus(clones, clone.getCloneid(), true);
+            }
+            request.getSession().setAttribute(Constants.CART, shoppingcart);
+            request.getSession().setAttribute(Constants.CART_STATUS, Constants.UPDATED);
+
+            if (psi == 1) {
+                return (mapping.findForward("success_vector_search_psi"));
+            }
+            if ("collection".equals(forward)) {
+                return (mapping.findForward("success_collection"));
+            }
+            if ("vectorSearchResult".equals(forward)) {
+                return (mapping.findForward("success_vector_search"));
+            }
+            if ("blast".equals(forward)) {
+                return (mapping.findForward("success_blast"));
+            }
+            return (mapping.findForward("success"));
+        }
+        
         if (button != null && button.equals(Constants.DOWNLOAD)) {
             if (clones == null && Constants.BOOLEAN_ISDOWNLOAD_YES.equals(isDownload)) {
                 QueryProcessManager manager = new QueryProcessManager();

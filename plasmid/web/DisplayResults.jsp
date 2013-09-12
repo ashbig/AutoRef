@@ -81,6 +81,7 @@ return(document.cookie.match('(^|; )'+name+'=([^;]*)')||0)[2]
                                             <html:option value="<%=(new Integer(i+1)).toString()%>"/>
                                         </html:select>
                                         <html:submit property="button" value="Display"/>
+                                        <html:submit property="button" value="Add All To Cart"/>
                                     </td>
                                     <td class="mainbodytexthead"><html:submit property="button" value="<%=Constants.DOWNLOAD%>"/></td>
                                     <td align="right" class="mainbodytexthead"><a target="_blank" href="TermDefinition.jsp">Explanation of Terms</a></td>
@@ -286,6 +287,7 @@ return(document.cookie.match('(^|; )'+name+'=([^;]*)')||0)[2]
                                             <html:option value="<%=(new Integer(k+1)).toString()%>"/>
                                         </html:select>
                                         <html:submit property="button" value="Display"/>
+                                        <html:submit property="button" value="Add All To Cart"/>
                                     </td>
                                     <td class="mainbodytexthead"><html:submit property="button" value="<%=Constants.DOWNLOAD%>"/></td>
                                     <td align="right" class="mainbodytexthead"><a target="_blank" href="TermDefinition.jsp">Explanation of Terms</a></td>
