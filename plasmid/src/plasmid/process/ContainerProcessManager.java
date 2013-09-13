@@ -206,7 +206,7 @@ public class ContainerProcessManager {
                 String s = line.trim();
                 if(s.length()<1)
                     continue;
-                
+                //8003269185,A01
                 String[] ss = s.split(DELIM);
                 String label = ss[0];
                 int position = PlatePositionConvertor.convertWellFromA8_12toInt(ss[1]);
