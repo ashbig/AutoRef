@@ -15,6 +15,7 @@ import plasmid.database.*;
 import plasmid.database.DatabaseManager.*;
 import plasmid.Constants;
 import plasmid.util.CloneGrowthComparator;
+import plasmid.util.PlatePositionConvertor;
 
 /**
  *
@@ -200,25 +201,20 @@ public class ContainerProcessManager {
         try {
             in = new BufferedReader(new FileReader(filename));
             //in = new BufferedReader(new InputStreamReader(ftp.getInputStream(filename, 0)));
-            String line = in.readLine();
-            int i=0;
-            int j=1;
+            String line = null;
             while((line = in.readLine()) != null) {
                 String s = line.trim();
                 if(s.length()<1)
                     continue;
                 
-                String label = null;
-                if(s.indexOf(NOTUBE)<0) {
-                    label = s.substring(0, s.length()-1);
+                String[] ss = s.split(DELIM);
+                String label = ss[0];
+                int position = PlatePositionConvertor.convertWellFromA8_12toInt(ss[1]);
+                if(s.indexOf(NOTUBE)>=0) {
+                    label = null;
                 }
                 
-                mapping.put((new Integer(i*ROW+j)).toString(), label);
-                i++;
-                if(i == COLUMN) {
-                    i=0;
-                    j++;
-                }
+                mapping.put(""+position, label);
             }
         } catch (Exception ex) {
             if(Constants.DEBUG) {

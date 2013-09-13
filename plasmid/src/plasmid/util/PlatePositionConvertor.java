@@ -88,6 +88,7 @@ public class PlatePositionConvertor {
         String line;
 
         try {
+            /**
             PrintWriter output = new PrintWriter(new BufferedWriter(new FileWriter(outputFile)));
 
             output.println("Well\tPosition");
@@ -101,6 +102,9 @@ public class PlatePositionConvertor {
             }
             in.close();
             output.close();
+            */
+           String well = "B02";
+           System.out.println("pos="+PlatePositionConvertor.convertWellFromA8_12toInt(well));
         } catch (Exception ex) {
             System.out.println(ex);
         }
