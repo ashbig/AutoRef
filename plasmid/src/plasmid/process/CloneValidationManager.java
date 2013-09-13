@@ -212,7 +212,7 @@ public class CloneValidationManager {
 
     public String analyzeByBlast(BlastManager bm, String clonename, String cloneseq, String seq) throws Exception {
         String output = BlastWrapper.BLAST_FILE_PATH + clonename + ".out";
-        String s = bm.runBl2seq(BlastWrapper.PROGRAM_BLASTN, "PlasmID|" + clonename, cloneseq, clonename, seq, true, output, BlastWrapper.PAIRWISE_OUTPUT, false);
+        String s = bm.runBl2seq(BlastWrapper.PROGRAM_BLASTN, "PlasmID|" + clonename, cloneseq, clonename, seq, true, output, BlastWrapper.DEFAULT_OUTPUT, false);
         BlastParser parser = new BlastParser(output);
         if (cloneseq.length() >= ALENGTH) {
             parser.setAlength(getAlength());
