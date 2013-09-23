@@ -42,15 +42,18 @@ public class PrintPackingSlipAction extends InternalUserAction {
         
         CloneOrder order = (CloneOrder) request.getSession().getAttribute(Constants.CLONEORDER);
         List<OrderClones> clones = order.getClones();
+        int count = 0;
         for(OrderClones clone:clones) {
             clone.setShipped(false);
             for(int i=0; i<shipped.length; i++) {
                 int cloneid = Integer.parseInt(shipped[i]);
                 if(cloneid==clone.getCloneid()) {
                     clone.setShipped(true);
+                    count++;
                 }
             }
         }
+        order.setClonesInShipment(count);
         
         //write to pdf file in browser
         response.setContentType("application/pdf");

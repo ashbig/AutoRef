@@ -42,6 +42,10 @@
                             <td class="formlabel">PO/Billing Number:</td>
                             <td colspan="3" class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="ponumber"/></td>
                         </tr>
+                        <tr> 
+                            <td class="formlabel">Total clones ordered:</td>
+                            <td colspan="3" class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="numOfClones"/></td>
+                        </tr>
                     </table>
 
                     <p class="text">Check shipped items:</p>

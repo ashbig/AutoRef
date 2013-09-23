@@ -2261,8 +2261,22 @@ public class OrderProcessManager {
             cell.setColspan(2);
             cell.setBorder(Rectangle.NO_BORDER);
             table.addCell(cell);
+        
+            cell = new PdfPCell(PdfEditor.makeTitle(" "));
+            cell.setColspan(2);
+            cell.setBorder(Rectangle.NO_BORDER);
+            table.addCell(cell);
+            cell = new PdfPCell(PdfEditor.makeSmallBold("Total clones ordered:\t" + order.getNumOfClones()));
+            cell.setColspan(2);
+            cell.setBorder(Rectangle.NO_BORDER);
+            table.addCell(cell);
+            cell = new PdfPCell(PdfEditor.makeSmallBold("Total clones in shipment:\t" + order.getClonesInShipment()));
+            cell.setColspan(2);
+            cell.setBorder(Rectangle.NO_BORDER);
+            table.addCell(cell);
             document.add(table);
-
+            
+            List<OrderClones> clones = order.getClones();
             document.add(PdfEditor.makeTitle(" "));
             table = new PdfPTable(4);
             table.setWidthPercentage(100);
@@ -2278,7 +2292,6 @@ public class OrderProcessManager {
             cell = new PdfPCell(PdfEditor.makeSmallBold("Shipped"));
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(cell);
-            List<OrderClones> clones = order.getClones();
             for (OrderClones clone : clones) {
                 //if (clone.isShipped()) {
                 cell = new PdfPCell(PdfEditor.makeSmall(clone.getClonename()));
@@ -2304,7 +2317,8 @@ public class OrderProcessManager {
                 //}
             }
             document.add(table);
-
+            document.add(PdfEditor.makeTitle(" "));
+            document.add(PdfEditor.makeSmall("Questions? Please contact: plasmidhelp@hms.harvard.edu"));
             document.close();
             file.close();
         } catch (Exception e) {

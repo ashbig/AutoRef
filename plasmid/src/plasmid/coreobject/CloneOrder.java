@@ -116,6 +116,7 @@ public class CloneOrder implements Serializable {
     private String updatedon;
     private UserAddress shippingInfo;
     private boolean hasPlatinumResult;
+    private int clonesInShipment;
     
     /** Creates a new instance of CloneOrder */
     public CloneOrder() {
@@ -225,6 +226,12 @@ public class CloneOrder implements Serializable {
     
     public List getBatches() {return batches;}
     public void setBatches(List l) {this.batches = l;}
+    
+    public int getNumOfClones() {
+        if(clones==null)
+            return 0;
+        return clones.size();
+    }
     
     public List getShippedContainersAsList() {
         StringConvertor sv = new StringConvertor();
@@ -451,5 +458,19 @@ public class CloneOrder implements Serializable {
      */
     public void setHasPlatinumResult(boolean hasPlatinumResult) {
         this.hasPlatinumResult = hasPlatinumResult;
+    }
+
+    /**
+     * @return the clonesInShipment
+     */
+    public int getClonesInShipment() {
+        return clonesInShipment;
+    }
+
+    /**
+     * @param clonesInShipment the clonesInShipment to set
+     */
+    public void setClonesInShipment(int clonesInShipment) {
+        this.clonesInShipment = clonesInShipment;
     }
 }
