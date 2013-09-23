@@ -13,7 +13,7 @@ import plasmid.coreobject.CollectionInfo;
  * @author  DZuo
  */
 public class ClonePriceCalculator {
-
+    public static final double PRICE_PER_CLONE_HOST = 0.0;
     public static final double PRICE_PER_CLONE_DFHCC = 45.0;
     public static final double PRICE_PER_CLONE_COMMERCIAL = 61.0;
     public static final double PRICE_PER_CLONE_OTHER = 55.0;
@@ -28,6 +28,9 @@ public class ClonePriceCalculator {
     }
 
     public double getPricePerClone(User user) {
+        if (User.HOSTLAB.equals(user.getGroup())) {
+            return PRICE_PER_CLONE_HOST;
+        }
         if (user.isMember()) {
             return PRICE_PER_CLONE_DFHCC;
         }

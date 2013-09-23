@@ -16,6 +16,7 @@ public class User {
     public static final String HARVARD = "Harvard affiliate";
     public static final String ACADEMIC = "Other academic";
     public static final String NONPROFIT = "Other non-profit organization";
+    public static final String HOSTLAB = "Host lab";
     public static final String OTHER = "Commercial";
     public static final String INTERNAL = "Yes";
     public static final String EXTERNAL = "No";
