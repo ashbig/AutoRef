@@ -351,18 +351,27 @@ public class CloneOrderManager extends TableManager {
 
         String sql2 = "select invoiceid from invoice where orderid=" + orderid;
         String sql3 = "select count(*) from orderclonevalidation where orderid=" + orderid;
+        String sql4 = "select shipmentid,to_char(shippingdate,'YYYY-MM-DD hh:mm:ss'),who,trackingnumber,method,account,comments from ordershipment where orderid="+orderid;
+        String sql5 = "select count(*) from shippedclones where shipmentid=?";
               
         if (user != null) {
             sql = sql + " and u.userid=" + user.getUserid();
         }
 
         DatabaseTransaction t = null;
+        Connection c = null;
+        PreparedStatement stmt = null;
         ResultSet rs = null;
         ResultSet rs2 = null;
         ResultSet rs3 = null;
+        ResultSet rs4 = null;
+        ResultSet rs5 = null;
         CloneOrder order = null;
         try {
             t = DatabaseTransaction.getInstance();
+            c = t.requestConnection();
+            stmt = c.prepareStatement(sql5);
+            
             rs = t.executeQuery(sql);
             if (rs.next()) {
                 String date = rs.getString(2);
@@ -450,6 +459,28 @@ public class CloneOrderManager extends TableManager {
                         order.setHasPlatinumResult(true);
                     }
                 }
+                
+                rs4 = t.executeQuery(sql4);
+                List<Shipment> shipments = new ArrayList<Shipment>();
+                while(rs4.next()) {
+                    int shipmentid = rs4.getInt(1);
+                    String shipdate = rs4.getString(2);
+                    String who = rs4.getString(3);
+                    String tracking = rs4.getString(4);
+                    String method = rs4.getString(5);
+                    String account = rs4.getString(6);
+                    String comments2 = rs4.getString(7);
+                    Shipment shipment = new Shipment(shipmentid,shipdate, who, tracking, method, account, comments2);
+                    
+                    stmt.setInt(1, shipmentid);
+                    rs5 = DatabaseTransaction.executeQuery(stmt);
+                    if(rs5.next()) {
+                        int count = rs5.getInt(1);
+                        shipment.setNumOfClones(count);
+                    }
+                    shipments.add(shipment);
+                }
+                order.setShipments(shipments);
             }
         } catch (Exception ex) {
             handleError(ex, "Cannot query cloneorder.");
@@ -458,6 +489,10 @@ public class CloneOrderManager extends TableManager {
             DatabaseTransaction.closeResultSet(rs);
             DatabaseTransaction.closeResultSet(rs2);
             DatabaseTransaction.closeResultSet(rs3);
+            DatabaseTransaction.closeResultSet(rs4);
+            DatabaseTransaction.closeResultSet(rs5);
+            DatabaseTransaction.closeStatement(stmt);
+            DatabaseTransaction.closeConnection(c);
         }
         return order;
     }

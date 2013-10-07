@@ -118,6 +118,8 @@ public class CloneOrder implements Serializable {
     private boolean hasPlatinumResult;
     private int clonesInShipment;
     
+    private List<Shipment> shipments;
+    
     /** Creates a new instance of CloneOrder */
     public CloneOrder() {
         this.items = new ArrayList();
@@ -472,5 +474,26 @@ public class CloneOrder implements Serializable {
      */
     public void setClonesInShipment(int clonesInShipment) {
         this.clonesInShipment = clonesInShipment;
+    }
+
+    /**
+     * @return the shipments
+     */
+    public List<Shipment> getShipments() {
+        return shipments;
+    }
+
+    /**
+     * @param shipments the shipments to set
+     */
+    public void setShipments(List<Shipment> shipments) {
+        this.shipments = shipments;
+    }
+    
+    public boolean isDisplayShipment() {
+        if(shipments==null || shipments.size()==0) {
+            return false;
+        }
+        return true;
     }
 }
