@@ -66,19 +66,19 @@
           <td width="45%">Individual Clone with Platinum QC</td>
         </tr>
         <tr class="tableinfo">
-          <td>DF/HCC Members</td>
-          <td align="right">$45.00</td>
-          <td align="right">$55.00</td>
+          <td>Harvard University and DF/HCC Members</td>
+          <td align="right">$46.00</td>
+          <td align="right">$52.00</td>
         </tr>
         <tr class="tableinfo">
-          <td>Academics and Nonprofits</td>
-          <td align="right">$55.00</td>
+          <td>Other Academics and Nonprofits</td>
+          <td align="right">$58.00</td>
           <td align="right">$65.00</td>
         </tr>
         <tr class="tableinfo">
           <td>Commercial Users</td>
-          <td align="right">$60.50</td>
-          <td align="right">$70.50</td>
+          <td align="right">$70.00</td>
+          <td align="right">$78.00</td>
         </tr>
       </table>
       <div align="center"><span class="footertext"> *Shipping is additional. Either provide a FedEx number or shipping is a flat fee of $10 for domestic orders or $20 for international orders. <br>
