@@ -20,6 +20,7 @@ import plasmid.Constants;
 import plasmid.coreobject.*;
 import plasmid.form.CheckoutForm;
 import plasmid.process.OrderProcessManager;
+import plasmid.util.ClonePriceCalculator;
 
 /**
  *
@@ -116,7 +117,7 @@ public class EnterAddressAction extends UserAction {
         int numOfClonesInCollections = ((CheckoutForm) form).getNumOfClonesInCollections();
         String isplatinum = ((CheckoutForm) form).getIsplatinum();
         if (Constants.ISPLATINUM_Y.equals(isplatinum)) {
-            platinumServiceCost = (numOfClones + numOfClonesInCollections) * Constants.PLATINUM_SERVICE_COST;
+            platinumServiceCost = ClonePriceCalculator.calculatePlatinumCost(user,numOfClones + numOfClonesInCollections);
         }
 
         double shippingCost = 0.0;

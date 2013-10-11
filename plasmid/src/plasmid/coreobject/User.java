@@ -242,7 +242,7 @@ public class User {
     }
 
     public boolean isMember() {
-        if(MEMBER_Y.equals(ismember))
+        if(MEMBER_Y.equals(ismember) || User.HARVARD.equals(this.getGroup()))
             return true;
         return false;
     }

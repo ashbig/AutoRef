@@ -14,9 +14,13 @@ import plasmid.coreobject.CollectionInfo;
  */
 public class ClonePriceCalculator {
     public static final double PRICE_PER_CLONE_HOST = 0.0;
-    public static final double PRICE_PER_CLONE_DFHCC = 45.0;
-    public static final double PRICE_PER_CLONE_COMMERCIAL = 61.0;
-    public static final double PRICE_PER_CLONE_OTHER = 55.0;
+    public static final double PRICE_PER_CLONE_DFHCC = 46.0;
+    public static final double PRICE_PER_CLONE_COMMERCIAL = 70.0;
+    public static final double PRICE_PER_CLONE_OTHER = 58.0;
+    public static final double PRICE_PLATINUM_HOST = 6.0;
+    public static final double PRICE_PLATINUM_DFHCC = 6.0;
+    public static final double PRICE_PLATINUM_COMMERCIAL = 8.0;
+    public static final double PRICE_PLATINUM_OTHER = 7.0;
 
     /** Creates a new instance of ClonePriceCalculator */
     public ClonePriceCalculator() {
@@ -55,5 +59,18 @@ public class ClonePriceCalculator {
         }
 
         return price * quantity;
+    }
+
+    public static double calculatePlatinumCost(User user, int numOfClones) {
+        if (User.HOSTLAB.equals(user.getGroup())) {
+            return PRICE_PLATINUM_HOST*numOfClones;
+        }
+        if (user.isMember()) {
+            return PRICE_PLATINUM_DFHCC*numOfClones;
+        }
+        if (User.OTHER.equals(user.getGroup())) {
+            return PRICE_PLATINUM_COMMERCIAL*numOfClones;
+        }
+        return PRICE_PLATINUM_OTHER*numOfClones;
     }
 }
