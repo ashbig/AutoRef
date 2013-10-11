@@ -35,7 +35,7 @@ public class ClonePriceCalculator {
         if (User.HOSTLAB.equals(user.getGroup())) {
             return PRICE_PER_CLONE_HOST;
         }
-        if (user.isMember()) {
+        if (user.isMemberForCloneOrder()) {
             return PRICE_PER_CLONE_DFHCC;
         }
         if (User.OTHER.equals(user.getGroup())) {
@@ -53,7 +53,7 @@ public class ClonePriceCalculator {
             return price * quantity;
         }
 
-        if (user.isMember()) {
+        if (user.isMemberForCloneOrder()) {
             price = info.getMemberprice();
             return price * quantity;
         }
@@ -65,7 +65,7 @@ public class ClonePriceCalculator {
         if (User.HOSTLAB.equals(user.getGroup())) {
             return PRICE_PLATINUM_HOST*numOfClones;
         }
-        if (user.isMember()) {
+        if (user.isMemberForCloneOrder()) {
             return PRICE_PLATINUM_DFHCC*numOfClones;
         }
         if (User.OTHER.equals(user.getGroup())) {

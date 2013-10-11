@@ -242,7 +242,13 @@ public class User {
     }
 
     public boolean isMember() {
-        if(MEMBER_Y.equals(ismember) || User.HARVARD.equals(this.getGroup()))
+        if(MEMBER_Y.equals(ismember))
+            return true;
+        return false;
+    }
+
+    public boolean isMemberForCloneOrder() {
+        if(MEMBER_Y.equals(ismember) || User.HARVARD_UNIVERSITY.equals(group))
             return true;
         return false;
     }
