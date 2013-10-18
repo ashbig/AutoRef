@@ -39,7 +39,6 @@ public class RegistrationForm extends ActionForm {
     private String institution2;
     private String institution3;
     private String institution;
-    private boolean ismember;
     private boolean update;
     private boolean first;
 
@@ -171,7 +170,6 @@ public class RegistrationForm extends ActionForm {
         institution = "";
         update = false;
         first = true;
-        ismember = false;
     }
 
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
@@ -275,21 +273,6 @@ public class RegistrationForm extends ActionForm {
 
     public void setFirst(boolean first) {
         this.first = first;
-    }
-
-    public boolean isIsmember() {
-        return ismember;
-    }
-
-    public void setIsmember(boolean ismember) {
-        this.ismember = ismember;
-    }
-
-    public String getMember() {
-        if (ismember) {
-            return "Yes";
-        }
-        return "No";
     }
 }
 

@@ -76,7 +76,6 @@ public class RegistrationAction extends Action {
         String institution = null;
         boolean isnewinstitution = false;
         Institution institute = null;
-        boolean ismember = ((RegistrationForm) form).isIsmember();
 
         ((RegistrationForm) form).setFirst(false);
 
@@ -148,7 +147,10 @@ public class RegistrationAction extends Action {
 
         String pname = null;
         String pemail = null;
+        boolean isNewPi = false;
+        PI p = null;
         if (pi == null || pi.trim().length() < 1) {
+            isNewPi = true;
             if (group.equals(User.HARVARD_UNIVERSITY) || group.equals(User.HARVARD) || group.equals(User.ACADEMIC)) {
                 if (manager.piExist(pifirstname, pilastname, piemail)) {
                     DatabaseTransaction.closeConnection(conn);
@@ -157,7 +159,7 @@ public class RegistrationAction extends Action {
 
                 pname = pilastname.trim().toUpperCase() + ", " + pifirstname.trim();
                 pemail = piemail.trim();
-                PI p = new PI(pname, pifirstname.trim(), pilastname.trim(), pemail);
+                p = new PI(pname, pifirstname.trim(), pilastname.trim(), pemail);
                 if (!manager.insertPI(p)) {
                     DatabaseTransaction.rollback(conn);
                     DatabaseTransaction.closeConnection(conn);
@@ -171,8 +173,8 @@ public class RegistrationAction extends Action {
             int indexLeft = pi.indexOf("(");
             int indexRight = pi.indexOf(")");
             pname = pi.substring(0, indexLeft - 1);
-            PI newpi = UserManager.findPI(pname);
-            if (newpi == null) {
+            p = UserManager.findPI(pname);
+            if (p == null) {
                 DatabaseTransaction.rollback(conn);
                 DatabaseTransaction.closeConnection(conn);
                 errors.add(ActionErrors.GLOBAL_ERROR,
@@ -180,7 +182,7 @@ public class RegistrationAction extends Action {
                 saveErrors(request, errors);
                 return mapping.findForward("error");
             }
-            pemail = newpi.getEmail();
+            pemail = p.getEmail();
         }
 
         if (isnewinstitution) {
@@ -206,7 +208,10 @@ public class RegistrationAction extends Action {
             user.setPhone(phone);
             user.setPiname(pname);
             user.setPiemail(pemail);
-            user.setIsmember(ismember);
+            user.setIsmember(PI.ISMEMBER_NO);
+            if(!isNewPi) {
+                user.setIsmember(p.getIsmember());
+            }
             if (!manager.updateUserProfile(user)) {
                 DatabaseTransaction.rollback(conn);
                 DatabaseTransaction.closeConnection(conn);
@@ -228,7 +233,10 @@ public class RegistrationAction extends Action {
             }
 
             User user = new User(id, firstname.trim(), lastname.trim(), email.trim(), phone, institution, null, pname, group, password, User.EXTERNAL, pemail);
-            user.setIsmember(ismember);
+            user.setIsmember(PI.ISMEMBER_NO);
+            if(!isNewPi) {
+                user.setIsmember(p.getIsmember());
+            }
             if (!manager.insertUser(user)) {
                 DatabaseTransaction.rollback(conn);
                 DatabaseTransaction.closeConnection(conn);

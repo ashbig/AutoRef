@@ -11,12 +11,16 @@ package plasmid.coreobject;
  * @author  DZuo
  */
 public class PI {
+    public static final String ISMEMBER_YES = "Y";
+    public static final String ISMEMBER_NO = "N";
+    
     private String name;
     private String firstname;
     private String lastname;
     private String institution;
     private String department;
     private String email;
+    private String ismember;
     
     /** Creates a new instance of PI */
     public PI() {
@@ -71,5 +75,19 @@ public class PI {
         pi.setName(pname);
         pi.setEmail(pemail);
         return pi.getNameInstitution();
+    }
+
+    /**
+     * @return the ismember
+     */
+    public String getIsmember() {
+        return ismember;
+    }
+
+    /**
+     * @param ismember the ismember to set
+     */
+    public void setIsmember(String ismember) {
+        this.ismember = ismember;
     }
 }

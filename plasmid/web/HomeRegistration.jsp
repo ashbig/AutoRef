@@ -151,13 +151,6 @@
                                     </html:select>
                                 </td>        
                             </tr>
-                            <tr class="formlabel"> 
-                                <td width="30%" align="left" valign="baseline">Please check here if you or your PI is a DF/HCC member:</td>
-                                <td width="70%" align="left" valign="baseline">
-                                    <html:checkbox property="ismember" styleClass="text">DF/HCC member</html:checkbox>
-                                    <a href="PIList.html" target="_blank">check if your PI is a DF/HCC memeber</a>
-                                </td>        
-                            </tr>
                             
                             <tr class="formlabel"> 
                                 <td width="30%" align="right">&nbsp;</td>

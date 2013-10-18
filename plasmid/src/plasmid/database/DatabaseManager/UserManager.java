@@ -53,8 +53,8 @@ public class UserManager extends TableManager {
     }
 
     public boolean insertPI(PI pi) {
-        String sql = "insert into pi(name,firstname,lastname,email)" +
-                " values(?,?,?,?)";
+        String sql = "insert into pi(name,firstname,lastname,email,ismember)" +
+                " values(?,?,?,?,?)";
         PreparedStatement stmt = null;
         try {
             stmt = conn.prepareStatement(sql);
@@ -62,6 +62,7 @@ public class UserManager extends TableManager {
             stmt.setString(2, pi.getFirstname());
             stmt.setString(3, pi.getLastname());
             stmt.setString(4, pi.getEmail());
+            stmt.setString(5, PI.ISMEMBER_NO);
             DatabaseTransaction.executeUpdate(stmt);
         } catch (Exception ex) {
             handleError(ex, "Cannot insert PI into database.");
@@ -219,7 +220,7 @@ public class UserManager extends TableManager {
     }
 
     public static PI findPI(String piname) {
-        String sql = "select name,email, firstname, lastname from pi where name=?";
+        String sql = "select name,email, firstname, lastname, ismember from pi where name=?";
         PreparedStatement stmt = null;
         ResultSet rs = null;
         PI rt = null;
@@ -235,7 +236,9 @@ public class UserManager extends TableManager {
                 String email = rs.getString(2);
                 String first = rs.getString(3);
                 String lastName = rs.getString(4);
+                String ismember = rs.getString(5);
                 rt = new PI(piname, first, lastName, email);
+                rt.setIsmember(ismember);
             }
         } catch (Exception ex) {
             System.out.println(ex);
