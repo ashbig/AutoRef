@@ -2264,14 +2264,14 @@ public class OrderProcessManager {
             table.addCell(PdfEditor.makeSmallBold("Order Date:\t" + order.getOrderDate()));
             table.addCell(PdfEditor.makeSmallBold("Email:\t" + order.getEmail()));
             table.addCell(PdfEditor.makeSmallBold("Phone:\t" + order.getPhone()));
-            table.addCell(PdfEditor.makeSmallBold("Phone:\t" + order.getName()));
-            table.addCell(PdfEditor.makeSmallBold("Phone:\t" + order.getPonumber()));
+            table.addCell(PdfEditor.makeSmallBold("Name:\t" + order.getName()));
+            table.addCell(PdfEditor.makeSmallBold("PO Number:\t" + order.getPonumber()));
         
             PdfPCell cell = new PdfPCell(PdfEditor.makeTitle(" "));
             cell.setColspan(2);
             cell.setBorder(Rectangle.NO_BORDER);
             table.addCell(cell);
-            cell = new PdfPCell(PdfEditor.makeSmallBold("Total clones ordered:\t" + order.getNumOfClones()));
+            cell = new PdfPCell(PdfEditor.makeSmallBold("Total clones ordered:\t" + order.getNumofclones()));
             cell.setColspan(2);
             cell.setBorder(Rectangle.NO_BORDER);
             table.addCell(cell);
@@ -2281,16 +2281,16 @@ public class OrderProcessManager {
             table.addCell(cell);
             document.add(table);
             
-            List<Clone> clones = order.getClones();
-            document.add(PdfEditor.makeTitle("Clones in shipment"));
+            List<Clone> clones = shipment.getClones();
+            document.add(PdfEditor.makeTitle(" "));
             table = new PdfPTable(1);
-            table.setWidthPercentage(100);
-            cell = new PdfPCell(PdfEditor.makeSmallBold("Item"));
+            table.setWidthPercentage(30);
+            cell = new PdfPCell(PdfEditor.makeSmallBold("Clones in shipment"));
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(cell);
             for (Clone clone : clones) {
                 cell = new PdfPCell(PdfEditor.makeSmall(clone.getName()));
-                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                cell.setHorizontalAlignment(Element.ALIGN_LEFT);
                 table.addCell(cell);
             }
             document.add(table);
