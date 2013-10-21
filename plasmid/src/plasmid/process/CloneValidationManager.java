@@ -103,7 +103,7 @@ public class CloneValidationManager {
                                 validation.setPhred(phred);
                             } catch (Exception ex) {
                                 ex.printStackTrace();
-                                throw new Exception("Wrong file format.");
+                                throw new Exception("Wrong file format: "+filename);
                             }
                             continue;
                         }
