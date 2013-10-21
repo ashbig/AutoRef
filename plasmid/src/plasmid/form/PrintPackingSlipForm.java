@@ -13,6 +13,7 @@ import org.apache.struts.action.ActionMapping;
  * @author Lab User
  */
 public class PrintPackingSlipForm extends ActionForm {
+    private int shipmentid;
     private String[] shipped;
 
     
@@ -32,5 +33,19 @@ public class PrintPackingSlipForm extends ActionForm {
      */
     public void setShipped(String[] shipped) {
         this.shipped = shipped;
+    }
+
+    /**
+     * @return the shipmentid
+     */
+    public int getShipmentid() {
+        return shipmentid;
+    }
+
+    /**
+     * @param shipmentid the shipmentid to set
+     */
+    public void setShipmentid(int shipmentid) {
+        this.shipmentid = shipmentid;
     }
 }

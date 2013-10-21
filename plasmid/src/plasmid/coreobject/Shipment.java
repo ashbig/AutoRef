@@ -22,6 +22,9 @@ public class Shipment {
     private int numOfClones;
 
     private List<Clone> clones;
+    private CloneOrder order;
+    
+    public Shipment() {};
     
     public Shipment(int shipid, String date, String who, String tracking, String method, String account, String comments) {
         this.shipmentid = shipid;
@@ -31,6 +34,12 @@ public class Shipment {
         this.method = method;
         this.account = account;
         this.comments = comments;
+    }
+    
+    public int getNumClonesShipped() {
+        if(clones==null)
+            return 0;
+        return clones.size();
     }
     
     /**
@@ -171,5 +180,19 @@ public class Shipment {
      */
     public void setComments(String comments) {
         this.comments = comments;
+    }
+
+    /**
+     * @return the order
+     */
+    public CloneOrder getOrder() {
+        return order;
+    }
+
+    /**
+     * @param order the order to set
+     */
+    public void setOrder(CloneOrder order) {
+        this.order = order;
     }
 }

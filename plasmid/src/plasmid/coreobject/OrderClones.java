@@ -27,6 +27,7 @@ public class OrderClones {
     private OrderCloneValidation validation;
     private List history;
     private boolean shipped;
+    private boolean inshipment;
     
     /** Creates a new instance of OrderClones */
     public OrderClones() {
@@ -149,5 +150,19 @@ public class OrderClones {
      */
     public void setClonename(String clonename) {
         this.clonename = clonename;
+    }
+
+    /**
+     * @return the inshipment
+     */
+    public boolean isInshipment() {
+        return inshipment;
+    }
+
+    /**
+     * @param inshipment the inshipment to set
+     */
+    public void setInshipment(boolean inshipment) {
+        this.inshipment = inshipment;
     }
 }

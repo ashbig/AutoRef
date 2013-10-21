@@ -3,7 +3,6 @@
  *
  * Created on April 4, 2006, 1:41 PM
  */
-
 package plasmid.action;
 
 import java.util.*;
@@ -26,11 +25,12 @@ import plasmid.database.DatabaseManager.DefTableManager;
 
 /**
  *
- * @author  DZuo
+ * @author DZuo
  */
-public class ProcessShippingAction  extends InternalUserAction {
-    
-    /** Does the real work for the perform method which must be overriden by the
+public class ProcessShippingAction extends InternalUserAction {
+
+    /**
+     * Does the real work for the perform method which must be overriden by the
      * Child classes.
      *
      * @param mapping The ActionMapping used to select this instance
@@ -43,57 +43,87 @@ public class ProcessShippingAction  extends InternalUserAction {
      *
      */
     public ActionForward internalUserPerform(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
+
         ActionErrors errors = new ActionErrors();
-        User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
-        String orderid = ((ProcessShippingForm)form).getOrderid();
-        
+        User user = (User) request.getSession().getAttribute(Constants.USER_KEY);
+        String orderid = ((ProcessShippingForm) form).getOrderid();
+
         OrderProcessManager manager = new OrderProcessManager();
         CloneOrder order = manager.getCloneOrder(user, Integer.parseInt(orderid));
-        
-        if(order == null) {
+
+        if (order == null) {
             errors.add(ActionErrors.GLOBAL_ERROR,
-            new ActionError("error.general", "Cannot get order."));
-            saveErrors(request,errors);
+                    new ActionError("error.general", "Cannot get order."));
+            saveErrors(request, errors);
             return mapping.findForward("error");
         }
-        
+        List<OrderClones> clones = manager.getOrderClones(Integer.parseInt(orderid), user);
+        if (clones == null) {
+            errors.add(ActionErrors.GLOBAL_ERROR,
+                    new ActionError("error.general", "Cannot get order clones."));
+            saveErrors(request, errors);
+            return mapping.findForward("error");
+        }
+        order.setClones(clones);
+
+        List shipped = new ArrayList();
+        for (OrderClones clone : clones) {
+            if (clone.isShipped()) {
+                continue;
+            }
+            OrderCloneValidation validation = clone.getValidation();
+            if (validation == null) {
+                if (CloneOrder.ISPLATINUM_NO.equals(order.getIsplatinum())) {
+                    shipped.add(clone.getCloneid());
+                }
+            } else {
+                if (OrderCloneValidation.RESULT_PASS.equals(clone.getValidation().getResult())) {
+                    shipped.add(clone.getCloneid());
+                }
+            }
+        }
+        String[] s = new String[shipped.size()];
+        for (int i = 0; i < shipped.size(); i++) {
+            s[i] = "" + shipped.get(i);
+        }
+        ((ProcessShippingForm) form).setShipped(s);
+
         Invoice invoice = null;
         try {
             invoice = manager.getInvoiceByOrder(Integer.parseInt(orderid));
         } catch (Exception ex) {
             errors.add(ActionErrors.GLOBAL_ERROR,
-            new ActionError("error.general", "Cannot get invoice."));
-            saveErrors(request,errors);
+                    new ActionError("error.general", "Cannot get invoice."));
+            saveErrors(request, errors);
             return mapping.findForward("error");
         }
-        
-        if(invoice != null) {
-            ((ProcessShippingForm)form).setAdjustment(invoice.getAdjustment());
-            ((ProcessShippingForm)form).setReason(invoice.getReasonforadj());
+
+        if (invoice != null) {
+            ((ProcessShippingForm) form).setAdjustment(invoice.getAdjustment());
+            ((ProcessShippingForm) form).setReason(invoice.getReasonforadj());
         }
-        
+
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yy");
         Date today = new Date();
-        
-        ((ProcessShippingForm)form).setOrderid(orderid);
-        ((ProcessShippingForm)form).setShippingMethod(order.getShippingmethod());
-        ((ProcessShippingForm)form).setShippingDate(formatter.format(today));
-        ((ProcessShippingForm)form).setWhoShipped(user.getUsername());
+
+        ((ProcessShippingForm) form).setOrderid(orderid);
+        ((ProcessShippingForm) form).setShippingMethod(order.getShippingmethod());
+        ((ProcessShippingForm) form).setShippingDate(formatter.format(today));
+        ((ProcessShippingForm) form).setWhoShipped(user.getUsername());
         //((ProcessShippingForm)form).setShippingAccount(order.getShippingaccount());
-        ((ProcessShippingForm)form).setTrackingNumber(order.getTrackingnumber());
+        ((ProcessShippingForm) form).setTrackingNumber(order.getTrackingnumber());
         //((ProcessShippingForm)form).setShippingCharge(order.getCostforshipping());
-        ((ProcessShippingForm)form).setComments(order.getComments());
-        ((ProcessShippingForm)form).setNewAccount(order.getPonumber());
-        
+        ((ProcessShippingForm) form).setComments(order.getComments());
+        ((ProcessShippingForm) form).setNewAccount(order.getPonumber());
+
         List shippingMethods = DefTableManager.getVocabularies("shippingmethod", "method");
         List shippingStatus = new ArrayList();
         shippingStatus.add(CloneOrder.SHIPPED);
         shippingStatus.add(CloneOrder.PARTIALLY_SHIPPED);
         request.setAttribute("shippingMethods", shippingMethods);
         request.setAttribute("allStatus", shippingStatus);
-        request.setAttribute(Constants.CLONEORDER, order);
-            
+        request.getSession().setAttribute(Constants.CLONEORDER, order);
+
         return mapping.findForward("success");
     }
 }

@@ -6,6 +6,8 @@
 package plasmid.action;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -43,6 +45,29 @@ public class EnterShippingAction extends InternalUserAction {
 
         ActionErrors errors = new ActionErrors();
         User user = (User) request.getSession().getAttribute(Constants.USER_KEY);
+        CloneOrder order = (CloneOrder) request.getSession().getAttribute(Constants.CLONEORDER);
+                
+        String[] shipped = ((ProcessShippingForm)form).getShipped();
+        
+        List<OrderClones> clones = order.getClones();
+        List<Clone> shippedClones = new ArrayList<Clone>();
+        int count = 0;
+        for(OrderClones clone:clones) {
+            clone.setInshipment(false);
+            for(int i=0; i<shipped.length; i++) {
+                int cloneid = Integer.parseInt(shipped[i]);
+                if(cloneid==clone.getCloneid()) {
+                    clone.setInshipment(true);
+                    Clone c = new Clone();
+                    c.setCloneid(clone.getCloneid());
+                    c.setOrderid(order.getOrderid());
+                    shippedClones.add(c);
+                    count++;
+                }
+            }
+        }
+        order.setClonesInShipment(count);
+        
 
         int orderid = Integer.parseInt(((ProcessShippingForm) form).getOrderid());
         String shippingMethod = ((ProcessShippingForm) form).getShippingMethod();
@@ -58,46 +83,6 @@ public class EnterShippingAction extends InternalUserAction {
         String reason = ((ProcessShippingForm) form).getReason();
         String newAccount = ((ProcessShippingForm) form).getNewAccount();
 
-        OrderProcessManager manager = new OrderProcessManager();
-        CloneOrder order = manager.getCloneOrder(user, orderid);
-        if (order == null) {
-            errors.add(ActionErrors.GLOBAL_ERROR,
-                    new ActionError("error.general", "Cannot get order."));
-            saveErrors(request, errors);
-            return mapping.findForward("error");
-        }
-
-        request.setAttribute(Constants.CLONEORDER, order);
-
-        // StringConvertor sc = new StringConvertor();
-        // List labelList = sc.convertFromStringToList(labels, " \n\t");
-        /**
-         * if(labelList.size()==0) { errors.add(ActionErrors.GLOBAL_ERROR, new
-         * ActionError("error.general", "Please enter valid containers."));
-         * saveErrors(request, errors);
-         *
-         * List shippingMethods =
-         * DefTableManager.getVocabularies("shippingmethod", "method");
-         * request.setAttribute("shippingMethods", shippingMethods);
-         *
-         * return (new ActionForward(mapping.getInput())); }
-         *
-         * ContainerProcessManager m = new ContainerProcessManager(); List
-         * containers = m.getContainers(labelList, false); List
-         * noFoundContainers = m.getNofoundContainers(labelList, containers);
-         * if(noFoundContainers.size()>0) { String s =
-         * sc.convertFromListToString(noFoundContainers);
-         * errors.add(ActionErrors.GLOBAL_ERROR, new
-         * ActionError("error.container.notfound", s)); saveErrors(request,
-         * errors); return (new ActionForward(mapping.getInput())); }
-         *
-         * List emptyContainers = m.checkEmptyContainers(containers,
-         * Container.EMPTY); if(emptyContainers.size()>0) { String s =
-         * sc.convertFromListToString(emptyContainers);
-         * errors.add(ActionErrors.GLOBAL_ERROR, new
-         * ActionError("error.container.empty", s)); saveErrors(request,
-         * errors); return (new ActionForward(mapping.getInput())); }
-         */
         order.setPonumber(newAccount);
         order.setStatus(status);
         order.setShippingmethod(shippingMethod);
@@ -111,6 +96,7 @@ public class EnterShippingAction extends InternalUserAction {
         order.setComments(comments);
 
         Invoice invoice = null;
+        OrderProcessManager manager = new OrderProcessManager();
         try {
             invoice = manager.getInvoiceByOrder(orderid);
         } catch (Exception ex) {
@@ -130,7 +116,16 @@ public class EnterShippingAction extends InternalUserAction {
             invoice.setReasonforadj(reason);
         }
 
-        if (!manager.updateShipping(order, invoice, isNewInvoice)) {
+        Shipment shipment = new Shipment();
+        shipment.setWho(whoShipped);
+        shipment.setTrackingnumber(trackingNumber);
+        shipment.setMethod(shippingMethod);
+        shipment.setAccount(newAccount);
+        shipment.setComments(comments);
+        shipment.setOrderid(orderid);
+        shipment.setClones(shippedClones);
+        
+        if (!manager.updateShipping(order, invoice, isNewInvoice, shipment)) {
             errors.add(ActionErrors.GLOBAL_ERROR,
                     new ActionError("error.general", "Error occured while updating database with shipping information."));
             saveErrors(request, errors);
@@ -147,9 +142,10 @@ public class EnterShippingAction extends InternalUserAction {
                     new ActionError("error.general", "Email notification to user has been failed."));
             saveErrors(request, errors);
         }
-
+        
         ((ProcessShippingForm) form).resetValues();
-        order.setInvoiceid(invoice.getInvoiceid());
+        order = manager.getCloneOrder(user, orderid);
+        request.getSession().setAttribute(Constants.CLONEORDER, order);
         return mapping.findForward("success");
     }
 }

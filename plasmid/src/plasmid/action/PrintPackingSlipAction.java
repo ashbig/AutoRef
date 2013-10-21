@@ -5,16 +5,15 @@
 package plasmid.action;
 
 import java.io.IOException;
-import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.struts.action.ActionError;
+import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import plasmid.Constants;
-import plasmid.coreobject.CloneOrder;
-import plasmid.coreobject.OrderClones;
+import plasmid.coreobject.Shipment;
 import plasmid.form.PrintPackingSlipForm;
 import plasmid.process.OrderProcessManager;
 
@@ -38,28 +37,21 @@ public class PrintPackingSlipAction extends InternalUserAction {
      *
      */
     public ActionForward internalUserPerform(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String[] shipped = ((PrintPackingSlipForm)form).getShipped();
-        
-        CloneOrder order = (CloneOrder) request.getSession().getAttribute(Constants.CLONEORDER);
-        List<OrderClones> clones = order.getClones();
-        int count = 0;
-        for(OrderClones clone:clones) {
-            clone.setShipped(false);
-            for(int i=0; i<shipped.length; i++) {
-                int cloneid = Integer.parseInt(shipped[i]);
-                if(cloneid==clone.getCloneid()) {
-                    clone.setShipped(true);
-                    count++;
-                }
-            }
-        }
-        order.setClonesInShipment(count);
-        
-        //write to pdf file in browser
-        response.setContentType("application/pdf");
-        response.setHeader("Content-Disposition", "attachment; filename=Order_" + order.getOrderid() + ".pdf");
+        ActionErrors errors = new ActionErrors();
+
+        int shipmentid = ((PrintPackingSlipForm) form).getShipmentid();
         OrderProcessManager manager = new OrderProcessManager();
-        manager.printPackingSlip(response.getOutputStream(), order);
-        return mapping.findForward(null);
+        try {
+            Shipment shipment = manager.getOrderShipment(shipmentid);
+            response.setContentType("application/pdf");
+            response.setHeader("Content-Disposition", "attachment; filename=Order_" + shipment.getOrder().getOrderid() + ".pdf");
+            manager.printPackingSlip(response.getOutputStream(), shipment);
+            return mapping.findForward(null);
+        } catch (Exception ex) {
+            errors.add(ActionErrors.GLOBAL_ERROR,
+                    new ActionError("error.general", ex.getMessage()));
+            saveErrors(request, errors);
+            return mapping.findForward("error");
+        }
     }
 }

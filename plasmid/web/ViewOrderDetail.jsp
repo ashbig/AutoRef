@@ -73,6 +73,12 @@
                             <td class="formlabel">Last Updatec By:</td>
                             <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="updatedby"/></td>
                         </tr>
+                        <tr> 
+                            <td class="formlabel">Shipping Method:</td>
+                            <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="shippingmethod"/></td>
+                            <td class="formlabel">Shipping Account:</td>
+                            <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="shippingaccount"/></td>
+                        </tr>
                         <tr>
                             <td class="formlabel"></td>
                             <logic:equal name="<%=Constants.CLONEORDER%>" property="invoiceid" value="0">
@@ -170,28 +176,24 @@
                                 <td class="tableheader">&nbsp;</td>
                                 </logic:equal>
                         </tr>
-                        <logc:iterate name="<%=Constants.CLONEORDER%>" property="shipments" id="shipment">
+                        <logic:iterate name="<%=Constants.CLONEORDER%>" property="shipments" id="shipment">
                             <tr> 
-                                <td class="text"><bean:write name="shipment" property="date"/></td>
-                                <td class="text"><bean:write name="shipment" property="method"/></td>
-                                <td class="text"><bean:write name="shipment" property="account"/></td>
-                                <td class="text"><bean:write name="shipment" property="numOfClones"/></td>
-                                <td class="text"><bean:write name="shipment" property="trackingnumber"/></td>
+                                <td class="tablebody"><bean:write name="shipment" property="date"/></td>
+                                <td class="tablebody"><bean:write name="shipment" property="method"/></td>
+                                <td class="tablebody"><bean:write name="shipment" property="account"/></td>
+                                <td class="tablebody"><bean:write name="shipment" property="numOfClones"/></td>
+                                <td class="tablebody"><bean:write name="shipment" property="trackingnumber"/></td>
                                     <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
-                                    <td class="text"><bean:write name="shipment" property="who"/></td>
-                                    <td class="text">
-                                            <html:form action="GeneratePackingSlip.do">
-                                                <html:hidden name="<%=Constants.CLONEORDER%>" property="orderid"/>
-                                                <html:hidden name="<%=Constants.CLONEORDER%>" property="orderDate"/>
-                                                <html:hidden name="<%=Constants.CLONEORDER%>" property="ponumber"/>
-                                                <html:hidden name="<%=Constants.CLONEORDER%>" property="email"/>
-                                                <html:hidden name="<%=Constants.CLONEORDER%>" property="phone"/>
+                                    <td class="tablebody"><bean:write name="shipment" property="who"/></td>
+                                    <td class="tablebody">
+                                            <html:form action="PrintPackingSlip.do">
+                                                <html:hidden name="shipment" property="shipmentid"/>
                                                 <html:submit styleClass="text" value="Generate Packing Slip"/>
                                             </html:form>
                                     </td>
                                     </logic:equal>
                             </tr>
-                        </logc:iterate>
+                        </logic:iterate>
                     </table>
                     </logic:equal>
                     <logic:equal name="<%=Constants.CLONEORDER%>" property="displayShipment" value="false">

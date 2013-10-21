@@ -27,6 +27,7 @@ public class ProcessShippingForm extends ActionForm {
     private double adjustment;
     private String reason;
     private String newAccount;
+    private String[] shipped;
     
     /** Creates a new instance of ProcessShippingForm */
     public ProcessShippingForm() {
@@ -64,6 +65,7 @@ public class ProcessShippingForm extends ActionForm {
         comments = null;
         adjustment = 0.0;
         reason = null;
+        shipped = new String[0];
     }
 
     public double getAdjustment() {
@@ -88,5 +90,19 @@ public class ProcessShippingForm extends ActionForm {
 
     public void setNewAccount(String newAccount) {
         this.newAccount = newAccount;
+    }
+
+    /**
+     * @return the shipped
+     */
+    public String[] getShipped() {
+        return shipped;
+    }
+
+    /**
+     * @param shipped the shipped to set
+     */
+    public void setShipped(String[] shipped) {
+        this.shipped = shipped;
     }
 }

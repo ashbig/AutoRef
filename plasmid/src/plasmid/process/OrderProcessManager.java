@@ -1114,7 +1114,7 @@ public class OrderProcessManager {
         return c;
     }
 
-    public boolean updateShipping(CloneOrder order, Invoice invoice, boolean isNewInvoice) {
+    public boolean updateShipping(CloneOrder order, Invoice invoice, boolean isNewInvoice, Shipment shipment) {
         DatabaseTransaction t = null;
         Connection conn = null;
         try {
@@ -1122,7 +1122,7 @@ public class OrderProcessManager {
             conn = t.requestConnection();
             CloneOrderManager manager = new CloneOrderManager(conn);
             boolean b = false;
-            if (manager.updateOrderWithShipping(order)) {
+            if (manager.updateOrderWithShipping(order) && manager.insertShipment(shipment)) {
                 if (isNewInvoice) {
                     int invoiceid = manager.addInvoice(invoice);
                     if (invoiceid > 0) {
@@ -2241,8 +2241,15 @@ public class OrderProcessManager {
         return manager.queryOrderClones(orderid, user, true);
     }
 
-    public void printPackingSlip(OutputStream file, CloneOrder order) {
+    public Shipment getOrderShipment(int shipmentid) throws Exception {
+        CloneOrderManager manager = new CloneOrderManager();
+        return manager.queryOrderShipment(shipmentid);
+    }
+    
+    public void printPackingSlip(OutputStream file, Shipment shipment) {
         try {
+            CloneOrder order = shipment.getOrder();
+            
             Document document = new Document();
             PdfWriter.getInstance(document, file);
             document.open();
@@ -2257,12 +2264,10 @@ public class OrderProcessManager {
             table.addCell(PdfEditor.makeSmallBold("Order Date:\t" + order.getOrderDate()));
             table.addCell(PdfEditor.makeSmallBold("Email:\t" + order.getEmail()));
             table.addCell(PdfEditor.makeSmallBold("Phone:\t" + order.getPhone()));
-            PdfPCell cell = new PdfPCell(PdfEditor.makeSmallBold("PO/Billing Number:\t" + order.getPonumber()));
-            cell.setColspan(2);
-            cell.setBorder(Rectangle.NO_BORDER);
-            table.addCell(cell);
+            table.addCell(PdfEditor.makeSmallBold("Phone:\t" + order.getName()));
+            table.addCell(PdfEditor.makeSmallBold("Phone:\t" + order.getPonumber()));
         
-            cell = new PdfPCell(PdfEditor.makeTitle(" "));
+            PdfPCell cell = new PdfPCell(PdfEditor.makeTitle(" "));
             cell.setColspan(2);
             cell.setBorder(Rectangle.NO_BORDER);
             table.addCell(cell);
@@ -2270,51 +2275,23 @@ public class OrderProcessManager {
             cell.setColspan(2);
             cell.setBorder(Rectangle.NO_BORDER);
             table.addCell(cell);
-            cell = new PdfPCell(PdfEditor.makeSmallBold("Total clones in shipment:\t" + order.getClonesInShipment()));
+            cell = new PdfPCell(PdfEditor.makeSmallBold("Total clones in shipment:\t" + shipment.getNumClonesShipped()));
             cell.setColspan(2);
             cell.setBorder(Rectangle.NO_BORDER);
             table.addCell(cell);
             document.add(table);
             
-            List<OrderClones> clones = order.getClones();
-            document.add(PdfEditor.makeTitle(" "));
-            table = new PdfPTable(4);
+            List<Clone> clones = order.getClones();
+            document.add(PdfEditor.makeTitle("Clones in shipment"));
+            table = new PdfPTable(1);
             table.setWidthPercentage(100);
             cell = new PdfPCell(PdfEditor.makeSmallBold("Item"));
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(cell);
-            cell = new PdfPCell(PdfEditor.makeSmallBold("Quantity"));
-            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            table.addCell(cell);
-            cell = new PdfPCell(PdfEditor.makeSmallBold("Platinum Result"));
-            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            table.addCell(cell);
-            cell = new PdfPCell(PdfEditor.makeSmallBold("Shipped"));
-            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            table.addCell(cell);
-            for (OrderClones clone : clones) {
-                //if (clone.isShipped()) {
-                cell = new PdfPCell(PdfEditor.makeSmall(clone.getClonename()));
+            for (Clone clone : clones) {
+                cell = new PdfPCell(PdfEditor.makeSmall(clone.getName()));
                 cell.setHorizontalAlignment(Element.ALIGN_CENTER);
                 table.addCell(cell);
-                cell = new PdfPCell(PdfEditor.makeSmall("" + clone.getQuantity()));
-                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-                table.addCell(cell);
-                String result = "NA";
-                if (clone.getValidation() != null) {
-                    result = clone.getValidation().getResult();
-                }
-                cell = new PdfPCell(PdfEditor.makeSmall(result));
-                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-                table.addCell(cell);
-                String isShipped = "No";
-                if (clone.isShipped()) {
-                    isShipped = "Yes";
-                }
-                cell = new PdfPCell(PdfEditor.makeSmall(isShipped));
-                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-                table.addCell(cell);
-                //}
             }
             document.add(table);
             document.add(PdfEditor.makeTitle(" "));

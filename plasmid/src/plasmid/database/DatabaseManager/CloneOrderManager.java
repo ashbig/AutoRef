@@ -16,7 +16,7 @@ import plasmid.util.StringConvertor;
 
 /**
  *
- * @author  DZuo
+ * @author DZuo
  */
 public class CloneOrderManager extends TableManager {
 
@@ -24,7 +24,9 @@ public class CloneOrderManager extends TableManager {
         super();
     }
 
-    /** Creates a new instance of CloneOrderManager */
+    /**
+     * Creates a new instance of CloneOrderManager
+     */
     public CloneOrderManager(Connection conn) {
         super(conn);
     }
@@ -54,11 +56,11 @@ public class CloneOrderManager extends TableManager {
 
         DefTableManager m = new DefTableManager();
         /**
-         * int orderid = m.getMaxNumber("cloneorder", "orderid");
-         * if(orderid == -1) {
-         * handleError(new Exception(m.getErrorMessage()), "Cannot get orderid from cloneorder.");
-         * return -1;
-         * }*/
+         * int orderid = m.getMaxNumber("cloneorder", "orderid"); if(orderid ==
+         * -1) { handleError(new Exception(m.getErrorMessage()), "Cannot get
+         * orderid from cloneorder."); return -1;
+         * }
+         */
         String sql = "insert into cloneorder"
                 + " (orderdate,orderstatus,ponumber,shippingto,billingto,"
                 + " shippingaddress,billingaddress,numofclones,numofcollection,"
@@ -190,7 +192,7 @@ public class CloneOrderManager extends TableManager {
     }
 
     public List queryOrderClones(int orderid, User user, boolean isValidation) {
-        String sql = "select o.cloneid, o.quantity, cl.clonename"
+        String sql = "select o.cloneid, o.quantity, cl.clonename, o.shipped"
                 + " from orderclones o, cloneorder c, clone cl"
                 + " where o.orderid=c.orderid"
                 + " and o.cloneid=cl.cloneid"
@@ -201,9 +203,9 @@ public class CloneOrderManager extends TableManager {
         }
         sql += " order by o.cloneid";
 
-        String sql2 = "select method,result,to_char(when, 'YYYY-MM-DD') from orderclonevalidation"+
-                " where cloneid=? and orderid="+orderid+" order by when desc";
-        
+        String sql2 = "select method,result,to_char(when, 'YYYY-MM-DD') from orderclonevalidation"
+                + " where cloneid=? and orderid=" + orderid + " order by when desc";
+
         DatabaseTransaction t = null;
         ResultSet rs = null;
         ResultSet rs2 = null;
@@ -219,13 +221,17 @@ public class CloneOrderManager extends TableManager {
                 int cloneid = rs.getInt(1);
                 int quantity = rs.getInt(2);
                 String clonename = rs.getString(3);
+                int shipped = rs.getInt(4);
                 OrderClones clone = new OrderClones(orderid, cloneid, null, quantity);
                 clone.setClonename(clonename);
                 clone.setShipped(false);
-                
+                if (shipped == 1) {
+                    clone.setShipped(true);
+                }
+
                 stmt.setInt(1, cloneid);
                 rs2 = DatabaseTransaction.executeQuery(stmt);
-                if(rs2.next()) {
+                if (rs2.next()) {
                     String method = rs2.getString(1);
                     String result = rs2.getString(2);
                     String when = rs2.getString(3);
@@ -233,9 +239,6 @@ public class CloneOrderManager extends TableManager {
                     validation.setMethod(method);
                     validation.setResult(result);
                     validation.setWhen(when);
-                    if(OrderCloneValidation.RESULT_PASS.equals(result)) {
-                        clone.setShipped(true);
-                    }
                     clone.setValidation(validation);
                 }
                 DatabaseTransaction.closeResultSet(rs2);
@@ -332,10 +335,11 @@ public class CloneOrderManager extends TableManager {
     /**
      * Query database to get the clone order by orderid and user.
      *
-     * @param user A User object. If user is null, order with any user will be returned.
+     * @param user A User object. If user is null, order with any user will be
+     * returned.
      * @param orderid. The orderid used for query.
-     * @return CloneOrder object will be returned for the given user and orderid.
-     * Will return null if no order found.
+     * @return CloneOrder object will be returned for the given user and
+     * orderid. Will return null if no order found.
      * @exception
      */
     public CloneOrder queryCloneOrder(User user, int orderid) throws Exception {
@@ -351,9 +355,9 @@ public class CloneOrderManager extends TableManager {
 
         String sql2 = "select invoiceid from invoice where orderid=" + orderid;
         String sql3 = "select count(*) from orderclonevalidation where orderid=" + orderid;
-        String sql4 = "select shipmentid,to_char(shippingdate,'YYYY-MM-DD hh:mm:ss'),who,trackingnumber,method,account,comments from ordershipment where orderid="+orderid;
+        String sql4 = "select shipmentid,to_char(shippingdate,'YYYY-MM-DD hh:mm:ss'),who,trackingnumber,method,account,comments from ordershipment where orderid=" + orderid;
         String sql5 = "select count(*) from shippedclones where shipmentid=?";
-              
+
         if (user != null) {
             sql = sql + " and u.userid=" + user.getUserid();
         }
@@ -371,7 +375,7 @@ public class CloneOrderManager extends TableManager {
             t = DatabaseTransaction.getInstance();
             c = t.requestConnection();
             stmt = c.prepareStatement(sql5);
-            
+
             rs = t.executeQuery(sql);
             if (rs.next()) {
                 String date = rs.getString(2);
@@ -455,14 +459,14 @@ public class CloneOrderManager extends TableManager {
                 rs3 = t.executeQuery(sql3);
                 if (rs3.next()) {
                     int count = rs3.getInt(1);
-                    if(count>0) {
+                    if (count > 0) {
                         order.setHasPlatinumResult(true);
                     }
                 }
-                
+
                 rs4 = t.executeQuery(sql4);
                 List<Shipment> shipments = new ArrayList<Shipment>();
-                while(rs4.next()) {
+                while (rs4.next()) {
                     int shipmentid = rs4.getInt(1);
                     String shipdate = rs4.getString(2);
                     String who = rs4.getString(3);
@@ -470,11 +474,11 @@ public class CloneOrderManager extends TableManager {
                     String method = rs4.getString(5);
                     String account = rs4.getString(6);
                     String comments2 = rs4.getString(7);
-                    Shipment shipment = new Shipment(shipmentid,shipdate, who, tracking, method, account, comments2);
-                    
+                    Shipment shipment = new Shipment(shipmentid, shipdate, who, tracking, method, account, comments2);
+
                     stmt.setInt(1, shipmentid);
                     rs5 = DatabaseTransaction.executeQuery(stmt);
-                    if(rs5.next()) {
+                    if (rs5.next()) {
                         int count = rs5.getInt(1);
                         shipment.setNumOfClones(count);
                     }
@@ -497,11 +501,85 @@ public class CloneOrderManager extends TableManager {
         return order;
     }
 
+    public Shipment queryOrderShipment(int shipmentid) throws Exception {
+        String sql = "select orderid,to_char(shippingdate,'YYYY-MM-DD hh:mm:ss'),who,trackingnumber,method,account,comments from ordershipment where shipmentid=" + shipmentid;
+        String sql2 = "select to_char(c.orderdate,'YYYY-MM-DD hh:mm:ss'), c.numofclones,u.firstname,u.lastname,u.email,u.phone"+
+                " from cloneorder c, userprofile u where c.userid=u.userid and c.orderid=?";
+        String sql3 = "select cloneid,clonename from clone where cloneid in (select cloneid from shippedclones where shipmentid="+shipmentid+") order by cloneid";
+        DatabaseTransaction t = null;
+        Connection c = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        ResultSet rs2 = null;
+        ResultSet rs3 = null;
+        Shipment shipment = null;
+        try {
+            t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            if (rs.next()) {
+                int orderid = rs.getInt(1);
+                String date = rs.getString(2);
+                String who = rs.getString(3);
+                String trackingnumber = rs.getString(4);
+                String method = rs.getString(5);
+                String account = rs.getString(6);
+                String comments = rs.getString(7);
+                shipment = new Shipment(shipmentid, date, who, trackingnumber, method, account, comments);
+
+                c = t.requestConnection();
+                stmt = c.prepareStatement(sql2);
+                stmt.setInt(1, orderid);
+                rs2 = DatabaseTransaction.executeQuery(stmt);
+                if(rs2.next()) {
+                    String orderdate = rs2.getString(1);
+                    int numofclones = rs2.getInt(2);
+                    String firstname = rs2.getString(3);
+                    String lastname = rs2.getString(4);
+                    String email = rs2.getString(5);
+                    String phone = rs2.getString(6);
+                    CloneOrder order = new CloneOrder();
+                    order.setOrderid(orderid);
+                    order.setOrderDate(orderdate);
+                    order.setFirstname(firstname);
+                    order.setLastname(lastname);
+                    order.setEmail(email);
+                    order.setPhone(phone);
+                    order.setNumofclones(numofclones);
+                    shipment.setOrder(order);
+                }
+                
+                List<Clone> clones = new ArrayList<Clone>();
+                rs3 = t.executeQuery(sql3);
+                while(rs3.next()) {
+                    int cloneid = rs3.getInt(1);
+                    String clonename = rs3.getString(2);
+                    Clone clone = new Clone();
+                    clone.setCloneid(cloneid);
+                    clone.setName(clonename);
+                    clones.add(clone);
+                }
+                shipment.setClones(clones);
+            }
+        } catch (Exception ex) {
+            handleError(ex, "Cannot query shipment.");
+            throw new Exception(ex);
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeResultSet(rs2);
+            DatabaseTransaction.closeResultSet(rs3);
+            DatabaseTransaction.closeStatement(stmt);
+            DatabaseTransaction.closeConnection(c);
+        }
+        return shipment;
+    }
+
     /**
      * Query database to get all the orders for a given user and status.
      *
-     * @param user User object. If user is null, orders for all users will be returned.
-     * @param status String for status. If status is null, orders at all status will be returned.
+     * @param user User object. If user is null, orders for all users will be
+     * returned.
+     * @param status String for status. If status is null, orders at all status
+     * will be returned.
      * @return A list of CloneOrder objects. Return null if error occured.
      */
     public List queryCloneOrders(User user, String status, String sortby, String sorttype) {
@@ -1044,7 +1122,9 @@ public class CloneOrderManager extends TableManager {
                 + " comments=?,"
                 + " ponumber=?"
                 + " where orderid=?";
+        String sql2 = "update orderclones set SHIPPED=1 where cloneid=?";
         PreparedStatement stmt = null;
+        PreparedStatement stmt2 = null;
 
         try {
             stmt = conn.prepareStatement(sql);
@@ -1061,11 +1141,71 @@ public class CloneOrderManager extends TableManager {
             stmt.setString(11, order.getPonumber());
             stmt.setInt(12, order.getOrderid());
             DatabaseTransaction.executeUpdate(stmt);
+
+            stmt2 = conn.prepareStatement(sql2);
+            List<OrderClones> clones = order.getClones();
+            for (OrderClones clone : clones) {
+                if (clone.isInshipment()) {
+                    stmt2.setInt(1, clone.getCloneid());
+                    DatabaseTransaction.executeUpdate(stmt2);
+                }
+            }
         } catch (Exception ex) {
             handleError(ex, "Cannot update order with shipping for orderid: " + order.getOrderid());
             return false;
         } finally {
             DatabaseTransaction.closeStatement(stmt);
+            DatabaseTransaction.closeStatement(stmt2);
+        }
+
+        return true;
+    }
+
+    public boolean insertShipment(Shipment shipment) {
+        String sql1 = "select shipmentid.nextval from dual";
+        String sql = "insert into ordershipment"
+                + " (SHIPMENTID,SHIPPINGDATE,who,trackingnumber,method,account,comments,orderid)"
+                + " values(?,sysdate,?,?,?,?,?,?)";
+        String sql2 = "insert into shippedclones(shipmentid,cloneid,orderid)"
+                + " values(?,?,?)";
+        PreparedStatement stmt = null;
+        PreparedStatement stmt2 = null;
+        ResultSet rs = null;
+
+        try {
+            rs = DatabaseTransaction.executeQuery(sql1, conn);
+            int shipmentid = 0;
+            if (rs.next()) {
+                shipmentid = rs.getInt(1);
+            } else {
+                throw new Exception("Cannot get shipmentid from database.");
+            }
+
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, shipmentid);
+            stmt.setString(2, shipment.getWho());
+            stmt.setString(3, shipment.getTrackingnumber());
+            stmt.setString(4, shipment.getMethod());
+            stmt.setString(5, shipment.getAccount());
+            stmt.setString(6, shipment.getComments());
+            stmt.setInt(7, shipment.getOrderid());
+            DatabaseTransaction.executeUpdate(stmt);
+
+            stmt2 = conn.prepareStatement(sql2);
+            List<Clone> clones = shipment.getClones();
+            for (Clone clone : clones) {
+                stmt2.setInt(1, shipmentid);
+                stmt2.setInt(2, clone.getCloneid());
+                stmt2.setInt(3, clone.getOrderid());
+                DatabaseTransaction.executeUpdate(stmt2);
+            }
+        } catch (Exception ex) {
+            handleError(ex, "Cannot insert shipment for orderid: " + shipment.getOrderid());
+            return false;
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+            DatabaseTransaction.closeStatement(stmt2);
         }
 
         return true;

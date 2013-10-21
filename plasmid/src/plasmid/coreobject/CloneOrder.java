@@ -46,6 +46,8 @@ public class CloneOrder implements Serializable {
     public static final String PLATINUM_STATUS_COMPLETE = "Complete";
     public static final String PLATINUM_ENTER_RESULTS = "enter";
     public static final String PLATINUM_DISPLAY_RESULTS = "display";
+    public static final String ISPLATINUM_YES = "Yes";
+    public static final String ISPLATINUM_NO = "No";
     
     public static final String allstatus[] = {
         CloneOrder.PENDING, 
