@@ -171,6 +171,7 @@
                             <td class="tableheader">Account</td>
                             <td class="tableheader">#Clones</td>
                             <td class="tableheader">Tracking#</td>
+                            <td class="tableheader">Comments</td>
                                 <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
                                 <td class="tableheader">Who</td>
                                 <td class="tableheader">&nbsp;</td>
@@ -183,6 +184,7 @@
                                 <td class="tablebody"><bean:write name="shipment" property="account"/></td>
                                 <td class="tablebody"><bean:write name="shipment" property="numOfClones"/></td>
                                 <td class="tablebody"><bean:write name="shipment" property="trackingnumber"/></td>
+                                <td class="tablebody"><bean:write name="shipment" property="comments"/></td>
                                     <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
                                     <td class="tablebody"><bean:write name="shipment" property="who"/></td>
                                     <td class="tablebody">
