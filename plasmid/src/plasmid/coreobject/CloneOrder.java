@@ -119,7 +119,7 @@ public class CloneOrder implements Serializable {
     private UserAddress shippingInfo;
     private boolean hasPlatinumResult;
     private int clonesInShipment;
-    
+    private Shipment currentShipment;
     private List<Shipment> shipments;
     
     /** Creates a new instance of CloneOrder */
@@ -497,5 +497,25 @@ public class CloneOrder implements Serializable {
             return false;
         }
         return true;
+    }
+    
+    public boolean isPatinum() {
+        if(ISPLATINUM_YES.equals(getIsplatinum()))
+            return true;
+        return false;
+    }
+
+    /**
+     * @return the currentShipment
+     */
+    public Shipment getCurrentShipment() {
+        return currentShipment;
+    }
+
+    /**
+     * @param currentShipment the currentShipment to set
+     */
+    public void setCurrentShipment(Shipment currentShipment) {
+        this.currentShipment = currentShipment;
     }
 }

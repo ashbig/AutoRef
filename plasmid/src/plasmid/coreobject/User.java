@@ -252,6 +252,12 @@ public class User {
             return true;
         return false;
     }
+    
+    public static boolean isMemberForCloneOrder(String usergroup, String ismember) {
+        if(MEMBER_Y.equals(ismember) || User.HARVARD_UNIVERSITY.equals(usergroup))
+            return true;
+        return false;
+    }
 
     public boolean isInternalMember() {
         if(HARVARD_UNIVERSITY.equals(group)) {

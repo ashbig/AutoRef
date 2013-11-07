@@ -24,7 +24,7 @@
                 <td width="83%" align="left" valign="top">
                     <jsp:include page="orderHistoryTitle.jsp" />
 
-                    <html:form action="EnterShipping.do">
+                    <html:form action="EnterShippingConfirmation.do">
                         <table width="100%" border="0">
                             <tr> 
                                 <td class="formlabel">Order ID:</td>
@@ -42,7 +42,7 @@
                                 <td class="formlabel">&nbsp;</td>
                                 <td class="text">&nbsp;</td>
                                 <td class="formlabel">New PO/Billing Number:</td>
-                                <td class="text"><html:text styleClass="text" maxlength="100" property="newAccount"/></td>
+                                <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="ponumber"/></td>
                             </tr>
                             <tr> 
                                 <td class="formlabel">Platinum Service:</td>
@@ -70,23 +70,28 @@
                             </tr>
                             <tr> 
                                 <td class="formlabel">Total Price:</td>
-                                <td class="text" colspan="3"><bean:write name="<%=Constants.CLONEORDER%>" property="totalPriceString"/></td>
+                                <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="totalPriceString"/></td>
+                                <td class="formlabel">Price Adjustment (enter negative number for refund):</td>
+                                <td class="text"><html:text styleClass="text" maxlength="50" property="adjustment"/></td>
+                            </tr>
+                            <tr> 
+                                <td class="formlabel" colspan="4">Reason for Adjustment:</td>
+                            </tr>
+                            <tr> 
+                                <td class="text" colspan="4"><html:textarea rows="5" cols="60" property="reason"/></td>
                             </tr>
                         </table>
 
-                    <p class="text">Check shipped items:</p>
+                    <p class="text">Clones in the shipment:</p>
                         <table width="100%" border="0">
                             <tr> 
-                                <td class="tableheader">&nbsp;</td>
                                 <td class="tableheader">Item</td>
                                 <td class="tableheader">Quantity</td>
                                 <td class="tableheader">Platinum Result</td>
+                                <td class="tableheader">In Shipment</td>
                             </tr>
                             <logic:iterate name="<%=Constants.CLONEORDER%>" property="clones" id="clone">
                                 <tr> 
-                                    <td class="tablebody">
-                                        <html:multibox property="shipped"><bean:write name="clone" property="cloneid"/></html:multibox>
-                                    </td>
                                     <td class="tablebody"><bean:write name="clone" property="clonename"/></td>
                                     <td class="tablebody"><bean:write name="clone" property="quantity"/></td>
                                     <logic:present name="clone" property="validation">
@@ -95,6 +100,7 @@
                                     <logic:notPresent name="clone" property="validation">
                                         <td class="tablebody">NA</td>
                                     </logic:notPresent>
+                                    <td class="tablebody"><bean:write name="clone" property="inShipmentString"/></td>
                                 </tr> 
                             </logic:iterate>
                         </table>
@@ -105,38 +111,34 @@
                                 <tr> 
                                     <td width="20%" class="formlabel">Shipping Methods:</td>
                                     <td width="30%" class="text">
-                                        <html:select property="shippingMethod">
-                                            <html:options name="shippingMethods"/>
-                                        </html:select>
+                                        <bean:write name="<%=Constants.CLONEORDER%>" property="currentShipment.method"/>
                                     </td>
                                     <td width="20%" class="formlabel">Shipping Date:</td>
-                                    <td width="30%" class="text"><html:text property="shippingDate"/></td>
+                                    <td width="30%" class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="shippingdate"/></td>
                                 </tr>
                                 <tr> 
                                     <td class="formlabel">Shipping Account:</td>
                                     <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="shippingaccount"/></td>
                                     <td class="formlabel">Tracking Number:</td>
-                                    <td class="text"><html:text maxlength="50" property="trackingNumber"/></td>
+                                    <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="currentShipment.trackingnumber"/></td>
                                 </tr>
                                 <tr>
                                     <td class="formlabel">Who Shipped:</td>
                                     <td class="text"><bean:write name="processShippingForm" property="whoShipped"/></td>
                                     <td class="formlabel">Shipping Status:</td>
                                     <td class="text">
-                                        <html:select property="shippingStatus">
-                                            <html:options name="allStatus"/>
-                                        </html:select>
+                                        <bean:write name="<%=Constants.CLONEORDER%>" property="status"/>
                                     </td>
                                 </tr>
                                 <tr> 
                                     <td class="formlabel" colspan="4">Comments:</td>
                                 </tr>
                                 <tr> 
-                                    <td class="text" colspan="4"><html:textarea rows="5" cols="60" property="comments"/></td>
+                                    <td class="text" colspan="4"><bean:write name="<%=Constants.CLONEORDER%>" property="comments"/></td>
                                 </tr>
                             </table>
                             <html:hidden name="<%=Constants.CLONEORDER%>" property="orderid"/>
-                            <p align="center"><html:submit styleClass="text" value="Continue"/></P>
+                            <p align="center"><html:submit styleClass="text" value="Process"/></P>
                             </logic:equal>
                         </html:form>
 

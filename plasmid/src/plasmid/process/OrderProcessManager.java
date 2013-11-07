@@ -254,6 +254,18 @@ public class OrderProcessManager {
 
         return n + m;
     }
+    
+    public static double calculateRefund(String usergroup, String ismember, int count, boolean isPlatinum) {
+        double refund = 0.0;
+        ClonePriceCalculator calculator = new ClonePriceCalculator();
+        refund = calculator.calculateClonePrice(count, usergroup, ismember);
+        if(isPlatinum) {
+            refund += ClonePriceCalculator.calculatePlatinumCost(usergroup, ismember, count);
+        }
+        if(refund>0)
+            return -refund;
+        return refund;
+    }
 
     public List updateShoppingCartForClones(List clones, String cloneid, List shoppingcartCopy) {
         List newShoppingcart = new ArrayList();
@@ -934,10 +946,11 @@ public class OrderProcessManager {
 
         for (int i = 0; i < clones.size(); i++) {
             CloneInfo c = (CloneInfo) clones.get(i);
-            if(c.getTerm()==null)
+            if (c.getTerm() == null) {
                 out.print("\t");
-            else 
-                out.print(c.getTerm()+"\t");
+            } else {
+                out.print(c.getTerm() + "\t");
+            }
             if (Clone.NOINSERT.equals(c.getType())) {
                 out.print(c.getName() + "\t" + c.getType() + "\t\t\t\t\t\t\t" + c.getVectorname() + "\t" + c.getRecommendedGrowthCondition().getName() + "\t");
 
@@ -1114,7 +1127,7 @@ public class OrderProcessManager {
         return c;
     }
 
-    public boolean updateShipping(CloneOrder order, Invoice invoice, boolean isNewInvoice, Shipment shipment) {
+    public boolean updateShipping(CloneOrder order, Invoice invoice, boolean isNewInvoice, Shipment shipment, boolean hasInvoice) {
         DatabaseTransaction t = null;
         Connection conn = null;
         try {
@@ -1123,14 +1136,16 @@ public class OrderProcessManager {
             CloneOrderManager manager = new CloneOrderManager(conn);
             boolean b = false;
             if (manager.updateOrderWithShipping(order) && manager.insertShipment(shipment)) {
-                if (isNewInvoice) {
-                    int invoiceid = manager.addInvoice(invoice);
-                    if (invoiceid > 0) {
-                        invoice.setInvoiceid(invoiceid);
-                        b = true;
+                if (hasInvoice) {
+                    if (isNewInvoice) {
+                        int invoiceid = manager.addInvoice(invoice);
+                        if (invoiceid > 0) {
+                            invoice.setInvoiceid(invoiceid);
+                            b = true;
+                        }
+                    } else {
+                        b = manager.updateInvoice(invoice.getInvoiceid(), invoice.getAccountnum(), invoice.getAdjustment(), invoice.getReasonforadj());
                     }
-                } else {
-                    b = manager.updateInvoice(invoice.getInvoiceid(), invoice.getAccountnum(), invoice.getAdjustment(), invoice.getReasonforadj());
                 }
             }
             if (b) {
@@ -2192,7 +2207,13 @@ public class OrderProcessManager {
         int orderid = order.getOrderid();
         String to = order.getEmail();
         String subject = "PlasmID Order " + orderid + " Shipped";
-        String text = "Your PlasmID order " + orderid + " has shipped. Please note your tracking number and any shipping comments below. If you have requested the Platinum QC Service, end-read sequences are  available in  your account at http://plasmid.med.harvard.edu/PLASMID/Login.jsp. To view the results of our QC testing please log into your account, select the appropriate order number, and then select \"View Platinum Results.\" Please remember that a single end-read sequence is not able to verify your entire construct. Feel free to contact us at plasmidhelp@hms.harvard.edu if you have any questions. Thank you for using PlasmID.\n\n";
+        String text = "Your PlasmID order " + orderid;
+        if(CloneOrder.PARTIALLY_SHIPPED.equals(order.getStatus())) {
+            text += " has partially shipped.";
+        } else {
+            text += " has shipped.";
+        }
+        text += " Please note your tracking number and any shipping comments below. If you have requested the Platinum QC Service, end-read sequences are  available in  your account at http://plasmid.med.harvard.edu/PLASMID/Login.jsp. To view the results of our QC testing please log into your account, select the appropriate order number, and then select \"View Platinum Results.\" Please remember that a single end-read sequence is not able to verify your entire construct. Feel free to contact us at plasmidhelp@hms.harvard.edu if you have any questions. Thank you for using PlasmID.\n\n";
         text += "If you have selected \"pickup\" as your shipment option please pick up your order from the second floor of the Seeley G. Mudd building.  Samples can be found in the hallway refrigerator.\n\n";
         text += "===========================================================\n";
         text += "Tracking Number: " + order.getTrackingnumber() + "\n";
@@ -2201,7 +2222,7 @@ public class OrderProcessManager {
         }
         Mailer.sendMessage(to, Constants.EMAIL_FROM, subject, text);
 
-        if (!User.isInternalMember(order.getUsergroup())) {
+        if (!User.isInternalMember(order.getUsergroup()) && invoice != null) {
             String filename = Constants.TMP + "Invoice_" + orderid + ".pdf";
             File f1 = new File(filename);
             OutputStream file = new FileOutputStream(f1);
@@ -2245,11 +2266,11 @@ public class OrderProcessManager {
         CloneOrderManager manager = new CloneOrderManager();
         return manager.queryOrderShipment(shipmentid);
     }
-    
+
     public void printPackingSlip(OutputStream file, Shipment shipment) {
         try {
             CloneOrder order = shipment.getOrder();
-            
+
             Document document = new Document();
             PdfWriter.getInstance(document, file);
             document.open();
@@ -2265,8 +2286,8 @@ public class OrderProcessManager {
             table.addCell(PdfEditor.makeSmallBold("Email:\t" + order.getEmail()));
             table.addCell(PdfEditor.makeSmallBold("Phone:\t" + order.getPhone()));
             table.addCell(PdfEditor.makeSmallBold("Name:\t" + order.getName()));
-            table.addCell(PdfEditor.makeSmallBold("PO Number:\t" + order.getPonumber()));
-        
+            table.addCell(PdfEditor.makeSmallBold("PO Number:\t" + shipment.getAccount()));
+
             PdfPCell cell = new PdfPCell(PdfEditor.makeTitle(" "));
             cell.setColspan(2);
             cell.setBorder(Rectangle.NO_BORDER);
@@ -2280,7 +2301,7 @@ public class OrderProcessManager {
             cell.setBorder(Rectangle.NO_BORDER);
             table.addCell(cell);
             document.add(table);
-            
+
             List<Clone> clones = shipment.getClones();
             document.add(PdfEditor.makeTitle(" "));
             table = new PdfPTable(1);

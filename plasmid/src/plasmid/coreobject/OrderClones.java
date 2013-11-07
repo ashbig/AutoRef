@@ -6,6 +6,7 @@
 
 package plasmid.coreobject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,10 @@ import java.util.List;
  *
  * @author  DZuo
  */
-public class OrderClones {
+public class OrderClones implements Serializable {
+    public static final String INSHIPMENT_YES = "Yes";
+    public static final String INSHIPMENT_NO = "No";
+    
     private int orderid;
     private int cloneid;
     private String collectionname;
@@ -164,5 +168,11 @@ public class OrderClones {
      */
     public void setInshipment(boolean inshipment) {
         this.inshipment = inshipment;
+    }
+    
+    public String getInShipmentString() {
+        if(this.inshipment) 
+            return INSHIPMENT_YES;
+        return INSHIPMENT_NO;
     }
 }

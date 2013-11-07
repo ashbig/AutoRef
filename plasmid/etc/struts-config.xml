@@ -394,6 +394,12 @@
                     type="plasmid.action.EnterShippingAction"
                     name="processShippingForm"
                     input="/EnterShipping.jsp">
+            <forward  name="success"  path="/EnterShippingConfirmation.jsp"/>
+        </action>
+        <action     path="/EnterShippingConfirmation"
+                    type="plasmid.action.EnterShippingConfirmationAction"
+                    name="processShippingForm"
+                    input="/EnterShippingConfirmation.jsp">
             <forward  name="success"  path="/ViewOrderDetail.jsp"/>
         </action>
         <action    path="/FindClones"

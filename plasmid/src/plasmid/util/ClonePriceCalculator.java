@@ -31,14 +31,23 @@ public class ClonePriceCalculator {
         return clonenum * pricePerClone;
     }
 
+    public double calculateClonePrice(int clonenum, String usergroup, String ismember) {
+        double pricePerClone = getPricePerClone(usergroup, ismember);
+        return clonenum * pricePerClone;
+    }
+
     public double getPricePerClone(User user) {
-        if (User.HOSTLAB.equals(user.getGroup())) {
+        return getPricePerClone(user.getGroup(), user.getIsmember());
+    }
+
+    public double getPricePerClone(String usergroup, String ismember) {
+        if (User.HOSTLAB.equals(usergroup)) {
             return PRICE_PER_CLONE_HOST;
         }
-        if (user.isMemberForCloneOrder()) {
+        if (User.isMemberForCloneOrder(usergroup, ismember)) {
             return PRICE_PER_CLONE_DFHCC;
         }
-        if (User.OTHER.equals(user.getGroup())) {
+        if (User.OTHER.equals(usergroup)) {
             return PRICE_PER_CLONE_COMMERCIAL;
         }
         return PRICE_PER_CLONE_OTHER;
@@ -62,13 +71,17 @@ public class ClonePriceCalculator {
     }
 
     public static double calculatePlatinumCost(User user, int numOfClones) {
-        if (User.HOSTLAB.equals(user.getGroup())) {
+        return calculatePlatinumCost(user.getGroup(), user.getIsmember(), numOfClones);
+    }
+
+    public static double calculatePlatinumCost(String usergroup, String ismember, int numOfClones) {
+        if (User.HOSTLAB.equals(usergroup)) {
             return PRICE_PLATINUM_HOST*numOfClones;
         }
-        if (user.isMemberForCloneOrder()) {
+        if (User.isMemberForCloneOrder(usergroup, ismember)) {
             return PRICE_PLATINUM_DFHCC*numOfClones;
         }
-        if (User.OTHER.equals(user.getGroup())) {
+        if (User.OTHER.equals(usergroup)) {
             return PRICE_PLATINUM_COMMERCIAL*numOfClones;
         }
         return PRICE_PLATINUM_OTHER*numOfClones;
