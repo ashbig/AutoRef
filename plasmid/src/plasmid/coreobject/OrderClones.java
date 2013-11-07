@@ -17,6 +17,8 @@ import java.util.List;
 public class OrderClones implements Serializable {
     public static final String INSHIPMENT_YES = "Yes";
     public static final String INSHIPMENT_NO = "No";
+    public static final String SHIPPED_STRING_YES = "Shipped";
+    public static final String SHIPPED_STRING_NO = "";
     
     private int orderid;
     private int cloneid;
@@ -174,5 +176,11 @@ public class OrderClones implements Serializable {
         if(this.inshipment) 
             return INSHIPMENT_YES;
         return INSHIPMENT_NO;
+    }
+    
+    public String getShippedString() {
+        if(isShipped())
+            return SHIPPED_STRING_YES;
+        return SHIPPED_STRING_NO;
     }
 }

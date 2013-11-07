@@ -81,6 +81,7 @@
                                 <td class="tableheader">Item</td>
                                 <td class="tableheader">Quantity</td>
                                 <td class="tableheader">Platinum Result</td>
+                                <td class="tableheader">Shipping Status</td>
                             </tr>
                             <logic:iterate name="<%=Constants.CLONEORDER%>" property="clones" id="clone">
                                 <tr> 
@@ -95,6 +96,7 @@
                                     <logic:notPresent name="clone" property="validation">
                                         <td class="tablebody">NA</td>
                                     </logic:notPresent>
+                                    <td class="tablebody"><bean:write name="clone" property="shippedString"/></td>
                                 </tr> 
                             </logic:iterate>
                         </table>

@@ -6,6 +6,7 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ page import="plasmid.Constants" %> 
 <%@ page import="plasmid.coreobject.User" %>
+<%@ page import="plasmid.coreobject.CloneOrder" %>
 
 <html>
     <head>
@@ -71,8 +72,10 @@
                             <tr> 
                                 <td class="formlabel">Total Price:</td>
                                 <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="totalPriceString"/></td>
+                            <logc:equal name="<%=Constants.CLONEORDER%>" property="status" value="<%=CloneOrder.SHIPPED%>">
                                 <td class="formlabel">Price Adjustment (enter negative number for refund):</td>
                                 <td class="text"><html:text styleClass="text" maxlength="50" property="adjustment"/></td>
+                            </logc:equal>
                             </tr>
                             <tr> 
                                 <td class="formlabel" colspan="4">Reason for Adjustment:</td>
@@ -89,6 +92,7 @@
                                 <td class="tableheader">Quantity</td>
                                 <td class="tableheader">Platinum Result</td>
                                 <td class="tableheader">In Shipment</td>
+                                <td class="tableheader">Shipping Status</td>
                             </tr>
                             <logic:iterate name="<%=Constants.CLONEORDER%>" property="clones" id="clone">
                                 <tr> 
@@ -101,6 +105,7 @@
                                         <td class="tablebody">NA</td>
                                     </logic:notPresent>
                                     <td class="tablebody"><bean:write name="clone" property="inShipmentString"/></td>
+                                    <td class="tablebody"><bean:write name="clone" property="shippedString"/></td>
                                 </tr> 
                             </logic:iterate>
                         </table>

@@ -1146,6 +1146,8 @@ public class OrderProcessManager {
                     } else {
                         b = manager.updateInvoice(invoice.getInvoiceid(), invoice.getAccountnum(), invoice.getAdjustment(), invoice.getReasonforadj());
                     }
+                } else {
+                    b = true;
                 }
             }
             if (b) {
@@ -1157,7 +1159,7 @@ public class OrderProcessManager {
         } catch (Exception ex) {
             DatabaseTransaction.rollback(conn);
             if (Constants.DEBUG) {
-                System.out.println(ex);
+                ex.printStackTrace();
             }
             return false;
         } finally {
