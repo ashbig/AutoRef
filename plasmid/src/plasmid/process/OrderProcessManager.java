@@ -254,16 +254,17 @@ public class OrderProcessManager {
 
         return n + m;
     }
-    
+
     public static double calculateRefund(String usergroup, String ismember, int count, boolean isPlatinum) {
         double refund = 0.0;
         ClonePriceCalculator calculator = new ClonePriceCalculator();
         refund = calculator.calculateClonePrice(count, usergroup, ismember);
-        if(isPlatinum) {
+        if (isPlatinum) {
             refund += ClonePriceCalculator.calculatePlatinumCost(usergroup, ismember, count);
         }
-        if(refund>0)
+        if (refund > 0) {
             return -refund;
+        }
         return refund;
     }
 
@@ -1125,6 +1126,38 @@ public class OrderProcessManager {
             DatabaseTransaction.closeResultSet(rs);
         }
         return c;
+    }
+
+    public boolean completeOrder(CloneOrder order, Invoice invoice) {
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            CloneOrderManager manager = new CloneOrderManager(conn);
+            boolean b = false;
+            if (manager.updateOrderStatus(order.getOrderid(), CloneOrder.SHIPPED)) {
+                int invoiceid = manager.addInvoice(invoice);
+                if (invoiceid > 0) {
+                    invoice.setInvoiceid(invoiceid);
+                    b = true;
+                }
+            }
+            if (b) {
+                DatabaseTransaction.commit(conn);
+            } else {
+                DatabaseTransaction.rollback(conn);
+            }
+            return b;
+        } catch (Exception ex) {
+            DatabaseTransaction.rollback(conn);
+            if (Constants.DEBUG) {
+                ex.printStackTrace();
+            }
+            return false;
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
+        }
     }
 
     public boolean updateShipping(CloneOrder order, Invoice invoice, boolean isNewInvoice, Shipment shipment, boolean hasInvoice) {
@@ -2210,7 +2243,7 @@ public class OrderProcessManager {
         String to = order.getEmail();
         String subject = "PlasmID Order " + orderid + " Shipped";
         String text = "Your PlasmID order " + orderid;
-        if(CloneOrder.PARTIALLY_SHIPPED.equals(order.getStatus())) {
+        if (CloneOrder.PARTIALLY_SHIPPED.equals(order.getStatus())) {
             text += " has partially shipped.";
         } else {
             text += " has shipped.";

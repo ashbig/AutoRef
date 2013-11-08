@@ -301,6 +301,12 @@ public class CloneOrder implements Serializable {
         
         return false;
     }
+    
+    public boolean getIsPartiallyShipped() {
+        if(CloneOrder.PARTIALLY_SHIPPED.equals(status))
+            return true;
+        return false;
+    }
 
     public String getPiinstitution() {
         return piinstitution;

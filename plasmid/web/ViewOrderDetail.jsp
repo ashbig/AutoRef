@@ -245,6 +245,16 @@
                                     </logic:equal>
                                 </logic:equal>
                             </td> 
+                            <td width="20%" align="left" class="text">
+                                <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
+                                    <logic:equal name="<%=Constants.CLONEORDER%>" property="isPartiallyShipped" value="true">
+                                        <html:form action="CompleteOrderInput.do">
+                                            <html:hidden name="<%=Constants.CLONEORDER%>" property="orderid"/>
+                                            <html:submit styleClass="text" value="Complete Order"/>
+                                        </html:form>
+                                    </logic:equal>
+                                </logic:equal>
+                            </td> 
                         </tr>
                     </table>
 
