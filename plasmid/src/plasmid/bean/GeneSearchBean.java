@@ -65,7 +65,7 @@ public class GeneSearchBean implements Serializable {
 
     public GeneSearchBean() {
         this.genenames = null;
-        this.caseSensitive = "yes";
+        this.caseSensitive = "no";
         genes = null;
         seqs = null;
         clones = null;
@@ -80,7 +80,7 @@ public class GeneSearchBean implements Serializable {
         filterToggle = true;
         genePanel = -1;
         refseqPanel = -1;
-        refseqView = true;
+        refseqView = false;
         cloneView = true;
 
         try {
@@ -94,7 +94,7 @@ public class GeneSearchBean implements Serializable {
         filterToggle = true;
         genePanel = -1;
         refseqPanel = -1;
-        refseqView = true;
+        refseqView = false;
         cloneView = true;
         showResult = false;
         genes = null;
@@ -110,8 +110,17 @@ public class GeneSearchBean implements Serializable {
             List<String> terms = convertor.convertFromStringToList(genenames, ",");
             List<String> vptypes = getVptypes();
             genes = manager.searchGenes(terms, isCaseSensitive, vptypes, getRestrictions(), species);
+            for(Geneinfo gene:genes) {
+                int geneid = gene.getGeneid();
+                List<Gene2Refseq> seqs = manager.searchRefseqs(geneid, vptypes, getRestrictions());
+                gene.setSeqs(seqs);
+            }
             showResult = true;
         } catch (DatabaseException ex) {
+            FacesMessage msg = new FacesMessage(ex.getMessage());
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        } catch (IOException ex) {
+            ex.printStackTrace();
             FacesMessage msg = new FacesMessage(ex.getMessage());
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
@@ -566,7 +575,7 @@ public class GeneSearchBean implements Serializable {
     }
 
     public void geneViewTabChange() {
-        refseqView = true;
+        refseqView = false;
         cloneView = true;
         refseqPanel = -1;
         seqs = null;

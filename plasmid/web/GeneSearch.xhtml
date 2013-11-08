@@ -72,7 +72,7 @@
                 <p:tab title="Gene View">  
                     <p:accordionPanel id="geneview2" value="#{geneSearchBean.genes}" var="gene" dynamic ="true" activeIndex="#{geneSearchBean.genePanel}" cache="false">          
                         <p:ajax event="tabChange" listener="#{geneSearchBean.geneViewTabChange}"/>
-                        <p:tab title="Search term: #{gene.term}, Gene: #{gene.symbol}, Total plasmids found: #{gene.cloneCount}">  
+                        <p:tab title="Search term: #{gene.term}, Gene: #{gene.symbol}&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Total plasmids found: #{gene.cloneCount}">  
                             <p:panelGrid> 
                                 <p:row>
                                     <p:column>
@@ -147,12 +147,10 @@
 
                             <p:spacer height="10"/>
 
-                            <p:panel header="NCBI Reference Sequences (RefSeq) - mRNA and Protein(s)" toggleable="true" toggleSpeed="500" collapsed="#{geneSearchBean.refseqView}">  
-                                <p:ajax event="toggle" listener="#{geneSearchBean.findRefseqs(gene.geneid)}" update="seqView" /> 
-
-                                <p:accordionPanel id="seqView" value="#{geneSearchBean.seqs}" var="seq" activeIndex="#{geneSearchBean.refseqPanel}" dynamic="true" cache="false">  
+                            <p:panel header="NCBI Reference Sequences (RefSeq) - mRNA and Protein(s)" toggleable="false">  
+                                <p:accordionPanel id="seqView" value="#{gene.seqs}" var="seq" activeIndex="#{geneSearchBean.refseqPanel}" dynamic="true" cache="false">  
                                     <p:ajax event="tabChange" listener="#{geneSearchBean.seqViewTabChange}"/>
-                                    <p:tab title="RefSeq sequence: #{seq.accession} -> #{seq.proteinacc}, Total plasmids found: #{seq.cloneCount}"> 
+                                    <p:tab title="RefSeq sequence: #{seq.accession} -> #{seq.proteinacc}&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Total plasmids found: #{seq.cloneCount}"> 
                                         <p:panelGrid columns="4">
                                             <h:outputLabel value="GenBank Accession:"/>
                                             <h:outputLink target="_blank" value="http://www.ncbi.nlm.nih.gov/nuccore/#{seq.gi}">#{seq.accession}</h:outputLink>
