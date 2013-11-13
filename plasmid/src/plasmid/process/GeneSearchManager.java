@@ -5,7 +5,6 @@
 package plasmid.process;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -22,7 +21,6 @@ import plasmid.database.DatabaseException;
 import plasmid.database.DatabaseManager.CloneManager;
 import plasmid.database.DatabaseManager.GeneQueryManager;
 import plasmid.database.DatabaseManager.VectorManager;
-import plasmid.util.StringConvertor;
 
 /**
  *
@@ -37,7 +35,7 @@ public class GeneSearchManager {
         if(terms == null || terms.isEmpty()) {
             return null;
         }      
-        return GeneQueryManager.queryGenesDetail(terms, isCaseSensitive, vptypes, restrictions, species);
+        return GeneQueryManager.queryGenesWithRefseqs(terms, isCaseSensitive, vptypes, restrictions, species);
     }
     
     public List<Gene2Refseq> searchRefseqs(int geneid, List<String> vptypes, List<String> restrictions) throws DatabaseException, IOException {

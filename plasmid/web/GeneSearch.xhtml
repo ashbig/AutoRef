@@ -72,7 +72,7 @@
                 <p:tab title="Gene View">  
                     <p:accordionPanel id="geneview2" value="#{geneSearchBean.genes}" var="gene" dynamic ="true" activeIndex="#{geneSearchBean.genePanel}" cache="false">          
                         <p:ajax event="tabChange" listener="#{geneSearchBean.geneViewTabChange}"/>
-                        <p:tab title="Search term: #{gene.term}, Gene: #{gene.symbol}&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Total plasmids found: #{gene.cloneCount}">  
+                        <p:tab title="Gene: #{gene.symbol}">  
                             <p:panelGrid> 
                                 <p:row>
                                     <p:column>
