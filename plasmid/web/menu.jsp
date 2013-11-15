@@ -13,10 +13,9 @@
         <tr> 
           <td height="15" class="mainbodytext">Search Plasmids</td>
         </tr>
-        <!--
         <tr> 
           <td height="15" class="lftsubtxt">- <a href="<%=request.getContextPath( )%>/faces/GeneSearch.xhtml" class="leftsubnavtext">human & mouse genes</a></td>
-        </tr>-->
+        </tr>
         <tr> 
           <td height="15" class="lftsubtxt">- <a href="<%=request.getContextPath( )%>/PrepareAdvancedSearch.do?psi=0" class="leftsubnavtext">advanced text search</a></td>
         </tr>
