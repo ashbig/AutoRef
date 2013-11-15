@@ -47,7 +47,7 @@ public class ChangeOrderStatusAction extends InternalUserAction {
 
         if (Constants.BUTTON_CREATE_INVOICE.equals(button)) {
             StringConvertor sv = new StringConvertor();
-            List l = manager.getCloneOrders(sv.convertFromListToString(orderid), null, null, null, null, null, null, Constants.ALL, null, Constants.ALL);
+            List l = manager.getCloneOrders(sv.convertFromListToString(orderid), null, null, null, null, null, null, Constants.ALL, null, Constants.ALL, null);
             response.setContentType("application/x-msexcel");
             response.setHeader("Content-Disposition", "attachment;filename=Invoice.xls");
             PrintWriter out = response.getWriter();
@@ -58,7 +58,7 @@ public class ChangeOrderStatusAction extends InternalUserAction {
 
         if (Constants.BUTTON_GENERATE_REPORT.equals(button)) {
             StringConvertor sv = new StringConvertor();
-            List l = manager.getCloneOrders(sv.convertFromListToString(orderid), null, null, null, null, null, null, Constants.ALL, Constants.SORTBY_INSTITUTION, Constants.ALL, true);
+            List l = manager.getCloneOrders(sv.convertFromListToString(orderid), null, null, null, null, null, null, Constants.ALL, Constants.SORTBY_INSTITUTION, Constants.ALL, true, null);
             for (int i = 0; i < l.size(); i++) {
                 CloneOrder co = (CloneOrder) l.get(i);
                 List clones = manager.getOrderClones(co.getOrderid(), user, false, co.getIsBatch());
