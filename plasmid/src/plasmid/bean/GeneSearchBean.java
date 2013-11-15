@@ -110,20 +110,16 @@ public class GeneSearchBean implements Serializable {
             List<String> terms = convertor.convertFromStringToList(genenames, ",");
             List<String> vptypes = getVptypes();
             genes = manager.searchGenes(terms, isCaseSensitive, vptypes, getRestrictions(), species);
-            for(Geneinfo gene:genes) {
+            /**for(Geneinfo gene:genes) {
                 int geneid = gene.getGeneid();
                 List<Gene2Refseq> seqs = manager.searchRefseqs(geneid, vptypes, getRestrictions());
                 gene.setSeqs(seqs);
-            }
+            }*/
             showResult = true;
         } catch (DatabaseException ex) {
             FacesMessage msg = new FacesMessage(ex.getMessage());
             FacesContext.getCurrentInstance().addMessage(null, msg);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            FacesMessage msg = new FacesMessage(ex.getMessage());
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-        }
+        } 
     }
 
     public void findRefseqs(int geneid) {
