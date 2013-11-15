@@ -28,6 +28,8 @@ public class SearchOrderForm extends ActionForm {
     private String organization;
     private String sort;
     private String cloneProvider;
+    //ab code addition for search po
+    private String ponumber;
     
     /** Creates a new instance of SearchOrderForm */
     public SearchOrderForm() {
@@ -42,6 +44,8 @@ public class SearchOrderForm extends ActionForm {
     public String getLastName() {return lastName;}
     public String getOrganization() {return organization;}
     public String getSort() {return sort;}
+    //ab PO addtion: get
+    public String getPonumber() {return ponumber;}
     
     public void setOrderid(String s) {this.orderid = s;}
     public void setOrderDateFrom(String s) {this.orderDateFrom = s;}
@@ -52,6 +56,8 @@ public class SearchOrderForm extends ActionForm {
     public void setLastName(String s) {this.lastName = s;}
     public void setOrganization(String s) {this.organization = s;}
     public void setSort(String s) {this.sort = s;}
+    // ab PO addition: set
+    public void setPonumber(String s) {this.ponumber = s;}
 
     public String getCloneProvider() {
         return cloneProvider;

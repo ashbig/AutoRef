@@ -36,6 +36,10 @@
     <td colspan="4" class="itemtext"><html:text property="orderid" size="50"/></td>
   </tr>
   <tr></tr>
+  <tr> 
+      <td class="formlabel"> PO Number (separate each PO by comma [,]): </td>
+      <td colspan="4" class="itemtext"><html:text property="ponumber" size="50"/></td>
+  </tr>
   <tr>
     <td class="formlabel">Select Order Date (mm/dd/yyyy):</td>
     <td class="formlabel">From</td>

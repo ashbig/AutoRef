@@ -1414,13 +1414,13 @@ public class OrderProcessManager {
 
     public List getCloneOrders(String orderids, String orderDateFrom, String orderDateTo,
             String shippingDateFrom, String shippingDateTo, String status, String lastnames,
-            String organization, String sort, String provider) {
-        return getCloneOrders(orderids, orderDateFrom, orderDateTo, shippingDateFrom, shippingDateTo, status, lastnames, organization, sort, provider, false);
+            String organization, String sort, String provider, String ponumbers) { /// ab added po
+        return getCloneOrders(orderids, orderDateFrom, orderDateTo, shippingDateFrom, shippingDateTo, status, lastnames, organization, sort, provider, false, ponumbers); //ab added PO
     }
 
     public List getCloneOrders(String orderids, String orderDateFrom, String orderDateTo,
             String shippingDateFrom, String shippingDateTo, String status, String lastnames,
-            String organization, String sort, String provider, boolean isPI) {
+            String organization, String sort, String provider, boolean isPI, String ponumbers) {
         DatabaseTransaction t = null;
         Connection conn = null;
         StringConvertor sc = new StringConvertor();
@@ -1461,9 +1461,13 @@ public class OrderProcessManager {
                     isMember = true;
                 }
             }
-
+            List ponumberList = null;
+            if (ponumbers != null && ponumbers.trim().length() > 0) {
+                ponumberList = sc.convertFromStringToList(ponumbers.trim(), ","); //ab added coded taken DIRECTLY from invoices line 1487
+            }
+            
             String sortby = null;
-            if (Constants.SORTBY_ORDERDATE.equals(sort)) {
+            if (Constants.SORTBY_ORDERDATE.equals(sort)) {  // is sort by PO really necessary? leaving it out for now
                 sortby = "orderdate";
             }
             if (Constants.SORTBY_ORDERID.equals(sort)) {
@@ -1481,7 +1485,7 @@ public class OrderProcessManager {
             if (Constants.SORTBY_INSTITUTION.equals(sort)) {
                 sortby = "institution";
             }
-            List cloneorders = manager.queryCloneOrders(orderidList, orderDateFrom, orderDateTo, shippingDateFrom, shippingDateTo, status, lastnameList, isMember, sortby, provider, isPI, isMtamember);
+            List cloneorders = manager.queryCloneOrders(orderidList, orderDateFrom, orderDateTo, shippingDateFrom, shippingDateTo, status, lastnameList, isMember, sortby, provider, isPI, isMtamember, ponumberList);
             return cloneorders;
         } catch (Exception ex) {
             DatabaseTransaction.rollback(conn);

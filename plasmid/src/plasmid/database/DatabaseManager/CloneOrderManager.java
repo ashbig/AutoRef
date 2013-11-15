@@ -712,13 +712,13 @@ public class CloneOrderManager extends TableManager {
 
     public List queryCloneOrders(List orderids, String orderDateFrom, String orderDateTo,
             String shippingDateFrom, String shippingDateTo, String status, List lastnames,
-            boolean isMember, String sort, String provider, boolean isMtamember) {
-        return queryCloneOrders(orderids, orderDateFrom, orderDateTo, shippingDateFrom, shippingDateTo, status, lastnames, isMember, sort, provider, false, isMtamember);
+            boolean isMember, String sort, String provider, boolean isMtamember, List ponumbers) { //ab added po number
+        return queryCloneOrders(orderids, orderDateFrom, orderDateTo, shippingDateFrom, shippingDateTo, status, lastnames, isMember, sort, provider, false, isMtamember, ponumbers); //ab added po number
     }
 
     public List queryCloneOrders(List orderids, String orderDateFrom, String orderDateTo,
             String shippingDateFrom, String shippingDateTo, String status, List lastnames,
-            boolean isMember, String sort, String provider, boolean isPI, boolean isMtamember) {
+            boolean isMember, String sort, String provider, boolean isPI, boolean isMtamember, List ponumbers) { // AB added po number
         String sql = "select c.orderid,to_char(c.orderdate, 'YYYY-MM-DD hh:mm:ss'),c.orderstatus,c.ponumber,c.shippingto,c.billingto,"
                 + " c.shippingaddress,c.billingaddress,c.numofclones,c.numofcollection,c.costforclones,"
                 + " c.costforcollection,c.costforshipping,c.totalprice,c.userid,u.firstname,u.lastname,"
@@ -756,6 +756,9 @@ public class CloneOrderManager extends TableManager {
         }
         if (isMtamember) {
             sql += " and u.institution in (select name from institution where ismember='Y')";
+        }
+        if (ponumbers != null) {  ////ab addded code
+            sql += " and lower(c.ponumber) in ("+StringConvertor.convertFromListToSqlString(ponumbers)+")";
         }
         if (!Constants.ALL.equals(provider)) {
             sql += " and c.orderid in (select orderid from orderclones where cloneid in (select cloneid from cloneauthor where authorid in (select authorid from authorinfo where authorname='" + provider + "')))";
