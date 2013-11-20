@@ -36,7 +36,7 @@ public class SequenceAnalyzer {
 
     public static final String BLAST_PROGRAM_PATH = "C:\\NCBI\\blast-2.2.28+\\bin\\";
     public static final String BLAST_FILE_PATH = "D:\\dev\\blast\\tmp\\";
-    public static final String FILE_PATH = "D:\\dev\\Gene_20130402\\PlasmidAnalysis\\analysis\\pairwise\\";
+    public static final String FILE_PATH = "D:\\wade\\Interactome\\analysis\\";
     public static final String BLASTABLE_DB_PATH = "D:\\dev\\blast\\db\\";
 
     public String getBestMatchByBlast(Dnasequence sequence, String db) {
@@ -106,23 +106,23 @@ public class SequenceAnalyzer {
         try {
             BufferedReader in = new BufferedReader(new FileReader(input));
             OutputStreamWriter out = new FileWriter(output);
-            out.write("Cloneid\tRefseqGI\tPercentid\tAlength\tMismatch\tGap\tEvalue\tScore\tqStart\tqEnd\tsStart\tsEnd\n");
+            out.write("ID\tCloneid\tRefseqGI\tPercentid\tAlength\tMismatch\tGap\tEvalue\tScore\tqStart\tqEnd\tsStart\tsEnd\n");
 
             BlastWrapper blaster = new BlastWrapper();
             blaster.setIsLowcomp(true);
             //blaster.setLowcomp("no");
             //blaster.setWordsize(5);
             //blaster.setExpect(1000);
-            blaster.setAlignmentview(1);
             String line = in.readLine();
             while ((line = in.readLine()) != null) {
                 //ID    queryid	Plasmidcloneseq_Sequence    subjectid	ReferenceProtein_Sequence
-                String[] column = line.split("\t", 4);
-                String queryid = column[0];
-                String cloneseq = column[1];
-                String subid = column[2];
-                String proteinSeq = column[3];
-                System.out.println(queryid + "\t" + subid);
+                String[] column = line.split("\t", 5);
+                String id = column[0];
+                String queryid = column[1];
+                String cloneseq = column[2];
+                String subid = column[3];
+                String proteinSeq = column[4];
+                System.out.println(id);
                 if (cloneseq == null || cloneseq.length() == 0 || proteinSeq == null || proteinSeq.length() == 0) {
                     continue;
                 }
@@ -132,7 +132,6 @@ public class SequenceAnalyzer {
                 blaster.setInput(inputfile1);
                 blaster.setInput2(inputfile2);
                 blaster.setOutput(outputfile);
-                blaster.setAlignmentview(BlastWrapper.PAIRWISE_OUTPUT);
                 blaster.setProgram(BlastWrapper.PROGRAM_BLASTN);
                 blaster.runBlast2Seq();
 
@@ -152,7 +151,7 @@ public class SequenceAnalyzer {
                 }
                 BlastInfo info = (BlastInfo) blastInfos.get(0);
                 //int mismatch = info.getMismatch() + info.getGap();
-                out.write(queryid + "\t" + subid + "\t" + info.getPid()
+                out.write(id + "\t" + queryid + "\t" + subid + "\t" + info.getPid()
                         + "\t" + info.getAlength()
                         + "\t" + info.getMismatch()
                         + "\t" + info.getGap()
@@ -256,7 +255,7 @@ public class SequenceAnalyzer {
         FileWriter out = new FileWriter(new File(file), append);
         for (Dnasequence seq : sequences) {
             out.write(">" + seq.getType() + "\n");
-            out.write(Dnasequence.convertToFasta(seq.getSequence()) + "\n");
+            out.write(Dnasequence.convertToFasta(seq.getSequence()) + "\n\n");
         }
         out.close();
     }
@@ -400,11 +399,11 @@ public class SequenceAnalyzer {
     public static void main(String args[]) {
         String input = "C:\\dev\\plasmid_support\\ccsb_201210\\stringcompare_input.txt";
         String output = "C:\\dev\\plasmid_support\\ccsb_201210\\stringcompare_output.txt";
-        String blastinput = SequenceAnalyzer.FILE_PATH + "Plasmid_human_analysis_cds_input.txt";
-        String blastoutput = SequenceAnalyzer.FILE_PATH + "Plasmid_human_analysis_cds_lowcomp_yes.txt";
+        String blastinput = SequenceAnalyzer.FILE_PATH + "blast_cds_input.txt";
+        String blastoutput = SequenceAnalyzer.FILE_PATH + "blast_cds_output.txt";
 
-        String refseqfile = "D:\\dev\\blast\\db\\refseq_mouse_cds.txt";
-        String refseqFastaFile = "D:\\dev\\blast\\db\\refseq_mouse_cds_fasta";
+        String refseqfile = "D:\\wade\\Interactome\\analysis\\domain_input.txt";
+        String refseqFastaFile = "D:\\wade\\Interactome\\analysis\\domain_input_fasta";
 
         String blastRefseqInput = "D:\\dev\\Gene_20130402\\PlasmidAnalysis\\analysis\\plasmid_human_blast_input6.txt";
         String blastRefseqOutput = "D:\\dev\\Gene_20130402\\PlasmidAnalysis\\analysis\\plasmid_human_analysis_aa2.txt";
@@ -432,24 +431,24 @@ public class SequenceAnalyzer {
          * try { List<Dnasequence> seqs = analyzer.readSequences(refseqfile);
          * analyzer.makeFastaDatabase(seqs, refseqFastaFile, false); } catch
          * (Exception ex) { ex.printStackTrace(); System.exit(1); }
-         */
-        /**
-         * try { analyzer.generateFastaDatabase(refseqfile, refseqFastaFile); }
-         * catch (Exception ex) { ex.printStackTrace(); System.exit(1);
+        try {
+            analyzer.generateFastaDatabase(refseqfile, refseqFastaFile);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            System.exit(1);
         }
          */
+
         //analyzer.findMatchingRefseq(blastRefseqInput, blastRefseqOutput, BLASTABLE_DB_PATH+"refseq_human_proteinseq_fasta");
         /**
          * try { analyzer.findFailedImageClone(failedImageInput,
          * failedImageOutput); } catch (Exception ex) { ex.printStackTrace();
-         * System.exit(1);
-        }
+         * System.exit(1); }
          */
         /**
          * try { //analyzer.parseSynonyms(synonymInput, synonymOutput);
          * analyzer.aggregateField(goinput, gooutput); } catch (Exception ex) {
-         * ex.printStackTrace(); System.exit(1);
-        }
+         * ex.printStackTrace(); System.exit(1); }
          */
         System.exit(0);
     }

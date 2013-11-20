@@ -17,7 +17,7 @@ public class GenerateContainers {
     public static final String TECAN_LOG_FILE_PATH = "D:\\dev\\Test\\Plasmid\\";
     
     //public static final String URL = "http://dev.plasmid.med.harvard.edu/PLASMID/"; //testing
-    //public static final String URL = "http://localhost:8080/PLASMID/";
+    //public static final String URL = "http://localhost:8080/plasmid_new/";
     public static final String URL = "http://plasmid.med.harvard.edu/PLASMID/"; //production
     
     private String worklistName;
@@ -92,16 +92,18 @@ public class GenerateContainers {
     
     public static void main(String args[]) {
         String logfile = "LOG01809.LOG";
+        String worklistid="539";
         
         System.out.println("Starting...");
         GenerateContainers g = new GenerateContainers();
         try {
-            System.out.println("Getting the last modified log file in directory: "+TECAN_LOG_FILE_PATH);
-            logfile = g.getLastLogFile(TECAN_LOG_FILE_PATH);
-            System.out.println("Parsing log file: "+logfile);
-            g.parseTecanLogFile(logfile);
-            System.out.println("Parsing log file successful.");
-            System.out.println("Generating containers in database...");
+            //System.out.println("Getting the last modified log file in directory: "+TECAN_LOG_FILE_PATH);
+            //logfile = g.getLastLogFile(TECAN_LOG_FILE_PATH);
+            //System.out.println("Parsing log file: "+logfile);
+            //g.parseTecanLogFile(logfile);
+            //System.out.println("Parsing log file successful.");
+            //System.out.println("Generating containers in database...");
+            g.setWorklistName(worklistid);
             if(g.generateContainers()) {
                 System.out.println("Generating containers in database successful.");
                 System.out.println("Successful!");
