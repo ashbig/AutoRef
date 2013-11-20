@@ -59,7 +59,7 @@
                                         <html:text name="PM" property="title" readonly="true" size="80"/>
                                     </logic:present>
                                     <logic:notPresent name="PM">
-                                        <html:text property="title" size="70" size="80"/>
+                                        <html:text property="title" size="80"/>
                                     </logic:notPresent>
                                 </td>
                             </tr>
