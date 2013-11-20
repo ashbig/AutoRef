@@ -1,0 +1,217 @@
+ID   PSP64      preliminary; circular DNA; SYN; 2999 BP.
+XX
+AC   X65327; L08943; VB0034; IG0094;
+XX
+DT   06-AUG-1987 (Rel. 2, Created)
+DT   01-JUL-1995 (Rel. 12, Last updated, Version 1)
+XX
+DE   E. coli phagemid vector pSP64 - complete.
+XX
+KW   cloning vector.
+XX
+OS   Cloning vector
+OC   Artificial sequences; Cloning vehicles.
+XX
+RN   [1]
+RC   pSP64
+RA   ;
+RT   ;
+RL   Submitted (23-MAR-1992) on tape to the EMBL Data Library by:
+RL   Technical Services, Promega Corporation, 2800 Woods Hollow Road,
+RL   Madison, WI 53711-5399, USA.
+XX
+RN   [2]
+RP   1-2999
+RC   pSP64
+RA   Klock C.;
+RT   ;
+RL   Submitted (28-MAY-1993) on tape to the EMBL Data Library by:
+RL   Technical Services, Promega Corporation, 2800 Woods Hollow Road,
+RL   Madison, WI 53711-5399, USA.
+XX
+RN   [3]
+RC   pSP64 from pUC12 & SP6 promoter
+RC   pSP65 from pUC12 & SP6 promoter
+RA   Melton D.A., Krieg P.A., Rebagliati M.R., Maniatis T., Zinn K.,
+RA   Green M.R.;
+RT   "Efficient in vitro synthesis of biologically active RNA and RNA
+RT   hybridization probes from plasmids containing a bacteriophage
+RT   SP6 promoter";
+RL   Nucleic Acids Res. 12:7035-7056(1984).
+XX
+RN   [4]
+RC   pSP64
+RA   Melton D.A.;
+RT   ;
+RL   Submitted (00-APR-1986) to GenBank on computer-readable media by:
+RL   Melton D.A., Harvard University.
+XX
+RN   [5]
+RC   pSP64
+RA   Gilbert W.;
+RT   "Obtained from VecBase 3.0";
+RL   Unpublished (1991).
+XX
+RN   [6]
+RC   pSP6-HbetaA from pSP6-Hbeta
+RC   pSP6-HbetaoFA from pSP6-HbetaA & piSVHPbetao
+RC   pSP62-PL1 from human beta-globin gene
+RA   Green M.R., Maniatis T., Melton D.A.;
+RT   "Human beta-globin pre-mRNA synthesized in vitro is accurately
+RT   spliced in Xenopus oocyte nuclei";
+RL   Cell 32:681-694(1983).
+XX
+RN   [7]
+RC   R7delta7 from pBR322 & SP6 promoter
+RC   pSP6-Hbeta from R7delta7 & human beta-globin gene
+RA   Butler E., Little P.;
+RT   ;
+RL   Unpublished (1983).
+XX
+RN   [8]
+RC   piSVHPbetao from beta0-thallassemic gene
+RA   Treisman R., Proudfoot N.J., Shander M., Maniatis T.;
+RT   "A single base change at a splice site in a beta0-thallassemic gene
+RT   causes abnormal RNA splicing";
+RL   Cell 29:903-911(1982).
+XX
+CC   During the construction of the pSP64 vector from pUC12, the
+CC   majority of the lacZ gene was deleted.  Therefore. the X-gal
+CC   color screening method for the identification of recombinants is
+CC   not possible with this vector.
+CC   old Boehringer vector.
+CC   NM (pSP64)
+CC   CM (yes)
+CC   NA (ds-DNA)
+CC   TP (circular)
+CC   ST ()
+CC   TY (phagemid)
+CC   SP (Promega)
+CC   HO (E.coli HB101)(E.coli LE392)(E.coli JM83)
+CC   CP (high)
+CC   FN (transcription)
+CC   SE (color blue/white)
+CC   PA (pUC12)(bGal12)(PromSP6)(pBR322)
+CC   BR (pSP65)
+CC   OF (pGEM-1)(pCKSP6)
+CC   OR ()
+XX
+FH   Key             Location/Qualifiers
+FH
+FT   misc_feature    0..0
+FT                   /note="1. pUC12 remove small FnuDII-Sau3A/MboI,
+FT                   \ 2680bp-
+FT                   \ MboI = 249 399 984 1020 1037 1295 1341 1359 1700
+FT                   \ 1805 1817 1895 1903 1914 1989
+FT                   \ FnuDII = 30 674 716 1108
+FT                   2. Sp6 FnuDII-Sau3A/MboI 400bp, promoter
+FT                   -> pSP64 2999bp [no lacZ]"
+FT   promoter        1..1
+FT                   /note="PRO Salmonella bacteriophage Sp6
+FT                   transcription initiation site"
+FT   misc_binding    7..57
+FT                   /note="MCS HindIII-PstI-SalI-XbaI-BamHI-SmaI-SacI-
+FT                   EcoRI, from M13mp10/pUC12"
+FT   misc_feature    57..286
+FT                   /note="E. coli lac operon"
+FT   misc_feature    58..2288
+FT                   /note="from pUC12 bases 450..2680"
+FT   misc_feature    71..71
+FT                   /note="E. coli lacZ gene transcription initiation
+FT                   site"
+FT   promoter        91..107
+FT                   /note="PRO E. coli lac operator"
+FT   misc_binding    232..232
+FT                   /note="SIT unique PvuII"
+FT   misc_binding    408..408
+FT                   /note="SIT unique AflIII"
+FT   rep_origin      <408..<1000
+FT                   /note="ORI E. coli pMB1 (ColE1 and pBR322)"
+FT   CDS             1228..2088
+FT                   /note="ANT E. coli beta-lactamase gene (bla)
+FT                   ampicillin resistance gene (apr/amp)"
+FT   misc_binding    1421..1421
+FT                   /note="SIT unique BglI"
+FT   misc_binding    1523..1523
+FT                   /note="SIT unique AvlII"
+FT   misc_binding    1671..1671
+FT                   /note="SIT unique PvuII"
+FT   misc_binding    1781..1781
+FT                   /note="SIT unique ScaI"
+FT   misc_binding    1900..1900
+FT                   /note="SIT unique Asp700I"
+FT   misc_binding    2105..2105
+FT                   /note="SIT unique SspI"
+FT   misc_binding    2223..2223
+FT                   /note="SIT unique AatII"
+FT   misc_feature    2289..2475
+FT                   /note="from pUC12 bases 1..187"
+FT   misc_feature    2522..2800
+FT                   /note="from pBR322 bases complement(376..654)"
+FT   misc_binding    2567..2567
+FT                   /note="SIT unique SphI"
+FT   misc_binding    2597..2597
+FT                   /note="SIT unique DsaI"
+FT   misc_binding    2633..2633
+FT                   /note="SIT unique Eco47III"
+FT   misc_binding    2726..2726
+FT                   /note="SIT unique NaeI"
+FT   misc_binding    2757..2757
+FT                   /note="SIT unique NheI"
+FT   misc_feature    2801..3045
+FT                   /note="from bacteriophage Sp6"
+FT   promoter        join(2983..2999,1..6)
+FT                   /note="PRO bacteriophage Sp6; from Salmonella "
+XX
+SQ   Sequence 2999 BP; 744 A; 772 C; 761 G; 722 T; 0 other;
+     gaatacaagc ttgggctgca ggtcgactct agaggatccc cgggcgagct cgaattcgta
+     atcatggtca tagctgtttc ctgtgtgaaa ttgttatccg ctcacaattc cacacaacat
+     acgagccgga agcataaagt gtaaagcctg gggtgcctaa tgagtgagct aactcacatt
+     aattgcgttg cgctcactgc ccgctttcca gtcgggaaac ctgtcgtgcc agctgcatta
+     atgaatcggc caacgcgcgg ggagaggcgg tttgcgtatt gggcgctctt ccgcttcctc
+     gctcactgac tcgctgcgct cggtcgttcg gctgcggcga gcggtatcag ctcactcaaa
+     ggcggtaata cggttatcca cagaatcagg ggataacgca ggaaagaaca tgtgagcaaa
+     aggccagcaa aaggccagga accgtaaaaa ggccgcgttg ctggcgtttt tccataggct
+     ccgcccccct gacgagcatc acaaaaatcg acgctcaagt cagaggtggc gaaacccgac
+     aggactataa agataccagg cgtttccccc tggaagctcc ctcgtgcgct ctcctgttcc
+     gaccctgccg cttaccggat acctgtccgc ctttctccct tcgggaagcg tggcgctttc
+     tcatagctca cgctgtaggt atctcagttc ggtgtaggtc gttcgctcca agctgggctg
+     tgtgcacgaa ccccccgttc agcccgaccg ctgcgcctta tccggtaact atcgtcttga
+     gtccaacccg gtaagacacg acttatcgcc actggcagca gccactggta acaggattag
+     cagagcgagg tatgtaggcg gtgctacaga gttcttgaag tggtggccta actacggcta
+     cactagaagg acagtatttg gtatctgcgc tctgctgaag ccagttacct tcggaaaaag
+     agttggtagc tcttgatccg gcaaacaaac caccgctggt agcggtggtt tttttgtttg
+     caagcagcag attacgcgca gaaaaaaagg atctcaagaa gatcctttga tcttttctac
+     ggggtctgac gctcagtgga acgaaaactc acgttaaggg attttggtca tgagattatc
+     aaaaaggatc ttcacctaga tccttttaaa ttaaaaatga agttttaaat caatctaaag
+     tatatatgag taaacttggt ctgacagtta ccaatgctta atcagtgagg cacctatctc
+     agcgatctgt ctatttcgtt catccatagt tgcctgactc cccgtcgtgt agataactac
+     gatacgggag ggcttaccat ctggccccag tgctgcaatg ataccgcgag acccacgctc
+     accggctcca gatttatcag caataaacca gccagccgga agggccgagc gcagaagtgg
+     tcctgcaact ttatccgcct ccatccagtc tattaattgt tgccgggaag ctagagtaag
+     tagttcgcca gttaatagtt tgcgcaacgt tgttgccatt gctacaggca tcgtggtgtc
+     acgctcgtcg tttggtatgg cttcattcag ctccggttcc caacgatcaa ggcgagttac
+     atgatccccc atgttgtgca aaaaagcggt tagctccttc ggtcctccga tcgttgtcag
+     aagtaagttg gccgcagtgt tatcactcat ggttatggca gcactgcata attctcttac
+     tgtcatgcca tccgtaagat gcttttctgt gactggtgag tactcaacca agtcattctg
+     agaatagtgt atgcggcgac cgagttgctc ttgcccggcg tcaatacggg ataataccgc
+     gccacatagc agaactttaa aagtgctcat cattggaaaa cgttcttcgg ggcgaaaact
+     ctcaaggatc ttaccgctgt tgagatccag ttcgatgtaa cccactcgtg cacccaactg
+     atcttcagca tcttttactt tcaccagcgt ttctgggtga gcaaaaacag gaaggcaaaa
+     tgccgcaaaa aagggaataa gggcgacacg gaaatgttga atactcatac tcttcctttt
+     tcaatattat tgaagcattt atcagggtta ttgtctcatg agcggataca tatttgaatg
+     tatttagaaa aataaacaaa taggggttcc gcgcacattt ccccgaaaag tgccacctga
+     cgtctaagaa accattatta tcatgacatt aacctataaa aataggcgta tcacgaggcc
+     ctttcgtctc gcgcgtttcg gtgatgacgg tgaaaacctc tgacacatgc agctcccgga
+     gacggtcaca gcttgtctgt aagcggatgc cgggagcaga caagcccgtc agggcgcgtc
+     agcgggtgtt ggcgggtgtc ggggctggct taactatgcg gcatcagagc agattgtact
+     gagagtgcac catatcgacg ctctccctta tgcgactcct gcattaggaa gcagcccagt
+     agtaggttga ggccgttgag caccgccgcc gcaaggaatg gtgcatgcaa ggagatggcg
+     cccaacagtc ccccggccac ggggcctgcc accataccca cgccgaaaca agcgctcatg
+     agcccgaagt ggcgagcccg atcttcccca tcggtgatgt cggcgatata ggcgccagca
+     accgcacctg tggcgccggt gatgccggcc acgatgcgtc cggcgtagag gatctggcta
+     gcgatgaccc tgctgattgg ttcgctgacc atttccgggg tgcggaacgg cgttaccaga
+     aactcagaag gttcgtccaa ccaaaccgac tctgacggca gtttacgaga gagatgatag
+     ggtctgcttc agtaagccag atgctacaca attaggcttg tacatattgt cgttagaacg
+     cggctacaat taatacataa ccttatgtat catacacata cgatttaggt gacactata
+//

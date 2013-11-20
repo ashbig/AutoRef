@@ -1,0 +1,190 @@
+ID   PFASTBAC11-Cpo-His6 standard; circular DNA; SYN; 4798 BP.
+AC   -;
+DT   12-DEC-1999
+DE   pFASTBAC vector modiifed for secretion of recombinant proteins with C-terminal 6xHis tags. Fuses gp64 signal peptide at N-terminus. Expression under control of early/late hybrid gp64 promoter
+KW   -.
+CC   uses Cpo I as single restriction site for directional cloning of
+CC   inserts. N- and C- termini must be in frame with Gly-Pro reading
+CC   frame of CpoI in order to use this vector successfully. Cpo I =
+CC   CGGWCCG where W= A/T. Forward primer for adapting gene of interest
+CC   w/ Cpo I sites should read 5' - NNNNCGGTCCG...-> and reverse primer
+CC   should read 5'NNNNCGGACCG...->. 
+CC   GBRFLN|REFERENCE   for Bac to Bac system
+CC   GBRFLN|  AUTHORS   Luckow VA, Lee SC, Barry GF, Olins PO.
+CC   GBRFLN|  TITLE     Efficient generation of infectious recombinant baculoviruses by
+CC   GBRFLN|            site-specific transposon-mediated insertion of foreign genes into a
+CC   GBRFLN|            baculovirus genome propagated in Escherichia coli.
+CC   GBRFLN|  JOURNAL   J Virol. 1993 Aug;67(8):4566-79.
+CC   GBRFLN|  MEDLINE   8392598
+CC   GBRFLN|  REMARK    Also see Invitrogen, they market the Bac-to-Bac system and sell
+CC   GBRFLN|            DH10Bac completent cells compatible with this plasmid.
+CC   This file is created by Vector NTI
+CC   http://www.informaxinc.com/
+CC   ORIGDB|GenBank
+CC   VNTDATE|406133716|
+CC   VNTDBDATE|406133716|
+CC   LSOWNER|
+CC   VNTAUTHORNAME|Stephanie Mohr|
+CC   VNTAUTHORTEL|617.324.4251|
+CC   VNTAUTHOREML|stephanie_mohr@hms.harvard.edu|
+FH   Key             Location/Qualifiers
+FH
+FT   rep_origin      complement(7..447)
+FT                   /vntifkey="33"
+FT                   /label=F1\ori
+FT                   /note="f1 origin"
+FT   misc_feature    4152..4158
+FT                   /vntifkey="21"
+FT                   /label=CpoI\site
+FT                   /note="CpoI site"
+FT   CDS             589..1446
+FT                   /vntifkey="4"
+FT                   /label=Ampicillin\resistance\gene
+FT                   /note="Ampicillin resistance gene"
+FT   rep_origin      1870..1870
+FT                   /vntifkey="33"
+FT                   /label=ColE1\origin
+FT                   /note="ColE1 origin"
+FT   misc_feature    2511..2735
+FT                   /vntifkey="21"
+FT                   /label=Tn7R\attachment\site
+FT                   /note="Tn7R attachment site"
+FT   CDS             complement(2805..3335)
+FT                   /vntifkey="4"
+FT                   /label=gentamicin\resistance
+FT                   /note="gentamicin resistance"
+FT   promoter        3909..4089
+FT                   /vntifkey="30"
+FT                   /label=gp64\promoter
+FT                   /note="gp64 promoter"
+FT   promoter        3950..3950
+FT                   /vntifkey="30"
+FT                   /label=LATE\mRNA\INITIATION
+FT                   /note="LATE mRNA INITIATION"
+FT   promoter        3964..3964
+FT                   /vntifkey="30"
+FT                   /label=LATE\mRNA\INITIATION
+FT                   /note="LATE mRNA INITIATION"
+FT   promoter        4052..4052
+FT                   /vntifkey="30"
+FT                   /label=EARLY\mRNA\INITIATION
+FT                   /note="EARLY mRNA INITIATION"
+FT   sig_peptide     4090..4149
+FT                   /vntifkey="94"
+FT                   /label=SIGNAL\PEPTIDE
+FT                   /note="SIGNAL PEPTIDE"
+FT   primer_bind     4096..4116
+FT                   /vntifkey="28"
+FT                   /label=gp64\signal\primer\F
+FT                   /note="gp64 signal primer F"
+FT   misc_feature    4150..4150
+FT                   /vntifkey="21"
+FT                   /label=SIGNAL\PEPTIDASE\CLEAVAGE
+FT                   /note="SIGNAL PEPTIDASE CLEAVAGE"
+FT   primer          <4159..4191
+FT                   /vntifkey="27"
+FT                   /label=FASTBAC1\CPO\primer
+FT                   /note="FASTBAC1 CPO primer"
+FT   CDS             4159..4176
+FT                   /vntifkey="4"
+FT                   /label=HIS\tag
+FT                   /note="HIS tag"
+FT   polyA_signal    4202..4422
+FT                   /vntifkey="25"
+FT                   /label=SV40\late\polyA\signal
+FT                   /note="SV40 polyA signal"
+FT   misc_feature    4451..4778
+FT                   /vntifkey="21"
+FT                   /label=Tn7L\attachment\site
+FT                   /note="Tn7L attachment site"
+FT   CDS             787..1446
+FT                   /vntifkey="4"
+FT                   /label=ampR\ORF
+FT   rep_origin      2..457
+FT                   /vntifkey="33"
+FT                   /label=M13\ori
+FT   rep_origin      1544..2226
+FT                   /vntifkey="33"
+FT                   /label=ColE1\ori
+SQ   Sequence 4798 BP; 1199 A; 1177 C; 1145 G; 1277 t;
+     gacgcgccct gtagcggcgc attaagcgcg gcgggtgtgg tggttacgcg cagcgtgacc        60
+     gctacacttg ccagcgccct agcgcccgct cctttcgctt tcttcccttc ctttctcgcc       120
+     acgttcgccg gctttccccg tcaagctcta aatcgggggc tccctttagg gttccgattt       180
+     agtgctttac ggcacctcga ccccaaaaaa cttgattagg gtgatggttc acgtagtggg       240
+     ccatcgccct gatagacggt ttttcgccct ttgacgttgg agtccacgtt ctttaatagt       300
+     ggactcttgt tccaaactgg aacaacactc aaccctatct cggtctattc ttttgattta       360
+     taagggattt tgccgatttc ggcctattgg ttaaaaaatg agctgattta acaaaaattt       420
+     aacgcgaatt ttaacaaaat attaacgttt acaatttcag gtggcacttt tcggggaaat       480
+     gtgcgcggaa cccctatttg tttatttttc taaatacatt caaatatgta tccgctcatg       540
+     agacaataac cctgataaat gcttcaataa tattgaaaaa ggaagagtat gagtattcaa       600
+     catttccgtg tcgcccttat tccctttttt gcggcatttt gccttcctgt ttttgctcac       660
+     ccagaaacgc tggtgaaagt aaaagatgct gaagatcagt tgggtgcacg agtgggttac       720
+     atcgaactgg atctcaacag cggtaagatc cttgagagtt ttcgccccga agaacgtttt       780
+     ccaatgatga gcacttttaa agttctgcta tgtggcgcgg tattatcccg tattgacgcc       840
+     gggcaagagc aactcggtcg ccgcatacac tattctcaga atgacttggt tgagtactca       900
+     ccagtcacag aaaagcatct tacggatggc atgacagtaa gagaattatg cagtgctgcc       960
+     ataaccatga gtgataacac tgcggccaac ttacttctga caacgatcgg aggaccgaag      1020
+     gagctaaccg cttttttgca caacatgggg gatcatgtaa ctcgccttga tcgttgggaa      1080
+     ccggagctga atgaagccat accaaacgac gagcgtgaca ccacgatgcc tgtagcaatg      1140
+     gcaacaacgt tgcgcaaact attaactggc gaactactta ctctagcttc ccggcaacaa      1200
+     ttaatagact ggatggaggc ggataaagtt gcaggaccac ttctgcgctc ggcccttccg      1260
+     gctggctggt ttattgctga taaatctgga gccggtgagc gtgggtctcg cggtatcatt      1320
+     gcagcactgg ggccagatgg taagccctcc cgtatcgtag ttatctacac gacggggagt      1380
+     caggcaacta tggatgaacg aaatagacag atcgctgaga taggtgcctc actgattaag      1440
+     cattggtaac tgtcagacca agtttactca tatatacttt agattgattt aaaacttcat      1500
+     ttttaattta aaaggatcta ggtgaagatc ctttttgata atctcatgac caaaatccct      1560
+     taacgtgagt tttcgttcca ctgagcgtca gaccccgtag aaaagatcaa aggatcttct      1620
+     tgagatcctt tttttctgcg cgtaatctgc tgcttgcaaa caaaaaaacc accgctacca      1680
+     gcggtggttt gtttgccgga tcaagagcta ccaactcttt ttccgaaggt aactggcttc      1740
+     agcagagcgc agataccaaa tactgtcctt ctagtgtagc cgtagttagg ccaccacttc      1800
+     aagaactctg tagcaccgcc tacatacctc gctctgctaa tcctgttacc agtggctgct      1860
+     gccagtggcg ataagtcgtg tcttaccggg ttggactcaa gacgatagtt accggataag      1920
+     gcgcagcggt cgggctgaac ggggggttcg tgcacacagc ccagcttgga gcgaacgacc      1980
+     tacaccgaac tgagatacct acagcgtgag cattgagaaa gcgccacgct tcccgaaggg      2040
+     agaaaggcgg acaggtatcc ggtaagcggc agggtcggaa caggagagcg cacgagggag      2100
+     cttccagggg gaaacgcctg gtatctttat agtcctgtcg ggtttcgcca cctctgactt      2160
+     gagcgtcgat ttttgtgatg ctcgtcaggg gggcggagcc tatggaaaaa cgccagcaac      2220
+     gcggcctttt tacggttcct ggccttttgc tggccttttg ctcacatgtt ctttcctgcg      2280
+     ttatcccctg attctgtgga taaccgtatt accgcctttg agtgagctga taccgctcgc      2340
+     cgcagccgaa cgaccgagcg cagcgagtca gtgagcgagg aagcggaaga gcgcctgatg      2400
+     cggtattttc tccttacgca tctgtgcggt atttcacacc gcagaccagc cgcgtaacct      2460
+     ggcaaaatcg gttacggttg agtaataaat ggatgccctg cgtaagcggg tgtgggcgga      2520
+     caataaagtc ttaaactgaa caaaatagat ctaaactatg acaataaagt cttaaactag      2580
+     acagaatagt tgtaaactga aatcagtcca gttatgctgt gaaaaagcat actggacttt      2640
+     tgttatggct aaagcaaact cttcattttc tgaagtgcaa attgcccgtc gtattaaaga      2700
+     ggggcgtggc caagggcatg gtaaagacta tattcgcggc gttgtgacaa tttaccgaac      2760
+     aactccgcgg ccgggaagcc gatctcggct tgaacgaatt gttaggtggc ggtacttggg      2820
+     tcgatatcaa agtgcatcac ttcttcccgt atgcccaact ttgtatagag agccactgcg      2880
+     ggatcgtcac cgtaatctgc ttgcacgtag atcacataag caccaagcgc gttggcctca      2940
+     tgcttgagga gattgatgag cgcggtggca atgccctgcc tccggtgctc gccggagact      3000
+     gcgagatcat agatatagat ctcactacgc ggctgctcaa acctgggcag aacgtaagcc      3060
+     gcgagagcgc caacaaccgc ttcttggtcg aaggcagcaa gcgcgatgaa tgtcttacta      3120
+     cggagcaagt tcccgaggta atcggagtcc ggctgatgtt gggagtaggt ggctacgtct      3180
+     ccgaactcac gaccgaaaag atcaagagca gcccgcatgg atttgacttg gtcagggccg      3240
+     agcctacatg tgcgaatgat gcccatactt gagccaccta actttgtttt agggcgactg      3300
+     ccctgctgcg taacatcgtt gctgctgcgt aacatcgttg ctgctccata acatcaaaca      3360
+     tcgacccacg gcgtaacgcg cttgctgctt ggatgcccga ggcatagact gtacaaaaaa      3420
+     acagtcataa caagccatga aaaccgccac tgcgccgtta ccaccgctgc gttcggtcaa      3480
+     ggttctggac cagttgcgtg agcgcatacg ctacttgcat tacagtttac gaaccgaaca      3540
+     ggcttatgtc aactgggttc gtgccttcat ccgtttccac ggtgtgcgtc acccggcaac      3600
+     cttgggcagc agcgaagtcg aggcatttct gtcctggctg gcgaacgagc gcaaggtttc      3660
+     ggtctccacg catcgtcagg cattggcggc cttgctgttc ttctacggca aggtgctgtg      3720
+     cacggatctg ccctggcttc aggagatcgg aagacctcgg ccgtcgcggc gcttgccggt      3780
+     ggtgctgacc ccggatgaag tggttcgcat cctcggtttt ctggaaggcg agcatcgttt      3840
+     gttcgcccag gactctagct atagttctag tggttggcta cgttgtatac tgagcgtccg      3900
+     tgttcatgat cccgttttta taacagccag ataaaaataa tcttatcaat taagataaaa      3960
+     agataagatt attaatctaa caacgtgcct tgtgtcacgt aggccagata acggtcgggt      4020
+     atataagacg cctcaacgct actagtaaat cagtcacacc aaggcttcaa taaggaacac      4080
+     acaagcaaga tggtaagcgc tattgtttta tatgtgcttt tggcggcggc ggcgcattct      4140
+     gcctttgcgg ccggtccgca tcaccatcac catcactaga ggatcataat cagccatacc      4200
+     acatttgtag aggttttact tgctttaaaa aacctcccac acctccccct gaacctgaaa      4260
+     cataaaatga atgcaattgt tgttgttaac ttgtttattg cagcttataa tggttacaaa      4320
+     taaagcaata gcatcacaaa tttcacaaat aaagcatttt tttcactgca ttctagttgt      4380
+     ggtttgtcca aactcatcaa tgtatcttat catgtctgga tctgatcact gcttgagcct      4440
+     aggagatccg aaccagataa gtgaaatcta gttccaaact attttgtcat ttttaatttt      4500
+     cgtattagct tacgacgcta cacccagttc ccatctattt tgtcactctt ccctaaataa      4560
+     tccttaaaaa ctccatttcc acccctccca gttcccaact attttgtccg cccacagcgg      4620
+     ggcatttttc ttcctgttat gtttttaatc aaacatcctg ccaactccat gtgacaaacc      4680
+     gtcatcttcg gctacttttt ctctgtcaca gaatgaaaat ttttctgtca tctcttcgtt      4740
+     attaatgttt gtaattgact gaatatcaac gcttatttgc agcctgaatg gcgaatgg        4798
+//

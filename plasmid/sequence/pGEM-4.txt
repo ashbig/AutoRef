@@ -1,0 +1,142 @@
+ID   PGEM4      preliminary; circular DNA; SYN; 2871 BP.
+XX
+AC   X65303; M77707; IG0051;
+XX
+DT   06-AUG-1987 (Rel. 2, Created)
+DT   01-JUL-1995 (Rel. 12, Last updated, Version 1)
+XX
+DE   E. coli phagemid vector pGEM-4 - complete.
+XX
+KW   cloning vector.
+XX
+OS   Cloning vector
+OC   Artificial sequences; Cloning vehicles.
+XX
+RN   [1]
+RC   pGEM-4, revised by [2]
+RA   ;
+RT   ;
+RL   Submitted (23-MAR-1992) on tape to the EMBL Data Library by:
+RL   Technical Services, Promega Corporation, 2800 Woods Hollow Road,
+RL   Madison, WI 53711-5399, USA.
+XX
+RN   [2]
+RP   1-2871
+RC   pGEM-4
+RA   Klock C.;
+RT   ;
+RL   Submitted (28-MAY-1993) on tape to the EMBL Data Library by:
+RL   Technical Services, Promega Corporation, 2800 Woods Hollow Road,
+RL   Madison, WI 53711-5399, USA.
+XX
+RN   [3]
+RP   1-2871
+RC   pGEM-4
+RA   Gilbert W.;
+RT   "VecBase 3.0";
+RL   Unpublished (1991).
+XX
+RN   [4]
+RC   pGEM-4 from pUC18
+RA   Lewis K.;
+RT   ;
+RL   Unpublished (1987).
+RL   Lewis K., Promega.
+XX
+CC   NCBI gi: 58205
+CC   old Promega vector.
+CC   NM (pGEM-4)
+CC   CM (yes)
+CC   NA (ds-DNA)
+CC   TP (circular)
+CC   ST ()
+CC   TY (phagemid)
+CC   SP ()
+CC   HO (E.coli)
+CC   CP ()
+CC   FN (cloning)(transcription)
+CC   SE (color blue/white)
+CC   PA (pUC18)
+CC   BR (pGEM-2)(pGEM-1)(pGEM-3)
+CC   OF ()
+CC   OR ()
+XX
+FH   Key             Location/Qualifiers
+FH
+FT   misc_feature    0..0
+FT                   /note="1. pUC18 2686bp, ori/amp/lacZ
+FT                   2. T7, promoter
+FT                   3. Sp6, promoter
+FT                   -> pGEM-4 2871bp"
+FT   misc_feature    1..1
+FT                   /note="bacteriophage Sp6 transcription initiation
+FT                   site"
+FT   misc_feature    10..66
+FT                   /note="MCS EcoRI-SacI-KpnI-SmaI-BamHI-XbaI-SalI-
+FT                   BspMI-PstI-SphI-HindIII"
+FT   promoter        71..93
+FT                   /note="PRO bacteriophage T7"
+FT   misc_feature    76..76
+FT                   /note="bacteriophage T7 transcription initiation
+FT                   site"
+FT   misc_feature    104..162
+FT                   /note="GEN E. coli lac operon"
+FT   CDS             complement(1104..1964)
+FT                   /note="ANT E. coli beta-lactamase gene (bla)
+FT                   ampicillin resistance gene (apr/amp)"
+FT   rep_origin      0..0
+FT                   /note="ORI E. coli pMB1 (ColE1 and pBR322)"
+FT   promoter        2854..2871
+FT                   /note="PRO bacteriophage Sp6"
+XX
+SQ   Sequence 2871 BP; 712 A; 740 C; 729 G; 690 T; 0 other;
+     gaatacacgg aattcgagct cggtacccgg ggatcctcta gagtcgacct gcaggcatgc
+     aagcttccgg tctccctata gtgagtcgta ttaatttcga taagccagct gcattaatga
+     atcggccaac gcgcggggag aggcggtttg cgtattgggc gctcttccgc ttcctcgctc
+     actgactcgc tgcgctcggt cgttcggctg cggcgagcgg tatcagctca ctcaaaggcg
+     gtaatacggt tatccacaga atcaggggat aacgcaggaa agaacatgtg agcaaaaggc
+     cagcaaaagg ccaggaaccg taaaaaggcc gcgttgctgg cgtttttcca taggctccgc
+     ccccctgacg agcatcacaa aaatcgacgc tcaagtcaga ggtggcgaaa cccgacagga
+     ctataaagat accaggcgtt tccccctgga agctccctcg tgcgctctcc tgttccgacc
+     ctgccgctta ccggatacct gtccgccttt ctcccttcgg gaagcgtggc gctttctcat
+     agctcacgct gtaggtatct cagttcggtg taggtcgttc gctccaagct gggctgtgtg
+     cacgaacccc ccgttcagcc cgaccgctgc gccttatccg gtaactatcg tcttgagtcc
+     aacccggtaa gacacgactt atcgccactg gcagcagcca ctggtaacag gattagcaga
+     gcgaggtatg taggcggtgc tacagagttc ttgaagtggt ggcctaacta cggctacact
+     agaaggacag tatttggtat ctgcgctctg ctgaagccag ttaccttcgg aaaaagagtt
+     ggtagctctt gatccggcaa acaaaccacc gctggtagcg gtggtttttt tgtttgcaag
+     cagcagatta cgcgcagaaa aaaaggatct caagaagatc ctttgatctt ttctacgggg
+     tctgacgctc agtggaacga aaactcacgt taagggattt tggtcatgag attatcaaaa
+     aggatcttca cctagatcct tttaaattaa aaatgaagtt ttaaatcaat ctaaagtata
+     tatgagtaaa cttggtctga cagttaccaa tgcttaatca gtgaggcacc tatctcagcg
+     atctgtctat ttcgttcatc catagttgcc tgactccccg tcgtgtagat aactacgata
+     cgggagggct taccatctgg ccccagtgct gcaatgatac cgcgagaccc acgctcaccg
+     gctccagatt tatcagcaat aaaccagcca gccggaaggg ccgagcgcag aagtggtcct
+     gcaactttat ccgcctccat ccagtctatt aattgttgcc gggaagctag agtaagtagt
+     tcgccagtta atagtttgcg caacgttgtt gccattgcta caggcatcgt ggtgtcacgc
+     tcgtcgtttg gtatggcttc attcagctcc ggttcccaac gatcaaggcg agttacatga
+     tcccccatgt tgtgcaaaaa agcggttagc tccttcggtc ctccgatcgt tgtcagaagt
+     aagttggccg cagtgttatc actcatggtt atggcagcac tgcataattc tcttactgtc
+     atgccatccg taagatgctt ttctgtgact ggtgagtact caaccaagtc attctgagaa
+     tagtgtatgc ggcgaccgag ttgctcttgc ccggcgtcaa tacgggataa taccgcgcca
+     catagcagaa ctttaaaagt gctcatcatt ggaaaacgtt cttcggggcg aaaactctca
+     aggatcttac cgctgttgag atccagttcg atgtaaccca ctcgtgcacc caactgatct
+     tcagcatctt ttactttcac cagcgtttct gggtgagcaa aaacaggaag gcaaaatgcc
+     gcaaaaaagg gaataagggc gacacggaaa tgttgaatac tcatactctt cctttttcaa
+     tattattgaa gcatttatca gggttattgt ctcatgagcg gatacatatt tgaatgtatt
+     tagaaaaata aacaaatagg ggttccgcgc acatttcccc gaaaagtgcc acctgacgtc
+     taagaaacca ttattatcat gacattaacc tataaaaata ggcgtatcac gaggcccttt
+     cgtctcgcgc gtttcggtga tgacggtgaa aacctctgac acatgcagct cccggagacg
+     gtcacagctt gtctgtaagc ggatgccggg agcagacaag cccgtcaggg cgcgtcagcg
+     ggtgttggcg ggtgtcgggg ctggcttaac tatgcggcat cagagcagat tgtactgaga
+     gtgcaccata tcgacgctct cccttatgcg actcctgcat taggaagcag cccagtagta
+     ggttgaggcc gttgagcacc gccgccgcaa ggaatggtgc aaggagatgg cgcccaacag
+     tcccccggcc acggggcctg ccaccatacc cacgccgaaa caagcgctca tgagcccgaa
+     gtggcgagcc cgatcttccc catcggtgat gtcggcgata taggcgccag caaccgcacc
+     tgtggcgccg gtgatgccgg ccacgatgcg tccggcgtag aggatctggc tagcgatgac
+     cctgctgatt ggttcgctga ccatttccgg ggtgcggaac ggcgttacca gaaactcaga
+     aggttcgtcc aaccaaaccg actctgacgg cagtttacga gagagatgat agggtctgct
+     tcagtaagcc agatgctaca caattaggct tgtacatatt gtcgttagaa cgcggctaca
+     attaatacat aaccttatgt atcatacaca tacgatttag gtgacactat a
+//
+

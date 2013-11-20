@@ -1,0 +1,83 @@
+ID   PAS1       preliminary; circular DNA; SYN; 7100 BP.
+XX
+AC   ATCC87007;
+XX
+DT   01-FEB-1995 (Rel. 11, Created)
+DT   01-JUL-1995 (Rel. 12, Last updated, Version 1)
+XX
+DE   Saccharomyces/E.coli phagemid pAS1 - incomplete.
+XX
+KW   cloning vector.
+XX
+OS   Cloning vector
+OC   Artificial sequences; Cloning vehicles.
+XX
+RN   [1]
+RC   pACT, pACT2 from LEU2 gene
+RA   Durfee T., Becherer K., Chen P.L., Yeh S.H., Yang Y., Kilburn A.E.,
+RA   Lee W.H., Elledge S.J.;
+RT   "The retinoblastoma protein associates with the protein
+RT   phosphatase type 1 catalytic subunit";
+RL   Genes Dev. 7:555-569(1993).
+XX
+CC   Restriction digests of the clone give the following sizes (kb):
+CC   BamHI--7.2; SalI--7.2; SmaI--7.2. (ATCC staff)
+CC   Shuttle expression vector used to create fusion proteins
+CC   consisting of the nuclear localization sequence from SV40 T antigen,
+CC   the GAL4 DNA-binding domain (aa 1-147), and a HA (hemagglutinin)
+CC   epitope tag in frame with the activation domain.
+CC   The order of the major features in this plasmid is:
+CC   ADC1 (ADH) promoter -> - GAL4 DNA binding domain - HA -
+CC   EcoRI - NdeI/MCS/SalI - ADC1 terminator - pMB1 ori - ampR -
+CC   2 micron ori - TRP1 -> - f1 ori. [1]
+CC   Growth: LB plus ampicillin (ATCC medium number 1227) 37C
+CC   Deposited by: Elledge S.J.
+CC   NM (pAS1)
+CC   CM (no)
+CC   NA (ds-DNA)
+CC   TP (circular)
+CC   ST ()
+CC   TY (phagemid)
+CC   SP (ATCC)
+CC   HO (E.coli)(Saccharomyces cerevisiae)
+CC   CP ()
+CC   FN (cloning)(expression)(shuttle - episomal)(DNA library)
+CC   SE ()
+CC   PA ()
+CC   BR ()
+CC   OF ()
+CC   OR ()
+XX
+FH   Key             Location/Qualifiers
+FH
+FT   misc_feature    0..0
+FT                   /note="1. pBR322 4361bp, ori/amp
+FT                   2. SV40, T antigen
+FT                   3. HA epitope
+FT                   4. yeast, GAL4
+FT                   5. yeast, TRP1
+FT                   -> pAS1 7100bp"
+FT   rep_origin      0..0
+FT                   /note="ORI E. coli pMB1 (ColE1 and pBR322)"
+FT   rep_origin      0..0
+FT                   /note="ORI yeast 2 micron"
+FT   rep_origin      0..0
+FT                   /note="ORI E. coli phage f1"
+FT   CDS             0..0
+FT                   /note="ANT E. coli amp gene"
+FT   CDS             0..0
+FT                   /note="ANT yeast TRP1 gene"
+FT   misc_binding    0..0
+FT                   /note="MCS NdeI-NcoI-SfiI-SmaI-BamHI-SalI"
+FT   promoter        0..0
+FT                   /note="PRO yeast ADH/ADC1"
+FT   misc_feature    0..0
+FT                   /note="GAL4 activation domain"
+FT   misc_feature    0..0
+FT                   /note="HA (hemagglutinin) epitope tag"
+FT   terminator      0..0
+FT                   /note="TER yeast ADC1"
+XX
+SQ   Sequence 1 BP; 0 A; 0 C; 0 G; 0 T; 1 other;
+     n
+//

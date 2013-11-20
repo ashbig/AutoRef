@@ -1,0 +1,95 @@
+LOCUS       pMCSG12                 4133 bp    DNA     linear       23-NOV-2005
+DEFINITION  Cloning vector pMCSG12.
+ACCESSION
+VERSION
+KEYWORDS    .
+SOURCE      Cloning vector pMCSG12
+  ORGANISM  Cloning vector pMCSG12
+            Unclassified.
+REFERENCE   1  (bases 1 to 4133)
+  AUTHORS   Donnelly,M.I.
+  TITLE     A new vector for high-throughput, ligation-independent cloning
+  JOURNAL   Unpublished
+REFERENCE   2  (bases 1 to 4133)
+  AUTHORS   Donnelly,M.I.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (23-NOV-2005) Biosciences Division, Argonne National
+            Laboratory, 9700 S. Cass Ave., Argonne, IL 60439, USA
+FEATURES             Location/Qualifiers
+     source          1..4133
+                     /organism="Cloning vector pMCSG12"
+                     /plasmid=""
+                     /mol_type="genomic DNA"
+     Region          339..392                     /note="S loop;S loop"     rep_origin      1875..2787                     /label="P15A\ori     CDS             complement(2911..3993)                     /label="lacI     promoter        4117..4133                     /label="T7\Promoter     protein_bind    5..25                     /label="lacO     CDS             complement(854..1513)                     /label="CAT     RBS             58..63                     /label="RBS-1     Region          83..100                     /label="His-Tag     terminator      587..634                     /label="T7\Terminator     Region          491..535                     /label="S-Tag     protein_bind    235..255                     /label="lacO     promoter        214..230                     /label="T7\promoter     RBS             286..291                     /label="RBS     primer          4074..4093                     /label="ACYCDuetUP1\Primer\#71178-3     primer          189..208                     /label="DuetUP2\Primer\#71180-3     primer          complement(189..208)                     /label="DuetDOWN1\Primer\#71179-3     primer          complement(573..591)                     /label="T7\Terminator\Primer\#69337-3     CDS             300..437                     /note="coding region"     Region          303..320                     /note="His Tag"     Cleavage-site   399..419                     /note="TEV Site"     misc_feature    407..438                     /note="LIC Site"     misc_feature    297..484                     /note="pMCSG8"
+BASE COUNT     1024 a   1063 c   1018 g   1028 t
+ORIGIN
+        1 ggggaattgt gagcggataa caattcccct gtagaaataa ttttgtttaa ctttaataag
+       61 gagatatacc atgggcagca gccatcacca tcatcaccac agccaggatc cgaattcgag
+      121 ctcggcgcgc ctgcaggtcg acaagcttgc ggccgcataa tgcttaagtc gaacagaaag
+      181 taatcgtatt gtacacggcc gcataatcga aattaatacg actcactata ggggaattgt
+      241 gagcggataa caattcccca tcttagtata ttagttaagt ataagaagga gatatacata
+      301 tgcaccatca tcatcatcat tcttctggtg tagatctgga agttgaaacc aaatctgctg
+      361 gtggtatcgt tctgaccggt tctgctgctg ctggtaccga gaacctgtac ttccaatcca
+      421 atattggaag tggataacgg atccgaattc gagctccgtc gacaagcttg cggccgcact
+      481 cgagtctggt aaagaaaccg ctgctgcgaa atttgaacgc cagcacatgg actcgtctac
+      541 tagcgcagct taattaacct aggctgctgc caccgctgag caataactag cataacccct
+      601 tggggcctct aaacgggtct tgaggggttt tttgctgaaa cctcaggcat ttgagaagca
+      661 cacggtcaca ctgcttccgg tagtcaataa accggtaaac cagcaataga cataagcggc
+      721 tatttaacga ccctgccctg aaccgacgac cgggtcgaat ttgctttcga atttctgcca
+      781 ttcatccgct tattatcact tattcaggcg tagcaccagg cgtttaaggg caccaataac
+      841 tgccttaaaa aaattacgcc ccgccctgcc actcatcgca gtactgttgt aattcattaa
+      901 gcattctgcc gacatggaag ccatcacaga cggcatgatg aacctgaatc gccagcggca
+      961 tcagcacctt gtcgccttgc gtatagtatt tgcccatagt gaaaacgggg gcgaagaagt
+     1021 tgtccatatt ggccacgttt aaatcaaaac tggtgaaact cacccaggga ttggctgaga
+     1081 cgaaaaacat attctcaata aaccctttag ggaaataggc caggttttca ccgtaacacg
+     1141 ccacatcttg cgaatatatg tgtagaaact gccggaaatc gtcgtggtat tcactccaga
+     1201 gcgatgaaaa cgtttcagtt tgctcatgga aaacggtgta acaagggtga acactatccc
+     1261 atatcaccag ctcaccgtct ttcattgcca tacggaactc cggatgagca ttcatcaggc
+     1321 gggcaagaat gtgaataaag gccggataaa acttgtgctt atttttcttt acggtcttta
+     1381 aaaaggccgt aatatccagc tgaacggtct ggttataggt acattgagca actgactgaa
+     1441 atgcctcaaa atgttcttta cgatgccatt gggatatatc aacggtggta tatccagtga
+     1501 tttttttctc cattttagct tccttagctc ctgaaaatct cgataactca aaaaatacgc
+     1561 ccggtagtga tcttatttca ttatggtgaa agttggaacc tcttacgtgc cgatcaacgt
+     1621 ctcattttcg ccaaaagttg gcccagggct tcccggtatc aacagggaca ccaggattta
+     1681 tttattctgc gaagtgatct tccgtcacag gtatttattc ggcgcaaagt gcgtcgggtg
+     1741 atgctgccaa cttactgatt tagtgtatga tggtgttttt gaggtgctcc agtggcttct
+     1801 gtttctatca gctgtccctc ctgttcagct actgacgggg tggtgcgtaa cggcaaaagc
+     1861 accgccggac atcagcgcta gcggagtgta tactggctta ctatgttggc actgatgagg
+     1921 gtgtcagtga agtgcttcat gtggcaggag aaaaaaggct gcaccggtgc gtcagcagaa
+     1981 tatgtgatac aggatatatt ccgcttcctc gctcactgac tcgctacgct cggtcgttcg
+     2041 actgcggcga gcggaaatgg cttacgaacg gggcggagat ttcctggaag atgccaggaa
+     2101 gatacttaac agggaagtga gagggccgcg gcaaagccgt ttttccatag gctccgcccc
+     2161 cctgacaagc atcacgaaat ctgacgctca aatcagtggt ggcgaaaccc gacaggacta
+     2221 taaagatacc aggcgtttcc cctggcggct ccctcgtgcg ctctcctgtt cctgcctttc
+     2281 ggtttaccgg tgtcattccg ctgttatggc cgcgtttgtc tcattccacg cctgacactc
+     2341 agttccgggt aggcagttcg ctccaagctg gactgtatgc acgaaccccc cgttcagtcc
+     2401 gaccgctgcg ccttatccgg taactatcgt cttgagtcca acccggaaag acatgcaaaa
+     2461 gcaccactgg cagcagccac tggtaattga tttagaggag ttagtcttga agtcatgcgc
+     2521 cggttaaggc taaactgaaa ggacaagttt tggtgactgc gctcctccaa gccagttacc
+     2581 tcggttcaaa gagttggtag ctcagagaac cttcgaaaaa ccgccctgca aggcggtttt
+     2641 ttcgttttca gagcaagaga ttacgcgcag accaaaacga tctcaagaag atcatcttat
+     2701 taatcagata aattatttct agatttcagt gcaatttatc tcttcaaatg tagcacctga
+     2761 agtcagcccc atacgatata agttgtaatt ctcatgttag tcatgccccg cgcccaccgg
+     2821 aaggagctga ctgggttgaa ggctctcaag ggcatcggtc gagatcccgg tgcctaatga
+     2881 gtgagctaac ttacattaat tgcgttgcgc tcactgcccg ctttccagtc gggaaacctg
+     2941 tcgtgccagc tgcattaatg aatcggccaa cgcgcgggga gaggcggttt gcgtattggg
+     3001 cgccagggtg gtttttcttt tcaccagtga gacgggcaac agctgattgc ccttcaccgc
+     3061 ctggccctga gagagttgca gcaagcggtc cacgctggtt tgccccagca ggcgaaaatc
+     3121 ctgtttgatg gtggttaacg gcgggatata acatgagctg tcttcggtat cgtcgtatcc
+     3181 cactaccgag atgtccgcac caacgcgcag cccggactcg gtaatggcgc gcattgcgcc
+     3241 cagcgccatc tgatcgttgg caaccagcat cgcagtggga acgatgccct cattcagcat
+     3301 ttgcatggtt tgttgaaaac cggacatggc actccagtcg ccttcccgtt ccgctatcgg
+     3361 ctgaatttga ttgcgagtga gatatttatg ccagccagcc agacgcagac gcgccgagac
+     3421 agaacttaat gggcccgcta acagcgcgat ttgctggtga cccaatgcga ccagatgctc
+     3481 cacgcccagt cgcgtaccgt cttcatggga gaaaataata ctgttgatgg gtgtctggtc
+     3541 agagacatca agaaataacg ccggaacatt agtgcaggca gcttccacag caatggcatc
+     3601 ctggtcatcc agcggatagt taatgatcag cccactgacg cgttgcgcga gaagattgtg
+     3661 caccgccgct ttacaggctt cgacgccgct tcgttctacc atcgacacca ccacgctggc
+     3721 acccagttga tcggcgcgag atttaatcgc cgcgacaatt tgcgacggcg cgtgcagggc
+     3781 cagactggag gtggcaacgc caatcagcaa cgactgtttg cccgccagtt gttgtgccac
+     3841 gcggttggga atgtaattca gctccgccat cgccgcttcc actttttccc gcgttttcgc
+     3901 agaaacgtgg ctggcctggt tcaccacgcg ggaaacggtc tgataagaga caccggcata
+     3961 ctctgcgaca tcgtataacg ttactggttt cacattcacc accctgaatt gactctcttc
+     4021 cgggcgctat catgccatac cgcgaaaggt tttgcgccat tcgatggtgt ccgggatctc
+     4081 gacgctctcc cttatgcgac tcctgcatta ggaaattaat acgactcact ata
+//

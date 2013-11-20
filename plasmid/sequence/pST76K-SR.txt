@@ -1,0 +1,187 @@
+ID   pST76K-SR standard; circular DNA; SYN; 6326 BP.
+AC   -;
+DT   03-SEP-2003
+DE   pST76K_SR shuttle plasmid for sequence replacement in BACs; replicates well at 30-32 C.
+KW   -.
+CC   Construction of shuttle plasmids with pST76K_SR
+CC   The plasmid replicates well only at 30-32°C.
+CC   Positive selection: 	50µg/ml kanamycin
+CC   Negative selection: 	5-10% sucrose
+CC   IPTG (might be necessary, because the promotor of sacB was a PlacZ
+CC   and sometimes reverts to a repressable one)
+CC   The mutation (deletion, insertion, point mutant) should be flanked
+CC   by targeting sequences 500-1000 bp in length.
+CC   All shuttle plasmids should be tested for temperature sensitive
+CC   replication (should not grow at 41-43 deg C) and sucrose sensitivity
+CC   - should be inhibited for growth on 5-10% sucrose LB plates.
+CC   Generation of cointegrates:
+CC   electroporation (1.25-1.8 kV; 200Ohm; 25µF; 4.5-5.0 ms; 0.1cm
+CC   cuvette; 50 µl electrocompetent DH10B E. coli cells containing BAC
+CC   of intereset. Shake bacteria 1 h at 30 deg C in 1ml SOC-medium
+CC   without antibiotics. Plate 100µl at an agar plate with kanamycin and
+CC   the selection for the target DNA. Spin the remaining 900 µL down;
+CC   resuspend in 100 µl and plate at a 2nd agar plate. Incubate over
+CC   night at 41-43 deg C.Check colonies for cointegrates with miniprep
+CC   and restriction (growth at 43°C!!!) Save the cointegrates at a new
+CC   agar plate with kanamycin and your BAC's selection marker
+CC   (chloramphenicol [CAM]) at 41-43 deg C. Resolution of cointegrates:
+CC   Grow a single (fresh) colony 3-4 hours to overnight in LB only with
+CC   selection for your target BAC at 37 and/or 41 deg C. Then streak or
+CC   plate 1-3 µL on 1-3 agar plates containing selection for your target
+CC   BAC (chloramphenicol) plus 5-10% sucrose (use fresh sucrose LB
+CC   plates). Incubate overnight at 37 deg C. Replica plate large
+CC   colonies on separate kanamycin and BAC selectable marker plates
+CC   (chloramphenicol). Incubate overnight at 32-37 deg C. Some of the
+CC   colonies should only grow on plates without kanamycin. These are
+CC   your resolved co-integrates.
+CC   GBRFLN|REFERENCE   use of pST76K-SR in shuttle mutagenesis
+CC   GBRFLN|  AUTHORS   Adler, H., M. Messerle, M. Wagner, and U. H. Koszinowski.           
+CC   GBRFLN|  TITLE     Cloning and mutagenesis of the murine gammaherpesvirus 68 genome as
+CC   GBRFLN|            an infectious bacterial artificial chromosome.
+CC   GBRFLN|  JOURNAL   J Virol. 2000 Aug;74(15):6964-74. 
+CC   GBRFLN|  MEDLINE   10888635
+CC   GBRFLN|  REMARK    pST76K-SR was developed by G. Posfai. Also refered to as pST76K_SR.
+CC   GBRFLN|            See PMID 10933677 and PMID 15890938 for other examples of use of
+CC   GBRFLN|            this reagent in shuttle mutagenesis of herpesvirus BACs.
+CC   This file is created by Vector NTI
+CC   http://www.informaxinc.com/
+CC   ORIGDB|GenBank
+CC   VNTDATE|406052039|
+CC   VNTDBDATE|406052039|
+CC   LSOWNER|
+CC   VNTAUTHORNAME|Stephanie Mohr|
+CC   VNTAUTHORTEL|617.324.4251|
+CC   VNTAUTHOREML|stephanie_mohr@hms.harvard.edu|
+FH   Key             Location/Qualifiers
+FH
+FT   CDS             complement(217..1635)
+FT                   /vntifkey="4"
+FT                   /label=sacB:\levansucrase
+FT                   /note="sacB: levansucrase"
+FT   CDS             complement(1999..3060)
+FT                   /vntifkey="4"
+FT                   /label=RecA\protein\(E.\coli)
+FT                   /note="RecA protein (E. coli)"
+FT   CDS             complement(3295..4245)
+FT                   /vntifkey="4"
+FT                   /label=repTS,\protein\responsible\for\ts\DNA\replication
+FT                   /note="repTS, protein responsible for ts DNA replication"
+FT   CDS             complement(5381..6175)
+FT                   /vntifkey="4"
+FT                   /label=NeoR
+FT                   /note="NeoR, kanamycin resistance protein"
+FT   misc_recomb     17..50
+FT                   /vntifkey="86"
+FT                   /label=FRT
+FT                   /note="FRT site-specific recombination site"
+FT   primer_bind     86..105
+FT                   /vntifkey="28"
+FT                   /label=T7
+SQ   Sequence 6326 BP; 1512 A; 1503 C; 1423 G; 1888 t;
+     atcgatgaat tgatccgaag ttcctattct ctagaaagta taggaacttc gaattgtcga        60
+     caagcttgat ctggcttatc gaaattaata cgactcacta tagggagacc ggaattctag       120
+     ctgtttcctg tgtgaaattg ttctagtcaa ttcaccatct tgttgagaaa taaaagaaaa       180
+     tgccaatgaa gtatcggcat tttctttttg ctgttattag ttgactgtca gctgtccttg       240
+     ctccaggatg ctgtttttga caacggatgt tttattgcct ttgatgttca ttaagaagct       300
+     tggcgcaaat gttgcctttt tatcctcgaa gaagcctctg tttgtcatgt agcttgtgat       360
+     aaccacattg ttgcctttgg cttgcggcac tgcgaagtga gagtaagtga atgtcacatc       420
+     gtttggatca agacccattt gcagcacaag ccctgttttg ttcagcggct tgtaagggcc       480
+     ggttaaagag tgtgatacat aaccaagcat gtaaatatcg tttgagttaa taccatcgat       540
+     cgtcattttt gaaccgcgtg aatcagtgaa caagtaccat ttgccgttca ttttgaaaac       600
+     attcgcgcgc tcgatttcat cagttaccgt gtttgaagtg atcagcggct tcattacttt       660
+     tttcaatgtg taatcattat ttaactctat gataccgagg gcgccgttcg ctaactcagc       720
+     atcgcgtttt ttagcgctct gctgaagctt ctggctttct ttacggaaga agttcgtgcc       780
+     gccgccgtag tacgctttgt taaataaaga ttcttcgcct tggtatccgt tttctgttcc       840
+     cgtgttggct tcgaatacaa ggtatttatg gcctttgtct tcaacgtagt gagggtctct       900
+     cagcgtatgg ttgtcgccgg atgtataatt gccttcatcg ataaactgct gaacgttctg       960
+     atatgttttt ccgtctccgt caaaaatcgt tttgtgatct tccactccgt tgattttgag      1020
+     tgtgtcatca gattttgaca catttacctg cgctgttgtc aggctttgtt tgccgtaatg      1080
+     tttaccggaa tagtcagtgt agaataaacg gatttttccg tcagatgtaa aggttgcaga      1140
+     accggaccat tcttgcgtct gatctttcag gatcggatcg ttggcgtcga acttatcgct      1200
+     gtctttaaag acacggcccg cgtttttcca gctgtcgatt gagttgtcgc cgaccttttg      1260
+     ataaaacatg tagattgatg tgtcatcagc gtctttcggg cttcccgcaa gagcaaacac      1320
+     aacgtgatag ccgttgtatt cagctactgt tccgtcagcg ttttgcagcg gccagctgtc      1380
+     ccacacatca agtccttttg cagactcaat atttttaatc gttgattgat cgaattgagg      1440
+     cacttggtat ttttcgtttt gctgctgttt agggatctgc agcatatcat ggcgtgtaat      1500
+     atgagagacg ccgtacgttt ctttgtatgc tttttggtta ttttctttcg cgaaggcttg      1560
+     agtcgctcct cctgccagaa gtgcagtcgt aaaagtcaga actgtggctt gttttacaat      1620
+     ttttttgatg ttcatgttca tgtctccttc tgtatgtact gtttttgcga tctgccgttt      1680
+     cgatcctccc gaattgacta gtatccgctc acaattccac acaacatacg agccggaagc      1740
+     ataaagtgta aagcctgggg tgcctaatga gtgagctaac tcacattaat tgcgttgcgc      1800
+     gaattcgagc tcggtacccg gggatccgct agggataaca gggtaatata gatcctctag      1860
+     agtcgacctg caggcatgca agcttggcac tggctgatca gctagcgcga cgggatgttg      1920
+     attctgtcat ggcatatcct tacaacttaa aaaagcaaaa gggccgcaga tgcgaccctt      1980
+     gtgtatcaaa caagacgatt aaaaatcttc gttagtttct gctacgcctt cgctatcatc      2040
+     tacagagaaa tccggcgttg agttcgggtt gctcagcagc aactcacgta ctttcttctc      2100
+     gatctctttc gcggtttccg ggttatcttt cagccaggca gtcgcattcg ctttaccctg      2160
+     accgatcttc tcacctttgt agctgtacca cgcgcctgct ttctcgatca gcttctcttt      2220
+     tacgcccagg tcaaccagtt cgccgtagaa gttgatacct tcgccgtaga ggatctggaa      2280
+     ttcagcctgt ttaaacggcg cagcgatttt gttcttcacc actttcacgc gggtttcgct      2340
+     acccaccacg ttttcgccct ctttcaccgc gccgatacga cggatgtcga gacgaacaga      2400
+     ggcgtagaat ttcagcgcgt taccaccggt agtggtttcc gggttaccga acatcacacc      2460
+     aattttcata cggatctggt tgatgaagat cagcagcgtg ttggactgct tcaggttacc      2520
+     cgccagctta cgcatcgcct ggctcatcat acgtgccgca aggcccatgt gagagtcgcc      2580
+     gatttcgcct tcgatttccg ctttcggcgt cagtgccgcc acggagtcaa cgacgataac      2640
+     gtctactgcg ccagaacgcg ccagggcgtc acagatttcc agtgcctgct cgccggtgtc      2700
+     cggctgggag cacagcaggt tgtcgatatc gacgcccagt ttacgtgcgt agattgggtc      2760
+     cagcgcgtgt tcagcatcga taaacgcaca ggttttacct tcacgctgcg ctgcggcgat      2820
+     cacctgcagc gtcagcgtgg ttttaccgga agattccggt ccgtagattt cgacgatacg      2880
+     gcccatcggc agaccacctg ccccaagcgc gatatccagt gaaagcgaac cggtagagat      2940
+     ggtttccaca tccatggaac ggtcttcacc caggcgcatg atggagcctt taccaaattg      3000
+     tttctcaatc tggcccagtg ctgccgccaa cgctttctgt ttgttttcgt cgatagccat      3060
+     ttttactcct gtcatgccgg gtaataccgg atagtcaata tgttctgttg aagcaattat      3120
+     actgtatgct catacagtat caagtgtttt gtagaaattg ttgccacaag gtctgcaatg      3180
+     cgctagccca tgggtatgga cagttttccc tttgatatgt aacggtgaac agttgttcta      3240
+     cttttgtttg ttagtcttga tgcttcactg atagatacaa gagccataag aacctcagat      3300
+     ccttccgtat ttagccagta tgttctctag tgtggttcgt tgtttttgcg tgagccatga      3360
+     gaacgaacca ttgagatcat gcttactttg catgtcactc aaaaattttg cctcaaaact      3420
+     ggtgagctga atttttgcag ttaaagcatc gtgtagtgtt tttcttagtc cgttacgtag      3480
+     gtaggaatct gatgtaatgg ttgttggtat tttgtcacca ttcattttta tctggttgtt      3540
+     ctcaagttcg gttacgagat ccatttgtct atctagttca acttggaaaa tcaacgtatc      3600
+     agtcgggcgg cctcgcttat caaccaccaa tttcatattg ctgtaagtgt ttaaatcttt      3660
+     acttattggt ttcaaaaccc attggttaag ccttttaaac tcatggtagt tattttcaag      3720
+     cattaacatg aacttaaatt catcaaggct aatctctata tttgccttgt gagttttctt      3780
+     ttgtgttagt tcttttaata accactcata aatcctcata gagtatttgt tttcaaaaga      3840
+     cttaacatgt tccagattat attttatgaa tttttttaac tggaaaagat aaggcaatat      3900
+     ctcttcacta aaaactaatt ctaatttttc gcttgagaac ttggcatagt ttgtccactg      3960
+     gaaaatctca aagcctttaa ccaaaggatt cctgatttcc acagttctcg tcatcagctc      4020
+     tctggttgct ttagctaata caccataagc attttcccta ctgatgttca tcatctgaac      4080
+     gtattggtta taagtgaacg ataccgtccg ttctttcctt gtagggtttt caatcgtggg      4140
+     gttgagtagt gccacacagc ataaaattag cttggtttca tgctccgtta agtcatagcg      4200
+     actaatcgct agttcatttg ctttgaaaac aactaattca gacatacatc tcaattggtc      4260
+     taggtgattt taatcactat accaattgag atgggctagt caatgataat tactagtcct      4320
+     tttcctttga gttgtgggta tctgtaaatt ctgctagacc tttgctggaa aacttgtaaa      4380
+     ttctgctaga ccctctgtaa attccgctag acctttgtgt gttttttttg tttatattca      4440
+     agtggttata atttatagaa taaagaaaga ataaaaaaag ataaaaagaa tagatcccag      4500
+     ccctgtgtat aactcactac tttagtcagt tccgcagtat tacaaaagga tgtcgcaaac      4560
+     gctgtttgct cctctacaaa acagacctta aaaccctaaa ggcttaagta gcaccctcgc      4620
+     aagctcggtt gcggccgcaa tcgggcaaat cgctgaatat tccttttgtc tccgaccatc      4680
+     aggcacctga gtcgctgtct ttttcgtgac attcagttcg ctgcgctcac ggctctggca      4740
+     gtgaatgggg gtaaatggca ctacaggcgc cttttatgga ttcatgcaag gaaactaccc      4800
+     ataatacaag aaaagcccgt cacgggcttc tcagggcgtt ttatggcggg tctgctatgt      4860
+     ggtgctatct gactttttgc tgttcagcag ttcctgccct ctgattttcc agtctgacca      4920
+     cttcggatta tcccgtgaca ggtcattcag actggctaat gcacccagta aggcagcggt      4980
+     atcatcaacg gggtctgacg ctcagtggaa cgaaaactca cgttaaggga ttttggtcat      5040
+     gagattatca aaaaggatct tcacctagat ccttttaaat taaaaatgaa gttttaaatc      5100
+     aatctaaagt atatatgagt aaacttggtc tgacagttac caatgcttaa tcagtgaggc      5160
+     acctatctca gcgatctgtc tatttcgttc atccatagtt gcctgactcc ccgtcgtgta      5220
+     gataactacg atacgggagg gcttaccatc tggccccagt gctgcaatga taccgcgaga      5280
+     cccacgctca ccggctccag atttatcagc aataaaccag ccagccgggc cgcaaaaatt      5340
+     aaaaatgaag ttttgacggt atcgaacccc agagtcccgc tcagaagaac tcgtcaagaa      5400
+     ggcgatagaa ggcgatgcgc tgcgaatcgg gagcggcgat accgtaaagc acgaggaagc      5460
+     ggtcagccca ttcgccgcca agctcttcag caatatcacg ggtagccaac gctatgtcct      5520
+     gatagcggtc cgccacaccc agccggccac agtcgatgaa tccagaaaag cggccatttt      5580
+     ccaccatgat attcggcaag caggcatcgc catgggtcac gacgagatcc tcgccgtcgg      5640
+     gcatccgcgc cttgagcctg gcgaacagtt cggctggcgc gagcccctga tgctcttcgt      5700
+     ccagatcatc ctgatcgaca agaccggctt ccatccgagt acgtgctcgc tcgatgcgat      5760
+     gtttcgcttg gtggtcgaat gggcaggtag ccggatcaag cgtatgcagc cgccgcattg      5820
+     catcagccat gatggatact ttctcggcag gagcaaggtg agatgacagg agatcctgcc      5880
+     ccggcacttc gcccaatagc agccagtccc ttcccgcttc agtgacaacg tcgagcacag      5940
+     ctgcgcaagg aacgcccgtc gtggccagcc acgatagccg cgctgcctcg tcttggagtt      6000
+     cattcagggc accggacagg tcggtcttga caaaaagaac cgggcgcccc tgcgctgaca      6060
+     gccggaacac ggcggcatca gagcagccga ttgtctgttg tgcccagtca tagccgaata      6120
+     gcctctccac ccaagcggcc ggagaacctg cgtgcaatcc atcttgttca atcatgcgaa      6180
+     acgatcctca tcctgtctct tgatccacta gattattgaa gcatttatca gggttattgt      6240
+     ctcatgagcg gatacatatt tgaatgtatt tagaaaaata aacaaatagg ggttccgcgc      6300
+     acatttcccc gaaaagtgcc acctgc                                           6326
+//

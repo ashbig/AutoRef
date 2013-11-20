@@ -1,0 +1,91 @@
+LOCUS       pMCSG21                 3852 bp    DNA     circular     23-NOV-2005
+DEFINITION  Cloning vector pMCSG21.
+ACCESSION
+VERSION
+KEYWORDS    .
+SOURCE      Cloning vector pMCSG21
+  ORGANISM  Cloning vector pMCSG21
+            Unclassified.
+REFERENCE   1  (bases 1 to 3852)
+  AUTHORS   Donnelly,M.I.
+  TITLE     A new vector for high-throughput, ligation-independent cloning
+  JOURNAL   Unpublished
+REFERENCE   2  (bases 1 to 3852)
+  AUTHORS   Donnelly,M.I.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (23-NOV-2005) Biosciences Division, Argonne National
+            Laboratory, 9700 S. Cass Ave., Argonne, IL 60439, USA
+FEATURES             Location/Qualifiers
+     source          1..3852
+                     /organism="Cloning vector pMCSG21"
+                     /plasmid=""
+                     /mol_type="genomic DNA"
+     promoter        214..230                     /label="T7\promoter     CDS             complement(2630..3589)                     /label="lacI     protein_bind    5..25                     /label="lacO     RBS             58..63                     /label="RBS-1     misc_binding    83..100                     /label="His-Tag     protein_bind    235..255                     /label="lacO     RBS             286..291                     /label="RBS     rep_origin      1773..1773                     /label="Replication\Origin     -35_signal      complement(1607..1612)                     /label="-35\Ap     -10_signal      complement(1584..1590)                     /label="-10\Ap     RBS             complement(1548..1552)                     /label="RBS     CDS             complement(751..1542)                     /label="aadA\(Correct,\original\source\Tn21)     rep_origin      complement(1682..2420)                     /label="CloDF13\ori     CDS             71..160                     /note="mcs-1 orf"     misc_feature    353..384                     /note="LIC Site"     Cleavage-site   345..365                     /note="TEV site"     Region          303..320                     /note="His Tag"     CDS             300..383                     /note="coding region"
+BASE COUNT      909 a   1054 c    963 g    926 t
+ORIGIN
+        1 ggggaattgt gagcggataa caattcccct gtagaaataa ttttgtttaa ctttaataag
+       61 gagatatacc atgggcagca gccatcacca tcatcaccac agccaggatc cgaattcgag
+      121 ctcggcgcgc ctgcaggtcg acaagcttgc ggccgcataa tgcttaagtc gaacagaaag
+      181 taatcgtatt gtacacggcc gcataatcga aattaatacg actcactata ggggaattgt
+      241 gagcggataa caattcccca tcttagtata ttagttaagt ataagaagga gatatacata
+      301 tgcaccatca tcatcatcat tcttctggtg tagatctggg taccgagaac ctgtacttcc
+      361 aatccaatat tggaagtgga taacggatcc gaattcgagc tccgtcgaca agcttgcggc
+      421 cgcactcgag tctggtaaag aaaccgctgc tgcgaaattt gaacgccagc acatggactc
+      481 gtctactagc gcagcttaat taacctaggc tgctgccacc gctgagcaat aactagcata
+      541 accccttggg gcctctaaac gggtcttgag gggttttttg ctgaaacctc aggcatttga
+      601 gaagcacacg gtcacactgc ttccggtagt caataaaccg gtaaaccagc aatagacata
+      661 agcggctatt taacgaccct gccctgaacc gacgaccggg tcatcgtggc cggatcttgc
+      721 ggcccctcgg cttgaacgaa ttgttagaca ttatttgccg actaccttgg tgatctcgcc
+      781 tttcacgtag tggacaaatt cttccaactg atctgcgcgc gaggccaagc gatcttcttc
+      841 ttgtccaaga taagcctgtc tagcttcaag tatgacgggc tgatactggg ccggcaggcg
+      901 ctccattgcc cagtcggcag cgacatcctt cggcgcgatt ttgccggtta ctgcgctgta
+      961 ccaaatgcgg gacaacgtaa gcactacatt tcgctcatcg ccagcccagt cgggcggcga
+     1021 gttccatagc gttaaggttt catttagcgc ctcaaataga tcctgttcag gaaccggatc
+     1081 aaagagttcc tccgccgctg gacctaccaa ggcaacgcta tgttctcttg cttttgtcag
+     1141 caagatagcc agatcaatgt cgatcgtggc tggctcgaag atacctgcaa gaatgtcatt
+     1201 gcgctgccat tctccaaatt gcagttcgcg cttagctgga taacgccacg gaatgatgtc
+     1261 gtcgtgcaca acaatggtga cttctacagc gcggagaatc tcgctctctc caggggaagc
+     1321 cgaagtttcc aaaaggtcgt tgatcaaagc tcgccgcgtt gtttcatcaa gccttacggt
+     1381 caccgtaacc agcaaatcaa tatcactgtg tggcttcagg ccgccatcca ctgcggagcc
+     1441 gtacaaatgt acggccagca acgtcggttc gagatggcgc tcgatgacgc caactacctc
+     1501 tgatagttga gtcgatactt cggcgatcac cgcttccctc atactcttcc tttttcatta
+     1561 ttattgaagc atttatcagg gttattgtct catgagcgga tacatatttg aatgtattta
+     1621 gaaaaataaa caaatagcta gctcactcgg tcgctacgct ccgggcgtga gactgcggcg
+     1681 ggcgctgcgg acacatacaa agttacccac agattccgtg gataagcagg ggactaacat
+     1741 gtgaggcaaa acagcagggc cgcgccggtg gcgtttttcc ataggctccg ccctcctgcc
+     1801 agagttcaca taaacagacg cttttccggt gcatctgtgg gagccgtgag gctcaaccat
+     1861 gaatctgaca gtacgggcga aacccgacag gacttaaaga tccccaccgt ttccggcggg
+     1921 tcgctccctc ttgcgctctc ctgttccgac cctgccgttt accggatacc tgttccgcct
+     1981 ttctccctta cgggaagtgt ggcgctttct catagctcac acactggtat ctcggctcgg
+     2041 tgtaggtcgt tcgctccaag ctgggctgta agcaagaact ccccgttcag cccgactgct
+     2101 gcgccttatc cggtaactgt tcacttgagt ccaacccgga aaagcacggt aaaacgccac
+     2161 tggcagcagc cattggtaac tgggagttcg cagaggattt gtttagctaa acacgcggtt
+     2221 gctcttgaag tgtgcgccaa agtccggcta cactggaagg acagatttgg ttgctgtgct
+     2281 ctgcgaaagc cagttaccac ggttaagcag ttccccaact gacttaacct tcgatcaaac
+     2341 cacctcccca ggtggttttt tcgtttacag ggcaaaagat tacgcgcaga aaaaaaggat
+     2401 ctcaagaaga tcctttgatc ttttctactg aaccgctcta gatttcagtg caatttatct
+     2461 cttcaaatgt agcacctgaa gtcagcccca tacgatataa gttgtaattc tcatgttagt
+     2521 catgccccgc gcccaccgga aggagctgac tgggttgaag gctctcaagg gcatcggtcg
+     2581 agatcccggt gcctaatgag tgagctaact tacattaatt gcgttgcgct cactgcccgc
+     2641 tttccagtcg ggaaacctgt cgtgccagct gcattaatga atcggccaac gcgcggggag
+     2701 aggcggtttg cgtattgggc gccagggtgg tttttctttt caccagtgag acgggcaaca
+     2761 gctgattgcc cttcaccgcc tggccctgag agagttgcag caagcggtcc acgctggttt
+     2821 gccccagcag gcgaaaatcc tgtttgatgg tggttaacgg cgggatataa catgagctgt
+     2881 cttcggtatc gtcgtatccc actaccgaga tgtccgcacc aacgcgcagc ccggactcgg
+     2941 taatggcgcg cattgcgccc agcgccatct gatcgttggc aaccagcatc gcagtgggaa
+     3001 cgatgccctc attcagcatt tgcatggttt gttgaaaacc ggacatggca ctccagtcgc
+     3061 cttcccgttc cgctatcggc tgaatttgat tgcgagtgag atatttatgc cagccagcca
+     3121 gacgcagacg cgccgagaca gaacttaatg ggcccgctaa cagcgcgatt tgctggtgac
+     3181 ccaatgcgac cagatgctcc acgcccagtc gcgtaccgtc ttcatgggag aaaataatac
+     3241 tgttgatggg tgtctggtca gagacatcaa gaaataacgc cggaacatta gtgcaggcag
+     3301 cttccacagc aatggcatcc tggtcatcca gcggatagtt aatgatcagc ccactgacgc
+     3361 gttgcgcgag aagattgtgc accgccgctt tacaggcttc gacgccgctt cgttctacca
+     3421 tcgacaccac cacgctggca cccagttgat cggcgcgaga tttaatcgcc gcgacaattt
+     3481 gcgacggcgc gtgcagggcc agactggagg tggcaacgcc aatcagcaac gactgtttgc
+     3541 ccgccagttg ttgtgccacg cggttgggaa tgtaattcag ctccgccatc gccgcttcca
+     3601 ctttttcccg cgttttcgca gaaacgtggc tggcctggtt caccacgcgg gaaacggtct
+     3661 gataagagac accggcatac tctgcgacat cgtataacgt tactggtttc acattcacca
+     3721 ccctgaattg actctcttcc gggcgctatc atgccatacc gcgaaaggtt ttgcgccatt
+     3781 cgatggtgtc cgggatctcg acgctctccc ttatgcgact cctgcattag gaaattaata
+     3841 cgactcacta ta
+//
