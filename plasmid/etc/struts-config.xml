@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="ISO-8859-1" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 
 <!DOCTYPE struts-config PUBLIC
-          "-//Apache Software Foundation//DTD Struts Configuration 1.0//EN"
-          "http://jakarta.apache.org/struts/dtds/struts-config_1_0.dtd">
+          "-//Apache Software Foundation//DTD Struts Configuration 1.3//EN"
+          "http://jakarta.apache.org/struts/dtds/struts-config_1_3.dtd">
 
 <!--
      This is the Struts configuration file for the example application,
@@ -15,9 +15,9 @@
      "name" and "type" attributes.
 -->
 <struts-config>
-
-
-
+    
+    
+    
     <!-- ========== Form Bean Definitions =================================== -->
     <form-beans>
         <form-bean name="addVFTForm"
@@ -209,7 +209,7 @@
         <forward    name="findPMID"    path="/findPMID.jsp"/>
     </global-forwards>
 
-
+    
     <!-- ========== Action Mapping Definitions ============================== -->
     <action-mappings type="org.apache.struts.action.ActionMapping">
         <action     path="/AddCollectionToCart"
@@ -539,7 +539,7 @@
             <forward  name="confirm"   path="/MergeCart.jsp"/>
             <forward  name="failure"  path="/Login.jsp"/>
         </action>
-
+    
         <!-- process a user logout -->
         <action     path="/Logout"
                     type="plasmid.action.LogoutAction">
@@ -757,7 +757,7 @@
                    input="/SEQ_UpdateBilling.jsp">
             <forward  name="success"   path="/SEQ_ViewInvoice.jsp"/>
         </action>
-        
+
         <action    path="/SEQ_UploadOrders"
                    type="plasmid.action.SEQ_UploadOrdersAction"
                    name="seq_UploadOrdersForm"
@@ -1129,8 +1129,8 @@
                 input="/findPMID.jsp"
                 validate="true">
         </action>
-
-
+    
+  
         <!-- The standard administrative actions available with Struts -->
         <!-- These would be either omitted or protected by security -->
         <!-- in a real application deployment -->
