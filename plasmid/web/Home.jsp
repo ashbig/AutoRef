@@ -20,22 +20,23 @@
                 <td height="250"><table width="800" height="259" border="0" align="center" bgcolor="#EFEFEF" id="form">
                         <tr>
                             <td width="800" height="112">
-                                
+                                <!-- 
                                 <p align="left"><span class="mainbodytext">The Mission of the DNA Resource CORE is to provide member in the DF/HCC, Harvard Affiliates, and outside researchers with quality and inexpensive <a target="_blank" href="http://dnaseq.med.harvard.edu/">DNA sequencing services</a> and <a href="http://plasmid.med.harvard.edu/PLASMID/Home.jsp">sequence verified plasmid constructs</a>, paired with comprehensive quality control and customer support.&nbsp;        
                                 </span>
+                                -->
                                  <!--
                                 //<p align="left"><span class="formlabelitalic">
                                 The PlasmID website will be unavailable on Saturday 11/13/2013 from 4:00AM - 6:00 AM EST for routine maintenance.</span></p>
                               -->
-                               <!-- 
-                                <p align="left"><span class="formlabelitalic">Dear DF/HCC DNA Resource Core Users,
-                                        <br><br>
-                                        The Core would like to inform you that our facility will be closed from Friday, December 23rd, 2011 to January 2nd, 2012. PlasmID orders however will still be accepted online during the break for later processing. We will resume filling orders on Tuesday, January 3rd, 2012.
-                                        <br><br>
-                                        Happy Holidays!<br>
-                                        Staff at DF/HCC DNA Resource Core
+                               
+                              <p align="justify" <span class="formlabelitalic">Dear DF/HCC DNA Resource Core Users,
+                                      <br><br>
+                                        The Core would like to inform you that our facility will be closed from Tuesday, December 23rd, 2013 to Thursday, January 2nd, 2014 in observance of Harvard University's Winter Recess. Our last international shipment will occur on Wednesday, December 18th 2013 and our last domestic shipment will occur on Thursday, December 19th 2013. As we work to complete existing orders please note that new orders placed after Wednesday, December 11th may not be completed prior to this recess. For urgent requests, you may wish to place your order with a commercial provider. As always, please contact
+                                        <a href="mailto:plasmidhelp@hms.harvard.edu">plasmidhelp@hms.harvard.edu</a> with any questions or concerns.<br>
+                                        <br> Happy Holidays!<br>
+                                        Your DF/HCC DNA Resource Core Staff
                                     </span>
-                                </p>-->
+                                </p>
                                 <!--
         <p align="left" class="formlabelitalic">
             Dear Valued PlasmID User,<br><br>
