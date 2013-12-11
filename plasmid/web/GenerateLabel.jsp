@@ -289,7 +289,7 @@ Address 2</span>
 </td>
 																			<td style="width: 65%">
 <span id="txtAddress2">
-LHRRB 212<!-- end txtAddress2 -->
+SMG 228<!-- end txtAddress2 -->
 </span>
 					</td>
 				</tr>
