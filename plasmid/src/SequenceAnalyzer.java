@@ -52,7 +52,7 @@ public class SequenceAnalyzer {
             blaster.setProgram(BlastWrapper.PROGRAM_BLASTN);
             blaster.runBlast();
 
-            BlastParser parser = new BlastParser(outputfile);
+            !!!!!!!!!!!BlastParser parser = new BlastParser(outputfile);
             parser.setAlength(0);
             parser.setPid(0);
             parser.parseTabularOutput();
