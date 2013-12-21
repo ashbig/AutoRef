@@ -332,15 +332,15 @@ public class SEQ_OrderProcessManager {
         document.add(PdfEditor.makeSmall("  Dep.BCMP Room C- 214"));
         document.add(PdfEditor.makeSmall("  240 Longwood Ave."));
         document.add(PdfEditor.makeSmall("  Boston, MA 02115"));
-        document.add(PdfEditor.makeSmall("  617-432-1210"));
+        document.add(PdfEditor.makeSmall("  617-432-2408"));
 
         document.add(PdfEditor.makeTitle(" "));
         document.add(PdfEditor.makeSmallItalic("Please see billing memo for more payment information."));
 
         document.add(PdfEditor.makeTitle(" "));
         document.add(PdfEditor.makeSmallBold("For Invoice Information Contact:"));
-        document.add(PdfEditor.makeSmall("  Elmira Dhroso, (617)432-1210"));
-        document.add(PdfEditor.makeSmall("  elmira_dhroso@hms.harvard.edu"));
+        document.add(PdfEditor.makeSmall("  Lola Yao, (617)432-2408"));
+        document.add(PdfEditor.makeSmall("  dnaresource_finance@hms.harvard.edu"));
     }
 
     public void printInternalInvoice(OutputStream file, Invoice invoice) {
@@ -461,8 +461,8 @@ public class SEQ_OrderProcessManager {
         
         document.add(PdfEditor.makeTitle(" "));
         document.add(PdfEditor.makeSmallBold("For Invoice Information Contact:"));
-        document.add(PdfEditor.makeSmall("  Elmira Dhroso, (617)432-1210"));
-        document.add(PdfEditor.makeSmall("  elmira_dhroso@hms.harvard.edu"));
+        document.add(PdfEditor.makeSmall("  Lola Yao, (617)432-2408"));
+        document.add(PdfEditor.makeSmall("  dnaresource_finance@hms.harvard.edu"));
     }
 
     public void printInvoice(OutputStream file, Invoice invoice) {

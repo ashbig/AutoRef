@@ -70,7 +70,7 @@
             <tr>
                 <td width="800" class="mainbodytext"><i>To expedite orders please feel free to email completed MTAs to plasmidMTA@hms.harvard.edu and then mail the original signed document to:</i> <br>
                     Glenn Beeman<br>
-                    LHRRB 212<br> 
+                    SGM 228<br> 
                     240 Longwood Ave<br> 
                     Boston, MA 02115
                 </td>

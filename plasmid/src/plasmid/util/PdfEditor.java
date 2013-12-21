@@ -58,7 +58,7 @@ public class PdfEditor {
     
     public static Paragraph makeSenderAddress() {
         Font font = new Font(Font.FontFamily.TIMES_ROMAN, 10); 
-        String s = "Harvard Medical School\nDep.BCMP Room C- 214\n240 Longwood Ave.\nBoston, MA 02115\n(617)432-1210\nAttn: Elmira Dhroso";
+        String s = "Harvard Medical School\nDep.BCMP Room C- 214\n240 Longwood Ave.\nBoston, MA 02115\n(617)432-1210\nAttn: Lola Yao";
         Paragraph par = new Paragraph(12, new Chunk(s, font));
         return par;
     }

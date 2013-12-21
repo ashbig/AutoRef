@@ -2088,8 +2088,8 @@ public class OrderProcessManager {
 
         document.add(PdfEditor.makeTitle(" "));
         document.add(PdfEditor.makeSmallBold("For Invoice Information Contact:"));
-        document.add(PdfEditor.makeSmall("  Elmira Dhroso, (617)432-1210"));
-        document.add(PdfEditor.makeSmall("  elmira_dhroso@hms.harvard.edu"));
+        document.add(PdfEditor.makeSmall("  Lola Yao, (617)432-2408"));
+        document.add(PdfEditor.makeSmall("  dnaresource_finance@hms.harvard.edu"));
     }
 
     public void printInternalInvoice(OutputStream file, CloneOrder order, Invoice invoice) {
