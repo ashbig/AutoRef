@@ -89,7 +89,7 @@
     </init-param>   
     <init-param>
       <param-name>jdbcURL</param-name>
-      <param-value>jdbc:oracle:thin:@ITLORADEV1.med.harvard.edu:1521:HMSDEV</param-value>
+      <param-value>jdbc:oracle:thin://@127.0.0.1:1521/HMSDEV.med.harvard.edu</param-value>
     </init-param>
 
     <init-param>
