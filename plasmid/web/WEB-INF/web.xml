@@ -89,9 +89,8 @@
     </init-param>   
     <init-param>
       <param-name>jdbcURL</param-name>
-      <param-value>jdbc:oracle:thin:@ITLORADEV1.med.harvard.edu:1521:HMSDEV</param-value>
+      <param-value>jdbc:oracle:thin://@127.0.0.1:1521/HMSDEV.med.harvard.edu</param-value>
     </init-param>
-
     <init-param>
       <param-name>user</param-name>
       <param-value>devplasmid</param-value>
@@ -137,7 +136,7 @@
   <!-- IMPORTANT: To use the CGI servlet, you also need to rename the       -->
   <!--            $CATALINA_HOME/server/lib/servlets-cgi.renametojar file   -->
   <!--            to $CATALINA_HOME/server/lib/servlets-cgi.jar             -->
-<!--
+
   <servlet>
     <servlet-name>cgi</servlet-name>
     <servlet-class>org.apache.catalina.servlets.CGIServlet</servlet-class>
@@ -155,7 +154,7 @@
     </init-param>
      <load-on-startup>5</load-on-startup>
    </servlet>
--->
+
   <!-- Action Servlet Mapping -->
   <servlet-mapping>
     <servlet-name>action</servlet-name>
