@@ -89,16 +89,15 @@
     </init-param>   
     <init-param>
       <param-name>jdbcURL</param-name>
-      <param-value>jdbc:oracle:thin://@127.0.0.1:1522/RITGAPPS.med.harvard.edu</param-value>
+      <param-value>jdbc:oracle:thin://@127.0.0.1:1521/DEV1.med.harvard.edu</param-value>
     </init-param>
-
     <init-param>
       <param-name>user</param-name>
-      <param-value>plasmid</param-value>
+      <param-value>devplasmid</param-value>
     </init-param>
     <init-param>
         <param-name>password</param-name>
-        <param-value>orvayraddod2</param-value>
+        <param-value>quozubvuod3</param-value>
     </init-param>
     <!-- for oracle database -->   
 
