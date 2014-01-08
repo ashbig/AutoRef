@@ -136,7 +136,7 @@
   <!-- IMPORTANT: To use the CGI servlet, you also need to rename the       -->
   <!--            $CATALINA_HOME/server/lib/servlets-cgi.renametojar file   -->
   <!--            to $CATALINA_HOME/server/lib/servlets-cgi.jar             -->
-
+<!--
   <servlet>
     <servlet-name>cgi</servlet-name>
     <servlet-class>org.apache.catalina.servlets.CGIServlet</servlet-class>
@@ -154,7 +154,7 @@
     </init-param>
      <load-on-startup>5</load-on-startup>
    </servlet>
-
+-->
   <!-- Action Servlet Mapping -->
   <servlet-mapping>
     <servlet-name>action</servlet-name>
