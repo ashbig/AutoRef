@@ -21,12 +21,12 @@ public class DataTransfer {
     public static final String username_old = "plasmid_production";
     public static final String password_old = "plasmID";
     
-    public static final String url_new = "jdbc:oracle:thin:@127.0.0.1:2483:oradb";
-    public static final String username_new = "plasmid";
-    public static final String password_new = "orvayraddod2";
-    //public static final String url_new = "jdbc:oracle:thin:@127.0.0.1:2483:devoradb";
-    //public static final String username_new = "devplasmid";
-    //public static final String password_new = "quozubvuod3";
+    //public static final String url_new = "jdbc:oracle:thin:@127.0.0.1:2483:oradb";
+    //public static final String username_new = "plasmid";
+    //public static final String password_new = "orvayraddod2";
+    public static final String url_new = "jdbc:oracle:thin:@127.0.0.1:2483:devoradb";
+    public static final String username_new = "devplasmid";
+    public static final String password_new = "quozubvuod3";
     
     
     private List pis;
