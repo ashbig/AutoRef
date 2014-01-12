@@ -62,12 +62,16 @@ public final class LogonAction extends Action {
         DatabaseTransaction t = null;
         Connection conn = null;
         try {
+            System.out.println("Before getting the DB instance");
             t = DatabaseTransaction.getInstance();
+            System.out.println("Before getting the DB connection");
             conn = t.requestConnection();
         } catch (Exception ex) {
             if(Constants.DEBUG) {
                 System.out.println(ex);
             }
+            
+            System.out.println("In exception handling");
             
             errors.add(ActionErrors.GLOBAL_ERROR,
             new ActionError("error.database"));
@@ -76,7 +80,8 @@ public final class LogonAction extends Action {
             return mapping.findForward("error");
         }
         
-        UserManager manager = new UserManager(conn);
+             System.out.println("Before user manager");
+       UserManager manager = new UserManager(conn);
         User user = manager.authenticate(email, password);
         if(user == null) {
             errors.add(ActionErrors.GLOBAL_ERROR,
