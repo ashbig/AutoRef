@@ -70,16 +70,16 @@ public class DatabaseTransaction {
 
     private DatabaseTransaction() {
         try {
-            logger.info("Attempting to lookup the database info from the IC");
-            System.out.println("Attempting to lookup the database info from the IC");
+            //logger.info("Attempting to lookup the database info from the IC");
+            //System.out.println("Attempting to lookup the database info from the IC");
             InitialContext ic = new InitialContext();
             dataSource = (DataSource) ic.lookup("java:/comp/env/jdbc/plasmid");
-            logger.info("DT creation worked");
-            System.out.println("DT creation worked");
+            //logger.info("DT creation worked");
+            //System.out.println("DT creation worked");
         } catch (Exception ex) {
             ex.printStackTrace();
-            System.out.println("cannot get database connection.\n" + ex.getMessage());
-            logger.warning("cannot get database connection.\n" + ex.getMessage());
+            //System.out.println("cannot get database connection.\n" + ex.getMessage());
+            //logger.warning("cannot get database connection.\n" + ex.getMessage());
         }
     }
 
