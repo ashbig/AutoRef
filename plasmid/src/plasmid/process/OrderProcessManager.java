@@ -2234,7 +2234,7 @@ public class OrderProcessManager {
         String subject = "Invoice for order " + invoice.getOrderid();
         String text = "Dear Accounts Payable Representative:\n\n"
                 + "Attached please find an invoice from the PlasmID Repository at Harvard Medical School.\n\n"
-                + "This invoice was generated upon completion and shipment of your order. Any discounts, price modifications, and credit card payments should already be reflected on this invoice. If you have received this notification in error, or believe that a clerical mistake has occurred please contact us as soon as possible to resolve the issue. Please find payment instructions attached to this email and ALWAYS BE SURE TO INCLUDE YOUR INVOICE NUMBER WITH PAYMENT and ADD ANY WIRE TRANSFER FEES TO YOUR TOTAL.\n\n"
+                + "This invoice was generated upon HELLO completion and shipment of your order. Any discounts, price modifications, and credit card payments should already be reflected on this invoice. If you have received this notification in error, or believe that a clerical mistake has occurred please contact us as soon as possible to resolve the issue. Please find payment instructions attached to this email and ALWAYS BE SURE TO INCLUDE YOUR INVOICE NUMBER WITH PAYMENT and ADD ANY WIRE TRANSFER FEES TO YOUR TOTAL.\n\n"
                 + "As a part of our continued environmental efforts this email will serve as your sole notification, and no paper copy will be mailed to your facility.\n\n"
                 + "Payment Terms: Net 30\n"
                 + "Enclosures: Invoice, Payment Instructions\n";
