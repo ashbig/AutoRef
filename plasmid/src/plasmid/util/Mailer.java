@@ -58,7 +58,7 @@ public class Mailer {
     public final static String SMTP_HOST ="smtp.cl.med.harvard.edu";
     public static final String FROM = "plasmidhelp@hms.harvard.edu";
     public static final String USNAME = "plasmidhelp";
-    public static final String PWD = "Password1";
+    public static final String PWD = "Password2";
     
     /**
      * Utility Method to send a message
