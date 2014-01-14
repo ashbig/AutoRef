@@ -7,7 +7,6 @@ package plasmid.database.DatabaseManager;
 
 import java.sql.*;
 import java.util.*;
-import java.sql.Date;
 import plasmid.coreobject.*;
 import plasmid.database.*;
 import plasmid.Constants;
