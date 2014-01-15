@@ -10,7 +10,7 @@
         <p align="center" class="homeMainText">PlasmID was created and is maintained 
           by the <a href="http://dnaseq.med.harvard.edu" target="_blank">DF/HCC 
           DNA Resource Core</a></p>
-            <p class="footertext">©2004-2010 Harvard Medical School</p></td>
+            <p class="footertext">©2004-2014 Harvard Medical School</p></td>
         </tr>
       </table></td>
   </tr>
