@@ -22,6 +22,7 @@
     <property name="dist.war" value="${app.name}.war"/>
     <property name="javadoc.home" value="${deploy.home}/javadoc"/>
     <property name="file.home" value="${tomcat.home}/PlasmidRepository/file"/>  
+    <property name="build.dir" value="build_dir"/>  
 
     <!-- The "prepare" target is used to construct the deployment home                  directory structure (if necessary), and to copy in static files                  as required.  In the example below, Ant is instructed to create                  the deployment directory, copy the contents of the "web/" source                   hierarchy, and set up the WEB-INF subdirectory appropriately. -->
 
@@ -60,6 +61,7 @@
             <fileset dir="src/perl"/>
         </copy>
     
+         <mkdir dir="${build.dir}"/> 
     </target>
 
 
@@ -67,6 +69,7 @@
 
     <target name="clean">
         <delete dir="${deploy.home}"/>
+        <delete dir="${build.dir}"/>
     </target>
 
 
@@ -80,13 +83,18 @@
         </path>
       
         <!--javac classpath="${netbeans.filesystems.path}" debug="off" deprecation="off" destdir="${deploy.home}/WEB-INF/classes" optimize="on" srcdir="src"/-->
-        <javac debug="on" deprecation="off" destdir="${deploy.home}/WEB-INF/classes" optimize="on" srcdir="src">
+        <javac debug="on" deprecation="off" destdir="${build.dir}" optimize="on" srcdir="src">
             <classpath refid="myclasspath"/>
         </javac>
 
         <copy todir="${deploy.home}/WEB-INF/classes">
             <fileset dir="src" includes="**/*.properties"/>
         </copy>
+
+        <copy todir="${deploy.home}/WEB-INF/classes" overwrite="true">
+            <fileset dir="${build.dir}" includes="**/*.class"/>
+        </copy>
+
     </target>
 
     <target depends="prepare" name="javadoc">
