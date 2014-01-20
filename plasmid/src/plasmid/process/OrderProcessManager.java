@@ -2088,7 +2088,7 @@ public class OrderProcessManager {
 
         document.add(PdfEditor.makeTitle(" "));
         document.add(PdfEditor.makeSmallBold("For Invoice Information Contact:"));
-        document.add(PdfEditor.makeSmall("  HHELLLOOOOO Yao, (617)432-2408"));
+        document.add(PdfEditor.makeSmall("  Lola Yao, (617)432-2408"));
         document.add(PdfEditor.makeSmall("  dnaresource_finance@hms.harvard.edu"));
     }
 
