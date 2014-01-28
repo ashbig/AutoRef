@@ -2218,7 +2218,7 @@ public class OrderProcessManager {
         
         document.add(PdfEditor.makeSmallBold("For All Other Inquiries Contact:"));
         document.add(PdfEditor.makeSmall("  Glenn Beeman, (617) 432-7708"));
-        document.add(PdfEditor.makeSmall("  plasmidhelp@hms.harvard.edu"))
+        document.add(PdfEditor.makeSmall("  plasmidhelp@hms.harvard.edu"));
     }
 
     public void displayInvoice(OutputStream file, CloneOrder order, Invoice invoice) {
