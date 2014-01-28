@@ -65,7 +65,7 @@ public class GeneSearchBean implements Serializable {
 
     public GeneSearchBean() {
         this.genenames = null;
-        this.caseSensitive = "yes";
+        this.caseSensitive = "no";
         genes = null;
         seqs = null;
         clones = null;
