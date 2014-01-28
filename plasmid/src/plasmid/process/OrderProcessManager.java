@@ -2065,10 +2065,10 @@ public class OrderProcessManager {
         cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
         table.addCell(cell);
         document.add(table);
-        document.add(PdfEditor.makeSmallItalic("***************" + invoice.getReasonforadj()));
+        document.add(PdfEditor.makeSmallItalic("*" + invoice.getReasonforadj()));
 
         document.add(PdfEditor.makeTitle(" "));
-        document.add(PdfEditor.makeSmallBold("butnothereMake checkes payable to: Harvard Medical School. "
+        document.add(PdfEditor.makeSmallBold("Make checkes payable to: Harvard Medical School. "
                 + "Include invoice number on check. Payments must be made in U.S. funds drawn on a U.S. bank. "
                 + "If you pay through wire transfer, please include wire transfer fee in the total amount."));
 
@@ -2088,8 +2088,8 @@ public class OrderProcessManager {
 
         document.add(PdfEditor.makeTitle(" "));
         document.add(PdfEditor.makeSmallBold("For Invoice Information Contact:"));
-        document.add(PdfEditor.makeSmall("  Lola Yao, (617) 432-2408"));
-        document.add(PdfEditor.makeSmall("  dnaresource_finance@hms.harvard.edu"));
+        document.add(PdfEditor.makeSmall("  Elmira Dhroso, (617)432-1210"));
+        document.add(PdfEditor.makeSmall("  elmira_dhroso@hms.harvard.edu"));
     }
 
     public void printInternalInvoice(OutputStream file, CloneOrder order, Invoice invoice) {
@@ -2252,7 +2252,7 @@ public class OrderProcessManager {
         } else {
             text += " has shipped.";
         }
-        text += "Please note your tracking number and any shipping comments below. If you have requested the Platinum QC Service, end-read sequences are  available in  your account at http://plasmid.med.harvard.edu/PLASMID/Login.jsp. To view the results of our QC testing please log into your account, select the appropriate order number, and then select \"View Platinum Results.\" Please remember that a single end-read sequence is not able to verify your entire construct. Feel free to contact us at plasmidhelp@hms.harvard.edu if you have any questions. Thank you for using PlasmID.\n\n";
+        text += " Please note your tracking number and any shipping comments below. If you have requested the Platinum QC Service, end-read sequences are  available in  your account at http://plasmid.med.harvard.edu/PLASMID/Login.jsp. To view the results of our QC testing please log into your account, select the appropriate order number, and then select \"View Platinum Results.\" Please remember that a single end-read sequence is not able to verify your entire construct. Feel free to contact us at plasmidhelp@hms.harvard.edu if you have any questions. Thank you for using PlasmID.\n\n";
         text += "If you have selected \"pickup\" as your shipment option please pick up your order from the second floor of the Seeley G. Mudd building.  Samples can be found in the hallway refrigerator.\n\n";
         text += "===========================================================\n";
         text += "Tracking Number: " + order.getTrackingnumber() + "\n";
