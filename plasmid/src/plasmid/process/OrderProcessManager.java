@@ -2193,6 +2193,16 @@ public class OrderProcessManager {
         table.addCell(cell);
         document.add(table);
         document.add(PdfEditor.makeSmallItalic("*" + invoice.getReasonforadj()));
+        
+        document.add(PdfEditor.makeTitle(" "));
+        document.add(PdfEditor.makeSmallBold("For Invoice Information Contact:"));
+        document.add(PdfEditor.makeSmall("  Lola Yao, (617) 432-2408"));
+        document.add(PdfEditor.makeSmall("  dnaresource_finance@hms.harvard.edu"));
+        
+        document.add(PdfEditor.makeTitle(" "));
+        document.add(PdfEditor.makeSmallBold("For All Other Inquiries Contact:"));
+        document.add(PdfEditor.makeSmall("  Glenn Beeman, (617) 432-7708"));
+        document.add(PdfEditor.makeSmall("  plasmidhelp@hms.harvard.edu"));
     }
 
     public void displayInvoice(OutputStream file, CloneOrder order, Invoice invoice) {
