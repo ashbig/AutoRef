@@ -2091,6 +2091,7 @@ public class OrderProcessManager {
         document.add(PdfEditor.makeSmall("  Lola Yao, (617) 432-2408"));
         document.add(PdfEditor.makeSmall("  dnaresource_finance@hms.harvard.edu"));
         
+        document.add(PdfEditor.makeTitle(" "));
         document.add(PdfEditor.makeSmallBold("For All Other Inquiries Contact:"));
         document.add(PdfEditor.makeSmall("  Glenn Beeman, (617) 432-7708"));
         document.add(PdfEditor.makeSmall("  plasmidhelp@hms.harvard.edu"));
@@ -2192,6 +2193,33 @@ public class OrderProcessManager {
         table.addCell(cell);
         document.add(table);
         document.add(PdfEditor.makeSmallItalic("*" + invoice.getReasonforadj()));
+                document.add(PdfEditor.makeSmallBold("Make checkes payable to: Harvard Medical School. "
+                + "Include invoice number on check. Payments must be made in U.S. funds drawn on a U.S. bank. "
+                + "If you pay through wire transfer, please include wire transfer fee in the total amount."));
+
+        document.add(PdfEditor.makeTitle(" "));
+        document.add(PdfEditor.makeSmallBold("If your payment due is zero, please DO NOT send payment and regard this as your receipt."));
+
+        document.add(PdfEditor.makeTitle(" "));
+        document.add(PdfEditor.makeSmallBold("Mailing Address:"));
+        document.add(PdfEditor.makeSmall("  Harvard Medical School"));
+        document.add(PdfEditor.makeSmall("  Dep.BCMP Room C- 214"));
+        document.add(PdfEditor.makeSmall("  240 Longwood Ave."));
+        document.add(PdfEditor.makeSmall("  Boston, MA 02115"));
+        document.add(PdfEditor.makeSmall("  617-432-1210"));
+
+        document.add(PdfEditor.makeTitle(" "));
+        document.add(PdfEditor.makeSmallItalic("Please see billing memo for more payment information."));
+
+        document.add(PdfEditor.makeTitle(" "));
+        document.add(PdfEditor.makeSmallBold("For Invoice Information Contact:"));
+        document.add(PdfEditor.makeSmall("  Lola Yao, (617) 432-2408"));
+        document.add(PdfEditor.makeSmall("  dnaresource_finance@hms.harvard.edu"));
+        
+        document.add(PdfEditor.makeTitle(" "));
+        document.add(PdfEditor.makeSmallBold("For All Other Inquiries Contact:"));
+        document.add(PdfEditor.makeSmall("  Glenn Beeman, (617) 432-7708"));
+        document.add(PdfEditor.makeSmall("  plasmidhelp@hms.harvard.edu"));
     }
 
     public void displayInvoice(OutputStream file, CloneOrder order, Invoice invoice) {
