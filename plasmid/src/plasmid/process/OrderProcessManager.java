@@ -2065,7 +2065,7 @@ public class OrderProcessManager {
         cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
         table.addCell(cell);
         document.add(table);
-        document.add(PdfEditor.makeSmallItalic("***************" + invoice.getReasonforadj()));
+        document.add(PdfEditor.makeSmallItalic("*Whyhere" + invoice.getReasonforadj()));
 
         document.add(PdfEditor.makeTitle(" "));
         document.add(PdfEditor.makeSmallBold("butnothereMake checkes payable to: Harvard Medical School. "
