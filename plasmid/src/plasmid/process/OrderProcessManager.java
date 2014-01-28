@@ -2280,7 +2280,7 @@ public class OrderProcessManager {
                     + "Payment Terms: Net 30\n"
                     + "Enclosures: Invoice, Payment Instructions\n\n";
 
-            Mailer.sendMessage(billingemail, Constants.EMAIL_FROM, to, subject, text, files);
+            Mailer.sendMessage(billingemail, Constants.EMAIL_INVOICE, to, subject, text, files);
         }
     }
 
