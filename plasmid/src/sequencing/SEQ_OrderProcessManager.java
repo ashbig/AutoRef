@@ -316,10 +316,10 @@ public class SEQ_OrderProcessManager {
         cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
         table.addCell(cell);
         document.add(table);
-        document.add(PdfEditor.makeSmallItalic("*why this line" + invoice.getReasonforadj()));
+        document.add(PdfEditor.makeSmallItalic("*" + invoice.getReasonforadj()));
 
         document.add(PdfEditor.makeTitle(" "));
-        document.add(PdfEditor.makeSmallBold("but not this lineMake checkes payable to: Harvard Medical School. " +
+        document.add(PdfEditor.makeSmallBold("Make checkes payable to: Harvard Medical School. " +
                 "Include invoice number on check. Payments must be made in U.S. funds drawn on a U.S. bank. " +
                 "If you pay through wire transfer, please include wire transfer fee in the total amount."));
 
