@@ -2239,7 +2239,7 @@ public class OrderProcessManager {
                 + "Payment Terms: Net 30\n"
                 + "Enclosures: Invoice, Payment Instructions\n";
 
-        Mailer.sendMessages(billingemail, Constants.EMAIL_INVOICE, ccs, subject, text, files);
+        Mailer.sendMessages(billingemail, Constants.EMAIL_FROM, ccs, subject, text, files);
     }
 
     public void sendShippingEmails(CloneOrder order, Invoice invoice) throws Exception {
