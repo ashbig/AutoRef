@@ -2259,7 +2259,15 @@ public class OrderProcessManager {
     public void sendShippingEmails(CloneOrder order, Invoice invoice) throws Exception {
         int orderid = order.getOrderid();
         String to = order.getEmail();
-        String subject = "PlasmID Order " + orderid + " Shipped";
+        String subject = " ";
+        if (CloneOrder.PARTIALLY_SHIPPED.equals(order.getStatus()))
+        {
+            subject = "PlasmID Order " + orderid + " Partially Shipped";
+        }    
+        else
+        {
+            subject = "PlasmID Order " + orderid + " Shipped";
+        }
         String text = "Your PlasmID order " + orderid;
         if (CloneOrder.PARTIALLY_SHIPPED.equals(order.getStatus())) {
             text += " has been partially shipped. All constructs passing QC at this time have been included in your shipment. For more information refer to the packing slip included in your shipment.";
