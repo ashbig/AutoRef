@@ -27,6 +27,7 @@ public class Container {
     public static final String MICRONIC96TUBEMP16 = "Micronic96Tubes on 30mmNest/MP16";
     public static final String EMPTY = "EMPTY";
     public static final String FILLED = "FILLED";
+    public static final String NO_BACK_UP = "NO BACK UP";
     
     public static final String UNAVAILABLE = "UNAVAILABLE";
     public static final String WORKBENCH = "WORKBENCH";
