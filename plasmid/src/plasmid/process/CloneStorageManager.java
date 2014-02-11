@@ -44,7 +44,7 @@ public class CloneStorageManager {
             if (label != null && label.trim().length() > 0) {
                 int containerid = DefTableManager.getNextid("containerid");
                 int sampleid = DefTableManager.getNextid("sampleid");
-                Container container = new Container(containerid, Container.TUBE, label.trim(), null, Container.BIOBANK, 1, Container.FILLED);
+                Container container = new Container(containerid, Container.TUBE, label.trim(), null, Container.BIOBANK, 1, Container.NO_BACK_UP);
                 Sample sample = new Sample(sampleid, Sample.WORKING_GLYCEROL, Sample.GOOD, clone.getCloneid(), 1, "A", "01", containerid, label);
                 sample.setClone(clone);
                 container.addSample(sample);
