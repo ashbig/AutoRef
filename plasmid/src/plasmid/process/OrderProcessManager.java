@@ -1351,7 +1351,7 @@ public class OrderProcessManager {
 
     public void sendPendingEmail(CloneOrder order, String email) {
         String subject = "PlasmID Order Confirmation (order ID: " + order.getOrderid() + ")";
-        String text = "Thank you for placing a clone request with PlasmID. Please note your order ID number and save this email for your future reference. You may check the progress of your order at any time by logging into your account and then selecting 'View Orders.' Orders of < 48 clones typically ship within 7-10 days. We ask that you please allow additional time for large orders or when requesting QC testing. Orders will ship as glycerol stocks when allowed by local law. Some international orders may ship as purified DNA or stabilized in special tubes to comply with local import law or to accommodate slower shipping routes. Please contact plasmidhelp@hms.harvard.edu with any questions or concerns.\n\n";
+        String text = "Thank you for placing a clone request with PlasmID. Please note your order ID number and save this email for your future reference. You may check the progress of your order at any time by logging into your account and then selecting 'View Orders.' Orders of < 48 clones typically ship within 7-10 business days. We ask that you please allow additional time for large orders or when requesting QC testing. Orders will ship as glycerol stocks when allowed by local law. Some international orders may ship as purified DNA or stabilized in special tubes to comply with local import law or to accommodate slower shipping routes. Please contact plasmidhelp@hms.harvard.edu with any questions or concerns.\n\n";
         text += "\n" + formOrderText(order);
         text += "\n" + "Please sign in at PlasmID to view order status, "
                 + "track your shipment, download clone information, cancel a request, "
@@ -2241,7 +2241,6 @@ public class OrderProcessManager {
 
         String billingemail = order.getBillingemail();
         List ccs = new ArrayList();
-        ccs.add(Constants.EMAIL_FROM);
         if (isOther) {
             ccs.add(order.getPiemail());
             ccs.add(order.getEmail());
@@ -2263,7 +2262,7 @@ public class OrderProcessManager {
         String subject = "PlasmID Order " + orderid + " Shipped";
         String text = "Your PlasmID order " + orderid;
         if (CloneOrder.PARTIALLY_SHIPPED.equals(order.getStatus())) {
-            text += " has partially shipped.";
+            text += " has been partially shipped. All constructs passing QC at this time have been included in your shipment. For more information refer to the packing slip included in your shipment.";
         } else {
             text += " has shipped.";
         }
