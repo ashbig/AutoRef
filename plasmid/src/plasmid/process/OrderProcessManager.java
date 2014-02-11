@@ -2270,7 +2270,7 @@ public class OrderProcessManager {
         }
         String text = "Your PlasmID order " + orderid;
         if (CloneOrder.PARTIALLY_SHIPPED.equals(order.getStatus())) {
-            text += " has been partially shipped. All constructs passing QC at this time have been included in your shipment. For more information refer to the packing slip included in your shipment.";
+            text += " has been partially shipped. All constructs passing QC at this time have been included in your shipment. For more information refer to the packing slip included in your shipment. ";
         } else {
             text += " has shipped.";
         }
