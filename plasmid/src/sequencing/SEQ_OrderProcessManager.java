@@ -509,7 +509,6 @@ public class SEQ_OrderProcessManager {
         SEQ_Order order = invoice.getSeqorder().get(0);
         String billingemail = order.getBillingemail();
         List ccs = new ArrayList();
-        ccs.add(Constants.EMAIL_FROM);
         if (isOther) {
             ccs.add(order.getPiemail());
         }
