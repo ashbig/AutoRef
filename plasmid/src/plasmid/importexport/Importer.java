@@ -115,7 +115,7 @@ public class Importer {
     //public static final String filepath = "C:\\dev\\plasmid_support\\OC_missing\\import\\";
     //public static final String filepath = "C:\\dev\\plasmid_support\\mgc_import_201111\\import3\\";
     //public static final String filepath = "C:\\dev\\plasmid_support\\ccsb_201210\\import\\";
-    public static final String filepath = "C:\\dev\\plasmid_support\\kinase_gateway_201206\\import\\clones\\";
+    public static final String filepath = "E:\\plasmid\\main\\newconstructs";
      
     private List tables;
     private String error;
