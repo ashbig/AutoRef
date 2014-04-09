@@ -169,8 +169,10 @@ public class OrderClones implements Serializable {
      * @param inshipment the inshipment to set
      */
     public void setInshipment(boolean inshipment) {
+      if ( orderid == this.orderid ) {  
         this.inshipment = inshipment;
     }
+    }s
     
     public String getInShipmentString() {
         if(this.inshipment) 
