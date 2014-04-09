@@ -172,8 +172,7 @@ public class OrderClones implements Serializable {
       if ( orderid == this.orderid ) {  
         this.inshipment = inshipment;
     }
-    }s
-    
+    }
     public String getInShipmentString() {
         if(this.inshipment) 
             return INSHIPMENT_YES;
