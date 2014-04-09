@@ -118,6 +118,8 @@ public class RegistrationAction extends Action {
             conn = t.requestConnection();
         } catch (Exception ex) {
             if (Constants.DEBUG) {
+                            System.out.println ( "Error occured at line 121");
+
                 System.out.println(ex);
             }
 
@@ -125,6 +127,8 @@ public class RegistrationAction extends Action {
                     new ActionError("error.database"));
             saveErrors(request, errors);
             DatabaseTransaction.closeConnection(conn);
+            System.out.println ( "Error occured at line 128");
+
             return mapping.findForward("error");
         }
 
@@ -140,6 +144,8 @@ public class RegistrationAction extends Action {
 
         if (forward.equals("confirm")) {
             DatabaseTransaction.closeConnection(conn);
+            System.out.println ( "Error occured at line 143");
+
             return (mapping.findForward("success_confirm"));
         }
 
@@ -154,6 +160,8 @@ public class RegistrationAction extends Action {
             if (group.equals(User.HARVARD_UNIVERSITY) || group.equals(User.HARVARD) || group.equals(User.ACADEMIC)) {
                 if (manager.piExist(pifirstname, pilastname, piemail)) {
                     DatabaseTransaction.closeConnection(conn);
+                    System.out.println ( "Error occured at line 157");
+
                     return (mapping.findForward("pierror"));
                 }
 
@@ -166,6 +174,8 @@ public class RegistrationAction extends Action {
                     errors.add(ActionErrors.GLOBAL_ERROR,
                             new ActionError(manager.getErrorMessage()));
                     saveErrors(request, errors);
+                    System.out.println ( "Error occured at line 169");
+
                     return mapping.findForward("error");
                 }
             }
@@ -180,6 +190,8 @@ public class RegistrationAction extends Action {
                 errors.add(ActionErrors.GLOBAL_ERROR,
                         new ActionError(manager.getErrorMessage()));
                 saveErrors(request, errors);
+                System.out.println ( "Error occured at line 183");
+
                 return mapping.findForward("error");
             }
             pemail = p.getEmail();
@@ -192,6 +204,8 @@ public class RegistrationAction extends Action {
                 errors.add(ActionErrors.GLOBAL_ERROR,
                         new ActionError(manager.getErrorMessage()));
                 saveErrors(request, errors);
+                System.out.println ( "Error occured at line 195");
+
                 return mapping.findForward("error");
             }
         }
@@ -218,6 +232,8 @@ public class RegistrationAction extends Action {
                 errors.add(ActionErrors.GLOBAL_ERROR,
                         new ActionError(manager.getErrorMessage()));
                 saveErrors(request, errors);
+                System.out.println ( "Error occured at line 221");
+
                 return mapping.findForward("error");
             }
             next = "success_update";
@@ -229,6 +245,8 @@ public class RegistrationAction extends Action {
                         new ActionError(m.getErrorMessage()));
                 saveErrors(request, errors);
                 DatabaseTransaction.closeConnection(conn);
+                System.out.println ( "Error occured at line 232");
+
                 return mapping.findForward("error");
             }
 
@@ -243,8 +261,9 @@ public class RegistrationAction extends Action {
                 errors.add(ActionErrors.GLOBAL_ERROR,
                         new ActionError(manager.getErrorMessage()));
                 saveErrors(request, errors);
-                return mapping.findForward("error");
-            }
+                System.out.println ( " Error occured at line 244");
+
+                return mapping.findForward("error");            }
             request.setAttribute("registrationSuccessful", "1");
         }
 
