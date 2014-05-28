@@ -374,7 +374,7 @@ public class Importer {
         Importer imp = new Importer();
       
         if(!imp.readAllFiles()) {
-            System.out.println(imp.getError());
+            System.out.println(imp.getError() );
             System.exit(0);
         }
         if(imp.performImport()) {
