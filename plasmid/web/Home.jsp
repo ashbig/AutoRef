@@ -85,8 +85,8 @@
         <p align="left" class="mainbodytext"><strong class="mainbodytext">DEPOSITING CLONES: </strong>Go to <a href="Submission.jsp">Plasmid Submission</a> or see a <a href="http://psimr.asu.edu/overview.html" target="_blank">slide show</a> describing the process.</p>       
         -->
                                 <hr> 
-                                <html:form action="AdvancedSearch.do">
-                                    <p class="formlabel">Search PlasmID collection [<a href="PrepareAdvancedSearch.do?psi=0">Advanced Search</a>]</p>
+                                <html:form action="faces/GeneSearch.xhtml">
+                                    <p class="formlabel">Search PlasmID collection [<a href="faces/GeneSearch.xhtml">Advanced Search</a>]</p>
                                     <table width="100%" border="0">
                                         <tr> 
                                             <td class="formlabel" width="30%">Gene name or symbol</td>
