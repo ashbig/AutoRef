@@ -30,7 +30,7 @@
 <html:form action="ViewOrderHistory.do?start=1">
 <table width="100%" border="0">
   <tr>
-    <td width="40%" class="formlabel">Choose order1 status:
+    <td width="40%" class="formlabel">Choose order status:
         <html:select styleClass="itemtext" property="status">
             <html:option value="<%=CloneOrder.ALL%>"/>
             <html:option value="<%=CloneOrder.PENDING%>"/>
