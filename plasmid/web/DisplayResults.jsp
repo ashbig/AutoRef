@@ -19,7 +19,7 @@
         
 <script language="JavaScript">
 function readCookie(name){
-return(document.cookie.match('(^|; )'+name+'=([^;]*)')||0)[2]
+return(document.cookie.match('(^|; )'+name+'=([^;]*)')||0)[2];
 }
 </script>
 
