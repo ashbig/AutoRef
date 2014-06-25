@@ -82,7 +82,7 @@
         </servlet-class>  
         
 
-    <!-- for oracle database-->
+    <!-- for oracle database
     <init-param>
         <param-name>driverClass</param-name>
         <param-value>oracle.jdbc.driver.OracleDriver</param-value>
@@ -100,7 +100,7 @@
         <param-name>password</param-name>
         <param-value>quozubvuod3</param-value>
     </init-param>
-    <!--for oracle database -->   
+    for oracle database -->   
 
     <init-param>
       <param-name>minCount</param-name>
