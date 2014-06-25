@@ -22,91 +22,13 @@
                             <td width="800" height="112">
  
                                 <p align="left"><span class="mainbodytext">The Mission of the DNA Resource CORE is to provide member in the DF/HCC, Harvard Affiliates, and outside researchers with quality and inexpensive <a target="_blank" href="http://dnaseq.med.harvard.edu/">DNA sequencing services</a> and <a href="http://plasmid.med.harvard.edu/PLASMID/Home.jsp">sequence verified plasmid constructs</a>, paired with comprehensive quality control and customer support.&nbsp;        
-                                </span>
-                               
-                                 <!--
-                                //<p align="left"><span class="formlabelitalic">
-                                The PlasmID website will be unavailable on Saturday 11/13/2013 from 4:00AM - 6:00 AM EST for routine maintenance.</span></p>
-                              -->
-                                <!--
-                              <p align="justify" <span class="formlabelitalic">Dear DF/HCC DNA Resource Core Users,
-                                      <br><br>
-                                     HHHEEEYYY Core would like to inform you that our facility will be closed from Tuesday, December 23rd, 2013 to Thursday, January 2nd, 2014 in observance of Harvard University's Winter Recess. Our last international shipment will occur on Wednesday, December 18th 2013 and our last domestic shipment will occur on Thursday, December 19th 2013. As we work to complete existing orders please note that new orders placed after Wednesday, December 11th may not be completed prior to this recess. For urgent requests, you may wish to place your order with a commercial provider. As always, please contact
-                                        <a href="mailto:plasmidhelp@hms.harvard.edu">plasmidhelp@hms.harvard.edu</a> with any questions or concerns.<br>
-                                        <br> Happy Holidays!<br>
-                                        Your DF/HCC DNA Resource Core Staff
                                     </span>
-                                </p>
-                                <!--
-        <p align="left" class="formlabelitalic">
-            Dear Valued PlasmID User,<br><br>
-            We are happy to announce that we are no longer experiencing a two week delay on new orders.
-            To better serve your plasmid needs in the future we are happy to announce our upcoming 
-            plans for expansion. In the coming days please look forward to the addition of many new 
-            clone collections, new personnel to fill orders, and faster turn-around times. To enable 
-            this expansion we are also adjusting our price structure for the first time in almost 
-            10 years! We are committed to providing valuable plasmid constructs to the research 
-            community at the lowest possible rate, and are happy to announce new rates far below 
-            those found elsewhere on the market. Below please find our new pricing structure which 
-            will take effect on April 1, 2011. If you have any questions or concerns please feel free 
-            to contact <a href="mailto:plasmidhelp@hms.harvard.edu">plasmidhelp@hms.harvard.edu</a>. 
-        </p>
-              <table width="70%" border="3" align="center" id="gray">
-        <tr class="tableheader">
-          <td width="30%">Pricing Category</td>
-          <td width="25%">Individual Clone</td>
-          <td width="45%">Individual Clone with Platinum QC</td>
-        </tr>
-        <tr class="tableinfo">
-          <td>DF/HCC Members</td>
-          <td align="right">$45.00</td>
-          <td align="right">$55.00</td>
-        </tr>
-        <tr class="tableinfo">
-          <td>Academics and Nonprofits</td>
-          <td align="right">$55.00</td>
-          <td align="right">$65.00</td>
-        </tr>
-        <tr class="tableinfo">
-          <td>Commercial Users</td>
-          <td align="right">$60.50</td>
-          <td align="right">$70.50</td>
-        </tr>
-      </table>
-            
-        <p class="alertbigger">NOTICE: Due to high volume all incoming orders are experiencing a TWO WEEK delay. We are working rapidly to improve our capacity and value your patronage. If you have any further questions or concerns please contact <a href="mailto:plasmidhelp@hms.harvard.edu">plasmidhelp@hms.harvard.edu</a>.</p>
-            <!--p class="alertheader">Special Notice: In observance of the holidays the PlasmID Repository will be closed from 12/23/2010 - 01/03/2011. </p-->
-            <!--p class="alert">Our website will continue to accept new orders, but no new orders will be processed until the new year. To avoid shipping complications our last shipping date will be 12/20/2010.Please contact plasmidhelp@hms.harvard.edu with any questions or concerns. </p-->
-        
-            <!--
-        <p align="left" class="mainbodytext"><strong>PLASMID SEARCH:</strong>  Go to <a href="OrderOverview.jsp">Search & Order</a>
-          or find a list of our large collections <a href="collection_overview.jsp" target="_blank">here</a>. </p>
-        <p align="left" class="mainbodytext"><strong>PLASMID COST:</strong> Click <a href="http://plasmid.med.harvard.edu/PLASMID/OrderOverview.jsp#cost">here</a> for plasmid and shipping costs.</p>
-        <p align="left" class="mainbodytext"><strong class="mainbodytext">DEPOSITING CLONES: </strong>Go to <a href="Submission.jsp">Plasmid Submission</a> or see a <a href="http://psimr.asu.edu/overview.html" target="_blank">slide show</a> describing the process.</p>       
-        -->
                                 <hr> 
-                                <html:form action="faces/GeneSearch.xhtml">
-                                    <p class="formlabel">Search PlasmID collection [<a href="faces/GeneSearch.xhtml">Advanced Search</a>]</p>
-                                    <table width="100%" border="0">
-                                        <tr> 
-                                            <td class="formlabel" width="30%">Gene name or symbol</td>
-                                            <td>
-                                                <html:select property="geneNameOp" styleClass="itemtext">
-                                                    <html:option value="<%=Constants.OPERATOR_EQUALS %>"/>
-                                                    <html:option value="<%=Constants.OPERATOR_CONTAINS %>"/>
-                                                </html:select>
-                                            </td>
-                                            <td>
-                                                <html:text styleClass="itemtext" property="geneName" size="50"/>
-                                            </td>
-                                            <td><html:submit styleClass="formlabel" value="Search"/></td>
-                                        </tr>
-                                    </table>
-                                </html:form>
-                                
+                                    <p align="center" class="formlabel" style="font-size: 16px"><a href="faces/GeneSearch.xhtml">Search here for the most up to date Human & Mouse cDNAs we have available! </a></p> 
+                                    <p align="center" class="formlabel" style="font-size: 14px"><a href="OrderOverview.jsp">For other clone types or collection inquiries please see our Search & Order page. </a></p>
                                 <hr>
                                 <p align="left" class="mainbodytext">Click <a href="TermAndCondition.jsp">here</a> for the <strong class="mainbodytext">terms and conditions</strong> for receiving plasmids from the repository.</p>
-                            <p align="left" class="mainbodytext"> Click <a href="cloning_strategies.htm" target="_blank">here</a> to view the <strong>cloning methods</strong> used to create many of the  plasmids           </p>        </td>
+                            <p align="left" class="mainbodytext"> Click <a href="cloning_strategies.htm" target="_blank">here</a> to view the <strong>cloning methods</strong> used to create many of the  plasmids.          </p>        </td>
                         </tr>
                 </table></td>
             </tr>
