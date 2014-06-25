@@ -100,7 +100,7 @@
         <param-name>password</param-name>
         <param-value>quozubvuod3</param-value>
     </init-param>
-    <--for oracle database -->   
+    <!--for oracle database -->   
 
     <init-param>
       <param-name>minCount</param-name>
