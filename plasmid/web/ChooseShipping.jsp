@@ -11,6 +11,11 @@
 <title>PlasmID Database</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
+<script>
+    function showMsg() {
+        alert("WARNING!\n\nAre you sure you want to remove QC testing?\nWe did not create these bacterial stocks and make no warranty for their identity or fitness. ");
+    }
+</script>
 </head>
 
 <body>
@@ -90,8 +95,9 @@
 <p class="mainbodytexthead">
               Additional Options:
               <ul class="mainbodytexthead">
-                  <li>Platinum QC Service: $6 for Harvard University and DF/HCC members; $7 for other academics and non-profits; $8 for commercial users.</li>
-                  <li>Add this QC service for added peace of mind. When you order a Platinum Clone we will send your individual sample for end read sequencing at our in house sequencing facility. Our bench scientists will then analyze the resulting sequence to verify that the correct clone was cultured. For each clone ordered you will receive a glycerol stock, a DNA aliquot, and the individual sequencing read. If you have any additional questions about our Platinum Service please feel free to contact <a href="mailto:plasmidhelp@hms.harvard.edu">PlasmID help</a>.</li>
+                  <li>Platinum QC Service: $6 for Harvard University and DF/HCC members; $7 for other academics and non-profits; $8 for commercial users.<p></li>
+                  <li>Our platinum QC service has already been selected for your convenience. Please only remove this service if you are prepared to perform your own validation before any downstream experiments. Be aware that the cost of your construct lies within retrieval and distribution and we make no warranty on these clones. Removal of this service will not expedite your order in any way.<p></li>
+                  <li>When you order a Platinum Clone we will perform end read sequencing at our in house sequencing facility. Our bench scientists will align the resulting sequence with the details that we list, saving you time, effort and money. If a clone fails Platinum QC validation you will be entitled to a refund or may select any replacement construct from our library. For each clone ordered with Platinum QC you will receive not only the standard glycerol stock, but additionally an aliquot of plasmid DNA, and the individual sequencing read will be made available through your account profile. If you have any additional questions about our Platinum Service please feel free to contact <a href="mailto:plasmidhelp@hms.harvard.edu">PlasmID help</a>.</li>
               </ul>
 </p>
 
@@ -100,7 +106,7 @@
     <td class="formlabel" width="20%">Would you like to add platinum service?</td>
     <td class="text">
             <html:radio styleClass="text" property="isplatinum" value="<%=Constants.ISPLATINUM_Y%>">Yes</html:radio>
-            <html:radio styleClass="text" property="isplatinum" value="<%=Constants.ISPLATINUM_N%>">No</html:radio>
+            <html:radio styleClass="text" property="isplatinum" onclick="showMsg()" value="<%=Constants.ISPLATINUM_N%>">No</html:radio>
     </td>
   </tr>
   <tr> 
