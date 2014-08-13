@@ -25,6 +25,7 @@ import plasmid.Constants;
 import plasmid.database.DatabaseManager.*;
 import com.jscape.inet.sftp.Sftp;
 import java.text.SimpleDateFormat;
+import static plasmid.Constants.wells;
 
 /**
  *
@@ -1620,14 +1621,14 @@ public class OrderProcessManager {
     }
 
     public void printCloneWorlist(PrintWriter out, List clones) {
-        out.println("Order ID\tClone ID\tVector\tGrowth Condition\tContainer\tWell");
+        out.println("Des.Well\tOrder ID\tClone ID\tPrimer\tDNA Type\tVector\tGrowth Condition\tPlate\tSrc. Well\tBB Tube");
         for (int i = 0; i < clones.size(); i++) {
             CloneInfo clone = (CloneInfo) clones.get(i);
             GrowthCondition growth = clone.getRecommendedGrowthCondition();
             if (growth == null) {
-                out.println(clone.getOrderid() + "\t" + clone.getName() + "\t" + clone.getVectorname() + "\t" + "\t\t" + clone.getPlate() + "\t" + clone.getWell());
+                out.println( wells[i] +"\t" + clone.getOrderid() + "\t" + clone.getName() + "\t" + clone.getPrimer() +"\tPLASMID\t"  + clone.getVectorname() + "\t" + "\t\t" + clone.getLatestPlate() + "\t" + clone.getLatestWell() + "\t" + clone.getBBTube());
             } else {
-                out.println(clone.getOrderid() + "\t" + clone.getName() + "\t" + clone.getVectorname() + "\t" + clone.getRecommendedGrowthCondition().getName() + "\t" + clone.getPlate() + "\t" + clone.getWell());
+                out.println( wells[i] + "\t" + clone.getOrderid() + "\t" + clone.getName() + "\t" + clone.getPrimer() +"\tPLASMID\t" + clone.getVectorname() + "\t" + clone.getRecommendedGrowthCondition().getName() + "\t"  + clone.getLatestPlate() + "\t" + clone.getLatestWell() + "\t" + clone.getBBTube());
             }
         }
     }

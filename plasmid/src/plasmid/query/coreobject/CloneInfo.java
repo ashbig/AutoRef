@@ -23,6 +23,13 @@ public class CloneInfo extends Clone implements Serializable{
     protected String targetPlate;
     protected String targetWell;
     
+    //The below variables were created to store only plates OR only biobank tubes
+    protected String latestPlate;
+    protected String bbTube=null;
+    protected String latestWell;
+    protected int lposition;
+    protected String primer;
+    
     public CloneInfo() {
         super();
     }
@@ -70,6 +77,13 @@ public class CloneInfo extends Clone implements Serializable{
     public String getTargetPlate() {return targetPlate;}
     public String getTargetWell() {return targetWell;}
     
+    //getter methods to be called by DownloadCloneWorklistAction.java
+    public String getLatestPlate() { return latestPlate; }
+    public String getLatestWell() {return latestWell;}
+    public String getBBTube() { return bbTube; }
+    public String getPrimer() { return primer;};
+
+    
     public void setTerm(String term) {this.term = term;}
     public void setQuantity(int i) {this.quantity = i;}
     public void setPlate(String s) {this.plate = s;}
@@ -79,6 +93,15 @@ public class CloneInfo extends Clone implements Serializable{
     public void setIsAddedToCart(boolean b) {this.isAddedToCart = b;}    
     public void setTargetPlate(String s) {this.targetPlate = s;}
     public void setTargetWell(String s) {this.targetWell = s;}
+    
+    
+    //setter methods to be called by DownloadCloneWorklistAction.java
+    public void setLatestPlate( String lPlate ) { this.latestPlate = lPlate; }
+    public void setLatestWell(String lWell) { this.latestWell =lWell;}
+    public void setLatestWell(String x, String y) {this.latestWell = x+y;}
+    public void setLatestPosition(int i) {this.lposition = i;}
+    public void setBBTube( String bbTube) { this.bbTube = bbTube; }
+    public void setPrimer ( String primer ) { this.primer = primer; }
     
     private void writeObject(java.io.ObjectOutputStream out)
      throws IOException {

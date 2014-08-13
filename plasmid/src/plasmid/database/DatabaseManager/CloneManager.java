@@ -12,6 +12,7 @@ import java.io.OutputStreamWriter;
 import java.sql.*;
 import java.util.*;
 
+
 import plasmid.coreobject.*;
 import plasmid.query.coreobject.CloneInfo;
 import plasmid.database.*;
@@ -1079,6 +1080,7 @@ public class CloneManager extends TableManager {
         String sql5 = getGrowthSql();
         String sql6 = getInsertseqSql();
         String sql7 = getClonenameSql();
+        
 
         PreparedStatement stmt = null;
         PreparedStatement stmt2 = null;
@@ -1087,7 +1089,8 @@ public class CloneManager extends TableManager {
         PreparedStatement stmt5 = null;
         PreparedStatement stmt6 = null;
         PreparedStatement stmt7 = null;
-
+        
+        
         ResultSet rs = null;
         int currentCloneid = 0;
         try {
@@ -1233,6 +1236,13 @@ public class CloneManager extends TableManager {
         String sql5 = getGrowthSql();
         String sql6 = getInsertseqSql();
         String sql7 = getClonenameSql();
+        
+       
+       // Setting sql statements
+       // methods found in this file at lines 1410 1422
+       String sq18 = getPlateStorageSql();
+       String sq19 = getBBTubeStorageSql();
+       String sq20 = getPrimerSql();
 
         PreparedStatement stmt2 = null;
         PreparedStatement stmt3 = null;
@@ -1240,6 +1250,12 @@ public class CloneManager extends TableManager {
         PreparedStatement stmt5 = null;
         PreparedStatement stmt6 = null;
         PreparedStatement stmt7 = null;
+        
+        // Setting prepared latest tube/plate statements to query
+        // Refer to lines 1410 - 1422
+        PreparedStatement stmt8 = null;
+        PreparedStatement stmt9 = null;
+        PreparedStatement stmt10 = null;
 
         int currentCloneid = 0;
         try {
@@ -1249,8 +1265,13 @@ public class CloneManager extends TableManager {
             if (isSelection) {
                 stmt3 = conn.prepareStatement(sql3);
             }
+            //Preparing statements for setting plate well and label
+            // stmt 4 is the original method, 8(plate), 9(well) 10(primer) are the modififed statements
             if (isWorkingStorage) {
                 stmt4 = conn.prepareStatement(sql4);
+                stmt8 = conn.prepareStatement(sq18);
+                stmt9 = conn.prepareStatement(sq19);
+                stmt10 = conn.prepareStatement(sq20);
             }
             if (isGrowth) {
                 stmt5 = conn.prepareStatement(sql5);
@@ -1306,8 +1327,33 @@ public class CloneManager extends TableManager {
                     stmt4.setInt(1, cloneid);
                     stmt4.setString(2, Sample.WORKING_GLYCEROL);
                     setStorage(stmt4, c);
+                } 
+                // 1331 - 1357 queries for the latest plate, well, and bbtube available in plasmID database
+                if (isWorkingStorage) {
+                    stmt8.setInt(1, cloneid);
+                    stmt8.setString(2, Sample.WORKING_GLYCEROL);
+                    setLatestPlateStorage(stmt8, c);
                 }
-
+                
+                if (isWorkingStorage) {
+                    try {
+                        stmt10.setInt(1, cloneid);
+                        setSeqPrimer(stmt10, c);
+                    } catch ( Exception ex) {
+                        handleError(ex, "Error occured: No primer for: " + currentCloneid);
+                        continue;
+                    }
+                }
+                if (isWorkingStorage) {
+                    try {
+                        stmt9.setInt(1, cloneid);
+                        stmt9.setString(2, Sample.WORKING_GLYCEROL);
+                        setBBStorage(stmt9, c);
+                    } catch ( Exception ex) {
+                        handleError(ex, "Error occured: No available bio-bank tube for clone id " + currentCloneid);
+                        continue;
+                    }
+                }
                 if (isClonename) {
                     stmt7.setInt(1, cloneid);
                     List names = getClonenames(stmt7, cloneid);
@@ -1334,6 +1380,11 @@ public class CloneManager extends TableManager {
             if (stmt7 != null) {
                 DatabaseTransaction.closeStatement(stmt7);
             }
+            if (stmt8 != null) {
+            DatabaseTransaction.closeStatement(stmt8);
+            }
+            DatabaseTransaction.closeStatement(stmt9);
+            DatabaseTransaction.closeStatement(stmt10);
         }
         return infos;
     }
@@ -1357,6 +1408,35 @@ public class CloneManager extends TableManager {
     private String getStorageSql() {
         return "select containerlabel, position, positionx, positiony from sample where cloneid=? and sampletype=? order by sampleid desc";
     }
+    
+  /**
+  *  getPlateStoargeSql
+  * 
+  *  returns the value of the most recent plate entered in the plasmID database, as well as the well associated with the clone. 
+  */
+   private String getPlateStorageSql() {
+        return "select containerlabel, position, positionx, positiony from containerheader, sample where cloneid=? and sampletype=? and sample.containerid=containerheader.containerid and containertype != 'Tube' order by sampleid desc";
+    }
+   
+  /**
+  *  getBBTubeStorageSql
+  * 
+  *  returns a string to be used as a sql query of the most recent 2d tube 
+  *  entered in the plasmID database associated with the variable clone ?
+  */
+   private String getBBTubeStorageSql() {
+        return "select containerlabel from containerheader, sample where cloneid=? and sampletype=? and sample.containerid=containerheader.containerid and containertype = 'Tube' order by sampleid desc";
+    }
+   
+  /**
+   *  getPrimersql
+   * 
+   *  returns a string to be used as a sql query of primer associated with the variable clone ? 
+   */
+    private String getPrimerSql() {
+        return "select seqprimer from vector, clone where clone.vectorid = vector.vectorid and cloneid = ?";
+    }
+
 
     private String getGrowthSql() {
         String s = "select g.growthid, g.name, g.hosttype, g.antibioticselection, g.growthcondition, g.comments"
@@ -1440,6 +1520,55 @@ public class CloneManager extends TableManager {
             c.setWell(x, y);
         }
         DatabaseTransaction.closeResultSet(rs4);
+    }
+   /**
+    * setLatestPlateStorage
+    * 
+    * param 1 prepared sql statement 
+    * param 2 Cloneinfo = the clone id ( int ) to be associated in the prepared statement. 
+    */
+    private void setLatestPlateStorage(PreparedStatement stmt, CloneInfo c) throws Exception {
+        ResultSet rs1 = DatabaseTransaction.executeQuery(stmt);
+        if (rs1.next()) {
+            String label = rs1.getString(1);
+            int lposition = rs1.getInt(2);
+            String x = rs1.getString(3);
+            String y = rs1.getString(4);
+            c.setLatestPlate(label);
+            c.setLatestPosition(lposition);
+            c.setLatestWell(x, y);
+        }
+        DatabaseTransaction.closeResultSet(rs1);
+    }
+   /**
+    * setBBStorage
+    * 
+    * param 1 prepared sql statement 
+    * param 2 Cloneinfo = the clone id ( int ) to be associated in the prepared statement. 
+    */
+    private void setBBStorage(PreparedStatement stmt, CloneInfo c) throws Exception {
+        ResultSet rs2 = DatabaseTransaction.executeQuery(stmt);
+        if (rs2.next()) {
+            String label = rs2.getString(1);
+            // uncomment below to set this to formatted 10 digit output.
+            //label = String.format(label,10,'0');
+            c.setBBTube(label);
+        }
+        DatabaseTransaction.closeResultSet(rs2);
+    }
+   /**
+    * setSeqPrimer
+    * 
+    * param 1 prepared sql statement 
+    * param 2 Cloneinfo = the clone id ( int ) to be associated in the prepared statement. 
+    */
+    private void setSeqPrimer(PreparedStatement stmt, CloneInfo c) throws Exception {
+        ResultSet rs3 = DatabaseTransaction.executeQuery(stmt);
+        if (rs3.next()) {
+            String sprimer = rs3.getString(1);
+            c.setPrimer(sprimer);
+        }
+        DatabaseTransaction.closeResultSet(rs3);
     }
 
     private GrowthCondition getRecommendedGrowth(PreparedStatement stmt, int cloneid) throws Exception {

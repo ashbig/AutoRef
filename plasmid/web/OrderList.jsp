@@ -32,7 +32,6 @@
   <tr>
     <td width="40%" class="formlabel">Choose order status:
         <html:select styleClass="itemtext" property="status">
-            <html:option value="<%=CloneOrder.ALL%>"/>
             <html:option value="<%=CloneOrder.PENDING%>"/>
             <html:option value="<%=CloneOrder.PENDING_MTA%>"/>
             <html:option value="<%=CloneOrder.PENDING_PAYMENT%>"/>

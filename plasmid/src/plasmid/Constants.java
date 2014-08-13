@@ -161,6 +161,20 @@ public class Constants {
     public static final String SORT_ASC = "asc";
     public static final String SORT_DESC = "desc";
     
+    // To generate Well ID's when batching orders.     
+    public static final String [] wells = { "A01", "B01", "CO1", "D01", "E01", "F01", "G01", "H01",
+                                            "A02", "B02", "CO2", "D02", "E02", "F02", "G02", "H02",
+                                            "A03", "B03", "CO3", "D03", "E03", "F03", "G03", "H03",
+                                            "A04", "B04", "CO4", "D04", "E04", "F04", "G04", "H04",
+                                            "A05", "B05", "CO5", "D05", "E05", "F05", "G05", "H05",
+                                            "A06", "B06", "CO6", "D06", "E06", "F06", "G06", "H06",
+                                            "A07", "B07", "CO7", "D07", "E07", "F07", "G07", "H07",
+                                            "A08", "B08", "CO8", "D08", "E08", "F08", "G08", "H08",
+                                            "A09", "B09", "CO9", "D09", "E09", "F09", "G09", "H09",
+                                            "A10", "B10", "C10", "D10", "E10", "F10", "G10", "H10",
+                                            "A11", "B11", "C11", "D11", "E11", "F11", "G11", "H11",
+                                            "A12", "B12", "C12", "D12", "E12", "F12", "G12", "H12" };
+    
     /** Creates a new instance of Constants */
     public Constants() {
     }
