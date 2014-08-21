@@ -79,8 +79,9 @@
   <tr> 
     <td class="formlabel" width="20%">Choose shipping method:</td>
     <td class="text">
-        <html:select property="shippingMethod">
-            <html:options name="shippingMethods"/>
+        <html:select styleclass="itemtext" property="Method">
+            <html:option value="<%=ShippingMethod.FedEx%>"/>
+            <html:option value="<%=ShippingMethod.PickUp%>"/>
         </html:select>
     </td>
   </tr>
