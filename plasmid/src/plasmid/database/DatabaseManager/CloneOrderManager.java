@@ -581,8 +581,10 @@ public class CloneOrderManager extends TableManager {
      * @param status String for status. If status is null, orders at all status
      * will be returned.
      * @return A list of CloneOrder objects. Return null if error occured.
+     * MODIFIED 9/22/14 to allow all in progress orders to be passed as a param
      */
     public List queryCloneOrders(User user, String status, String sortby, String sorttype) {
+
         String sql = "select c.orderid,to_char(c.orderdate, 'YYYY-MM-DD hh:mm:ss'),c.orderstatus,c.ponumber,c.shippingto,c.billingto,"
                 + " c.shippingaddress,c.billingaddress,c.numofclones,c.numofcollection,c.costforclones,"
                 + " c.costforcollection,c.costforshipping,c.totalprice,c.userid,u.firstname,u.lastname,"
@@ -592,15 +594,25 @@ public class CloneOrderManager extends TableManager {
                 + " c.ismta, c.isplatinum, c.costforplatinum, c.platinumservicestatus,c.billingemail,"
                 + " c.updatedby,to_char(c.updatedon, 'YYYY-MM-DD')"
                 + " from cloneorder c, userprofile u where c.userid=u.userid";
-
+        
         if (user != null) {
             sql = sql + " and c.userid=" + user.getUserid();
+            
+            //This statement has been modified to allow all in progress orders to be viewed. 
             if (status != null && status.trim().length() > 0) {
-                sql = sql + " and c.orderstatus=?";
+                if (status.equals("All In Progress")) {
+                    //status =" and c.orderstatus in ('Partially Shipped', 'Troubleshooting','In Process')";
+                    sql = sql + " and c.orderstatus in ('Partially Shipped', 'Troubleshooting','In Process')";
+                }
+                else sql = sql + " and c.orderstatus=?";
             }
         } else {
-            if (status != null && status.trim().length() > 0) {
-                sql = sql + " and c.orderstatus=?";
+            if (status != null && status.trim().length() > 0) {    
+                if (status.equals("All In Progress")) {
+                    //status =" and c.orderstatus in ('Partially Shipped', 'Troubleshooting','In Process')";
+                    sql = sql + " and c.orderstatus in ('Partially Shipped','Troubleshooting','In Process')";
+                }
+                else sql = sql + " and c.orderstatus=?";
             }
         }
 
@@ -613,15 +625,15 @@ public class CloneOrderManager extends TableManager {
         } else {
             sql = sql + " order by c.orderid desc";
         }
-
         PreparedStatement stmt = null;
         ResultSet rs = null;
+        
         try {
             stmt = conn.prepareStatement(sql);
-            if (status != null && status.trim().length() > 0) {
+            // All in progress orders will by pass this conditional if the in progress selection is passed as a param
+            if (status != null && status.trim().length() > 0 && status != " and c.orderstatus in ('Partially Shipped', 'Troubleshooting','In Process')") {
                 stmt.setString(1, status);
             }
-
             rs = DatabaseTransaction.executeQuery(stmt);
             List orders = new ArrayList();
             while (rs.next()) {
