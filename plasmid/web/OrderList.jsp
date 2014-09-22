@@ -33,14 +33,15 @@
     <td width="40%" class="formlabel">Choose order status:
         <html:select styleClass="itemtext" property="status">
             <html:option value="<%=CloneOrder.PENDING%>"/>
+            <html:option value="<%=CloneOrder.INPROCESS%>"/>
+            <html:option value="<%=CloneOrder.TROUBLESHOOTING%>"/>
+            <html:option value="<%=CloneOrder.PARTIALLY_SHIPPED%>"/>
+            <html:option value="<%=CloneOrder.ALL_INPROGRESS%>">All In Progress</html:option>>
+            <html:option value="<%=CloneOrder.SHIPPED%>"/>
+            <html:option value="<%=CloneOrder.CANCEL%>"/>
             <html:option value="<%=CloneOrder.PENDING_MTA%>"/>
             <html:option value="<%=CloneOrder.PENDING_PAYMENT%>"/>
             <html:option value="<%=CloneOrder.PENDING_AQIS%>"/>
-            <html:option value="<%=CloneOrder.TROUBLESHOOTING%>"/>
-            <html:option value="<%=CloneOrder.INPROCESS%>"/>
-            <html:option value="<%=CloneOrder.SHIPPED%>"/>
-            <html:option value="<%=CloneOrder.PARTIALLY_SHIPPED%>"/>
-            <html:option value="<%=CloneOrder.CANCEL%>"/>
             <html:option value="<%=CloneOrder.INVALIDE_PAYMENT%>"/>
         </html:select>
     </td>
