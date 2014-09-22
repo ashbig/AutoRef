@@ -601,7 +601,7 @@ public class CloneOrderManager extends TableManager {
             //This statement has been modified to allow all in progress orders to be viewed. 
             if (status != null && status.trim().length() > 0) {
                 if (status.equals("All In Progress")) {
-                    //status =" and c.orderstatus in ('Partially Shipped', 'Troubleshooting','In Process')";
+                    status =" and c.orderstatus in ('Partially Shipped', 'Troubleshooting','In Process')";
                     sql = sql + " and c.orderstatus in ('Partially Shipped', 'Troubleshooting','In Process')";
                 }
                 else sql = sql + " and c.orderstatus=?";
@@ -609,7 +609,7 @@ public class CloneOrderManager extends TableManager {
         } else {
             if (status != null && status.trim().length() > 0) {    
                 if (status.equals("All In Progress")) {
-                    //status =" and c.orderstatus in ('Partially Shipped', 'Troubleshooting','In Process')";
+                    status =" and c.orderstatus in ('Partially Shipped', 'Troubleshooting','In Process')";
                     sql = sql + " and c.orderstatus in ('Partially Shipped','Troubleshooting','In Process')";
                 }
                 else sql = sql + " and c.orderstatus=?";
