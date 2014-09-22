@@ -41,7 +41,7 @@ Please read through each of these  documents before you start.
         <br />
         <li><a href="File_Details_v2.doc" target="_blank">File_details</a> This document outlines the definition of the data we ask for in the excel forms. If there are elements here that do not work for you, additional information you would like to add or any questions, please contact me for further discussion.</li>
         <br />
-        <li><a href="Submission checklist v5.doc">Submission Checklist</a> This document will guide you through the submission process.  The items in this checklist highlight a variety of problems we have frequently encountered and describe in detail how to prepare your data and samples. </li>
+        <li><a href="Submission checklist v4.doc">Submission Checklist</a> This document will guide you through the submission process.  The items in this checklist highlight a variety of problems we have frequently encountered and describe in detail how to prepare your data and samples. </li>
         </ul>
     </td>
   </tr>
