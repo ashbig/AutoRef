@@ -23,17 +23,18 @@ public class CloneOrder implements Serializable {
     public static final String COL_USERLASTNAME = "u.lastname";
     public static final String COL_UPDATEDBY = "UPDATEDBY";
     public static final String COL_UPDATEDON = "UPDATEDON";
-
-    public static final String ALL = "All";
+        
     public static final String PENDING = "Pending";
     public static final String PENDING_MTA = "Pending MTA";
     public static final String PENDING_PAYMENT = "Pending for payment";
     public static final String INVALIDE_PAYMENT = "Invalid payment";
     public static final String TROUBLESHOOTING = "Troubleshooting";
     public static final String INPROCESS = "In Process";
+    public static final String ALL = "All";
     public static final String SHIPPED = "Shipped";
     public static final String PARTIALLY_SHIPPED = "Partially Shipped";
     public static final String COMPLETE = "Complete";
+    public static final String ALL_INPROGRESS = "All In Progress";
     public static final String CANCEL = "Cancelled";
     public static final String TBD = "To Be Determined";
     public static final String PENDING_AQIS = "Pending AQIS";
@@ -48,6 +49,9 @@ public class CloneOrder implements Serializable {
     public static final String PLATINUM_DISPLAY_RESULTS = "display";
     public static final String ISPLATINUM_YES = "Yes";
     public static final String ISPLATINUM_NO = "No";
+    
+    public static final String FEDEX="FedEx";
+    public static final String PICKUP="PickUp";
     
     public static final String allstatus[] = {
         CloneOrder.PENDING, 
