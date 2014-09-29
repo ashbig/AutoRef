@@ -709,6 +709,10 @@ public class CloneOrderManager extends TableManager {
                 order.setBillingemail(billingemail);
                 order.setUpdatedby(updatedby);
                 order.setUpdatedon(updatedon);
+                //date2 refers to the original date of the order formatted for manipulation
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");                
+                java.util.Date date2 = dateFormat.parse(date);
+                order.setDayssinceorder(date2);
                 orders.add(order);
             }
             return orders;
