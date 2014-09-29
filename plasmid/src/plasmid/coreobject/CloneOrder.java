@@ -8,6 +8,7 @@ package plasmid.coreobject;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import plasmid.util.StringConvertor;
 
 /**
@@ -52,6 +53,7 @@ public class CloneOrder implements Serializable {
     
     public static final String FEDEX="FedEx";
     public static final String PICKUP="PickUp";
+    protected long dayssinceorder;
     
     public static final String allstatus[] = {
         CloneOrder.PENDING, 
@@ -527,5 +529,15 @@ public class CloneOrder implements Serializable {
      */
     public void setCurrentShipment(Shipment currentShipment) {
         this.currentShipment = currentShipment;
+    }
+    
+    public void setDayssinceorder ( Date date2 ) {
+       Date today = new Date ();
+       long timeDiff = today.getTime() - date2.getTime();
+       long time = TimeUnit.DAYS.convert(timeDiff, TimeUnit.MILLISECONDS);
+       this.dayssinceorder = time;
+    } 
+    public Long getDayssinceorder ( ){
+        return dayssinceorder;
     }
 }
