@@ -532,6 +532,8 @@ public class CloneOrder implements Serializable {
     }
     
     public void setDayssinceorder ( Date date2 ) {
+      // Calls new instance of date, determines difference of
+      // dates in miliseconds. converts to days. 
        Date today = new Date ();
        long timeDiff = today.getTime() - date2.getTime();
        long time = TimeUnit.DAYS.convert(timeDiff, TimeUnit.MILLISECONDS);
