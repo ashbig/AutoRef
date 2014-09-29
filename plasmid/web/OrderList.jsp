@@ -80,9 +80,11 @@
     <td class="tableheader">User Email</td>
     <td class="tableheader">Last Updated On</td>
     <td class="tableheader">Last Updated By</td>
+    <td class="tableheader">Days Since Order</td>
   </tr>
 
   <% int i=0; %>
+  <% int cloneNumber = 0; %>
   <logic:iterate id="order" name="<%=Constants.ORDERS%>"> 
   <tr>
     <td class="tableinfo"><a href="ViewOrderDetail.do?orderid=<bean:write name="order" property="orderid"/>"><bean:write name="order" property="orderid"/></a></td>
@@ -160,6 +162,8 @@
     <td class="tableinfo"><bean:write name="order" property="email"/></td>
     <td class="tableinfo"><bean:write name="order" property="updatedon"/></td>
     <td class="tableinfo"><bean:write name="order" property="updatedby"/></td>
+    <td class="tableinfo"><bean:write name="order" property="dayssinceorder"/></td>
+
   </tr>
   <% i++; %>
   </logic:iterate>    
