@@ -1,194 +1,188 @@
-<html> 
-<head> 
-<title>PlasmID Database</title> 
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"> 
-<link href="plasmidstyle.css" rel="stylesheet" type="text/css"> 
-</head> 
+<%@ page language="java" %>
+<%@ page errorPage="ProcessError.do"%>
+
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+
+<html>
+<head>
+<title>PlasmID Database</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link href="plasmidstyle.css" rel="stylesheet" type="text/css">
+</head>
+
 <body>
-<p align="center"><span class="homepageText2">Answers to  Frequently Asked Questions</span><br />
-</p>
-<p align="center"><span class="homepageLink"><strong><em>Sequencing is cheap insurance! </em></strong><em>We recommend that you do diagnostic tests on all  clones,<br />
-  <em>including sequence verified clones.  Feedback on your results is welcome.</em></em></span></p>
-<div align="center">
-  <table border="0" cellpadding="0" width="586">
-    <tr bgcolor="#ECE9D8">
-      <td height="158" class="mainbodytextlarge"><p class="formlabel"><a href="#who" class="formlabelitalic">WHO WE ARE</a></p>
-        <p class="formlabel"><span class="formlabel"><a href="#registration" class="formlabelitalic">PlasmID REGISTRATION</a></span></p>
-        <ul>
-          <li><strong class="formlabel"><a href="#registration1">Do I have to register?</a></strong></li>
-          <li><strong class="formlabel"><a href="#registration2">My PI is not on the    registration list.&nbsp; How do I register?</a></strong></li>
-          <li><strong class="formlabel"><a href="#registration3">I am the PI in addition to    being the ?user? who will place orders.&nbsp; How do I register?</a></strong></li>
-        </ul>
-        <p class="formlabelitalic"><a href="#search">PlasmID SEARCH AND ORDER</a></p>
-        <ul>
-          <li><strong class="mainbodytext"><a href="#search1">How do I search for    plasmids?</a></strong></li>
-          <li><strong class="mainbodytext"><a href="#search2">I did not find a plasmid of    interest in your collection.&nbsp; Am I searching correctly?</a></strong></li>
-          <li><strong class="mainbodytext"><a href="#search3">How do I place a request for    plasmids I identified on PlasmID?</a></strong></li>
-          <li><span class="mainbodytext"><strong><a href="#search4">How do I know if my request went    through or when I will receive the plasmid?</a></strong></span></li>
-          <li><strong class="mainbodytext"><a href="#search5">Can I view info about the clones I requested and    check request status?</a></strong></li>
-          <li><strong class="mainbodytext"><a href="#search6">How much do plasmids cost?</a></strong></li>
-          <li><strong class="mainbodytext"><a href="#search7">How much does shipping cost?</a></strong></li>
-          <li><strong class="mainbodytext"><a href="#search8">Why am I charged for a plasmid?</a></strong></li>
-          <li><span class="mainbodytext"><strong><a href="#search9">How can I pay for these plasmids?</a></strong></span></li>
-          <li><span class="mainbodytext"><strong><a href="#search10">Do I need a PayPal account    to pay by credit card?</a></strong></span></li>
-          <li><span class="mainbodytext"><strong><a href="#search11">In what form will I receive the    plasmids?</a></strong></span></li>
-          <li><span class="mainbodytext"><strong><a href="#search12">Can    I pick up my plasmids from your facility?</a></strong></span></li>
-          <li><span class="mainbodytext"><strong class="mainbodytext"><a href="#search13">How    long will it take for me to receive my plasmids?</a></strong></span></li>
-          <li><span class="mainbodytext"><strong><a href="#search14">Will I need to get a signature on an MTA?</a></strong></span></li>
-          <li><span class="mainbodytext"><strong><a href="#search15">Can we make this MTA process    easier?</a></strong></span> </li>
-        </ul>
-        <p class="formlabelitalic"><a href="#deposit">HOW TO DEPOSIT PLASMIDS</a></p>
-        <ul>
-          <li><strong class="formlabel"><a href="#deposit1">How do I deposit my clones?</a></strong></li>
-          <li><strong class="formlabel"><a href="#deposit2">What is a Depositors Agreement?</a></strong></li>
-          <li><strong class="formlabel"><a href="#deposit3">What is an Expedited Process    MTA?</a></strong></li>
-          <li><strong class="formlabel"><a href="#deposit4">What types of plasmids cannot be    shared with the repository?</a></strong></li>
-          <li><strong class="formlabel"><a href="#deposit5">How are plasmids stored and    handled after I share them?</a></strong> </li>
-        </ul>
-        <p class="formlabelitalic"><a href="#plasmidinfo">INFORMATION ABOUT OUR PLASMIDS</a></p>
-        <ul>
-          <li> <span class="formlabel"><strong><a href="#plasmidinfo1">What's &quot;closed&quot; vs.    &quot;fusion&quot; format?</a></strong></span></li>
-          <li><span class="formlabel"><strong><a href="#plasmidinfo2">Can I use restriction enzymes with    human clones in pDNR-Dual?</a></strong> </span></li>
-          <li><span class="formlabel"><strong><a href="#plasmidinfo3">What is the difference between a    &quot;discrepancy&quot; and a &quot;mutation&quot;?</a></strong></span></li>
-          <li><span class="formlabel"><strong><a href="#plasmidinfo4"> What's with recombinational    cloning (pDNR-Dual, pDONR201, pDONR221, etc. vectors)?</a></strong></span></li>
-          <li><span class="formlabel"><strong><a href="#plasmidinfo5">Do HIP cDNA/ORF clones have 5' or    3' UTRs?</a></strong></span></li>
-          <li><span class="formlabel"><strong><a href="#plasmidinfo6"> Can I get help identifying a large    sub-group of clones bioinformatically?</a></strong></span></li>
-          <li><span class="formlabel"><strong><a href="#plasmidinfo7">Who should I cite if my work with    a clone requested via PlasmID results in publication?</a></strong></span></li>
-        </ul>        
-        <p><span class="formlabelitalic">PROTEIN    STRUCTURE INITIATIVE (PSI) FAQs</span><br />
-          <span class="mainbodytext">&nbsp; &nbsp;    &nbsp; &nbsp; <a href="http://psimr.asu.edu" target="_blank">Click here</a> for more detailed information about the PSI Material Repository<br />
-        &nbsp; &nbsp; &nbsp; &nbsp; <a href="http://kb.psi-structuralgenomics.org/KB/index.jsp" target="_blank">Click    here</a> for more detailed information about PSI </span></p></td>
+<jsp:include page="homeTitle.jsp" />
+<table width="1000" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
+  <tr> 
+    <td width="17%" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle"> 
+      <jsp:include page="menuHome.jsp" />
+	</td>
+        <td width="83%" align="center" valign="top">
+            <br>
+        <p class="mainbodytext"><font size= "4"><strong>Answers to Frequently Asked Questions &nbsp</strong></font><br>
+        <p></p>
+<html:errors/>
+<table width="100%" border="3" cellpadding="10"> 
+      <td class="mainbodytext" align="Justify"><p class="mainbodytext"><strong><u>Order Status</u></strong><br>
+            <a href="#When">When will my order arrive?</a><br>
+            <a href="#Troubleshooting">What does the Troubleshooting Status mean?</a><br>
+            <a href="#Partiallyshipped">My order has been Partially Shipped, what happens next?</a><br>
+        </p>
+          <p class="mainbodytext"><strong><u>Registration</u></strong><br>
+            <a href="#RegistrationError">The registration form gives me an error, what is wrong?</a><br>
+            <a href="#RegisterNeeded">Do I need to register?</a><br>
+            <a href="#PI">My PI is not listed, what should I do?</a><br>
+            </p>
+          <p class="mainbodytext"><strong><u>Financial</u></strong><br>
+            <a href="#cost">How much do plasmids cost?</a><br>
+            <a href="#quote">Can I get a price quote?</a><br>
+            <a href="#thirtythreedigitcodes">The site asks for a 33-digit code, but I don&rsquo;t have one.  What do I do?</a><br>
+            <a href="#remit">What is your remit to address?</a><br>
+            <a href="#name">What is your legal name?</a><br>
+            <a href="#vendorregistration">Who can complete these Vendor Registration forms?</a><br>
+            </p>
+          <p class="mainbodytext"><strong><u>Picking A  Construct</u></strong><br>
+            <a href="#searches">There are multiple search options, what do they do?</a><br>
+            <a href="#multiples">I see multiple plasmids for my gene, how do I pick the best  one?</a><br>
+            <a href="#expression">How can I tell if a plasmid will express?</a><br>
+            </p>
+          <p class="mainbodytext"><strong><u>MTA&rsquo;s</u></strong><br>
+            <a href="#MTAneeded">Do I need to complete an MTA for this order?</a><br>
+            <a href="#download">Where do I find/ download a copy of the MTA for my order?</a><br>
+            <a href="#joinEPMTA">My Institution is not in the Expedited MTA Network, can I  still place an order?</a><br>
+            <a href="#Expedited">How can my institution join the Expedited MTA Network?</a></p>
+          <p class="mainbodytext"><strong><u>Other Questions</u></strong><br>
+            <a href="#deposit">I have a construct  that I would like to share. How do I deposit it?</a><br>
+            <a href="#gateway">What is the  GATEWAY System?</a></p>
+          <p class="mainbodytext"></p></td>
     </tr>
     <tr>
-      <td><p class="mainbodytext">&nbsp;</p>
-        <p class="mainbodytext"><span class="mainbodytexthead"><strong><a name="who" id="who"></a></strong></span><span class="formlabelitalic"><strong>WHO WE ARE</strong></span><span class="mainbodytexthead"><br />
-          </span><br />
-          The plasmid repository was established in 2004 at    the Harvard Institute of Proteomics (HIP) at Harvard Medical     School.&nbsp; Our    repository holds collections of sequenced-verified open reading frame (ORF)    clones made by HIP researchers, and various clones from other researchers    throughout the region.&nbsp; <br />
-          <br />
-        We accept deposits of both large and small clone    collections from researchers and distribute their clones to universities    across the world. See our<a href="http://psimr.asu.edu/depositingslides.html" target="_blank"> slide show</a> for an overview of the repository and how to deposit plasmids.<br />
-          <br />
-          <a name="registration" id="registration"></a><strong class="formlabelitalic">PlasmID REGISTRATION</strong> <br />
-          <br />
-          <strong>Q. <a name="registration1" id="registration1"></a>Do I have to register?</strong> <br />
-          A. You do not have to register to search the    database, download vector and clone maps, or view other information. However,    you do have to register and sign in before placing an order. Registration is    live so you will be able to sign in as soon as you have completed on-line    registration.&nbsp; We recommend signing in before you start searching for    plasmids because not all plasmids are visible before registration and it    saves a few steps later if you plan on ordering plasmids.<br />
-          <br />
-          <strong>Q.<a name="registration2" id="registration2"></a>&nbsp;My PI is not on the    registration list.&nbsp; How do I register?</strong> <br />
-          A. You will need to fill out information for both    yourself and the PI during registration.&nbsp;People from the same lab will    be able to find their PI on the list the next time someone registers.<br />
-          <br />
-          <strong>Q.<a name="registration3" id="registration3"></a>&nbsp;I am the PI in addition to    being the ?user? who will place orders.&nbsp; How do I register?</strong> <br />
-        A. Please enter your information in both the user    and PI fields during registration. <br />
-        <br />
-        <a name="search" id="search"></a><strong class="formlabelitalic">PlasmID Search &amp; Order</strong> <br />
-        <br />
-        <strong>Q.&nbsp; <a name="search1" id="search1"></a>How do I search for    plasmids?</strong><br />
-        There are many ways to search for plasmids on    PlasmID.&nbsp; You can search by specific terms, such as vector, insert name,    CloneID, depositor, TargetDB ID, PDB ID, protein expression, solubility or    purification. <a href="OrderOverview.jsp">Click here</a> for all our search options.<br />
-        <br />
-        <strong>Q.<a name="search2" id="search2"></a> I did not find a plasmid of    interest in your collection.&nbsp; Am I searching correctly?</strong> <br />
-        A. The most flexible search tool at PlasmID is the    Advanced Text Search tool. There, you can use gene names and synonyms, author    names, the part or full name of a vector, species name, PDB ID,    TargetDB/PepcDB ID or combinations to search plasmids. It is also helpful to    use ?official? gene names and identifiers as they appear in databases such as    NCBI Entrez Gene or organism-specific databases like SGD or FlyBase. Try    ?view empty vectors? to see a list of vectors that take inserts, act as    helper vectors, etc. You can enter more than one ID in a field at ?search by    gene? to search multiple genes at one time.<br />
-        <br />
-        <strong>Q.<a name="search3" id="search3"></a> How do I place a request for    plasmids I identified on PlasmID?</strong> <br />
-        A. Once you identify a plasmid of interest (in a    search results table or on a static list, for example), click the button at    the far right-hand side of the page to add it to your shopping cart.&nbsp;    When you are ready to check out, click the shopping cart icon (top right of    any page) to initiate check-out and follow the steps, being sure to click the    button at the bottom until your request is confirmed. <a href="OrderOverview.jsp">Click here</a> for more details about how to order. <br />
-        <br />
-        <strong>Q. <a name="search4" id="search4"></a>How do I know if my request went    through or when I will receive the plasmid?</strong> <br />
-        A. After you place a request, our system will send    a confirmation email.&nbsp; You can sign in at any time to view the status of    your request.&nbsp; In addition, you will receive an email when the plasmid    is shipped, including FedEx tracking information.&nbsp; Requests are filled    in the order in which they are received.&nbsp; Changes day-to-day in the    volume and size of requests makes it difficult to tell you the exact day the    plasmid(s) will ship, so please check in with the PlasmID system for updates. <br />
-        <br />
-        <strong><em>Q. </em><a name="search5" id="search5"></a>Can I view info about the clones I requested and    check request status?</strong> <br />
-        A. You can always return to past requests and check    request status by signing in and going to &quot;my accounts&quot; (top right    of the page). Click on a specific clone order then look for the link at the    bottom (# of clones) that takes you to a table of information lets you download    an Excel spreadsheet with basic information about the clones.<br />
-        <br />
-        <strong>Q. <a name="search6" id="search6"></a>How much do plasmids cost?</strong> <br />
-        A. Please see current pricing on <a href="OrderOverview.jsp">this page</a>.</p>
-        <p class="mainbodytext"><strong>Q.<a name="search7" id="search7"></a> How much does shipping cost?</strong> <br />
-          A. There are three ways to pay for shipping: </p>
-        <ul>
-            <li class="mainbodytext">Provide us with you    FedEx number. </li>
-            <li class="mainbodytext">Flat shipping rate of    $10 for domestic orders and $20 for international orders. </li>
-            <li class="mainbodytext">No charge for shipping    for the Harvard     Medical School    community. Pick up your order in the Seeley G.     Mudd Building    in the <a href="http://www.hip.harvard.edu/Location.html#Quad" target="_blank">HMS    Quad</a> in the second floor hallway freezer. You MUST have access to the    building to take advantage of this offer. </li>
-        </ul>
-        <p class="mainbodytext"><strong>Q.<a name="search8" id="search8"></a> Why am I charged for a plasmid?</strong> <br />
-  A.&nbsp; These nominal costs&nbsp;are designed to offset the handling fees    associated with preparing and sending plasmids. In keeping with the terms    outlined by our granting agencies, our aim is always to offset costs, never    to make a profit. In addition, we make an effort to significantly reduce the    per-clone costs for large collections in order to encourage high-throughput    studies.<br />
-          <br />
-          <strong>Q.<a name="search9" id="search9"></a> How can I pay for these plasmids?</strong> <br />
-          A.&nbsp; You can pay using either a credit card or a purchase order number.<br />
-          <br />
-          <strong>Q.<a name="search10" id="search10"></a> Do I need a PayPal account    to pay by credit card?</strong> <br />
-          A.&nbsp; No you DO NOT need a PayPal account to pay by credit card.&nbsp;    PayPal is only used to securely collect the credit card information.&nbsp; At    check out, use the option to ?pay without an account.?<br />
-          <br />
-          <strong>Q.<a name="search11" id="search11"></a> In what form will I receive the    plasmids?</strong> <br />
-          A. We usually ship plasmids at room temperature (no ice) as freshly-prepared    bacterial glycerol stocks.&nbsp; Our years of experience have shown that    plasmids are stable in that format during shipment (streak out and/or freeze    at -80 upon arrival). We occasionally ship plasmids as purified DNA in water. </p>
-        <p class="mainbodytext"><strong>Q. <a name="search12" id="search12"></a>Can    I pick up my plasmids from your facility?<br />
-          </strong>A. Yes.    During the check out process you may select ?Pick-Up? from the shipping    options. Pick up orders will be placed in the hallway freezer in the second    floor hallway of the Seely Mudd building. You must have access to this    building to request pick up for your shipping option. <br />
-          </p>
-        <p class="mainbodytext"><strong>Q. <a name="search13" id="search13"></a>How    long will it take for me to receive my plasmids?</strong><br />
-          A. We ask that you please allow 7-10 days from the time that all MTA?s are    processed to receive your clone, but many small orders ship much faster. At a    minimum filling your order will take three days, however, we fill orders    based on the order in which they were received. Also if you place a large    order it takes more time to pick the clones, and this can take up to 4 weeks.    PLEASE NOTE: We do not ship over the weekend to ensure that people are in    your laboratory to receive the order.<br />
-          </p>
-        <p class="mainbodytext"><strong>Q.&nbsp;<a name="search14" id="search14"></a>    Will I need to get a signature on an MTA?</strong> <br />
-          A. For certain plasmids, yes you will need an MTA    signature. We will be sure to identify the correct MTA and send it to you    electronically to be signed by the appropriate official in your technology    transfer office.&nbsp; An original signed copy of the MTA should be returned    to the DF/HCC DNA Resource CORE at Harvard    Medical School,    240 Longwood Ave,    SGM 228, Boston, MA 02115.&nbsp; <br />
-          More    specifically, if you are: <br />
-          ACADEMIC RESEARCHERS: FLEXGene clones from HIP are    covered by a minimally restrictive MTA sent with clones. Most other clones    are covered by our standard MTA, which has been pre-approved by some    institutions and is based on the well-recognized Uniform Biologicals MTA    (UB-MTA). For some clones and for some institutions, however, you will have    to get a signed MTA to us before we can send the clones. In a few exceptional    cases, you will have to get a third-party MTA signed before we can send the    clone, as all or part of the clone is covered by MTAs from more than one    institution. For more information about MTAs, including information about how    to join our 'in network' group with pre-approved MTA coverage, please contact <a href="mailto:plasmidhelp@hms.harvard.edu">plasmidhelp@hms.harvard.edu</a>.    If you request clones and an MTA is required, the MTA will be emailed to you    as a PDF file.<br />
-          <br />
-          COMPANIES: Most of the HIP FLEXGene clones are    available to companies and will be covered by a minimally restrictive MTA    between HIP and your company. We will email the MTA after you place a    request. You are also welcome to get in touch to review the terms before    placing your request.<br />
-          <br />
-          <strong>Q.<a name="search15" id="search15"></a> Can we make this MTA process    easier?</strong> <br />
-          A. YES!!!&nbsp; We have developed an Expedited    Process MTA that your institution signs and allows all researchers at that    institution to receive all plasmids from our collection with only an    electronic signature.&nbsp; Please email us if you are interested in starting    this process with your institution.&nbsp;&nbsp; <a href="http://psimr.asu.edu/Depositor%20Agreement/DA.html">Click here</a> for    more information about MTAs </p>
-        <p class="mainbodytext"><span class="formlabelitalic"><a name="deposit" id="deposit"></a>HOW TO DEPOSIT PLASMIDS</span><br />
-          <br />
-          <strong>Q. <a name="deposit1" id="deposit1"></a>&nbsp;How do I deposit my clones?</strong><br />
-          <a href="Submission.jsp">Click here</a> or contact us at plasmidhelp@hms.harvard.edu for more information about    depositing clones in our collection.&nbsp; See our <a href="http://psimr.asu.edu/depositingslides.html" target="_blank">slide show</a> for an overview of the repository and the submission process. The three steps    to deposit clones are<br />
-          <br />
-          1.&nbsp; Have your institution sign the Depositors    Agreement.&nbsp; This agreement sets the terms by which the plasmid    repository will distribute your plasmids.&nbsp; Contact us to see if your    institution has already signed a depositor agreement.&nbsp; Otherwise we will    contact your technology transfer office to begin the process.&nbsp; <a href="http://psimr.asu.edu/Depositor%20Agreement/DA.html">Click here</a> for    more information about depositor agreements.<br />
-          <br />
-          2.&nbsp; Prepare the data describing the details    about your clones.&nbsp; Because we parse the data directly into our    database, we ask that the information you send us is in a particular    format.&nbsp;&nbsp; We have submission forms and templates that should guide    you in this process.&nbsp; <br />
-          <br />
-          3.&nbsp; Once we have entered your data into our    database, we can accept your plasmid samples.&nbsp; These can be sent on dry    ice either as DNA (10-15ul of at least 15ng/ul) or glycerol stocks.&nbsp; If you    send glycerol stocks the bacteria MUST BE T1/T5 phage resistant.&nbsp; Once    we receive your samples, we will make them available for purchase through    PlasmID<br />
-          <br />
-          <strong>Q.<a name="deposit2" id="deposit2"></a> What is a Depositors Agreement?</strong><br />
-          <a href="http://psimr.asu.edu/Depositor%20Agreement/DA.html">Click here</a> to    learn more about the Depositors Agreement.<br />
-          <br />
-          <strong>Q.&nbsp;<a name="deposit3" id="deposit3"></a> What is an Expedited Process    MTA?</strong><br />
-          <a href="http://psimr.asu.edu/Depositor%20Agreement/DA.html">Click here</a> to    learn more about the Expedited Process MTA.<br />
-          <br />
-          <strong>Q.<a name="deposit4" id="deposit4"></a> What types of plasmids cannot be    shared with the repository?</strong> <br />
-          A. Four types of plasmids cannot be added to the    repository.&nbsp; <br />
-          <br />
-          1. Plasmids that require an unusual or specific    bacterial host strain cannot be added, as we require that all plasmids are    stored here in a phage-resistant DH5-alpha-like host strain, in order to    maintain the integrity of the collection as a whole. <br />
-          <br />
-          2. Plasmids that are identical to material that is    commercially available cannot be added to our collection.&nbsp; <br />
-          <br />
-          3. Plasmids that are hazardous or legally restricted    for distribution cannot be added to the repository. <br />
-          <br />
-          4. Plasmids that you do not have the right to    distribute (for example, plasmids you received from another researcher and/or    made by another person and/or protected by a patent, licensing agreement, etc.)    cannot be shared with us unless permission is also granted by any and all    relevant third parties. Sometimes this extends even to modified forms of a    plasmid.&nbsp; In general, you can share plasmids that you made or made    significant modifications, but you cannot share unmodified forms of something    you got from another researcher or a company.<br />
-          <br />
-          <strong>Q.<a name="deposit5" id="deposit5"></a> How are plasmids stored and    handled after I share them?</strong> <br />
-          A. When you share plasmids with the repository, we    transform them into a phage-resistant bacterial host strain, single colony    isolate, and create working and archival glycerol stocks. These are stored in    conventional -80 degree freezers (archival copies) or in the fully automated    BioBank freezer storage system, in which working samples are stored in    individually 2D barcode-labeled tubes for automated retrieval and array in    any format.&nbsp; Information about each clone is carefully curated by    PhD-level scientists and entered into the database.</p>
-        <p class="mainbodytext"><a name="plasmidinfo" id="plasmidinfo"></a><strong class="formlabelitalic">INFORMATION ABOUT OUR PLASMIDS</strong><br />
-          <br />
-          <strong>Q.<a name="plasmidinfo1" id="plasmidinfo1"></a> What's &quot;closed&quot; vs.    &quot;fusion&quot; format?</strong> <br />
-          A. This terminology, adopted from the Harvard Institute of Proteomics (HIP),    indicates that a stop codon is present (closed) or is absent (fusion) in a    cDNA or ORF insert. For more details about these definitions <a href="Definitions for annotating CDS sequences_v4.doc" target="_blank">click here</a>. Fusion format clones are useful for producing    C-terminally tagged versions of an ORF.<br />
-          <br />
-          <strong>Q.<a name="plasmidinfo2" id="plasmidinfo2"></a> Can I use restriction enzymes with    human clones in pDNR-Dual?</strong> <br />
-          A. The human pDNR-Dual master clones from HIP were generated using the    InFusion reaction (Clontech) rather than an RE approach and most of the RE    sites in the MCS are gone after the insert is introduced. In the resulting    master clones, the <em>Hind</em>III    and <em>Sal</em>I sites are present so    that enzyme pair can be used to liberate the insert -- but beware! There    could be <em>Hind</em>III or <em>Sal</em>I sites in the insert. See more on    the flexibility of using the recombinational cloning approach rather than REs    below.<br />
-          <br />
-          <strong>Q.<a name="plasmidinfo3" id="plasmidinfo3"></a> What is the difference between a    &quot;discrepancy&quot; and a &quot;mutation&quot;? </strong><br />
-          A. 'Discrepancy' is a term borrowed from HIP that refers to differences    between the actual clone sequence and the target sequence (that is, what the    researchers were trying to clone in a specific cloning effort). Discrepancies    can result when the clone recovered is an isoform or naturally occurring    polymorphic form of the target sequence, or from PCR, replication, or other    errors. Be sure to check the insert sequence to be sure that discrepancies    that were deemed 'acceptable' to HIP researchers are also acceptable to you. <br />
-          'Mutations' we define as changes that are known or expected to affect    function. We curate an insert as containing a mutation when the insert    sequence is a known mutant form (e.g. cloned from a mutant allele) or when    the clone was engineered to have a mutation (e.g. in a site-specific    mutagenesis effort). Please be aware that there may OR MAY NOT be    experimental evidence to support the idea that a particular naturally    occurring or engineered mutation results in a constitutively active,    inactive, etc. form. And be further cautioned ... neither 'discrepancy' nor    'mutation' is the last word on nucleotide differences between your actual    clone and the wild-type form(s). Tags can come from vectors and not be    annotated as part of the insert; mutations and deletions may not be clearly    annotated or detected by those who shared clones; and recombination or    replication errors can change clones over time. DNA sequencing provides an    inexpensive and robust means to ask if the clone you received is indeed the    clone you requested and that it meets your expectations. Please perform    diagnostic tests before investing a lot of time in your experiments!<br />
-          <br />
-          <strong>Q.<a name="plasmidinfo4" id="plasmidinfo4"></a> What's with recombinational    cloning (pDNR-Dual, pDONR201, pDONR221, etc. vectors)?</strong> <br />
-          A. Most clones generated at HIP and shared with the repository are based on    successful recombinational cloning methodologies such as the Clontech Creator    system (LoxP sites) or the Invitrogen Gateway system (att sties). You can    learn more about these approaches at vendors' websites and at the HIP website    http://www.hip.harvard.edu (look for information about FLEXGene clones).    These flexible systems allow a single sequence-verified ORF    (&quot;master&quot; or &quot;donor&quot; clone) to be used to create expression    constructs for a variety of different techniques via recombination (few    steps) rather than restriction enzyme cloning and ligation (several steps).    In general, we keep the master clones in our collection because they give the    most flexibility to the largest set of users. But in some cases, we also have    expression versions. &quot;Entry&quot; or &quot;acceptor&quot; vectors used    in combination with master clones to create expression constructs are    available from a number of different sources, including Clontech and    Invitrogen. Please visit their websites to learn more.<br />
-          <br />
-          <strong>Q.<a name="plasmidinfo5" id="plasmidinfo5"></a> Do HIP cDNA/ORF clones have 5' or    3' UTRs?</strong> <br />
-          A. No. The majority of HIP clone collections (including human, yeast, and    more) come from projects in which only the open reading frames (ORFs) were    cloned.<br />
-          <br />
-          <strong>Q.<a name="plasmidinfo6" id="plasmidinfo6"></a> Can I get help identifying a large    sub-group of clones bioinformatically?</strong> <br />
-          A. Yes. Bioinformaticists at our host institution, HIP, may be willing to    collaborate with you to identify specific sub-groups of clones that share    some property (biochemical function, sub-cellular localization, up-regulated    in a tissue tested by microarray, etc.). Please contact us to initiate this    kind of collaborative bioinformatics-based work with bioinformaticists at    HIP. Requests are reviewed and accepted on a case-by-case basis. Please note    that we make some bioinformatically organized groups of clones available for    view and request on the &quot;clone collections&quot; page (for example,    human kinase collections and the BC1000 genes associated with breast cancer). <br />
-          <br />
-          <strong>Q. <a name="plasmidinfo7" id="plasmidinfo7"></a>Who should I cite if my work with    a clone requested via PlasmID results in publication?</strong><br />
-          <strong>A. </strong>The people who put    in the hard work to make the clone and any appropriate references should be    cited! You should be able to find this information on the clone detail page    (click on the CloneID to get there). Look for clone authors and PubMed IDs    (vectors can also have associated authors and PubMed IDs).</p>
-        <a name="PSI" id="PSI"></a> </td>
+    <td><p class="mainbodytext"></p>
+
+		<p class="mainbodytextlarge"><u><strong>Order Status</strong></u>
+        
+        </p><p class="mainbodytext"align="justify"><strong>
+<a name="When"></a>Q. When will my order arrive? </strong><br>
+A. Orders typically ship within 7-10 business days of your order. </p>
+        
+        <p class="mainbodytext"align="justify"><strong>      
+<a name="Troubleshooting"></a>Q. What does the Troubleshooting status mean?</strong><br>
+A. The troubleshooting status generally means that we were not able to verify one or more of the plasmids in your order using end read sequencing. The technician filling your order  may have already attempted to correct this problem by streaking the bacterial stock on agar, picking isolates, and sequencing again. That effort has also failed. At this point you are welcome to select any alternate construct from our library or ask taht we drop the charges for that construct. Please contact <a href="plasmidhelp@hms.harvard.edu">plasmidhelp@hms.harvard.edu</a> if you need help selecting an alternate. 
+        
+        <p class="mainbodytext"align="justify"><strong>
+<a name="Partiallyshipped"></a>Q. My order has been Partially Shipped, what happens next?</strong><br>
+A. Once your order Partially Ships, we will continue to work on any of remaining constructs. As we continue to work your order may move into our Troubleshooting status if we continue to have trouble verifying the construct. If we are able to verify the remaining construct(s) you will receive another shipment notification when the remaining constructs are shipped. 
+        
+        <p class="mainbodytextlarge"><strong><u>Registration</u></strong>        
+                  
+        <p class="mainbodytext"align="justify"><strong>
+<a name="RegistrationError"></a>Q. The registration form gives me an error, what is wrong?</strong><br>
+A. The registration form contains both drop down menu's and open text fields. Whenever possible please select values from a drop down menu and LEAVE THE TEXT FIELDS BLANK. The text fields should only be used if you are not able to find your insititution or PI. The form automatically adds the new value to the drop down list for next time. If the PI or institution is already in the drop down you will get an error.
+        
+        <p class="mainbodytext"align="justify"><strong>
+<a name="RegisterNeeded"></a>Q. Do I need to register?</strong><br>
+A. You do not have to register to search the database, download vector and clone maps, or view other information. However, you do have to register and sign in before placing an order. Registration is live so you will be able to sign in as soon as you have completed on-line registration.  We recommend signing in before you start searching for plasmids because not all plasmids are visible before registration and it saves a few steps later if you plan on ordering plasmids.</p>
+
+		<p class="mainbodytext"align="justify"><strong>
+<a name="PI"></a>Q. My PI or Institution is not listed on the registration form, what should I do?</strong><br>
+A. Our registration form is designed to accept new PI and Institution names. Simply leave the drop down menu's for the appropriate field(s) on 'Please Select' then type the new value in the open text field below the drop down menu. If you have any trouble please email <a href="plasmidhelp@hms.harvard.edu">plasmidhelp@hms.harvard.edu</a>.</p>
+
+		<p class="mainbodytextlarge"><strong><u>Financial</u></strong>  
+           
+        <p class="mainbodytext"align="justify"><strong>
+<a name="cost"></a>Q. How much do plasmids cost?</strong><br>
+A. Plasmids from our facility are free, but we do charge a retrieval fee and shipping to cover our operating costs. Please see our current fee structures  <a href="http://plasmid.med.harvard.edu/PLASMID/OrderOverview.jsp"> here</a>.</p>
+
+		<p class="mainbodytext"align="justify"><strong>
+<a name="quote"></a>Q. Can I get a price quote?</strong><br>
+A. The shopping cart on our website can provide a full summary of all costs before you enter a PO or process a credit card. Most users print from this page, save their shopping cart, and then return to the saved cart when they are ready to place their order. If your institution requires more than this please write to plasmidhelp@hms.harvard.edu. Responses from this email may take up to 24 hours on weekdays, and no responses are given on the weekend.</p>
+
+		<p class="mainbodytext"align="justify"><strong>
+<a name="thirtythreedigitcodes"></a>Q. The sites asks for a 33-digit code, but I don't have one. What do I do?</strong><br>
+A. Harvard uses 33-digit codes for all internal purchases. If you are at Harvard University you should be able to obtain this account number from the person who places orders in your lab, or from your grant manager. If you are at a Harvard affiliated hospital you are considered external and need to pay by a PO or credit card. You are being asked for a 33-digit code because you improperly registered your account as 'Harvard University' when it should be 'Harvard affiliate.' Please log into your account, select 'My Account' and then 'Update Account' to change this value. Once you have modified your account the website will no longer ask for a 33-digit code.</p>
+           
+           <p class="mainbodytext"><strong>
+<a name="remit"></a>Q. What is your remit to address?</strong><br>
+A. We ask that you write PO's and remit payment to: <br><br>
+<em>Harvard Medical School<br> Dept BCMP, C1-214<br> 240 Longwood Ave. <br> 
+Boston, MA 02115</em></p>
+
+<p class="mainbodytext"align="justify"><strong>
+<a name="name"></a>Q. What is your legal name?</strong><br>
+A. Our legal name is 'President and Fellows of Harvard College' and we are doing business as 'Harvard Medical School'</p>
+
+<p class="mainbodytext"><strong>
+<a name="vendorregistration"></a>Q. Who can complete these vendor registration forms?</strong><br>
+A. Vendor registration forms should be sent to <a href="plasmidhelp@hms.harvard.edu">plasmidhelp@hms.harvard.edu</a>.</p>
+
+		<p class="mainbodytextlarge"><strong><u>Picking A Construct</u></strong>
+        
+<p class="mainbodytext"align="justify"><strong>
+<a name="multiples"></a>Q. I see multiple plasmids for my gene, how do I pick the best one?</strong><br>
+A. In general most researchers want the plasmid that covers the largest part of the protein coding region (CDS) for their gene of interest. Most researchers will also want construct that do not have mutations compared to an NCBI reference, but some single point mutations are silent and reflect the true variety found in natural samples. If you are still having trouble choosing we are always happy to discuss your specific needs and help you to find the plasmid that is right for your research. Please email <a href="plasmidhelp@hms.harvard.edu">plasmidhelp@hms.harvard.edu</a> with your questions and we will be happy to help.</p> 
+
+<p class="mainbodytext"align="justify"><strong>
+<a name="expression"></a>Q. How can I tell if a plasmid will express?</strong><br>
+A. Most of the constructs in our library are in a cloning vector and WILL NOT express. We do have a small collection of constructs in an expression vector. To determine if the construct will express you need to examine the annotation of the backbone vector. When you look at the annotation you should look for a promoter that your model organism or expression system uses. For example, in the case of mammalian expression a CMV promoter is often, but not always present. If you cannot determine whether a specific construct will express in your system please email plasmidhelp@hms.harvard.edu with the clone ID and the expression system or organism where you would like to express.</p>       
+
+<p class="mainbodytext"align="justify"><strong>
+<a name="searches"></a>Q. There are multiple search options, what do they do?</strong><br>
+A. Our newest <a href="http://plasmid.med.harvard.edu/PLASMID/faces/GeneSearch.xhtml">Human and Mouse Gene</a> search tool allows you to simply enter a gene symbol for human or mouse and then see all plasmids that we have for that gene. Our tool automatically searches through all known aliases/ synonyms and will then show you how our plasmids compare to current NCBI reference sequences. In the search results you can view a bp or aa alignment of our plasmids and can also see what percentage of the protein coding region is covered by our plasmids. 
+
+<br><br> Our <a href="http://plasmid.med.harvard.edu/PLASMID/PrepareBlast.do">BLAST</a> search tool allows you to enter nucleotide sequences in fasta format and then see which constructs match to the sequence that you provided. 
+
+<br><br>Our <a href="http://plasmid.med.harvard.edu/PLASMID/PrepareAdvancedSearch.do?psi=0">Advanced Text Search</a> is the most flexible search tool at PlasmID. There, you can use gene names and synonyms, author names, the part or full name of a vector, species name, PDB ID, TargetDB/PepcDB ID or combinations to search plasmids. It is also helpful to use official gene names and identifiers as they appear in databases such as NCBI Entrez Gene or organism-specific databases like SGD or FlyBase. 
+
+<br><br>If you arrived at our site with a known clone ID from our facility or from one of our depositors you can enter those ID's in our <a href="http://plasmid.med.harvard.edu/PLASMID/SearchClone.jsp">Clone ID</a> search tool. By default the tool is set to accept PlasmID clone ID's like HsCD#######. You can change the drop down menu to 'Other Clone ID' to search for all aliases or clone ID's from the depositor. 
+
+<br><br>To search for plasmids that code for a specific gene we recommend that you start with our <a href="http://plasmid.med.harvard.edu/PLASMID/faces/GeneSearch.xhtml">Human and Mouse Gene</a> search tool. However, if you are looking for genes from other species you can use the <a href="http://plasmid.med.harvard.edu/PLASMID/GetDataForRefseqSearch.do">Gene</a> search tool to locate a list of plasmids where that gene symbol was mentioned. Since these symbols are not dynamically updated you may also need to search for older aliases to find the constructs that you need. 
+
+<br><br>If you are searching for plasmids that contain a protein coding gene, and want to restrict the search to characteristics of a vector you can use the  <a href="http://plasmid.med.harvard.edu/PLASMID/GetVectorPropertyTypes.do"> Vector</a> search tool. Please note that most users place too many restrictions and see no results. We recommend the use of this tool only when the previous searches yield too many results.
+
+<br><br>Finally, if you are looking for 'Empty' vectors that do not contain a protein coding gene of interest you can view a full list <a href="http://plasmid.med.harvard.edu/PLASMID/GetVectorsByType.do">here</a>, or select a specific vector collection from the left side navigation panel. </p>
+
+		<p class="mainbodytextlarge"><strong><u>MTA's</u></strong>
+        
+<p class="mainbodytext" align="justify"><strong>
+<a name="MTAneeded"></a>Q. Do I need to complete an MTA for this order?</strong><br>
+A. An MTA governs the transfer of material in all orders. Many institutions have signed a generalized MTA agreement with us and are therefore in our Expedited MTA Network. When you place an order that ships to one of these institutions you will be presented with our Standard Plasmid Transfer Agreement and you will be able to approve it electronically without the need for a signature. A paper copy of this same MTA will also ship with your order for your records. If your institution is not in our Expedited MTA Network we ask that you execute a separate Standard Plasmid Transfer Agreement for each request. MTA's can be downloaded from our <a href="http://plasmid.med.harvard.edu/PLASMID/TermAndCondition.jsp">Terms and Conditions</a> page. Completed MTA's should be emailed to <a href="plasmidMTA@hms.harvard.edu">plasmidMTA@hms.harvard.edu</a>. Researchers or Institutions who fail to execute this MTA implicitly agree to the terms of the Standard Plasmid Transfer Agreement through the use of this website.</p>   
+
+<p class="mainbodytext" align="justify"><strong>
+<a name="download"></a>Q. Where do I find/ download a copy of the MTA for my order?</strong><br>
+A. MTA's can be downloaded from our <a href="http://plasmid.med.harvard.edu/PLASMID/TermAndCondition.jsp">Terms and Conditions</a> page.</p>   
+
+<p class="mainbodytext" align="justify"><strong>
+<a name="joinEPMTA"></a>Q. My Institution is not in the Expedited MTA Network, can I still place an order?</strong><br>
+A. You are welcome to place an order even if your institution is not in our Expedited MTA Network. We ask taht you execute a separate Standard Plasmid Transfer Agreement for each request. Alternately you can have your institution join our Expedited MTA Network.</p>  
+
+
+<p class="mainbodytext" align="justify"><strong>
+<a name="Expedited"></a>Q. How can my institution join the Expedited MTA Network?</strong><br>
+A. Institutions can join our Expedited MTA Network by executing the Standard Plasmid Transfer Agreement and Expedited Process Agreement at the same time. Both of these documents can be downloaded from our <a href="http://plasmid.med.harvard.edu/PLASMID/TermAndCondition.jsp">Terms and Conditions</a> page. Once these documents are completed, the original signed documents must be mailed to The DNA Resource Core at Harvard Medical School at the <a href="http://plasmid.med.harvard.edu/PLASMID/Contactus.jsp">address listed on our website</a>. </p>
+
+	<p class="mainbodytextlarge"><strong><u>Other Questions</u></strong>
+
+<p class="mainbodytext" align="justify"><strong>
+<a name="deposit"></a>Q. I have a construct that I would like to share. How do I deposit it?</strong><br>
+A. First of all, thank you for sharing your construct with the broader research community. We look forward to helping you make this resource available. Additional details about depositing plasmids can be found on our <a href="http://plasmid.med.harvard.edu/PLASMID/Submission.jsp">Plasmid Submission</a> page. This page is geared to deposits of libraries of plasmids. If you have fewer samples to deposit this page might not make sense. Please just drop us a line at <a href="plasmidhelp@hms.harvard.edu">plasmidhelp@hms.harvard.edu</a> and we will get the process started for you. </p>
+
+<p class="mainbodytext" align="justify" ><strong>
+<a name="gateway"></a>Q. What is the GATEWAY system?</strong><br>
+A. GATEWAY is a enzymatic cloning system that eliminates the need for RE digests and ligations. This all in one system allows you to quickly shuttle an entry construct into a compatible destination vector in one enzymatic recombination step. More details and resources can be found on the <a href="http://www.lifetechnologies.com/us/en/home/life-science/cloning/gateway-cloning.html">Life Technologies website</a>.</p>
+        
+        </td>
     </tr>
   </table>
   <p class="homepageText2">&nbsp;</p>
 </div>
-<p align="center">Still have questions? Please contact <a href="mailto:plasmidhelp@hms.harvard.edu">PlasmID help</a>.</p>
-</body>
-
+<p align="center" class="mainbodytext">Still have questions? Please contact <a href="mailto:plasmidhelp@hms.harvard.edu">PlasmID help</a>.</p></td>
+  </tr>
+</table>
+</td>
+  </tr>
+</table>
+<jsp:include page="footer.jsp" /></body>
 </html>
+
