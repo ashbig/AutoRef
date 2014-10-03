@@ -289,7 +289,7 @@ Address 2</span>
 </td>
 																			<td style="width: 65%">
 <span id="txtAddress2">
-SGM 228<!-- end txtAddress2 -->
+C2 Room 204<!-- end txtAddress2 -->
 </span>
 					</td>
 				</tr>
