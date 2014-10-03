@@ -32,7 +32,7 @@
       <p class="mainbodytext">We are located  in the Seeley G. Mudd building at the Harvard Medical School in Boston.</p>
       <blockquote>
         <p class="mainbodytext"><strong>Mailing address:</strong><br>
-        SGM 228<br>
+        C2 Room 204<br>
         240 Longwood Ave<br>
         Boston, MA 02115</p>
         <p class="mainbodytext"><strong>Remit Payment To:</strong><br>
