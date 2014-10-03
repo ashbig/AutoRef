@@ -1386,7 +1386,7 @@ public class OrderProcessManager {
         String text = "Your order " + order.getOrderid() + " requires additional information. One or more of the clones in your order requires the completion of a Materials Transfer Agreement (MTA).  Your order has been placed on hold pending this documentation. Please download the required MTA from this web page http://plasmid.med.harvard.edu/PLASMID/TermAndCondition.jsp. Please email a copy of the fully executed MTA to plasmidmta@hms.harvard.edu, then mail the original signed document to the address below. Please feel free to contact us at the same email address for any questions. Thank you for using PlasmID.\n\n";
         text += "DF/HCC DNA Resource Core\n";
         text += "Harvard Medical School\n";
-        text += "240 Longwood Ave, SGM 228\n";
+        text += "240 Longwood Ave, C2 Room 204\n";
         text += "Boston, MA 02115\n\n";
 
         try {
