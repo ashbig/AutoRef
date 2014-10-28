@@ -93,7 +93,7 @@
   </tr>
 </table>
 
-<p class="mainbodytexthead">
+        <%--<p class="mainbodytexthead">
               Additional Options:
               <ul class="mainbodytexthead">
                   <li>Platinum QC Service: $6 for Harvard University and DF/HCC members; $7 for other academics and non-profits; $8 for commercial users.<p></li>
@@ -116,7 +116,7 @@
         <html:submit value="Continue"/>
     </td>
   </tr>
-</table>
+</table>--%>
     </html:form>
 
     </td>
