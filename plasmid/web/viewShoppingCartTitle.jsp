@@ -15,7 +15,7 @@
                     <li>$10.00 for domestic orders</li>
                     <li>$20.00 for international orders</li>
                 </ul>
-                <li>No charge for shipping for the Harvard Medical School community. Pick up your order in the Seeley G. Mudd Building in the <a href="http://www.hip.harvard.edu/Location.html#Quad" target="_blank">HMS Quad</a> in the second floor hallway freezer. You MUST have access to the building to take advantage of this option.</li>
+                <li>No charge for shipping for the Harvard Medical School community. Pick up your order in the C1 Building which is located in the <a href="http://plasmid.med.harvard.edu/PlasmidRepository/file/map/Pick-up_Location.png" target="_blank">HMS Quad</a>. Your order will have your oder number and named and be located in the second floor hallway refrigerator. You MUST have access to the building to take advantage of this option.</li>
             </ol>
             <b>Payment Options</b>
             <ul>
