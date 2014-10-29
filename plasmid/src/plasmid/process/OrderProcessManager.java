@@ -2294,7 +2294,7 @@ public class OrderProcessManager {
             text += " has shipped.";
         }
         text += "Please note your tracking number and any shipping comments below. If you have requested the Platinum QC Service, end-read sequences are  available in  your account at http://plasmid.med.harvard.edu/PLASMID/Login.jsp. To view the results of our QC testing please log into your account, select the appropriate order number, and then select \"View Platinum Results.\" Please remember that a single end-read sequence is not able to verify your entire construct. Feel free to contact us at plasmidhelp@hms.harvard.edu if you have any questions. Thank you for using PlasmID.\n\n";
-        text += "If you have selected \"pickup\" as your shipment option please pick up your order from the second floor of the C building adjacent to room 217.  Samples can be found in the hallway refrigerator.\n\n";
+        text += "If you have selected \"pickup\" as your shipment option please pick up your order from the second floor of the C1 building at the corner of building C1 and LHRRB.  Samples can be found in the hallway refrigerator. See http://plasmid.med.harvard.edu/PlasmidRepository/file/map/Pick-up_Location.png for a detailed location.\n\n";
         text += "===========================================================\n";
         text += "Tracking Number: " + order.getTrackingnumber() + "\n";
         if (order.getComments() != null && order.getComments().trim().length() > 0) {
