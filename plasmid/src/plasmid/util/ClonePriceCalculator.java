@@ -14,13 +14,17 @@ import plasmid.coreobject.CollectionInfo;
  */
 public class ClonePriceCalculator {
     public static final double PRICE_PER_CLONE_HOST = 0.0;
-    public static final double PRICE_PER_CLONE_DFHCC = 46.0;
-    public static final double PRICE_PER_CLONE_COMMERCIAL = 70.0;
-    public static final double PRICE_PER_CLONE_OTHER = 58.0;
-    public static final double PRICE_PLATINUM_HOST = 6.0;
-    public static final double PRICE_PLATINUM_DFHCC = 6.0;
-    public static final double PRICE_PLATINUM_COMMERCIAL = 8.0;
-    public static final double PRICE_PLATINUM_OTHER = 7.0;
+    public static final double PRICE_PER_CLONE_DFHCC = 52.0;
+    public static final double PRICE_PER_CLONE_COMMERCIAL = 78.0;
+    public static final double PRICE_PER_CLONE_OTHER = 65.0;
+    
+    // In 10/28/2014 the dna resource core shifted the qc
+    // cost into the clone cost itself. This is why the variables
+    // below are marked as zero dollars. 
+    public static final double PRICE_PLATINUM_HOST = 0.0;
+    public static final double PRICE_PLATINUM_DFHCC = 0.0;
+    public static final double PRICE_PLATINUM_COMMERCIAL = 0.0;
+    public static final double PRICE_PLATINUM_OTHER = 0.0;
 
     /** Creates a new instance of ClonePriceCalculator */
     public ClonePriceCalculator() {
