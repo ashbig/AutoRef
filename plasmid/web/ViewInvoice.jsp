@@ -169,7 +169,7 @@
                                         <logic:equal name="<%=Constants.CLONEORDER%>" property="enterPlatinumBasedOnStatus" value="<%=CloneOrder.PLATINUM_ENTER_RESULTS%>">
                                             <html:form action="EnterPlatinumResult.do">
                                                 <html:hidden name="<%=Constants.CLONEORDER%>" property="orderid"/>
-                                                <html:submit styleClass="text" value="Enter Platinum Results"/>
+                                                <html:submit styleClass="text" value="Enter QC Results"/>
                                             </html:form>
                                         </logic:equal>
                                         
