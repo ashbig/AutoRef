@@ -13,7 +13,7 @@ import plasmid.coreobject.CollectionInfo;
  * @author  DZuo
  */
 public class ClonePriceCalculator {
-    public static final double PRICE_PER_CLONE_HOST = 0.0;
+    public static final double PRICE_PER_CLONE_HOST = 6.0;
     public static final double PRICE_PER_CLONE_DFHCC = 52.0;
     public static final double PRICE_PER_CLONE_COMMERCIAL = 78.0;
     public static final double PRICE_PER_CLONE_OTHER = 65.0;
