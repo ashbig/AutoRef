@@ -210,7 +210,7 @@
                                     <logic:equal name="<%=Constants.CLONEORDER%>" property="isplatinum" value="Yes">
                                         <html:form action="EnterPlatinumResult.do">
                                             <html:hidden name="<%=Constants.CLONEORDER%>" property="orderid"/>
-                                            <html:submit styleClass="text" value="Enter Platinum Results"/>
+                                            <html:submit styleClass="text" value="QC Results"/>
                                         </html:form>     
                                     </logic:equal>
                                 </logic:equal>
@@ -220,7 +220,7 @@
                                     <logic:equal name="<%=Constants.CLONEORDER%>" property="hasPlatinumResult" value="true">
                                         <html:form action="ViewPlatinumResult.do">
                                             <html:hidden name="<%=Constants.CLONEORDER%>" property="orderid"/>
-                                            <html:submit styleClass="text" value="View Platinum Results"/>
+                                            <html:submit styleClass="text" value="View QC Results"/>
                                         </html:form>
                                     </logic:equal>
                                 </logic:equal>
