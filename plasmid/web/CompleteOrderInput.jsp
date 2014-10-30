@@ -38,12 +38,12 @@
                                 <td class="formlabel">PO/Billing Number:</td>
                                 <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="ponumber"/></td>
                             </tr>
-                            <tr> 
+                            <%--<tr> 
                                 <td class="formlabel">Platinum Service:</td>
                                 <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="isplatinum"/></td>
                                 <td class="formlabel">Platinum Service Status:</td>
                                 <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="platinumServiceStatus"/></td>
-                            </tr>
+                            </tr>--%>
                             <tr> 
                                 <td class="formlabel">Email:</td>
                                 <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="email"/></td>
@@ -81,7 +81,7 @@
                             <tr> 
                                 <td class="tableheader">Item</td>
                                 <td class="tableheader">Quantity</td>
-                                <td class="tableheader">Platinum Result</td>
+                                <td class="tableheader">QC Result</td>
                                 <td class="tableheader">Shipping Status</td>
                             </tr>
                             <logic:iterate name="<%=Constants.CLONEORDER%>" property="clones" id="clone">
