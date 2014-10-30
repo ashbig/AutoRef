@@ -91,6 +91,11 @@
         <html:text size="50" property="accountNumber"/>
     </td>
   </tr>
+  <tr>
+      <td class="text">
+        <html:submit value="Continue"/>
+    </td>
+  <tr>
 </table>
 
         <%--<p class="mainbodytexthead">
