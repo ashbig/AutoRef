@@ -4,7 +4,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-
+<%-- 10/15/2014 PlasmID removed "NO" Orders as an option, any commented out code below reflects this--%>
 <html>
 <head>
 <title>PlasmID Database</title>
@@ -20,96 +20,92 @@
       <jsp:include page="menu.jsp" />
 	</td>
     <td width="83%" align="left" valign="top">
-	<jsp:include page="orderoverviewTitle.jsp" />
+	<%--<jsp:include page="orderoverviewTitle.jsp" />--%>
 
 <table width="100%" border="0">
-  <tr>
-    <td height="40" colspan="2" valign="top"><div align="center">
-      <span class="homepageText2">You can search for clones using various criteria.</span><br>
-      <span class="mainbodytext">PLEASE LOG IN BEFORE SEARCHING FOR CLONES! </span>
-     
-      </div></td>
-    </tr>
-  <tr bordercolor="#000000" bgcolor="#F5F5F5">
-    <td width="55%" height="185" valign="top">
-      <span align="left" class="homepageText2">Gene insert  </span>
-            <span class="mainbodytext"><a href="GetDataForRefseqSearch.do">Search by gene</a></span> <br>
-          <span class="mainbodytext"> First choose the organism of interest, and then search for your gene(s) of interest by inputting GI number,  GenBank  Accession, Gene ID or Gene Symbol (gene name).</span>          </p>
-      <p><span align="left" class="homepageText2">Assay type,  Cloning Method or Expression  </span><span class="mainbodytext"><a href="GetVectorPropertyTypes.do">Search by vector</a></span><br>
-        <span class="mainbodytext">Search based on properties of the vector (ex. mammalian expression).</span><br>
-        </p>
-      <p><span align="left" class="homepageText2">PlasmID, CloneID, FLH#, other ID  </span><span class="mainbodytext"><a href="SearchClone.jsp">Search by clone identifier</a></span><br>
-        
-          <span class="mainbodytext">Search by CloneID/PlasmID or all other IDs.</span></p></td>
-    <td width="45%" valign="top">
-      <p><span align="left" class="homepageText2">Sequence similarity search</span>
-            <span class="mainbodytext"><a href="PrepareBlast.do">Blast search</a></span><br>
-        <span class="mainbodytext">Search by nucleotide sequence or amino acid sequence.</span><br>
-        <br>
-            <span align="left" class="homepageText2">Advanced search options</span> 
-            <span class="mainbodytext"><a href="PrepareAdvancedSearch.do?psi=0">Advanced search</a></span> <br>
-             <span class="mainbodytext">Search by gene name, gene symbol, vector name, vector feature, author name, publication, or species.</span><br>
-          <br>
-          <span class="homepageText2">Looking for an 'empty vector'? </span>
-          <span class="mainbodytext"><a href="GetAllVectors.do">View all vectors</a></span></p>      </td>
-  </tr>
-  <tr>
-    <td height="277" colspan="2" valign="top"><div align="center">
-      
-      
-      <span class="homepageText2 style3"><a name="cost"></a><br>
-      CLONE COSTS </span>   </div>
-      <table width="70%" border="3" align="center" id="gray">
-        <tr class="tableheader">
-          <td width="30%">Pricing Category</td>
-          <td width="25%">Individual Clone</td>
-          <td width="45%">Individual Clone with Platinum QC</td>
+    <td height="225" colspan="2" valign="top"><div align="center">
+            <br>
+      <span class="homepageText2 style3" style="font-size:20px"><a name="cost"></a><br>
+      CLONE COSTS </span>       
+      <div align="center"><span class="itemtext"> *You may consider these prices a quote for all clones in any quantity.</span></div></div>
+      <table width="90%" border="3" align="center" id="gray">
+          <tr class="tableheader" style="font-size:20px">
+            <td width="50%" bgcolor="#6699CC">Pricing Category</td>
+          <%--<td width="25%">Individual Clone</td>--%>
+          <td width="50%" bgcolor="#6699CC" >Individual Clone with QC Test</td>
         </tr>
-        <tr class="tableinfo">
+        <tr class="tableinfo" style="font-size:18px">
           <td>Harvard University and DF/HCC Members</td>
-          <td align="right">$46.00</td>
+          <%--<td align="right">$46.00</td>--%>
           <td align="right">$52.00</td>
         </tr>
-        <tr class="tableinfo">
+        <tr class="tableinfo" style="font-size:18px">
           <td>Other Academics and Nonprofits</td>
-          <td align="right">$58.00</td>
+          <%--<td align="right">$58.00</td>--%>
           <td align="right">$65.00</td>
         </tr>
-        <tr class="tableinfo">
+        <tr class="tableinfo" style="font-size:18px">
           <td>Commercial Users</td>
-          <td align="right">$70.00</td>
+          <%--<td align="right">$70.00</td>--%>
           <td align="right">$78.00</td>
         </tr>
       </table>
-      <div align="center"><span class="footertext"> *Shipping is additional. Either provide a FedEx number or shipping is a flat fee of $10 for domestic orders or $20 for international orders. <br>
+      <div align="center"><span class="itemtext"> *Shipping is additional. Either provide a FedEx number or shipping is a flat fee of $10 for domestic orders or $20 for international orders. <br>
       No charge for shipping to the Harvard Medical School community if order is picked up. Must have building access.</span></div>
-      <div align="center"><span class="footertext">Please click <a target="_blank" href="http://plasmid.med.harvard.edu/PLASMID/PIList.html">here</a> for the list of DF/HCC members.</span></div>  
-      
-      <pre><span class="homepageText2">
-Can't find what you're looking for? </span>
-<span class="mainbodytext">          1. Please be sure you logged in because log-in effects what clones you can view.
-          2. <a href="plasmid_links.jsp" title="Plasmid Links Page" target="_self">CLICK HERE</a> to see other resources for clones.</span></pre>
-      <p><span class="homepageText2">CloneID is your link to more info. </span>
-          <br>
-          <span class="mainbodytext">Click on the clone ID to view growth conditions, insert and vector info, insert sequence (if we have it), authors and references to cite, and to download 
-            a clone map (if there is one). click on a vector name to get more information 
-            about the vector. to return to this info after placing an order sign in, 
-            then go to &quot;my account&quot; (top right of the page) and &quot;view 
-            orders&quot; to monitor order status, view clones and download info.</span>        </p>
-      <p>  <span class="homepageText2">Please give credit where credit is due!</span><br>
-        
-          <span class="mainbodytext">Click on the clone ID to find the reference(s) associated with the clone and the author(s) who donated the clone. The people who constructed, published, and donated the clone should be cited whenever you publish work that uses the clone that you ordered.</span><br>
-          <p><span class="homepageText2">Don't recognize an organisms' 
-            name? </span>      <br>
-            
-              <span class="mainbodytext">The <a target="_blank" href="collection_overview.jsp">collection overview</a> includes common 
-              names for organisms in our collection. </span>
-          <p><span class="homepageText2">Ready to check out?
-            </span><br>
-              <span class="mainbodytext">Click the <a href="ViewCart.do">shopping cart</a> icon to initiate 
-          check-out (top right of any page)</span>      </td>
+      <div align="center"><span class="itemtext">Please click <a target="_blank" href="http://plasmid.med.harvard.edu/PLASMID/PIList.html">here</a> for the list of DF/HCC members.</span></div>
+       <br>
+         <tr>
+    <td height="40" colspan="2" valign="top"><div align="center">
+      <span class="homepageText2  style3" style="font-size:20px"><br>You can search for clones using various criteria</span><br>
+      <span class="itemtext">PLEASE LOG IN BEFORE SEARCHING FOR CLONES! </span>    
+     </div></td>
+    </tr>   
+      <table width="90%" border="3" align="center" id="gray">
+          <tr class="tableheader" style="font-size:20px">
+            <td width="30%" bgcolor="#6699CC" >Search Method</td>
+          <td width="70%"bgcolor="#6699CC">Description</td>
+        </tr>
+        <tr class="tableinfo" style="font-size:14px">
+            <td><a href="faces/GeneSearch.xhtml">Human & Mouse Gene</a></td>
+            <td align="left">Our recommended method of searching the PlasmID database. Simply enter your gene of interest and query our database against the latest reference sequence!</td>
+        </tr>
+        <tr class="tableinfo" style="font-size:14px">
+        <td><a href="PrepareAdvancedSearch.do">Advanced Search</a></td>
+          <td align="left">Search by gene name, gene symbol, vector name, vector feature, author name, publication, or species.</td>
+        </tr>
+        <tr class="tableinfo" style="font-size:14px">
+            <td><a href="PrepareBlast.do">Blast Search</a></td>
+          <td align="left">Search our database by a similarity alignment of your nucleotide or amino acid sequence.</td>
+        </tr>
+        <tr class="tableinfo" style="font-size:14px">
+            <td><a href="SearchClone.jsp">Search by Clone Identifier</a></td>
+          <td align="left">Search by PlasmID, CloneID, FLH#, or other IDs. </td>
+        </tr>
+        <tr class="tableinfo" style="font-size:14px">
+            <td><a href="GetVectorPropertyTypes.do">Search by Vector</a></td>
+          <td align="left">Search based on the properties of the vector such as, assay type, cloning method or expression characteristics.</td>
+        </tr>
+        <tr class="tableinfo" style="font-size:14px">
+            <td><a href="GetVectorsByType.do">Empty Vectors</a></td>
+          <td align="left">View our full list of empty vectors. To narrow down the list view the search and order tool bar.</td>
+        </tr>
+        <tr class="tableinfo" style="font-size:14px">
+            <td><a href="GetVectorsByType.do">Available Collections</a></td>
+          <td align="left">View the full list of all of PlasmID's available collections. The <a href="collection_overview.jsp">collection overview</a> includes common 
+              names for organisms in our collection.</td>
+        </tr>
+      </table>
+      <br>
+      <br>        
+      <span class="homepageText2 style3" style="font-size:16px">Have additional questions? Please see our <a href="FAQ.jsp">FAQ!</a><br></span>
+      <br>        
+      <span class="homepageText2 style3"style="font-size:16px">Please give credit where credit is due!</b></span>
+      <br>
+      <span class="itemtext" style="padding-left:20px"> Click on the clone ID to find the reference(s) associated with the clone and the author(s) who donated the clone.</span><br>
+      <span class="itemtext" style="padding-left:20px">The people who constructed, published,  and donated the clone should be cited whenever you publish work that uses the clone that you ordered.<br></span>
+     </td>
     </tr>
-</table>
+    <br>
 
 <table width="100%" border="0">
   <tr>
