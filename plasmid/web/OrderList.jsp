@@ -154,7 +154,7 @@
     </logic:notEqual>
     <input type="hidden" name='<%="orderid["+(i)+"]"%>' value="<bean:write name="order" property="orderid"/>">
 
-    <%--<td class="tableinfo"><bean:write name="order" property="isplatinum"/></td>--%>
+    <td class="tableinfo"><bean:write name="order" property="isplatinum"/></td>
     <td class="tableinfo"><bean:write name="order" property="numofclones"/></td>
     <td class="tableinfo"><bean:write name="order" property="numofcollection"/></td>
     <td class="tableinfo"><bean:write name="order" property="totalPriceString"/></td>
