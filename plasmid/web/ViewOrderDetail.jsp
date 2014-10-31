@@ -148,10 +148,10 @@
                             <td class="tablebody"><a href="ViewOrderCollections.do?orderid=<bean:write name="<%=Constants.CLONEORDER%>" property="orderid"/>"><bean:write name="<%=Constants.CLONEORDER%>" property="numofcollection"/></a></td>
                             <td align="right" class="tablebody">$<bean:write name="<%=Constants.CLONEORDER%>" property="costforcollection"/></td>
                         </tr> 
-                        <%--<tr> 
+                        <tr> 
                             <td class="tablebody">Platinum service:</td>
                             <td align="right" colspan="2" class="tablebody">$<bean:write name="<%=Constants.CLONEORDER%>" property="costforplatinum"/></td>
-                        </tr>--%>
+                        </tr>
                         <tr> 
                             <td class="tablebody">Shipping and handling:</td>
                             <td align="right" colspan="2" class="tablebody">$<bean:write name="<%=Constants.CLONEORDER%>" property="shipping"/></td>
