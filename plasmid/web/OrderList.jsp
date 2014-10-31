@@ -72,7 +72,7 @@
     <td class="tableheader">Order ID</td>
     <td class="tableheader">Order Date</td>
     <td class="tableheader">Status</td>
-    <%--%<td class="tableheader">Platinum Service</td>--%>
+    <td class="tableheader">Platinum Service</td>
     <td class="tableheader">Number of Clones</td>
     <td class="tableheader">Number of Collections</td>
     <td class="tableheader">Total Price</td>
