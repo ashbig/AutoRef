@@ -56,7 +56,7 @@
   </logic:present>
   <logic:notPresent name="<%=Constants.USER_KEY%>" scope="session"> 
   <tr> 
-    <td height="25"><a href="Home.jsp" class="leftnavtext">Home</a></td>
+    <td height="25"><a href="faces/Home.xhtml" class="leftnavtext">Home</a></td>
   </tr>
   <tr> 
     <td height=45" valign="middle"> 
