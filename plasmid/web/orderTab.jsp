@@ -5,7 +5,7 @@
         <tr> 
           <td><table width="100%" height="33" border="0" cellpadding="4" cellspacing="1" bgcolor="#FFFFFF">
               <tr> 
-                <td width="16%" align="center" bgcolor="#6699CC"><strong><a href="faces/Home.xhtml" STYLE="text-decoration:none"><font>Home</font></a></strong></td>
+                <td width="16%" align="center" bgcolor="#6699CC"><strong><a href="Home.xhtml" STYLE="text-decoration:none"><font>Home</font></a></strong></td>
                 <td width="28%" align="center" bgcolor="#6699CC"><a href="Submission.jsp" STYLE="text-decoration:none"><font><strong>Plasmid 
                   Submission </strong></font></a></td>
                 <td width="28%" align="center" bgcolor="#6699CC"><font color="#CCCCCC">
