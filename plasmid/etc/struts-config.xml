@@ -354,7 +354,7 @@
                     name="logoutForm"
                     scope="request"
                     input="/Logout.do">
-            <forward  name="success"  path="/Home.jsp"/>
+            <forward  name="success"  path="faces/Home.xhtml"/>
         </action>
         <action     path="/ConfirmResults"
                     type="plasmid.action.ConfirmResultsAction"
@@ -543,7 +543,7 @@
         <!-- process a user logout -->
         <action     path="/Logout"
                     type="plasmid.action.LogoutAction">
-            <forward  name="success"  path="/Home.jsp"/>
+            <forward  name="success"  path="faces/Home.xhtml"/>
             <forward  name="confirm"  path="/ConfirmLogout.jsp"/>
         </action>
         <action    path="/MergeCart"
@@ -564,7 +564,7 @@
                     type="plasmid.action.PlaceOrderAction"
                     name="checkoutForm"
                     input="/ChoosePayment.jsp">
-            <forward  name="success"  path="/Home.jsp"/>
+            <forward  name="success"  path="faces/Home.xhtml"/>
         </action>
         <action    path="/Plate96To384Input"
                    type="plasmid.action.Plate96To384InputAction"
