@@ -168,7 +168,7 @@
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>Faces Servlet</servlet-name>
+        <servlet-name>Faces</servlet-name>
         <url-pattern>*xhtml</url-pattern>
     </servlet-mapping>
   
