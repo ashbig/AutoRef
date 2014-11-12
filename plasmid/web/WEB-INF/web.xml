@@ -169,7 +169,7 @@
 
     <servlet-mapping>
         <servlet-name>Faces</servlet-name>
-        <url-pattern>*xhtml</url-pattern>
+        <url-pattern>*.xhtml</url-pattern>
     </servlet-mapping>
   
     <!-- Define the default session timeout for your application,
