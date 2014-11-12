@@ -3,7 +3,7 @@
   <tr> 
     <td height="54"> <table width="100%" border="0" cellspacing="0" cellpadding="0">
         <tr align="center"> 
-          <td height="52"> <p class="footertext"><a href="Home.jsp" class="footertext">Home</a> 
+          <td height="52"> <p class="footertext"><a href="faces/Home.xhtml" class="footertext">Home</a> 
               &#149; <a href="Submission.jsp" class="footertext">Plasmid 
               Submission</a> &#149; <a href="OrderOverview.jsp" class="footertext">Search & Order</a> 
               &#149; <a href="Contactus.jsp" class="footertext">Contact Us</a></p>
