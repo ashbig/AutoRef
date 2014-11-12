@@ -169,7 +169,7 @@
 
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
-        <url-pattern>/faces/*</url-pattern>
+        <url-pattern>*xhtml</url-pattern>
     </servlet-mapping>
   
     <!-- Define the default session timeout for your application,
@@ -183,7 +183,7 @@
 
   <!-- Welcome-file-list -->
   <welcome-file-list>
-    <welcome-file>faces/Home.xhtml</welcome-file>
+    <welcome-file>Home.xhtml</welcome-file>
   </welcome-file-list>
 
     <taglib>
