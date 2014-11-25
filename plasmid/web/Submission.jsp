@@ -18,19 +18,21 @@
 -->
 </style>
 </head>
+<div class="gridContainer clearfix">
+
 
 <body>
 <jsp:include page="submissionTitle.jsp" />
-<table width="673" border="0">
+<table width="100%" border="0">
   <tr>
-    <td><p class="homepageText2"><strong>Why submit your plasmids to our repository?</strong></p>
+    <td><p class="mainbodytexthead">Why submit your plasmids to our repository?</p>
       <p class="mainbodytext">Sharing plasmids with the <a href="http://dnaseq.med.harvard.edu/">DF/HCC DNA Resource Core</a> benefits you  by alleviating the burden of storage, maintenance and distribution, and  benefits the general research community by making plasmids available from a  central source. 
         We encourage submission of  plasmids from researchers at any of the <a href="http://www.dfhcc.harvard.edu/">DF/HCC</a> parent institutions and from the research community at large.  Small and  large collections are equally welcome.</p>
-      <p class="homepageText2"><strong> Submitting plasmids generally  involves the following three steps: </strong></p>
-      <p class="mainbodytext">1) Gaining permission from your  institution to include the plasmids in the repository for distribution under  specific terms (the <a href="PSI_Depositor_Agreement_OCT2007_final_generic.pdf" target="_blank">Depositor Agreement</a>). NOTE that this permission has already  been granted by all seven <a href="http://www.dfhcc.harvard.edu/">DF/HCC</a> institutions as well as several other research institutes listed <a href="DA.html">here</a>. </p>
-      <p class="mainbodytext">2)  Providing us with information about the plasmids, such as maps or sequence  files, growth conditions, relevant authors and publications, etc. so we are set  up to handle the plasmids when they arrive. We have <a href="#subguidlines">templates for submission</a> of  information that allow us to easily import your data into our database. </p>
-      <p class="mainbodytext">3) Sumbit your samples. Please DO NOT submit samples until we confirm that i) your data is entered into our computers and ii) we are ready to receive your samples.</p>
-      <p class="homepageText2"><strong> <a name="subguidlines" id="subguidlines"></a>Submission Guidelines</strong></p>
+      <p class="mainbodytexthead">Submitting plasmids generally involves the following three steps:</p>
+      <p class="mainbodytext">1) Gain permission from your institution to include the plasmids in the repository for distribution under  specific terms (the <a href="PSI_Depositor_Agreement_OCT2007_final_generic.pdf" target="_blank">Depositor Agreement</a>). NOTE that this permission has already  been granted by all seven <a href="http://www.dfhcc.harvard.edu/">DF/HCC</a> institutions as well as several other research institutes listed <a href="DA.html">here</a>. </p>
+      <p class="mainbodytext">2) Providing us with information about the plasmids, such as maps or sequence  files, growth conditions, relevant authors and publications, etc. so we are set  up to handle the plasmids when they arrive. We have <a href="#subguidlines">templates for submission</a> of  information that allow us to easily import your data into our database. </p>
+      <p class="mainbodytext">3) Submit your samples. Please DO NOT submit samples until we confirm that i) your data is entered into our computers and ii) we are ready to receive your samples.</p>
+      <p class="mainbodytexthead"><a name="subguidlines" id="subguidlines"></a>Submission Guidelines</p>
      
       <pre class="mainbodytext">
 We have standardized our submission process.  This  information is outlined in the following five files.  <br>
@@ -48,6 +50,6 @@ Please read through each of these  documents before you start.
 </table>
 <p class="mainbodytext">To get things started, please contact <a href="mailto:plasmidhelp@hms.harvard.edu">PlasmID help</a>.</p>
 
-<jsp:include page="footer.jsp" /></body>
+<jsp:include page="footer.jsp" /></body></div>
 </html>
 

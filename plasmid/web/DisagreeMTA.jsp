@@ -12,8 +12,13 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
         <title>JSP Page</title>
-    </head>
+     <link href="SpryMenuBarHorizontal.css" rel="stylesheet" type="text/css" />
+        <link href="boilerplate.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="respond.min.js"></script>
+</head>
+     <div class="gridContainer clearfix">
+
     <body>
         <h2>Hello World!</h2>
-    </body>
+    </body></div>
 </html>

@@ -14,9 +14,14 @@
         <title>Vector Map</title>
         <script src="http://code.jquery.com/jquery-1.8.1.min.js"></script>
         <script type="text/javascript" src="http://www.labgeni.us/static/javascript/plasmID_map.js"></script>
+<link href="SpryMenuBarHorizontal.css" rel="stylesheet" type="text/css" />
+<link href="boilerplate.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="respond.min.js"></script>
 </head>
+<div class="gridContainer clearfix">
 <body>
     <div class="map""></div>
     <input type="hidden" name="XML_location" id="XML_location" value="<bean:write name="vectormapurl"/>"/>
 </body>
+</div>
 </html>

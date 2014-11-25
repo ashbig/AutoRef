@@ -8,12 +8,16 @@
 
 <html>
 <head>
-    <title>Clone Detail</title>
+    <title><logic:iterate id="insert" name="clone" property="inserts"><bean:write name="insert" property="name"/></logic:iterate> in <bean:write name="clone" property="vector.name"/></title>
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
     <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
+<link rel="shortcut icon" href="dnacore.ico">
 </head>
+<div class="gridContainer clearfix">
+    
+<jsp:include page="signinMenuBar.jsp" />    
+<div class="content">
 
-<body>
     <p class="text">Clone: <bean:write name="clone" property="name"/></p>
     <table width="700" border="0">
         <tr> 
@@ -296,5 +300,7 @@
             </logic:iterate>
         </table>
     </logic:present>
+</div>
 </body>
+</div>
 </html>

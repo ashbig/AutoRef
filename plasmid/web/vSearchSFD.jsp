@@ -27,22 +27,31 @@
                 return false;
             }
             
-        </script>        
-    </head>
+        </script>
+<link href="layout.css" rel="stylesheet" type="text/css" />
+<link href="SpryMenuBarHorizontal.css" rel="stylesheet" type="text/css" />
+<link href="boilerplate.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="respond.min.js"></script>
+        <!--<script type="text/javascript" src="SpryMenuBar.js"></script>  code from dreamweaver doesn't work, submenu action re-done with css  
+        <script type="text/javascript">
+        var MenuBar1 = new Spry.Widget.MenuBar("MenuBar1", {imgDown:"SpryMenuBarDownHover.gif", imgRight:"SpryMenuBarRightHover.gif"});</script> -->
+</head>
+<div class="gridContainer clearfix">
+
     
     <body>
         <jsp:include page="homeTitle.jsp" />
-        <table width="1000" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
+        <table width="100%" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
             <tr>
-                <td width="17%" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle">
+                <%--<td width="17%" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle">
                     <jsp:include page="menuHome.jsp" />
-                </td>
-                <td width="83%" align="left" valign="top">
-                    <jsp:include page="vSearchSFDTitle.jsp" />
+                </td>--%>
+                <td width="100%" align="left" valign="top">
+                    <%--<jsp:include page="vSearchSFDTitle.jsp" />--%>
                     <html:form action="/vSearchSFD">
                         <html:errors/>
                         
-                        <h2>Submit Vector For Distribution</h2>
+                        <p class='mainbodytexthead'>Submit Vector For Distribution</p>
                         
                         <p>Please search for existing vector submitted for distribution.</p>
                         <p><em>If you have any questions, please contact the <a href="mailto:Catherine_Cormier@hms.harvard.edu">scientific liaison</a></em>.</p>
@@ -140,5 +149,6 @@
         </table>
         
     <jsp:include page="footer.jsp" /></body>
+</div>
 </html>
 

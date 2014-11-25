@@ -1,39 +1,137 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ page import="plasmid.Constants" %> 
 <%@ page import="plasmid.coreobject.User" %> 
+ <link href="layout.css" rel="stylesheet" type="text/css" />
+ <link href="SpryMenuBarHorizontal.css" rel="stylesheet" type="text/css" />
+ <link href="boilerplate.css" rel="stylesheet" type="text/css" />
+ <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
+ <link rel="shortcut icon" href="dnacore.ico">
 
-<table width="1000" height="86" border="0" align="center">
-  <tr> 
-    <td colspan="3" rowspan="2">
-        <logic:present name="<%=Constants.USER_KEY%>" scope="session"> 
+<br>
+<br>
+<img height="60" src="HMS_BiochemMolPhamH.jpg" alt="BCMP">
+<div id="header">          
+
+<br>
+<div class="logo">
+<img height="50" src="dnacore.jpg"/>
+
+<img height="50" src="PlasmID_logo.jpg"/>
+</div>
+<br>
+
+
+<h:body>
+<table width="100%" height="57" border="0" align="center">
+            <tr> 
+                <td>
+                    <a href="http://dnaseq.med.harvard.edu" target="_blank">DNA Resource Core</a><br><br>
+                    
+            <logic:present name="<%=Constants.USER_KEY%>" scope="session"> 
             <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
-            <a href="SampleTrackingHome.jsp" class="text">Sample Tracking</a>            
-            <a href="SEQ_InvoiceHome.jsp" class="text">Sequencing</a>            
+                    <a href="SampleTrackingHome.jsp">Sample Tracking |</a>            
+                    <a href="SEQ_InvoiceHome.jsp">Sequencing</a>
             </logic:equal>
-            <logic:notEqual name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
-&nbsp;            </logic:notEqual>
-        </logic:present>
-        <logic:notPresent name="<%=Constants.USER_KEY%>" scope="session"> 
-&nbsp;        </logic:notPresent>    </td>
-    <td width="64%" align="center" valign="bottom" class="title"> 
-      <img height="83" width="77" src="dnacore.jpg"/><img height="81" width="222" src="PlasmID_logo.jpg"/></td>
-    <td width="18%" height="54" align="right" valign="bottom" class="countrytext"> 
-      <p><a href="ViewCart.do" border="0"><img src="shoppingcart2.gif" width="105" height="18"/></a></p></td>
-  </tr>
-  <tr>
-    <!--<td width="64%" rowspan="2" align="center" valign="top" class="homepageLink"><a href="http://psimr.asu.edu" target="_blank">Protein Structure Initiative
-    - Material Repository (PSI-MR)</a></td>-->
-    <td width="64%" rowspan="2" align="center" valign="top" class="homepageLink"><a href="http://dnaseq.med.harvard.edu" target="_blank">DF/HCC DNA Resource Core</a></td>
-    <td rowspan="2"> 
-    <logic:present name="<%=Constants.USER_KEY%>" scope="session"> 
-      <a href="Logout.do" class="countrytext">Sign Out </a> 
-      | <a href="Account.jsp" class="countrytext">My Account</a>    </logic:present> 
-    <logic:notPresent name="<%=Constants.USER_KEY%>" scope="session"> 
-      <a href="Login.jsp" class="countrytext">Sign In </a> 
-      | <a href="PrepareRegistration.do" class="countrytext">Registration</a>    </logic:notPresent> 
-    | <a href="FAQ.jsp" class="countrytext">FAQ</a></td>
-  </tr>
-  <tr>
-    <td height="26" colspan="3">&nbsp;</td>
-  </tr>
+                    
+            <logic:notEqual name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">&nbsp;      
+            </logic:notEqual>
+            </logic:present>
+            <logic:notPresent name="<%=Constants.USER_KEY%>" scope="session"> &nbsp;        
+            </logic:notPresent>
+                    
+              </td>
+                <td width="50%" height="50" align="right" valign="bottom" class="countrytext"> 
+                    <a href="ViewCart.do" border="0"><img src="shoppingcart2.gif" width="105" height="18"/></a>
+                    <br>
+                   <br>
+                <logic:present name="<%=Constants.USER_KEY%>" scope="session">    
+                    <a href="Logout.do" class="countrytext">Sign Out |</a> 
+                    <a href="Account.jsp" class="countrytext"> My Account |</a>
+                </logic:present>
+                
+                <logic:notPresent name="<%=Constants.USER_KEY%>" scope="session">
+                    <a href="Login.jsp" class="countrytext" >Sign In |</a> 
+                    <a href="PrepareRegistration.do" class="countrytext"> Registration |</a> 
+                </logic:notPresent> 
+                    <a href="FAQ.jsp" class="countrytext"> FAQ</a>
+                    
+                    
+                    </td>
+            </tr>
+            <tr>    
+              
+              
+</tr>
 </table>
+</td>
+</tr>
+</table></td>
+</tr>
+</table>
+</td></div>
+     
+  <div id="nav" align="center">
+    <ul id="MenuBar1" class="MenuBarHorizontal">
+      <li><a class="MenuBarItemSubmenu" href="Home.jsp" title="Home">Home</a>
+        <ul>
+           <logic:present name="<%=Constants.USER_KEY%>" scope="session">
+          <li><a href="Logout.do" title="Log Out">Sign Out</a></li>
+          <li><a href="Account.jsp" title="My Account">My Account</a></li>
+          <li><a href="PrepareRegistration.do?update=true&first=true" title="Update Account">Update Account</a></li>
+          <li><a href="ViewOrderHistory.do" title="View Orders">View Orders</a></li> 
+            <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
+          <li><a href="ViewContainers.jsp" title="View Containers">View Containers</a></li>
+          <li><a href="vSearch.jsp" title="Vector Submission">Vector Submission</a></li>
+          <li><a href="vSearchSFD.jsp" title="Vector For Distribution">Vector For Distribution</a></li>
+          <li><a href="SearchOrderInput.jsp" title="Search Orders">Search Orders</a></li>
+          <li><a href="PrepareSearchInvoice.do" title="Search Invoices">Search Invoices</a></li>
+          <li><a href="pReceiveSearch.jsp" title="Recieve Plasmids">Receive Plasmids</a></li>
+          <li><a href="CloneValidationInput.jsp" title="Clone Validation">Clone Validation</a></li>
+          <li><a href="AddInstitutionsInput.jsp" title="Add Institutions">Add Institutions</a></li>
+          <li><a href="AddEmtaMembersInput.jsp" title="Add Institution to Expedited MTA Members">Add EP-MTA Members</a></li>
+          <li><a href="SampleTrackingHome.jsp">Sample Tracking</a></li>            
+          <li><a href="SEQ_InvoiceHome.jsp">Sequencing Invoices</a></li>
+          </logic:equal>
+          </logic:present>
+          <logic:notPresent name="<%=Constants.USER_KEY%>" scope="session">
+          <li><a href="Login.jsp" title="Sign In">Sign In</a></li>
+          <li><a href="FindPassword.jsp" title="Find lost password">Find Password</a></li>
+          <li><a href="PrepareRegistration.do" title="Registration">Registration</a></li>
+          </logic:notPresent> 
+         </ul>
+      </li>
+      
+      <li><a class="MenuBarItemSubmenu" href="OrderOverview.jsp">Plasmids</a>
+        <ul>
+          <li><a href="GeneSearch.xhtml" title= "Human and Mouse Gene Search">Human &amp; Mouse Genes</a></li>
+          <li><a href="PrepareAdvancedSearch.do?psi=0" title= "Text Search">Text Search</a></li>
+          <li><a href="GetDataForRefseqSearch.do" title= "All Organism Gene Search">Search by Gene</a></li>
+          <!--<li><a href="GetVectorPropertyTypes.do" title= "Vector Search">Search by Vector</a></li>  confusing search tool, little success finding vector or plasmid of interest   -->
+          <li><a href="SearchClone.jsp" title= "Clone ID">Search by Clone ID</a></li>
+          <li><a href="PrepareBlast.do" title= "BLAST search">BLAST Search</a></li>
+        </ul>
+      </li>
+      <li><a class="MenuBarItemSubmenu"href="GetVectorsByType.do">Vectors</a>
+        <ul>
+          <li><a href="GetVectorsByType.do?type=viral production" title= "Viral Production">Viral Production</a></li>
+          <li><a href="GetVectorsByType.do?type=RNA interference" title= "RNA Interference">RNA Interference</a></li>
+          <li><a href="GetVectorsByType.do?type=mammalian expression" title= "Mammalian Expression">Mammalian Expression</a></li>
+          <li><a href="GetVectorsByType.do?type=drosophila in vitro and in vivo expression" title= "Drosophila Expression">Drosophila Expression</a></li>
+          <li><a href="GetVectorsByType.do?type=bacterial expression" title= "Bacterial Expression">Bacterial Expression</a></li>
+          <li><a href="GetVectorsByType.do?type=baculovirus/insect cell expression" title= "Baculovirus/ Insect Cell Expression">Insect Cell Expression</a></li>
+          <li><a href="GetVectorsByType.do?type=cloning vector" title= "Cloning Vectors">Cloning Vectors</a></li>
+          <li><a href="GetVectorsByType.do?type=mutagenesis vector" title= "Mutagenesis Vectors">Mutagenesis</a></li>
+          <li><a href="GetVectorsByType.do?type=Yeast Expression" title= "Yeast Expression">Yeast Expression</a></li>
+          <li><a href="GetVectorsByType.do?type=fluorescent marker" title= "Fluorescence Marker">Fluorescence Marker</a></li>
+        </ul>
+      </li>
+      <li><a href="Submission.jsp" title="Submit plasmids">Submission</a></li>
+      <li><a href="GetCollectionList.do" title="View List of Collections">Collections</a></li>
+      <li><a href="Pricing.jsp" title="pricing">Pricing</a></li>
+      <!--<li><a href="#" title="Cloning">Cloning</a></li>  under construction-->
+      <li><a href="Contactus.jsp">Contact Us</a></li>
+      <li><a href="AboutUs.jsp">About Us</a></li>
+      </li>
+    </ul>
+  </div>
+ 

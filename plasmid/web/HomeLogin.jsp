@@ -12,17 +12,21 @@
 <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
 <META HTTP-EQUIV="Expires" CONTENT="-1">
 <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
+<link href="SpryMenuBarHorizontal.css" rel="stylesheet" type="text/css" />
+<link href="boilerplate.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="respond.min.js"></script>
 </head>
+<div class="gridContainer clearfix">
 
 <body>
 <jsp:include page="homeTitle.jsp" />
-<table width="1000" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
+<table width="100%" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
   <tr> 
-    <td width="17%" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle"> 
+    <%--<td width="17%" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle"> 
       <jsp:include page="menuHome.jsp" />
-	</td>
-    <td width="83%" align="left" valign="top">
-	<jsp:include page="loginTitle.jsp" />
+	</td>--%>
+    <td width="100%" align="left" valign="top">
+	<%--<jsp:include page="loginTitle.jsp" />--%>
       <html:form action="Logon.do" enctype="multipart/form-data">
 <p class="homeMainText">Please log in below if you are a registered user: </p>
 <table width="100%" border="0">
@@ -55,5 +59,6 @@
 <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
 <META HTTP-EQUIV="Expires" CONTENT="-1">
 </HEAD>
+</div>
 </html>
 

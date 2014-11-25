@@ -13,22 +13,29 @@
         <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
         <META HTTP-EQUIV="Expires" CONTENT="-1">
         <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
+        <link href="layout.css" rel="stylesheet" type="text/css" />
+        <link href="SpryMenuBarHorizontal.css" rel="stylesheet" type="text/css" />
+        <link href="boilerplate.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="respond.min.js"></script>
     </head>
-    
+    <div class="gridContainer clearfix">
+        <div class=content">
     <body>
         <jsp:include page="homeTitle.jsp" />
-        <table width="1000" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
+        <table width="100%" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
             <tr> 
-                <td width="17%" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle"> 
+                <%--<td width="17%" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle"> 
                     <jsp:include page="menuHome.jsp" />
-                </td>
-                <td width="83%" align="left" valign="top">
+                </td> --%>
+                <td width="100%" align="left" valign="top">
+                    <%--
                     <logic:equal name="registrationForm" property="update" value="true">
                         <jsp:include page="updateAccountTitle.jsp" />
                     </logic:equal>
                     <logic:notEqual name="registrationForm" property="update" value="true">
                         <jsp:include page="registrationTitle.jsp" />
                     </logic:notEqual>
+                    --%>
                     <html:form action="Registration.do">
                         <input type="hidden" name="forward" value="confirm">
                         <p class="homeMainText">Please enter the following information. (* indicates required 
@@ -188,10 +195,12 @@
                 </html:form></td>
             </tr>
         </table>
+        </div>
     <jsp:include page="footer.jsp" /></body>
     <HEAD>
         <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
         <META HTTP-EQUIV="Expires" CONTENT="-1">
     </HEAD>
+    </div>
 </html>
 

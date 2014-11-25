@@ -7,7 +7,12 @@
 <%@page isErrorPage="true"%>
 
 <html>
-<head><title> Error</title></head>
+<head><title> Error</title>
+<link href="SpryMenuBarHorizontal.css" rel="stylesheet" type="text/css" />
+<link href="boilerplate.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="respond.min.js"></script>
+</head>
+<div class="gridContainer clearfix">
 <body>
     <h2>Error</h2>
     <hr>
@@ -20,4 +25,5 @@
         <bean:write name="exception"/>
     </logic:present>
 </body>
+</div>
 </html>

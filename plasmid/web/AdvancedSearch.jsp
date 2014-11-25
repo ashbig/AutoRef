@@ -11,20 +11,23 @@
 <head>
 <title>PlasmID Database</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<link href="plasmidstyle.css" rel="stylesheet" type="text/css">
+<link href="plasmidstyle.css" rel="stylesheet" type="text/css"> <link href="SpryMenuBarHorizontal.css" rel="stylesheet" type="text/css" />
+<link href="boilerplate.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="respond.min.js"></script>
 </head>
+     <div class="gridContainer clearfix">
 
 <body>
 <jsp:include page="orderTitle.jsp" />
-<table width="1000" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
+<table width="100%" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
   <tr> 
-    <td width="17%" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle"> 
+    <%--<td width="17%" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle"> 
       <jsp:include page="menu.jsp" />
-	</td>
-    <td width="83%" align="left" valign="top">
-	<jsp:include page="advancedSearchTitle.jsp" />
+	</td>--%>
+    <td width="100%" align="left" valign="top">
+	<%--<jsp:include page="advancedSearchTitle.jsp" />--%>
       <html:form action="AdvancedSearch.do">
-          
+          <p class='mainbodytexthead'>Text Search Tool</p>       
 <table width="100%" border="0">
   <tr> 
     <td width="15%" class="formlabel">Gene name</td>
@@ -35,7 +38,7 @@
         </html:select>
     </td>
     <td width="36%">
-        <html:text styleClass="itemtext" property="geneName" size="50"/>
+        <html:text styleClass="itemtext" property="geneName" size="30"/>
     </td>
     <!--
     <td class="formlabel" width="18%">
@@ -53,7 +56,7 @@
         </html:select>
     </td>
     <td width="36%">
-        <html:text styleClass="itemtext" property="vectorName" size="50"/>
+        <html:text styleClass="itemtext" property="vectorName" size="30"/>
     </td>
     <!--
     <td width="18%">
@@ -71,7 +74,7 @@
         </html:select>
     </td>
     <td width="36%">
-        <html:text styleClass="itemtext" property="vectorFeature" size="50"/>
+        <html:text styleClass="itemtext" property="vectorFeature" size="30"/>
     </td>
     <!--
     <td width="18%">
@@ -89,7 +92,7 @@
         </html:select>
     </td>
     <td width="36%">
-        <html:text styleClass="itemtext" property="authorName" size="50"/>
+        <html:text styleClass="itemtext" property="authorName" size="30"/>
     </td>
     <!--
     <td width="18%">
@@ -106,7 +109,7 @@
         </html:select>
     </td>
     <td width="36%">
-        <html:text styleClass="itemtext" property="pmid" size="50"/>
+        <html:text styleClass="itemtext" property="pmid" size="30"/>
     </td>
     <!--
     <td width="18%">
@@ -115,7 +118,7 @@
     </td>
     -->
   </tr>
-  <tr> 
+  <!--<tr> 
     <td width="15%" class="formlabel">Species</td>
     <td colspan="2">
         <html:select property="species" styleClass="itemtext">
@@ -127,8 +130,8 @@
           <html:radio property="pmidAndOr" value="and"/>
           <html:radio property="pmidAndOr" value="or"/>
     </td>
-    -->
-  </tr>
+    
+  </tr> -->
   
   <logic:equal name="psi" value="1">
   <tr> 
@@ -147,7 +150,7 @@
         </html:select>
     </td>
     <td width="36%">
-        <html:text styleClass="itemtext" property="pdbid" size="50"/>
+        <html:text styleClass="itemtext" property="pdbid" size="30"/>
     </td>
     <td class="itemtext">
         (use * to include all)
@@ -167,7 +170,7 @@
         </html:select>
     </td>
     <td width="36%">
-        <html:text styleClass="itemtext" property="targetid" size="50"/>
+        <html:text styleClass="itemtext" property="targetid" size="30"/>
     </td>
     <!--
     <td width="18%">
@@ -264,5 +267,6 @@
   </tr>
 </table> 
 <jsp:include page="footer.jsp" /></body>
+     </div>
 </html>
 

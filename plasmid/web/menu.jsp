@@ -1,3 +1,4 @@
+<!-- old nav bar no longer needed
 <table width="136" border="0">
   <tr> 
     <td height="31" align="center" valign="middle"><font size="2" face="Verdana, Arial, Helvetica, sans-serif">
@@ -33,7 +34,7 @@
         </tr>
         <!--<tr> 
           <td height="15" class="lftsubtxt">- <a href="PrepareAdvancedSearch.do?psi=1" class="leftsubnavtext">PSI-MR search</a></td>
-        </tr>-->
+        </tr>
         <tr> 
           <td height="15" class="lftsubtxt">- <a href="<%=request.getContextPath( )%>/PrepareBlast.do" class="leftsubnavtext">blast search</a></td>
         </tr>
@@ -89,7 +90,7 @@
         </tr>
         <!--<tr> 
           <td height="15" class="lftsubtxt">- <a href="GetAllVectors.do?PSI=true" class="leftsubnavtext">PSI empty vectors</a></td>
-        </tr>-->
+        </tr>
       </table></td>
   </tr>
   <tr> 
@@ -103,3 +104,4 @@
       </table></td>
   </tr>
 </table>
+-->

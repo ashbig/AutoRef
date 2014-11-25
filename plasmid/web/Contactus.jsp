@@ -10,18 +10,25 @@
 <title>PlasmID Database</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
+<link href="layout.css" rel="stylesheet" type="text/css" />
+<link href="SpryMenuBarHorizontal.css" rel="stylesheet" type="text/css" />
+<link href="boilerplate.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="respond.min.js"></script>
+        <!--<script type="text/javascript" src="SpryMenuBar.js"></script>  code from dreamweaver doesn't work, submenu action re-done with css  
+        <script type="text/javascript">
+        var MenuBar1 = new Spry.Widget.MenuBar("MenuBar1", {imgDown:"SpryMenuBarDownHover.gif", imgRight:"SpryMenuBarRightHover.gif"});</script> -->
 </head>
-
+<div class="gridContainer clearfix">
 <body>
 <jsp:include page="contactTitle.jsp" />
-<table width="1000" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
-<TBODY>
-    <TR> 
-        <TD width="100%">
-<p class="homeMainText">PlasmID Contact Information</p>
-<table width="100%" border="0">
-  <tr> 
-    <td width="58%" height="444" valign="top"> 
+<!--
+old pic of biobank
+<div class="aside">
+    <img src="biobank_arm_no_effect.gif" width="250" height="396"> 
+            </div>-->
+<div class="content">
+<!--<p class="mainbodytexthead">PlasmID Contact Information</p>
+
       <p class="mainbodytext">The <a href="http://dnaseq.med.harvard.edu/" title="DNA Resource Core" target="_blank">DF/HCC 
         DNA Resource Core</a> provides DNA sequencing services in addition to 
         plasmid repository services. </p>
@@ -30,29 +37,34 @@
         at <a href="http://hms.harvard.edu/hms/home.asp" title="Harvard Medical School" target="_blank">Harvard 
         Medical School</a>.</p>
       <p class="mainbodytext">We are located  in the Seeley G. Mudd building at the Harvard Medical School in Boston.</p>
-      <blockquote>
-        <p class="mainbodytext"><strong>Mailing address:</strong><br>
+     -->
+ <p class="mainbodytexthead">Contact Info:</p>
+ 
+ <p class="mainbodytext"><u>Mailing address:</u><br>
         C2 Room 204<br>
         240 Longwood Ave<br>
         Boston, MA 02115</p>
-        <p class="mainbodytext"><strong>Remit Payment To:</strong><br>
+        <p class="mainbodytext"><u>Remit Payment To:</u><br>
           Harvard Medical School<br>
           Dept. BCMP, C1-214<br>
           240 Longwood Ave.<br>
           Boston, MA 02115</p>
-          </blockquote>
-          <p class="mainbodytext"><strong>Contact Info:</strong><br>
-          Questions about PlasmID? Please contact <a href="mailto:plasmidhelp@hms.harvard.edu">PlasmID help</a>.<br>
-          Questions about Material Transfer Agreements (MTAs)? Contact <a href="mailto:plasmidMTA@hms.harvard.edu">MTA help</a>.</p>
-          </td>
-    <td width="42%" align="center" valign="middle"><img src="biobank_arm_no_effect.gif" width="250" height="396"> 
-      <p class="homepageLink">&nbsp;</p></td>
-  </tr>
-</table>
-        </TD>
-    </TR>
-  </TBODY>
-</table>
-<jsp:include page="footer.jsp" /></body>
+ 
+
+          <p class="mainbodytext">
+          <u>Email</u><br>
+          <a href="mailto:plasmidhelp@hms.harvard.edu">plasmidhelp@hms.harvard.edu</a>: General Help Email<br>
+           <a href="mailto:plasmidMTA@hms.harvard.edu">plasmidMTA@hms.harvard.edu</a>: Questions about Material Transfer Agreements (MTAs)<br>
+          <a href='dnaresource_finance@hms.harvard.edu'>dnaresource_finance@hms.harvard.edu</a>: Payment or Financial Questions</a></p>
+          
+          <p class="mainbodytext">
+          <u>Phone</u><br>
+          Lab: 617-432-7708</p>
+
+          </div>
+            
+ 
+  
+<jsp:include page="footer.jsp" /></body></div>
 </html>
 

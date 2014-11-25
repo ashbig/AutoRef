@@ -4,8 +4,12 @@
 <title>Untitled Document</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
+<link href="SpryMenuBarHorizontal.css" rel="stylesheet" type="text/css" />
+<link href="boilerplate.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="respond.min.js"></script>
 </head>
-
+<div class="gridContainer clearfix">
+<jsp:include page="signinMenuBar.jsp" />
 <body>
 <p align="center" class="homepageText2">Explanation of Terms Used by PlasmID</p>
 <table width="100%" border="0">
@@ -175,9 +179,10 @@
 <table width="100%" border="0">
   <tr> 
     <td class="tablebody">Still have questions? Read our <a href="FAQ.jsp">FAQs</a> or contact 
-      <a href="mailto:catherine_cormier@hms.harvard.edu">Catherine Cormier</a>.</td>
+      <a href="mailto:plasmidhelp@hms.harvard.edu">plasmidhelp@hms.harvard.edu</a>.</td>
   </tr>
 </table>
 
 </body>
+</div>
 </html>

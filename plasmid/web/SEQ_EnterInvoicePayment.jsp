@@ -12,17 +12,21 @@
         <title>PlasmID Database</title>
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
         <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
-    </head>
+<link href="SpryMenuBarHorizontal.css" rel="stylesheet" type="text/css" />
+<link href="boilerplate.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="respond.min.js"></script>
+</head>
+<div class="gridContainer clearfix">
     
     <body>
         <jsp:include page="homeTitle.jsp" />
-        <table width="1000" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
+        <table width="100%" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
             <tr> 
-                <td width="17%" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle"> 
+                <%--<td width="17%" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle"> 
                     <jsp:include page="seq_menuHome.jsp" />
-                </td>
-                <td width="83%" align="left" valign="top">
-                    <jsp:include page="seq_invoiceTitle.jsp" />
+                </td>--%>
+                <td width="100%" align="left" valign="top">
+                    <%--<jsp:include page="seq_invoiceTitle.jsp" />--%>
                     
                     <logic:present name="ordermessage">
                         <p class="text"><bean:write name="ordermessage"/></p>
@@ -82,4 +86,5 @@
             </tr>
         </table>
     <jsp:include page="footer.jsp" /></body>
+</div>
 </html>

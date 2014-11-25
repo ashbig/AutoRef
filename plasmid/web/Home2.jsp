@@ -11,10 +11,14 @@
         <title>PlasmID Database</title>
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
         <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
-    </head>
+<link href="SpryMenuBarHorizontal.css" rel="stylesheet" type="text/css" />
+<link href="boilerplate.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="respond.min.js"></script>
+</head>
+<div class="gridContainer clearfix">
     
     <body>
-        <table width="1000" height="86" border="0" align="center">
+        <table width="100%" height="86" border="0" align="center">
   <tr> 
     <td width="100%" align="center" valign="bottom" class="title"> 
       <img height="83" width="77" src="dnacore.jpg"/><img height="81" width="222" src="PlasmID_logo.jpg"/></td>
@@ -172,5 +176,6 @@
   </tr>
 </table>
     </body>
+</div>
 </html>
 

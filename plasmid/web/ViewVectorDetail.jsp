@@ -12,7 +12,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
 </head>
-
+<div class="gridContainer clearfix">
+    
+<jsp:include page="signinMenuBar.jsp" /> 
 <body>
 <p class="text">Vector: <bean:write name="vector" property="name"/></p>
 <table width="700" border="0">
@@ -150,4 +152,5 @@
 </table>
 </logic:present>
 </body>
+</div>
 </html>

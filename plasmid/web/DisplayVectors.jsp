@@ -17,19 +17,18 @@ return(document.cookie.match('(^|; )'+name+'=([^;]*)')||0)[2]
 }
 </script>
 </head>
+<div class="gridContainer clearfix">
 
 <body onScroll="document.cookie='ypos=' + window.pageYOffset" onLoad="window.scrollTo(0,readCookie('ypos'))">
 <jsp:include page="orderTitle.jsp" />
-<table width="1000" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
+<table width="100%" height="406" border="0" align="left" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
   <tr> 
-    <td width="136" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle"> 
-      <jsp:include page="menu.jsp" />
-	</td>
-    <td width="864" align="left" valign="top">
-	<jsp:include page="viewAllVectorsTitle.jsp" />
+    
+    <td width="100%" align="left" valign="top">
+	<%--<jsp:include page="viewAllVectorsTitle.jsp" />--%>
       <html:form action="SetVectorDisplay.do">
-
-<p class="mainbodytexthead">List of search terms found</p>
+<div class="content">
+<!--<p class="mainbodytexthead">List of search terms found</p>-->
 <p class="text">This is only clones without inserts ('empty vectors').  
 Many other vectors are represented in the repository 
 (try 'search by reference sequence' or 'view collection').</P>
@@ -79,6 +78,7 @@ Many other vectors are represented in the repository
 </td>
   </tr>
 </table>
-<jsp:include page="footer.jsp" /></body>
-</html>
+</div>
+<jsp:include page="footer.jsp" /></body></div>
+</html>]
 

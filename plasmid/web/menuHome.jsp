@@ -1,6 +1,7 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ page import="plasmid.Constants" %> 
 <%@ page import="plasmid.coreobject.User" %> 
+<!-- left nav bar no longer used
 
 <table width="136" border="0">
   <tr> 
@@ -75,3 +76,5 @@
   </tr>
   </logic:notPresent>
 </table>
+
+-->

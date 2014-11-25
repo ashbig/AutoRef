@@ -1,6 +1,6 @@
-<%@ page language="java" %>
+<%@ page language="java"%>
 <%@ page errorPage="ProcessError.do"%>
-<%@ page import="plasmid.Constants" %> 
+<%@ page import="plasmid.Constants"%> 
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -10,48 +10,47 @@
     <head>
         <title>PlasmID Database</title>
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-        <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
+        <link href="layout.css" rel="stylesheet" type="text/css" />
+        <link href="SpryMenuBarHorizontal.css" rel="stylesheet" type="text/css" />
+        <link href="boilerplate.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="respond.min.js"></script>
+        <!--<script type="text/javascript" src="SpryMenuBar.js"></script>  code from dreamweaver doesn't work, submenu action re-done with css  
+        <script type="text/javascript">
+        var MenuBar1 = new Spry.Widget.MenuBar("MenuBar1", {imgDown:"SpryMenuBarDownHover.gif", imgRight:"SpryMenuBarRightHover.gif"});</script> -->
     </head>
-    
-    <body>
-        <jsp:include page="homeTitle.jsp" /><table width="973"  border="0">
-            
-            <tr>
-                <td height="250"><table width="800" height="259" border="0" align="center" bgcolor="#EFEFEF" id="form">
-                        <tr>
-                            <td width="800" height="112">
- 
-                                <p align="left"><span class="mainbodytext">The Mission of the DNA Resource CORE is to provide member in the DF/HCC, Harvard Affiliates, and outside researchers with quality and inexpensive <a target="_blank" href="http://dnaseq.med.harvard.edu/">DNA sequencing services</a> and <a href="http://plasmid.med.harvard.edu/PLASMID/Home.jsp">sequence verified plasmid constructs</a>, paired with comprehensive quality control and customer support.&nbsp;        
-                                    </span>
-                                <hr> 
-                                    <p align="center" class="formlabel" style="font-size: 16px"><a href="faces/GeneSearch.xhtml">Search here for the most up to date Human & Mouse cDNAs we have available! </a></p> 
-                                    <p align="center" class="formlabel" style="font-size: 14px"><a href="OrderOverview.jsp">For other clone types or collection inquiries please see our Search & Order page. </a></p>
-                                <hr>
-                                <p align="left" class="mainbodytext">Click <a href="TermAndCondition.jsp">here</a> for the <strong class="mainbodytext">terms and conditions</strong> for receiving plasmids from the repository.</p>
-                            <p align="left" class="mainbodytext"> Click <a href="cloning_strategies.htm" target="_blank">here</a> to view the <strong>cloning methods</strong> used to create many of the  plasmids.          </p>        </td>
-                        </tr>
-                </table></td>
-            </tr>
-            <tr>
-                <td><table width="800" border="5" align="center" bordercolor="#999999" id="gray">
-                        <tr>
-                            <td width="800" height="70">
-                                <p/>
-                                <p class="mainbodytext">What's New?
-                                <ul class="mainbodytext">
-                                    <li>Vector Collection organized by downstream use</li>
-                                    <li>Viral packaging plasmids and scramble hairpin now available [<a href="http://plasmid.med.harvard.edu/PLASMID/GetVectorsByType.do?type=viral%20production">go there</a>]</li>
-                                    <li>hORFV8.1 in pENTR223 now available [PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed?cmd=Search&db=pubmed&term=21706014" target="_blank">21706014]</a></li>
-                                    <li>Complete collection from <a href="http://www.orfeomecollaboration.org/" target="_blank">ORFeome Collaboration</a> now available</li>
-                                </ul>
-                                </p>
-                            </td>
-                        </tr>
-                </table></td>
-            </tr>
-        </table>
-        <table width="100%" border="0" cellspacing="1" cellpadding="4">
-            <tr align="left" valign="top" bgcolor="#6699cc" class="homepageText3"> 
+    <div class="gridContainer clearfix">
+
+
+        <jsp:include page="homeTitle.jsp" /><table width="80%"  border="0">
+
+    <p class="mainbodytext"><font size="4"> 
+        The Mission of the DNA Resource CORE is to provide member in the DF/HCC, Harvard Affiliates, and outside researchers with quality and inexpensive <a target="_blank" href="http://dnaseq.med.harvard.edu/">DNA sequencing services</a> and <a href="http://plasmid.med.harvard.edu/PLASMID/Home.jsp">sequence verified plasmid constructs</a>, paired with comprehensive quality control and customer support.</p>                          
+    <p><a href="faces/GeneSearch.xhtml">Search here for the most up to date Human & Mouse cDNAs we have available! </a></p> 
+    <br><a href="OrderOverview.jsp">For other clone types or collection inquiries please see our Search & Order page. </a></br>
+    <p align="left" class="mainbodytext">Click <a href="TermAndCondition.jsp">here</a> for the <strong class="mainbodytext">terms and conditions</strong> for receiving plasmids from the repository.</p>
+<p align="left" class="mainbodytext"> Click <a href="cloning_strategies.htm" target="_blank">here</a> to view the <strong>cloning methods</strong> used to create many of the  plasmids.          </p>        </td>
+What's New?                          
+<br/>&#149 Vector Collection organized by downstream use
+<br/>&#149 Viral packaging plasmids and scramble hairpin now available [<a href="http://plasmid.med.harvard.edu/PLASMID/GetVectorsByType.do?type=viral%20production">go there</a>]                                   hORFV8.1 in pENTR223 now available [PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed?cmd=Search&db=pubmed&term=21706014" target="_blank">21706014]</a></li>
+<br/>&#149 Complete collection from <a href="http://www.orfeomecollaboration.org/" target="_blank">ORFeome Collaboration</a> now available
+<br></br> 
+<br></br>
+<br></br>
+<br></br>
+<br></br>
+<br></br>
+<br></br>
+<br></br>
+<br></br>
+<br></br>
+<br></br>
+<br></br>
+<br></br>
+
+
+
+        <!--<table width="100%" border="0" cellspacing="1" cellpadding="4">
+            <tr align="left" valign="top" bgcolor="#6699CC" class="homepageText3"> 
                 <td width="12%" class="homeMainText"> DF/HCC Member Institutions:</td>
                 <td width="12%" class="homeMainText"><a href="http://www.bidmc.harvard.edu/sites/bidmc/home.asp" title="Beth Israel Deaconess Medical Center" target="_blank">Beth 
                 Israel Deaconess Medical Center</a></td>
@@ -69,17 +68,17 @@
                 General Hospital</a></td>
             </tr>
         </table>
+        -->
         
-        <p align="center"><span class="mainbodytext">
-            <a href="http://www.dfhcc.harvard.edu" target="_blank"><img src="DFHCC_NCI_logo.jpg" width="379"  height="46"></a>&nbsp;
-        <a href="http://hms.harvard.edu" target="_blank"><img src="HMS_logo.jpg" width="66" height="63"></a></span>
         
-        </TD>
+        <!--</TD>
         </TR>
         </TBODY>
-        </table>
+        </table>-->
     <jsp:include page="footer.jsp" /></body>
+    </div>
 </html>
+
 
 
 

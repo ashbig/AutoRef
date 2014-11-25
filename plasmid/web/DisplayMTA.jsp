@@ -45,7 +45,7 @@ function Disab(num) {
 </SCRIPT>
 
 </head>
-
+<div class="gridContainer clearfix">
 <body>
 <jsp:include page="orderTitle.jsp" />
 <table width="1000" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
@@ -86,4 +86,5 @@ Please read the MTA to be sure you understand the obligations herein, which may 
   </tr>
 </table>
 <jsp:include page="footer.jsp" /></body>
+</div>
 </html>

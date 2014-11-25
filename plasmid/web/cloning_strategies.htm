@@ -1,4 +1,9 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<%@ page language="java" %>
+<%@ page errorPage="ProcessError.do"%>
+
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <html>
 <head>
 <title>Untitled Document</title>
@@ -27,8 +32,9 @@ body {
 -->
 </style>
 </head>
-
+<div class="gridContainer clearfix">
 <body>
+<jsp:include page="signinMenuBar.jsp" />
 <p align="center" class="homepageText2 style4"><strong>Information about Cloning Methods</strong></p>
 <p class="mainbodytext style5"><strong><u>Included on this  page:</u></strong></p>
 <pre><span class="homeMainText">Restriction Digest Approaches: &nbsp;<span class="style1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
@@ -101,4 +107,5 @@ MAGIC approach (Elledge Lab, HMS)</strong></span></pre>
 <p class="mainbodytext"><u>In THE DF/HCC DNA Resource Core Repository (PlasmID)</u><br>
   Examples include the set of pPRIME-(marker)-recipient clones  for shRNA-based approaches that was shared with the repository by the Elledge  lab (HHMI/Harvard Medical School).</p>
 </body>
+</div>
 </html>

@@ -10,20 +10,27 @@
 <title>PlasmID Database</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
+       <link href="layout.css" rel="stylesheet" type="text/css" />
+        <link href="SpryMenuBarHorizontal.css" rel="stylesheet" type="text/css" />
+        <link href="boilerplate.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="respond.min.js"></script>
 </head>
+     <div class="gridContainer clearfix">
 
+        
 <body>
 <jsp:include page="homeTitle.jsp" />
-<table width="1000" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
+<table width="100%" border="0" align="left" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
   <tr> 
-    <td width="17%" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle"> 
+    <%--<td width="17%" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle"> 
       <jsp:include page="menuHome.jsp" />
-	</td>
-    <td width="83%" align="left" valign="top">
-	<jsp:include page="addInstitutionsTitle.jsp" />
+	</td>--%>
+    <td width="100%" align="left" valign="top">
+	<%--<jsp:include page="addInstitutionsTitle.jsp" />--%>
       <html:form action="CheckInstitutions.do">
 <html:errors/>
-      <table width="100%" height="118" border="0" align="center">
+<p class='mainbodytexthead'>Add New Institutions To Our Database</p>      
+<table width="100%" height="118" border="0" align="center">
         <tr> 
             <td height="10" colspan="2" class="tableheader"><strong>Please enter institution names (separate each institution with new line)</strong></td>
         </tr>
@@ -41,5 +48,6 @@
   </tr>
 </table>
 <jsp:include page="footer.jsp" /></body>
+     </div>
 </html>
 

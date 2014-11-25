@@ -1,3 +1,5 @@
+<!-- old nav element
+
 <table width="1000" height="49" border="0" align="center">
   <tr> 
     <td height="45"> 
@@ -18,3 +20,4 @@
       </table></td>
   </tr>
 </table>
+-->
