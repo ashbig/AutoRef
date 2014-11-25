@@ -6,6 +6,7 @@
  <link href="boilerplate.css" rel="stylesheet" type="text/css" />
  <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
  <link rel="shortcut icon" href="dnacore.ico">
+ <script src="respond.min.js"></script>
 
 <br>
 <br>
