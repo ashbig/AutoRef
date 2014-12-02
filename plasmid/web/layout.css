@@ -189,7 +189,7 @@ img, object, embed, video {
 	clear: both;
 	float: left;
 	margin-left: 0;
-	width: 24.1758%;
+	width: 379px;
 	display: block;
 }
 #footer {
@@ -201,4 +201,11 @@ img, object, embed, video {
 }
 
 
+}
+#legal {
+	clear: both;
+	float: left;
+	margin-left: 0;
+	width: 5%;
+	display: block;
 }

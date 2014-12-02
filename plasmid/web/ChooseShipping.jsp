@@ -35,10 +35,10 @@
 
 <html:errors/>
 
-<p class="mainbodytexthead">
+<p class="mainbodytext">
           <i>If you do not want to complete your order now, you can save your cart and return to check-out another time (remember to sign in to see your saved cart).</i>
 </p>
-<p class="mainbodytexthead">
+<p class="mainbodytext">
               If you have any questions, please contact <a href="mailto:plasmidhelp@hms.harvard.edu">PlasmID help</a>.   
 </p>
 
@@ -69,7 +69,7 @@
 
 <p class="mainbodytexthead">
               Shipping Options:
-              <ol class="mainbodytexthead">
+              <ol class="mainbodytext">
                   <li>Include a FedEx account number at check-out and we will charge your account.</li>
                   <li>If you don't provide a FedEx account number, we will apply a standard shipping charge at check-out.</li>
                   <ul>  
@@ -100,7 +100,7 @@
 
 <p class="mainbodytexthead">
               Additional Options:
-              <ul class="mainbodytexthead">
+              <ul class="mainbodytext">
                   <li>Platinum QC Service: $6 for Harvard University and DF/HCC members; $7 for other academics and non-profits; $8 for commercial users.<p></li>
                   <li>Our platinum QC service has already been selected for your convenience. Please only remove this service if you are prepared to perform your own validation before any downstream experiments. Be aware that the cost of your construct lies within retrieval and distribution and we make no warranty on these clones. Removal of this service will not expedite your order in any way.<p></li>
                   <li>When you order a Platinum Clone we will perform end read sequencing at our in house sequencing facility. Our bench scientists will align the resulting sequence with the construct details that we list, saving you time, effort and money. If a clone fails Platinum QC validation you will be entitled to a refund or may select any replacement construct from our library. For each clone ordered with Platinum QC you will receive not only the standard glycerol stock, but additionally an aliquot of plasmid DNA, and the individual sequencing read will be made available through your account profile. If you have any additional questions about our Platinum Service please feel free to contact <a href="mailto:plasmidhelp@hms.harvard.edu">PlasmID help</a>.</li>

@@ -21,7 +21,7 @@
         <p class="mainbodytext"><font size= "4"><strong>Answers to Frequently Asked Questions &nbsp</strong></font><br>
         <p></p>
 
-<table width="100%" border="3" cellpadding="10"> 
+<table width="100%" border="0" cellpadding="0"> 
       <td class="mainbodytext" align="Justify"><p class="mainbodytext"><strong><u>Order Status</u></strong><br>
             <a href="#When">When will my order arrive?</a><br>
             <a href="#Troubleshooting">What does the Troubleshooting Status mean?</a><br>

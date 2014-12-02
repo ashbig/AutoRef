@@ -41,7 +41,7 @@
           <td>Commercial Users</td>
           <td align="right">$78.00</td>
         </tr>
-        <tr class="tableinfo"><td colspan="2"><br>*Please click <a target="_blank" href="http://plasmid.med.harvard.edu/PLASMID/PIList.html">here</a> for our current list of DF/HCC members.</td></tr>
+        <tr class="tableinfo"><td colspan="2"><br>*Please click <a href="PIList.jsp">here</a> for our current list of DF/HCC members.</td></tr>
       </table>
       
       

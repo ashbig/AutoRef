@@ -23,12 +23,12 @@
 
         <jsp:include page="homeTitle.jsp" /><table width="80%"  border="0">
 
-    <p class="mainbodytext"><font size="4"> 
+    <p class="mainbodytext"> 
         The Mission of the DNA Resource CORE is to provide member in the DF/HCC, Harvard Affiliates, and outside researchers with quality and inexpensive <a target="_blank" href="http://dnaseq.med.harvard.edu/">DNA sequencing services</a> and <a href="http://plasmid.med.harvard.edu/PLASMID/Home.jsp">sequence verified plasmid constructs</a>, paired with comprehensive quality control and customer support.</p>                          
-    <p><a href="faces/GeneSearch.xhtml">Search here for the most up to date Human & Mouse cDNAs we have available! </a></p> 
+    <p><a href="faces/GeneSearch.xhtml">Search here for the most up to date Human & Mouse cDNAs we have available! </a>
     <br><a href="OrderOverview.jsp">For other clone types or collection inquiries please see our Search & Order page. </a></br>
-    <p align="left" class="mainbodytext">Click <a href="TermAndCondition.jsp">here</a> for the <strong class="mainbodytext">terms and conditions</strong> for receiving plasmids from the repository.</p>
-<p align="left" class="mainbodytext"> Click <a href="cloning_strategies.htm" target="_blank">here</a> to view the <strong>cloning methods</strong> used to create many of the  plasmids.          </p>        </td>
+    Click <a href="TermAndCondition.jsp">here</a> for the <strong class="mainbodytext">terms and conditions</strong> for receiving plasmids from the repository. <br>
+    Click <a href="cloning_strategies.htm" target="_blank">here</a> to view the <strong>cloning methods</strong> used to create many of the  plasmids.          </p>        </td>
 What's New?                          
 <br/>&#149 Vector Collection organized by downstream use
 <br/>&#149 Viral packaging plasmids and scramble hairpin now available [<a href="http://plasmid.med.harvard.edu/PLASMID/GetVectorsByType.do?type=viral%20production">go there</a>]                                   hORFV8.1 in pENTR223 now available [PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed?cmd=Search&db=pubmed&term=21706014" target="_blank">21706014]</a></li>

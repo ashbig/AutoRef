@@ -35,7 +35,8 @@ img
 }
 
 
-Named Classes (alphabetically) 
+/*Named Classes (alphabetically)*/
+
 .alert {font-family:Arial,Helvetica,sans-serif; font-size:12px; color:#FF0000;}
 .alertheader {font-family:Arial,Helvetica,sans-serif; font-size:12px; font-weight:bold; color:#FF0000;}
 .alertbig {font-family:Arial,Helvetica,sans-serif; font-size:14px; font-style:italic; color:#FF0000;}
@@ -168,3 +169,12 @@ h1.title {margin-left:10px; padding-left:20px; background-image: url(file:///Z|/
 #sidebarcol {font-family:Arial,Helvetica,sans-serif; color:#666666; BORDER-RIGHT:#cccccc 1px solid; PADDING-RIGHT:10px; BORDER-TOP:#cccccc 1px solid; PADDING-LEFT:10px; BACKGROUND:#ffffff; PADDING-BOTTOM:10px; MARGIN:0px; BORDER-LEFT:#cccccc 1px solid; WIDTH:200px; PADDING-TOP:10px; BORDER-BOTTOM:#cccccc 1px solid;}
 #sidebarcol H1{font-family: Arial, Helvetica, sans-serif; font-size: 12px; background-color: #E0E0E0; color: #000000; text-align:center; font-weight: bold;}
 .bartext {color: #FFFFFF;}
+.subtletext {
+    font-family:Arial,Helvetica,sans-serif; font-size:1em; color:#A9A9A9;
+}
+.subtletext a:link {
+    font-family:Arial,Helvetica,sans-serif; font-size:1em; color:#A9A9A9;
+}
+.subtletext a:visited {
+    font-family:Arial,Helvetica,sans-serif; font-size:1em; color:#A9A9A9;
+}

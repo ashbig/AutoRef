@@ -48,22 +48,22 @@ function Disab(num) {
 <div class="gridContainer clearfix">
 <body>
 <jsp:include page="orderTitle.jsp" />
-<table width="1000" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
+<table width="100%" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
   <tr> 
-    <td width="17%" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle"> 
+    <%--<td width="17%" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle"> 
       <jsp:include page="menu.jsp" />
 	</td>
     <td width="83%" align="left" valign="top">
-	<jsp:include page="checkoutTitle.jsp" />
+	<jsp:include page="checkoutTitle.jsp" />--%>
 
-<p class="mainbodytexthead">
+<p class="mainbodytext">
    Your institution has pre-approved the transfer of plasmid clones in our collection that are covered by our standard Plasmid Transfer Agreement (MTA).  The plasmid(s) you requested fall into the standard MTA category.  Thus, you do not need an institutional signature on this document.  
 </p>
-<p class="mainbodytexthead">
+<p class="mainbodytext">
 Please read the MTA to be sure you understand the obligations herein, which may include restrictions on commercial use and/or patentability of the material. To indicate your agreement to these terms, please click "Agree" below.  
 </p>
 <p><b>Please insure that you have complied with all of your institution's internal regulations for material transfer before placing this order.</b></p>
-<p class="mainbodytexthead">
+<p class="mainbodytext">
     If you have any questions, contact us at <a href="mailto:plasmidMTA@hms.harvard.edu">plasmidMTA@hms.harvard.edu</a>.
 </p>
 

@@ -1,22 +1,19 @@
 <div id="footer">
     
-    <hr>
-    
-  <p align="center" class="mainbodytext">Still have questions? Please contact <a href="mailto:plasmidhelp@hms.harvard.edu">PlasmID help</a>.
-  <br>
-  <br>
+<hr>
+<p align="left" class="subtletext">
+<a href="http://www.dfhcc.harvard.edu" target="_blank"><img src="DFHCC_NCI_logo.jpg" width="379"  height="46"></a>   
+<p align="left" class="subtletext">
+    <!--Questions? Please contact <a href="mailto:plasmidhelp@hms.harvard.edu">PlasmID help</a>.<br>
   <!--<a href="Home.jsp" class="footertext">Home</a> 
               &#149; <a href="Submission.jsp" class="footertext">Plasmid 
               Submission</a> &#149; <a href="OrderOverview.jsp" class="footertext">Search & Order</a> 
               &#149; <a href="Contactus.jsp" class="footertext">Contact Us</a>
               <br><br> -->
-        PlasmID was created and is maintained 
-          by the <a href="http://dnaseq.med.harvard.edu" target="_blank">DF/HCC 
-          DNA Resource Core</a>
-  <br><br>
-©2004-2015 Harvard Medical School</p><hr>
-  <p align="left"><span class="mainbodytext">
-            <a href="http://www.dfhcc.harvard.edu" target="_blank"><img src="DFHCC_NCI_logo.jpg" width="379"  height="46"></a>
+
+<a href="TermAndCondition.jsp"style="text-decoration: none">Terms and Conditions</a><br>
+©2004-2015 Harvard Medical School<br>
+PlasmID was created and is maintained by the <a href="http://dnaseq.med.harvard.edu" style="text-decoration: none">DF/HCC DNA Resource Core</a> at Harvard Medical School</p>
 <!--Google Analytics tracker-->
     <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

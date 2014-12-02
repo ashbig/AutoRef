@@ -57,62 +57,51 @@
         <br>
         <tr>--%>
     <td height="40" colspan="2" valign="top"><div align="center">
-      <span class="homepageText2  style3" style="font-size:20px"><br>You can search for clones using various criteria</span><br>
-      <span class="itemtext">PLEASE LOG IN BEFORE SEARCHING FOR CLONES! </span>    
+      <span class="mainbodytexthead"><br>You can search for clones using various criteria</span><br>
+      <span class="mainbodytext">PLEASE LOG IN BEFORE SEARCHING FOR CLONES! </span>    
         </div></td>
         </tr>   
       <table width="90%" border="3" align="center" id="gray">
-          <tr class="tableheader" style="font-size:20px">
-            <td width="30%" bgcolor="#6699CC" >Search Method</td>
-          <td width="70%"bgcolor="#6699CC">Description</td>
+          <tr class="tableheader">
+            <td width="30%">Search Method</td>
+          <td width="70%">Description</td>
         </tr>
-        <tr class="tableinfo" style="font-size:14px">
+        <tr class="tableinfo">
             <td><a href="faces/GeneSearch.xhtml">Human & Mouse Gene</a></td>
             <td align="left">Our recommended method of searching the PlasmID database. Simply enter your gene of interest and query our database against the latest reference sequence!</td>
         </tr>
-        <tr class="tableinfo" style="font-size:14px">
+        <tr class="tableinfo">
         <td><a href="PrepareAdvancedSearch.do">Text Search</a></td>
           <td align="left">Search by gene name, gene symbol, vector name, vector feature, author name, publication, or species.</td>
         </tr>
-        <tr class="tableinfo" style="font-size:14px">
+        <tr class="tableinfo">
             <td><a href="PrepareBlast.do">Blast Search</a></td>
           <td align="left">Search our database by a similarity alignment of your nucleotide or amino acid sequence.</td>
         </tr>
-        <tr class="tableinfo" style="font-size:14px">
+        <tr class="tableinfo">
             <td><a href="SearchClone.jsp">Search by Clone Identifier</a></td>
           <td align="left">Search by PlasmID, CloneID, FLH#, or other IDs. </td>
         </tr>
-        <tr class="tableinfo" style="font-size:14px">
+        <tr class="tableinfo">
             <td><a href="GetVectorPropertyTypes.do">Search by Vector</a></td>
           <td align="left">Search based on the properties of the vector such as, assay type, cloning method or expression characteristics.</td>
         </tr>
-        <tr class="tableinfo" style="font-size:14px">
+        <tr class="tableinfo">
             <td><a href="GetVectorsByType.do">Empty Vectors</a></td>
           <td align="left">View our full list of empty vectors. To narrow down the list view the search and order tool bar.</td>
         </tr>
-        <tr class="tableinfo" style="font-size:14px">
+        <tr class="tableinfo">
             <td><a href="GetVectorsByType.do">Available Collections</a></td>
           <td align="left">View the full list of all of PlasmID's available collections. The <a href="collection_overview.jsp">collection overview</a> includes common 
               names for organisms in our collection.</td>
         </tr>
       </table>
-      <br>
-      <br>        
-      <span class="homepageText2 style3" style="font-size:16px">Have additional questions? Please see our <a href="FAQ.jsp">FAQ!</a><br></span>
-      <br>        
-      <span class="homepageText2 style3"style="font-size:16px">Please give credit where credit is due!</b></span>
-      <br>
-      <span class="itemtext" style="padding-left:20px"> Click on the clone ID to find the reference(s) associated with the clone and the author(s) who donated the clone.</span><br>
-      <span class="itemtext" style="padding-left:20px">The people who constructed, published,  and donated the clone should be cited whenever you publish work that uses the clone that you ordered.<br></span>
-     </td>
-    <%--</tr>
-    <br>--%>
+      <br>      
+      <p class="mainbodytext">Have additional questions? Please see our <a href="FAQ.jsp">FAQ!</a></p>        
+      <p class="mainbodytext">Please give credit where credit is due! Click on the clone ID to find the reference(s) associated with the clone and the author(s) who donated the clone. The people who constructed, published,  and donated the clone should be cited whenever you publish work that uses the clone that you ordered.
+      </p>
+    
 
-<table width="100%" border="0">
-  <tr>
-  <td height="28" colspan="8"> <div align="center" class="homeMainText">Questions about PlasmID? Please contact <a href="mailto:plasmidhelp@hms.harvard.edu">PlasmID help</a>.</div></td>
-  </tr>
-</table>
     </td>
   </tr>
 </table>

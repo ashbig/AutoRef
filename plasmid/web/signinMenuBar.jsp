@@ -10,9 +10,9 @@
 
 <br>
 <br>
-<img height="60" src="HMS_BiochemMolPhamH.jpg" alt="BCMP">
+<a href="http://hms.harvard.edu/" target="_blank"><img height="60" src="HMS_BiochemMolPhamH.jpg" alt="BCMP"></a>
 <div id="header">          
-
+    <hr>
 <br>
 <div class="logo">
 <img height="50" src="dnacore.jpg"/>
@@ -23,10 +23,10 @@
 
 
 <h:body>
-<table width="100%" height="57" border="0" align="center">
+<table width="100%" height="12px" border="0" align="center">
             <tr> 
                 <td>
-                    <a href="http://dnaseq.med.harvard.edu" target="_blank">DNA Resource Core</a><br><br>
+                    <%--<a href="http://dnaseq.med.harvard.edu" target="_blank">DNA Resource Core</a><br><br>--%>
                     
             <logic:present name="<%=Constants.USER_KEY%>" scope="session"> 
             <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
@@ -41,7 +41,7 @@
             </logic:notPresent>
                     
               </td>
-                <td width="50%" height="50" align="right" valign="bottom" class="countrytext"> 
+                <td width="50%" height="12px" align="right" valign="bottom" class="countrytext"> 
                     <a href="ViewCart.do" border="0"><img src="shoppingcart2.gif" width="105" height="18"/></a>
                     <br>
                    <br>
@@ -102,7 +102,7 @@
          </ul>
       </li>
       
-      <li><a class="MenuBarItemSubmenu" href="OrderOverview.jsp">Plasmids</a>
+      <li><a class="MenuBarItemSubmenu" href="OrderOverview.jsp">cDNA/ORF</a>
         <ul>
           <li><a href="GeneSearch.xhtml" title= "Human and Mouse Gene Search">Human &amp; Mouse Genes</a></li>
           <li><a href="PrepareAdvancedSearch.do?psi=0" title= "Text Search">Text Search</a></li>
@@ -129,8 +129,8 @@
       <li><a href="Submission.jsp" title="Submit plasmids">Submission</a></li>
       <li><a href="GetCollectionList.do" title="View List of Collections">Collections</a></li>
       <li><a href="Pricing.jsp" title="pricing">Pricing</a></li>
-      <!--<li><a href="#" title="Cloning">Cloning</a></li>  under construction-->
-      <li><a href="Contactus.jsp">Contact Us</a></li>
+      <li><a href="cloningstrategies.jsp" title="Learn About Cloning Methods">Learn</a></li>
+      <li><a href="Contactus.jsp">Contact</a></li>
       <li><a href="AboutUs.jsp">About Us</a></li>
       </li>
     </ul>

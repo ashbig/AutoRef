@@ -20,12 +20,12 @@
     <body>
         <div class="gridContainer clearfix">
         <jsp:include page="orderTitle.jsp" />
-        <table width="1000" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
+        <table width="100%" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
             <tr> 
-                <td width="17%" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle"> 
+                <%--<td width="17%" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle"> 
                     <jsp:include page="menu.jsp" />
                 </td>
-                <td width="83%" align="left" valign="top">
+                <td width="83%" align="left" valign="top">--%>
                     <jsp:include page="viewShoppingCartTitle.jsp" />
             <p class='mainbodytexthead'>Shopping Cart Contents</p>
                     <html:errors/>
