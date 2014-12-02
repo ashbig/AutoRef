@@ -119,7 +119,7 @@ A.leftsubnavtext:visited {color:#000000;}
 A.leftsubnavtext:hover {color:#0054A6;}
 A.leftsubnavtext:active {color:#0054A6;}
 .lftsubtxt {padding-left:12px; padding-top:3px;}
-.mainbodytext {font-family:Arial,Helvetica,sans-serif; font-size:12px; color:#000000;}
+.mainbodytext {font-family:Verdana, Arial,Helvetica,sans-serif; font-size:12px; color:#000000;}
 .mainbodytext a:link {color:#CC0000; text-decoration:underline;}
 .mainbodytext a:visited {color:#CC0000; text-decoration:underline;}
 .mainbodytext a:hover {color:#666666; text-decoration:none;}

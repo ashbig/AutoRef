@@ -1,0 +1,74 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"  
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="/template/homeTemplate.xhtml">
+    <ui:define name="content">
+        <h:form id="searchForm">  
+            <p:panel id="searchPanel" header="Gene Search" style="margin-bottom:10px;">  
+                <p:messages id="messages"/> 
+                <p:panelGrid> 
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel for="genenames" value="Gene name: "/>
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="genenames" value="#{geneSearchBean.genenames}" required="true"
+                                         requiredMessage="Please enter the search term."/> 
+                        </p:column>
+                        <p:column>
+                            <p:commandButton id="submitButton" value="Search" update="resultview" action="/GeneSearch.xhtml" actionListener="#{geneSearchBean.doSearch}" ajax="false"/> 
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel for="caseid" value="Case sensitive: "/>
+                        </p:column>
+                        <p:column>
+                            <p:selectOneRadio id="caseid" value="#{geneSearchBean.caseSensitive}">  
+                                <f:selectItem itemLabel="Yes" itemValue="yes" /> 
+                                <f:selectItem itemLabel="No" itemValue="no" />
+                            </p:selectOneRadio>  
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>                                       
+                <p:panel style="width: 400px" id="filterView" header="Filters" toggleable="true" toggleSpeed="500" collapsed="#{geneSearchBean.filterToggle}"> 
+                    <p:outputLabel value="Type"/>
+                    <p:selectManyCheckbox value="#{geneSearchBean.species}" label="Species" layout="pageDirection">  
+                        <f:selectItem itemValue="9606" itemLabel="Human"/>  
+                        <f:selectItem itemValue="10090" itemLabel="Mouse" />  
+                    </p:selectManyCheckbox>  
+                    
+                    <p:outputLabel value="Type"/>
+                    <p:selectManyCheckbox value="#{geneSearchBean.vpForType}" label="Type" layout="pageDirection">  
+                        <f:selectItems value="#{geneSearchBean.allVpForType}" />  
+                    </p:selectManyCheckbox>  
+
+                    <p:outputLabel value="Expression"/>
+                    <p:selectManyCheckbox value="#{geneSearchBean.vpForExpression}" label="Expression" layout="pageDirection">  
+                        <f:selectItems value="#{geneSearchBean.allVpForExpression}" />  
+                    </p:selectManyCheckbox>  
+
+                    <p:outputLabel value="Assay"/>
+                    <p:selectManyCheckbox value="#{geneSearchBean.vpForAssay}" label="Assay" layout="pageDirection">  
+                        <f:selectItems value="#{geneSearchBean.allVpForAssay}" />  
+                    </p:selectManyCheckbox>  
+
+                    <p:outputLabel value="Cloning System"/>
+                    <p:selectManyCheckbox value="#{geneSearchBean.vpForCloning}" label="Cloning System" layout="pageDirection">  
+                        <f:selectItems value="#{geneSearchBean.allVpForCloning}" />  
+                    </p:selectManyCheckbox>  
+
+                    <p:commandButton value="Update" 
+                                     actionListener="#{geneSearchBean.doSearch}" 
+                                     update=":searchForm:resultview"
+                                     ajax="false"/>  
+                </p:panel>
+            </p:panel>
+            
+        </h:form> 
+
+    </ui:define>
+</ui:composition>
+

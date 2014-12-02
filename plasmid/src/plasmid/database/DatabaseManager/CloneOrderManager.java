@@ -1274,7 +1274,7 @@ public class CloneOrderManager extends TableManager {
             stmt.setInt(2, order.getOrderid());
             DatabaseTransaction.executeUpdate(stmt);
         } catch (Exception ex) {
-            handleError(ex, "Cannot update platinum service status from clone order: " + order.getOrderid());
+            handleError(ex, "Cannot update QC service status from clone order: " + order.getOrderid());
             return false;
         } finally {
             DatabaseTransaction.closeStatement(stmt);

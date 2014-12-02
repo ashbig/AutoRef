@@ -1400,7 +1400,7 @@ public class OrderProcessManager {
         String subject = "PlasmID Order " + orderid + " Currently in Troubleshooting";
         String text =
                 "Dear PlasmID User,\n\n"
-                + "I write in regard to your recent order from the PlasmID Repository. Unfortunately one or more of the clones in your order did not pass our Platinum quality control (QC) test.  To view the results of our QC testing please log into your account, select the appropriate order number, and then select \"View Platinum Results\". We have already streaked the failed construct(s) on agar and selected four isolates for further analysis. Unfortunately none of those isolates passed our quality control testing.\n\n"
+                + "I write in regard to your recent order from the PlasmID Repository. Unfortunately one or more of the clones in your order did not pass our quality control (QC) test.  To view the results of our QC testing please log into your account, select the appropriate order number, and then select \"View QC Results\". We have already streaked the failed construct(s) on agar and selected four isolates for further analysis. Unfortunately none of those isolates passed our quality control testing.\n\n"
                 + "In light of these results I write to determine the best way to complete your order. In many cases we have each gene in several vectors or formats and are happy to provide an alternate plasmid as a replacement. Please let me know if you require assistance selecting a suitable alternate.\n\n"
                 + "If substitution with an alternate clone  is not possible we are also happy to adjust the price of your order and ship the remaining constructs. Please contact me at your earliest convenience so that we may work together to complete your order.\n\n"
                 + "Sincerely,\n\n"
@@ -2293,8 +2293,8 @@ public class OrderProcessManager {
         } else {
             text += " has shipped.";
         }
-        text += "Please note your tracking number and any shipping comments below. If you have requested the Platinum QC Service, end-read sequences are  available in  your account at http://plasmid.med.harvard.edu/PLASMID/Login.jsp. To view the results of our QC testing please log into your account, select the appropriate order number, and then select \"View Platinum Results.\" Please remember that a single end-read sequence is not able to verify your entire construct. Feel free to contact us at plasmidhelp@hms.harvard.edu if you have any questions. Thank you for using PlasmID.\n\n";
-        text += "If you have selected \"pickup\" as your shipment option please pick up your order from the second floor of the C building adjacent to room 217.  Samples can be found in the hallway refrigerator.\n\n";
+        text += "Please note your tracking number and any shipping comments below. Your end-read sequences are  available in  your account at http://plasmid.med.harvard.edu/PLASMID/Login.jsp. To view the results of our QC testing please log into your account, select the appropriate order number, and then select \"View QC Results.\" Please remember that a single end-read sequence is not able to verify your entire construct. Feel free to contact us at plasmidhelp@hms.harvard.edu if you have any questions. Thank you for using PlasmID.\n\n";
+        text += "If you have selected \"pickup\" as your shipment option please pick up your order from the second floor of the C1 building at the corner of building C1 and LHRRB.  Samples can be found in the hallway refrigerator. See http://plasmid.med.harvard.edu/PlasmidRepository/file/map/Pick-up_Location.png for a detailed location.\n\n";
         text += "===========================================================\n";
         text += "Tracking Number: " + order.getTrackingnumber() + "\n";
         if (order.getComments() != null && order.getComments().trim().length() > 0) {

@@ -154,10 +154,10 @@ is not allowed to be shipped outside of USA.
     <td class="tablebody"><bean:write name="checkoutForm" property="numOfCollections"/></td>
     <td align="right" class="tablebody">$<bean:write name="checkoutForm" property="costOfCollections"/></td>
   </tr> 
-   <tr> 
+  <%-- <tr> 
     <td class="tablebody">Platinum service:</td>
     <td align="right" colspan="2" class="tablebody">$<bean:write name="checkoutForm" property="costOfPlatinum"/></td>
-  </tr> 
+  </tr> --%>
   <tr> 
     <td class="tableheader">Total price (before shipping charge):</td>
     <td align="right" colspan="2" class="tablebody">$<bean:write name="checkoutForm" property="totalPrice"/></td>

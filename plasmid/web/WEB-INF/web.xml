@@ -160,8 +160,17 @@
   <servlet-mapping>
     <servlet-name>action</servlet-name>
     <url-pattern>*.do</url-pattern>
-  </servlet-mapping>
+  </servlet-mapping>  
+      <servlet>
+        <servlet-name>Faces</servlet-name>
+        <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
 
+    <servlet-mapping>
+        <servlet-name>Faces</servlet-name>
+        <url-pattern>*.xhtml</url-pattern>
+    </servlet-mapping>
   
     <!-- Define the default session timeout for your application,
          in minutes.  From a servlet or JSP page, you can modify
@@ -174,7 +183,7 @@
 
   <!-- Welcome-file-list -->
   <welcome-file-list>
-    <welcome-file>AboutUs.jsp</welcome-file>
+    <welcome-file>Home.xhtml</welcome-file>
   </welcome-file-list>
 
     <taglib>
@@ -223,5 +232,4 @@
 
          You can define any number of servlets, including zero.
     -->
-
 </web-app>

@@ -53,7 +53,7 @@
         <html:select styleClass="itemtext" property="sortby">
             <html:option value="<%=CloneOrder.COL_ORDERID%>">Order ID</html:option>
             <html:option value="<%=CloneOrder.COL_ORDERDATE%>">Order Date</html:option>
-            <html:option value="<%=CloneOrder.COL_PLATINUM%>">Platinum Service</html:option>
+            <%--<html:option value="<%=CloneOrder.COL_PLATINUM%>">Platinum Service</html:option>--%>
             <html:option value="<%=CloneOrder.COL_NUMOFCLONES%>">Number of Clones</html:option>
             <html:option value="<%=CloneOrder.COL_USERLASTNAME%>">User</html:option>
             <html:option value="<%=CloneOrder.COL_UPDATEDON%>">Last Updated On</html:option>
@@ -76,7 +76,7 @@
     <td class="tableheader">Order ID</td>
     <td class="tableheader">Order Date</td>
     <td class="tableheader">Status</td>
-    <td class="tableheader">Platinum Service</td>
+    <%--<td class="tableheader">Platinum Service</td>--%>
     <td class="tableheader">Number of Clones</td>
     <td class="tableheader">Number of Collections</td>
     <td class="tableheader">Total Price</td>
@@ -158,7 +158,7 @@
     </logic:notEqual>
     <input type="hidden" name='<%="orderid["+(i)+"]"%>' value="<bean:write name="order" property="orderid"/>">
 
-    <td class="tableinfo"><bean:write name="order" property="isplatinum"/></td>
+    <%--<td class="tableinfo"><bean:write name="order" property="isplatinum"/></td>--%>
     <td class="tableinfo"><bean:write name="order" property="numofclones"/></td>
     <td class="tableinfo"><bean:write name="order" property="numofcollection"/></td>
     <td class="tableinfo"><bean:write name="order" property="totalPriceString"/></td>

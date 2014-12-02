@@ -66,41 +66,10 @@
             <td width="30%">Search Method</td>
           <td width="70%">Description</td>
         </tr>
-        <tr class="tableinfo">
-            <td><a href="faces/GeneSearch.xhtml">Human & Mouse Gene</a></td>
-            <td align="left">Our recommended method of searching the PlasmID database. Simply enter your gene of interest and query our database against the latest reference sequence!</td>
         </tr>
-        <tr class="tableinfo">
-        <td><a href="PrepareAdvancedSearch.do">Text Search</a></td>
-          <td align="left">Search by gene name, gene symbol, vector name, vector feature, author name, publication, or species.</td>
         </tr>
-        <tr class="tableinfo">
-            <td><a href="PrepareBlast.do">Blast Search</a></td>
-          <td align="left">Search our database by a similarity alignment of your nucleotide or amino acid sequence.</td>
-        </tr>
-        <tr class="tableinfo">
-            <td><a href="SearchClone.jsp">Search by Clone Identifier</a></td>
-          <td align="left">Search by PlasmID, CloneID, FLH#, or other IDs. </td>
-        </tr>
-        <tr class="tableinfo">
-            <td><a href="GetVectorPropertyTypes.do">Search by Vector</a></td>
-          <td align="left">Search based on the properties of the vector such as, assay type, cloning method or expression characteristics.</td>
-        </tr>
-        <tr class="tableinfo">
-            <td><a href="GetVectorsByType.do">Empty Vectors</a></td>
-          <td align="left">View our full list of empty vectors. To narrow down the list view the search and order tool bar.</td>
-        </tr>
-        <tr class="tableinfo">
-            <td><a href="GetVectorsByType.do">Available Collections</a></td>
-          <td align="left">View the full list of all of PlasmID's available collections. The <a href="collection_overview.jsp">collection overview</a> includes common 
-              names for organisms in our collection.</td>
         </tr>
       </table>
-      <br>      
-      <p class="mainbodytext">Have additional questions? Please see our <a href="FAQ.jsp">FAQ!</a></p>        
-      <p class="mainbodytext">Please give credit where credit is due! Click on the clone ID to find the reference(s) associated with the clone and the author(s) who donated the clone. The people who constructed, published,  and donated the clone should be cited whenever you publish work that uses the clone that you ordered.
-      </p>
-    
 
     </td>
   </tr>
@@ -109,3 +78,6 @@
 </div>
 </html>
 
+        <tr class="tableinfo">
+            <td><a href="faces/GeneSearch.xhtml">Human & Mouse Gene</a></td>
+            <td align="left">Our recommended method of searching the PlasmID database. Simply enter your gene of interest and query our database against the latest reference sequence!</td>

@@ -47,12 +47,12 @@
                             <td class="formlabel">PO/Billing Number:</td>
                             <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="ponumber"/></td>
                         </tr>
-                        <tr> 
+                        <%--<tr> 
                             <td class="formlabel">Platinum Service:</td>
                             <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="isplatinum"/></td>
                             <td class="formlabel">Platinum Service Status:</td>
                             <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="platinumServiceStatus"/></td>
-                        </tr>
+                        </tr>--%>
                         <tr> 
                             <td class="formlabel">Email:</td>
                             <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="email"/></td>
@@ -214,7 +214,7 @@
                                     <logic:equal name="<%=Constants.CLONEORDER%>" property="isplatinum" value="Yes">
                                         <html:form action="EnterPlatinumResult.do">
                                             <html:hidden name="<%=Constants.CLONEORDER%>" property="orderid"/>
-                                            <html:submit styleClass="text" value="Enter Platinum Results"/>
+                                            <html:submit styleClass="text" value="Enter QC Results"/>
                                         </html:form>     
                                     </logic:equal>
                                 </logic:equal>
@@ -224,7 +224,7 @@
                                     <logic:equal name="<%=Constants.CLONEORDER%>" property="hasPlatinumResult" value="true">
                                         <html:form action="ViewPlatinumResult.do">
                                             <html:hidden name="<%=Constants.CLONEORDER%>" property="orderid"/>
-                                            <html:submit styleClass="text" value="View Platinum Results"/>
+                                            <html:submit styleClass="text" value="View QC Results"/>
                                         </html:form>
                                     </logic:equal>
                                 </logic:equal>
