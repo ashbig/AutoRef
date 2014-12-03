@@ -15,8 +15,8 @@
 
 <body>
 <jsp:include page="orderTitle.jsp" />
-<table width="100%" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
-        <%--<tr></tr>--%> 
+<%--<table width="100%" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
+        <tr></tr>--%> 
         <%--<td width="17%" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle"> 
         <jsp:include page="menu.jsp" />
 	</td>
@@ -55,29 +55,59 @@
       No charge for shipping to the Harvard Medical School community if order is picked up. Must have building access.</span></div>
         <div align="center"><span class="itemtext">Please click <a target="_blank" href="http://plasmid.med.harvard.edu/PLASMID/PIList.html">here</a> for the list of DF/HCC members.</span></div>
         <br>
-        <tr>--%>
-    <td height="40" colspan="2" valign="top"><div align="center">
+        <tr>
+    <td height="40" colspan="2" valign="top">--%>
+        <div align="center" class="content">
       <span class="mainbodytexthead"><br>You can search for clones using various criteria</span><br>
-      <span class="mainbodytext">PLEASE LOG IN BEFORE SEARCHING FOR CLONES! </span>    
-        </div></td>
-        </tr>   
+      <span class="mainbodytext">PLEASE LOG IN BEFORE SEARCHING FOR CLONES! </span>  
+        </div>
+  <br>  
       <table width="90%" border="3" align="center" id="gray">
           <tr class="tableheader">
             <td width="30%">Search Method</td>
           <td width="70%">Description</td>
-        </tr>
-        </tr>
-        </tr>
-        </tr>
-      </table>
-
-    </td>
-  </tr>
-</table>
-<jsp:include page="footer.jsp" /></body>
-</div>
-</html>
-
+         </tr>
         <tr class="tableinfo">
             <td><a href="faces/GeneSearch.xhtml">Human & Mouse Gene</a></td>
             <td align="left">Our recommended method of searching the PlasmID database. Simply enter your gene of interest and query our database against the latest reference sequence!</td>
+        </tr>
+        <tr class="tableinfo">
+        <td><a href="PrepareAdvancedSearch.do">Advanced Search</a></td>
+          <td align="left">Search by gene name, gene symbol, vector name, vector feature, author name, publication, or species.</td>
+        </tr>
+        <tr class="tableinfo">
+            <td><a href="PrepareBlast.do">Blast Search</a></td>
+          <td align="left">Search our database by a similarity alignment of your nucleotide or amino acid sequence.</td>
+        </tr>
+        <tr class="tableinfo">
+            <td><a href="SearchClone.jsp">Search by Clone Identifier</a></td>
+          <td align="left">Search by PlasmID, CloneID, FLH#, or other IDs. </td>
+        </tr>
+        <tr class="tableinfo">
+            <td><a href="GetVectorPropertyTypes.do">Search by Vector</a></td>
+          <td align="left">Search based on the properties of the vector such as, assay type, cloning method or expression characteristics.</td>
+        </tr>
+        <tr class="tableinfo">
+            <td><a href="GetVectorsByType.do">Empty Vectors</a></td>
+          <td align="left">View our full list of empty vectors. To narrow down the list view the search and order tool bar.</td>
+        </tr>
+        <tr class="tableinfo">
+            <td><a href="GetVectorsByType.do">Available Collections</a></td>
+          <td align="left">View the full list of all of PlasmID's available collections. The <a href="collection_overview.jsp">collection overview</a> includes common 
+              names for organisms in our collection.</td>
+        </tr>
+      </table>
+      <br>
+      <br>        
+      <span class="mainbodytext">Have additional questions? Please see our <a href="FAQ.jsp">FAQ!</a><br></span>
+      <br>        
+      <span class="mainbodytext">Please give credit where credit is due!</b></span>
+      <br>
+      <span class="mainbodytext"> Click on the clone ID to find the reference(s) associated with the clone and the author(s) who donated the clone.</span><br>
+      <span class="mainbodytext">The people who constructed, published,  and donated the clone should be cited whenever you publish work that uses the clone that you ordered.<br></span>
+     </td>
+    </tr>
+    <br>
+<jsp:include page="footer.jsp" /></body>
+</div>
+</html>

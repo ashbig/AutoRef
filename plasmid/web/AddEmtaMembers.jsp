@@ -19,7 +19,7 @@
 
     
     <body>
-        <jsp:include page="homeTitle.jsp" />
+        <jsp:include page="signinMenuBar.jsp" />
         <div class="content"
         <table width="100%" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
             <tr> 

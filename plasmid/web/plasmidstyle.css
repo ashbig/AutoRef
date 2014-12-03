@@ -57,8 +57,8 @@ UL.bulletedlist LI {font-family: Arial,Helvetica,sans-serif; font-size: 12px; MA
 .countrytext {font-family:Verdana,Arial,Helvetica,sans-serif; font-size:10px; font-style:normal; line-height:normal; font-weight:normal; font-variant:normal; text-transform:none; color:#666666; text-decoration:none;}
 A.countrytext:link {color:#666666;}
 A.countrytext:visited {COLOR:#666666;}
-A.countrytext:hover {COLOR:#0054A6;}
-A.countrytext:active {color:#0054A6;}
+A.countrytext:hover {COLOR:666666;}
+A.countrytext:active {color:666666;}
 TR.evenJobColorClass {background-color:#CCCCFF;}
 .featuretext {font-family:Arial,Helvetica,sans-serif; font-size:12px;}
 .featuretext A:link {color:#0054A6;	TEXT-DECORATION: none;}	

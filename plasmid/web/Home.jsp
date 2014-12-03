@@ -21,7 +21,7 @@
     <div class="gridContainer clearfix">
 
 
-        <jsp:include page="homeTitle.jsp" /><table width="80%"  border="0">
+        <jsp:include page="signinMenuBar.jsp" /><table width="80%"  border="0">
 
     <p class="mainbodytext"> 
         The Mission of the DNA Resource CORE is to provide member in the DF/HCC, Harvard Affiliates, and outside researchers with quality and inexpensive <a target="_blank" href="http://dnaseq.med.harvard.edu/">DNA sequencing services</a> and <a href="http://plasmid.med.harvard.edu/PLASMID/Home.jsp">sequence verified plasmid constructs</a>, paired with comprehensive quality control and customer support.</p>                          

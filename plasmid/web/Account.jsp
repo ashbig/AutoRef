@@ -20,7 +20,7 @@
 <div class="gridContainer clearfix">
 
 <body>
-<jsp:include page="homeTitle.jsp" />
+<jsp:include page="signinMenuBar.jsp" />
 <table width="100%" height="406" border="0" align="left" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
   <tr> 
    

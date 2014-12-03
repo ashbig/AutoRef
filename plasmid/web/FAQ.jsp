@@ -16,7 +16,7 @@
 </head>
      <div class="gridContainer clearfix">
 
-<jsp:include page="homeTitle.jsp" />
+<jsp:include page="signinMenuBar.jsp" />
 <div class="content">
         <p class="mainbodytext"><font size= "4"><strong>Answers to Frequently Asked Questions &nbsp</strong></font><br>
         <p></p>

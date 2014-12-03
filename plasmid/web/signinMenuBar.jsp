@@ -23,14 +23,14 @@
 
 
 <h:body>
-<table width="100%" height="12px" border="0" align="center">
+<table width="100%" height="30px" border="0" align="center">
             <tr> 
-                <td>
+                <td width="50%" height="12px" border="0" align="left" class="countrytext">
                     <%--<a href="http://dnaseq.med.harvard.edu" target="_blank">DNA Resource Core</a><br><br>--%>
                     
             <logic:present name="<%=Constants.USER_KEY%>" scope="session"> 
             <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
-                    <a href="SampleTrackingHome.jsp">Sample Tracking |</a>            
+                    <a href="SampleTrackingHome.jsp">Sample Tracking</a> |&nbsp;&nbsp;    
                     <a href="SEQ_InvoiceHome.jsp">Sequencing</a>
             </logic:equal>
                     
@@ -57,23 +57,15 @@
                     <a href="FAQ.jsp" class="countrytext"> FAQ</a>
                     
                     
-                    </td>
+                </td>
             </tr>
-            <tr>    
-              
-              
-</tr>
+            
 </table>
-</td>
-</tr>
-</table></td>
-</tr>
-</table>
-</td></div>
+</div>
      
   <div id="nav" align="center">
     <ul id="MenuBar1" class="MenuBarHorizontal">
-      <li><a class="MenuBarItemSubmenu" href="Home.jsp" title="Home">Home</a>
+      <li><a class="MenuBarItemSubmenu" href="Home.xhtml" title="Home">Home</a>
         <ul>
            <logic:present name="<%=Constants.USER_KEY%>" scope="session">
           <li><a href="Logout.do" title="Log Out">Sign Out</a></li>

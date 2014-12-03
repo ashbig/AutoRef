@@ -17,7 +17,7 @@
 <div class="gridContainer clearfix">
 
 <body>
-<jsp:include page="homeTitle.jsp" />
+<jsp:include page="signinMenuBar.jsp" />
 <p class="mainbodytext">Use of material from the PlasmID reagent library is subject to the terms and conditions outlined below. By accessing and using this Web Site, you accept and agree to all of the terms and conditions ("Provisions") set forth below and all applicable international, national, federal, state and local laws and regulations. If you do not agree to these Terms of Use, please do not use this Web Site. Failure to execute a Material Transfer Agreement (MTA) for a plasmid request does not excuse or exempt the recipient from the terms of the applicable Material Transfer Agreement (MTA).</p>
 
 <table class="table" width="80%" border="3" align="center" id="grey">

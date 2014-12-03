@@ -19,7 +19,7 @@
 
 <div class="gridContainer clearfix">
 <body>
-<jsp:include page="homeTitle.jsp" />
+<jsp:include page="signinMenuBar.jsp" />
 
     <h3>DF/HCC Member List</h3>
 <table class="table" id="grey" border="3">
