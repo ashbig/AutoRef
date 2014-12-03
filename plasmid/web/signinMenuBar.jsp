@@ -30,7 +30,7 @@
                     
             <logic:present name="<%=Constants.USER_KEY%>" scope="session"> 
             <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
-                    <a href="SampleTrackingHome.jsp">Sample Tracking</a> |&nbsp;&nbsp;    
+                    <a href="SampleTrackingHome.jsp">Sample Tracking</a>&nbsp;    
                     <a href="SEQ_InvoiceHome.jsp">Sequencing</a>
             </logic:equal>
                     
