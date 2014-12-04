@@ -2,7 +2,7 @@
     
 <hr>
 <p align="left" class="subtletext">
-<a href="http://www.dfhcc.harvard.edu" target="_blank"><img src="DFHCC_NCI_logo.jpg" width="379"  height="46"></a>   
+<a href="http://www.dfhcc.harvard.edu" target="_blank"><img src="DFHCC_NCI_logo.jpg" height="35"></a>   
 <p align="left" class="subtletext">
     <!--Questions? Please contact <a href="mailto:plasmidhelp@hms.harvard.edu">PlasmID help</a>.<br>
   <!--<a href="Home.jsp" class="footertext">Home</a> 
@@ -14,6 +14,7 @@
 <a href="TermAndCondition.jsp"style="text-decoration: none">Terms and Conditions</a><br>
 ©2004-2015 Harvard Medical School<br>
 PlasmID was created and is maintained by the <a href="http://dnaseq.med.harvard.edu" style="text-decoration: none">DF/HCC DNA Resource Core</a> at Harvard Medical School</p>
+<br>
 <!--Google Analytics tracker-->
     <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

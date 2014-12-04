@@ -33,7 +33,7 @@ return(document.cookie.match('(^|; )'+name+'=([^;]*)')||0)[2]
 Many other vectors are represented in the repository 
 (try 'search by reference sequence' or 'view collection').</P>
 <p class="mainbodytexthead" align="right"><a target="_blank" href="TermDefinition.jsp">Explanation of Terms</a></p>
-<table width="100%" border="0">
+<table width="100%" border="0" valign="middle">
   <tr>
     <td class="tableheader">&nbsp;</td>
     <td class="tableheader"><a href="SetVectorDisplay.do?sortby=cloneid">Clone ID</a></td>
@@ -80,5 +80,4 @@ Many other vectors are represented in the repository
 </table>
 </div>
 <jsp:include page="footer.jsp" /></body></div>
-</html>]
-
+</html>

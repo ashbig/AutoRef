@@ -24,7 +24,7 @@
 
 
 
-      <table class="table" width="325em" border="3" align="left" id="gray">
+      <table class="table" width="325em" border="0" align="left" id="gray">
         <tr class="tableheader">
           <td width="225em">Pricing Category</td>
           <td align="right" width="100em">Retrieval Fee</td>
@@ -70,7 +70,7 @@
             </p>
             <br>
 
-            <table width="100%" border="3" cellpadding="10"><td>       
+            <table width="100%" border="0" cellpadding="0"><td>       
 <p class="mainbodytexthead">Financial</p>  
            
 <p class="mainbodytext"align="justify"><strong>

@@ -57,12 +57,12 @@
         <br>
         <tr>
     <td height="40" colspan="2" valign="top">--%>
-        <div align="center" class="content">
+        <div align="center" class="table">
       <span class="mainbodytexthead"><br>You can search for clones using various criteria</span><br>
       <span class="mainbodytext">PLEASE LOG IN BEFORE SEARCHING FOR CLONES! </span>  
         </div>
   <br>  
-      <table width="90%" border="3" align="center" id="gray">
+      <table width="90%" border="3" align="center" id="gray" class="table">
           <tr class="tableheader">
             <td width="30%">Search Method</td>
           <td width="70%">Description</td>

@@ -21,19 +21,20 @@
         <link rel="stylesheet" type="text/css" href="#{request.contextPath}/layout.css" />
         <link rel="stylesheet" type="text/css" href="#{request.contextPath}/SpryMenuBarHorizontal.css" />
         <link rel="stylesheet" type="text/css" href="#{request.contextPath}/boilerplate.css" />
+        <link rel="shortcut icon" href="dnacore.ico"/>
     </h:head>
     <div class="gridContainer clearfix">
 
         <br></br>
         <br></br>
-    <a href="http://hms.harvard.edu/" target="_blank"><img height="60" src="HMS_BiochemMolPhamH.jpg" alt="BCMP"/></a>
+    <a href="http://hms.harvard.edu/" target="_blank"><img height="55" src="HMS_BiochemMolPhamH.jpg" alt="BCMP"/></a>
         
     <hr></hr>
         <br></br>
 <div class="logo">
-    <img height="50" src="dnacore.jpg"/>
+    <img height="55" src="dnacore.jpg"/>
 
-<img height="50" src="PlasmID_logo.jpg"/>
+<img height="55" src="PlasmID_logo.jpg"/>
 </div>
         <h:body>
 
@@ -71,17 +72,17 @@
           <li><h:outputLink value="PrepareRegistration.do" rendered="#{!plasmidBean.userExist}"> Registration</h:outputLink></li>
           <li><h:outputLink value="ViewOrderHistory.do" rendered="#{plasmidBean.userExist}"> View Orders</h:outputLink></li>
           <!--<logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">-->
-          <li><h:outputLink value="ViewContainers.jsp" title="View Containers" rendered="#{plasmidBean.userInternal}">View Containers</h:outputLink></li>
+          <!--<li><h:outputLink value="ViewContainers.jsp" title="View Containers" rendered="#{plasmidBean.userInternal}">View Containers</h:outputLink></li>
           <li><h:outputLink value="vSearch.jsp" title="Vector Submission" rendered="#{plasmidBean.userInternal}">Vector Submission</h:outputLink></li>
-          <li><h:outputLink value="vSearchSFD.jsp" title="Vector For Distribution" rendered="#{plasmidBean.userInternal}">Vector For Distribution</h:outputLink></li>
+          <li><h:outputLink value="vSearchSFD.jsp" title="Vector For Distribution" rendered="#{plasmidBean.userInternal}">Vector For Distribution</h:outputLink></li>-->
           <li><h:outputLink value="SearchOrderInput.jsp" title="Search Orders" rendered="#{plasmidBean.userInternal}">Search Orders</h:outputLink></li>
-          <li><h:outputLink value="PrepareSearchInvoice.do" title="Search Invoices" rendered="#{plasmidBean.userInternal}">Search Invoices</h:outputLink></li>
-          <li><h:outputLink value="pReceiveSearch.jsp" title="Recieve Plasmids" rendered="#{plasmidBean.userInternal}">Receive Plasmids</h:outputLink></li>
+          <!--<li><h:outputLink value="PrepareSearchInvoice.do" title="Search Invoices" rendered="#{plasmidBean.userInternal}">Search Invoices</h:outputLink></li>
+          <li><h:outputLink value="pReceiveSearch.jsp" title="Recieve Plasmids" rendered="#{plasmidBean.userInternal}">Receive Plasmids</h:outputLink></li>-->
           <li><h:outputLink value="CloneValidationInput.jsp" title="Clone Validation" rendered="#{plasmidBean.userInternal}">Clone Validation</h:outputLink></li>
-          <li><h:outputLink value="AddInstitutionsInput.jsp" title="Add Institutions" rendered="#{plasmidBean.userInternal}">Add Institutions</h:outputLink></li>
-          <li><h:outputLink value="AddEmtaMembersInput.jsp" title="Add Institution to Expedited MTA Members" rendered="#{plasmidBean.userInternal}">Add EP-MTA Members</h:outputLink></li>
+          <!--<li><h:outputLink value="AddInstitutionsInput.jsp" title="Add Institutions" rendered="#{plasmidBean.userInternal}">Add Institutions</h:outputLink></li>
+          <li><h:outputLink value="AddEmtaMembersInput.jsp" title="Add Institution to Expedited MTA Members" rendered="#{plasmidBean.userInternal}">Add EP-MTA Members</h:outputLink></li>-->
           <li><h:outputLink value="SampleTrackingHome.jsp" rendered="#{plasmidBean.userInternal}">Sample Tracking</h:outputLink></li>            
-          <li><h:outputLink value="SEQ_InvoiceHome.jsp"  rendered="#{plasmidBean.userInternal}">Sequencing</h:outputLink> </li>
+          <!--<li><h:outputLink value="SEQ_InvoiceHome.jsp"  rendered="#{plasmidBean.userInternal}">Sequencing</h:outputLink> </li>-->
           <!--</logic:equal>
           </logic:present>
           <logic:notPresent name="<%=Constants.USER_KEY%>" scope="session">-->
@@ -122,6 +123,18 @@
       <li><a href="cloningstrategies.jsp" title="Learn About Cloning Methods">Learn</a></li>
       <li><a href="Contactus.jsp">Contact</a></li>
       <li><a href="AboutUs.jsp">About Us</a></li>
+      <li><h:outputLink class="MenuBarItemSubmenu" value="Home.xhtml" title="Admin" rendered="#{plasmidBean.userInternal}">Admin</h:outputLink>
+        <ul>
+          <li><h:outputLink value="ViewContainers.jsp" title="View Containers" rendered="#{plasmidBean.userInternal}">View Containers</h:outputLink></li>
+          <li><h:outputLink value="vSearch.jsp" title="Vector Submission" rendered="#{plasmidBean.userInternal}">Vector Submission</h:outputLink></li>
+          <li><h:outputLink value="vSearchSFD.jsp" title="Vector For Distribution" rendered="#{plasmidBean.userInternal}">Vector For Distribution</h:outputLink></li>
+          <li><h:outputLink value="PrepareSearchInvoice.do" title="Search Invoices" rendered="#{plasmidBean.userInternal}">Search Invoices</h:outputLink></li>
+          <li><h:outputLink value="pReceiveSearch.jsp" title="Recieve Plasmids" rendered="#{plasmidBean.userInternal}">Receive Plasmids</h:outputLink></li>
+          <li><h:outputLink value="AddInstitutionsInput.jsp" title="Add Institutions" rendered="#{plasmidBean.userInternal}">Add Institutions</h:outputLink></li>
+          <li><h:outputLink value="AddEmtaMembersInput.jsp" title="Add Institution to Expedited MTA Members" rendered="#{plasmidBean.userInternal}">Add EP-MTA Members</h:outputLink></li>
+          <li><h:outputLink value="SEQ_InvoiceHome.jsp"  rendered="#{plasmidBean.userInternal}">Sequencing</h:outputLink> </li>
+         </ul>
+      </li>
     </ul>
  </div>
    <!-- end nav element -->     
@@ -187,7 +200,7 @@
     
     <hr></hr>
     <p align="left" class="subtletext"></p>
-<a href="http://www.dfhcc.harvard.edu" target="_blank"><img src="DFHCC_NCI_logo.jpg" width="379"  height="46"/></a>   
+<a href="http://www.dfhcc.harvard.edu" target="_blank"><img src="DFHCC_NCI_logo.jpg" height="35"/></a>   
 <p align="left" class="subtletext">
     <a href="TermAndCondition.jsp" style="text-decoration: none">Terms and Conditions</a><br></br>
     ©2004-2015 Harvard Medical School<br></br>

@@ -10,14 +10,14 @@
 
 <br>
 <br>
-<a href="http://hms.harvard.edu/" target="_blank"><img height="60" src="HMS_BiochemMolPhamH.jpg" alt="BCMP"></a>
+<a href="http://hms.harvard.edu/" target="_blank"><img height="55" src="HMS_BiochemMolPhamH.jpg" alt="BCMP"></a>
 <div id="header">          
     <hr>
 <br>
 <div class="logo">
-<img height="50" src="dnacore.jpg"/>
+<img height="55" src="dnacore.jpg"/>
 
-<img height="50" src="PlasmID_logo.jpg"/>
+<img height="55" src="PlasmID_logo.jpg"/>
 </div>
 <br>
 
@@ -73,17 +73,17 @@
           <li><a href="PrepareRegistration.do?update=true&first=true" title="Update Account">Update Account</a></li>
           <li><a href="ViewOrderHistory.do" title="View Orders">View Orders</a></li> 
             <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
-          <li><a href="ViewContainers.jsp" title="View Containers">View Containers</a></li>
+          <!--<li><a href="ViewContainers.jsp" title="View Containers">View Containers</a></li>
           <li><a href="vSearch.jsp" title="Vector Submission">Vector Submission</a></li>
-          <li><a href="vSearchSFD.jsp" title="Vector For Distribution">Vector For Distribution</a></li>
+          <li><a href="vSearchSFD.jsp" title="Vector For Distribution">Vector For Distribution</a></li>-->
           <li><a href="SearchOrderInput.jsp" title="Search Orders">Search Orders</a></li>
-          <li><a href="PrepareSearchInvoice.do" title="Search Invoices">Search Invoices</a></li>
-          <li><a href="pReceiveSearch.jsp" title="Recieve Plasmids">Receive Plasmids</a></li>
+          <!--<li><a href="PrepareSearchInvoice.do" title="Search Invoices">Search Invoices</a></li>
+          <li><a href="pReceiveSearch.jsp" title="Recieve Plasmids">Receive Plasmids</a></li>-->
           <li><a href="CloneValidationInput.jsp" title="Clone Validation">Clone Validation</a></li>
-          <li><a href="AddInstitutionsInput.jsp" title="Add Institutions">Add Institutions</a></li>
-          <li><a href="AddEmtaMembersInput.jsp" title="Add Institution to Expedited MTA Members">Add EP-MTA Members</a></li>
+          <!--<li><a href="AddInstitutionsInput.jsp" title="Add Institutions">Add Institutions</a></li>
+          <li><a href="AddEmtaMembersInput.jsp" title="Add Institution to Expedited MTA Members">Add EP-MTA Members</a></li>-->
           <li><a href="SampleTrackingHome.jsp">Sample Tracking</a></li>            
-          <li><a href="SEQ_InvoiceHome.jsp">Sequencing Invoices</a></li>
+          <!--<li><a href="SEQ_InvoiceHome.jsp">Sequencing Invoices</a></li>-->
           </logic:equal>
           </logic:present>
           <logic:notPresent name="<%=Constants.USER_KEY%>" scope="session">
@@ -124,7 +124,26 @@
       <li><a href="cloningstrategies.jsp" title="Learn About Cloning Methods">Learn</a></li>
       <li><a href="Contactus.jsp">Contact</a></li>
       <li><a href="AboutUs.jsp">About Us</a></li>
+          <logic:present name="<%=Constants.USER_KEY%>" scope="session">
+          <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">      
+      
+      <li><a class="MenuBarItemSubmenu" href="#" title="Admin">Admin</a>
+        <ul>
+                    <li><a href="ViewContainers.jsp" title="View Containers">View Containers</a></li>
+                    <li><a href="vSearch.jsp" title="Vector Submission">Vector Submission</a></li>
+                    <li><a href="vSearchSFD.jsp" title="Vector For Distribution">Vector For Distribution</a></li>
+                    <li><a href="PrepareSearchInvoice.do" title="Search Invoices">Search Invoices</a></li>
+                    <li><a href="pReceiveSearch.jsp" title="Recieve Plasmids">Receive Plasmids</a></li>
+                    <li><a href="AddInstitutionsInput.jsp" title="Add Institutions">Add Institutions</a></li>
+                    <li><a href="AddEmtaMembersInput.jsp" title="Add Institution to Expedited MTA Members">Add EP-MTA Members</a></li>   
+                    <li><a href="SEQ_InvoiceHome.jsp">Sequencing Invoices</a></li>
+          </logic:equal>
+          </logic:present>
+          <logic:notPresent name="<%=Constants.USER_KEY%>" scope="session">
+          </logic:notPresent> 
+         </ul>
       </li>
+      
     </ul>
   </div>
  

@@ -144,13 +144,15 @@ img, object, embed, video {
 
 @media only screen and (min-width: 769px) {
 .gridContainer {
-	width: 90%;
-	max-width: 90%;
+	width: 80%;
+	max-width: 80%;
 	padding-left: 2%;
 	padding-right: 2%;
 	margin: auto;
 	background-color:#FFF;
         border-radius: 1.5em;
+        margin-top: 3em;
+        margin-bottom: 3em;
 }
 #LayoutDiv1 {
 	clear: both;
