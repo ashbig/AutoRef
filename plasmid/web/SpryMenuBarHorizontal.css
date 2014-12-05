@@ -25,7 +25,8 @@ ul.MenuBarActive
 {
 	z-index: 1000;
 }
-/* Menu item containers, position children relative to this container and are a fixed width */
+/* Menu item containers, position children relative to this container and are a fixed width 
+revised 12/5/14 by GB menu items centered and made larger*/
 ul.MenuBarHorizontal li
 {
 	margin: 0;
@@ -33,9 +34,9 @@ ul.MenuBarHorizontal li
 	list-style-type: none;
 	font-size: 100%;
 	position: relative;
-	text-align: left;
+	text-align: center;
 	cursor: pointer;
-	width: 7em;
+	width: 8em;
 	float: left;
 }
 /* Submenus should appear below their parent (top: 0) with a higher z-index, but they are initially off the left side of the screen (-1000em) */
@@ -86,9 +87,10 @@ ul.MenuBarHorizontal ul.MenuBarSubmenuVisible ul.MenuBarSubmenuVisible
 /* Submenu containers have borders on all sides */
 ul.MenuBarHorizontal ul
 {
-	border: 1px solid #CCC;
+	border: 0px solid #CCC;
 }
-/* Menu items are a light gray block with padding and no text decoration */
+/* Menu items are a light gray block with padding and no text decoration 
+revised 12/05/14 by GB, border added around menu items*/
 ul.MenuBarHorizontal a
 {
 	display: block;
@@ -101,17 +103,22 @@ ul.MenuBarHorizontal a
         font-family: Verdana, Tahoma, "Trebuchet MS", sans-serif;
         font-size: 1em;
         font-weight:500;
+        border-color:#CCC;
+        border-style:solid;
+        border-width: .5px;
+        border-radius: .5em;
 }
-/* Menu items that have mouse over or focus have a blue background and white text */
+/* Menu items that have mouse over or focus have a blue background and white text, 
+revised 12/5/14 by GB: blue changed to #CAE2FA to match background behind clearfix div, white text changed back to original #333 grey prior to hover */
 ul.MenuBarHorizontal a:hover, ul.MenuBarHorizontal a:focus
 {
-	background-color: #33C;
-	color: #FFF;
+	background-color: #CAE2FA;
+	color: #333;
 }
 /* Menu items that are open with submenus are set to MenuBarItemHover with a blue background and white text */
 ul.MenuBarHorizontal a.MenuBarItemHover, ul.MenuBarHorizontal a.MenuBarItemSubmenuHover, ul.MenuBarHorizontal a.MenuBarSubmenuVisible
 {
-	background-color: #33C;
+	background-color: #CAE2FA;
 	color: #FFF;
 }
 

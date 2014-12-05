@@ -21,10 +21,10 @@
 
 <body>
 <jsp:include page="signinMenuBar.jsp" />
-<table width="50%" border="0" align="left" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
+<table width="700px" border="0" align="left" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
   <tr> 
    
-    <td width="83%" align="left" valign="top">
+    <td width="100%" align="left" valign="top">
 	<!--<jsp:include page="accountTitle.jsp" />-->
 
 <p>

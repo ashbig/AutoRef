@@ -5,7 +5,7 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 template="/template/homeTemplate.xhtml">
     <ui:define name="content">
-        <h:form id="searchForm">  
+        <h:form id="searchForm" style="width: 100%; border: 0;">  
             <p:panel id="searchPanel" header="Gene Search" style="margin-bottom:10px;">  
                 <p:messages id="messages"/> 
                 <p:panelGrid> 
@@ -33,7 +33,7 @@
                         </p:column>
                     </p:row>
                 </p:panelGrid>                                       
-                <p:panel style="width: 400px" id="filterView" header="Filters" toggleable="true" toggleSpeed="500" collapsed="#{geneSearchBean.filterToggle}"> 
+                <p:panel style="width: 100%; border: 0;" id="filterView" header="Filters" toggleable="true" toggleSpeed="500" collapsed="#{geneSearchBean.filterToggle}"> 
                     <p:outputLabel value="Type"/>
                     <p:selectManyCheckbox value="#{geneSearchBean.species}" label="Species" layout="pageDirection">  
                         <f:selectItem itemValue="9606" itemLabel="Human"/>  
@@ -73,7 +73,7 @@
                     <p:accordionPanel id="geneview2" value="#{geneSearchBean.genes}" var="gene" dynamic ="true" activeIndex="#{geneSearchBean.genePanel}" cache="false">          
                         <p:ajax event="tabChange" listener="#{geneSearchBean.geneViewTabChange}"/>
                         <p:tab title="Gene: #{gene.symbol}">  
-                            <p:panelGrid> 
+                            <p:panelGrid style="position:relative; left:-40px;"> 
                                 <p:row>
                                     <p:column>
                                         <h:outputText value="Gene ID:"/>
@@ -147,7 +147,7 @@
 
                             <p:spacer height="10"/>
 
-                            <p:panel header="NCBI Reference Sequences (RefSeq) - mRNA and Protein(s)" toggleable="false">  
+                            <p:panel header="NCBI Reference Sequences (RefSeq) - mRNA and Protein(s)" toggleable="false" style="border: 0; font-size: .9em; position:relative; left:-30px;">  
                                 <p:accordionPanel id="seqView" value="#{gene.seqs}" var="seq" activeIndex="#{geneSearchBean.refseqPanel}" dynamic="true" cache="false">  
                                     <p:ajax event="tabChange" listener="#{geneSearchBean.seqViewTabChange}"/>
                                     <p:tab title="RefSeq sequence: #{seq.accession} -> #{seq.proteinacc}&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Total plasmids found: #{seq.cloneCount}"> 
@@ -171,15 +171,15 @@
                                         </p:panelGrid>
                                         <p:spacer height="5"/>
 
-                                        <p:panel header="Available Plasmids" toggleable="true" toggleSpeed="500" collapsed="#{geneSearchBean.cloneView}">
-                                            <p:ajax event="toggle" listener="#{geneSearchBean.findPlasmids(seq.gi)}" update=":searchForm:resultview:geneview2:seqView:plasmidView"/>
+                                        <!--<p:panel style="width: auto; border: 0" header="Available Plasmids" toggleable="true" toggleSpeed="500" collapsed="#{geneSearchBean.cloneView}">
+                                            <p:ajax event="toggle" listener="#{geneSearchBean.findPlasmids(seq.gi)}" update=":searchForm:resultview:geneview2:seqView:plasmidView"/>-->
 
-                                                <p:dataTable var="clone" value="#{geneSearchBean.clones}" id="plasmidView">        
+                                                <p:dataTable var="clone" value="#{geneSearchBean.clones}" id="plasmidView" style="border: 0; font-size: .8em; position: relative; left: -20px;">        
                                                     <p:column headerText="Plasmid ID">  
                                                         <h:outputLink target="_blank" value="GetCloneDetail.do?cloneid=#{clone.cloneid}&amp;species=">#{clone.clonename}</h:outputLink>
                                                     </p:column> 
 
-                                                    <p:column headerText="Size (bp)">  
+                                                    <p:column headerText="bp">  
                                                         <h:outputText value="#{clone.size}" />  
                                                     </p:column>     
 
@@ -191,15 +191,15 @@
                                                         <h:outputText value="#{clone.format}" />  
                                                     </p:column>  
 
-                                                    <p:column headerText="Restriction">  
+                                                    <!--<p:column headerText="Restriction">  
                                                         <h:outputText value="#{clone.restriction}" />  
+                                                    </p:column>-->  
+
+                                                    <p:column headerText="Alength">  
+                                                        <h:outputText value="#{clone.alength}" rendered="#{clone.showAlignment}"/>  
                                                     </p:column>  
 
-                                                    <p:column headerText="PID/Alength">  
-                                                        <h:outputText value="#{clone.percentid}/#{clone.alength}" rendered="#{clone.showAlignment}"/>  
-                                                    </p:column>  
-
-                                                    <p:column headerText="CDS Coverage">  
+                                                    <p:column headerText="%CDS">  
                                                         <h:outputText value="#{clone.coverage}" rendered="#{clone.showAlignment}"/>  
                                                     </p:column>  
 
@@ -208,7 +208,7 @@
                                                     </p:column>  
 
                                                     <p:column headerText="">  
-                                                        <p:commandButton value="Blast Alignment" 
+                                                        <p:commandButton value="Alignment" 
                                                                          actionListener="#{geneSearchBean.viewAlignment}" 
                                                                          update=":searchForm:alignmentView"
                                                                          oncomplete="blastDialog.show()"
@@ -233,7 +233,7 @@
                                                     </p:column>  
                                                 </p:dataTable>
 
-                                        </p:panel>
+                                        <!--</p:panel>-->
                                     </p:tab>
                                 </p:accordionPanel> 
                             </p:panel>  

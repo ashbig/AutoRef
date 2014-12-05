@@ -94,7 +94,7 @@
          </ul>
       </li>
       
-      <li><a class="MenuBarItemSubmenu" href="OrderOverview.jsp">cDNA/ORF</a>
+      <li><a class="MenuBarItemSubmenu" href="OrderOverview.jsp">Inserts</a>
         <ul>
           <li><a href="GeneSearch.xhtml" title= "Human and Mouse Gene Search">Human &amp; Mouse Genes</a></li>
           <li><a href="PrepareAdvancedSearch.do?psi=0" title= "Text Search">Text Search</a></li>
@@ -104,7 +104,7 @@
           <li><a href="PrepareBlast.do" title= "BLAST search">BLAST Search</a></li>
         </ul>
       </li>
-      <li><a class="MenuBarItemSubmenu"href="GetVectorsByType.do">Vectors</a>
+      <li><a class="MenuBarItemSubmenu" href="GetVectorsByType.do">Vectors</a>
         <ul>
           <li><a href="GetVectorsByType.do?type=viral production" title= "Viral Production">Viral Production</a></li>
           <li><a href="GetVectorsByType.do?type=RNA interference" title= "RNA Interference">RNA Interference</a></li>
@@ -118,8 +118,8 @@
           <li><a href="GetVectorsByType.do?type=fluorescent marker" title= "Fluorescence Marker">Fluorescence Marker</a></li>
         </ul>
       </li>
-      <li><a href="Submission.jsp" title="Submit plasmids">Submission</a></li>
       <li><a href="GetCollectionList.do" title="View List of Collections">Collections</a></li>
+      <li><a href="Submission.jsp" title="Submit plasmids">Submission</a></li>
       <li><a href="Pricing.jsp" title="pricing">Pricing</a></li>
       <li><a href="cloningstrategies.jsp" title="Learn About Cloning Methods">Learn</a></li>
       <li><a href="Contactus.jsp">Contact</a></li>

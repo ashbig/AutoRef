@@ -174,10 +174,10 @@ img, object, embed, video {
 	margin-left: 0%;
 	width: 100%;
 	display: block;
-	background-color: #EEE;
+	background-color: #FFF;
 	height: 2.5em;
         margin-top: 1em;
-        margin-bottom: 3em;
+        margin-bottom: 4em;
 }
 #content {
 	clear: none;

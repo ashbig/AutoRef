@@ -11,7 +11,7 @@
               &#149; <a href="Contactus.jsp" class="footertext">Contact Us</a>
               <br><br> -->
 
-<a href="TermAndCondition.jsp"style="text-decoration: none">Terms and Conditions</a><br>
+<a href="TermAndCondition.jsp" style="text-decoration: none">Terms and Conditions</a><br>
 ©2004-2015 Harvard Medical School<br>
 PlasmID was created and is maintained by the <a href="http://dnaseq.med.harvard.edu" style="text-decoration: none">DF/HCC DNA Resource Core</a> at Harvard Medical School</p>
 <br>

@@ -24,7 +24,7 @@
 
 <body>
 <jsp:include page="signinMenuBar.jsp" />
-<table width="50%" border="0" align="left" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
+<table width="700px" border="0" align="left" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
   <tr> 
     <%--<td width="17%" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle"> 
       <jsp:include page="menuHome.jsp" />

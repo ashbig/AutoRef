@@ -21,8 +21,8 @@
 <body>
 <jsp:include page="signinMenuBar.jsp" />
 
-    <h3>DF/HCC Member List</h3>
-<table class="table" id="grey" border="3">
+    <p class="mainbodytexthead">DF/HCC Member List</p>
+<table>
   <col width="206" />
   <col width="252" />
   <tr class="tableheader">

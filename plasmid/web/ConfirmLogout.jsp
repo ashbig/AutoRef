@@ -19,7 +19,7 @@
 
 <body>
 <jsp:include page="signinMenuBar.jsp" />
-<table width="100%" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
+<table width="100%" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
   <tr> 
     <%--<td width="17%" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle"> 
       <jsp:include page="menuHome.jsp" />
@@ -29,7 +29,7 @@
       <html:form action="ConfirmLogout.do">
 <p class="text">
 You have modified your shopping cart. Would you like to save the changes to your account?
-<table width="100%" border="0">
+<table width="100px" border="0">
     <tr>
         <td class="text"><html:submit property="confirm" value="Yes"/></td>
         <td class="text"><html:submit property="confirm" value="No"/></td>

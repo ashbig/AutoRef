@@ -57,12 +57,11 @@
         <br>
         <tr>
     <td height="40" colspan="2" valign="top">--%>
-        <div align="center" class="table">
       <span class="mainbodytexthead"><br>You can search for clones using various criteria</span><br>
       <span class="mainbodytext">PLEASE LOG IN BEFORE SEARCHING FOR CLONES! </span>  
-        </div>
-  <br>  
-      <table width="90%" border="3" align="center" id="gray" class="table">
+  <br>
+  <br>
+      <table width="100%" align="left">
           <tr class="tableheader">
             <td width="30%">Search Method</td>
           <td width="70%">Description</td>
@@ -92,8 +91,8 @@
           <td align="left">View our full list of empty vectors. To narrow down the list view the search and order tool bar.</td>
         </tr>
         <tr class="tableinfo">
-            <td><a href="GetVectorsByType.do">Available Collections</a></td>
-          <td align="left">View the full list of all of PlasmID's available collections. The <a href="collection_overview.jsp">collection overview</a> includes common 
+            <td><a href="GetCollectionList.do">Available Collections</a></td>
+          <td align="left">View the full list of all of PlasmID's available collections. The <a href="GetCollectionList.do">collection overview</a> includes common 
               names for organisms in our collection.</td>
         </tr>
       </table>
