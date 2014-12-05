@@ -80,7 +80,7 @@
       </ol>
 </p>
 
-<table width="100%" border="0">
+<table width="400%" border="0">
   <tr> 
     <td class="formlabel" width="20%">Choose shipping method:</td>
     <td class="text">

@@ -48,13 +48,13 @@
   </tr>
 </table>
 <p class="text">*If you don't see your country on the list, 
-please contact <a href="mailto:dongmei_zuo@hms.harvard.edu">PlasmID support</a>. 
+please contact <a href="mailto:plasmidhelp@hms.harvard.edu">PlasmID support</a>. 
 
 Please be aware that <i>
 Bacillus anthracis</i>
 is not allowed to be shipped outside of USA.
 </p>
-<table width="100%" border="0">
+<table width="1000px" border="0">
   <tr> 
     <td colspan="2" class="featuretext">Shipping Address:</td>
     <td colspan="2" class="featuretext">Billing Address:</td>
