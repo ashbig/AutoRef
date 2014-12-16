@@ -8,7 +8,8 @@
 
 <html>
     <head>
-        <title>PlasmID Database</title>
+        <title>Pre-formatted Collections</title>
+        <meta name='description' content='Pre-formatted collections of plasmids.'>
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
         <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
     </head>

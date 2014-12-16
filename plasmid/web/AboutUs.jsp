@@ -7,7 +7,8 @@
 
 <html>
 <head>
-<title>PlasmID Database</title>
+<title>About Us</title>
+<meta name='description' content='Information about our Mission, History, Host Lab, Host Department, and our broader organizational affiliations.'>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
 <link href="layout.css" rel="stylesheet" type="text/css" />

@@ -8,6 +8,7 @@
 <html>
 <head>
 <title>Cloning Strategies</title>
+<meta name='description' content='Educational material about various cloning strategies'>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
 <link href="layout.css" rel="stylesheet" type="text/css" />

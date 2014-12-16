@@ -7,7 +7,8 @@
 
 <html>
 <head>
-<title>PlasmID Database</title>
+<title>Contact Us</title>
+<meta name='description' content='Email, Phone, and mailing address to contact the PlasmID Repository staff.'>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
 <link href="layout.css" rel="stylesheet" type="text/css" />

@@ -1,3 +1,8 @@
+<!--<head>
+    <title>Harvard PlasmID Library</title>
+    <meta name="description=" content="The Plasmid Information Database (PlasmiID) annotates, stores, and distributes plasmid cDNA's, ORF's, and shRNA's for use in cancer research."></meta>
+</head>-->
+
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:f="http://java.sun.com/jsf/core"
@@ -33,7 +38,7 @@
                         </p:column>
                     </p:row>
                 </p:panelGrid>                                       
-                <p:panel style="width: 400px" id="filterView" header="Filters" toggleable="true" toggleSpeed="500" collapsed="#{geneSearchBean.filterToggle}"> 
+                <p:panel style="width: 100%; border:0;" id="filterView" header="Filters" toggleable="true" toggleSpeed="500" collapsed="#{geneSearchBean.filterToggle}"> 
                     <p:outputLabel value="Type"/>
                     <p:selectManyCheckbox value="#{geneSearchBean.species}" label="Species" layout="pageDirection">  
                         <f:selectItem itemValue="9606" itemLabel="Human"/>  

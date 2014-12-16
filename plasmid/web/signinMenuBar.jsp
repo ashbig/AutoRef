@@ -11,21 +11,9 @@
 <br>
 <br>
 <a href="http://hms.harvard.edu/" target="_blank"><img height="55" src="HMS_BiochemMolPhamH.jpg" alt="BCMP"></a>
-<div id="header">          
-    <hr>
-<br>
-<div class="logo">
-<img height="55" src="dnacore.jpg"/>
-
-<img height="55" src="PlasmID_logo.jpg"/>
-</div>
-<br>
-
-
-<h:body>
-<table width="100%" height="30px" border="0" align="center">
+<table width="30%" height="30px" border="0" align="right">
             <tr> 
-                <td width="50%" height="12px" border="0" align="left" class="countrytext">
+                <td width="50%" height="12px" border="0" align="left" class="countrytext" valign="middle">
                     <%--<a href="http://dnaseq.med.harvard.edu" target="_blank">DNA Resource Core</a><br><br>--%>
                     
             <logic:present name="<%=Constants.USER_KEY%>" scope="session"> 
@@ -61,6 +49,65 @@
             </tr>
             
 </table>
+<div id="header">          
+    <hr>
+<br>
+<div class="logo">
+<img height="55" src="dnacore.jpg"/>
+<img height="55" src="PlasmID_logo.jpg"/>
+<!-- Alerts to users about closings etc can be typed in this P class. Note: You must update both homeTemplate.xhtml and signinMenuBar.jsp to see this alert throughout the whole site.-->
+    <p>
+    <table width ="50%" align="center">
+    <td>
+    <p class="alertred" align="left">Harvard will be closed for Winter Recess from Tuesday Dec 24 to Friday Jan 5. 
+    We will continue to accept plasmid request during Winter Recess and they will be filled once we return.
+    For time-sensitive requests you may want to consider a commercial provider.</p>
+    </td>
+    </table>
+    </p>
+<!-- End Alter Section-->
+</div>
+<h:body>
+<%-- old location of cart
+<table width="100%" height="30px" border="0" align="center">
+            <tr> 
+                <td width="50%" height="12px" border="0" align="left" class="countrytext">
+                    <%--<a href="http://dnaseq.med.harvard.edu" target="_blank">DNA Resource Core</a><br><br>
+                    
+            <logic:present name="<%=Constants.USER_KEY%>" scope="session"> 
+            <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
+                    <a href="SampleTrackingHome.jsp">Sample Tracking</a>&nbsp;    
+                    <a href="SEQ_InvoiceHome.jsp">Sequencing</a>
+            </logic:equal>
+                    
+            <logic:notEqual name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">&nbsp;      
+            </logic:notEqual>
+            </logic:present>
+            <logic:notPresent name="<%=Constants.USER_KEY%>" scope="session"> &nbsp;        
+            </logic:notPresent>
+                    
+              </td>
+                <td width="50%" height="12px" align="right" valign="bottom" class="countrytext"> 
+                    <a href="ViewCart.do" border="0"><img src="shoppingcart2.gif" width="105" height="18"/></a>
+                    <br>
+                   <br>
+                <logic:present name="<%=Constants.USER_KEY%>" scope="session">    
+                    <a href="Logout.do" class="countrytext">Sign Out |</a> 
+                    <a href="Account.jsp" class="countrytext"> My Account |</a>
+                </logic:present>
+                
+                <logic:notPresent name="<%=Constants.USER_KEY%>" scope="session">
+                    <a href="Login.jsp" class="countrytext" >Sign In |</a> 
+                    <a href="PrepareRegistration.do" class="countrytext"> Registration |</a> 
+                </logic:notPresent> 
+                    <a href="FAQ.jsp" class="countrytext"> FAQ</a>
+                    
+                    
+                </td>
+            </tr>
+            
+</table>
+old location of cart --%>
 </div>
      
   <div id="nav" align="center">
@@ -127,7 +174,7 @@
           <logic:present name="<%=Constants.USER_KEY%>" scope="session">
           <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">      
       
-      <li><a class="MenuBarItemSubmenu" href="#" title="Admin">Admin</a>
+      <li><a class="MenuBarItemSubmenu" href="Admin.jsp" title="Admin">Admin</a>
         <ul>
                     <li><a href="ViewContainers.jsp" title="View Containers">View Containers</a></li>
                     <li><a href="vSearch.jsp" title="Vector Submission">Vector Submission</a></li>

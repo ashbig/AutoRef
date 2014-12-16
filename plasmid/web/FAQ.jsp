@@ -7,7 +7,8 @@
 
 <html>
 <head>
-<title>PlasmID Database</title>
+<title>Frequently Asked Questions</title>
+<meta name='description' content='Answers to some of the most frequently asked questions'>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
 <link href="SpryMenuBarHorizontal.css" rel="stylesheet" type="text/css" />

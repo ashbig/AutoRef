@@ -9,7 +9,8 @@
 
 <html>
 <head>
-<title>PlasmID Database</title>
+<title>My Account</title>
+<meta name='description' content='View details about my specific account including past orders and account information'>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
        <link href="layout.css" rel="stylesheet" type="text/css" />

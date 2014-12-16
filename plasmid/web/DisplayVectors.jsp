@@ -8,7 +8,8 @@
 
 <html>
 <head>
-<title>PlasmID Database</title>
+<title>Plasmid Backbones</title>
+<meta name='description' content='Unique plasmid backbones that can be requested/ ordered.'>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
 <script language="JavaScript">

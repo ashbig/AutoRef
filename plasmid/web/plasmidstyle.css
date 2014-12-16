@@ -41,6 +41,7 @@ img
 .alertheader {font-family:Arial,Helvetica,sans-serif; font-size:12px; font-weight:bold; color:#FF0000;}
 .alertbig {font-family:Arial,Helvetica,sans-serif; font-size:14px; font-style:italic; color:#FF0000;}
 .alertbigger {font-family:Arial,Helvetica,sans-serif; font-size:16px; font-style:italic; color:#FF0000;}
+.alertred{font-family:Arial,Helvetica,sans-serif; font-size:16px; color:#CC0000;}
 .breadcrumbtext {font-family:Arial,Helvetica,sans-serif; font-size:12px; text-transform:lowercase; color:#0054A6;}
 .breadcrumbtext A:link {color:#0054A6; text-decoration:none; BORDER-BOTTOM:none;}
 .breadcrumbtext A:visited {COLOR:#0054A6; text-decoration:none; BORDER-BOTTOM:none;}

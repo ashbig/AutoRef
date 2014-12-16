@@ -7,7 +7,8 @@
 <%-- 10/15/2014 PlasmID removed "NO" Orders as an option, any commented out code below reflects this--%>
 <html>
 <head>
-<title>PlasmID Database</title>
+<title>Search Unique Inserts</title>
+<meta name='description' content='Search tools to locate unique inserts such as cDNA, ORF, or shRNA.'>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
 </head>

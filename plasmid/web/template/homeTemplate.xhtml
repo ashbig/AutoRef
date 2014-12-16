@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:ui="http://java.sun.com/jsf/facelets" >
+      xmlns:ui="http://java.sun.com/jsf/facelets">
     <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -15,7 +15,8 @@
 
 </script>
     <h:head>
-        <title>PlasmID Database</title>
+        <title>Harvard PlasmID Database</title>
+        <meta name="description=" content="The Plasmid Information Database (PlasmID) annotates, stores, and distributes plasmid cDNA's, ORF's, and shRNA's for use in cancer research."></meta>
         <link rel="stylesheet" type="text/css" href="#{request.contextPath}/basic.css" />  
         <link rel="stylesheet" type="text/css" href="#{request.contextPath}/plasmidstyle.css" /> 
         <link rel="stylesheet" type="text/css" href="#{request.contextPath}/layout.css" />
@@ -25,9 +26,30 @@
     </h:head>
     <div class="gridContainer clearfix">
 
-        <br></br>
-        <br></br>
+     <br></br>
+     <br></br>
     <a href="http://hms.harvard.edu/" target="_blank"><img height="55" src="HMS_BiochemMolPhamH.jpg" alt="BCMP"/></a>
+            <table width="30%" height="30px" border="0" align="right" valign="middle">
+            <tr> 
+                <td width="50%" height="12px" border="0" align="left" class="countrytext">
+                    <h:outputLink value="SampleTrackingHome.jsp" rendered="#{plasmidBean.userInternal}">Sample Tracking</h:outputLink>&nbsp;
+                    <h:outputLink value="SEQ_InvoiceHome.jsp"  rendered="#{plasmidBean.userInternal}">Sequencing</h:outputLink>            
+                </td>
+                <td width="50%" height="12px" align="right" valign="bottom" class="countrytext"> 
+                    <a href="ViewCart.do" border="0"><img src="shoppingcart2.gif" width="105" height="18"/></a>
+                    <br></br>
+                    <br></br>
+
+                    <h:outputLink value="Logout.do" class="countrytext" rendered="#{plasmidBean.userExist}">Sign Out |</h:outputLink> 
+                    <h:outputLink value="Account.jsp" class="countrytext" rendered="#{plasmidBean.userExist}"> My Account |</h:outputLink>
+
+                    <h:outputLink value="Login.jsp" class="countrytext" rendered="#{!plasmidBean.userExist}">Sign In |</h:outputLink> 
+                    <h:outputLink value="PrepareRegistration.do" class="countrytext" rendered="#{!plasmidBean.userExist}"> Registration |</h:outputLink> 
+                    <a target="_blank" href="FAQ.jsp" class="countrytext"> FAQ</a>
+                </td>
+            </tr>
+
+        </table>
         
     <hr></hr>
         <br></br>
@@ -35,9 +57,18 @@
     <img height="55" src="dnacore.jpg"/>
 
 <img height="55" src="PlasmID_logo.jpg"/>
+<!-- Alerts to users about closings etc can be typed in this P class. Note: You must update both homeTemplate.xhtml and signinMenuBar.jsp to see this alert throughout the whole site.-->
+    <table width ="50%" align="center">
+    <td>
+    <p class="alertred" align="left">Harvard will be closed for Winter Recess from Tuesday Dec 24 to Friday Jan 5. 
+    We will continue to accept plasmid request during Winter Recess and they will be filled once we return.
+    For time-sensitive requests you may want to consider a commercial provider.</p>
+    </td>
+    </table>
+<!-- End Alter Section-->
 </div>
         <h:body>
-
+<!-- old cart location 
         <table width="100%" height="30px" border="0" align="center">
             <tr>&nbsp;</tr>
             <tr> 
@@ -60,6 +91,7 @@
             </tr>
 
         </table>
+End old cart location-->
       
 <!-- Nav bar edited to comply with xhtml language, logic lines from jsp commented out, li elements re-written to use beans--> 
         <div id="nav" align="center">
@@ -123,7 +155,7 @@
       <li><a href="cloningstrategies.jsp" title="Learn About Cloning Methods">Learn</a></li>
       <li><a href="Contactus.jsp">Contact</a></li>
       <li><a href="AboutUs.jsp">About Us</a></li>
-      <li><h:outputLink class="MenuBarItemSubmenu" value="Home.xhtml" title="Admin" rendered="#{plasmidBean.userInternal}">Admin</h:outputLink>
+      <li><h:outputLink class="MenuBarItemSubmenu" value="Admin.jsp" title="Admin" rendered="#{plasmidBean.userInternal}">Admin</h:outputLink>
         <ul>
           <li><h:outputLink value="ViewContainers.jsp" title="View Containers" rendered="#{plasmidBean.userInternal}">View Containers</h:outputLink></li>
           <li><h:outputLink value="vSearch.jsp" title="Vector Submission" rendered="#{plasmidBean.userInternal}">Vector Submission</h:outputLink></li>
