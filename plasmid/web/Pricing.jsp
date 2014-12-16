@@ -25,7 +25,7 @@
 
 
 
-      <table class="table" width="325em" border="0" align="left" id="gray">
+      <table class="table" width="400em" border="0" align="left" id="gray">
         <tr class="tableheader">
           <td width="225em">Pricing Category</td>
           <td align="right" width="100em">Retrieval Fee</td>
@@ -47,7 +47,7 @@
       
       
       
-<p class="mainbodytexthead">Plasmid Costs</p>
+<p class="mainbodytexthead">Plasmid Retrieval Costs</p>
         <p class='mainbodytext'> The PlasmID Repository is a non-profit service hosted by Harvard Medical School. <br>
             To ensure our continued operation we charge a retrieval fee to offset the cost of labor, equipment, and lab space.<br> </p>  
       

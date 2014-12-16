@@ -37,9 +37,9 @@ img
 
 /*Named Classes (alphabetically)*/
 
-.alert {font-family:Arial,Helvetica,sans-serif; font-size:12px; color:#FF0000;}
-.alertheader {font-family:Arial,Helvetica,sans-serif; font-size:12px; font-weight:bold; color:#FF0000;}
-.alertbig {font-family:Arial,Helvetica,sans-serif; font-size:14px; font-style:italic; color:#FF0000;}
+.alert {font-family:Arial,Helvetica,sans-serif; font-size:14px; color:#FF0000;}
+.alertheader {font-family:Arial,Helvetica,sans-serif; font-size:142px; font-weight:bold; color:#FF0000;}
+.alertbig {font-family:Arial,Helvetica,sans-serif; font-size:16px; font-style:italic; color:#FF0000;}
 .alertbigger {font-family:Arial,Helvetica,sans-serif; font-size:16px; font-style:italic; color:#FF0000;}
 .alertred{font-family:Arial,Helvetica,sans-serif; font-size:16px; color:#CC0000;}
 .breadcrumbtext {font-family:Arial,Helvetica,sans-serif; font-size:12px; text-transform:lowercase; color:#0054A6;}
@@ -77,8 +77,8 @@ TR.evenJobColorClass {background-color:#CCCCFF;}
 .footertext A:visited {COLOR:#81A649; text-decoration:underline; BORDER-BOTTOM:none;}
 .footertext A:hover {COLOR:#333333; TEXT-DECORATION:none; BORDER-BOTTOM:none;}
 .footertext A:active {color:#0054A6; text-decoration:underline; BORDER-BOTTOM:none;}
-.formlabel {font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:12px; color:#000000;}
-.formlabelitalic {font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-style:italic; font-size:12px; color:#000000;}
+.formlabel {font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:14px; color:#000000;}
+.formlabelitalic {font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-style:italic; font-size:14px; color:#000000;}
 UL.homeBullet {}
 UL.homeBullet LI {font-family:Arial,Helvetica,sans-serif; font-size:12px; padding-left:5px; padding-bottom:5px;}
 .homeBullet A:link {color:#0054A6; BORDER-BOTTOM: dashed 1px #0054A6; TEXT-DECORATION: none;}
@@ -93,7 +93,7 @@ UL.homeBullet LI {font-family:Arial,Helvetica,sans-serif; font-size:12px; paddin
 .homepageLink A:active {color:#0054A6; TEXT-DECORATION:none; BORDER-BOTTOM:medium none;}
 .homepageText2 {font-family:Arial,Helvetica,sans-serif; font-size:15px; background-repeat:no-repeat; color:#000000; font-weight:bold; padding-top:2px; padding-left:20px;}
 .homepageText3 {font-family:Arial,Helvetica,sans-serif; font-size:15px; background-repeat:no-repeat; color:#000000; font-weight:bold; padding-top:0px; padding-left:20px; padding-bottom:2px;}
-.itemtext {font-family:Arial,Helvetica,sans-serif; font-size:12px;}
+.itemtext {font-family:Arial,Helvetica,sans-serif; font-size:14px;}
 .itemtext A:link {color:#7C1D20; text-decoration:underline; BORDER-BOTTOM:none;}
 .itemtext A:visited {COLOR:#7C1D20; text-decoration:none; BORDER-BOTTOM:none;}
 .itemtext A:hover {color:#666666; text-decoration:none; BORDER-BOTTOM:none;}
@@ -120,7 +120,7 @@ A.leftsubnavtext:visited {color:#000000;}
 A.leftsubnavtext:hover {color:#0054A6;}
 A.leftsubnavtext:active {color:#0054A6;}
 .lftsubtxt {padding-left:12px; padding-top:3px;}
-.mainbodytext {font-family:Verdana, Arial,Helvetica,sans-serif; font-size:12px; color:#000000;}
+.mainbodytext {font-family:Verdana, Arial,Helvetica,sans-serif; font-size:14px; color:#000000;}
 .mainbodytext a:link {color:#CC0000; text-decoration:underline;}
 .mainbodytext a:visited {color:#CC0000; text-decoration:underline;}
 .mainbodytext a:hover {color:#666666; text-decoration:none;}
@@ -146,10 +146,10 @@ UL.sectionlist LI {font-family:Arial,Helvetica,sans-serif; font-size:12px; LINE-
 .subnavtextNS A:visited {COLOR:#333333; TEXT-DECORATION:none;}
 .subnavtextNS A:hover {COLOR:#666666; TEXT-DECORATION:none;}
 .subnavtextNS A:active {COLOR:#333333; TEXT-DECORATION:none;}
-.tablebody {font-family:Arial,Helvetica,sans-serif; font-size:12px; color:#000000; font-weight:normal; background:#dddddd;}
-.tableheader {font-family:Arial,Helvetica,sans-serif; font-size:13px; color:#ffffff; font-weight:bold; background:#999999;}
-.tableinfo {font-family:Arial,Helvetica,sans-serif; font-size:11px; color:#000000; background:#EEEEEE;}
-.text {color:#000000; font-family:Arial,Helvetica,sans-serif; font-size:12px;}
+.tablebody {font-family:Arial,Helvetica,sans-serif; font-size:14px; color:#000000; font-weight:normal; background:#dddddd;}
+.tableheader {font-family:Arial,Helvetica,sans-serif; font-size:15px; color:#ffffff; font-weight:bold; background:#999999;}
+.tableinfo {font-family:Arial,Helvetica,sans-serif; font-size:14px; color:#000000; background:#EEEEEE;}
+.text {color:#000000; font-family:Arial,Helvetica,sans-serif; font-size:14px;}
 .text A:link {color:#0054A6; BORDER-BOTTOM:#0054A6 1px dashed; TEXT-DECORATION:none;}
 .text A:visited {COLOR:#cc0000; BORDER-BOTTOM:#cc0000 1px dashed; TEXT-DECORATION:none;}
 .text A:hover {COLOR:#333333; TEXT-DECORATION:none; BORDER-BOTTOM:none;}

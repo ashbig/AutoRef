@@ -11,9 +11,9 @@
 <br>
 <br>
 <a href="http://hms.harvard.edu/" target="_blank"><img height="55" src="HMS_BiochemMolPhamH.jpg" alt="BCMP"></a>
-<table width="30%" height="30px" border="0" align="right">
+<table width="275px" height="30px" border="0" align="right">
             <tr> 
-                <td width="50%" height="12px" border="0" align="left" class="countrytext" valign="middle">
+                <td width="105px" height="12px" border="0" align="left" class="countrytext" valign="middle">
                     <%--<a href="http://dnaseq.med.harvard.edu" target="_blank">DNA Resource Core</a><br><br>--%>
                     
             <logic:present name="<%=Constants.USER_KEY%>" scope="session"> 
@@ -29,7 +29,7 @@
             </logic:notPresent>
                     
               </td>
-                <td width="50%" height="12px" align="right" valign="bottom" class="countrytext"> 
+                <td width="170px" height="12px" align="right" valign="bottom" class="countrytext"> 
                     <a href="ViewCart.do" border="0"><img src="shoppingcart2.gif" width="105" height="18"/></a>
                     <br>
                    <br>
@@ -59,9 +59,7 @@
     <p>
     <table width ="50%" align="center">
     <td>
-    <p class="alertred" align="left">Harvard will be closed for Winter Recess from Tuesday Dec 24 to Friday Jan 5. 
-    We will continue to accept plasmid request during Winter Recess and they will be filled once we return.
-    For time-sensitive requests you may want to consider a commercial provider.</p>
+    <p class="alertred" align="left">Harvard will be closed for Winter Recess starting Tuesday Dec 24 and will reopen on Monday Jan 5. We will continue to accept plasmid request during this break but they will be filled once we return. For time-sensitive requests you may want to consider a commercial provider.</p>
     </td>
     </table>
     </p>
