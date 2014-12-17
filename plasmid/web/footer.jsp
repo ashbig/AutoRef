@@ -1,5 +1,5 @@
 <div id="footer">
-    
+<div id="noprint">    
 <hr>
 <p align="left" class="subtletext">
 <a href="http://www.dfhcc.harvard.edu" target="_blank"><img src="DFHCC_NCI_logo.jpg" height="35"></a>   
@@ -27,4 +27,5 @@ PlasmID was created and is maintained by the <a href="http://dnaseq.med.harvard.
 
 </script>
 <!-- End Google Analytics tracker-->
+</div>
 </div>

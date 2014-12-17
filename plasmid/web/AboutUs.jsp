@@ -33,6 +33,7 @@ Funded by a grant from the National Cancer Institute, we have joined these seven
 <p class="mainbodytext">
     The mission of the DNA Resource Core is to provide researchers with inexpensive sequencing and plasmid services paired with comprehensive quality control and customer support.</p>
 <p class="mainbodytexthead">Our History</p>
+<p class="mainbodytext">
 PlasmID was added to the DNA Resource Core in the spring of 2004 to reduce the burden on individual labs to store, maintain and distribute plasmid clones and supporting information. Currently, our repository has ~350,000 plasmids, including most human cDNAs as well as shRNA libraries. We distribute clones widely to the community using a <a href="Pricing.jsp">cost-recovery</a> mechanism.</p>
 <p class="mainbodytext">
     In addition to our PlasmID Repository service the DF/HCC DNA Resource Core also provides DNA sequencing services. To learn more click <a href="http://dnaseq.med.harvard.edu/">here</a>. </p>

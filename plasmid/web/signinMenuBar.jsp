@@ -6,6 +6,7 @@
  <link href="boilerplate.css" rel="stylesheet" type="text/css" />
  <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
  <link rel="shortcut icon" href="dnacore.ico">
+ <link rel="stylesheet" type="text/css" href="print.css" media="print">
  <script src="respond.min.js"></script>
 
 <br>
@@ -52,6 +53,7 @@
 <div id="header">          
     <hr>
 <br>
+<div id="noprint">
 <div class="logo">
 <img height="55" src="dnacore.jpg"/>
 <img height="55" src="PlasmID_logo.jpg"/>
@@ -106,7 +108,7 @@
             
 </table>
 old location of cart --%>
-</div>
+
      
   <div id="nav" align="center">
     <ul id="MenuBar1" class="MenuBarHorizontal">
@@ -191,4 +193,5 @@ old location of cart --%>
       
     </ul>
   </div>
+</div>
  

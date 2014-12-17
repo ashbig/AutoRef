@@ -76,7 +76,7 @@
                         <p></p>
                         <logic:notPresent name="vSearchForm" property="results">
                             <logic:notEmpty name="vSearchForm" property="VN">
-                                <center><font color="red"><b>No Vector Found. Please try again.</b></font></center>
+                                <center><font color="red"><b>You must be logged in to use this tool.</b></font></center>
                             </logic:notEmpty>
                         </logic:notPresent>
                         <logic:present name="vSearchForm" property="results">

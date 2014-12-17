@@ -58,8 +58,8 @@
         <br>
         <tr>
     <td height="40" colspan="2" valign="top">--%>
-      <span class="mainbodytexthead"><br>You can search for clones using various criteria</span><br>
-      <span class="mainbodytext">PLEASE LOG IN BEFORE SEARCHING FOR CLONES! </span>  
+            <p class="mainbodytexthead">You can search for clones using various criteria</p>
+      <p class="mainbodytext">PLEASE LOG IN BEFORE SEARCHING FOR CLONES! </p>  
   <br>
   <br>
       <table width="100%" align="left">
