@@ -57,7 +57,7 @@
 <div class="logo">
 <img height="55" src="dnacore.jpg"/>
 <img height="55" src="PlasmID_logo.jpg"/>
-<!-- Alerts to users about closings etc can be typed in this P class. Note: You must update both homeTemplate.xhtml and signinMenuBar.jsp to see this alert throughout the whole site.-->
+<!-- Alerts to users about closings etc can be typed in this P class. Note: You must update both homeTemplate.xhtml and signinMenuBar.jsp to see this alert throughout the whole site.
     <p>
     <table width ="50%" align="center">
     <td>
@@ -65,7 +65,7 @@
     </td>
     </table>
     </p>
-<!-- End Alter Section-->
+End Alert Section-->
 </div>
 <h:body>
 <%-- old location of cart
