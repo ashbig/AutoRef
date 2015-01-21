@@ -25,17 +25,17 @@
       <jsp:include page="menuHome.jsp" />
 	</td>--%>
     <td width="100%%" align="left" valign="top">
-    <logic:equal name="registrationForm" property="update" value="true"> 
+    <%--<logic:equal name="registrationForm" property="update" value="true"> 
 	<%--<jsp:include page="updateAccountTitle.jsp" />--%>
-    </logic:equal>
+    <%--</logic:equal>
     <logic:notEqual name="registrationForm" property="update" value="true"> 
 	<jsp:include page="registrationTitle.jsp" />
-    </logic:notEqual>
+    </logic:notEqual>--%>
       <html:form action="Registration.do" enctype="multipart/form-data">
 <input type="hidden" name="forward" value="submit"/>
-<p class="homeMainText">Please verify the following information. (* indicates required 
+<p class="mainbodytext">Please verify the following information. (* indicates required 
   field) </p>
-<table width="100%" border="0">
+<table width="1000px" border="0">
   <tr class="formlabel"> 
     <td width="22%" align="left" valign="baseline">*First Name:</td>
     <td width="78%" align="left" valign="baseline"> 
@@ -61,7 +61,7 @@
     </td>
   </tr>
   <tr class="formlabel"> 
-    <td width="22%" align="left" valign="baseline">*PI Institution or Company Name:</td>
+    <td width="22%" align="left" valign="baseline">*Institution/<br>Company Name:</td>
     <td width="78%" align="left" valign="baseline"> 
         <bean:write name="registrationForm" property="institution"/>
     </td>
@@ -106,7 +106,7 @@
   </tr>
   </logic:equal>
   <tr class="formlabel"> 
-    <td width="22%" align="left" valign="baseline">Group you or your PI belong to:</td>
+    <td width="22%" align="left" valign="baseline">Group:</td>
     <td width="78%" align="left" valign="baseline">
         <bean:write name="registrationForm" property="group"/>
     </td>
@@ -140,6 +140,7 @@
 </table>
       </html:form></td>
   </tr>
+  <tr><td class='mainbodytext'><font color='red'>If this information is not correct please user your browser's back button to go back and make changes.</td></tr>
 </table>
 <jsp:include page="footer.jsp" /></body>
      </div>

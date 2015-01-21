@@ -35,20 +35,20 @@
                     <p>
                     <table width="100%" border="0">
                         <tr> 
-                            <td width="20%" class="formlabel">Validation Status:</td>
+                            <td width="130px" class="formlabel">Validation Status:</td>
                             <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="platinumServiceStatus"/> </td>
                         </tr>
                     </table>
 
                     <p class="homeMainText">Validation Summary: Pass-<bean:write name="pass"/>; Fail-<bean:write name="fail"/>; Manual-<bean:write name="manual"/></p>
-                    <table width="100%" border="1">
+                    <table border="1">
                         <tr>
-                            <td class="tableheader">CloneID</td>
-                            <td class="tableheader">Validation Result</td>
+                            <td width='105px' class="tableheader">CloneID</td>
+                            <td width='140px' class="tableheader">Validation Result</td>
                             <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
-                                <td class="tableheader">Validation Method</td>
-                                <td class="tableheader">Workflow</td>
-                                <td class="tableheader">Researcher</td>
+                                <td width='200px' class="tableheader">Validation Method</td>
+                                <td width='100px' class="tableheader">Workflow</td>
+                                <td width='100px' class="tableheader">Researcher</td>
                             </logic:equal>
                             <td class="tableheader">Date</td>
                         </tr>
@@ -71,15 +71,22 @@
                     <p class="homeMainText">Validation History</p>
 
                     <logic:iterate name="<%=Constants.CLONEORDER%>" property="clones" id="c">
-                        <table width="100%" border="0">
+                        <table style="margin-top: 2em;" border="0">
                             <tr>
-                                <td width="20%" class="formlabel">PlasmID Clone ID: </td>
-                                <td class="text"><bean:write name="c" property="clone.name"/></td>
+                                <td width="130px" class="formlabel">PlasmID Clone ID: </td>
+                                <td width="100px" class="text"><bean:write name="c" property="clone.name"/></td>
                             </tr>
                         </table>
 
                         <logic:equal name="c" property="hasHistory" value="1">
-                            <table width="100%" border="1">
+                            <table style="table-layout: fixed;" width="100%" border="1">
+                                <col width="50%">
+                                <col width="10%">
+                                <col width="10%">
+                                <col width="10%">
+                                <col width="10%">
+                                <col width="10%">                                
+                                
                                 <tr>
                                     <td class="tableheader">Sequence</td>
                                     <td class="tableheader">Validation Result</td>
@@ -93,7 +100,7 @@
 
                                 <logic:iterate name="c" property="history" id="v">
                                     <tr class="tableinfo"> 
-                                        <td><bean:write name="v" property="readForWeb"/></td>
+                                        <td style="word-wrap: break-word;"><bean:write name="v" property="readForWeb"/></td>
                                         <td><bean:write name="v" property="result"/></td>
                                         <td><bean:write name="v" property="method"/></td>
                                         <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">

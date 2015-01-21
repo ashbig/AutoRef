@@ -15,7 +15,23 @@
  <link href="SpryMenuBarHorizontal.css" rel="stylesheet" type="text/css" />
         <link href="boilerplate.css" rel="stylesheet" type="text/css" />
         <script type="text/javascript" src="respond.min.js"></script>
-</head>
+        <script type="text/javascript">
+function showText(obj)
+{
+if(obj.value=='Show')
+{
+document.getElementById('mytext').style.display='block';
+obj.value='Hide';
+}
+else
+{
+document.getElementById('mytext').style.display='none';
+obj.value='Show';
+}
+return;
+}
+</script>
+    </head>
      <div class="gridContainer clearfix">
 
     
@@ -30,7 +46,7 @@
                     <%--<jsp:include page="checkoutTitle.jsp" />--%>
                     
                     <html:errors/>
-                    <table width="100%" border="0">
+                    <%--<table width="100%" border="0">
                         <tr> 
                             <td width="12%" class="formlabel">Name:</td>
                             <td colspan="3" class="text"><bean:write name="<%=Constants.USER_KEY%>" property="username"/></td>
@@ -125,7 +141,7 @@
                             <td class="formlabel">Email:</td>
                             <td class="text"><bean:write name="checkoutForm"  property="billingemail"/></td>
                         </tr>
-                    </table>
+                    </table>--%>
                     
                     <p>&nbsp;</p>
                     
@@ -162,6 +178,7 @@
                     
                     <html:form action="ChoosePayment.do">
                         <logic:equal name="<%=Constants.USER_KEY%>" property="internalMember" value="true">
+                            <p class="mainbodytexthead">On Campus requests must be paid using a valid 33 digit code. You or your grant manager can obtain this from the HCOM system. If you are at a Harvard affiliated institution and do not have a 33 digit code you must <a href="PrepareRegistration.do?update=true&first=true">update your account</a> to 'Harvard affiliate' before you can checkout.</p>
                             <table>
                                 <tr>
                                     <td class="formlabel">Please enter 33 digit billing code:</td>
@@ -180,24 +197,12 @@
                             </table>
                         </logic:equal>
                         <logic:notEqual name="<%=Constants.USER_KEY%>" property="internalMember" value="true"><p class="mainbodytexthead">
-                                <b>Pay Using a Credit Card </b>
-                            </p>
-                            <p class="mainbodytexthead">
-                                Click the button to pay by credit card through the PayPal site. You DO NOT need to create a PayPal account to pay by credit card: see the bottom right-hand side of the PayPal page for a link to pay by credit card WITHOUT signing in or registering.
-                            You will be returned to PlasmID to complete your request.</p> 
-                            <p class="text">Please confirm the following information (use back button to make changes):</P>
                             <table>
-                                <tr>
-                                    <td colspan="3" class="alertbig">
-                                        **ATTENTION: Customers paying through wire transfer please be sure to cover transferring bank fees and third-party bank fees where applicable. Thank you.
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td width="30%" class="formlabel">Please choose payment method:</td>
-                                    <td width="30%" class="text"><html:radio property="paymentmethod" value="<%=Constants.PAYPAL%>"/><img src="credit_card.jpg"/></td>
-                                    <td class="text"><html:radio property="paymentmethod" value="<%=Constants.PO%>"/><%=Constants.PO%></td>
-                                </tr>
-                                <tr>
+                                <tr><td width="50%" class="formlabel">How would you like to pay?</td></tr>
+                                <tr><td width="50%" class="text"><html:radio property="paymentmethod" value="<%=Constants.PAYPAL%>"/> Credit Card</td></tr>
+                                <tr><td width="50%" class="text"><html:radio property="paymentmethod" value="<%=Constants.PO%>"/> I have a <%=Constants.PO%></td></tr>
+                                <tr><td width="50%" class="text"><html:radio property="paymentmethod" value=""/> I need to request a PO</td></tr>                              
+                                <tr style="visibility:hidden" id="PO">
                                     <td class="formlabel">*PO Number:</td>
                                     <td colspan="2" class="text">
                                         <html:text maxlength="50" property="ponumber" size="40"/>

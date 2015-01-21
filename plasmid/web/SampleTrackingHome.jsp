@@ -21,7 +21,7 @@
 
 <body>
 <jsp:include page="internalHomeTitle.jsp" />
-<table width="100%" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
+<table width="100%" border="0" align="center">
   <tr> 
     <%--<td width="17%" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle"> 
       <jsp:include page="sampleTrackingMenu.jsp" />
@@ -31,15 +31,17 @@
 <html:errors/>
 
 <ul>
-    <li class="text"><a href="LabelPlates.jsp">Create New Container Labels</a>
-    <li class="text"><a href="SelectProcess.jsp">Generate Worklist</a>
-    <li class="text"><a href="GetResultTypes.do">Enter Results</a>
-    <li class="text"><a href="FindClones.jsp">Find Clones</a>
+
+    <li class="text"><a href="FindClones.jsp">Find Clones</a> (Start with CloneID -> Storage Containers)</li>
+    <li class="text"><a href="ViewContainers.jsp" title="View Containers">View Containers</a> (Start with Storage Containers -> CloneID</li>
     <li class="text"><a href="UpdateCloneStatusInput.jsp">Update Clone Status</a>
     <li class="text"><a href="UpdateCloneStorageInput.jsp">Update Clone Storage</a>
     <li class="text"><a href="PrepareContainerUpload.do">Upload Containers</a>
     <li class="text"><a href="Plate96To384Input.jsp">Generate Condensed Archive Plates</a>
     <li class="text"><a href="Plate384To96Input.jsp">Reverse Plate Condensation</a>
+    <li class="text"><a href="LabelPlates.jsp">Create New Container Labels</a>
+    <li class="text"><a href="SelectProcess.jsp">Generate Worklist</a>
+    <li class="text"><a href="GetResultTypes.do">Enter Results</a>
 </ul>
     </td>
   </tr>

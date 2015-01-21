@@ -176,14 +176,14 @@ old location of cart --%>
       
       <li><a class="MenuBarItemSubmenu" href="Admin.jsp" title="Admin">Admin</a>
         <ul>
-                    <li><a href="ViewContainers.jsp" title="View Containers">View Containers</a></li>
+                    <li><a href="PrepareSearchInvoice.do" title="Search Invoices">PlasmID Invoices</a></li>
+                    <li><a href="SEQ_InvoiceHome.jsp">Sequencing Invoices</a></li>
                     <li><a href="vSearch.jsp" title="Vector Submission">Vector Submission</a></li>
                     <li><a href="vSearchSFD.jsp" title="Vector For Distribution">Vector For Distribution</a></li>
-                    <li><a href="PrepareSearchInvoice.do" title="Search Invoices">Search Invoices</a></li>
                     <li><a href="pReceiveSearch.jsp" title="Recieve Plasmids">Receive Plasmids</a></li>
                     <li><a href="AddInstitutionsInput.jsp" title="Add Institutions">Add Institutions</a></li>
                     <li><a href="AddEmtaMembersInput.jsp" title="Add Institution to Expedited MTA Members">Add EP-MTA Members</a></li>   
-                    <li><a href="SEQ_InvoiceHome.jsp">Sequencing Invoices</a></li>
+
           </logic:equal>
           </logic:present>
           <logic:notPresent name="<%=Constants.USER_KEY%>" scope="session">

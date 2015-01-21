@@ -38,7 +38,7 @@ img
 /*Named Classes (alphabetically)*/
 
 .alert {font-family:Arial,Helvetica,sans-serif; font-size:14px; color:#FF0000;}
-.alertheader {font-family:Arial,Helvetica,sans-serif; font-size:142px; font-weight:bold; color:#FF0000;}
+.alertheader {font-family:Arial,Helvetica,sans-serif; font-size:14px; font-weight:bold; color:#FF0000;}
 .alertbig {font-family:Arial,Helvetica,sans-serif; font-size:16px; font-style:italic; color:#FF0000;}
 .alertbigger {font-family:Arial,Helvetica,sans-serif; font-size:16px; font-style:italic; color:#FF0000;}
 .alertred{font-family:Arial,Helvetica,sans-serif; font-size:16px; color:#CC0000;}
