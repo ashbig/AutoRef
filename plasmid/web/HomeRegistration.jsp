@@ -22,119 +22,116 @@
         <div class=content">
     <body>
         <jsp:include page="signinMenuBar.jsp" />
-        <table width="100%" border="0" align="left">
-            <tr><td width="100%" align="left" valign="top">
+        <table width="100%" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
+            <tr> 
+                <%--<td width="17%" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle"> 
+                    <jsp:include page="menuHome.jsp" />
+                </td> --%>
+                <td width="100%" align="left" valign="top">
+                    <%--
+                    <logic:equal name="registrationForm" property="update" value="true">
+                        <jsp:include page="updateAccountTitle.jsp" />
+                    </logic:equal>
+                    <logic:notEqual name="registrationForm" property="update" value="true">
+                        <jsp:include page="registrationTitle.jsp" />
+                    </logic:notEqual>
+                    --%>
                     <html:form action="Registration.do">
                         <input type="hidden" name="forward" value="confirm">
-                        <p class="mainbodytext">Please enter the following information.<br>(* indicates required field) </p>
+                        <p class="mainbodytext">Please enter the following information. (* indicates required 
+                        field) </p>
                         <html:errors/>
-                        <table name="main" width="100%" border="0">
-                                <table name="basicinfo" border="1" rules="none" frame="box" style="margin-bottom:1em;" width="940px">
-                                    <colgroup>
-                                        <col width="150px">
-                                        <col width="850px">
-                                    </colgroup>
-                                    <tr class="formlabel"> 
-                                        <td align="left" valign="baseline">*First Name:</td>
-                                        <td align="left" valign="baseline"> 
-                                             <input type="text" maxlength="50" name="firstname" size="30" styleClass="text" required/>
-                                        </td>
-                                    </tr>
-                                    <tr class="formlabel"> 
-                                        <td align="left" valign="baseline">*Last Name:</td>
-                                        <td align="left" valign="baseline"> 
-                                           <input type="text" maxlength="50" name="lastname" size="30" styleClass="text" required/>
-                                        </td>
-                                    </tr>
-                                    <tr class="formlabel"> 
-                                        <td align="left" valign="baseline">*Email:</td>
-                                        <td align="left" valign="baseline"> 
-                                            <input type="email" maxlength="50" name="email" size="40" styleClass="text" required/>
-                                        </td>
-                                    </tr>
-                                    <tr class="formlabel"> 
-                                        <td align="left" valign="baseline">*Phone:</td>
-                                        <td align="left" valign="baseline"> 
-                                            <input type="tel" maxlength="50" name="phone" size="40" styleClass="text" required/>
-                                        </td>
-                                    </tr>
-                                </table>
-                                <table name="institution" border="1" rules="none"frame="box" style="margin-bottom:1em;" width="940px">
-                                <tr class="formlabel"> 
-                                    <td align="left" valign="top">*Institution/<br>Company Name:</td>
-                                    <td align="left" valign="baseline"> 
-                                        <table width="100%" border="0" bordercolor="#000000">
-                                            <colgroup>
-                                                <col width="150px">
-                                                <col width="850px">
-                                            </colgroup>
-                                            <tr>
-                                                <td class="formlabel" colspan="2"><input type="radio" name="institution" value="-- Please Select --" required> Expedited MTA Member: [<a class="text" href="memberinfo.html" target="_blank">?</a>]</td>
-                                            </tr>
-                                            <tr>
-                                                <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                                                <td class="text">
-                                                    <html:select property="institution1" styleClass="text">
-                                                        <html:option value="">-- Please Select --</html:option>
-                                                        <html:options name="members"/>
-                                                    </html:select>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="formlabel" colspan="2"><input type="radio" name="institution" value="-- Please Select --" required> Non Member: [<a class="text" href="nonmemberinfo.html" target="_blank">?</a>]</td>
-                                            </tr>
-                                            <tr>
-                                                <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                                                <td class="text">
-                                                    <html:select property="institution2" styleClass="text">
-                                                        <html:option value="">---------- Please Select ----------</html:option>
-                                                        <html:options name="institutions"/>
-                                                    </html:select>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="formlabel" colspan="2"><input type="radio" name="institution" value="" required> Other Institution (not listed above):</td>
-                                            </tr>
-                                            <tr>
-                                                <td></td>
-                                                <td class="text" colspan="2">
-                                                    <html:text maxlength="100" property="institution3" size="50" styleClass="text"/>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="formlabel">Choose category:</td>
-                                            </tr>
-                                            <tr>
-                                            <td></td>
-                                                <td class="text">
-                                                    <html:select property="category" styleClass="text">
-                                                        <html:option value="">-- Please Select --</html:option>
-                                                        <html:options name="categories"/>
-                                                    </html:select>            
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
-                                </table>
-
-                            <table name="pi" border="1" style="margin-bottom:1em;" rules="none" frame="box" width="940px">
-                                <tr class="formlabel"> 
-                                            <td align="left" valign="baseline">* User Group:</td>
-                                            <td align="left" valign="baseline">
-                                                <html:select property="group" styleClass="text">
-                                                    <html:option value="">-- Please Select --</html:option>
-                                                    <html:options name="groups"/>
-                                                </html:select>
-                                            </td>        
-                                </tr>   
-                                <tr><td>&nbsp;</td></tr>
-                                
-                                <tr class="formlabel">
-                            <td align="left" valign="baseline"> 
-                                *PI or<br>Supervisor:
+                        <table style="margin-bottom:1em;" width="940px" border="0">
+                            <colgroup>
+                                <col width="170px">
+                                <col width="300px">
+                                <col width="auto">
+                            </colgroup>
+                            <tr class="formlabel"> 
+                                <td align="left" valign="baseline">*First Name:</td>
+                                <td align="left" valign="baseline"> 
+                                    <html:text maxlength="50" property="firstname" size="40" styleClass="text"/>
                                 </td>
-                                <td align="left" valign="baseline"><input type="radio" name="pinameinput" required> 
+                            </tr>
+                            <tr class="formlabel"> 
+                                <td align="left" valign="baseline">*Last Name:</td>
+                                <td align="left" valign="baseline"> 
+                                    <html:text maxlength="50" property="lastname" size="40" styleClass="text"/>
+                                </td>
+                            </tr>
+                            <tr class="formlabel"> 
+                                <td align="left" valign="baseline">*Email:</td>
+                                <td align="left" valign="baseline"> 
+                                    <html:text maxlength="50" property="email" size="40" styleClass="text"/>
+                                </td>
+                            </tr>
+                            <tr class="formlabel"> 
+                                <td align="left" valign="baseline">*Phone:</td>
+                                <td align="left" valign="baseline"> 
+                                    <html:text maxlength="50" property="phone" size="40" styleClass="text"/>
+                                </td>
+                            </tr>
+                            <tr class="formlabel"> 
+                                <td align="left" valign="baseline">*User Group:</td>
+                                <td align="left" valign="baseline">
+                                    <html:select property="group" styleClass="text">
+                                        <html:option value="">-- Please Select --</html:option>
+                                        <html:options name="groups"/>
+                                    </html:select>
+                                </td>        
+                            </tr>
+                            <tr><td>&nbsp;</td></tr>
+                            <tr class="formlabel"> 
+                                <td align="left" valign="top">*Institution/<br>Company Name:</td>
+                                <td align="left" valign="baseline"> 
+                                    <table width="100%" border="0" bordercolor="#000000">
+                                        <tr>
+                                            <td class="formlabel" colspan="2">Expedited MTA Member: [<a class="text" href="memberinfo.html" target="_blank">?</a>]</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text" colspan="2">
+                                                <html:select property="institution1" styleClass="text">
+                                                    <html:option value="">-- Please Select --</html:option>
+                                                    <html:options name="members"/>
+                                                </html:select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="formlabel" colspan="2">Non Member: [<a class="text" href="nonmemberinfo.html" target="_blank">?</a>]</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text" colspan="2">
+                                                <html:select property="institution2" styleClass="text">
+                                                    <html:option value="">---------- Please Select ----------</html:option>
+                                                    <html:options name="institutions"/>
+                                                </html:select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="formlabel" colspan="2"><font color="grey">Institution not listed above:</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text" colspan="2">
+                                                <html:text maxlength="100" property="institution3" size="94" styleClass="text"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="formlabel" align="left" width="25%">Choose category:</td>
+                                            <td class="text" align="left">
+                                                <html:select property="category" styleClass="text">
+                                                    <html:option value="">-- Please Select --</html:option>
+                                                    <html:options name="categories"/>
+                                                </html:select>            
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr><td>&nbsp;</td></tr>
+                            <tr class="formlabel"> 
+                                <td align="left" valign="baseline">*PI or Supervisor:
+                                </td>
+                                <td align="left" valign="baseline"> 
                                     <html:select property="piname" styleClass="text">
                                         <html:option value=""/>
                                         <html:options collection="pis" property="nameInstitution"/>
@@ -143,55 +140,47 @@
                             </tr>
                             <tr class="formlabel"> 
                                 <td>&nbsp;</td>
-                                <td align="left" valign="top"><input type="radio" name="pinameinput" required> Not listed:</td>
+                                <td align="left" valign="top"><font color="grey"> &nbsp;PI not in list above</td>
                             </tr>
-                                <td align="left" valign="baseline" colspan="3">
+                            <tr>                                
+                                <td>&nbsp;</td>
+                                <td align="left" valign="baseline"> 
                                     <table width="100%" border="0" bordercolor="#000000">
-                                        <colgroup>
-                                            <col width="295px">
-                                            <col width="100px">
-                                            <col width="auto">
-                                        </colgroup>
                                         <tr> 
-                                            <td>&nbsp;</td>
-                                            <td class="formlabel"> First Name:</td>
-                                            <td>
+                                            <td align="left" width="25%" class="formlabel"><font color="grey">First Name:</td>
+                                            <td align="left" width="75%">
                                                 <html:text maxlength="50" property="pifirstname" size="30" styleClass="text"/>
                                             </td>
                                         </tr>
                                         <tr> 
-                                            <td>&nbsp;</td>
-                                            <td class="formlabel"> Last Name:</td>
+                                            <td align="left" class="formlabel"><font color="grey">Last Name:</td>
                                             <td>
                                                 <html:text maxlength="50" property="pilastname" size="30" styleClass="text"/>
                                             </td>
                                         </tr>
                                         <tr> 
-                                            <td>&nbsp;</td>
-                                            <td class="formlabel"> Email:</td>
+                                            <td align="left" class="formlabel"><font color="grey">Email:</td>
                                             <td>
                                                 <html:text maxlength="50" property="piemail" size="30" styleClass="text"/>
                                             </td>
                                         </tr>
-                                                            </tr>
-                                                                   
-                                        </table>
+                                </table></td>
+                            </tr>
+                            <tr><td>&nbsp;</td></tr>
 
-                            </table>
-                                </td>
-                            <table border="1" rules="none" frame="box" width="940px">
                             <tr class="formlabel"> 
-                                <td align="left" valign="baseline">*Please enter a password:</td>
+                                <td align="left" valign="baseline">*Password:</td>
                                 <td align="left" valign="baseline"> 
                                     <html:password maxlength="50" property="password" size="30" styleClass="text"/>
                                 </td>
                             </tr>
                             <tr class="formlabel"> 
-                                <td align="left" valign="baseline">*Please enter the password again</td>
+                                <td align="left" valign="baseline">*Re-enter password</td>
                                 <td align="left" valign="baseline"> 
                                     <html:password maxlength="50" property="password2" size="30" styleClass="text"/>
                                 </td>
                             </tr>
+                            <tr><td>&nbsp;</td></tr>
                             <tr class="formlabel"> 
                                 <logic:equal name="registrationForm" property="update" value="true">
                                     <td align="right" valign="baseline">

@@ -9,7 +9,7 @@
 <html>
 <head>
     <title><logic:iterate id="insert" name="clone" property="inserts"><bean:write name="insert" property="name"/></logic:iterate> in <bean:write name="clone" property="vector.name"/></title>
-    <meta name="description=" content="Details about the <logic:iterate id="insert" name="clone" property="inserts"><bean:write name="insert" property="name"/></logic:iterate> plasmid (cDNA, ORF, or shRNA); including sequence, author, publications, and links to public references."</meta>
+    <meta name="description" content="Details about the <logic:iterate id="insert" name="clone" property="inserts"><bean:write name="insert" property="name"/></logic:iterate> plasmid (cDNA, ORF, or shRNA); including sequence, author, publications, and links to public references."</meta>
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
     <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
 <link rel="shortcut icon" href="dnacore.ico">

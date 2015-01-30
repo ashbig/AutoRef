@@ -8,7 +8,8 @@
 
 <html>
     <head>
-        <title>PlasmID Database</title>
+        <title>BLAST Results</title>
+        <meta name='description' content='View your BLAST search results.'>        
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
         <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
         

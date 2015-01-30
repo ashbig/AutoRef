@@ -35,58 +35,62 @@
 <input type="hidden" name="forward" value="submit"/>
 <p class="mainbodytext">Please verify the following information. (* indicates required 
   field) </p>
-<table width="1000px" border="0">
+<table border="1">
+    <colgroup>
+        <col width ="200px">
+        <col width ="auto">
+    </colgroup>
   <tr class="formlabel"> 
-    <td width="22%" align="left" valign="baseline">*First Name:</td>
-    <td width="78%" align="left" valign="baseline"> 
+    <td align="left" valign="baseline">*First Name:</td>
+    <td align="left" valign="baseline"> 
         <bean:write name="registrationForm" property="firstname"/>
     </td>
   </tr>
   <tr class="formlabel"> 
-    <td width="22%" align="left" valign="baseline">*Last Name:</td>
-    <td width="78%" align="left" valign="baseline"> 
+    <td align="left" valign="baseline">*Last Name:</td>
+    <td align="left" valign="baseline"> 
         <bean:write name="registrationForm" property="lastname"/>
     </td>
   </tr>
   <tr class="formlabel"> 
-    <td width="22%" align="left" valign="baseline">*Email:</td>
-    <td width="78%" align="left" valign="baseline"> 
+    <td align="left" valign="baseline">*Email:</td>
+    <td align="left" valign="baseline"> 
         <bean:write name="registrationForm" property="email"/>
     </td>
   </tr>
   <tr class="formlabel"> 
-    <td width="22%" align="left" valign="baseline">*Phone:</td>
-    <td width="78%" align="left" valign="baseline"> 
+    <td align="left" valign="baseline">*Phone:</td>
+    <td align="left" valign="baseline"> 
         <bean:write name="registrationForm" property="phone"/>
     </td>
   </tr>
   <tr class="formlabel"> 
-    <td width="22%" align="left" valign="baseline">*Institution/<br>Company Name:</td>
-    <td width="78%" align="left" valign="baseline"> 
+    <td align="left" valign="baseline">*Institution/<br>Company Name:</td>
+    <td align="left" valign="baseline"> 
         <bean:write name="registrationForm" property="institution"/>
     </td>
   </tr>
   <tr class="formlabel"> 
-    <td width="22%" align="left" valign="baseline">*Category:</td>
-    <td width="78%" align="left" valign="baseline"> 
+    <td align="left" valign="baseline">*Category:</td>
+    <td align="left" valign="baseline"> 
         <bean:write name="registrationForm" property="category"/>
     </td>
   </tr>
   <logic:notEqual name="registrationForm"  property="piname" value="">
   <tr class="formlabel"> 
-    <td width="22%" align="left" valign="baseline">PI:</td>
-    <td width="78%" align="left" valign="baseline"> 
+    <td align="left" valign="baseline">PI:</td>
+    <td align="left" valign="baseline"> 
         <bean:write name="registrationForm" property="piname"/>
     </td>
   </tr>
   </logic:notEqual>
   <logic:equal name="registrationForm" property="piname" value="">
   <tr class="formlabel"> 
-    <td width="22%" align="left" valign="top">PI information:</td>
-    <td width="78%" align="left" valign="baseline"> <table width="100%" border="0" bordercolor="#000000">
+    <td align="left" valign="top">PI information:</td>
+    <td align="left" valign="baseline"> <table width="100%" border="0" bordercolor="#000000">
         <tr class="formlabel"> 
-          <td width="25%"> *Fist Name:</td>
-          <td width="75%">
+          <td width="100px"> *First Name:</td>
+          <td width="auto">
              <bean:write name="registrationForm" property="pifirstname"/>
           </td>
         </tr>
@@ -106,34 +110,17 @@
   </tr>
   </logic:equal>
   <tr class="formlabel"> 
-    <td width="22%" align="left" valign="baseline">Group:</td>
-    <td width="78%" align="left" valign="baseline">
+    <td align="left" valign="baseline">Group:</td>
+    <td align="left" valign="baseline">
         <bean:write name="registrationForm" property="group"/>
     </td>
   </tr>
-
-  <tr class="formlabel"> 
-    <td width="22%" align="right">&nbsp;</td>
-    <td width="78%">&nbsp;</td>
-  </tr>
-<!--
-  <tr class="formlabel"> 
-    <td width="22%" align="left" valign="baseline">*Password:</td>
-    <td width="78%" align="left" valign="baseline"> 
-        <html:password property="password" styleClass="text"/>
-    </td>
-  </tr>
-  <tr class="formlabel"> 
-    <td width="22%" align="left" valign="baseline">*Re-enter the password 
-      </td>
-    <td width="78%" align="left" valign="baseline"> 
-        <html:password property="password2" styleClass="text"/>
-    </td>
-  </tr>
--->
+</table>
 <html:hidden property="password"/>
+<table>
+    <tr>&nbsp;</tr>
   <tr class="formlabel"> 
-    <td width="22%" align="right" valign="baseline">
+    <td align="left" valign="baseline">
         <html:submit styleClass="text" value="Confirm"/>
     </td>
   </tr>

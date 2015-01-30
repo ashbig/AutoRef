@@ -7,7 +7,7 @@
 
 <html>
 <head>
-<title>PlasmID Database</title>
+<title>Submission</title>
 <meta name='description' content='Details for researchers to share their plasmids with the broader research community'>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link href="plasmidstyle.css" rel="stylesheet" type="text/css">

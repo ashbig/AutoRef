@@ -7,6 +7,7 @@
  <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
  <link rel="shortcut icon" href="dnacore.ico">
  <link rel="stylesheet" type="text/css" href="print.css" media="print">
+ <meta name="viewport" content="width=device-width, initial-scale=1"/>
  <script src="respond.min.js"></script>
 
 <br>

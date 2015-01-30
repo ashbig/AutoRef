@@ -9,7 +9,8 @@
 
 <html>
     <head>
-        <title>PlasmID Database</title>
+        <title>BLAST Search</title>
+        <meta name='description' content='Search for specific plasmids by providing a sequence and using the BLAST algorithm to find corresponding plasmids.'>
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
         <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
             <script type="text/javascript">

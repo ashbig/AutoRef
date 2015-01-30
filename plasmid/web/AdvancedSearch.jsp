@@ -9,7 +9,8 @@
 
 <html>
 <head>
-<title>PlasmID Database</title>
+<title>Text Search</title>
+<meta name='description' content='Search for specific plasmids using a simple text search.'>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link href="plasmidstyle.css" rel="stylesheet" type="text/css"> <link href="SpryMenuBarHorizontal.css" rel="stylesheet" type="text/css" />
 <link href="boilerplate.css" rel="stylesheet" type="text/css" />
