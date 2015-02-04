@@ -36,115 +36,9 @@ return;
 
     
     <body>
-        <jsp:include page="orderTitle.jsp" />
-        <table width="100%" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
-            <tr> 
-                <%--<td width="17%" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle"> 
-                    <jsp:include page="menu.jsp" />
-                </td>--%>
-                <td width="100%" align="left" valign="top">
-                    <%--<jsp:include page="checkoutTitle.jsp" />--%>
-                    
-                    <html:errors/>
-                    <%--<table width="100%" border="0">
-                        <tr> 
-                            <td width="12%" class="formlabel">Name:</td>
-                            <td colspan="3" class="text"><bean:write name="<%=Constants.USER_KEY%>" property="username"/></td>
-                        </tr>
-                        <tr> 
-                            <td width="12%" class="formlabel">Email:</td>
-                            <td width="40%" class="text"><bean:write name="<%=Constants.USER_KEY%>" property="email"/></td>
-                            <td width="12%" class="formlabel">Phone:</td>
-                            <td width="36%" class="text"><bean:write name="<%=Constants.USER_KEY%>" property="phone"/></td>
-                        </tr>
-                        <tr> 
-                            <td width="12%" height="24" class="formlabel">Order Date:</td>
-                            <td width="40%" class="text"><bean:write name="date"/></td>
-                        </tr>
-                        <tr> 
-                            <td width="12%" height="24" class="formlabel">Shipping Method:</td>
-                            <td width="40%" class="text"><bean:write name="checkoutForm" property="shippingMethod"/></td>
-                            <td width="12%" class="formlabel">Shipping Account Number:</td>
-                            <td width="36%" class="text">
-                                <bean:write name="checkoutForm" property="accountNumber"/>
-                            </td>
-                        </tr>
-                    </table>
-                    <table width="100%" border="0">
-                        <tr> 
-                            <td colspan="2" class="featuretext">Shipping Address:</td>
-                            <td colspan="2" class="featuretext">Billing Address:</td>
-                        </tr>
-                        <tr> 
-                            <td width="17%" class="formlabel">Name:</td>
-                            <td class="text"><bean:write name="checkoutForm" property="shippingto"/></td>
-                            <td class="formlabel">Name:</td>
-                            <td class="text"><bean:write name="checkoutForm" property="billingto"/></td>
-                        </tr>
-                        <tr> 
-                            <td class="formlabel">Organization:</td>
-                            <td class="text"><bean:write name="checkoutForm" property="organization"/></td>
-                            <td class="formlabel">Organization:</td>
-                            <td class="text"><bean:write name="checkoutForm" property="billingorganization"/></td>
-                        </tr>
-                        <tr> 
-                            <td class="formlabel">Street:</td>
-                            <td class="text"><bean:write name="checkoutForm" property="addressline1"/></td>
-                            <td class="formlabel">Street:</td>
-                            <td class="text"><bean:write name="checkoutForm" property="billingaddressline1"/></td>
-                        </tr>
-                        <tr> 
-                            <td class="formlabel">Street (continued):</td>
-                            <td class="text"><bean:write name="checkoutForm" property="addressline2"/></td>
-                            <td class="formlabel">Street (continued):</td>
-                            <td class="text"><bean:write name="checkoutForm" property="billingaddressline2"/></td>
-                        </tr>
-                        <tr> 
-                            <td class="formlabel">City:</td>
-                            <td class="text"><bean:write name="checkoutForm" property="city"/></td>
-                            <td class="formlabel">City:</td>
-                            <td class="text"><bean:write name="checkoutForm" property="billingcity"/></td>
-                        </tr>
-                        <tr> 
-                            <td class="formlabel">State:</td>
-                            <td class="text"><bean:write name="checkoutForm" property="state"/></td>
-                            <td class="formlabel">State:</td>
-                            <td class="text"><bean:write name="checkoutForm" property="billingstate"/></td>
-                        </tr>
-                        <tr> 
-                            <td class="formlabel">Zip code:</td>
-                            <td class="text"><bean:write name="checkoutForm" property="zipcode"/></td>
-                            <td class="formlabel">Zip code:</td>
-                            <td class="text"><bean:write name="checkoutForm"  property="billingzipcode"/></td>
-                        </tr>
-                        <tr>
-                            <td class="formlabel">Country:</td>
-                            <td class="text"><bean:write name="checkoutForm" property="country"/></td>
-                            <td class="formlabel">Country:</td>
-                            <td class="text"><bean:write name="checkoutForm" property="billingcountry"/></td>
-                        </tr>
-                        <tr> 
-                            <td class="formlabel">Phone:</td>
-                            <td class="text"><bean:write name="checkoutForm" property="phone"/></td>
-                            <td class="formlabel">Phone:</td>
-                            <td class="text"><bean:write name="checkoutForm"  property="billingphone"/></td>
-                        </tr>
-                        <tr> 
-                            <td class="formlabel">Fax:</td>
-                            <td class="text"><bean:write name="checkoutForm" property="fax"/></td>
-                            <td class="formlabel">Fax:</td>
-                            <td class="text"><bean:write name="checkoutForm"  property="billingfax"/></td>
-                        </tr>
-                        <tr> 
-                            <td >&nbsp;</td>
-                            <td >&nbsp;</td>
-                            <td class="formlabel">Email:</td>
-                            <td class="text"><bean:write name="checkoutForm"  property="billingemail"/></td>
-                        </tr>
-                    </table>--%>
-                    
-                    <p>&nbsp;</p>
-                    
+<jsp:include page="orderTitle.jsp" />
+        <div id="noprint">                    
+                    <%--<p>&nbsp;</p>
                     <p class="text">Order Information:</p>
                     <table width="100%" border="0">
                         <tr> 
@@ -162,10 +56,10 @@ return;
                             <td class="tablebody"><bean:write name="checkoutForm" property="numOfCollections"/></td>
                             <td align="right" class="tablebody">$<bean:write name="checkoutForm" property="costOfCollections"/></td>
                         </tr>  
-                        <%--<tr> 
+                        <tr> 
                             <td class="tablebody">Platinum service:</td>
                             <td align="right" colspan="2" class="tablebody">$<bean:write name="checkoutForm" property="costOfPlatinum"/></td>
-                        </tr> --%>
+                        </tr> 
                         <tr> 
                             <td class="tablebody">Shipping:</td>
                             <td align="right" colspan="2" class="tablebody">$<bean:write name="checkoutForm" property="costForShipping"/></td>
@@ -174,7 +68,7 @@ return;
                             <td class="tableheader">Total price:</td>
                             <td align="right" colspan="2" class="tablebody">$<bean:write name="checkoutForm" property="totalPrice"/></td>
                         </tr>
-                    </table>
+                    </table>--%>
                     
                     <html:form action="ChoosePayment.do">
                         <logic:equal name="<%=Constants.USER_KEY%>" property="internalMember" value="true">
@@ -200,21 +94,106 @@ return;
                             <table>
                                 <tr><td width="50%" class="formlabel">How would you like to pay?</td></tr>
                                 <tr><td width="50%" class="text"><html:radio property="paymentmethod" value="<%=Constants.PAYPAL%>"/> Credit Card</td></tr>
-                                <tr><td width="50%" class="text"><html:radio property="paymentmethod" value="<%=Constants.PO%>"/> I have a <%=Constants.PO%></td></tr>
-                                <tr><td width="50%" class="text"><html:radio property="paymentmethod" value=""/> I need to request a PO</td></tr>                              
-                                <tr style="visibility:hidden" id="PO">
-                                    <td class="formlabel">*PO Number:</td>
-                                    <td colspan="2" class="text">
-                                        <html:text maxlength="50" property="ponumber" size="40"/>
-                                    </td>
+                                <tr><td width="50%" class="text" id="PO" class="formlabel"><html:radio property="paymentmethod" value="<%=Constants.PO%>"/> I have a <%=Constants.PO%>
+                                &nbsp;<html:text maxlength="50" property="ponumber" size="40"/>&nbsp;*</td>
                                 </tr>
                             </table>
                         </logic:notEqual>
                         <html:submit value="Place Order"/>
-                    </html:form>
-                    
-                </td>
-            </tr>
+                        </html:form>                       
+                        
+                        <br>&nbsp;<br>
+                        <p class="mainbodytext">* Still need to request a PO? Print out this page for your finance folks, then be sure to <a href="ViewCart.do">View Your Cart</a> and hit save.</p><br>
+        </div>                    
+                        <table border="0" cellpadding="5" style="table{border-collapse: collapse;}"><tr><td>                    
+                    <p class="text">Harvard Medical School<br>Dept. BCMP, C1-214<br>240 Longwood Ave.<br>Boston, MA 02115</p>
+                    <p class="text" align="middle"><strong><u>PRICE QUOTE</u></strong></p>
+                        <script type="text/javascript">
+                        tmonth=new Array("January","February","March","April","May","June","July","August","September","October","November","December");
+
+                        function GetClock(){
+                        var d=new Date();
+                        var nmonth=d.getMonth(),ndate=d.getDate(),nyear=d.getYear();
+                        if(nyear<1000) nyear+=1900;
+
+
+                        document.getElementById('clockbox').innerHTML=""+tmonth[nmonth]+" "+ndate+", "+nyear+"";
+                        }
+
+                        window.onload=function(){
+                        GetClock();
+                        setInterval(GetClock,1000);
+                        };
+                        </script>
+                        <table border="0">
+                            <tr><td>DATE:</td><td id="clockbox" width="200px"></td><td>(Quote valid for 30 days)</td></tr>
+                        </table>
+                        <table>
+                            <tr><td>&nbsp;</td></tr>
+                            <tr><td>REQUESTED BY: <bean:write name="<%=Constants.USER_KEY%>" property="username"/></td></tr>
+                            <tr><td>EMAIL: <bean:write name="<%=Constants.USER_KEY%>" property="email"/></td></tr>
+                            <tr><td>PHONE: <bean:write name="checkoutForm" property="phone"/></td></tr>
+                            <tr><td>FAX: <bean:write name="checkoutForm" property="fax"/></td></tr>
+                            <tr><td>&nbsp;</td></tr>
+                            <tr><td>DELIVERY ADDRESS:</td></tr>
+                            <tr><td><bean:write name="checkoutForm" property="shippingto"/></td></tr>
+                            <tr><td><bean:write name="checkoutForm" property="organization"/></td></tr>
+                            <tr><td><bean:write name="checkoutForm" property="addressline1"/></td></tr>
+                            <tr><td><bean:write name="checkoutForm" property="addressline2"/></td></tr>
+                            <tr><td><bean:write name="checkoutForm" property="city"/>, <bean:write name="checkoutForm" property="state"/> <bean:write name="checkoutForm" property="zipcode"/></td></tr>
+                            <tr><td><bean:write name="checkoutForm" property="country"/></td></tr>
+                        </table>
+                        <table width="100%" border="0">
+                                                <colgroup>
+                                                    <col width="100px">
+                                                    <col width="auto">                            
+                                                    <col width="auto">
+                                                    <col width="auto">                            
+                                                </colgroup>
+                                                <tr> 
+                                                    <th class="tableheader">Line</th>
+                                                    <th class="tableheader">Item</th>
+                                                    <th class="tableheader">Quantity</th>
+                                                    <th class="tableheader">Subtotal</th>
+                                                </tr>
+                                                <tr> 
+                                                    <td class="tablebody">1</td>
+                                                    <td class="tablebody">Individual Plasmid Retrieval</td>
+                                                    <td class="tablebody"><bean:write name="checkoutForm" property="numOfClones"/></td>
+                                                    <td align="right" class="tablebody">$<bean:write name="checkoutForm" property="costOfClones"/></td>
+                                                </tr> 
+                                                <tr> 
+                                                    <td class="tablebody">2</td>
+                                                    <td class="tablebody">Plasmid Collection Retrieval</td>
+                                                    <td class="tablebody"><bean:write name="checkoutForm" property="numOfCollections"/></td>
+                                                    <td align="right" class="tablebody">$<bean:write name="checkoutForm" property="costOfCollections"/></td>
+                                                </tr>  
+                                                <%--<tr> 
+                                                    <td class="tablebody">Platinum service:</td>
+                                                    <td align="right" colspan="2" class="tablebody">$<bean:write name="checkoutForm" property="costOfPlatinum"/></td>
+                                                </tr> --%>
+                                                <tr> 
+                                                    <td class="tablebody">3</td>
+                                                    <td class="tablebody">Shipping:</td>
+                                                    <td align="right" colspan="2" class="tablebody">$<bean:write name="checkoutForm" property="costForShipping"/></td>
+                                                </tr> 
+                                                <tr> 
+                                                    <td class="tableheader">Total price:</td>
+                                                    <td align="right" colspan="3" class="tablebody">$<bean:write name="checkoutForm" property="totalPrice"/></td>
+                                                </tr>
+                        </table>
+                                                <p>Conditions:<br>
+                                                    - All orders must be placed online via a registered account<br>
+                                                      &nbsp;&nbsp;(http://plasmid.med.harvard.edu)<br>
+                                                    - Payment allowed by credit card or PO<br>
+                                                    - Final payment of PO: NET 30, check or wire transfer, wire transfer fees to be paid by recipient<br>
+                                                    - Estimated delivery = 7-10 business days from order</p>
+                                                <p>PLEASE NOTE: We are the Dana Farber/ Harvard Cancer Center at Harvard Medical School and would prefer checks payable to <u><strong>HARVARD MEDICAL SCHOOL</strong></u>.</p>
+        <p>Please feel free to contact us with any questions or concerns at <a href="plasmidhelp@hms.harvard.edu">plasmidhelp@hms.harvard.edu</a></p>
+                </td></tr></table>
+                        
+                        </td></tr> 
+
         </table>
     <jsp:include page="footer.jsp" /></body>
      </div>

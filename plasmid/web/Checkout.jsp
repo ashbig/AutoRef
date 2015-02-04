@@ -133,7 +133,7 @@ is not allowed to be shipped outside of USA.
   </tr>
 </table>
 
-<p class="text"><input type=checkbox name="saveInfo">Save/Update user information.<br>
+<p class="text"><input type=checkbox name="saveInfo" checked>Save/Update user information.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<i>(By checking this check box, all the addresses will be saved or updated to user account)
 </i></p>
 
