@@ -23,8 +23,8 @@
 
 
 <body>
-<jsp:include page="submissionTitle.jsp" />
-<table width="100%" border="0">
+<jsp:include page="signinMenuBar.jsp" />
+<table id="content" width="100%" border="0">
   <tr>
     <td><p class="mainbodytexthead">Why submit your plasmids to our repository?</p>
       <p class="mainbodytext">Sharing plasmids with the <a href="http://dnaseq.med.harvard.edu/">DF/HCC DNA Resource Core</a> benefits you  by alleviating the burden of storage, maintenance and distribution, and  benefits the general research community by making plasmids available from a  central source. 

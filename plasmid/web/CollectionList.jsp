@@ -17,7 +17,7 @@
 
     <body>
         <jsp:include page="orderTitle.jsp" />
-        <table width="100%" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
+        <table id="content" width="100%" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
             <tr> 
                 
                 <td width="83%" align="left" valign="top">
