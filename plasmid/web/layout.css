@@ -60,6 +60,19 @@ img, object, embed, video {
 	display: block;
         margin-top: 1em;
         margin-bottom: 3em;
+        display:none;
+}
+#cart{
+    display:none;
+}
+#mobilehome {
+    display:block;
+}
+#rmm {
+    display: block;
+}
+#admin {
+    display: none;
 }
 #content {
 	clear: none;
@@ -115,6 +128,7 @@ img, object, embed, video {
 	display: block;
         margin-top: 1em;
         margin-bottom: 3em;
+        display: block;
 }
 #content {
 	clear: none;
@@ -137,6 +151,18 @@ img, object, embed, video {
 	margin-left: 0;
 	width: 100%;
 	display: block;
+}
+#rmm {
+    display: none;
+}
+#cart{
+    display:block;
+}
+#mobilehome {
+    display:none;
+}
+#admin {
+    display: block;
 }
 }
 
@@ -201,8 +227,18 @@ img, object, embed, video {
 	width: 100%;
 	display: block;
 }
-
-
+#rmm {
+    display:none;
+}
+#cart{
+    display:block;
+}
+#mobilehome {
+    display:none;
+}
+#admin {
+    display: block;
+}
 }
 #legal {
 	clear: both;
@@ -210,4 +246,7 @@ img, object, embed, video {
 	margin-left: 0;
 	width: 5%;
 	display: block;
+}
+#genesearch {
+    padding-top: 2em;
 }

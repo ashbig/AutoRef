@@ -7,13 +7,40 @@
  <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
  <link rel="shortcut icon" href="dnacore.ico">
  <link rel="stylesheet" type="text/css" href="print.css" media="print">
- <meta name="viewport" content="width=device-width, initial-scale=1"/>
- <script src="respond.min.js"></script>
-
+<link rel="stylesheet" href="responsivemobilemenu.css" type="text/css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
+<script type="text/javascript" src="responsivemobilemenu.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+<!-- start mobile menu, jsp version -->
+<div id="rmm" class="rmm" data-menu-style = "graphite">
+            <ul>
+                <li><a href="Home.xhtml" title="Home">Home</a></li>
+                <li><a href="OrderOverview.jsp">Inserts</a></li>
+                <li><a href="GetVectorsByType.do">Vectors</a></li>
+                <li><a href="GetCollectionList.do" title="View List of Collections">Collections</a></li>
+                <li><a href="Submission.jsp" title="Submit plasmids">Submission</a></li>
+                <li><a href="Pricing.jsp" title="pricing">Pricing</a></li>
+                <li><a href="cloningstrategies.jsp" title="Learn About Cloning Methods">Learn</a></li>
+                <li><a href="Contactus.jsp">Contact</a></li>
+                <li><a href="AboutUs.jsp">About Us</a></li>
+                <li><a target="_blank" href="FAQ.jsp">FAQ</a></li>                
+                    <logic:present name="<%=Constants.USER_KEY%>" scope="session">
+                        <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">      
+                            <li><a class="MenuBarItemSubmenu" href="Admin.jsp" title="Admin">Admin</a></li>
+                        </logic:equal>
+                            <li><a href="Logout.do">Sign Out</a></li>
+                    </logic:present>
+                    <logic:notPresent name="<%=Constants.USER_KEY%>" scope="session">
+                            <li><a href="Login.jsp">Sign In</a></li>
+                    </logic:notPresent> 
+            </ul>
+</div>
+<!-- end mobile menu, jsp version--> 
 <br>
 <br>
-<a href="http://hms.harvard.edu/" target="_blank"><img height="55" src="HMS_BiochemMolPhamH.jpg" alt="BCMP"></a>
-<table width="275px" height="30px" border="0" align="right">
+<div id='mobilehome'><br></div>
+<a href="http://hms.harvard.edu/" target="_blank"><img id="hmslogo" src="HMS_BiochemMolPhamH.jpg" alt="BCMP"></a>
+<table id="cart" width="275px" height="30px" border="0" align="right">
             <tr> 
                 <td width="105px" height="12px" border="0" align="left" class="countrytext" valign="middle">
                     <%--<a href="http://dnaseq.med.harvard.edu" target="_blank">DNA Resource Core</a><br><br>--%>
@@ -52,12 +79,13 @@
             
 </table>
 <div id="header">          
-    <hr>
+    <br><hr></div>
 <br>
 <div id="noprint">
 <div class="logo">
 <img height="55" src="dnacore.jpg"/>
 <img height="55" src="PlasmID_logo.jpg"/>
+
 <!-- Alerts to users about closings etc can be typed in this P class. Note: You must update both homeTemplate.xhtml and signinMenuBar.jsp to see this alert throughout the whole site.
     <p>
     <table width ="50%" align="center">
@@ -194,5 +222,4 @@ old location of cart --%>
       
     </ul>
   </div>
-</div>
- 
+</div> 

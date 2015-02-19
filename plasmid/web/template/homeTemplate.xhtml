@@ -25,13 +25,36 @@
         <link rel="stylesheet" type="text/css" href="#{request.contextPath}/boilerplate.css" />
         <link rel="shortcut icon" href="dnacore.ico"/>
         <link rel="stylesheet" type="text/css" href="print.css" media="print"/>
+        <link rel="stylesheet" href="responsivemobilemenu.css" type="text/css"/>
+        <script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
+        <script type="text/javascript" src="responsivemobilemenu.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"></meta>
     </h:head>
     <div class="gridContainer clearfix">
-
+<!-- start mobile menu, xhtml version -->
+       <div id="rmm" class="rmm" data-menu-style = "graphite">
+            <ul>
+               <li><a href="Home.xhtml" title="Home">Home</a></li>
+               <li><a href="OrderOverview.jsp">Inserts</a></li>
+               <li><a href="GetVectorsByType.do">Vectors</a></li>
+               <li><a href="GetCollectionList.do" title="View List of Collections">Collections</a></li>
+               <li><a href="Submission.jsp" title="Submit plasmids">Submission</a></li>
+               <li><a href="Pricing.jsp" title="pricing">Pricing</a></li>
+               <li><a href="cloningstrategies.jsp" title="Learn About Cloning Methods">Learn</a></li>
+               <li><a href="Contactus.jsp">Contact</a></li>
+               <li><a href="AboutUs.jsp">About Us</a></li>
+               <li><a target="_blank" href="FAQ.jsp">FAQ</a></li>
+               <li><a href="Admin.jsp" title="Admin"  rendered="#{plasmidBean.userInternal}">Admin</a></li>
+               <li><h:outputLink value="Login.jsp" rendered="#{!plasmidBean.userExist}">Sign In</h:outputLink></li>               
+               <li><a href="Logout.do" title="Log Out" rendered="#{plasmidBean.userExist}">Sign Out</a></li>
+            </ul>
+      </div>
+<!-- end mobile menu -->
      <br></br>
      <br></br>
-    <a href="http://hms.harvard.edu/" target="_blank"><img height="55" src="HMS_BiochemMolPhamH.jpg" alt="BCMP"/></a>
-            <table width="275px" height="30px" border="0" align="right" valign="middle">
+     <div id='mobilehome'><br></br></div>
+    <a href="http://hms.harvard.edu/" target="_blank"><img id='hmslogo' src="HMS_BiochemMolPhamH.jpg" alt="BCMP"/></a>
+            <table id="cart" width="275px" height="30px" border="0" align="right" valign="middle">
             <tr> 
                 <td width="105px" height="12px" border="0" align="left" class="countrytext">
                     <h:outputLink value="SampleTrackingHome.jsp" rendered="#{plasmidBean.userInternal}">Sample Tracking</h:outputLink>&nbsp;
@@ -68,60 +91,20 @@
 End Alert Section-->
 </div>
         <h:body>
-<!-- old cart location 
-        <table width="100%" height="30px" border="0" align="center">
-            <tr>&nbsp;</tr>
-            <tr> 
-                <td width="50%" height="12px" border="0" align="left" class="countrytext">
-                    <h:outputLink value="SampleTrackingHome.jsp" rendered="#{plasmidBean.userInternal}">Sample Tracking</h:outputLink>&nbsp;
-                    <h:outputLink value="SEQ_InvoiceHome.jsp"  rendered="#{plasmidBean.userInternal}">Sequencing</h:outputLink>            
-                </td>
-                <td width="50%" height="12px" align="right" valign="bottom" class="countrytext"> 
-                    <a href="ViewCart.do" border="0"><img src="shoppingcart2.gif" width="105" height="18"/></a>
-                    <br></br>
-                    <br></br>
-
-                    <h:outputLink value="Logout.do" class="countrytext" rendered="#{plasmidBean.userExist}">Sign Out |</h:outputLink> 
-                    <h:outputLink value="Account.jsp" class="countrytext" rendered="#{plasmidBean.userExist}"> My Account |</h:outputLink>
-
-                    <h:outputLink value="Login.jsp" class="countrytext" rendered="#{!plasmidBean.userExist}">Sign In |</h:outputLink> 
-                    <h:outputLink value="PrepareRegistration.do" class="countrytext" rendered="#{!plasmidBean.userExist}"> Registration |</h:outputLink> 
-                    <a target="_blank" href="FAQ.jsp" class="countrytext"> FAQ</a>
-                </td>
-            </tr>
-
-        </table>
-End old cart location-->
-      
 <!-- Nav bar edited to comply with xhtml language, logic lines from jsp commented out, li elements re-written to use beans--> 
         <div id="nav" align="center">
     <ul id="MenuBar1" class="MenuBarHorizontal">
       <li><a class="MenuBarItemSubmenu" href="Home.xhtml" title="Home">Home</a>
         <ul>
-           <!--<logic:present name="<%=Constants.USER_KEY%>" scope="session">-->
           <li><h:outputLink value="Logout.do" rendered="#{plasmidBean.userExist}">Sign Out</h:outputLink></li>
           <li><h:outputLink value="Account.jsp" rendered="#{plasmidBean.userExist}"> My Account</h:outputLink></li>
           <li><h:outputLink value="PrepareRegistration.do" rendered="#{!plasmidBean.userExist}"> Registration</h:outputLink></li>
           <li><h:outputLink value="ViewOrderHistory.do" rendered="#{plasmidBean.userExist}"> View Orders</h:outputLink></li>
-          <!--<logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">-->
-          <!--<li><h:outputLink value="ViewContainers.jsp" title="View Containers" rendered="#{plasmidBean.userInternal}">View Containers</h:outputLink></li>
-          <li><h:outputLink value="vSearch.jsp" title="Vector Submission" rendered="#{plasmidBean.userInternal}">Vector Submission</h:outputLink></li>
-          <li><h:outputLink value="vSearchSFD.jsp" title="Vector For Distribution" rendered="#{plasmidBean.userInternal}">Vector For Distribution</h:outputLink></li>-->
           <li><h:outputLink value="SearchOrderInput.jsp" title="Search Orders" rendered="#{plasmidBean.userInternal}">Search Orders</h:outputLink></li>
-          <!--<li><h:outputLink value="PrepareSearchInvoice.do" title="Search Invoices" rendered="#{plasmidBean.userInternal}">Search Invoices</h:outputLink></li>
-          <li><h:outputLink value="pReceiveSearch.jsp" title="Recieve Plasmids" rendered="#{plasmidBean.userInternal}">Receive Plasmids</h:outputLink></li>-->
           <li><h:outputLink value="CloneValidationInput.jsp" title="Clone Validation" rendered="#{plasmidBean.userInternal}">Clone Validation</h:outputLink></li>
-          <!--<li><h:outputLink value="AddInstitutionsInput.jsp" title="Add Institutions" rendered="#{plasmidBean.userInternal}">Add Institutions</h:outputLink></li>
-          <li><h:outputLink value="AddEmtaMembersInput.jsp" title="Add Institution to Expedited MTA Members" rendered="#{plasmidBean.userInternal}">Add EP-MTA Members</h:outputLink></li>-->
           <li><h:outputLink value="SampleTrackingHome.jsp" rendered="#{plasmidBean.userInternal}">Sample Tracking</h:outputLink></li>            
-          <!--<li><h:outputLink value="SEQ_InvoiceHome.jsp"  rendered="#{plasmidBean.userInternal}">Sequencing</h:outputLink> </li>-->
-          <!--</logic:equal>
-          </logic:present>
-          <logic:notPresent name="<%=Constants.USER_KEY%>" scope="session">-->
           <li><h:outputLink value="Login.jsp" rendered="#{!plasmidBean.userExist}">Sign In</h:outputLink></li>
           <li><h:outputLink value="FindPassword.jsp" title="Find lost password" rendered="#{!plasmidBean.userExist}">Find Password</h:outputLink></li>
-          <!--<li><h:outputLink value="PrepareRegistration.do" title="Registration"rendered="#{!plasmidBean.userExist}">Registration</h:outputLink></li>
-          </logic:notPresent> -->
          </ul>
       </li>
       
@@ -130,7 +113,6 @@ End old cart location-->
           <li><a href="GeneSearch.xhtml" title= "Human and Mouse Gene Search">Human &amp; Mouse Genes</a></li>
           <li><a href="PrepareAdvancedSearch.do?psi=0" title= "Text Search">Text Search</a></li>
           <li><a href="GetDataForRefseqSearch.do" title= "All Organism Gene Search">Search by Gene</a></li>
-          <!--<li><a href="GetVectorPropertyTypes.do" title= "Vector Search">Search by Vector</a></li>  confusing search tool, little success finding vector or plasmid of interest   -->
           <li><a href="SearchClone.jsp" title= "Clone ID">Search by Clone ID</a></li>
           <li><a href="PrepareBlast.do" title= "BLAST search">BLAST Search</a></li>
         </ul>
@@ -169,67 +151,25 @@ End old cart location-->
       </li>
     </ul>
  </div>
-   <!-- end nav element -->     
-        
-  <!-- old nested table
-  <table width="100%"  border="0" align="center"> 
-            <tr>
-                <td>
-                    <table width="100%" border="0" align="center" bgcolor="#EFEFEF" id="form">
-                        <tr>
-                            <td width="100%">
-                                <p align="left"><span class="mainbodytextlarge">The Mission of the DNA Resource CORE is to provide member in the DF/HCC, Harvard Affiliates, and outside researchers with quality and inexpensive <a target="_blank" href="http://dnaseq.med.harvard.edu/">DNA sequencing services</a> and <a href="http://plasmid.med.harvard.edu/PLASMID/Home.xhtml">sequence verified plasmid constructs</a>, paired with comprehensive quality control and customer support.</span></p>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <br></br>-->
-                        <table width="100%"  border="0" align="center"> 
-                            <td><ui:insert name="content"/></td>
-                        </table>
-                <!--</td>
-            </tr>
-        </table>-->
-<!-- end old nested table -->                
-<!-- old footer
-        <table width="45%"  border="0" align="center"> 
-            <tr>
-                <td><table width="100%" border="0" align="center" bgcolor="#EFEFEF" id="form">
-                        <tr>
-                            <td width="100%">
-                                <p align="left" class="mainbodytext">Click <a href="OrderOverview.jsp">here</a> for <strong class="mainbodytext">pricing and library searches</strong>. Here you will find a detailed explanation of our search options along with price quotes.</p>
-                                <p align="left" class="mainbodytext">Click <a href="TermAndCondition.jsp">here</a> for the <strong class="mainbodytext">terms and conditions</strong> for receiving plasmids from the repository.</p>
-                                <p align="left" class="mainbodytext"> Click <a href="cloning_strategies.htm" target="_blank">here</a> to view the <strong>cloning methods</strong> used to create many of the  plasmids. </p>
-                                <p align="left" class="mainbodytext">Click <a href="FAQ.jsp">here</a> for a <strong class="mainbodytext">detailed FAQ</strong> to answer additional questions.</p></td>
-                        </tr>
-                </table></td>
-            </tr>
+<!-- end nav element -->     
+        <table id='genesearch' width="100%"  border="0" align="center"> 
+            <td><ui:insert name="content"/></td>
         </table>
-        <br></br>     
-        <hr align="center" width="1000" size="2"/>
-                <p align="center"><span class="mainbodytext">
-                <a href="http://www.dfhcc.harvard.edu" target="_blank"><img src="DFHCC_NCI_logo.jpg" width="400"  height="46"></img></a>&nbsp;
-                <a href="http://hms.harvard.edu" target="_blank"><img src="HMS_logo.jpg" width="66" height="63"></img></a></span>           
-        <table width="1000" height="58" border="0" align="center">
-            <tr> 
-                <td height="54"> <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                        <tr align="center"> 
-                            <td height="52"> <p class="footertext"><a href="Home.xhtml" class="footertext">Home</a> 
-                                    &#149; <a href="Submission.jsp" class="footertext">Plasmid 
-                                        Submission</a> &#149; <a href="OrderOverview.jsp" class="footertext">Search &amp; Order</a> 
-                                    &#149; <a href="Contactus.jsp" class="footertext">Contact Us</a></p>
-                                <p align="center" class="homeMainText">PlasmID was created and is maintained 
-                                    by the <a href="http://dnaseq.med.harvard.edu" target="_blank">DF/HCC 
-                                        DNA Resource Core</a></p>
-                                <p class="footertext">©2004-2014 Harvard Medical School</p></td>
-                        </tr>
-                    </table></td>
-            </tr></table></p>-->
-<!-- End old footer -->
-<!-- New footer -->        
+<div id="mobilehome">
+    <ul>
+        <li><h:outputLink value="Logout.do" rendered="#{plasmidBean.userExist}">Sign Out</h:outputLink></li>
+        <li><a href="ViewCart.do" title="View Cart">View Cart</a></li>
+        <li><h:outputLink value="Account.jsp" rendered="#{plasmidBean.userExist}"> My Account</h:outputLink></li>
+        <li><h:outputLink value="PrepareRegistration.do" rendered="#{!plasmidBean.userExist}"> Registration</h:outputLink></li>
+        <li><h:outputLink value="ViewOrderHistory.do" rendered="#{plasmidBean.userExist}"> View Orders</h:outputLink></li>
+        <li><h:outputLink value="SearchOrderInput.jsp" title="Search Orders" rendered="#{plasmidBean.userInternal}">Search Orders</h:outputLink></li>
+        <li><h:outputLink value="CloneValidationInput.jsp" title="Clone Validation" rendered="#{plasmidBean.userInternal}">Clone Validation</h:outputLink></li>
+        <li><h:outputLink value="SampleTrackingHome.jsp" rendered="#{plasmidBean.userInternal}">Sample Tracking</h:outputLink></li>            
+        <li><h:outputLink value="Login.jsp" rendered="#{!plasmidBean.userExist}">Sign In</h:outputLink></li>
+        <li><h:outputLink value="FindPassword.jsp" title="Find lost password" rendered="#{!plasmidBean.userExist}">Find Password</h:outputLink></li>
+    </ul>
+</div>
+<!-- New footer -->
 <div id="footer">
     
     <hr></hr>

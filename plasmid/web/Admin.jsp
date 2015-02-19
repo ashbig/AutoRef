@@ -19,6 +19,8 @@
     <div class="gridContainer clearfix">
     <body>
         <jsp:include page="signinMenuBar.jsp" />
+        <div id='admin'>
+            <ul>
                     <li><a href="ViewContainers.jsp" title="View Containers">View Containers</a></li>
                     <li><a href="vSearch.jsp" title="Vector Submission">Vector Submission</a></li>
                     <li><a href="vSearchSFD.jsp" title="Vector For Distribution">Vector For Distribution</a></li>
@@ -27,7 +29,20 @@
                     <li><a href="AddInstitutionsInput.jsp" title="Add Institutions">Add Institutions</a></li>
                     <li><a href="AddEmtaMembersInput.jsp" title="Add Institution to Expedited MTA Members">Add EP-MTA Members</a></li>   
                     <li><a href="SEQ_InvoiceHome.jsp">Sequencing Invoices</a></li>
-                    <br>        
+            </ul>
+        </div>
+        <div id='mobilehome'>
+            <ul>
+                    <li><a href="ViewContainers.jsp" title="View Containers">View Containers</a></li>
+                    <li><a href="vSearch.jsp" title="Vector Submission">Vector Submission</a></li>
+                    <li><a href="vSearchSFD.jsp" title="Vector For Distribution">Vector For Distribution</a></li>
+                    <li><a href="PrepareSearchInvoice.do" title="Search Invoices">Search Invoices</a></li>
+                    <li><a href="pReceiveSearch.jsp" title="Recieve Plasmids">Receive Plasmids</a></li>
+                    <li><a href="AddInstitutionsInput.jsp" title="Add Institutions">Add Institutions</a></li>
+                    <li><a href="AddEmtaMembersInput.jsp" title="Add Institution to Expedited MTA Members">Add EP-MTA Members</a></li>   
+                    <li><a href="SEQ_InvoiceHome.jsp">Sequencing Invoices</a></li>
+            </ul>
+        </div>   
         <jsp:include page="footer.jsp" />
     </body>
     </div>
