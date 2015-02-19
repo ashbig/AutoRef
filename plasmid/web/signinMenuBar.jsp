@@ -39,7 +39,7 @@
 <br>
 <br>
 <div id='mobilehome'><br></div>
-<a href="http://hms.harvard.edu/" target="_blank"><img id="hmslogo" src="HMS_BiochemMolPhamH.jpg" alt="BCMP"></a>
+<div id='hmslogo'><a href="http://hms.harvard.edu/" target="_blank"><img id="hmslogo" src="HMS_BiochemMolPhamH.jpg" alt="BCMP"></a>
 <table id="cart" width="275px" height="30px" border="0" align="right">
             <tr> 
                 <td width="105px" height="12px" border="0" align="left" class="countrytext" valign="middle">
@@ -77,11 +77,10 @@
                 </td>
             </tr>
             
-</table>
+</table></div>
 <div id="header">          
     <br><hr></div>
 <br>
-<div id="noprint">
 <div class="logo">
 <img height="55" src="dnacore.jpg"/>
 <img height="55" src="PlasmID_logo.jpg"/>
@@ -222,4 +221,3 @@ old location of cart --%>
       
     </ul>
   </div>
-</div> 

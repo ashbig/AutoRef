@@ -36,40 +36,8 @@ return;
 
     
     <body>
-<jsp:include page="orderTitle.jsp" />
-        <div id="noprint">                    
-                    <%--<p>&nbsp;</p>
-                    <p class="text">Order Information:</p>
-                    <table width="100%" border="0">
-                        <tr> 
-                            <td class="tableheader">Item</td>
-                            <td class="tableheader">Quantity</td>
-                            <td class="tableheader">Price</td>
-                        </tr>
-                        <tr> 
-                            <td class="tablebody">Number of clones:</td>
-                            <td class="tablebody"><bean:write name="checkoutForm" property="numOfClones"/></td>
-                            <td align="right" class="tablebody">$<bean:write name="checkoutForm" property="costOfClones"/></td>
-                        </tr> 
-                        <tr> 
-                            <td class="tablebody">Number of collections:</td>
-                            <td class="tablebody"><bean:write name="checkoutForm" property="numOfCollections"/></td>
-                            <td align="right" class="tablebody">$<bean:write name="checkoutForm" property="costOfCollections"/></td>
-                        </tr>  
-                        <tr> 
-                            <td class="tablebody">Platinum service:</td>
-                            <td align="right" colspan="2" class="tablebody">$<bean:write name="checkoutForm" property="costOfPlatinum"/></td>
-                        </tr> 
-                        <tr> 
-                            <td class="tablebody">Shipping:</td>
-                            <td align="right" colspan="2" class="tablebody">$<bean:write name="checkoutForm" property="costForShipping"/></td>
-                        </tr> 
-                        <tr> 
-                            <td class="tableheader">Total price:</td>
-                            <td align="right" colspan="2" class="tablebody">$<bean:write name="checkoutForm" property="totalPrice"/></td>
-                        </tr>
-                    </table>--%>
-                    
+<jsp:include page="signinMenuBar.jsp" />
+        <div id="noprint">                                  
                     <html:form action="ChoosePayment.do">
                         <logic:equal name="<%=Constants.USER_KEY%>" property="internalMember" value="true">
                             <p class="mainbodytexthead">On Campus requests must be paid using a valid 33 digit code. You or your grant manager can obtain this from the HCOM system. If you are at a Harvard affiliated institution and do not have a 33 digit code you must <a href="PrepareRegistration.do?update=true&first=true">update your account</a> to 'Harvard affiliate' before you can checkout.</p>
@@ -152,20 +120,20 @@ return;
                                                 </colgroup>
                                                 <tr> 
                                                     <th class="tableheader">Line</th>
-                                                    <th class="tableheader">Item</th>
+                                                    <th align="left" class="tableheader">Item</th>
                                                     <th class="tableheader">Quantity</th>
-                                                    <th class="tableheader">Subtotal</th>
+                                                    <th align="right" class="tableheader">Subtotal</th>
                                                 </tr>
                                                 <tr> 
-                                                    <td class="tablebody">1</td>
-                                                    <td class="tablebody">Individual Plasmid Retrieval</td>
-                                                    <td class="tablebody"><bean:write name="checkoutForm" property="numOfClones"/></td>
+                                                    <td align="middle" class="tablebody">1</td>
+                                                    <td align="left" class="tablebody">Individual Plasmid Retrieval</td>
+                                                    <td align="middle" class="tablebody"><bean:write name="checkoutForm" property="numOfClones"/></td>
                                                     <td align="right" class="tablebody">$<bean:write name="checkoutForm" property="costOfClones"/></td>
                                                 </tr> 
                                                 <tr> 
-                                                    <td class="tablebody">2</td>
-                                                    <td class="tablebody">Plasmid Collection Retrieval</td>
-                                                    <td class="tablebody"><bean:write name="checkoutForm" property="numOfCollections"/></td>
+                                                    <td align="middle" class="tablebody">2</td>
+                                                    <td align="left" class="tablebody">Plasmid Collection Retrieval</td>
+                                                    <td align="middle" class="tablebody"><bean:write name="checkoutForm" property="numOfCollections"/></td>
                                                     <td align="right" class="tablebody">$<bean:write name="checkoutForm" property="costOfCollections"/></td>
                                                 </tr>  
                                                 <%--<tr> 
@@ -173,12 +141,12 @@ return;
                                                     <td align="right" colspan="2" class="tablebody">$<bean:write name="checkoutForm" property="costOfPlatinum"/></td>
                                                 </tr> --%>
                                                 <tr> 
-                                                    <td class="tablebody">3</td>
-                                                    <td class="tablebody">Shipping:</td>
+                                                    <td align="middle" class="tablebody">3</td>
+                                                    <td align="left" class="tablebody">Shipping</td>
                                                     <td align="right" colspan="2" class="tablebody">$<bean:write name="checkoutForm" property="costForShipping"/></td>
                                                 </tr> 
                                                 <tr> 
-                                                    <td class="tableheader">Total price:</td>
+                                                    <td align="middle" class="tableheader">Total price:</td>
                                                     <td align="right" colspan="3" class="tablebody">$<bean:write name="checkoutForm" property="totalPrice"/></td>
                                                 </tr>
                         </table>

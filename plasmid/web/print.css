@@ -10,6 +10,18 @@ and open the template in the editor.
 
 #noprint {display: none;}
 
+#rmm {display: none;}
+
+#mobilehome {display: none;}
+
+#hmslogo {display: inline;}
+
+#cart {display: none;}
+
+#logo {display: none;}
+
+#nav {display: none;}
+
 a[href]:after {display: none;}
 
 .countrytext {display: none;}
@@ -18,4 +30,5 @@ a[href]:after {display: none;}
     -moz-transform: scale(0.8, 0.8); /* Moz-browsers */
     zoom: 0.8; /* Other non-webkit browsers */
     zoom: 80%; /* Webkit browsers */
+    display: inline;
 }
