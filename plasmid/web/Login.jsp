@@ -7,7 +7,7 @@
 
 <html>
 <head>
-<title>PlasmID Database</title>
+<title>Login</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
 <link href="SpryMenuBarHorizontal.css" rel="stylesheet" type="text/css" />
@@ -18,7 +18,7 @@
 
 <body>
 <jsp:include page="signinMenuBar.jsp" />
-<table width="100%" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
+<table id='content' width="100%" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
   <tr> 
     <%--<td width="17%" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle"> 
       <jsp:include page="menuHome.jsp" />
