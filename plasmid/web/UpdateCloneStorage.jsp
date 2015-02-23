@@ -21,6 +21,7 @@
     
     <body>
         <jsp:include page="internalHomeTitle.jsp" />
+        <div id='content'>
         <table width="100%" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
             <tr> 
                 <%--<td width="17%" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle"> 
@@ -68,6 +69,7 @@
                 </td>
             </tr>
         </table>
+        </div>
         <jsp:include page="footer.jsp" />
     </body>
 </div>

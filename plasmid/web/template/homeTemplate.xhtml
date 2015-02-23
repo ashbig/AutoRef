@@ -35,6 +35,7 @@
        <div id="rmm" class="rmm" data-menu-style = "graphite">
             <ul>
                <li><a href="Home.xhtml" title="Home">Home</a></li>
+               <li><h:outputLink value="ViewOrderHistory.do" rendered="#{plasmidBean.userExist}">View Orders</h:outputLink></li>
                <li><a href="OrderOverview.jsp">Inserts</a></li>
                <li><a href="GetVectorsByType.do">Vectors</a></li>
                <li><a href="GetCollectionList.do" title="View List of Collections">Collections</a></li>
@@ -44,9 +45,9 @@
                <li><a href="Contactus.jsp">Contact</a></li>
                <li><a href="AboutUs.jsp">About Us</a></li>
                <li><a target="_blank" href="FAQ.jsp">FAQ</a></li>
-               <li><a href="Admin.jsp" title="Admin"  rendered="#{plasmidBean.userInternal}">Admin</a></li>
+               <li><h:outputLink value="Admin.jsp" rendered="#{plasmidBean.userInternal}">Admin</h:outputLink></li>
                <li><h:outputLink value="Login.jsp" rendered="#{!plasmidBean.userExist}">Sign In</h:outputLink></li>               
-               <li><a href="Logout.do" title="Log Out" rendered="#{plasmidBean.userExist}">Sign Out</a></li>
+               <li><h:outputLink value="Logout.do" rendered="#{plasmidBean.userExist}">Sign Out</h:outputLink></li>
             </ul>
       </div>
 <!-- end mobile menu -->

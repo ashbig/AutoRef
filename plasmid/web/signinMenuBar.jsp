@@ -15,6 +15,9 @@
 <div id="rmm" class="rmm" data-menu-style = "graphite">
             <ul>
                 <li><a href="Home.xhtml" title="Home">Home</a></li>
+                    <logic:present name="<%=Constants.USER_KEY%>" scope="session">
+                        <li><a href="ViewOrderHistory.do" title="View Orders">View Orders</a></li>
+                    </logic:present>
                 <li><a href="OrderOverview.jsp">Inserts</a></li>
                 <li><a href="GetVectorsByType.do">Vectors</a></li>
                 <li><a href="GetCollectionList.do" title="View List of Collections">Collections</a></li>
@@ -96,48 +99,6 @@
 End Alert Section-->
 </div>
 <h:body>
-<%-- old location of cart
-<table width="100%" height="30px" border="0" align="center">
-            <tr> 
-                <td width="50%" height="12px" border="0" align="left" class="countrytext">
-                    <%--<a href="http://dnaseq.med.harvard.edu" target="_blank">DNA Resource Core</a><br><br>
-                    
-            <logic:present name="<%=Constants.USER_KEY%>" scope="session"> 
-            <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
-                    <a href="SampleTrackingHome.jsp">Sample Tracking</a>&nbsp;    
-                    <a href="SEQ_InvoiceHome.jsp">Sequencing</a>
-            </logic:equal>
-                    
-            <logic:notEqual name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">&nbsp;      
-            </logic:notEqual>
-            </logic:present>
-            <logic:notPresent name="<%=Constants.USER_KEY%>" scope="session"> &nbsp;        
-            </logic:notPresent>
-                    
-              </td>
-                <td width="50%" height="12px" align="right" valign="bottom" class="countrytext"> 
-                    <a href="ViewCart.do" border="0"><img src="shoppingcart2.gif" width="105" height="18"/></a>
-                    <br>
-                   <br>
-                <logic:present name="<%=Constants.USER_KEY%>" scope="session">    
-                    <a href="Logout.do" class="countrytext">Sign Out |</a> 
-                    <a href="Account.jsp" class="countrytext"> My Account |</a>
-                </logic:present>
-                
-                <logic:notPresent name="<%=Constants.USER_KEY%>" scope="session">
-                    <a href="Login.jsp" class="countrytext" >Sign In |</a> 
-                    <a href="PrepareRegistration.do" class="countrytext"> Registration |</a> 
-                </logic:notPresent> 
-                    <a href="FAQ.jsp" class="countrytext"> FAQ</a>
-                    
-                    
-                </td>
-            </tr>
-            
-</table>
-old location of cart --%>
-
-     
   <div id="nav" align="center">
     <ul id="MenuBar1" class="MenuBarHorizontal">
       <li><a class="MenuBarItemSubmenu" href="Home.xhtml" title="Home">Home</a>

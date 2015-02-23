@@ -21,19 +21,12 @@
 
 
 <body>
-<jsp:include page="internalHomeTitle.jsp" />
-<table width="100%" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
-  <tr> 
-    <%--<td width="17%" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle"> 
-      <jsp:include page="sampleTrackingMenu.jsp" />
-	</td>--%>
-    <td width="100%" align="left" valign="top">
-        <%--<jsp:include page="findClonesTitle.jsp" />--%>
+<jsp:include page="signinMenuBar.jsp" />
 <html:errors/>
 
 <logic:iterate name="cloneSamples" id="clone">
 <p class="text">Clone: <bean:write name="clone" property="name"/></p>
-<table width="100%" border="0">
+<table width="100%" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
   <tr>
     <td class="tableheader">Container</td>
     <td class="tableheader">Position</td>

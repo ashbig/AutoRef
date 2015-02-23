@@ -25,7 +25,7 @@
     
     <body>
         <jsp:include page="orderTitle.jsp" />
-        <table width="100%" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
+        <table id='content' width="100%" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
             <tr> 
                 <%--<td width="136" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle"> 
                     <jsp:include page="menu.jsp" />

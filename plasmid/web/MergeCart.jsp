@@ -18,7 +18,7 @@
 
 <body>
 <jsp:include page="signinMenuBar.jsp" />
-<table width="100%" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
+<table id='content' width="100%" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
   <tr> 
     <%--<td width="17%" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle"> 
       <jsp:include page="menuHome.jsp" />
@@ -26,7 +26,7 @@
     <td width="100%" align="left" valign="top">
         <%--<jsp:include page="loginTitle.jsp" />--%>
       <html:form action="MergeCart.do">
-<p class="text">You have a saved shopping cart with items in your account. Please choose from the following:
+          <p class="text">You have a saved shopping cart with items in your account. Please choose from the following:</p>
 <table width="100%" border="0">
   <tr> 
     <td height="21" colspan="2" class="itemtext"> 
@@ -36,12 +36,12 @@
   <tr> 
     <td height="24" colspan="2" class="itemtext"> 
     <html:radio property="merge" value="discartSavedCart"/>
-      Discart saved shopping cart items</td>
+      Discard saved shopping cart items</td>
   </tr>
   <tr> 
     <td height="21" colspan="2" class="itemtext"> 
     <html:radio property="merge" value="discartCurrentCart"/>
-      Discart current shopping cart items</td>
+      Discard current shopping cart items</td>
   </tr>
   <tr> 
     <td width="8%" height="41">&nbsp; </td>

@@ -20,7 +20,7 @@
 
 <body>
 <jsp:include page="orderTitle.jsp" />
-<table width="100%" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
+<table id='content' width="100%" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
   <tr> 
     <%--<td width="17%" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle"> 
       <jsp:include page="menu.jsp" />
@@ -30,6 +30,11 @@
       <html:form action="AdvancedSearch.do">
           <p class='mainbodytexthead'>Text Search Tool</p>       
 <table width="100%" border="0">
+    <colgroup>
+        <col width='30%'>
+        <col width='15%'>
+        <col width='36%'>
+    </colgroup>
   <tr> 
     <td width="15%" class="formlabel">Gene name</td>
     <td width="15%">
@@ -112,28 +117,7 @@
     <td width="36%">
         <html:text styleClass="itemtext" property="pmid" size="30"/>
     </td>
-    <!--
-    <td width="18%">
-          <html:radio property="pmidAndOr" value="and"/>
-          <html:radio property="pmidAndOr" value="or"/>
-    </td>
-    -->
   </tr>
-  <!--<tr> 
-    <td width="15%" class="formlabel">Species</td>
-    <td colspan="2">
-        <html:select property="species" styleClass="itemtext">
-          <html:options name="species"/>
-        </html:select>
-    </td>
-    <!--
-    <td width="18%">
-          <html:radio property="pmidAndOr" value="and"/>
-          <html:radio property="pmidAndOr" value="or"/>
-    </td>
-    
-  </tr> -->
-  
   <logic:equal name="psi" value="1">
   <tr> 
     <td>&nbsp;</td>
@@ -253,12 +237,10 @@
     <td>&nbsp;</td>
     <td>&nbsp;</td>
     <td>&nbsp;</td>
-    <td>&nbsp;</td>
   </tr>
   <tr> 
     <td>&nbsp;</td>
     <td><html:submit styleClass="formlabel" value="Search"/></td>
-    <td>&nbsp;</td>
     <td>&nbsp;</td>
   </tr>
 </table>
@@ -267,7 +249,8 @@
       </html:form></td>
   </tr>
 </table> 
-<jsp:include page="footer.jsp" /></body>
+<jsp:include page="footer.jsp" />
      </div>
+     </body>
 </html>
 
