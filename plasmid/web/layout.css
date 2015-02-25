@@ -68,6 +68,12 @@ img, object, embed, video {
 #cart{
     display:none;
 }
+#extrainfo{
+    display:none;
+}
+#extrainfo2{
+    display:none;
+}
 #mobilehome {
     display:block;
 }
@@ -100,9 +106,9 @@ img, object, embed, video {
 	display: block;
 }
 
-/* Tablet Layout: 481px to 768px. Inherits styles from: Mobile Layout. */
+/* Tablet Layout: NEW 670 - NEW 1065 not OLD481px to OLD768px. Inherits styles from: Mobile Layout. */
 
-@media only screen and (min-width: 481px) {
+@media only screen and (min-width: 670px) {
 .gridContainer {
 	width: 92%;
 	padding-left: 2%;
@@ -133,7 +139,7 @@ img, object, embed, video {
 	width: 100%;
 	display: block;
         margin-top: 1em;
-        margin-bottom: 3em;
+        margin-bottom: 0em;
         display: block;
 }
 #content {
@@ -142,7 +148,7 @@ img, object, embed, video {
 	margin-left: 0%;
 	width: 100%;
 	display: block;
-        padding-top: 2%;
+        padding-top: 0%;
 }
 #aside {
 	clear: none;
@@ -164,6 +170,12 @@ img, object, embed, video {
 #cart{
     display:block;
 }
+#extrainfo{
+    display:none;
+}
+#extrainfo2{
+    display:block;
+}
 #mobilehome {
     display:none;
 }
@@ -172,9 +184,9 @@ img, object, embed, video {
 }
 }
 
-/* Desktop Layout: 769px to a max of 1232px.  Inherits styles from: Mobile Layout and Tablet Layout. */
+/* Desktop Layout: NEW=1065px OLD=769px to a max of ? px.  Inherits styles from: Mobile Layout and Tablet Layout. */
 
-@media only screen and (min-width: 769px) {
+@media only screen and (min-width: 1065px) {
 .gridContainer {
 	width: 80%;
 	max-width: 80%;
@@ -207,9 +219,9 @@ img, object, embed, video {
 	width: 100%;
 	display: block;
 	background-color: #FFF;
-	height: 2.5em;
+	height: auto;
         margin-top: 1em;
-        margin-bottom: 4em;
+        margin-bottom: 0em;
 }
 #content {
 	clear: none;
@@ -217,7 +229,7 @@ img, object, embed, video {
 	margin-left: 0%;
 	width: 100%;
 	display: block;
-        padding-top: 2%;
+        padding-top: 0%;
 }
 #aside {
 	clear: both;
@@ -238,6 +250,12 @@ img, object, embed, video {
 }
 #cart{
     display:block;
+}
+#extrainfo{
+    display:block;
+}
+#extrainfo2{
+    display:inherit;
 }
 #mobilehome {
     display:none;

@@ -41,7 +41,6 @@
 <!-- end mobile menu, jsp version--> 
 <br>
 <br>
-<div id='mobilehome'><br></div>
 <div id='hmslogo'><a href="http://hms.harvard.edu/" target="_blank"><img id="hmslogo" src="HMS_BiochemMolPhamH.jpg" alt="BCMP"></a>
 <table id="cart" width="275px" height="30px" border="0" align="right">
             <tr> 

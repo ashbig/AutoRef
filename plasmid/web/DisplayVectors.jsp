@@ -35,15 +35,15 @@ Many other vectors are represented in the repository
 (try 'search by reference sequence' or 'view collection').</P>
 <p class="mainbodytexthead" align="right"><a target="_blank" href="TermDefinition.jsp">Explanation of Terms</a></p>
 <table width="100%" border="0" valign="middle">
-  <tr>
+  <tr style="background:#999999; text-align: center; vertical-align: top;">
     <td class="tableheader">&nbsp;</td>
     <td class="tableheader"><a href="SetVectorDisplay.do?sortby=cloneid">Clone ID</a></td>
     <td class="tableheader"><a href="SetVectorDisplay.do?sortby=vectorname">Vector Name</a></td>
-    <td class="tableheader">Description</td>
+    <td class="tableheader"  id="extrainfo">Description</td>
     <td class="tableheader">Cloning Strategy</td>
     <td class="tableheader">Tag</td>
-    <td class="tableheader">Special MTA</td>
-    <td class="tableheader">Use Restriction</td>
+    <td class="tableheader"  id="">Special MTA</td>
+    <td class="tableheader"  id="extrainfo2">Use Restriction</td>
     <td class="tableheader">&nbsp;</td>
   </tr>
 
@@ -53,11 +53,11 @@ Many other vectors are represented in the repository
     <td><%=++i%></td>
     <td><a target="_blank" href="GetCloneDetail.do?cloneid=<bean:write name="clone" property="cloneid"/>"><bean:write name="clone" property="name"/></a></td>
     <td><a target="_blank" href="GetVectorDetail.do?vectorid=<bean:write name="clone" property="vectorid"/>"><bean:write name="clone" property="vectorname"/></a></td>
-    <td><bean:write name="clone" property="description"/></td>
+    <td  id="extrainfo"><bean:write name="clone" property="description"/></td>
     <td><bean:write name="clone" property="vector.cloningSystem"/></td>
     <td><bean:write name="clone" property="vector.vectorTag"/></td>
-    <td><bean:write name="clone" property="specialtreatment"/></td>
-    <td><bean:write name="clone" property="restriction"/></td>
+    <td  id=""><bean:write name="clone" property="specialtreatment"/></td>
+    <td  id="extrainfo2"><bean:write name="clone" property="restriction"/></td>
     <html:form action="SetVectorDisplay.do">
     <input type="hidden" name="cloneid" value="<bean:write name="clone" property="cloneid"/>"/>
     <logic:equal name="clone" property="isAddedToCart" value="true">

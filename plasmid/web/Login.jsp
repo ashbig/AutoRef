@@ -33,20 +33,23 @@
 <html:errors/>
 <table width="100%" border="0">
   <tr> 
-    <td width="12%" valign="baseline" class="formlabel">Email:</td>
+    <td width="auto" valign="baseline" class="formlabel">Email:</td>
     <td>
         <html:text tabindex="1" property="email" styleClass="text" size="30"/>
     </td>
-    <td valign="baseline" width="60%" class="text"><a href="PrepareRegistration.do">Create New Account</a></td>
+
   </tr>
   <tr> 
     <td valign="baseline" class="formlabel">Password:</td>
-    <td width="28%">
+    <td width="auto">
         <html:password property="password" tabindex="2" styleClass="text" size="30" maxlength="20"/>
         <html:submit tabindex="2" styleClass="text" value="Login"/>
     </td>
-    <td valign="baseline" width="60%" class="text"><a href="FindPassword.jsp">Find Password</a></td>
+
   </tr>
+  <tr><td colspan='2'>&nbsp;</td></tr>
+  <tr><td colspan='2' valign="baseline" width="60%" class="text"><a href="PrepareRegistration.do">Create New Account</a></td></tr>
+  <tr><td colspan='2'  valign="baseline" width="60%" class="text"><a href="FindPassword.jsp">Find Password</a></td></tr>
 </table>
       </html:form></td>
   </tr>

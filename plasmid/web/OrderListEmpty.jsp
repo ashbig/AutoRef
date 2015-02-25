@@ -19,18 +19,9 @@
 
 <body>
 <jsp:include page="signinMenuBar.jsp" />
-<table width="100%" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
-  <tr> 
-    <%--<td width="17%" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle"> 
-      <jsp:include page="menuHome.jsp" />
-	</td>--%>
-    <td width="100%" align="left" valign="top">
-	<%--<jsp:include page="orderHistoryTitle.jsp" />--%>
-
-<p class="text">You have no orders.</p>
-
-    </td>
-  </tr>
+<table id='content' width="100%" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
+    <tr><td>&nbsp;</td></tr>
+    <tr><td width="100%" align="left" valign="top"><p class="mainbodytexthead">You have no orders.</p></td></tr>
 </table>
 <jsp:include page="footer.jsp" /></body>
 </div>

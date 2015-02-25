@@ -75,7 +75,7 @@ return;
         </div>                    
                         <table border="0" cellpadding="5" style="table{border-collapse: collapse;}"><tr><td>                    
                     <p class="text">Harvard Medical School<br>Dept. BCMP, C1-214<br>240 Longwood Ave.<br>Boston, MA 02115</p>
-                    <p class="text" align="middle"><strong><u>PRICE QUOTE</u></strong></p>
+                    <p class="text" align="middle"><strong><a href="javascript:if(window.print)window.print()" style='text-decoration:none;'>PRICE QUOTE</a></strong></p>
                         <script type="text/javascript">
                         tmonth=new Array("January","February","March","April","May","June","July","August","September","October","November","December");
 

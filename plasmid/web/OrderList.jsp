@@ -77,10 +77,10 @@
     <td class="tableheader">Order Date</td>
     <td class="tableheader">Status</td>
     <%--<td class="tableheader">Platinum Service</td>--%>
-    <td class="tableheader">Number of Clones</td>
-    <td class="tableheader">Number of Collections</td>
-    <td class="tableheader">Total Price</td>
-    <td class="tableheader">User</td>
+    <td class="tableheader">#Clones</td>
+    <td class="tableheader">#Collections</td>
+    <!--<td class="tableheader">Total Price</td>
+    <td class="tableheader">User</td>-->
     <td class="tableheader">User Email</td>
     <td class="tableheader">Last Updated On</td>
     <td class="tableheader">Last Updated By</td>
@@ -159,14 +159,14 @@
     <input type="hidden" name='<%="orderid["+(i)+"]"%>' value="<bean:write name="order" property="orderid"/>">
 
     <%--<td class="tableinfo"><bean:write name="order" property="isplatinum"/></td>--%>
-    <td class="tableinfo"><bean:write name="order" property="numofclones"/></td>
-    <td class="tableinfo"><bean:write name="order" property="numofcollection"/></td>
-    <td class="tableinfo"><bean:write name="order" property="totalPriceString"/></td>
-    <td class="tableinfo"><bean:write name="order" property="name"/></td>
+    <td class="tableinfo" align='center'><bean:write name="order" property="numofclones"/></td>
+    <td class="tableinfo" align='center'><bean:write name="order" property="numofcollection"/></td>
+    <%--<td class="tableinfo"><bean:write name="order" property="totalPriceString"/></td>
+    <td class="tableinfo"><bean:write name="order" property="name"/></td>--%>
     <td class="tableinfo"><bean:write name="order" property="email"/></td>
     <td class="tableinfo"><bean:write name="order" property="updatedon"/></td>
     <td class="tableinfo"><bean:write name="order" property="updatedby"/></td>
-    <td class="tableinfo"><bean:write name="order" property="dayssinceorder"/></td>
+    <td class="tableinfo" align='center'><bean:write name="order" property="dayssinceorder"/></td>
 
   </tr>
   <% i++; %>
