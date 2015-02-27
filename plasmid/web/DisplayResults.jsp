@@ -101,7 +101,7 @@ return(document.cookie.match('(^|; )'+name+'=([^;]*)')||0)[2];
                                     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=cloneid">PlasmID ID</a></td>
                                     <td class="tableheader" id="extrainfo"><a href="SetDisplay.do?page=1&sortby=originalcloneid">Original Clone ID</a></td>
                                     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=clonetype">Clone Type</a></td>
-                                    <td class="tableheader" id="extrainfo"><a href="SetDisplay.do?page=1&sortby=geneid">Species Specific ID</a></td>
+                                    <td class="tableheader" id="extrainfo" style="min-width:80px"><a href="SetDisplay.do?page=1&sortby=geneid">Species Specific ID</a></td>
                                     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=genesymbol">Gene Symbol</a></td>
                                     <!--<td class="tableheader">Keywords</td>
                                     <td class="tableheader">Gene Name</td>
@@ -125,10 +125,8 @@ return(document.cookie.match('(^|; )'+name+'=([^;]*)')||0)[2];
                                             <td id="extrainfo"><bean:write name="clone" property="originalCloneid"/></td>
                                             <td><bean:write name="clone" property="type"/></td>
                                             <logic:equal name="clone" property="type" value="<%=Clone.NOINSERT%>">
-                                                <!--<td>&nbsp;</td>
                                                 <td>&nbsp;</td>
                                                 <td>&nbsp;</td>
-                                                <td>&nbsp;</td>-->
                                                 <td id="extrainfo">&nbsp;</td>
                                                 <td id="extrainfo">&nbsp;</td>
                                                 <td id="extrainfo">&nbsp;</td>
@@ -200,9 +198,9 @@ return(document.cookie.match('(^|; )'+name+'=([^;]*)')||0)[2];
                                     <logic:iterate name="directFounds" id="clone" length="size" offset="<%=(new Integer(i)).toString()%>">
                                         <tr class="tableinfo"> 
                                             <td><%=++i%></td>
-                                            <td><bean:write name="clone" property="term"/></td>
+                                            <td id="extrainfo"><bean:write name="clone" property="term"/></td>
                                             <td><a target="_blank" href="GetCloneDetail.do?cloneid=<bean:write name="clone" property="cloneid"/>&species=<bean:write name="refseqSearchForm" property="species"/>"><bean:write name="clone" property="name"/></a></td>
-                                            <td><bean:write name="clone" property="originalCloneid"/></td>
+                                            <td id="extrainfo"><bean:write name="clone" property="originalCloneid"/></td>
                                             <td><bean:write name="clone" property="type"/></td>
                                             <logic:equal name="clone" property="type" value="<%=Clone.NOINSERT%>">
                                                 <td>&nbsp;</td>
@@ -216,42 +214,42 @@ return(document.cookie.match('(^|; )'+name+'=([^;]*)')||0)[2];
                                             <logic:notEqual name="clone" property="type" value="<%=Clone.NOINSERT%>">
                                                 <logic:iterate name="clone" property="inserts" id="insert">
                                                     <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.GENEID%>">
-                                                        <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=gene&cmd=Retrieve&dopt=Graphics&list_uids=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
+                                                        <td id="extrainfo"><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=gene&cmd=Retrieve&dopt=Graphics&list_uids=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
                                                     </logic:equal>
                                                     <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.PA%>">
-                                                        <td><a target="_blank" href="http://www.pseudomonas.com/AnnotationByPAU.asp?PA=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
+                                                        <td id="extrainfo"><a target="_blank" href="http://www.pseudomonas.com/AnnotationByPAU.asp?PA=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
                                                     </logic:equal>
                                                     <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.SGD%>">
-                                                        <td><a target="_blank" href="http://db.yeastgenome.org/cgi-bin/locus.pl?locus=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
+                                                        <td id="extrainfo"><a target="_blank" href="http://db.yeastgenome.org/cgi-bin/locus.pl?locus=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
                                                     </logic:equal>
                                                     <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.GENBANK%>">
-                                                        <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/nuccore/<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
+                                                        <td id="extrainfo"><a target="_blank" href="http://www.ncbi.nlm.nih.gov/nuccore/<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
                                                     </logic:equal>
                                                     <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.PRO_GI%>">
-                                                        <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/protein/<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
+                                                        <td id="extrainfo"><a target="_blank" href="http://www.ncbi.nlm.nih.gov/protein/<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
                                                     </logic:equal>
                                                     <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.FBID%>">
-                                                        <td><a target="_blank" href="http://www.flybase.org/.bin/fbidq.html?<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
+                                                        <td id="extrainfo"><a target="_blank" href="http://www.flybase.org/.bin/fbidq.html?<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
                                                     </logic:equal>
                                                     <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.WBGENEID%>">
-                                                        <td><a target="_blank" href="http://www.wormbase.org/db/gene/gene?name=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
+                                                        <td id="extrainfo"><a target="_blank" href="http://www.wormbase.org/db/gene/gene?name=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
                                                     </logic:equal>
                                                     <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.TAIR%>">
-                                                        <td><a target="_blank" href="http://arabidopsis.org/servlets/TairObject?type=locus&name=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
+                                                        <td id="extrainfo"><a target="_blank" href="http://arabidopsis.org/servlets/TairObject?type=locus&name=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
                                                     </logic:equal>
                                                     <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.LOCUS_TAG%>">
-                                                        <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/sites/entrez?db=gene&cmd=&term=<bean:write name="insert" property="geneid"/>&go=Go"><bean:write name="insert" property="geneid"/></a></td>
+                                                        <td id="extrainfo"><a target="_blank" href="http://www.ncbi.nlm.nih.gov/sites/entrez?db=gene&cmd=&term=<bean:write name="insert" property="geneid"/>&go=Go"><bean:write name="insert" property="geneid"/></a></td>
                                                     </logic:equal>
                                                     <td><bean:write name="insert" property="name"/></td>
-                                                    <td><bean:write name="insert" property="annotation"/></td>  
+                                                    <%--<td><bean:write name="insert" property="annotation"/></td>  
                                                     <td><bean:write name="insert" property="description"/></td>
                                                     <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=nucleotide&val=<bean:write name="insert" property="targetseqidForNCBI"/>"><bean:write name="insert" property="targetgenbank"/></a></td>  
-                                                    <td><bean:write name="insert" property="hasmutdis"/></td> 
+                                                    <td><bean:write name="insert" property="hasmutdis"/></td> --%>
                                                     <td><bean:write name="insert" property="format"/></td>
                                                 </logic:iterate>
                                             </logic:notEqual>
                                             <td><a target="_blank" href="GetVectorDetail.do?vectorid=<bean:write name="clone" property="vectorid"/>"><bean:write name="clone" property="vectorname"/></a></td>
-                                            <td>
+                                            <td id='extrainfo2'>
                                                 <logic:iterate name="clone" property="selections" id="selection">
                                                     <bean:write name="selection" property="hosttype"/>: <bean:write name="selection" property="marker"/>
                                                 </logic:iterate>

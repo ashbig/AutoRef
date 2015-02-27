@@ -74,20 +74,20 @@ return(document.cookie.match('(^|; )'+name+'=([^;]*)')||0)[2]
                     </html:form>
                     
                     <table width="100%" border="0">
-                        <tr>
+                        <tr style="background:#999999; text-align: center; vertical-align: top;">
                             <td class="tableheader">&nbsp;</td>
-                            <td class="tableheader">Search Term</td>
+                            <td class="tableheader" id="extrainfo">Search Term</td>
                             <td class="tableheader">PlasmID ID</td>
-                            <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=originalcloneid">Original Clone ID</a></td>
-                            <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=geneid">Species Specific ID</a></td>
+                            <td class="tableheader" id="extrainfo"><a href="SetDisplay.do?page=1&sortby=originalcloneid">Original Clone ID</a></td>
+                            <td class="tableheader" style="min-width:80px"><a href="SetDisplay.do?page=1&sortby=geneid">Species Specific ID</a></td>
                             <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=genesymbol">Gene Symbol</a></td>
-                            <td class="tableheader">Gene Name</td>
+                            <%--<td class="tableheader">Gene Name</td>
                             <td class="tableheader">Keywords</td>
-                            <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=mutdis">Mutation/ Discrepancy</a></td>
+                            <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=mutdis">Mutation/ Discrepancy</a></td>--%>
                             <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=vectorname">Vector</a></td>
-                            <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=selection">Selection Markers</a></td>
-                            <td class="tableheader">Max Identity(%)/Alignment Length</td>
-                            <td class="tableheader">Max Alignment Length/Identity(%)</td>
+                            <td class="tableheader" id="extrainfo"><a href="SetDisplay.do?page=1&sortby=selection">Selection Markers</a></td>
+                            <td class="tableheader">Identity (%)</td>
+                            <td class="tableheader">Alignment<br>Length (bp)</td>
                             <td class="tableheader">&nbsp;</td>
                         </tr>
                         
@@ -97,9 +97,9 @@ return(document.cookie.match('(^|; )'+name+'=([^;]*)')||0)[2]
                         
                             <tr class="tableinfo"> 
                                 <td><%=++i%></td>
-                                <td><a target="_blank" href="GetAlignment.do?queryid=<bean:write name="clone" property="queryid"/>&subjectid=<bean:write name="clone" property="subjectid"/>&clonename=<bean:write name="clone" property="name"/>"><bean:write name="clone" property="queryid"/></a></td>
+                                <td id="extrainfo"><a target="_blank" href="GetAlignment.do?queryid=<bean:write name="clone" property="queryid"/>&subjectid=<bean:write name="clone" property="subjectid"/>&clonename=<bean:write name="clone" property="name"/>"><bean:write name="clone" property="queryid"/></a></td>
                                 <td><a target="_blank" href="GetCloneDetail.do?cloneid=<bean:write name="clone" property="cloneid"/>&species="><bean:write name="clone" property="name"/></a></td>
-                                <td><bean:write name="clone" property="originalCloneid"/></td>
+                                <td id="extrainfo"><bean:write name="clone" property="originalCloneid"/></td>
                                 <logic:iterate name="clone" property="inserts" id="insert">
                                     <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.GENEID%>">
                                         <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=gene&cmd=Retrieve&dopt=Graphics&list_uids=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
@@ -134,19 +134,19 @@ return(document.cookie.match('(^|; )'+name+'=([^;]*)')||0)[2]
                                     <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.LOCUS_TAG%>">
                                         <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/sites/entrez?db=gene&cmd=&term=<bean:write name="insert" property="geneid"/>&go=Go"><bean:write name="insert" property="geneid"/></a></td>
                                     </logic:equal>
-                                    <td><bean:write name="insert" property="name"/></td>
+                                    <%--<td><bean:write name="insert" property="name"/></td>
                                     <td><bean:write name="insert" property="description"/></td>
-                                    <td><bean:write name="insert" property="annotation"/></td>
+                                    <td><bean:write name="insert" property="annotation"/></td>--%>
                                     <td><bean:write name="insert" property="hasmutdis"/></td>
                                 </logic:iterate>
                                 <td><a target="_blank" href="GetVectorDetail.do?vectorid=<bean:write name="clone" property="vectorid"/>"><bean:write name="clone" property="vectorname"/></a></td>
-                                <td>
+                                <td id="extrainfo">
                                     <logic:iterate name="clone" property="selections" id="selection">
                                         <bean:write name="selection" property="hosttype"/>: <bean:write name="selection" property="marker"/>
                                     </logic:iterate>
                                 </td>
-                                <td><bean:write name="clone" property="maxpid"/>/<bean:write name="clone" property="maxpidLength"/></td>
-                                <td><bean:write name="clone" property="maxAlength"/>/<bean:write name="clone" property="maxAlengthpid"/></td>
+                                <td><bean:write name="clone" property="maxpid"/></td>
+                                <td><bean:write name="clone" property="maxAlength"/></td>
                                 <html:form action="SetDisplay.do">
                                     <input type="hidden" name="cloneid" value="<bean:write name="clone" property="subjectid"/>"/>
                                     <logic:equal name="clone" property="isAddedToCart" value="true">
