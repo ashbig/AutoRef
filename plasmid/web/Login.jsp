@@ -35,14 +35,14 @@
   <tr> 
     <td width="auto" valign="baseline" class="formlabel">Email:</td>
     <td>
-        <html:text tabindex="1" property="email" styleClass="text" size="30"/>
+        <html:text tabindex="1" property="email" styleClass="text" size="20"/>
     </td>
 
   </tr>
   <tr> 
     <td valign="baseline" class="formlabel">Password:</td>
     <td width="auto">
-        <html:password property="password" tabindex="2" styleClass="text" size="30" maxlength="20"/>
+        <html:password property="password" tabindex="2" styleClass="text" size="20" maxlength="20"/>
         <html:submit tabindex="2" styleClass="text" value="Login"/>
     </td>
 
