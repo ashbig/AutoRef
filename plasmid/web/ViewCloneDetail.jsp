@@ -96,26 +96,26 @@
         <p class="text">Insert Information:</p>
         <table width="700" border="0">
             <tr> 
-                <td width="5%" class="tablebody">Insert</td>
-                <td width="6%" class="tablebody">Size (bp)</td>
-                <td width="8%" class="tablebody">Species</td>
-                <td width="6%" class="tablebody">Mutation</td>
-                <td width="6%" class="tablebody">Discrepancy</td>
-                <td width="6%" class="tablebody">Format</td>
-                <td width="10%" class="tablebody">Tissue Source</td>
-                <td width="7%" class="tablebody">Species Specific ID</td>
-                <td width="8%" class="tablebody">Gene Symbol</td>
-                <td width="26%" class="tablebody">Gene Name</td>
-                <td width="6%" class="tablebody">Target Genbank</td>
-                <td width="6%" class="tablebody">Keyword</td>
+                <td class="tablebody">Insert</td>
+                <td class="tablebody">Size (bp)</td>
+                <td class="tablebody">Species</td>
+                <!--<td class="tablebody">Mutation</td>
+                <td class="tablebody">Discrepancy</td>-->
+                <td class="tablebody">Format</td>
+                <td class="tablebody">Tissue Source</td>
+                <td class="tablebody">Species Specific ID</td>
+                <td class="tablebody">Gene Symbol</td>
+                <td class="tablebody">Gene Name</td>
+                <td class="tablebody">Target Genbank</td>
+                <td class="tablebody">Keyword</td>
             </tr>
             <logic:iterate id="insert" name="clone" property="inserts">
                 <tr class="tableinfo"> 
                     <td class="tableinfo"><bean:write name="insert" property="order"/></td>
                     <td class="tableinfo"><bean:write name="insert" property="size"/></td>
                     <td class="tableinfo"><bean:write name="insert" property="species"/></td>
-                    <td class="tableinfo"><bean:write name="insert" property="hasmutation"/></td>
-                    <td class="tableinfo"><bean:write name="insert" property="hasdiscrepancy"/></td>
+                    <%--<td class="tableinfo"><bean:write name="insert" property="hasmutation"/></td>
+                    <td class="tableinfo"><bean:write name="insert" property="hasdiscrepancy"/></td>--%>
                     <td class="tableinfo"><bean:write name="insert" property="format"/></td>
                     <td class="tableinfo"><bean:write name="insert" property="source"/></td>
                     <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.GENEID%>">

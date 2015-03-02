@@ -21,72 +21,23 @@
 
     <body>
         <jsp:include page="signinMenuBar.jsp" />
-        <table id='content' width="100%" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
-            <tr> 
-                <%--<td width="17%" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle"> 
-                    <jsp:include page="menuHome.jsp" />
-                </td>--%>
-                <td width="100%" align="left" valign="top">
-                    <%--<jsp:include page="orderHistoryTitle.jsp" />--%>
-
                     <logic:present name="ordermessage">
                         <p class="text"><bean:write name="ordermessage"/></p>
                     </logic:present>
                     <html:errors/>
-
-                    <table width="100%" border="0">
-                        <tr> 
-                            <td class="formlabel">Order ID:</td>
-                            <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="orderid"/></td>
-                            <td class="formlabel">Order Date:</td>
-                            <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="orderDate"/></td>
-                        </tr>
-                        <tr> 
-                            <td class="formlabel">Order Status:</td>
-                            <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="status"/></td>
-                            <td class="formlabel">PO/Billing Number:</td>
-                            <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="ponumber"/></td>
-                        </tr>
-                        <%--<tr> 
-                            <td class="formlabel">Platinum Service:</td>
-                            <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="isplatinum"/></td>
-                            <td class="formlabel">Platinum Service Status:</td>
-                            <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="platinumServiceStatus"/></td>
-                        </tr>--%>
-                        <tr> 
-                            <td class="formlabel">Email:</td>
-                            <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="email"/></td>
-                            <td class="formlabel">Phone:</td>
-                            <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="phone"/></td>
-                        </tr>
-                        <tr> 
-                            <td class="formlabel">PI Name:</td>
-                            <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="piname"/></td>
-                            <td class="formlabel">PI Email:</td>
-                            <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="piemail"/></td>
-                        </tr>
-                        <tr> 
-                            <td class="formlabel">User Group:</td>
-                            <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="usergroup"/></td>
-                            <td class="formlabel">DF/HCC Member:</td>
-                            <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="ismemberString"/></td>
-                        </tr>
-                        <tr> 
-                            <td class="formlabel">Last Updatec On:</td>
-                            <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="updatedon"/></td>
-                            <td class="formlabel">Last Updatec By:</td>
-                            <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="updatedby"/></td>
-                        </tr>
-                        <tr> 
-                            <td class="formlabel">Shipping Method:</td>
-                            <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="shippingmethod"/></td>
-                            <td class="formlabel">Shipping Account:</td>
-                            <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="shippingaccount"/></td>
-                        </tr>
-                        <tr>
-                            <td class="formlabel"></td>
-                            <logic:equal name="<%=Constants.CLONEORDER%>" property="invoiceid" value="0">
-                                <td class="text"></td>
+<div id="aside">
+     <table border="0" width="100%">
+                     <colgroup><col width="150px"><col width="auto"></colgroup>
+                        <tr><td colspan="2" class="featuretext">Order Details:</td></tr>
+                        <tr><td class="formlabel">Order ID:</td><td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="orderid"/></td></tr>
+                        <tr><td class="formlabel">PO Number:</td><td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="ponumber"/></td></tr>                        
+                        <tr><td class="formlabel">Order Date:</td><td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="orderDate"/></td></tr>
+                        <tr><td class="formlabel">Order Status:</td><td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="status"/></td></tr>
+                        <%--<tr><td class="formlabel">Last Updated On:</td><td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="updatedon"/></td></tr>
+                        <tr><td class="formlabel">Last Updated By:</td><td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="updatedby"/></td></tr>--%>    
+                        <tr><td class="formlabel">Shipping Method:</td><td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="shippingmethod"/></td></tr>
+                        <tr><td class="formlabel">Shipping Account:</td><td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="shippingaccount"/></td></tr>
+                        <tr><td class="formlabel"></td><logic:equal name="<%=Constants.CLONEORDER%>" property="invoiceid" value="0"><td class="text"></td>
                             </logic:equal>
                             <logic:notEqual name="<%=Constants.CLONEORDER%>" property="invoiceid" value="0">
                                 <td class="text">
@@ -98,15 +49,35 @@
                                     </html:form>
                                 </td>
                             </logic:notEqual>
-                        </tr>
-                    </table>
+                        </tr>                        
+    </table>
+</div>
+<div id="aside">
+    <table  border="0" width="100%">
+        <colgroup><col width="150px"><col width="auto"></colgroup>
+                        <tr><td colspan="2" class="featuretext">User Details:</td></tr>        
+                        <tr><td class="formlabel">Email:</td><td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="email"/></td></tr>
+                        <tr><td class="formlabel">Phone:</td><td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="phone"/></td></tr>
+                        <tr><td class="formlabel">PI Name:</td><td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="piname"/></td></tr>
+                        <tr><td class="formlabel">PI Email:</td><td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="piemail"/></td></tr>
+                        <tr><td class="formlabel">User Group:</td><td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="usergroup"/></td></tr>
+                        <tr><td class="formlabel">DF/HCC Member:</td><td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="ismemberString"/></td></tr>
+    </table>
+</div>
 
-                    <p>&nbsp;</p>
-                    <table width="100%" border="0">
-                        <tr> 
-                            <td colspan="2" class="featuretext">Shipping To:</td>
-                            <td class="featuretext">Billing To:</td>
-                            <td class="featuretext">
+<div id="content">&nbsp;</div>
+<div id="aside">
+    <table border="0" width="100%">
+        <colgroup><col width="50px"><col width="auto"></colgroup>
+                            <tr><td colspan="2" class="featuretext">Shipping To:</td></tr>
+                            <tr><td width="17%" class="formlabel">Name:</td><td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="shippingTo"/></td></tr>
+                            <tr><td class="formlabel">Address:</td><td class="text"><pre><bean:write name="<%=Constants.CLONEORDER%>" property="shippingAddress"/></pre></td></tr>
+    </table>
+</div>
+<div id="aside">
+    <table border="0" width="100%">
+        <colgroup><col width="50px"><col width="auto"></colgroup>        
+                            <tr><td class="featuretext">Billing To:</td><td class="featuretext">
                                 <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
                                     <html:form action="EditBilling.do">
                                         <html:hidden name="<%=Constants.CLONEORDER%>" property="orderid"/>
@@ -114,28 +85,13 @@
                                     </html:form>
                                 </logic:equal>
                             </td>
-                        </tr>
-                        <tr> 
-                            <td width="17%" class="formlabel">Name:</td>
-                            <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="shippingTo"/></td>
-                            <td class="formlabel">Name:</td>
-                            <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="billingTo"/></td>
-                        </tr>
-                        <tr> 
-                            <td class="formlabel">Address:</td>
-                            <td class="text"><pre><bean:write name="<%=Constants.CLONEORDER%>" property="shippingAddress"/></pre></td>
-                            <td class="formlabel">Address:</td>
-                            <td class="text"><pre><bean:write name="<%=Constants.CLONEORDER%>" property="billingAddress"/></pre></td>
-                        </tr>
-                        <tr> 
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td class="formlabel">Email:</td>
-                            <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="billingemail"/></td>
-                        </tr>
-                    </table>
-
-                    <p class="text">Order Information:</p>
+                            <tr><td class="formlabel">Name:</td><td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="billingTo"/></td></tr>
+                            <tr><td class="formlabel">Address:</td><td class="text"><pre><bean:write name="<%=Constants.CLONEORDER%>" property="billingAddress"/></pre></td></tr>
+                            <tr><td class="formlabel">Email:</td><td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="billingemail"/></td></tr>
+    </table>
+</div>
+<div id="content">
+                    <span class="text">Order Information:</span>
                     <table width="100%" border="0">
                         <tr> 
                             <td class="tableheader">Item</td>
@@ -265,6 +221,7 @@
                 </td>
             </tr>
         </table>
+</div>
         <jsp:include page="footer.jsp" /></body>
 </div>
 </html>

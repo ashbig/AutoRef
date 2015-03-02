@@ -23,3 +23,7 @@ and open the template in the editor.
 a[href]:after {display: none;}
 
 .countrytext {display: none;}
+
+#aside{
+    width: 50%;
+}

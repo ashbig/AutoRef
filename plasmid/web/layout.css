@@ -95,8 +95,9 @@ img, object, embed, video {
 	clear: none;
 	float: left;
 	margin-left: 0%;
-	width: 100%;
+	width: 310px;
 	display: block;
+        margin-top:5px;
 }
 #footer {
 	clear: both;
@@ -152,10 +153,9 @@ img, object, embed, video {
 }
 #aside {
 	clear: none;
-	float: left;
-	margin-left: 0%;
-	width: 100%;
-	display: block;
+	margin-left: 1px;
+	width: 40%;
+	display: inline-block;
 }
 #footer {
 	clear: both;
@@ -224,7 +224,7 @@ img, object, embed, video {
         margin-bottom: 1em;
 }
 #content {
-	clear: none;
+	clear: both;
 	float: left;
 	margin-left: 0%;
 	width: 100%;
@@ -232,11 +232,11 @@ img, object, embed, video {
         padding-top: 0%;
 }
 #aside {
-	clear: both;
-	float: left;
-	margin-left: 0;
-	width: 379px;
-	display: block;
+	display:inline-block;
+        width:50%;
+        margin-left: auto;
+        margin-right: auto;
+        text-align-last: center;
 }
 #footer {
 	clear: both;
