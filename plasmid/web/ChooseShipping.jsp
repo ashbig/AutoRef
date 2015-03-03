@@ -25,24 +25,9 @@
 
 <body>
 <jsp:include page="orderTitle.jsp" />
-<table id='content' width="100%" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
-  <tr> 
-    <%--<td width="17%" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle"> 
-      <jsp:include page="menu.jsp" />
-	</td>--%>
-    <td width="100%" align="left" valign="top">
-	<%--<jsp:include page="checkoutTitle.jsp" />--%>
-
-<html:errors/>
-
-<p class="mainbodytext">
-          <i>If you do not want to complete your order now, you can save your cart and return to check-out another time (remember to sign in to see your saved cart).</i>
-</p>
-<p class="mainbodytext">
-              If you have any questions, please contact <a href="mailto:plasmidhelp@hms.harvard.edu">PlasmID help</a>.   
-</p>
-
 <html:form action="EnterAddress.do">
+
+<%--<div id='content'width='100%'>
 
 <p class="text">Order Summary:</p>
 <table width="100%" border="0">
@@ -62,45 +47,31 @@
     <td align="right" class="tablebody">$<bean:write name="checkoutForm" property="costOfCollections"/></td>
   </tr> 
   <tr> 
-    <td class="tableheader">Total price (before shipping charge):</td>
+    <td class="tableheader">Subtotal:</td>
     <td align="right" colspan="2" class="tablebody">$<bean:write name="checkoutForm" property="totalPrice"/></td>
   </tr>
-</table>
+</table>--%>
 
-<p class="mainbodytexthead">
-              Shipping Options:
-              <ol class="mainbodytext">
-                  <li>Include a FedEx account number at check-out and we will charge your account.</li>
-                  <li>If you don't provide a FedEx account number, we will apply a standard shipping charge at check-out.</li>
-                  <ul>  
-                      <li>$10.00 for domestic orders</li>
-                      <li>$20.00 for international orders</li>
-                </ul>
-                <li>No charge for shipping for the Harvard Medical School community. Pick up your order in the Seeley G. Mudd Building in the <a href="http://www.hip.harvard.edu/Location.html#Quad" target="_blank">HMS Quad</a> in the second floor hallway freezer. You MUST have access to the building to take advantage of this option.</li>
-      </ol>
-</p>
-
-<table width="100%" border="0">
-  <tr> 
-    <td class="formlabel" width="20%">Choose shipping method:</td>
-     <td class="text">
-        <html:select property="shippingMethod">
-            <html:options name="shippingMethods"/>
-        </html:select>
-    </td>
-  </tr>
-  <tr> 
-    <td class="formlabel">Enter shipping account number (ONLY FedEx number. We do not accept other couriers):</td>
-    <td class="text">
-        <html:text size="50" property="accountNumber"/>
-    </td>
-  </tr>
-  <tr>
-      <td class="text">
-        <html:submit value="Continue"/>
-    </td>
+<div id='content' class="mainbodytexthead">
+Shipping Options:
+<li>Include a FedEx account number at check-out and we will charge your account.</li>
+<li>If you don't provide a FedEx account number, we will apply a standard shipping charge at check-out.</li>
+    <ul>  
+        <li>$10.00 for domestic orders</li>
+        <li>$20.00 for international orders</li>
+    </ul>
+<li>No charge if you Pick Up your own plasmids. 'Pick up' orders are placed in our 4C fridge in the hallway outside our lab (Corner of C Bldg and LHRRB) on the <a href="http://www.hip.harvard.edu/Location.html#Quad" target="_blank">HMS Quad</a>. You MUST have access to the building to take advantage of this option.</li>
+</div>
+<table width="100%" border="0" id='content'>
+  <tr><td class="formlabel">Choose shipping method:</td><td class="text"><html:select property="shippingMethod"><html:options name="shippingMethods"/></html:select></td></tr>
+  <tr><td class="formlabel">Enter shipping account number (ONLY FedEx number. We do not accept other couriers):</td><td class="text"><html:text size="20" property="accountNumber"/></td></tr>
+  <tr><td class="text"><html:submit value="Continue"/>*</td>
   </tr>
 </table>
+<table id='content' width="100%" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
+    <tr><td><html:errors/><p class="mainbodytext"><i>*If you do not want to complete your order now, you can <a href="ViewCart.do">return to your cart</a> and save it for check-out at another time (you must be signed in to save your cart).</i></p></td></tr>
+    <tr><td><p class="mainbodytext">If you have any questions, please contact<a href="mailto:plasmidhelp@hms.harvard.edu">PlasmID help</a>.</p></td></tr>
+</table>  
 
         <%--<p class="mainbodytexthead">
               Additional Options:
@@ -126,11 +97,7 @@
     </td>
   </tr>
 </table>--%>
-    </html:form>
-
-    </td>
-  </tr>
-</table>
+</html:form>
 <jsp:include page="footer.jsp" /></body>
-     </div>
+</div>
 </html>

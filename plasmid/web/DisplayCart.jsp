@@ -19,36 +19,31 @@
 
     <body>
         <div class="gridContainer clearfix">
-        <jsp:include page="orderTitle.jsp" />
-        <table width="100%" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
-            <tr> 
-                <%--<td width="17%" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle"> 
-                    <jsp:include page="menu.jsp" />
-                </td>
-                <td width="83%" align="left" valign="top">--%>
-                    <jsp:include page="viewShoppingCartTitle.jsp" />
-            <p class='mainbodytexthead'>Shopping Cart Contents</p>
+
+        <jsp:include page="signinMenuBar.jsp" />
+<div id='content'>
+        <p class='mainbodytexthead'>Shopping Cart Contents</p>
                     <html:errors/>
                     <p class="text">Clones:</p>
                     <table width="100%" border="0">
-                        <tr>
+                        <tr style="background:#999999; text-align: center; vertical-align: top;">
                             <td class="tableheader">&nbsp;</td>
                             <td class="tableheader">Clone ID</td>
-                            <td class="tableheader">Clone Type</td>
-                            <td class="tableheader">Gene ID</td>
+                            <!--<td class="tableheader">Clone Type</td>
+                            <td class="tableheader">Gene ID</td>-->
                             <td class="tableheader">Gene Symbol</td>
-                            <td class="tableheader">Keywords</td>
+                            <!--<td class="tableheader">Keywords</td>
                             <td class="tableheader">Gene Name</td>
                             <td class="tableheader">Reference Sequence</td>
-                            <td class="tableheader">Insert Format</td>
-                            <td class="tableheader">Vector</td>
-                            <td class="tableheader">Selection Markers</td>
+                            <td class="tableheader">Insert Format</td>-->
+                            <td id='extrainfo2' class="tableheader">Vector</td>
+                            <%--<td class="tableheader">Selection Markers</td>
                             <logic:present name="viewCartForm" property="isBatch">
                                 <logic:equal name="viewCartForm" property="isBatch" value="Y">
                                     <td class="tableheader">Target Plate</td>
                                     <td class="tableheader">Target Well</td>
                                 </logic:equal>
-                            </logic:present>
+                            </logic:present>--%>
                             <td class="tableheader">&nbsp;</td>
                         </tr>
                         
@@ -57,10 +52,10 @@
                             <tr class="tableinfo"> 
                                 <td><%=++m%></td>
                                 <td><a target="_blank" href="GetCloneDetail.do?cloneid=<bean:write name="clone" property="cloneid"/>"><bean:write name="clone" property="name"/></a></td>
-                                <td><bean:write name="clone" property="type"/></td>
+                                <!--<td><bean:write name="clone" property="type"/></td>-->
                                 <logic:notEqual name="clone" property="type" value="<%=Clone.NOINSERT%>">
                                     <logic:iterate name="clone" property="inserts" id="insert">
-                                        <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.GENEID%>">
+                                        <%--<logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.GENEID%>">
                                             <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=gene&cmd=Retrieve&dopt=Graphics&list_uids=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
                                         </logic:equal>
                                         <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.PA%>">
@@ -86,28 +81,28 @@
                                         </logic:equal>
                                         <logic:equal name="insert" property="speciesSpecificid" value="<%=RefseqNameType.LOCUS_TAG%>">
                                             <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/sites/entrez?db=gene&cmd=&term=<bean:write name="insert" property="geneid"/>&go=Go"><bean:write name="insert" property="geneid"/></a></td>
-                                        </logic:equal>
+                                        </logic:equal>--%>
                                         <td><bean:write name="insert" property="name"/></td>
-                                        <td><bean:write name="insert" property="annotation"/></td>
+                                        <%--<td><bean:write name="insert" property="annotation"/></td>
                                         <td><bean:write name="insert" property="description"/></td>
                                         <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=nucleotide&val=<bean:write name="insert" property="targetseqidForNCBI"/>"><bean:write name="insert" property="targetgenbank"/></a></td>
-                                        <td><bean:write name="insert" property="format"/></td>
+                                        <td><bean:write name="insert" property="format"/></td>--%>
                                     </logic:iterate>
                                 </logic:notEqual>
                                 <logic:equal name="clone" property="type" value="<%=Clone.NOINSERT%>">
                                     <td>&nbsp;</td>
+                                    <!--<td>&nbsp;</td>
                                     <td>&nbsp;</td>
                                     <td>&nbsp;</td>
                                     <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>-->
                                 </logic:equal>
-                                <td><a target="_blank" href="GetVectorDetail.do?vectorid=<bean:write name="clone" property="vectorid"/>"><bean:write name="clone" property="vectorname"/></a></td>
-                                <td>
+                                <td id='extrainfo2'><a target="_blank" href="GetVectorDetail.do?vectorid=<bean:write name="clone" property="vectorid"/>"><bean:write name="clone" property="vectorname"/></a></td>
+                                <%--<td>
                                     <logic:iterate name="clone" property="selections" id="selection">
                                         <bean:write name="selection" property="hosttype"/>: <bean:write name="selection" property="marker"/>
                                     </logic:iterate>
-                                </td>
+                                </td>--%>
                                 <logic:present name="viewCartForm" property="isBatch">
                                     <logic:equal name="viewCartForm" property="isBatch" value="Y">
                                         <td><bean:write name="clone" property="targetPlate"/></td>
@@ -130,10 +125,10 @@
                             <tr>
                                 <td class="tableheader">&nbsp;</td>
                                 <td class="tableheader">Collection Name</td>
-                                <td class="tableheader">Use Restriction</td>
+                                <!--<td class="tableheader">Use Restriction</td>
                                 <td class="tableheader">Price For DF/HCC Members</td>
                                 <td class="tableheader">Price For Commercial Users</td>
-                                <td class="tableheader">Price For All Others</td>
+                                <td class="tableheader">Price For All Others</td>-->
                                 <td class="tableheader">&nbsp;</td>
                             </tr>
                             
@@ -142,10 +137,10 @@
                                 <tr class="tableinfo"> 
                                     <td><%=++j%></td>
                                     <td><a target="_blank" class="itemtext" href="GetCollection.do?collectionName=<bean:write name="collection" property="name"/>"><bean:write name="collection" property="name"/></a></td>
-                                    <td><bean:write name="collection" property="restriction"/></td>
+                                    <%--<td><bean:write name="collection" property="restriction"/></td>
                                     <td><bean:write name="collection" property="displayMemberPrice"/></td>
                                     <td><bean:write name="collection" property="displayCommercialPrice"/></td>
-                                    <td><bean:write name="collection" property="displayPrice"/></td>
+                                    <td><bean:write name="collection" property="displayPrice"/></td>--%>
                                     <td><html:form action="UpdateCart.do">
                                         <input type="hidden" name="itemid" value="<bean:write name="collection" property="name"/>">
                                         <input type="hidden" name="type" value="<%=ShoppingCartItem.COLLECTION%>">
@@ -168,7 +163,7 @@
                     
                 </td>
             </tr>
-        </table>
+</div>
     <jsp:include page="footer.jsp" /></body>
 </div>
 </html>

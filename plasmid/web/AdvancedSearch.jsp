@@ -31,94 +31,94 @@
           <p class='mainbodytexthead'>Text Search Tool</p>       
 <table width="100%" border="0">
     <colgroup>
-        <col width='30%'>
-        <col width='15%'>
-        <col width='36%'>
+        <col width='auto'>
+        <col id='extrainfo2' width='15%'>
+        <col width='auto'>
     </colgroup>
   <tr> 
-    <td width="15%" class="formlabel">Gene name</td>
-    <td width="15%">
+    <td class="formlabel">Gene name</td>
+    <td id='extrainfo2'>
         <html:select property="geneNameOp" styleClass="itemtext">
           <html:option value="<%=Constants.OPERATOR_EQUALS %>"/>
           <html:option value="<%=Constants.OPERATOR_CONTAINS %>"/>
         </html:select>
     </td>
-    <td width="36%">
-        <html:text styleClass="itemtext" property="geneName" size="30"/>
+    <td>
+        <html:text styleClass="itemtext" property="geneName" size="20"/>
     </td>
     <!--
-    <td class="formlabel" width="18%">
+    <td class="formlabel">
           <html:radio property="geneNameAndOr" value="and"/>and
           <html:radio property="geneNameAndOr" value="or"/>or
     </td>
     -->
   </tr>
   <tr> 
-    <td width="15%" class="formlabel">Vector name</td>
-    <td width="15%">
+    <td class="formlabel">Vector name</td>
+    <td id='extrainfo2'>
         <html:select property="vectorNameOp" styleClass="itemtext">
           <html:option value="<%=Constants.OPERATOR_EQUALS %>"/>
           <html:option value="<%=Constants.OPERATOR_CONTAINS %>"/>
         </html:select>
     </td>
-    <td width="36%">
-        <html:text styleClass="itemtext" property="vectorName" size="30"/>
+    <td>
+        <html:text styleClass="itemtext" property="vectorName" size="20"/>
     </td>
     <!--
-    <td width="18%">
+    <td>
           <html:radio property="vectorNameAndOr" value="and"/>
           <html:radio property="vectorNameAndOr" value="or"/>
     </td>
     -->
   </tr>
   <tr> 
-    <td width="15%" class="formlabel">Vector feature</td>
-    <td width="15%">
+    <td class="formlabel">Vector feature</td>
+    <td id='extrainfo2'>
         <html:select property="vectorFeatureOp" styleClass="itemtext">
           <html:option value="<%=Constants.OPERATOR_EQUALS %>"/>
           <html:option value="<%=Constants.OPERATOR_CONTAINS %>"/>
         </html:select>
     </td>
-    <td width="36%">
-        <html:text styleClass="itemtext" property="vectorFeature" size="30"/>
+    <td>
+        <html:text styleClass="itemtext" property="vectorFeature" size="20"/>
     </td>
     <!--
-    <td width="18%">
+    <td>
           <html:radio property="vectorFeatureAndOr" value="and"/>
           <html:radio property="vectorFeatureAndOr" value="or"/>
     </td>
     -->
   </tr>
   <tr> 
-    <td width="15%" class="formlabel">Author name</td>
-    <td width="15%">
+    <td class="formlabel">Author name</td>
+    <td id='extrainfo2'>
         <html:select property="authorNameOp" styleClass="itemtext">
           <html:option value="<%=Constants.OPERATOR_EQUALS %>"/>
           <html:option value="<%=Constants.OPERATOR_CONTAINS %>"/>
         </html:select>
     </td>
-    <td width="36%">
-        <html:text styleClass="itemtext" property="authorName" size="30"/>
+    <td>
+        <html:text styleClass="itemtext" property="authorName" size="20"/>
     </td>
     <!--
-    <td width="18%">
+    <td>
           <html:radio property="authorNameAndOr" value="and"/>
           <html:radio property="authorNameAndOr" value="or"/>
     </td>
     -->
   </tr>
   <tr> 
-    <td width="15%" class="formlabel">PubMed ID</td>
-    <td width="15%">
+    <td class="formlabel">PubMed ID</td>
+    <td id='extrainfo2'>
         <html:select property="pmidOp" styleClass="itemtext">
           <html:option value="<%=Constants.OPERATOR_EQUALS %>"/>
         </html:select>
     </td>
-    <td width="36%">
-        <html:text styleClass="itemtext" property="pmid" size="30"/>
+    <td>
+        <html:text styleClass="itemtext" property="pmid" size="20"/>
     </td>
   </tr>
-  <logic:equal name="psi" value="1">
+  <%--<logic:equal name="psi" value="1">
   <tr> 
     <td>&nbsp;</td>
     <td>&nbsp;</td>
@@ -232,7 +232,7 @@
     </td>
     -->
   </tr>
-  </logic:equal>
+  </logic:equal>--%>
   <tr> 
     <td>&nbsp;</td>
     <td>&nbsp;</td>

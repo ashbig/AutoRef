@@ -42,14 +42,14 @@
     <tr><td class="formlabel">DF/HCC Member:</td><td class="text"><bean:write name="<%=Constants.USER_KEY%>" property="ismemberString"/></td></tr>
 </table>
 </div>
-<span id="content">
+<div id="content">
         <li class="text"><a href="PrepareRegistration.do?update=true&first=true">Update Account: </a>Change account information</li>
         <li class="text"><a href="ViewOrderHistory.do">View Orders: </a>View complete order list</li>
         <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
         <li class="text"><a href="ViewContainers.jsp">View Containers: </a>View plasmid information by containers</li> 
         <li class="text"><a href="SearchOrderInput.jsp">Search Orders: </a>Search clone orders by orderid, user last name, order date, shipping date, and organization</li>
         </logic:equal>
-</span>
+</div>
     <jsp:include page="footer.jsp" /></body></div>
 </html>
 

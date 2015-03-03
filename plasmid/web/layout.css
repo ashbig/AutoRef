@@ -95,8 +95,8 @@ img, object, embed, video {
 	clear: none;
 	float: left;
 	margin-left: 0%;
-	width: 310px;
-	display: block;
+	width: 100%;
+	display: inline-block;
         margin-top:5px;
 }
 #footer {
@@ -154,7 +154,7 @@ img, object, embed, video {
 #aside {
 	clear: none;
 	margin-left: 1px;
-	width: 40%;
+	width: auto;
 	display: inline-block;
 }
 #footer {
@@ -233,7 +233,7 @@ img, object, embed, video {
 }
 #aside {
 	display:inline-block;
-        width:50%;
+        width:auto;
         margin-left: auto;
         margin-right: auto;
         text-align-last: center;

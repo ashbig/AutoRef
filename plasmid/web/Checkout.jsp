@@ -32,107 +32,45 @@
 <html:errors/>
       <html:form action="CheckoutConfirm.do">
 <table width="100%" border="0">
-  <tr> 
-    <td width="12%" class="formlabel">Name:</td>
-    <td colspan="3" class="text"><bean:write name="<%=Constants.USER_KEY%>" property="username"/></td>
-  </tr>
-  <tr> 
-    <td width="12%" class="formlabel">Email:</td>
-    <td width="40%" class="text"><bean:write name="<%=Constants.USER_KEY%>" property="email"/></td>
-    <td width="12%" class="formlabel">Phone:</td>
-    <td width="36%" class="text"><bean:write name="<%=Constants.USER_KEY%>" property="phone"/></td>
-  </tr>
-  <tr> 
-    <td width="12%" height="24" class="formlabel">Order Date:</td>
-    <td width="40%" class="text"><bean:write name="date"/></td>
-  </tr>
+  <tr><td colspan="2" class="featuretext">User Information:</td></tr>
+  <tr><td width="12%" class="formlabel">Name:</td><td colspan="3" class="text"><bean:write name="<%=Constants.USER_KEY%>" property="username"/></td></tr>
+  <tr><td width="12%" class="formlabel">Email:</td><td width="40%" class="text"><bean:write name="<%=Constants.USER_KEY%>" property="email"/></td></tr>
+  <tr><td width="12%" class="formlabel">Phone:</td><td width="36%" class="text"><bean:write name="<%=Constants.USER_KEY%>" property="phone"/></td></tr>
+  <%--<tr><td width="12%" height="24" class="formlabel">Order Date:</td><td width="40%" class="text"><bean:write name="date"/></td></tr>--%>
 </table>
-<p class="text">*If you don't see your country on the list, 
-please contact <a href="mailto:plasmidhelp@hms.harvard.edu">PlasmID support</a>. 
-
-Please be aware that <i>
-Bacillus anthracis</i>
-is not allowed to be shipped outside of USA.
-</p>
-<table width="1000px" border="0">
-  <tr> 
-    <td colspan="2" class="featuretext">Shipping Address:</td>
-    <td colspan="2" class="featuretext">Billing Address:</td>
-  </tr>
-  <tr> 
-    <td width="17%" class="formlabel">*Name:</td>
-    <td><html:text styleClass="text" property="shippingto"/></td>
-    <td class="formlabel">*Name(Accounts Payable or Grant manager):</td>
-    <td><html:text styleClass="text" property="billingto"/></td>
-  </tr>
-  <tr> 
-    <td class="formlabel">Organization:</td>
-    <td><html:text styleClass="text" property="organization"/></td>
-    <td class="formlabel">Organization:</td>
-    <td><html:text styleClass="text" property="billingorganization"/></td>
-  </tr>
-  <tr> 
-    <td class="formlabel">*Street:</td>
-    <td><html:text styleClass="text" property="addressline1"/></td>
-    <td class="formlabel">*Street:</td>
-    <td><html:text styleClass="text" property="billingaddressline1"/></td>
-  </tr>
-  <tr> 
-    <td class="formlabel">Street (continued):</td>
-    <td><html:text styleClass="text" property="addressline2"/></td>
-    <td class="formlabel">Street (continued):</td>
-    <td><html:text styleClass="text" property="billingaddressline2"/></td>
-  </tr>
-  <tr> 
-    <td class="formlabel">*City:</td>
-    <td><html:text styleClass="text" property="city"/></td>
-    <td class="formlabel">*City:</td>
-    <td><html:text styleClass="text" property="billingcity"/></td>
-  </tr>
-  <tr> 
-    <td class="formlabel">*State:</td>
-    <td><html:text styleClass="text" property="state"/></td>
-    <td class="formlabel">*State:</td>
-    <td><html:text styleClass="text" property="billingstate"/></td>
-  </tr>
-  <tr> 
-    <td class="formlabel">*Zip code:</td>
-    <td><html:text styleClass="text" property="zipcode"/></td>
-    <td class="formlabel">*Zip code:</td>
-    <td><html:text styleClass="text" property="billingzipcode"/></td>
-  </tr>
-  <tr>
-    <td class="formlabel">*Country:</td>
-    <td><html:select styleClass="text" property="country">
-        <html:options name="countryList"/>
-        </html:select>
-    </td>
-    <td class="formlabel">*Country:</td>
-    <td><html:select styleClass="text" property="billingcountry">
-        <html:options name="countryList"/>
-        </html:select>
-    </td>
-  </tr>
-  <tr> 
-    <td class="formlabel">*Phone:</td>
-    <td><html:text styleClass="text" property="phone"/></td>
-    <td class="formlabel">*Phone:</td>
-    <td><html:text styleClass="text" property="billingphone"/></td>
-  </tr>
-  <tr> 
-    <td class="formlabel">Fax:</td>
-    <td><html:text styleClass="text" property="fax"/></td>
-    <td class="formlabel">*Fax:</td>
-    <td><html:text styleClass="text" property="billingfax"/></td>
-  </tr>
-  <tr> 
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td class="formlabel">*Email (Accounts Payable or Grant manager):</td>
-    <td><html:text styleClass="text" property="billingemail"/></td>
-  </tr>
+<p class="text">*If you don't see your country on the list, please contact <a href="mailto:plasmidhelp@hms.harvard.edu">PlasmID support</a>. Please be aware that <i>Bacillus anthracis</i> is not allowed to be shipped outside of USA.</p>
+<div id='aside'>
+<table width="100%" border="0">
+    <tr><td colspan="2" class="featuretext">Shipping Address:</td></tr>
+    <tr><td width="17%" class="formlabel">*Name:</td><td><html:text styleClass="text" property="shippingto"/></td></tr>  
+    <tr><td class="formlabel">Organization:</td><td><html:text styleClass="text" property="organization"/></td></tr>
+    <tr><td class="formlabel">*Street:</td><td><html:text styleClass="text" property="addressline1"/></td></tr>  
+    <tr><td class="formlabel">Street (continued):</td><td><html:text styleClass="text" property="addressline2"/></td></tr>  
+    <tr><td class="formlabel">*City:</td><td><html:text styleClass="text" property="city"/></td></tr>  
+    <tr><td class="formlabel">*State:</td><td><html:text styleClass="text" property="state"/></td></tr>  
+    <tr><td class="formlabel">*Zip code:</td><td><html:text styleClass="text" property="zipcode"/></td></tr>  
+    <tr><td class="formlabel">*Country:</td><td><html:select styleClass="text" property="country"><html:options name="countryList"/></html:select></td></tr>  
+    <tr><td class="formlabel">*Phone:</td><td><html:text styleClass="text" property="phone"/></td></tr>    
+    <tr><td class="formlabel">Fax:</td><td><html:text styleClass="text" property="fax"/></td></tr>
+    <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
 </table>
-
+</div>
+<div id='aside'>
+    <table width='100%'>    
+    <tr><td colspan="2" class="featuretext">Billing Address:</td></tr>
+    <tr><td class="formlabel">*Name(Accounts Payable or Grant manager):</td><td><html:text styleClass="text" property="billingto"/></td></tr>  
+    <tr><td class="formlabel">Organization:</td><td><html:text styleClass="text" property="billingorganization"/></td></tr>  
+    <tr><td class="formlabel">*Street:</td><td><html:text styleClass="text" property="billingaddressline1"/></td></tr>
+    <tr><td class="formlabel">Street (continued):</td><td><html:text styleClass="text" property="billingaddressline2"/></td></tr>
+    <tr><td class="formlabel">*City:</td><td><html:text styleClass="text" property="billingcity"/></td></tr>
+    <tr><td class="formlabel">*State:</td><td><html:text styleClass="text" property="billingstate"/></td></tr>    
+    <tr><td class="formlabel">*Zip code:</td><td><html:text styleClass="text" property="billingzipcode"/></td></tr>    
+    <tr><td class="formlabel">*Country:</td><td><html:select styleClass="text" property="billingcountry"><html:options name="countryList"/></html:select></td></tr>    
+    <tr><td class="formlabel">*Phone:</td><td><html:text styleClass="text" property="billingphone"/></td></tr>    
+    <tr><td class="formlabel">*Fax:</td><td><html:text styleClass="text" property="billingfax"/></td></tr>    
+    <tr><td class="formlabel">*Email (Accounts Payable or Grant manager):</td><td><html:text styleClass="text" property="billingemail"/></td></tr>
+    </table>
+</div>
 <p class="text"><input type=checkbox name="saveInfo" checked>Save/Update user information.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<i>(By checking this check box, all the addresses will be saved or updated to user account)
 </i></p>
