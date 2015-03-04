@@ -17,7 +17,7 @@ License: CC BY 3.0 http://creativecommons.org/licenses/by/3.0/
         right: 0%;
         left: 0%;
         width: 100%;
-	text-align: center;
+	text-align: left;
 	line-height:19px !important;
         z-index:1;
 }
@@ -112,8 +112,8 @@ border-top-right-radius: 6px;
 border-bottom-right-radius: 6px;
 }
 .rmm.graphite .rmm-toggled {
-	width:100%;
-	background-color:#555555;
+	width:auto;
+	/*background-color:#555555;*/
 	min-height:36px;
 	border-radius:0px;
 }
@@ -126,6 +126,7 @@ border-bottom-right-radius: 6px;
 	background-image:url('../rmm-img/graphite-menu-bg.png');
 	background-repeat:repeat-x;
 	border-radius:6px;
+        background-color:#555555;
 }
 .rmm.graphite .rmm-toggled-title {
 	position:relative;
@@ -154,10 +155,11 @@ border-bottom-right-radius: 6px;
 	width:100%;
 	background-color:#555555;
 	text-align:center;
-	padding:10px 0px 10px 0px;
+	padding:15px 0px 15px 0px;
 	border-bottom:1px solid #333333;
 	border-top:1px solid #777777;
 	text-shadow:1px 1px 1px #333333;
+        font-size:16px;
 }
 .rmm.graphite .rmm-toggled ul li a:active {
 	background-color:#444444;

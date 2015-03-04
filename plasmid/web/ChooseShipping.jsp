@@ -11,11 +11,11 @@
 <title>PlasmID Database</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
-<script>
+<%--<script>
     function showMsg() {
         alert("WARNING!\n\nAre you sure you want to remove QC testing?\nWe did not create these bacterial stocks and make no warranty for their identity or fitness. ");
     }
-</script>
+</script>--%>
  <link href="SpryMenuBarHorizontal.css" rel="stylesheet" type="text/css" />
         <link href="boilerplate.css" rel="stylesheet" type="text/css" />
         <script type="text/javascript" src="respond.min.js"></script>
@@ -64,9 +64,9 @@ Shipping Options:
 </div>
 <table width="100%" border="0" id='content'>
   <tr><td class="formlabel">Choose shipping method:</td><td class="text"><html:select property="shippingMethod"><html:options name="shippingMethods"/></html:select></td></tr>
-  <tr><td class="formlabel">Enter shipping account number (ONLY FedEx number. We do not accept other couriers):</td><td class="text"><html:text size="20" property="accountNumber"/></td></tr>
-  <tr><td class="text"><html:submit value="Continue"/>*</td>
-  </tr>
+  <tr><td class="formlabel">Enter shipping account number:</td><td class="text"><html:text size="10" property="accountNumber"/></td></tr>
+  <tr><td>&nbsp;</td><td>(Enter ONLY FedEx account numbers. We do not accept other couriers.)</td></tr>
+  <tr><td class="text"><html:submit value="Continue"/>*</td></tr>
 </table>
 <table id='content' width="100%" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
     <tr><td><html:errors/><p class="mainbodytext"><i>*If you do not want to complete your order now, you can <a href="ViewCart.do">return to your cart</a> and save it for check-out at another time (you must be signed in to save your cart).</i></p></td></tr>

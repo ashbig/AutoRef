@@ -25,7 +25,7 @@
         <p class='mainbodytexthead'>Shopping Cart Contents</p>
                     <html:errors/>
                     <p class="text">Clones:</p>
-                    <table width="100%" border="0">
+                    <table width="auto" border="0">
                         <tr style="background:#999999; text-align: center; vertical-align: top;">
                             <td class="tableheader">&nbsp;</td>
                             <td class="tableheader">Clone ID</td>
@@ -121,7 +121,7 @@
                     
                     <logic:present name="collectioncart">
                         <p class="text">Collections:</p>
-                        <table width="100%" border="0">
+                        <table width="auto" border="0">
                             <tr>
                                 <td class="tableheader">&nbsp;</td>
                                 <td class="tableheader">Collection Name</td>

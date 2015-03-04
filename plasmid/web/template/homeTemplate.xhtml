@@ -34,20 +34,24 @@
 <!-- start mobile menu, xhtml version -->
        <div id="rmm" class="rmm" data-menu-style = "graphite">
             <ul>
-               <li><a href="Home.xhtml" title="Home">Home</a></li>
-               <li><h:outputLink value="ViewOrderHistory.do" rendered="#{plasmidBean.userExist}">View Orders</h:outputLink></li>
-               <li><a href="OrderOverview.jsp">Inserts</a></li>
-               <li><a href="GetVectorsByType.do">Vectors</a></li>
-               <li><a href="GetCollectionList.do" title="View List of Collections">Collections</a></li>
-               <li><a href="Submission.jsp" title="Submit plasmids">Submission</a></li>
-               <li><a href="Pricing.jsp" title="pricing">Pricing</a></li>
-               <li><a href="cloningstrategies.jsp" title="Learn About Cloning Methods">Learn</a></li>
-               <li><a href="Contactus.jsp">Contact</a></li>
-               <li><a href="AboutUs.jsp">About Us</a></li>
-               <li><a target="_blank" href="FAQ.jsp">FAQ</a></li>
-               <li><h:outputLink value="Admin.jsp" rendered="#{plasmidBean.userInternal}">Admin</h:outputLink></li>
-               <li><h:outputLink value="Login.jsp" rendered="#{!plasmidBean.userExist}">Sign In</h:outputLink></li>               
-               <li><h:outputLink value="Logout.do" rendered="#{plasmidBean.userExist}">Sign Out</h:outputLink></li>
+                <li><h:outputLink value="Login.jsp" rendered="#{!plasmidBean.userExist}">Sign In</h:outputLink></li> 
+                <li><h:outputLink value="PrepareRegistration.do" rendered="#{!plasmidBean.userExist}"> Registration</h:outputLink></li>
+                <!--<li><h:ouptutLink value="FindPassword.jsp" rendered="#{!plasmidBean.userExist}">Find Password<h:ouptutLink></li>                -->
+                <li><h:outputLink value="ViewCart.do" rendered="#{plasmidBean.userExist}">My Cart</h:outputLink></li>
+                <li><h:outputLink value="Account.jsp" rendered="#{plasmidBean.userExist}">My Account</h:outputLink></li>   
+                <li><h:outputLink value="ViewOrderHistory.do" rendered="#{plasmidBean.userExist}">My Orders</h:outputLink></li>                
+                <li><a href="OrderOverview.jsp">Search</a></li>
+                <li><a href="#">More</a></li>
+                <!--<li><a href="GetVectorsByType.do">Vectors</a></li>
+                <li><a href="GetCollectionList.do" title="View List of Collections">Collections</a></li>
+                <li><a href="Submission.jsp" title="Submit plasmids">Submission</a></li>
+                <li><a href="Pricing.jsp" title="pricing">Pricing</a></li>
+                <li><a href="cloningstrategies.jsp" title="Learn About Cloning Methods">Learn</a></li>
+                <li><a href="Contactus.jsp">Contact</a></li>
+                <li><a href="AboutUs.jsp">About Us</a></li>
+                <li><a target="_blank" href="FAQ.jsp">FAQ</a></li>
+                <li><h:outputLink value="Logout.do" rendered="#{plasmidBean.userExist}">Sign Out</h:outputLink></li>-->
+                <li><h:outputLink value="Admin.jsp" rendered="#{plasmidBean.userInternal}">Admin</h:outputLink></li>               
             </ul>
       </div>
 <!-- end mobile menu -->
@@ -155,7 +159,7 @@ End Alert Section-->
         <table id='genesearch' width="100%"  border="0" align="center"> 
             <td><ui:insert name="content"/></td>
         </table>
-<div id="mobilehome">
+<!--<div id="mobilehome">
     <ul>
         <li><h:outputLink value="Logout.do" rendered="#{plasmidBean.userExist}">Sign Out</h:outputLink></li>
         <li><a href="ViewCart.do" title="View Cart">View Cart</a></li>
@@ -168,7 +172,7 @@ End Alert Section-->
         <li><h:outputLink value="Login.jsp" rendered="#{!plasmidBean.userExist}">Sign In</h:outputLink></li>
         <li><h:outputLink value="FindPassword.jsp" title="Find lost password" rendered="#{!plasmidBean.userExist}">Find Password</h:outputLink></li>
     </ul>
-</div>
+</div>-->
 <!-- New footer -->
 <div id="footer">
     

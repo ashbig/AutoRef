@@ -25,10 +25,10 @@
 
 
 
-      <table class="table" width="400em" border="0" align="left" id="gray">
+      <table class="table" width="auto" border="0" align="left" id="gray">
         <tr class="tableheader">
-          <td width="225em">Pricing Category</td>
-          <td align="right" width="100em">Retrieval Fee</td>
+          <td> Pricing Category</td>
+          <td align="right">Retrieval Fee</td>
         </tr>
         <tr class="tableinfo">
           <td>Harvard University and DF/HCC Members*</td>
@@ -48,17 +48,16 @@
       
       
 <p class="mainbodytexthead">Plasmid Retrieval Costs</p>
-        <p class='mainbodytext'> The PlasmID Repository is a non-profit service hosted by Harvard Medical School. <br>
-            To ensure our continued operation we charge a retrieval fee to offset the cost of labor, equipment, and lab space.<br> </p>  
+        <p class='mainbodytext'> The PlasmID Repository is a non-profit service hosted by Harvard Medical School. To ensure our continued operation we charge a retrieval fee to offset the cost of labor, equipment, and lab space.<br> </p>  
       
 
     
  
     <p class='mainbodytexthead'>Shipping</p>
-    <p class='mainbodytext'>Our flat price for shipping is $10 for domestic orders or $20 for international orders. <br>
-            You can also provide your own FedEx account number to be charged directly rather than pay our flat fee.<br>
-            Select 'Pickup' if you are nearby and want to avoid shipping costs. <br>
-            NOTE: You must have building access to use our 'Pickup' service.<br>
+    <p class='mainbodytext'>Our flat price for shipping is $10 for domestic orders or $20 for international orders.
+            You can also provide your own FedEx account number to be charged directly rather than pay our flat fee.
+            Select 'Pickup' if you are nearby and want to avoid shipping costs.
+            NOTE: You must have building access to use our 'Pickup' service.
             </p>
             <p class="mainbodytexthead">Financial FAQ's</p>
             <p>

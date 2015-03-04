@@ -68,7 +68,7 @@
           <td width="70%">Description</td>
          </tr>
         <tr class="tableinfo">
-            <td><a href="faces/GeneSearch.xhtml">Human & Mouse Gene</a></td>
+            <td><a href="GeneSearch.xhtml">Human & Mouse Gene</a></td>
             <td align="left">Our recommended method of searching the PlasmID database. Simply enter your gene of interest and query our database against the latest reference sequence!</td>
         </tr>
         <tr class="tableinfo">

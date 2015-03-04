@@ -29,13 +29,9 @@
 <html:errors/>
 <html:form action="FindPassword.do">
 <table width="100%" border="0">
-  <tr>
-    <td width="20%" class="formlabel">Please enter your email address:</td>
-    <td width="80%">
-        <html:text property="email" styleClass="text" size="30"/>
-        <html:submit styleClass="text" value="Submit"/>
-    </td>
-  </tr>
+    <tr><td width="20%" class="formlabel">Please enter your email address:</td></tr>
+    <tr><td width="80%"><html:text property="email" styleClass="text" size="20"/></td></tr>
+    <tr><td><html:submit styleClass="text" value="Submit"/></td></tr>
 </table>
 </html:form>
     </td>

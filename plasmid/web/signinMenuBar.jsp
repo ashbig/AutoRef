@@ -14,28 +14,37 @@
 <!-- start mobile menu, jsp version -->
 <div id="rmm" class="rmm" data-menu-style = "graphite">
             <ul>
-                <li><a href="Home.xhtml" title="Home">Home</a></li>
+                    <logic:notPresent name="<%=Constants.USER_KEY%>" scope="session">
+                            <li><a href="Login.jsp">Sign In</a></li>
+                            <li><a href="PrepareRegistration.do">Registration</a></li>
+                            <li><a href="FindPassword.jsp">Find Password</a></li>
+                    </logic:notPresent> 
                     <logic:present name="<%=Constants.USER_KEY%>" scope="session">
-                        <li><a href="ViewOrderHistory.do" title="View Orders">View Orders</a></li>
+                        <li><a href="ViewCart.do">My Cart</a></li>
+                        <li><a href="Account.jsp">My Account</a></li>
+                        <li><a href="ViewOrderHistory.do" title="View Orders">My Orders</a></li>
                     </logic:present>
-                <li><a href="OrderOverview.jsp">Inserts</a></li>
-                <li><a href="GetVectorsByType.do">Vectors</a></li>
-                <li><a href="GetCollectionList.do" title="View List of Collections">Collections</a></li>
-                <li><a href="Submission.jsp" title="Submit plasmids">Submission</a></li>
-                <li><a href="Pricing.jsp" title="pricing">Pricing</a></li>
-                <li><a href="cloningstrategies.jsp" title="Learn About Cloning Methods">Learn</a></li>
-                <li><a href="Contactus.jsp">Contact</a></li>
-                <li><a href="AboutUs.jsp">About Us</a></li>
-                <li><a target="_blank" href="FAQ.jsp">FAQ</a></li>                
+                        <li><a href="OrderOverview.jsp">Search</a></li>
+                        <li><a href="#">More</a></li>
+                        <%--<ul>
+                            <li><a href="GetVectorsByType.do">Vectors</a></li>
+                            <li><a href="GetCollectionList.do" title="View List of Collections">Collections</a></li>
+                            <li><a href="Submission.jsp" title="Submit plasmids">Submission</a></li>
+                            <li><a href="Pricing.jsp" title="pricing">Pricing</a></li>
+                            <li><a href="cloningstrategies.jsp" title="Learn About Cloning Methods">Learn</a></li>
+                            <li><a href="Contactus.jsp">Contact</a></li>
+                            <li><a href="AboutUs.jsp">About Us</a></li>
+                            <li><a target="_blank" href="FAQ.jsp">FAQ</a></li>                
+                            <logic:present name="<%=Constants.USER_KEY%>" scope="session">
+                            <li><a href="Logout.do">Sign Out</a></li>                        
+                            </logic:present>                                                
+                        </ul>--%>                            
                     <logic:present name="<%=Constants.USER_KEY%>" scope="session">
                         <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">      
                             <li><a class="MenuBarItemSubmenu" href="Admin.jsp" title="Admin">Admin</a></li>
                         </logic:equal>
-                            <li><a href="Logout.do">Sign Out</a></li>
                     </logic:present>
-                    <logic:notPresent name="<%=Constants.USER_KEY%>" scope="session">
-                            <li><a href="Login.jsp">Sign In</a></li>
-                    </logic:notPresent> 
+
             </ul>
 </div>
 <!-- end mobile menu, jsp version--> 

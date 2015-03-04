@@ -31,17 +31,17 @@
 <p class="text">Please fill out the following information (* indicates required field):</P>
 <html:errors/>
       <html:form action="CheckoutConfirm.do">
-<table width="100%" border="0">
+<!--<table id='content' width="100%" border="0">
   <tr><td colspan="2" class="featuretext">User Information:</td></tr>
   <tr><td width="12%" class="formlabel">Name:</td><td colspan="3" class="text"><bean:write name="<%=Constants.USER_KEY%>" property="username"/></td></tr>
   <tr><td width="12%" class="formlabel">Email:</td><td width="40%" class="text"><bean:write name="<%=Constants.USER_KEY%>" property="email"/></td></tr>
   <tr><td width="12%" class="formlabel">Phone:</td><td width="36%" class="text"><bean:write name="<%=Constants.USER_KEY%>" property="phone"/></td></tr>
   <%--<tr><td width="12%" height="24" class="formlabel">Order Date:</td><td width="40%" class="text"><bean:write name="date"/></td></tr>--%>
-</table>
+</table>-->
 <p class="text">*If you don't see your country on the list, please contact <a href="mailto:plasmidhelp@hms.harvard.edu">PlasmID support</a>. Please be aware that <i>Bacillus anthracis</i> is not allowed to be shipped outside of USA.</p>
 <div id='aside'>
-<table width="100%" border="0">
-    <tr><td colspan="2" class="featuretext">Shipping Address:</td></tr>
+<table width="auto" border="0">
+    <tr><td colspan="2" class="mainbodytexthead"><u>Shipping</u></td></tr>
     <tr><td width="17%" class="formlabel">*Name:</td><td><html:text styleClass="text" property="shippingto"/></td></tr>  
     <tr><td class="formlabel">Organization:</td><td><html:text styleClass="text" property="organization"/></td></tr>
     <tr><td class="formlabel">*Street:</td><td><html:text styleClass="text" property="addressline1"/></td></tr>  
@@ -56,8 +56,8 @@
 </table>
 </div>
 <div id='aside'>
-    <table width='100%'>    
-    <tr><td colspan="2" class="featuretext">Billing Address:</td></tr>
+    <table width='auto'>    
+    <tr><td colspan="2" class="mainbodytexthead"><u>Billing</u></td></tr>
     <tr><td class="formlabel">*Name(Accounts Payable or Grant manager):</td><td><html:text styleClass="text" property="billingto"/></td></tr>  
     <tr><td class="formlabel">Organization:</td><td><html:text styleClass="text" property="billingorganization"/></td></tr>  
     <tr><td class="formlabel">*Street:</td><td><html:text styleClass="text" property="billingaddressline1"/></td></tr>
@@ -69,12 +69,13 @@
     <tr><td class="formlabel">*Phone:</td><td><html:text styleClass="text" property="billingphone"/></td></tr>    
     <tr><td class="formlabel">*Fax:</td><td><html:text styleClass="text" property="billingfax"/></td></tr>    
     <tr><td class="formlabel">*Email (Accounts Payable or Grant manager):</td><td><html:text styleClass="text" property="billingemail"/></td></tr>
+    <tr><td colspan='2' class="featuretext">We direct your invoice to this billing email by default. If you prefer that we fax the invoice please <a href="mailto:plasmidhelp@hms.harvard.edu">let us know</a>.</td></tr>
     </table>
 </div>
-<p class="text"><input type=checkbox name="saveInfo" checked>Save/Update user information.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<i>(By checking this check box, all the addresses will be saved or updated to user account)
+<p class="text"><input type=checkbox name="saveInfo" checked>Save this information<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<i>(We will store this information with your account so you don't need to type it again next time!)
 </i></p>
-
+<%--
 <p class="text">Order Information:</p>
 <table width="100%" border="0">
   <tr> 
@@ -95,12 +96,12 @@
   <%-- <tr> 
     <td class="tablebody">Platinum service:</td>
     <td align="right" colspan="2" class="tablebody">$<bean:write name="checkoutForm" property="costOfPlatinum"/></td>
-  </tr> --%>
+  </tr>
   <tr> 
     <td class="tableheader">Total price (before shipping charge):</td>
     <td align="right" colspan="2" class="tablebody">$<bean:write name="checkoutForm" property="totalPrice"/></td>
   </tr>
-</table>
+</table>--%>
   <html:submit value="Continue"/>
     </html:form>
 
