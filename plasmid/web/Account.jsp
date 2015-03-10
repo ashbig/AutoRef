@@ -26,21 +26,21 @@
 <div id="aside">
 <table border="0">
     <colgroup><col width="130px"><col width="auto"></colgroup>
-    <tr><td class="tablebody">First:</td><td class="text"><bean:write name="<%=Constants.USER_KEY%>" property="firstname"/></td></tr>
-    <tr><td class="tablebody">Last:</td><td class="text"><bean:write name="<%=Constants.USER_KEY%>" property="lastname"/></td></tr>
-    <tr><td class="tablebody">Email:</td><td class="text"><bean:write name="<%=Constants.USER_KEY%>" property="email"/></td></tr>
-    <tr><td class="tablebody">Phone:</td><td class="text"><bean:write name="<%=Constants.USER_KEY%>" property="phone"/></td></tr>
+    <tr><td class="formlabel">First:</td><td class="text"><bean:write name="<%=Constants.USER_KEY%>" property="firstname"/></td></tr>
+    <tr><td class="formlabel">Last:</td><td class="text"><bean:write name="<%=Constants.USER_KEY%>" property="lastname"/></td></tr>
+    <tr><td class="formlabel">Email:</td><td class="text"><bean:write name="<%=Constants.USER_KEY%>" property="email"/></td></tr>
+    <tr><td class="formlabel">Phone:</td><td class="text"><bean:write name="<%=Constants.USER_KEY%>" property="phone"/></td></tr>
 
 </table>
 </div>
 <div id="aside">
 <table border="0">
     <colgroup><col width="130px"><col width="auto"></colgroup>    
-    <tr><td class="tablebody">Institution:</td><td class="text"><bean:write name="<%=Constants.USER_KEY%>" property="institution"/></td></tr>    
-    <tr><td class="tablebody">PI Name:</td><td class="text"><bean:write name="<%=Constants.USER_KEY%>" property="piname"/></td></tr>
-    <tr><td class="tablebody">PI Email:</td><td class="text"><bean:write name="<%=Constants.USER_KEY%>" property="piemail"/></td></tr>
-    <tr><td class="tablebody">Group:</td><td class="text"><bean:write name="<%=Constants.USER_KEY%>" property="group"/></td></tr>
-    <tr><td class="tablebody">DF/HCC Member:</td><td class="text"><bean:write name="<%=Constants.USER_KEY%>" property="ismemberString"/></td></tr>
+    <tr><td class="formlabel">Institution:</td><td class="text"><bean:write name="<%=Constants.USER_KEY%>" property="institution"/></td></tr>    
+    <tr><td class="formlabel">PI Name:</td><td class="text"><bean:write name="<%=Constants.USER_KEY%>" property="piname"/></td></tr>
+    <tr><td class="formlabel">PI Email:</td><td class="text"><bean:write name="<%=Constants.USER_KEY%>" property="piemail"/></td></tr>
+    <tr><td class="formlabel">Group:</td><td class="text"><bean:write name="<%=Constants.USER_KEY%>" property="group"/></td></tr>
+    <tr><td class="formlabel">DF/HCC Member:</td><td class="text"><bean:write name="<%=Constants.USER_KEY%>" property="ismemberString"/></td></tr>
 </table>
 </div>
 <div id="content">

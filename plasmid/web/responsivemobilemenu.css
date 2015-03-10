@@ -44,7 +44,7 @@ License: CC BY 3.0 http://creativecommons.org/licenses/by/3.0/
 
 /* sublevel menu - in construction */
 .rmm ul li ul, .rmm ul li ul li, .rmm ul li ul li a {
-	display:block !important;
+	display:none !important;
 	height:0px !important;
 	width:0px !important;
 }
@@ -166,7 +166,6 @@ border-bottom-right-radius: 6px;
 	border-bottom:1px solid #444444;
 	border-top:1px solid #444444;
 }
-
 
 
 /* SAPPHIRE STYLE */

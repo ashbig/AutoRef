@@ -18,14 +18,15 @@
                             <li><a href="Login.jsp">Sign In</a></li>
                             <li><a href="PrepareRegistration.do">Registration</a></li>
                             <li><a href="FindPassword.jsp">Find Password</a></li>
+                            <li><a href="ViewCart.do">My Cart</a></li>
                     </logic:notPresent> 
                     <logic:present name="<%=Constants.USER_KEY%>" scope="session">
-                        <li><a href="ViewCart.do">My Cart</a></li>
+                        
                         <li><a href="Account.jsp">My Account</a></li>
                         <li><a href="ViewOrderHistory.do" title="View Orders">My Orders</a></li>
                     </logic:present>
                         <li><a href="OrderOverview.jsp">Search</a></li>
-                        <li><a href="#">More</a></li>
+                        <li><a href="More.jsp">... More</a></li>
                         <%--<ul>
                             <li><a href="GetVectorsByType.do">Vectors</a></li>
                             <li><a href="GetCollectionList.do" title="View List of Collections">Collections</a></li>
