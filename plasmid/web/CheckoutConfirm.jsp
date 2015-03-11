@@ -69,13 +69,11 @@ return;
                         </logic:notEqual>
                         <html:submit value="Place Order"/>
                         </html:form>                       
-                        
-                        <br>&nbsp;<br>
-                        <p class="mainbodytext">* Still need to request a PO? Print out this page for your finance folks, then be sure to <a href="ViewCart.do">View Your Cart</a> and hit save.</p><br>
+                        <p class="mainbodytext">* Still need to request a PO? Print out this <a href="javascript:if(window.print)window.print()" style='text-decoration:none;'>Price Quote</a> for your finance folks, then be sure to <a href="ViewCart.do">View Your Cart</a> and hit save.</p><br>
         </div>                    
                         <table border="0" cellpadding="5" style="table{border-collapse: collapse;}"><tr><td>                    
                     <p class="text">Harvard Medical School<br>Dept. BCMP, C1-214<br>240 Longwood Ave.<br>Boston, MA 02115</p>
-                    <p class="text" align="middle"><strong><a href="javascript:if(window.print)window.print()" style='text-decoration:none;'>PRICE QUOTE</a></strong></p>
+                    <p class="text" align="middle"><strong>PRICE QUOTE</strong></p>
                         <script type="text/javascript">
                         tmonth=new Array("January","February","March","April","May","June","July","August","September","October","November","December");
 

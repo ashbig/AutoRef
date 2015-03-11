@@ -52,16 +52,17 @@
   </tr>
 </table>--%>
 
-<div id='content' class="mainbodytexthead">
-Shipping Options:
+<div id='content'>
+    <span class="mainbodytexthead">Shipping Options:</span>
 <li>Include a FedEx account number at check-out and we will charge your account.</li>
 <li>If you don't provide a FedEx account number, we will apply a standard shipping charge at check-out.</li>
     <ul>  
         <li>$10.00 for domestic orders</li>
         <li>$20.00 for international orders</li>
     </ul>
-<li>No charge if you Pick Up your own plasmids. 'Pick up' orders are placed in our 4C fridge in the hallway outside our lab (Corner of C Bldg and LHRRB) on the <a href="http://www.hip.harvard.edu/Location.html#Quad" target="_blank">HMS Quad</a>. You MUST have access to the building to take advantage of this option.</li>
+<span>No charge if you Pick Up your own plasmids. 'Pick up' orders are placed in our 4C fridge in the hallway outside our lab (Corner of C Bldg and LHRRB) on the <a href="http://www.hip.harvard.edu/Location.html#Quad" target="_blank">HMS Quad</a>. You MUST have access to the building to take advantage of this option.</span>
 </div>
+<br>
 <table width="100%" border="0" id='content'>
   <tr><td class="formlabel">Choose shipping method:</td><td class="text"><html:select property="shippingMethod"><html:options name="shippingMethods"/></html:select></td></tr>
   <tr><td class="formlabel">Enter shipping account number:</td><td class="text"><html:text size="10" property="accountNumber"/></td></tr>
