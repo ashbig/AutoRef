@@ -76,29 +76,34 @@
                     <html:form action="BlastSearch.do">
                     <html:errors/>
                         <table width="100%" border="0">
+                            <tr><td class="formlabel">Input</td></tr>
                             <tr> 
-                                <td width="20%" class="formlabel">Choose program: <a href="blasthelp.html#program" target="blasthelp">[i]</a></td>
-                                <td>
+                                
+                                <td colspan="2">1. 
                                     <html:select property="program" styleClass="itemtext">
                                         <html:options collection="programs" property="name" labelProperty="value"/>
                                     </html:select>
+                                    Choose Program <a href="blasthelp.html#program" target="blasthelp">[i]</a>
                                 </td>
                             </tr>
                             <tr> 
-                                <td width="20%" class="formlabel">Choose database:</td>
-                                <td>
+                                
+                                <td colspan="2">2. 
                                     <html:select property="database" styleClass="itemtext">
                                         <html:options name="dbs"/>
                                     </html:select>
+                                    Choose Database
                                 </td>
                             </tr>
                             <tr> 
-                                <td colspan="2" width="20%" class="formlabel">Enter sequence or Accession/GI:  <a href="blasthelp.html#input" target="blasthelp">[i]</a>
+                                <td colspan="2">3. 
                                     <html:select property="inputformat" styleClass="itemtext" onchange="adjustAlignment()">
                                         <html:options name="formats"/>
                                     </html:select>
-                                <br>(Multiple sequences should be in FASTA format. Multiple Accession/GI numbers should be separated by white space)
-                                </td>
+                                    Choose Input Type <a href="blasthelp.html#input" target="blasthelp">[i]</a>
+                                </td></tr>
+                            <tr>
+                                <td colspan="2">(Multiple sequences should be in FASTA format. Multiple Accession/GI numbers should be separated by white space)</td>
                             </tr>
                             <tr> 
                                 <td colspan="2" class="itemtext">
@@ -106,25 +111,21 @@
                                 </td>
                             </tr>
                             <tr> 
-                                <td width="20%" class="formlabel">Optimize for: <a href="blasthelp.html#optimization" target="blasthelp">[i]</a></td>
-                                <td class="itemtext">
-                                    <html:checkbox property="isLowcomp">Filter low complexity regions</html:checkbox>
+                                <td colspan="2" class="itemtext">
+                                    <html:checkbox property="isLowcomp">Filter low complexity regions</html:checkbox><a href="blasthelp.html#optimization" target="blasthelp">[i]</a>
                                 </td>
                             </tr>
                         </table>
                         
-                        <p class="formlabelitalic">Parameters <a href="blasthelp.html#parameters" target="blasthelp">[i]</a></p>
+                                <br>
                         <table width="100%" border="0">
+                            <tr><td class="formlabel">Parameters <a href="blasthelp.html#parameters" target="blasthelp">[i]</a></td></tr>
                             <tr> 
-                                <td width="20%" class="text">Minumum percent (%) identity:</td>
-                                <td class="itemtext">
-                                    <html:text property="pid" styleClass="itemtext"/>%
-                                </td>
-                            </tr>
-                            <tr> 
-                                <td width="20%" class="text">Minimum alignment length:</td>
-                                <td>
-                                    <html:text property="alength" styleClass="itemtext"/>nt
+                                <td class="text">1. 
+                                    <html:text property="pid" styleClass="itemtext"/>Min % ID <a href="blasthelp.html#parameters" target="blasthelp">[i]</a>
+                                </td></tr>
+                            <tr><td>2. 
+                                    <html:text property="alength" styleClass="itemtext"/>Min alignment length (nt) <a href="blasthelp.html#parameters" target="blasthelp">[i]</a>
                                 </td>
                             </tr>
                         </table>

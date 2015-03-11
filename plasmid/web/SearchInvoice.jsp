@@ -23,7 +23,7 @@
     
     <body>
         <jsp:include page="signinMenuBar.jsp" />
-        <table width="1000px" border="0" align="left" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
+        <table width="100%" border="0" align="left" bordercolor="#FFFFFF" bgcolor="#FFFFFF" style="max-width: 67em;">
             <tr> 
                 <%--<td width="17%" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle"> 
                     <jsp:include page="menuHome.jsp" />
@@ -34,13 +34,15 @@
                     <p class="mainbodytexthead">Search Invoice</p>
                     <html:form action="SearchInvoice.do" focus="invoicenums">
                         <table width="100%" border="0">
+                            <colgroup><col width="150px"><col><col><col><col></colgroup>                               
                             <tr>
-                                <td class="formlabel">Invoice Number (remove 'DFHCC_'; separate each invoice by comma [,]):</td>
-                                <td colspan="4" class="itemtext"><html:text property="invoicenums" size="50"/></td>
+                                <td class="formlabel">Invoice Number:</td>
+                                <td colspan="4" class="itemtext"><html:text property="invoicenums" size="30"/></td>
                             </tr>
+                            <tr><td></td><td colspan="4">(remove 'DFHCC_'; separate each invoice by comma [,])</td></tr>
                             <tr></tr>
                             <tr>
-                                <td class="formlabel">Invoice Date (mm/dd/yyyy):</td>
+                                <td class="formlabel">Invoice Date<br>(mm/dd/yyyy):</td>
                                 <td class="formlabel">From</td>
                                 <td class="itemtext"><html:text property="invoiceDateFrom"/>&nbsp;<a href="javascript:cal7.popup();"><img src="img/cal.gif" width="16" height="16" border="0" alt="Click Here to Pick up the date"></a></td>
                                 <td class="formlabel">To</td>
@@ -84,17 +86,19 @@
                             </tr>
                             <tr></tr>
                             <tr>
-                                <td class="formlabel">PI Last Name (separate each name by comma [,]):</td>
-                                <td colspan="4" class="itemtext"><html:text property="pinames" size="50"/></td>
+                                <td class="formlabel">PI Last Name:</td>
+                                <td colspan="4" class="itemtext"><html:text property="pinames" size="30"/></td>
                             </tr>
+                            <tr><td></td><td colspan="4"> (separate each name by comma [,])</td></tr>
                             <tr>
-                                <td class="formlabel">PO/Billing Number (separate each number by comma [,]):</td>
-                                <td colspan="4" class="itemtext"><html:text property="ponumbers" size="50"/></td>
+                                <td class="formlabel">PO/Billing Number:</td>
+                                <td colspan="4" class="itemtext"><html:text property="ponumbers" size="30"/></td>
                             </tr>
+                            <tr><td></td><td colspan="4"> (separate each number by comma [,])</td></tr>
                             <tr>
                                 <td class="formlabel">Payment Status:</td>
                                 <td colspan="4">
-                                    <html:select styleClass="itemtext" property="pstatus">
+                                    <html:select styleClass="itemtext" property="pstatus" style="width: 210px;">
                                         <html:option value="<%=Constants.ALL%>"/>
                                         <html:option value="<%=Invoice.PAYMENTSTATUS_PAID%>"/>
                                         <html:option value="<%=Invoice.PAYMENTSTATUS_UNPAID%>"/>
@@ -103,9 +107,9 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="formlabel">Harvard Univeristy:</td>
+                                <td class="formlabel">Harvard University:</td>
                                 <td colspan="4">
-                                    <html:select styleClass="itemtext" property="isinternal">
+                                    <html:select styleClass="itemtext" property="isinternal" style="width: 210px;">
                                         <html:option value="<%=Constants.ALL%>"/>
                                         <html:option value="<%=Constants.YES%>"/>
                                         <html:option value="<%=Constants.NO%>"/>
@@ -121,7 +125,7 @@
                                         </tr>
                                         <tr>
                                             <td class="text" colspan="2">
-                                                <html:select property="institution1" styleClass="text">
+                                                <html:select property="institution1" styleClass="text" style="width: 210px;">
                                                     <html:option value="">-- Please Select --</html:option>
                                                     <html:options name="members"/>
                                                 </html:select>
@@ -132,7 +136,7 @@
                                         </tr>
                                         <tr>
                                             <td class="text" colspan="2">
-                                                <html:select property="institution2" styleClass="text">
+                                                <html:select property="institution2" styleClass="text" style="width: 210px;">
                                                     <html:option value="">---------- US Institutions ----------</html:option>
                                                     <html:options name="us"/>
                                                     <html:option value="">---------- Government ----------</html:option>

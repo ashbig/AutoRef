@@ -113,7 +113,7 @@
 <div class="gridContainer clearfix">        
 <div class="rmm" data-menu-style = "graphite" data-menu-title = "... More" id="rmm">
         <ul>
-                            <li><a href="Home.xhtml">Main Menu</a></li>
+                            <li><a href="Home.xhtml">&#10094; &#10094; &#10094; &nbsp;Main Menu</a></li>
                             <!--<li><a href="GetVectorsByType.do">Vectors</a></li>
                             <li><a href="GetCollectionList.do" title="View List of Collections">Collections</a></li>-->
                             <li><a href="Submission.jsp" title="Submit plasmids">Submission</a></li>

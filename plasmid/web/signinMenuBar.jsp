@@ -21,12 +21,12 @@
                             <li><a href="ViewCart.do">My Cart</a></li>
                     </logic:notPresent> 
                     <logic:present name="<%=Constants.USER_KEY%>" scope="session">
-                        
+                        <li><a href="ViewCart.do">My Cart</a></li>
                         <li><a href="Account.jsp">My Account</a></li>
                         <li><a href="ViewOrderHistory.do" title="View Orders">My Orders</a></li>
                     </logic:present>
                         <li><a href="OrderOverview.jsp">Search</a></li>
-                        <li><a href="More.jsp">... More</a></li>
+                        <li><a href="More.jsp">More&nbsp; &#10095; &#10095; &#10095;</a></li>
                         <%--<ul>
                             <li><a href="GetVectorsByType.do">Vectors</a></li>
                             <li><a href="GetCollectionList.do" title="View List of Collections">Collections</a></li>

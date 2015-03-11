@@ -20,8 +20,8 @@
 <div class="content">
 
     <p class="mainbodytexthead">Clone: <bean:write name="clone" property="name"/></p>
-    <div id="content">
-    <table width='100%' border="0">
+    <div id="aside">
+    <table width="auto" style='max-width: 67em;' border="0">
         <colgroup><col width='150px'><col width='auto'></colgroup>
         <tr><td class="tablebody">Clone ID:</td><td class="tableinfo"><bean:write name="clone" property="name"/></td></tr>
         <tr><td class="tablebody">Is Verified:</td><td class="tableinfo"><bean:write name="clone" property="verified"/></td></tr>
@@ -29,24 +29,34 @@
         <tr><td class="tablebody">Source:</td><td class="tableinfo"><bean:write name="clone" property="source"/></td></tr>
         <tr><td class="tablebody">Description:</td><td class="tableinfo"><bean:write name="clone" property="description"/></td></tr>
         <tr><td class="tablebody">Comments:</td><td class="tableinfo"><bean:write name="clone" property="comments"/></td></tr>
+    </table>
+    </div>
+    <div id='aside'>
+        <table width='20px' border='0px'><tr><td height='auto'></td></tr></table>
+    </div>    
+    <div id="aside">
+    <table width="auto" style='max-width: 67em; margin-bottom: 0px; padding-bottom: 0px;' border="0">
+        <colgroup><col width='150px'><col width='auto'></colgroup>
         <tr><td class="tablebody">Type:</td><td class="tableinfo"><bean:write name="clone" property="type"/></td></tr>            
         <tr><td class="tablebody">Verification Method:</td><td class="tableinfo"><bean:write name="clone" property="vermethod"/></td></tr>        
         <tr><td class="tablebody">Distribution:</td><td class="tableinfo"><bean:write name="clone" property="restriction"/></td></tr>
         <tr><td class="tablebody">Special MTA:</td><td class="tableinfo"><bean:write name="clone" property="specialtreatment"/></td></tr>        
         </table>
     </div>
-    <div id='content'>
-        <table width='100%'>
+    <div id='content'style="margin-top: 0px; padding-top: 0px;">
+    <table border="0" style='max-width: 67em;'>
+        <colgroup><col width='150px'><col width='auto'></colgroup>        
         <tr><td class="tablebody">Map:</td><td class="tableinfo"><a target="blank" href="../PlasmidRepository/file/map/<bean:write name="clone" property="clonemap"/>"><bean:write name="clone" property="clonemap"/></a></td></tr>
         </table>
     </div>        
 <div id="content">
     <logic:present name="clone" property="names">
         <p class="mainbodytext">Related Identifiers:</p>
-        <table width="100%" border="0">
+    <table border="0" width="100%" style='max-width: 67em;'>
+        <colgroup><col width='150px'><col width='auto'></colgroup>
             <logic:iterate id="clonename" name="clone" property="names">
                 <tr>
-                    <td width="150px" class="tablebody"><bean:write name="clonename" property="type"/></td>
+                    <td class="tablebody"><bean:write name="clonename" property="type"/></td>
                     <td class="tableinfo">
                         <logic:notEqual name="clonename" property="urlLength" value="0">
                             <a target="_blank" href="<bean:write name="clonename" property="url"/>">
@@ -64,7 +74,7 @@
     
     <logic:present name="clone" property="properties">
         <p class="mainbodytext">Property:</p>
-        <table width="100%" border="0">
+    <table border="0" width="100%" style='max-width: 67em;'>
             <logic:iterate id="p" name="clone" property="properties">
                 <tr>
                     <td width='150px' class="tablebody"><bean:write name="p" property="type"/>:</td>
@@ -77,7 +87,7 @@
     
     <logic:present name="clone" property="inserts">
         <p class="mainbodytext">Insert Information:</p>
-        <table width="100%" border="0" id="cart">
+    <table border="0" style='max-width: 67em;' id="cart">
             <tr> 
                 <td class="tablebody">Insert</td>
                 <td class="tablebody">Size (bp)</td>
@@ -191,7 +201,8 @@
         <logic:iterate id="insert" name="clone" property="inserts">
             <logic:present name="insert" property="properties">
                 <p class="mainbodytext">Insert Property: Insert <bean:write name="insert" property="order"/></p>
-                <table width="100%" border="0">
+    <table border="0" style='max-width: 67em;'>
+        <colgroup><col width='50%'><col width='50%'><col width='100%'></colgroup>          
                     <tr> 
                         <td class="tablebody">Type</td>
                         <td class="tablebody">Value</td>
@@ -211,26 +222,27 @@
     
     <logic:present name="clone" property="vector">
         <p class="mainbodytext">Vector Information:</p>
-        <table width="100%" border="0">
-            <tr><td class="tablebody">Vector Name:</td><td class="mainbodytext"><a href="GetVectorDetail.do?vectorid=<bean:write name="clone" property="vector.vectorid"/>"><bean:write name="clone" property="vector.name"/></a></td></tr>
-            <tr><td class="tablebody">Type:</td><td class="mainbodytext"><bean:write name="clone" property="vector.type"/></td></tr>
-            <tr><td class="tablebody">Description:</td><td class="mainbodytext"><bean:write name="clone" property="vector.description"/></td></tr>
-            <tr><td class="tablebody">Properties:</td><td class="mainbodytext"><bean:write name="clone" property="vector.propertyString"/></td></tr>
-            <tr><td class="tablebody">Comments:</td><td class="mainbodytext"><bean:write name="clone" property="vector.comments"/></td></tr>
-            <tr><td class="tablebody">Map:</td><td class="mainbodytext"><a target="blank" href="../PlasmidRepository/file/map/<bean:write name="clone" property="vector.mapfilename"/>"><bean:write name="clone" property="vector.mapfilename"/></a></td></tr>
-            <tr><td class="tablebody">Sequence:</td><td class="mainbodytext"><a target="blank" href="../PlasmidRepository/file/sequence/<bean:write name="clone" property="vector.seqfilename"/>"><bean:write name="clone" property="vector.seqfilename"/></a></td></tr>
-            <tr><td class="tablebody">Size (bp):</td><td class="mainbodytext"><bean:write name="clone" property="vector.size"/></td></tr>
-            <tr><td class="tablebody">Form:</td><td class="mainbodytext"><bean:write name="clone" property="vector.form"/></td></tr>
+    <table border="0" style='max-width: 67em;'>
+        <colgroup><col width='150px'><col width='auto'></colgroup>    
+            <tr><td class="tablebody">Vector Name:</td><td class="tableinfo"><a href="GetVectorDetail.do?vectorid=<bean:write name="clone" property="vector.vectorid"/>"><bean:write name="clone" property="vector.name"/></a></td></tr>
+            <tr><td class="tablebody">Type:</td><td class="tableinfo"><bean:write name="clone" property="vector.type"/></td></tr>
+            <tr><td class="tablebody">Description:</td><td class="tableinfo"><bean:write name="clone" property="vector.description"/></td></tr>
+            <tr><td class="tablebody">Properties:</td><td class="tableinfo"><bean:write name="clone" property="vector.propertyString"/></td></tr>
+            <tr><td class="tablebody">Comments:</td><td class="tableinfo"><bean:write name="clone" property="vector.comments"/></td></tr>
+            <tr><td class="tablebody">Map:</td><td class="tableinfo"><a target="blank" href="../PlasmidRepository/file/map/<bean:write name="clone" property="vector.mapfilename"/>"><bean:write name="clone" property="vector.mapfilename"/></a></td></tr>
+            <tr><td class="tablebody">Sequence:</td><td class="tableinfo"><a target="blank" href="../PlasmidRepository/file/sequence/<bean:write name="clone" property="vector.seqfilename"/>"><bean:write name="clone" property="vector.seqfilename"/></a></td></tr>
+            <tr><td class="tablebody">Size (bp):</td><td class="tableinfo"><bean:write name="clone" property="vector.size"/></td></tr>
+            <tr><td class="tablebody">Form:</td><td class="tableinfo"><bean:write name="clone" property="vector.form"/></td></tr>
         </table>
     </logic:present>
     
     <logic:present name="clone" property="hosts">
         <p class="mainbodytext">Host Information:</p>
-        <table width="100%" border="0">
+    <table border="0" style='max-width: 67em;'>
             <tr>
-                <td width="31%" class="tablebody">Host Strain</td>
-                <td width="19%" class="tablebody">Is Used In Distribution</td>
-                <td width="50%" class="tablebody">Description</td>
+                <td width='25%' class="tablebody">Host Strain</td>
+                <td width='75%' class="tablebody">Is Used In Distribution</td>
+                <td width='100%' class="tablebody">Description</td>
             </tr>
             <logic:iterate id="host" name="clone" property="hosts">
                 <tr>
@@ -244,10 +256,10 @@
     
     <logic:present name="clone" property="selections">
         <p class="mainbodytext">Antibiotic Selections:</p>
-        <table width="100%" border="0">
+    <table border="0" width='100%' style='max-width: 67em;'>
             <tr>
-                <td width="24%" class="tablebody">Host Type</td>
-                <td width="76%" class="tablebody">Marker</td>
+                <td class="tablebody">Host Type</td>
+                <td class="tablebody">Marker</td>
             </tr>
             <logic:iterate id="selection" name="clone" property="selections">
                 <tr>
@@ -260,8 +272,8 @@
     
     <logic:present name="clone" property="recommendedGrowthCondition">
         <p class="mainbodytext">Recommended Growth Condition:</p>
-        <table width="100%" border="0">
-            <tr>
+     <table border="0" width="100%" style='max-width: 67em;'>
+            <tr style="background:#dddddd; vertical-align: top;">
                 <td class="tablebody">Host Type</td>
                 <td class="tablebody">Selection Condition</td>
                 <td id='extrainfo' class="tablebody">Growth Condition</td>
@@ -278,9 +290,10 @@
     
     <logic:present name="clone" property="authors">
         <p class="mainbodytext">Authors:</p>
-        <table width="100%" border="0">
+    <table border="0" width="100%" style='max-width: 67em;'>
+       
             <tr>
-                <td class="tablebody">Author Name</td>
+                <td width="150px" class="tablebody">Author Name</td>
                 <td class="tablebody">Author Type</td>
             </tr>
             <logic:iterate id="author" name="clone" property="authors">
@@ -293,13 +306,14 @@
     </logic:present>
     <logic:present name="clone" property="publications">
         <p class="mainbodytext">Publications:</p>
-        <table width="100%" border="0">
+    <table border="0" width="100%" style='max-width: 67em;'>
             <tr>
-                <td width="11%" class="tablebody">PMID</td>
-                <td width="89%" class="tablebody">Title</td>
-            </tr>
+                <td class="tablebody">PMID</td>
+                <td class="tablebody">Title</td>
+                           </tr>
             <logic:iterate id="publication" name="clone" property="publications">
                 <tr>
+
                     <td class="tableinfo"><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Search&db=pubmed&term=<bean:write name="publication" property="pmid"/>"><bean:write name="publication" property="pmid"/></a></td>
                     <td class="tableinfo"><bean:write name="publication" property="title"/></td>
                 </tr>

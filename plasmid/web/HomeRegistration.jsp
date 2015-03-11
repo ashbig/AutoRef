@@ -43,32 +43,32 @@
                         <html:errors/>
                         <table style="margin-bottom:1em;" width="940px" border="0">
                             <colgroup>
-                                <col width="170px">
+                                <col width="100px">
                                 <col width="300px">
                                 <col width="auto">
                             </colgroup>
                             <tr class="formlabel"> 
                                 <td align="left" valign="baseline">*First Name:</td>
                                 <td align="left" valign="baseline"> 
-                                    <html:text maxlength="50" property="firstname" size="40" styleClass="text"/>
+                                    <html:text maxlength="50" property="firstname" size="30" styleClass="text"/>
                                 </td>
                             </tr>
                             <tr class="formlabel"> 
                                 <td align="left" valign="baseline">*Last Name:</td>
                                 <td align="left" valign="baseline"> 
-                                    <html:text maxlength="50" property="lastname" size="40" styleClass="text"/>
+                                    <html:text maxlength="50" property="lastname" size="30" styleClass="text"/>
                                 </td>
                             </tr>
                             <tr class="formlabel"> 
                                 <td align="left" valign="baseline">*Email:</td>
                                 <td align="left" valign="baseline"> 
-                                    <html:text maxlength="50" property="email" size="40" styleClass="text"/>
+                                    <html:text maxlength="50" property="email" size="30" styleClass="text"/>
                                 </td>
                             </tr>
                             <tr class="formlabel"> 
                                 <td align="left" valign="baseline">*Phone:</td>
                                 <td align="left" valign="baseline"> 
-                                    <html:text maxlength="50" property="phone" size="40" styleClass="text"/>
+                                    <html:text maxlength="50" property="phone" size="30" styleClass="text"/>
                                 </td>
                             </tr>
                             <tr class="formlabel"> 
@@ -107,6 +107,7 @@
                                                 </html:select>
                                             </td>
                                         </tr>
+                                        
                                         <tr>
                                             <td class="formlabel" colspan="2"><font color="grey">Institution not listed above:</td>
                                         </tr>

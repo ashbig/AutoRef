@@ -95,7 +95,7 @@
                             <% int n = 0;%>
                             <% int i = 0;%>
                             <logic:iterate name="<%=Constants.CLONEORDER%>" id="cloneorder">
-                            <table>
+                            <table width='100%'>
                                 <tr class="formlabel">
                                     <td width=50%"">Order ID: <bean:write name="cloneorder" property="orderid"/></td>
                                     <td>Validation Status:
@@ -174,7 +174,7 @@
                                                     <tr>
                                                         <td class="tableheader">Read</td>
                                                         <td class="tableheader">Validation Result</td>
-                                                        <td class="tableheader">Validation Method</td>
+                                                        <!--<td class="tableheader">Validation Method</td>-->
                                                         <td class="tableheader">Workflow</td>
                                                         <td class="tableheader">Researcher</td>
                                                         <td class="tableheader">Date</td>
@@ -184,7 +184,7 @@
                                                         <tr class="tableinfo"> 
                                                             <td width="20"><pre><bean:write name="v" property="readForWeb"/></pre></td>
                                                             <td><bean:write name="v" property="result"/></td>
-                                                            <td><bean:write name="v" property="method"/></td>
+                                                            <%--<td><bean:write name="v" property="method"/></td>--%>
                                                             <td><bean:write name="v" property="workflowStringForWeb"/></td>
                                                             <td><bean:write name="v" property="who"/></td>
                                                             <td><bean:write name="v" property="when"/></td>

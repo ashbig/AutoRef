@@ -14,6 +14,8 @@
   ga('send', 'pageview');
 
 </script>
+        <script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
+        <script type="text/javascript" src="responsivemobilemenu.js"></script>
     <h:head>
         <title>Harvard PlasmID Database</title>
         <meta name="description" content="The Plasmid Information Database (PlasmID) annotates, stores, and distributes plasmid cDNA's, ORF's, and shRNA's for use in cancer research."></meta>
@@ -26,8 +28,6 @@
         <link rel="shortcut icon" href="dnacore.ico"/>
         <link rel="stylesheet" type="text/css" href="print.css" media="print"/>
         <link rel="stylesheet" href="responsivemobilemenu.css" type="text/css"/>
-        <!--<script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
-        <script type="text/javascript" src="responsivemobilemenu.js"></script>-->
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"></meta>        
     </h:head>
     <div class="gridContainer clearfix">
@@ -42,7 +42,7 @@
                 <li><h:outputLink value="Account.jsp" rendered="#{plasmidBean.userExist}">My Account</h:outputLink></li>   
                 <li><h:outputLink value="ViewOrderHistory.do" rendered="#{plasmidBean.userExist}">My Orders</h:outputLink></li>                
                 <li><a href="OrderOverview.jsp">Search</a></li>
-                <li><a href="More.jsp">... More</a></li>
+                <li><a href="More.jsp">More&nbsp; &#10095; &#10095; &#10095;</a></li>
                 <!--<li><a href="GetVectorsByType.do">Vectors</a></li>
                 <li><a href="GetCollectionList.do" title="View List of Collections">Collections</a></li>
                 <li><a href="Submission.jsp" title="Submit plasmids">Submission</a></li>
