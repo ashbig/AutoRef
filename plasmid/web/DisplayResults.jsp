@@ -13,7 +13,7 @@
 
 <html>
     <head>
-        <title>PlasmID Database</title>
+        <title>PlasmID: Search Results</title>
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
         <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
         
