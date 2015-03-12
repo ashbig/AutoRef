@@ -26,7 +26,7 @@
                         <li><a href="ViewOrderHistory.do" title="View Orders">My Orders</a></li>
                     </logic:present>
                         <li><a href="OrderOverview.jsp">Search</a></li>
-                        <li><a href="More.jsp">More&nbsp; &#10095; &#10095; &#10095;</a></li>
+                        <li><a href="More.jsp">More&nbsp; &#9193;</a></li>
                         <%--<ul>
                             <li><a href="GetVectorsByType.do">Vectors</a></li>
                             <li><a href="GetCollectionList.do" title="View List of Collections">Collections</a></li>

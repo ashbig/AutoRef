@@ -72,7 +72,7 @@
             <td align="left">Our recommended method of searching the PlasmID database. Simply enter your gene of interest and query our database against the latest reference sequence!</td>
         </tr>
         <tr class="tableinfo">
-        <td><a href="PrepareAdvancedSearch.do">Advanced Search</a></td>
+        <td><a href="PrepareAdvancedSearch.do">Text Search</a></td>
           <td align="left">Search by gene name, gene symbol, vector name, vector feature, author name, publication, or species.</td>
         </tr>
         <tr class="tableinfo">

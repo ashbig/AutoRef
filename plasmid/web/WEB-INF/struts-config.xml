@@ -644,7 +644,7 @@
             <forward  name="success"   path="/DisplayResults.jsp"/>
             <forward  name="summary"   path="/DisplayResultSummary.jsp"/>
         </action>
-            <action    path="/Registration"
+        <action    path="/Registration"
                    type="plasmid.action.RegistrationAction"
                    name="registrationForm"
                    validate="true"
