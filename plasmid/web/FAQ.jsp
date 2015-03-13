@@ -67,7 +67,7 @@ A. Orders typically ship within 7-10 business days of your order. </p>
         
         <p class="mainbodytext"align="justify"><strong>      
 <a name="Troubleshooting"></a>Q. What does the Troubleshooting status mean?</strong><br>
-A. The troubleshooting status generally means that we were not able to verify one or more of the plasmids in your order using end read sequencing. The technician filling your order  may have already attempted to correct this problem by streaking the bacterial stock on agar, picking isolates, and sequencing again. That effort has also failed. At this point you are welcome to select any alternate construct from our library or ask taht we drop the charges for that construct. Please contact <a href="plasmidhelp@hms.harvard.edu">plasmidhelp@hms.harvard.edu</a> if you need help selecting an alternate. 
+A. The troubleshooting status generally means that we were not able to verify one or more of the plasmids in your order using end read sequencing. The technician filling your order  may have already attempted to correct this problem by streaking the bacterial stock on agar, picking isolates, and sequencing again. That effort has also failed. At this point you are welcome to select any alternate construct from our library or ask that we drop the charges for that construct. Please contact <a href="mailto:plasmidhelp@hms.harvard.edu">plasmidhelp@hms.harvard.edu</a> if you need help selecting an alternate. 
         
         <p class="mainbodytext"align="justify"><strong>
 <a name="Partiallyshipped"></a>Q. My order has been Partially Shipped, what happens next?</strong><br>
@@ -85,7 +85,7 @@ A. You do not have to register to search the database, download vector and clone
 
 		<p class="mainbodytext"align="justify"><strong>
 <a name="PI"></a>Q. My PI or Institution is not listed on the registration form, what should I do?</strong><br>
-A. Our registration form is designed to accept new PI and Institution names. Simply leave the drop down menu's for the appropriate field(s) on 'Please Select' then type the new value in the open text field below the drop down menu. If you have any trouble please email <a href="plasmidhelp@hms.harvard.edu">plasmidhelp@hms.harvard.edu</a>.</p>
+A. Our registration form is designed to accept new PI and Institution names. Simply leave the drop down menu's for the appropriate field(s) on 'Please Select' then type the new value in the open text field below the drop down menu. If you have any trouble please email <a href="mailto:plasmidhelp@hms.harvard.edu">plasmidhelp@hms.harvard.edu</a>.</p>
 
 		<p class="mainbodytextlarge"><strong><u>Financial</u></strong>  
            
@@ -95,7 +95,7 @@ A. Plasmids from our facility are free, but we do charge a retrieval fee and shi
 
 		<p class="mainbodytext"align="justify"><strong>
 <a name="quote"></a>Q. Can I get a price quote?</strong><br>
-A. The shopping cart on our website can provide a full summary of all costs before you enter a PO or process a credit card. Most users print from this page, save their shopping cart, and then return to the saved cart when they are ready to place their order. If your institution requires more than this please write to plasmidhelp@hms.harvard.edu. Responses from this email may take up to 24 hours on weekdays, and no responses are given on the weekend.</p>
+A. The shopping cart on our website can provide a full summary of all costs before you enter a PO or process a credit card. Most users print from this page, save their shopping cart, and then return to the saved cart when they are ready to place their order. If your institution requires more than this please write to <a href="mailto:plasmidhelp@hms.harvard.edu">plasmidhelp@hms.harvard.edu</a>. Responses from this email may take up to 24 hours on weekdays, and no responses are given on the weekend.</p>
 
 		<p class="mainbodytext"align="justify"><strong>
 <a name="thirtythreedigitcodes"></a>Q. The sites asks for a 33-digit code, but I don't have one. What do I do?</strong><br>
@@ -113,17 +113,17 @@ A. Our legal name is 'President and Fellows of Harvard College' and we are doing
 
 <p class="mainbodytext"><strong>
 <a name="vendorregistration"></a>Q. Who can complete these vendor registration forms?</strong><br>
-A. Vendor registration forms should be sent to <a href="plasmidhelp@hms.harvard.edu">plasmidhelp@hms.harvard.edu</a>.</p>
+A. Vendor registration forms should be sent to <a href="mailto:plasmidhelp@hms.harvard.edu">plasmidhelp@hms.harvard.edu</a>.</p>
 
 		<p class="mainbodytextlarge"><strong><u>Picking A Construct</u></strong>
         
 <p class="mainbodytext"align="justify"><strong>
 <a name="multiples"></a>Q. I see multiple plasmids for my gene, how do I pick the best one?</strong><br>
-A. In general most researchers want the plasmid that covers the largest part of the protein coding region (CDS) for their gene of interest. Most researchers will also want construct that do not have mutations compared to an NCBI reference, but some single point mutations are silent and reflect the true variety found in natural samples. If you are still having trouble choosing we are always happy to discuss your specific needs and help you to find the plasmid that is right for your research. Please email <a href="plasmidhelp@hms.harvard.edu">plasmidhelp@hms.harvard.edu</a> with your questions and we will be happy to help.</p> 
+A. In general most researchers want the plasmid that covers the largest part of the protein coding region (CDS) for their gene of interest. Most researchers will also want construct that do not have mutations compared to an NCBI reference, but some single point mutations are silent and reflect the true variety found in natural samples. If you are still having trouble choosing we are always happy to discuss your specific needs and help you to find the plasmid that is right for your research. Please email <a href="mailto:plasmidhelp@hms.harvard.edu">plasmidhelp@hms.harvard.edu</a> with your questions and we will be happy to help.</p> 
 
 <p class="mainbodytext"align="justify"><strong>
 <a name="expression"></a>Q. How can I tell if a plasmid will express?</strong><br>
-A. Most of the constructs in our library are in a cloning vector and WILL NOT express. We do have a small collection of constructs in an expression vector. To determine if the construct will express you need to examine the annotation of the backbone vector. When you look at the annotation you should look for a promoter that your model organism or expression system uses. For example, in the case of mammalian expression a CMV promoter is often, but not always present. If you cannot determine whether a specific construct will express in your system please email plasmidhelp@hms.harvard.edu with the clone ID and the expression system or organism where you would like to express.</p>       
+A. Most of the constructs in our library are in a cloning vector and WILL NOT express. We do have a small collection of constructs in an expression vector. To determine if the construct will express you need to examine the annotation of the backbone vector. When you look at the annotation you should look for a promoter that your model organism or expression system uses. For example, in the case of mammalian expression a CMV promoter is often, but not always present. If you cannot determine whether a specific construct will express in your system please email <a href="mailto:plasmidhelp@hms.harvard.edu">plasmidhelp@hms.harvard.edu</a> with the clone ID and the expression system or organism where you would like to express.</p>       
 
 <p class="mainbodytext"align="justify"><strong>
 <a name="searches"></a>Q. There are multiple search options, what do they do?</strong><br>
@@ -145,7 +145,7 @@ A. Our newest <a href="/PLASMID/GeneSearch.xhtml">Human and Mouse Gene</a> searc
         
 <p class="mainbodytext" align="justify"><strong>
 <a name="MTAneeded"></a>Q. Do I need to complete an MTA for this order?</strong><br>
-A. An MTA governs the transfer of material in all orders. Many institutions have signed a generalized MTA agreement with us and are therefore in our Expedited MTA Network. When you place an order that ships to one of these institutions you will be presented with our Standard Plasmid Transfer Agreement and you will be able to approve it electronically without the need for a signature. A paper copy of this same MTA will also ship with your order for your records. If your institution is not in our Expedited MTA Network we ask that you execute a separate Standard Plasmid Transfer Agreement for each request. MTA's can be downloaded from our <a href="http://plasmid.med.harvard.edu/PLASMID/TermAndCondition.jsp">Terms and Conditions</a> page. Completed MTA's should be emailed to <a href="plasmidMTA@hms.harvard.edu">plasmidMTA@hms.harvard.edu</a>. Researchers or Institutions who fail to execute this MTA implicitly agree to the terms of the Standard Plasmid Transfer Agreement through the use of this website.</p>   
+A. An MTA governs the transfer of material in all orders. Many institutions have signed a generalized MTA agreement with us and are therefore in our Expedited MTA Network. When you place an order that ships to one of these institutions you will be presented with our Standard Plasmid Transfer Agreement and you will be able to approve it electronically without the need for a signature. A paper copy of this same MTA will also ship with your order for your records. If your institution is not in our Expedited MTA Network we ask that you execute a separate Standard Plasmid Transfer Agreement for each request. MTA's can be downloaded from our <a href="http://plasmid.med.harvard.edu/PLASMID/TermAndCondition.jsp">Terms and Conditions</a> page. Completed MTA's should be emailed to <a href="mailto:plasmidMTA@hms.harvard.edu">plasmidMTA@hms.harvard.edu</a>. Researchers or Institutions who fail to execute this MTA implicitly agree to the terms of the Standard Plasmid Transfer Agreement through the use of this website.</p>   
 
 <p class="mainbodytext" align="justify"><strong>
 <a name="download"></a>Q. Where do I find/ download a copy of the MTA for my order?</strong><br>
@@ -164,7 +164,7 @@ A. Institutions can join our Expedited MTA Network by executing the Standard Pla
 
 <p class="mainbodytext" align="justify"><strong>
 <a name="deposit"></a>Q. I have a construct that I would like to share. How do I deposit it?</strong><br>
-A. First of all, thank you for sharing your construct with the broader research community. We look forward to helping you make this resource available. Additional details about depositing plasmids can be found on our <a href="http://plasmid.med.harvard.edu/PLASMID/Submission.jsp">Plasmid Submission</a> page. This page is geared to deposits of libraries of plasmids. If you have fewer samples to deposit this page might not make sense. Please just drop us a line at <a href="plasmidhelp@hms.harvard.edu">plasmidhelp@hms.harvard.edu</a> and we will get the process started for you. </p>
+A. First of all, thank you for sharing your construct with the broader research community. We look forward to helping you make this resource available. Additional details about depositing plasmids can be found on our <a href="http://plasmid.med.harvard.edu/PLASMID/Submission.jsp">Plasmid Submission</a> page. This page is geared to deposits of libraries of plasmids. If you have fewer samples to deposit this page might not make sense. Please just drop us a line at <a href="mailto:plasmidhelp@hms.harvard.edu">plasmidhelp@hms.harvard.edu</a> and we will get the process started for you. </p>
 
 <p class="mainbodytext" align="justify" ><strong>
 <a name="gateway"></a>Q. What is the GATEWAY system?</strong><br>

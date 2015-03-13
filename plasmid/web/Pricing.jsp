@@ -79,7 +79,7 @@ A. Plasmids from our facility are free, but we do charge a retrieval fee and shi
 
 		<p class="mainbodytext"align="justify"><strong>
 <a name="quote"></a>Q. Can I get a price quote?</strong><br>
-A. The shopping cart on our website can provide a full summary of all costs before you enter a PO or process a credit card. Most users print from this page, save their shopping cart, and then return to the saved cart when they are ready to place their order. If your institution requires more than this please write to plasmidhelp@hms.harvard.edu. Responses from this email may take up to 24 hours on weekdays, and no responses are given on the weekend.</p>
+A. The shopping cart on our website can provide a full summary of all costs before you enter a PO or process a credit card. Most users print from this page, save their shopping cart, and then return to the saved cart when they are ready to place their order. If your institution requires more than this please write to <a href="mailto:plasmidhelp@hms.harvard.edu">plasmidhelp@hms.harvard.edu</a>. Responses from this email may take up to 24 hours on weekdays, and no responses are given on the weekend.</p>
 
 		<p class="mainbodytext"align="justify"><strong>
 <a name="thirtythreedigitcodes"></a>Q. The sites asks for a 33-digit code, but I don't have one. What do I do?</strong><br>
@@ -97,7 +97,7 @@ A. Our legal name is 'President and Fellows of Harvard College' and we are doing
 
 <p class="mainbodytext"><strong>
 <a name="vendorregistration"></a>Q. Who can complete these vendor registration forms?</strong><br>
-A. Vendor registration forms should be sent to <a href="plasmidhelp@hms.harvard.edu">plasmidhelp@hms.harvard.edu</a>.</p>
+A. Vendor registration forms should be sent to <a href="mailto:plasmidhelp@hms.harvard.edu">plasmidhelp@hms.harvard.edu</a>.</p>
 
 		
         </td>

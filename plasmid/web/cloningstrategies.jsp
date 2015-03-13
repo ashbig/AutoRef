@@ -86,7 +86,7 @@ body {
 <p class="mainbodytext"><u>Description</u><br>
   Clontech's Creator (TM) system and other LoxP  site-containing plasmids can be used to add, replace or otherwise manipulate  DNA using the Cre enzyme, which catalyzes site-specific recombination at LoxP  sites. Please note that not every vector containing LoxP is appropriate for  Cre/Lox-based cloning approaches. Sometimes the LoxP is present to make  possible some experimental approach that is unrelated to cloning (for example,  LoxP-containing constructs are sometime introduced into cells and then in vivo  expression of Cre is used to bring about changes).</p>
 <p class="mainbodytext"><u>Learn More</u><br>
-  To learn more about this method, please see the Clontech  website <a href="www.clonetech.com" target="_blank">www.clontech.com</a> and appropriate references, which include Hoess et al.  (1982) &quot;P1 site-specific recombination: nucleotide sequence of the recombining  sites&quot; (PubMed ID 6954485.).</p>
+  To learn more about this method, please see the Clontech  website <a href="http://www.clonetech.com" target="_blank">www.clontech.com</a> and appropriate references, which include Hoess et al.  (1982) &quot;P1 site-specific recombination: nucleotide sequence of the recombining  sites&quot; (PubMed ID 6954485.).</p>
 <p class="mainbodytext"><u>Advantages</u><br>
   A significant advantage of the system is that an insert can  be cloned into a single 'master' or 'entry' vector and readily sub-cloned into  many different expression vectors without the need to digest with restriction  enzymes, gel purify, ligate, etc.</p>
 <p class="mainbodytext"><u>In PlasmID </u><br>
@@ -97,7 +97,7 @@ body {
 <p class="mainbodytext"><u>Description</u><br>
   Invitrogen's Gateway (TM) system and other lambda phage  (att) recombination site-containing plasmids can be used to add, replace or  otherwise manipulate DNA using an enzyme that catalyzes site-specific  recombination at att-type sites.</p>
 <p class="mainbodytext"><u>Learn More</u><br>
-  To learn more about this method, please see the Invitrogen  website <a href="www.invitrogen.com" target="_blank">www.invitrogen.com</a> and appropriate references, which include Landy  (1989) &quot;Dynamic, structural and regulatory aspects of lambda site-specific  recombination&quot; (PubMed ID 2528323).</p>
+  To learn more about this method, please see the Invitrogen  website <a href="http://www.invitrogen.com" target="_blank">www.invitrogen.com</a> and appropriate references, which include Landy  (1989) &quot;Dynamic, structural and regulatory aspects of lambda site-specific  recombination&quot; (PubMed ID 2528323).</p>
 <p class="mainbodytext"><u>Advantages</u><br>
   Similar to the Cre/Lox approach, a significant advantage of  the system is that an insert can be cloned into a single 'master' or 'entry'  vector and readily sub-cloned into many different expression vectors without  the need to digest with restriction enzymes, gel purify, ligate, etc.</p>
 <p class="mainbodytext"><u>In PlasmID </u><br>

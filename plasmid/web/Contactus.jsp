@@ -56,7 +56,7 @@ old pic of biobank
           <u>Email</u><br>
           <a href="mailto:plasmidhelp@hms.harvard.edu">plasmidhelp@hms.harvard.edu</a>: General Help Email<br>
            <a href="mailto:plasmidMTA@hms.harvard.edu">plasmidMTA@hms.harvard.edu</a>: Questions about Material Transfer Agreements (MTAs)<br>
-          <a href='dnaresource_finance@hms.harvard.edu'>dnaresource_finance@hms.harvard.edu</a>: Payment or Financial Questions</a></p>
+          <a href='mailto:dnaresource_finance@hms.harvard.edu'>dnaresource_finance@hms.harvard.edu</a>: Payment or Financial Questions</a></p>
           
           <p class="mainbodytext">
           <u>Phone</u><br>
