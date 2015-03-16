@@ -22,7 +22,7 @@
 
     <body>
         <jsp:include page="internalHomeTitle.jsp" />
-        <table id='content' width="100%" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
+        <table id='content' width="100%" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF" id='content' id='content'>
             <tr> 
                 <%--<td width="17%" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle"> 
                     <jsp:include page="sampleTrackingMenu.jsp" />

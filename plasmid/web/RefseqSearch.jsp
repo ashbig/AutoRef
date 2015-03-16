@@ -33,7 +33,7 @@
           </tr>
           <tr> 
             <td width="3%" height="26">&nbsp;</td>
-            <td width="31%" height="26"> <html:select property="species"> <html:options
+            <td width="31%" height="26"> <html:select property="species" style="width: 210px;"> <html:options
                     name="allSpecies"
                 /> </html:select> </td>
             <td width="66%" height="26">&nbsp;</td>
@@ -51,7 +51,9 @@
             <input type="submit" name="Submit" value="Continue">
             </td>
             <td height="4" class="homeMainText">&nbsp;</td>
+          <tr><td>&nbsp;</td></tr>
           </tr>
+          <tr><td colspan='3' class='mainbodytexthead' style='color:red;'>If you are looking for Human or Mouse constructs we strongly encourage you to use <a href='GeneSearch.xhtml'>this tool</a> instead.</td></tr>
         </table>
       </html:form></td>
   </tr>

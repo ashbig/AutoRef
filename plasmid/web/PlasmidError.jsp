@@ -18,7 +18,7 @@
     <hr>
     <html:errors/>
     <p>
-    <h3>An error has occured and been logged</h3>
+    <h3>An error has occurred and been logged</h3>
     <hr>
 
     <logic:present name="exception">

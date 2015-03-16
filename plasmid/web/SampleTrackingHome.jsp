@@ -21,7 +21,7 @@
 
 <body>
 <jsp:include page="internalHomeTitle.jsp" />
-<table width="100%" border="0" align="center">
+<table width="100%" border="0" align="center" id='content'>
   <tr> 
     <%--<td width="17%" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle"> 
       <jsp:include page="sampleTrackingMenu.jsp" />
