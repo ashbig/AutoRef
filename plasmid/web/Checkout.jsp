@@ -49,7 +49,7 @@
     <tr><td class="formlabel">*City:</td><td><html:text styleClass="text" property="city"/></td></tr>  
     <tr><td class="formlabel">*State:</td><td><html:text styleClass="text" property="state"/></td></tr>  
     <tr><td class="formlabel">*Zip code:</td><td><html:text styleClass="text" property="zipcode"/></td></tr>  
-    <tr><td class="formlabel">*Country:</td><td><html:select styleClass="text" property="country"><html:options name="countryList"/></html:select></td></tr>  
+    <tr><td class="formlabel">*Country:</td><td><html:select styleClass="text" property="country"  style="width: 150px;"><html:options name="countryList"/></html:select></td></tr>  
     <tr><td class="formlabel">*Phone:</td><td><html:text styleClass="text" property="phone"/></td></tr>    
     <tr><td class="formlabel">Fax:</td><td><html:text styleClass="text" property="fax"/></td></tr>
     <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
@@ -65,12 +65,12 @@
     <tr><td class="formlabel">*City:</td><td><html:text styleClass="text" property="billingcity"/></td></tr>
     <tr><td class="formlabel">*State:</td><td><html:text styleClass="text" property="billingstate"/></td></tr>    
     <tr><td class="formlabel">*Zip code:</td><td><html:text styleClass="text" property="billingzipcode"/></td></tr>    
-    <tr><td class="formlabel">*Country:</td><td><html:select styleClass="text" property="billingcountry"><html:options name="countryList"/></html:select></td></tr>    
+    <tr><td class="formlabel">*Country:</td><td><html:select styleClass="text" property="billingcountry" style="width: 150px;"><html:options name="countryList"/></html:select></td></tr>    
     <tr><td class="formlabel">*Phone:</td><td><html:text styleClass="text" property="billingphone"/></td></tr>    
     <tr><td class="formlabel">*Fax:</td><td><html:text styleClass="text" property="billingfax"/></td></tr>    
     <tr><td class="formlabel">*Email:</td><td><html:text styleClass="text" property="billingemail"/></td></tr>
-    <tr><td colspan='2' class="featuretext">We direct your invoice to this billing email by default. If you prefer that we fax the invoice please <a href="mailto:plasmidhelp@hms.harvard.edu">let us know</a>.</td></tr>
     </table>
+    <p>We direct your invoice to this billing email by default. If you prefer that we fax the invoice please <a href="mailto:plasmidhelp@hms.harvard.edu">let us know</a>.</p>
 </div>
 <div id='content'>
     <p class="text"><input type=checkbox name="saveInfo" checked>Save this information<br>
