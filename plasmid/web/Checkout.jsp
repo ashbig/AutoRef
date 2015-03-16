@@ -70,7 +70,7 @@
     <tr><td class="formlabel">*Fax:</td><td><html:text styleClass="text" property="billingfax"/></td></tr>    
     <tr><td class="formlabel">*Email:</td><td><html:text styleClass="text" property="billingemail"/></td></tr>
     </table>
-    <p>We direct your invoice to this billing email by default. If you prefer that we fax the invoice please <a href="mailto:plasmidhelp@hms.harvard.edu">let us know</a>.</p>
+    <p>We direct your invoice to this billing email by<br>default. If you prefer that we fax the invoice<br>please <a href="mailto:plasmidhelp@hms.harvard.edu">let us know</a>.</p>
 </div>
 <div id='content'>
     <p class="text"><input type=checkbox name="saveInfo" checked>Save this information<br>
