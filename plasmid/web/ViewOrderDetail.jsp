@@ -26,11 +26,11 @@
                     </logic:present>
                     <html:errors/>
 <div id="aside">
-     <table border="0" width="100%">
+     <table border="0" width="100%" style='min-width:470px'>
                      <colgroup><col width="150px"><col width="auto"></colgroup>
                         <tr><td colspan="2" class="featuretext">Order Details:</td></tr>
                         <tr><td class="formlabel">Order ID:</td><td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="orderid"/></td></tr>
-                        <tr><td class="formlabel">PO Number:</td><td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="ponumber"/></td></tr>                        
+                        <tr><td class="formlabel">PO Number:</td><td class="text" style="word-wrap: break-word;"><bean:write name="<%=Constants.CLONEORDER%>" property="ponumber"/></td></tr>                        
                         <tr><td class="formlabel">Order Date:</td><td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="orderDate"/></td></tr>
                         <tr><td class="formlabel">Order Status:</td><td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="status"/></td></tr>
                         <%--<tr><td class="formlabel">Last Updated On:</td><td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="updatedon"/></td></tr>
@@ -53,7 +53,7 @@
     </table>
 </div>
 <div id="aside">
-    <table  border="0" width="100%">
+    <table  border="0" width="100%" style='min-width:375px'>
         <colgroup><col width="150px"><col width="auto"></colgroup>
                         <tr><td colspan="2" class="featuretext">User Details:</td></tr>        
                         <tr><td class="formlabel">Email:</td><td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="email"/></td></tr>
@@ -67,7 +67,7 @@
 
 <div id="content">&nbsp;</div>
 <div id="aside">
-    <table border="0" width="100%">
+    <table border="0" width="100%" style='min-width:470px'>
         <colgroup><col width="50px"><col width="auto"></colgroup>
                             <tr><td colspan="2" class="featuretext">Shipping To:</td></tr>
                             <tr><td width="17%" class="formlabel">Name:</td><td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="shippingTo"/></td></tr>
@@ -75,7 +75,7 @@
     </table>
 </div>
 <div id="aside">
-    <table border="0" width="100%">
+    <table border="0" width="100%" style='min-width:375px'>
         <colgroup><col width="50px"><col width="auto"></colgroup>        
                             <tr><td class="featuretext">Billing To:</td><td class="featuretext">
                                 <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
@@ -92,7 +92,7 @@
 </div>
 <div id="content">
                     <span class="text">Order Information:</span>
-                    <table width="100%" border="0">
+                    <table width="100%" border="0" style='max-width: 67em;'>
                         <tr> 
                             <td class="tableheader">Item</td>
                             <td class="tableheader">Quantity</td>

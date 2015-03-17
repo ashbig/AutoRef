@@ -20,8 +20,8 @@
 <div class="content">
 
     <p class="mainbodytexthead">Clone: <bean:write name="clone" property="name"/></p>
-    <div id="aside">
-    <table width="auto" style='max-width: 67em;' border="0">
+    <div id="content">
+    <table width="100%" style='max-width: 67em;' border="0">
         <colgroup><col width='150px'><col width='auto'></colgroup>
         <tr><td class="tablebody">Clone ID:</td><td class="tableinfo"><bean:write name="clone" property="name"/></td></tr>
         <tr><td class="tablebody">Is Verified:</td><td class="tableinfo"><bean:write name="clone" property="verified"/></td></tr>
@@ -29,14 +29,6 @@
         <tr><td class="tablebody">Source:</td><td class="tableinfo"><bean:write name="clone" property="source"/></td></tr>
         <tr><td class="tablebody">Description:</td><td class="tableinfo"><bean:write name="clone" property="description"/></td></tr>
         <tr><td class="tablebody">Comments:</td><td class="tableinfo"><bean:write name="clone" property="comments"/></td></tr>
-    </table>
-    </div>
-    <div id='aside'>
-        <table width='20px' border='0px'><tr><td height='auto'></td></tr></table>
-    </div>    
-    <div id="aside">
-    <table width="auto" style='max-width: 67em; margin-bottom: 0px; padding-bottom: 0px;' border="0">
-        <colgroup><col width='150px'><col width='auto'></colgroup>
         <tr><td class="tablebody">Type:</td><td class="tableinfo"><bean:write name="clone" property="type"/></td></tr>            
         <tr><td class="tablebody">Verification Method:</td><td class="tableinfo"><bean:write name="clone" property="vermethod"/></td></tr>        
         <tr><td class="tablebody">Distribution:</td><td class="tableinfo"><bean:write name="clone" property="restriction"/></td></tr>
@@ -146,7 +138,8 @@
             </logic:iterate>
         </table>
         
-        <table width="100%" border="0" id="mobilehome">
+        <table  width="100%" style='max-width: 67em;' border="0" id="mobilehome">
+                    <colgroup><col width='150px'><col width='auto'></colgroup>
             <logic:iterate id="insert" name="clone" property="inserts">
                 <tr><td class="tablebody">Insert</td><td class="tableinfo"><bean:write name="insert" property="order"/></td></tr>
                 <tr><td class="tablebody">Size (bp)</td><td class="tableinfo"><bean:write name="insert" property="size"/></td></tr>

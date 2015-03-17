@@ -37,7 +37,8 @@ return;
     
     <body>
 <jsp:include page="signinMenuBar.jsp" />
-        <div id="noprint">                                  
+        <div id="noprint">
+            
                     <html:form action="ChoosePayment.do">
                         <logic:equal name="<%=Constants.USER_KEY%>" property="internalMember" value="true">
                             <p class="mainbodytexthead">On Campus requests must be paid using a valid 33 digit code. You or your grant manager can obtain this from the HCOM system. If you are at a Harvard affiliated institution and do not have a 33 digit code you must <a href="PrepareRegistration.do?update=true&first=true">update your account</a> to 'Harvard affiliate' before you can checkout.</p>
@@ -60,10 +61,10 @@ return;
                         </logic:equal>
                         <logic:notEqual name="<%=Constants.USER_KEY%>" property="internalMember" value="true"><p class="mainbodytexthead">
                             <table>
-                                <tr><td width="50%" class="formlabel">How would you like to pay?</td></tr>
-                                <tr><td width="50%" class="text"><html:radio property="paymentmethod" value="<%=Constants.PAYPAL%>"/> Credit Card</td></tr>
-                                <tr><td width="50%" class="text" id="PO" class="formlabel"><html:radio property="paymentmethod" value="<%=Constants.PO%>"/> I have a <%=Constants.PO%>
-                                &nbsp;<html:text maxlength="50" property="ponumber" size="40"/>&nbsp;*</td>
+                                <tr>
+                                    <td width="30%" class="formlabel">Please choose payment method:</td>
+                                    <td width="30%" class="text"><html:radio property="paymentmethod" value="<%=Constants.PAYPAL%>"/><img src="credit_card.jpg"/></td>
+                                    <td class="text"><html:radio property="paymentmethod" value="<%=Constants.PO%>"/><%=Constants.PO%></td>
                                 </tr>
                             </table>
                         </logic:notEqual>
@@ -155,7 +156,7 @@ return;
                                                     - Final payment of PO: NET 30, check or wire transfer, wire transfer fees to be paid by recipient<br>
                                                     - Estimated delivery = 7-10 business days from order</p>
                                                 <p>PLEASE NOTE: We are the Dana Farber/ Harvard Cancer Center at Harvard Medical School and would prefer checks payable to <u><strong>HARVARD MEDICAL SCHOOL</strong></u>.</p>
-        <p>Please feel free to contact us with any questions or concerns at <a href="plasmidhelp@hms.harvard.edu">plasmidhelp@hms.harvard.edu</a></p>
+        <p>Please feel free to contact us with any questions or concerns at <a href="mailto:plasmidhelp@hms.harvard.edu">plasmidhelp@hms.harvard.edu</a></p>
                 </td></tr></table>
                         
                         </td></tr> 

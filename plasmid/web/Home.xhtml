@@ -22,9 +22,7 @@
                             <p:inputText id="genenames" value="#{geneSearchBean.genenames}" required="true"
                                          requiredMessage="Please enter the search term."/> 
                         </p:column>
-                        <p:column>
-                            <p:commandButton id="submitButton" value="Search" update="resultview" action="/GeneSearch.xhtml" actionListener="#{geneSearchBean.doSearch}" ajax="false"/> 
-                        </p:column>
+
                     </p:row>
                     <p:row>
                         <p:column>
@@ -36,6 +34,11 @@
                                 <f:selectItem itemLabel="No" itemValue="no" />
                             </p:selectOneRadio>  
                         </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column>
+                            <p:commandButton id="submitButton" value="Search" update="resultview" action="/GeneSearch.xhtml" actionListener="#{geneSearchBean.doSearch}" ajax="false"/> 
+                        </p:column>                        
                     </p:row>
                 </p:panelGrid>                                       
                 <p:panel style="width: 100%; border:0;" id="filterView" header="Filters" toggleable="true" toggleSpeed="500" collapsed="#{geneSearchBean.filterToggle}"> 
