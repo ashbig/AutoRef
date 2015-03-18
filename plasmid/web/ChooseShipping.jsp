@@ -54,24 +54,23 @@
 
 <div id='content'>
     <span class="mainbodytexthead">Shipping Options:</span>
-<li>Include a FedEx account number at check-out and we will charge your account.</li>
-<li>If you don't provide a FedEx account number, we will apply a standard shipping charge at check-out.</li>
-    <ul>  
-        <li>$10.00 for domestic orders</li>
-        <li>$20.00 for international orders</li>
-    </ul>
-<span>No charge if you Pick Up your own plasmids. 'Pick up' orders are placed in our 4C fridge in the hallway outside our lab (Corner of C Bldg and LHRRB) on the <a href="http://www.hip.harvard.edu/Location.html#Quad" target="_blank">HMS Quad</a>. You MUST have access to the building to take advantage of this option.</span>
+    <ol class='mainbodytext'>
+        <li><strong>FedEx</strong>: Account number not provided.<br>(We will apply a standard shipping charge at check-out $10.00 domestic, $20.00 international)</li>
+        <li><strong>FedEx</strong>: Account number is provided.<br>(FedEx will bill you for the shipment.)</li>
+        <li><strong>Pickup</strong> your own plasmids.*<br>(No shipping charge applied.)</li> 
+        <li><strong>Other</strong>: Contact us to make alternate arrangements.</li>
+    </ol>
+    <p class='mainbodytext'>*'Pickup' orders are placed in our 4C fridge in the hallway outside our lab (Corner of C Bldg and LHRRB) on the <a href="http://www.hip.harvard.edu/Location.html#Quad" target="_blank">HMS Quad</a>. You MUST have access to the building to take advantage of this option.</p>
 </div>
-<br>
-<table width="100%" border="0" id='content'>
-  <tr><td class="formlabel">Choose shipping method:</td><td class="text"><html:select property="shippingMethod"><html:options name="shippingMethods"/></html:select></td></tr>
-  <tr><td class="formlabel">Enter shipping account number:</td><td class="text"><html:text size="10" property="accountNumber"/></td></tr>
+<table width="100%" border="0" id='content' style='padding-top: 15px;'>
+  <tr><td class="mainbodytext">Choose shipping method:</td><td class="text"><html:select property="shippingMethod"><html:options name="shippingMethods"/></html:select></td></tr>
+  <tr><td class="mainbodytext">Enter shipping account number:</td><td class="text"><html:text size="10" property="accountNumber"/></td></tr>
   <tr><td>&nbsp;</td><td>(Enter ONLY FedEx account numbers. We do not accept other couriers.)</td></tr>
-  <tr><td class="text"><html:submit value="Continue"/>*</td></tr>
+  <tr><td class="text"><html:submit value="Continue"/>**</td></tr>
 </table>
-<table id='content' width="100%" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
-    <tr><td><html:errors/><p class="mainbodytext"><i>*If you do not want to complete your order now, you can <a href="ViewCart.do">return to your cart</a> and save it for check-out at another time (you must be signed in to save your cart).</i></p></td></tr>
-    <tr><td><p class="mainbodytext">If you have any questions, please contact<a href="mailto:plasmidhelp@hms.harvard.edu">PlasmID help</a>.</p></td></tr>
+<table id='content' width="100%" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF" style='padding-top: 15px;'>
+    <tr><td><html:errors/><p class="text">** If you do not want to complete your order now, you can <a href="ViewCart.do">return to your cart</a> and save it for check-out at another time (you must be signed in to save your cart).</p></td></tr>
+    <tr><td><p class="text">If you have any questions, please contact<a href="mailto:plasmidhelp@hms.harvard.edu">PlasmID help</a>.</p></td></tr>
 </table>  
 
         <%--<p class="mainbodytexthead">

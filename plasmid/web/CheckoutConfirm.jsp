@@ -15,22 +15,7 @@
  <link href="SpryMenuBarHorizontal.css" rel="stylesheet" type="text/css" />
         <link href="boilerplate.css" rel="stylesheet" type="text/css" />
         <script type="text/javascript" src="respond.min.js"></script>
-        <script type="text/javascript">
-function showText(obj)
-{
-if(obj.value=='Show')
-{
-document.getElementById('mytext').style.display='block';
-obj.value='Hide';
-}
-else
-{
-document.getElementById('mytext').style.display='none';
-obj.value='Show';
-}
-return;
-}
-</script>
+
     </head>
      <div class="gridContainer clearfix">
 
@@ -38,7 +23,31 @@ return;
     <body>
 <jsp:include page="signinMenuBar.jsp" />
         <div id="noprint">
-            
+                <html:errors/>
+                    <table width="100%" border="0" style='display:none;'>
+                        <tr> 
+                            <td width="12%" class="formlabel">Name:</td>
+                            <td colspan="3" class="text"><bean:write name="<%=Constants.USER_KEY%>" property="username"/></td>
+                        </tr>
+                        <tr> 
+                            <td width="12%" class="formlabel">Email:</td>
+                            <td width="40%" class="text"><bean:write name="<%=Constants.USER_KEY%>" property="email"/></td>
+                            <td width="12%" class="formlabel">Phone:</td>
+                            <td width="36%" class="text"><bean:write name="<%=Constants.USER_KEY%>" property="phone"/></td>
+                        </tr>
+                        <tr> 
+                            <td width="12%" height="24" class="formlabel">Order Date:</td>
+                            <td width="40%" class="text"><bean:write name="date"/></td>
+                        </tr>
+                        <tr> 
+                            <td width="12%" height="24" class="formlabel">Shipping Method:</td>
+                            <td width="40%" class="text"><bean:write name="checkoutForm" property="shippingMethod"/></td>
+                            <td width="12%" class="formlabel">Shipping Account Number:</td>
+                            <td width="36%" class="text">
+                                <bean:write name="checkoutForm" property="accountNumber"/>
+                            </td>
+                        </tr>
+                    </table>            
                     <html:form action="ChoosePayment.do">
                         <logic:equal name="<%=Constants.USER_KEY%>" property="internalMember" value="true">
                             <p class="mainbodytexthead">On Campus requests must be paid using a valid 33 digit code. You or your grant manager can obtain this from the HCOM system. If you are at a Harvard affiliated institution and do not have a 33 digit code you must <a href="PrepareRegistration.do?update=true&first=true">update your account</a> to 'Harvard affiliate' before you can checkout.</p>
@@ -61,39 +70,22 @@ return;
                         </logic:equal>
                         <logic:notEqual name="<%=Constants.USER_KEY%>" property="internalMember" value="true"><p class="mainbodytexthead">
                             <table>
-                                <tr>
-                                    <td width="30%" class="formlabel">Please choose payment method:</td>
-                                    <td width="30%" class="text"><html:radio property="paymentmethod" value="<%=Constants.PAYPAL%>"/><img src="credit_card.jpg"/></td>
-                                    <td class="text"><html:radio property="paymentmethod" value="<%=Constants.PO%>"/><%=Constants.PO%></td>
+                                <tr><td width="50%" class="formlabel">How would you like to pay?</td></tr>
+                                <tr><td width="50%" class="text"><html:radio property="paymentmethod" value="<%=Constants.PAYPAL%>"/> Credit Card</td></tr>
+                                <tr><td width="50%" class="text" id="PO" class="formlabel"><html:radio property="paymentmethod" value="<%=Constants.PO%>"/> I have a <%=Constants.PO%>&nbsp;*
+                                &nbsp;<html:text maxlength="50" property="ponumber" size="40"/>&nbsp;</td>
                                 </tr>
                             </table>
                         </logic:notEqual>
                         <html:submit value="Place Order"/>
                         </html:form>                       
-                        <p class="mainbodytext">* Still need to request a PO? Print out this <a href="javascript:if(window.print)window.print()" style='text-decoration:none;'>Price Quote</a> for your finance folks, then be sure to <a href="ViewCart.do">View Your Cart</a> and hit save.</p><br>
-        </div>                    
+                        <p class="mainbodytext">* Still need to request a PO? Print out this <a href="javascript:if(window.print)window.print()" style='text-decoration:none;'>Price Quote</a> for your finance folks, then be sure to <a href="ViewCart.do">View Your Cart</a> and hit save. You can come back and complete your order once you have the PO number.</p><br>
+</div>                    
                         <table border="0" cellpadding="5" style="table{border-collapse: collapse;}"><tr><td>                    
                     <p class="text">Harvard Medical School<br>Dept. BCMP, C1-214<br>240 Longwood Ave.<br>Boston, MA 02115</p>
                     <p class="text" align="middle"><strong>PRICE QUOTE</strong></p>
-                        <script type="text/javascript">
-                        tmonth=new Array("January","February","March","April","May","June","July","August","September","October","November","December");
-
-                        function GetClock(){
-                        var d=new Date();
-                        var nmonth=d.getMonth(),ndate=d.getDate(),nyear=d.getYear();
-                        if(nyear<1000) nyear+=1900;
-
-
-                        document.getElementById('clockbox').innerHTML=""+tmonth[nmonth]+" "+ndate+", "+nyear+"";
-                        }
-
-                        window.onload=function(){
-                        GetClock();
-                        setInterval(GetClock,1000);
-                        };
-                        </script>
                         <table border="0">
-                            <tr><td>DATE:</td><td id="clockbox" width="200px"></td><td>(Quote valid for 30 days)</td></tr>
+                            <tr><td>DATE:</td><td><bean:write name="date"/></td><td>(Quote valid for 30 days)</td></tr>
                         </table>
                         <table>
                             <tr><td>&nbsp;</td></tr>
