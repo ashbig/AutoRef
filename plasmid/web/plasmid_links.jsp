@@ -12,13 +12,11 @@
 --> 
 </style> 
 </head> 
- 
+<div class="gridContainer clearfix">
 <body class="mainbodytext style5"> 
+<jsp:include page="signinMenuBar.jsp" />
  
- 
- 
- 
-<table width="1000" height="86" border="0" align="center"> 
+<table width="100%" border="0" align="center" id="content"> 
   <tr> 
     <td colspan="3" rowspan="2"> 
          
@@ -193,6 +191,6 @@
 </td></tr>
 
 </table>
-<jsp:include page="footer.jsp" /></body>
+<jsp:include page="footer.jsp" /></body></div>
 </html>
 
