@@ -1,77 +1,24 @@
 
 <html> 
 <head> 
-<title>PlasmID Database</title> 
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"> 
-<link href="plasmidstyle.css" rel="stylesheet" type="text/css"> 
-<style type="text/css"> 
-<!--
-.style5 {font-family: Arial, Helvetica, sans-serif}
-.style6 {color: #000000; font-style : normal; font-weight : normal; font-size: 15px;}
-.style7 {font-size: 14px}
---> 
-</style> 
+<title>Links</title>
+<meta name='description' content='Hyperlinks to additional information on other websites'>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link href="plasmidstyle.css" rel="stylesheet" type="text/css">
+<link href="layout.css" rel="stylesheet" type="text/css" />
+<link href="SpryMenuBarHorizontal.css" rel="stylesheet" type="text/css" />
+<link href="boilerplate.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="respond.min.js"></script>
 </head> 
 <div class="gridContainer clearfix">
-<body class="mainbodytext style5"> 
 <jsp:include page="signinMenuBar.jsp" />
+    <body class="mainbodytext style5"> 
+
  
-<table width="100%" border="0" align="center" id="content"> 
-  <tr> 
-    <td colspan="3" rowspan="2"> 
-         
-            
-            <a href="SampleTrackingHome.jsp" class="text">Sample Tracking</A> 
-            
-            
-        
-         
-    </td> 
-    <td width="64%" align="center" valign="bottom" class="title"> 
-      <p><strong><font color="#333333" size="5">Welcome To PlasmID</font></strong></p></td> 
-    <td width="18%" height="54" align="right" valign="bottom" class="countrytext"> 
-      <p><a href="ViewCart.do" border="0"><img src="shoppingcart2.gif" width="105" height="18"></a></p></td> 
-  </tr> 
-  <tr> 
-    <td width="64%" align="center" valign="top" class="homepageLink"><a href="http://dnaseq.med.harvard.edu" target="_blank">DF/HCC 
-      DNA Resource Core</a></td> 
-    <td>&nbsp;</td> 
-  </tr> 
-  <tr> 
-    <td colspan="3">&nbsp;</td> 
-    <td width="64%" align="center" valign="top" class="homepageLink"><a href="http://psimr.asu.edu" target="_blank">Protein Structure Initiative
-      - Material Repository (PSI-MR)</a></td> 
-    <td height="26" valign="baseline" class="countrytext"> 
-     
-      <a href="Logout.do" class="countrytext">Sign Out </a> 
-      | <a href="Account.jsp" class="countrytext">My Account</a> 
-     
-     
-      | <a target="_blank" href="FAQs.jsp" class="countrytext">FAQ</a></td> 
-  </tr> 
-</table> 
- 
-<table width="1000" height="49" border="0" align="center"> 
-  <tr> 
-    <td height="45"> <table width="100%" height="36" border="0" cellpadding="0" cellspacing="0" bgcolor="#333333"> 
-        <tr> 
-          <td><table width="100%" height="36" border="0" cellpadding="0" cellspacing="0" bgcolor="#333333"> 
-        <tr> 
-          <td><table width="100%" height="33" border="0" cellpadding="4" cellspacing="1" bgcolor="#FFFFFF"> 
-              <tr> 
-                <td width="16%" align="center" bgcolor="#6699CC"><strong><font color="#CCCCCC"><a href="Home.xhtml" STYLE="text-decoration:none">Home</a></font></strong></td> 
-                <td width="28%" align="center" bgcolor="#6699CC"><font color="#CCCCCC"><strong>Plasmid 
-                  Submission </strong></font></td> 
-                <td width="35%" align="center" bgcolor="#6699CC"><a href="OrderOverview.jsp" STYLE="text-decoration:none"><font> 
-                    <strong>Search & Order</strong></font></a></td> 
-                <td width="21%" align="center" bgcolor="#6699CC"><a href="Contactus.jsp" STYLE="text-decoration:none"><font><strong>Contact 
-                  Us </strong></font></a></td> 
-              </tr> 
-            </table></td></tr></table></td></tr></table></td></tr></table>
- <table align="center" cellpadding="25px">
+ <table align="center" cellpadding="25px" id='content'>
  <tr>
  <td> 
-<table width="93%" cellpadding="10px" cellspacing="5px" >
+<table width="93%" cellpadding="10px" cellspacing="5px" id='content'>
   <tr>
     <td colspan="2" align="left" valign="top" class="homepageText3"><div align="center">Links to External Plasmid Sites and Databases</div></td>
   </tr>

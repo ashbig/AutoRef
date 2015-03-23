@@ -11,6 +11,9 @@
 <script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
 <script type="text/javascript" src="responsivemobilemenu.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+        <meta http-equiv="Cache-Control" content="no-cache" /> 
+        <meta http-equiv="Pragma" content="no-cache" /> 
+        <meta http-equiv="Expires" content="0" />
 <!-- start mobile menu, jsp version -->
 <div id="rmm" class="rmm" data-menu-style = "graphite">
             <ul>
