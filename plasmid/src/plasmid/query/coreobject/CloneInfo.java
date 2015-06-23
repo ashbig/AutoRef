@@ -29,6 +29,7 @@ public class CloneInfo extends Clone implements Serializable{
     protected String latestWell;
     protected int lposition;
     protected String primer;
+    protected String samTube = null;
     
     public CloneInfo() {
         super();
@@ -82,6 +83,7 @@ public class CloneInfo extends Clone implements Serializable{
     public String getLatestWell() {return latestWell;}
     public String getBBTube() { return bbTube; }
     public String getPrimer() { return primer;};
+    public String getSAMTube(){ return samTube;};
 
     
     public void setTerm(String term) {this.term = term;}
@@ -102,7 +104,8 @@ public class CloneInfo extends Clone implements Serializable{
     public void setLatestPosition(int i) {this.lposition = i;}
     public void setBBTube( String bbTube) { this.bbTube = bbTube; }
     public void setPrimer ( String primer ) { this.primer = primer; }
-    
+    public void setSAMTube( String samTube) { this.samTube = samTube; }
+
     private void writeObject(java.io.ObjectOutputStream out)
      throws IOException {
          out.defaultWriteObject();        
