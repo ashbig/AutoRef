@@ -73,18 +73,18 @@
 
 <table width="100%" border="0">
   <tr>
-    <td class="tableheader">Order ID</td>
-    <td class="tableheader">Order Date</td>
-    <td class="tableheader">Status</td>
+    <td class="tableheader" width="8%" align="center">Order ID</td>
+    <td class="tableheader"width="20%" align="center">Order Date</td>
+    <td class="tableheader" align="center">Status</td>
     <%--<td class="tableheader">Platinum Service</td>--%>
-    <td class="tableheader">#Clones</td>
-    <td class="tableheader">#Collections</td>
+    <td class="tableheader" align="center">#Clones</td>
+    <td class="tableheader" align="center">#Collections</td>
     <!--<td class="tableheader">Total Price</td>
     <td class="tableheader">User</td>-->
-    <td class="tableheader">User Email</td>
-    <td class="tableheader">Last Updated On</td>
-    <td class="tableheader">Last Updated By</td>
-    <td class="tableheader">Days Since Order</td>
+    <td class="tableheader"width="6%" align="center">User Email</td>
+    <td class="tableheader"width="12%" align="center">Updated On</td>
+    <td class="tableheader"width="12%" align="center">Updated By</td>
+    <td class="tableheader"width="15%" align="center">Days In Process</td>
   </tr>
 
   <% int i=0; %>
@@ -154,7 +154,7 @@
     </td>
     </logic:equal>
     <logic:notEqual name="order" property="beforeInprocess" value="-1">
-        <td class="tableinfo"><bean:write name="order" property="status"/></td>
+        <td class="tableinfo" align="center"><bean:write name="order" property="status"/></td>
     </logic:notEqual>
     <input type="hidden" name='<%="orderid["+(i)+"]"%>' value="<bean:write name="order" property="orderid"/>">
 
@@ -163,17 +163,21 @@
     <td class="tableinfo" align='center'><bean:write name="order" property="numofcollection"/></td>
     <%--<td class="tableinfo"><bean:write name="order" property="totalPriceString"/></td>
     <td class="tableinfo"><bean:write name="order" property="name"/></td>--%>
-    <td class="tableinfo"><bean:write name="order" property="email"/></td>
-    <td class="tableinfo"><bean:write name="order" property="updatedon"/></td>
-    <td class="tableinfo"><bean:write name="order" property="updatedby"/></td>
+    <td class="tableinfo"align='left'><bean:write name="order" property="email"/></td>
+    <td class="tableinfo"align='center'><bean:write name="order" property="updatedon"/></td>
+    <td class="tableinfo"align='center'><bean:write name="order" property="updatedby"/></td>
     <td class="tableinfo" align='center'><bean:write name="order" property="dayssinceorder"/></td>
 
   </tr>
   <% i++; %>
-  </logic:iterate>    
-    
+  </logic:iterate>
   <tr>
-    <td align="middle" colspan="6">
+      <td class ="tableinfo"</td><td class="tableinfo"</td> <td class="tableheader" width="20%">Total Clones In <bean:write name="order" property="status"/></td>
+      <td class="tableinfo" align='center'><bean:write name="order" property="totalclones"/></td><td class="tableinfo" </td><td class="tableinfo" </td><td class="tableinfo" </td><td class="tableinfo" </td><td class="tableinfo" </td>
+  </tr>
+  <td>&nbsp;</td>
+  <tr>
+    <td align="left" colspan="6">
         <html:submit property="orderListButton" styleClass="itemtext" value="Process Orders"/>&nbsp;&nbsp;
         <html:submit property="orderListButton" styleClass="itemtext" value="<%=Constants.BUTTON_CREATE_INVOICE%>"/>&nbsp;&nbsp;
         <html:submit property="orderListButton" styleClass="itemtext" value="<%=Constants.BUTTON_GENERATE_REPORT%>"/>&nbsp;&nbsp;
