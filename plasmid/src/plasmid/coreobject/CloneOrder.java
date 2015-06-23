@@ -128,6 +128,9 @@ public class CloneOrder implements Serializable {
     private Shipment currentShipment;
     private List<Shipment> shipments;
     
+    //total clones in list
+    private int totalClones;
+    
     /** Creates a new instance of CloneOrder */
     public CloneOrder() {
         this.items = new ArrayList();
@@ -196,6 +199,7 @@ public class CloneOrder implements Serializable {
     public String getIsBatch() {return isBatch;}
     public String getUsergroup() {return usergroup;}
     public String getComments() {return comments;}
+    public int getTotalclones(){return totalClones;};
     
     public void setOrderid(int i) {this.orderid = i;}
     public void setOrderDate(String s) {this.orderDate = s;}
@@ -230,6 +234,7 @@ public class CloneOrder implements Serializable {
     public void setIsBatch(String s) {this.isBatch = s;}
     public void setUsergroup(String s) {this.usergroup = s;}
     public void setComments(String s) {this.comments = s;}
+    public void setTotalclones(int i) {this.totalClones = i;}
     
     public List getItems() {return items;}
     public void setItems(List l) {this.items = l;}
