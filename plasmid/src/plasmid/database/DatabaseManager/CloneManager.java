@@ -18,7 +18,11 @@ import plasmid.query.coreobject.CloneInfo;
 import plasmid.database.*;
 import plasmid.Constants;
 import plasmid.util.StringConvertor;
-
+import java.sql.DriverManager;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 /**
  *
  * @author  DZuo
@@ -1451,6 +1455,27 @@ public class CloneManager extends TableManager {
         return s;
     }
 
+    /* This method will check the SAM databse for a tube
+       param1 = tubename
+    */
+    private boolean getSAMTubes ( String bbtube) throws SQLException, ClassNotFoundException {
+                bbtube = String.format(bbtube,10,'0');
+		Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");	
+		Connection conn = DriverManager.getConnection("jdbc:sqlserver://SAM-20KDX12\\SQLEXPRESS;user=sa;password=hst;database=SamManager");
+		Statement sta = conn.createStatement();
+		String Sql = "select TwoDBarcode from dbo.TubeInfo";
+		ResultSet rs = sta.executeQuery(Sql);
+                List samTubes = new ArrayList();
+		while (rs.next()) {
+			samTubes.add(rs.getString(1));
+		}
+                for (int i =0; i < samTubes.size(); i++){
+                    if (bbtube.equals(samTubes.get(i))){
+                        return true;
+                    }
+                }
+                return false;
+	}
     private List getInserts(PreparedStatement stmt, int cloneid) throws Exception {
         List inserts = new ArrayList();
         ResultSet rs2 = DatabaseTransaction.executeQuery(stmt);
@@ -1552,7 +1577,10 @@ public class CloneManager extends TableManager {
             String label = rs2.getString(1);
             // uncomment below to set this to formatted 10 digit output.
             //label = String.format(label,10,'0');
-            c.setBBTube(label);
+            if (getSAMTubes(label)){
+                c.setSAMTube(label);
+            }
+            else{ c.setBBTube(label); }
         }
         DatabaseTransaction.closeResultSet(rs2);
     }
