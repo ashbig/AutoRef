@@ -627,7 +627,6 @@ public class CloneOrderManager extends TableManager {
         }
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        
         try {
             stmt = conn.prepareStatement(sql);
             // All in progress orders will by pass this conditional if the in progress selection is passed as a param
@@ -636,6 +635,7 @@ public class CloneOrderManager extends TableManager {
             }
             rs = DatabaseTransaction.executeQuery(stmt);
             List orders = new ArrayList();
+            int count = 0;
             while (rs.next()) {
                 int orderid = rs.getInt(1);
                 String date = rs.getString(2);
@@ -646,6 +646,7 @@ public class CloneOrderManager extends TableManager {
                 String shippingaddress = rs.getString(7);
                 String billingaddress = rs.getString(8);
                 int numofclones = rs.getInt(9);
+                count = count + numofclones;
                 int numofcollection = rs.getInt(10);
                 double costforclones = rs.getDouble(11);
                 double costforcollection = rs.getDouble(12);
@@ -713,6 +714,7 @@ public class CloneOrderManager extends TableManager {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");                
                 java.util.Date date2 = dateFormat.parse(date);
                 order.setDayssinceorder(date2);
+                order.setTotalclones(count);
                 orders.add(order);
             }
             return orders;
