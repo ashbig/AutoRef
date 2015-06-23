@@ -1623,9 +1623,9 @@ public class OrderProcessManager {
     public void printCloneWorlist(PrintWriter out, List clones) {
         // Fill in destination wells if <= 92 total clones. 
         if ( clones.size() <= 92 ) {
-            out.println("Des.Well\tOrder ID\tClone ID\tPrimer\tDNA Type\tVector\tGrowth Condition\tPlate\tSrc. Well\tBB Tube");
+            out.println("Des.Well\tOrder ID\tClone ID\tPrimer\tDNA Type\tVector\tGrowth Condition\tPlate\tSrc. Well\tBB Tube\tSAM Tube");
         } else {
-            out.println("Order ID\tClone ID\tPrimer\tDNA Type\tVector\tGrowth Condition\tPlate\tSrc. Well\tBB Tube");
+            out.println("Order ID\tClone ID\tPrimer\tDNA Type\tVector\tGrowth Condition\tPlate\tSrc. Well\tBB Tube\tSAM Tube");
         }
             for (int i = 0; i < clones.size(); i++) {
             CloneInfo clone = (CloneInfo) clones.get(i);
@@ -1635,9 +1635,9 @@ public class OrderProcessManager {
             // else will ommit destination wells. 
             if (clones.size() <= 92 ) {
                 if (growth == null) {
-                    out.println( wells[i] +"\t" + clone.getOrderid() + "\t" + clone.getName() + "\t" + clone.getPrimer() +"\tPLASMID\t"  + clone.getVectorname() + "\t" + "\t\t" + clone.getLatestPlate() + "\t" + clone.getLatestWell() + "\t" + clone.getBBTube());
+                    out.println( wells[i] +"\t" + clone.getOrderid() + "\t" + clone.getName() + "\t" + clone.getPrimer() +"\tPLASMID\t"  + clone.getVectorname() + "\t" + "\t\t" + clone.getLatestPlate() + "\t" + clone.getLatestWell() + "\t" + clone.getBBTube() + "\t"+ clone.getSAMTube());
                 } else {
-                    out.println( wells[i] + "\t" + clone.getOrderid() + "\t" + clone.getName() + "\t" + clone.getPrimer() +"\tPLASMID\t" + clone.getVectorname() + "\t" + clone.getRecommendedGrowthCondition().getName() + "\t"  + clone.getLatestPlate() + "\t" + clone.getLatestWell() + "\t" + clone.getBBTube());
+                    out.println( wells[i] + "\t" + clone.getOrderid() + "\t" + clone.getName() + "\t" + clone.getPrimer() +"\tPLASMID\t" + clone.getVectorname() + "\t" + clone.getRecommendedGrowthCondition().getName() + "\t"  + clone.getLatestPlate() + "\t" + clone.getLatestWell() + "\t" + clone.getBBTube() + "\t" + clone.getSAMTube());
                 }
                 
             }
