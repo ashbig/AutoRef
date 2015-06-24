@@ -1580,7 +1580,7 @@ public class CloneManager extends TableManager {
             if (getSAMTubes(label)){
                 c.setSAMTube(label);
             }
-            c.setBBTube(label);
+            else { c.setBBTube(label); }
         }
         DatabaseTransaction.closeResultSet(rs2);
     }
