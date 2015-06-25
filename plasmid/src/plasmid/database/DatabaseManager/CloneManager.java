@@ -1461,7 +1461,7 @@ public class CloneManager extends TableManager {
     private boolean getSAMTubes ( String bbtube) throws SQLException, ClassNotFoundException {
                 bbtube = String.format(bbtube,10,'0');
 		Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");	
-		Connection conn = DriverManager.getConnection("jdbc:sqlserver://SAM-20KDX12\\SQLEXPRESS;user=sa;password=hst;database=SamManager");
+		Connection conn = DriverManager.getConnection("jdbc:sqlserver://SAM-20KDX12:1433;user=sa;password=hst;database=SamManager");
 		Statement sta = conn.createStatement();
 		String Sql = "select TwoDBarcode from dbo.TubeInfo";
 		ResultSet rs = sta.executeQuery(Sql);
