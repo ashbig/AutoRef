@@ -1458,9 +1458,10 @@ public class CloneManager extends TableManager {
     /* This method will check the SAM databse for a tube
        param1 = tubename
     */
-    private boolean getSAMTubes ( String bbtube) throws SQLException, ClassNotFoundException {
+    private boolean getSAMTubes ( String bbtube) {
                 bbtube = String.format(bbtube,10,'0');
-		Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");	
+             try{
+                Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 		Connection conn = DriverManager.getConnection("jdbc:sqlserver://SAM-20KDX12;instanceName=SQLEXPRESS;integratedSecurity=false;user=sa;password=hst;database=SamManager");
 		Statement sta = conn.createStatement();
 		String Sql = "select TwoDBarcode from dbo.TubeInfo";
@@ -1474,6 +1475,9 @@ public class CloneManager extends TableManager {
                         return true;
                     }
                 }
+             } catch (Exception ex){
+                 ex.printStackTrace();
+             }
                 return false;
 	}
     private List getInserts(PreparedStatement stmt, int cloneid) throws Exception {
