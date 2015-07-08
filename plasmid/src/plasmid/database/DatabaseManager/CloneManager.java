@@ -1462,7 +1462,7 @@ public class CloneManager extends TableManager {
                 bbtube = String.format(bbtube,10,'0');
              try{
                 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-		Connection conn = DriverManager.getConnection("jdbc:sqlserver://10.11.100.140/SAM-20KDX12;instanceName=SQLEXPRESS;integratedSecurity=false;user=sa;password=hst;database=SamManager");
+		Connection conn = DriverManager.getConnection("jdbc:sqlserver://sam-20kdx12;instanceName=SQLEXPRESS;integratedSecurity=false;user=sa;password=hst;database=SamManager");
 		Statement sta = conn.createStatement();
 		String Sql = "select TwoDBarcode from dbo.TubeInfo";
 		ResultSet rs = sta.executeQuery(Sql);
@@ -1478,7 +1478,7 @@ public class CloneManager extends TableManager {
              } catch (Exception ex){
                  ex.printStackTrace();
              }
-                return false;
+             return false;
 	}
     private List getInserts(PreparedStatement stmt, int cloneid) throws Exception {
         List inserts = new ArrayList();
@@ -1580,7 +1580,8 @@ public class CloneManager extends TableManager {
         if (rs2.next()) {
             String label = rs2.getString(1);
             // uncomment below to set this to formatted 10 digit output.
-            //label = String.format(label,10,'0');
+            label = String.format(label,10,'0');
+            System.out.println(label);
             if (getSAMTubes(label)){
                 c.setSAMTube(label);
             }
