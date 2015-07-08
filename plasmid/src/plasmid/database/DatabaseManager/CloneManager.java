@@ -1462,7 +1462,7 @@ public class CloneManager extends TableManager {
                 bbtube = String.format(bbtube,10,'0');
              try{
                 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-		Connection conn = DriverManager.getConnection("jdbc:sqlserver://10.11.100.140;instance=SQLEXPRESS;databaseName=SamManager;user=sa;password=hst");
+		Connection conn = DriverManager.getConnection("jdbc:sqlserver://10.11.100.140:1433;instance=SQLEXPRESS;database=SamManager;user=sa;password=hst");
 		Statement sta = conn.createStatement();
 		String Sql = "select TwoDBarcode from dbo.TubeInfo";
 		ResultSet rs = sta.executeQuery(Sql);
