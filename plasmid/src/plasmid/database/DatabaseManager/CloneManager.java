@@ -1454,7 +1454,7 @@ public class CloneManager extends TableManager {
                 + " from clonename where cloneid=?";
         return s;
     }
-
+    
     /* This method will check the SAM databse for a tube
        param1 = tubename
     */
