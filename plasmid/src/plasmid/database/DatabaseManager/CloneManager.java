@@ -1458,7 +1458,7 @@ public class CloneManager extends TableManager {
     /* This method will check the SAM databse for a tube
        param1 = tubename
     */
-    private boolean getSAMTubes ( String bbtube) {
+    private String getSAMTubes ( String bbtube) {
                 bbtube = String.format(bbtube,10,'0');
              try{
                 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
@@ -1472,13 +1472,14 @@ public class CloneManager extends TableManager {
 		}
                 for (int i =0; i < samTubes.size(); i++){
                     if (bbtube.equals(samTubes.get(i))){
-                        return true;
+                        return bbtube;
                     }
                 }
              } catch (Exception ex){
                  ex.printStackTrace();
+                 return "Unable to Connect to SAM";
              }
-             return false;
+             return "null";
 	}
     private List getInserts(PreparedStatement stmt, int cloneid) throws Exception {
         List inserts = new ArrayList();
@@ -1581,11 +1582,11 @@ public class CloneManager extends TableManager {
             String label = rs2.getString(1);
             // uncomment below to set this to formatted 10 digit output.
             label = String.format(label,10,'0');
-            System.out.println(label);
-            if (getSAMTubes(label)){
-                c.setSAMTube(label);
+            String samTube = getSAMTubes(label);
+            if (samTube.equals("null")){
+                c.setBBTube(label);
             }
-            else { c.setBBTube(label); }
+            else c.setSAMTube(samTube);
         }
         DatabaseTransaction.closeResultSet(rs2);
     }
