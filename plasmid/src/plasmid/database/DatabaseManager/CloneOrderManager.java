@@ -154,7 +154,7 @@ public class CloneOrderManager extends TableManager {
 
         return order.getOrderid();
     }
-
+    
     public int addBatchCloneOrder(CloneOrder order, User user) {
         int orderid = addCloneOrder(order, user);
 
