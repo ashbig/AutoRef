@@ -1582,11 +1582,12 @@ public class CloneManager extends TableManager {
             String label = rs2.getString(1);
             // uncomment below to set this to formatted 10 digit output.
             label = String.format(label,10,'0');
-            String samTube = getSAMTubes(label);
-            if (samTube.equals("null")){
+            String tubeStatus = getSAMTubes(label);
+            if (tubeStatus.equals("null")){
                 c.setBBTube(label);
+                c.setSAMTube(tubeStatus);
             }
-            else c.setSAMTube(samTube);
+            else c.setSAMTube(tubeStatus); c.setBBTube(label);
         }
         DatabaseTransaction.closeResultSet(rs2);
     }
