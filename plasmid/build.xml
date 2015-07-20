@@ -13,7 +13,7 @@
      
 
 
-    <property name="tomcat.home" value="/www/dev.plasmid.med.harvard.edu/docroot/"/>
+    <property name="tomcat.home" value="/www/plasmid.med.harvard.edu/docroot/"/>
     <property name="app.name" value="PLASMID"/>
     <property name="deploy.home" value="${tomcat.home}/${app.name}"/>
     <property name="system.lib" value="${tomcat.home}/lib"/>
