@@ -1467,10 +1467,10 @@ public class CloneManager extends TableManager {
                 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 		Connection conn = DriverManager.getConnection("jdbc:sqlserver://10.11.100.140:1433;instance=SQLEXPRESS;database=SamManager;user=sa;password=hst");
 		Statement sta = conn.createStatement();
-		String Sql = "select TwoDBarcode from dbo.TubeInfo where TwoDBarcode='" + bbtube +"\'";
+		String Sql = "select TwoDBarcode from dbo.TubeInfo where TwoDBarcode='" + bbtube +"\' use SamManager";
 		ResultSet rs = sta.executeQuery(Sql);
                 String samTube = rs.getString(1);
-		
+		conn.close();
                 if (bbtube.equals(samTube)){
                         return samTube;
                     }
