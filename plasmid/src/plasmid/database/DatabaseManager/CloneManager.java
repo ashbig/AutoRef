@@ -1469,14 +1469,14 @@ public class CloneManager extends TableManager {
 		Statement sta = conn.createStatement();
 		String Sql = "select TwoDBarcode from dbo.TubeInfo where TwoDBarcode='" + bbtube +"\' use SamManager";
 		ResultSet rs = sta.executeQuery(Sql);
-                String samTube = rs.getString(1);
-                System.out.println(samTube);
-                System.out.println(bbtube);
 		conn.close();
-                if (bbtube.equals(samTube)){
+                if (rs.next()){
+                    String samTube = rs.getString(1);
+                    if (bbtube.equals(samTube)){
                        return samTube;
                     }
-                } catch (Exception ex){
+                }
+             } catch (Exception ex){
                     ex.printStackTrace();
                     return "Unable to Query SAM";
              }
@@ -1583,9 +1583,9 @@ public class CloneManager extends TableManager {
             String label = rs2.getString(1);
             // uncomment below to set this to formatted 10 digit output.
             label = String.format(label,10,'0');
+            c.setBBTube(label);
             String tubeStatus = getSAMTubes(label);
             if (tubeStatus.equals("null") || tubeStatus.equals("Unable to Query SAM")){
-                c.setBBTube(label);
                 c.setSAMTube(tubeStatus);
             }
             else c.setSAMTube(tubeStatus); c.setBBTube("null");
