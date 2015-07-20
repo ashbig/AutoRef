@@ -1470,9 +1470,11 @@ public class CloneManager extends TableManager {
 		String Sql = "select TwoDBarcode from dbo.TubeInfo where TwoDBarcode='" + bbtube +"\' use SamManager";
 		ResultSet rs = sta.executeQuery(Sql);
                 String samTube = rs.getString(1);
+                System.out.println(samTube);
+                System.out.println(bbtube);
 		conn.close();
                 if (bbtube.equals(samTube)){
-                        return samTube;
+                       return samTube;
                     }
                 } catch (Exception ex){
                     ex.printStackTrace();
