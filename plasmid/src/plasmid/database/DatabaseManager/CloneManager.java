@@ -1459,25 +1459,24 @@ public class CloneManager extends TableManager {
        param1 = tubename
     */
     private String getSAMTubes ( String bbtube) {
+             if (bbtube.equals("null")){
+                 return "null";
+             }    
                 bbtube = String.format(bbtube,10,'0');
              try{
                 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 		Connection conn = DriverManager.getConnection("jdbc:sqlserver://10.11.100.140:1433;instance=SQLEXPRESS;database=SamManager;user=sa;password=hst");
 		Statement sta = conn.createStatement();
-		String Sql = "select TwoDBarcode from dbo.TubeInfo";
+		String Sql = "select TwoDBarcode from dbo.TubeInfo where TwoDBarcode='" + bbtube +"\'";
 		ResultSet rs = sta.executeQuery(Sql);
-                List samTubes = new ArrayList();
-		while (rs.next()) {
-			samTubes.add(rs.getString(1));
-		}
-                for (int i =0; i < samTubes.size(); i++){
-                    if (bbtube.equals(samTubes.get(i))){
-                        return bbtube;
+                String samTube = rs.getString(1);
+		
+                if (bbtube.equals(samTube)){
+                        return samTube;
                     }
-                }
-             } catch (Exception ex){
-                 ex.printStackTrace();
-                 return "Unable to Connect to SAM";
+                } catch (Exception ex){
+                    ex.printStackTrace();
+                    return "Unable to Query SAM";
              }
              return "null";
 	}
@@ -1583,11 +1582,11 @@ public class CloneManager extends TableManager {
             // uncomment below to set this to formatted 10 digit output.
             label = String.format(label,10,'0');
             String tubeStatus = getSAMTubes(label);
-            if (tubeStatus.equals("null")){
+            if (tubeStatus.equals("null") || tubeStatus.equals("Unable to Query SAM")){
                 c.setBBTube(label);
                 c.setSAMTube(tubeStatus);
             }
-            else c.setSAMTube(tubeStatus); c.setBBTube(label);
+            else c.setSAMTube(tubeStatus); c.setBBTube("null");
         }
         DatabaseTransaction.closeResultSet(rs2);
     }
